@@ -1,0 +1,50 @@
+{% set name = "bps-l2b_agb_processor" %}
+{% set version = "4.2.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: file://{{ RECIPE_DIR }}/../dist/bps_l2b_agb_processor-{{ version }}.tar.gz
+
+build:
+  noarch: python
+  entry_points:
+    - bps_l2b_agb_processor = bps.l2b_agb_processor.__main__:main
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.12
+    - setuptools
+    - wheel
+    - pip
+  run:
+    - python >=3.12
+    - numpy
+    - arepytools
+    - click
+    - numba >=0.57
+    - xsdata
+    - netcdf4
+    - bps-common =={{ version }}
+    - bps-transcoder =={{ version }}
+
+test:
+  imports:
+    - bps
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: Biomass L2b AGB Processor.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

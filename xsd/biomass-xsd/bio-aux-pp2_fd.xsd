@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="auxiliaryL2bFDProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="l2bFDProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Digital Object Identifier (DOI) to be written in output products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="minimumL2aCoverage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum coverage in percentage of the output tile to enable L2b processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2bFD">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the FD L2B MDS variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2bFD">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FD">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="probabilityOfChange">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the probability of change image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="CFM">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the CFM image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="HeatMap">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the Heat Map image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="acquisitionIdImage">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the acquisitionIdImage image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryL2bFDProcessingParameters" type="auxiliaryL2bFDProcessingParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS configuration parameters for the L2b FD Processor</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

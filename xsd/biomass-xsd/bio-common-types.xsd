@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--
+    ========================================================================
+    = Common product type definitions
+    ========================================================================
+    -->
+	<xsd:simpleType name="missionType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid BIOMASS mission names.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="BIOMASS"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="swathType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of all valid swath identifiers.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="S1"/>
+			<xsd:enumeration value="S2"/>
+			<xsd:enumeration value="S3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="acquisitionModeIDType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of all valid acquisition modes.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="S1 INT"/>
+			<xsd:enumeration value="S2 INT"/>
+			<xsd:enumeration value="S3 INT"/>
+			<xsd:enumeration value="S1 TOM"/>
+			<xsd:enumeration value="S2 TOM"/>
+			<xsd:enumeration value="S3 TOM"/>
+			<xsd:enumeration value="RX Only"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="productType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid product types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="SCS"/>
+			<xsd:enumeration value="DGM"/>
+			<xsd:enumeration value="STA"/>
+			<xsd:enumeration value="FH_L2A"/>
+			<xsd:enumeration value="FH_L2B"/>
+			<xsd:enumeration value="FD_L2A"/>
+			<xsd:enumeration value="FD_L2B"/>
+			<xsd:enumeration value="GN_L2A"/>
+			<xsd:enumeration value="AGB_L2B"/>
+			<xsd:enumeration value="TFH_L2A"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="polarisationType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid polarisations.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="H"/>
+			<xsd:enumeration value="V"/>
+			<xsd:enumeration value="HH"/>
+			<xsd:enumeration value="HV"/>
+			<xsd:enumeration value="VH"/>
+			<xsd:enumeration value="VV"/>
+			<xsd:enumeration value="XX"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="groupType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid LUT groups of variables.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="DEM based LUT"/>
+			<xsd:enumeration value="RFI based LUT"/>
+			<xsd:enumeration value="Image based LUT"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="channelType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid RGB channels.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="RED"/>
+			<xsd:enumeration value="GREEN"/>
+			<xsd:enumeration value="BLUE"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="timeType">
+		<xsd:annotation>
+			<xsd:documentation>UTC time expressed according to ISO 8601 standard (1 microsecond resolution).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="timeTypeWithPolarisation">
+		<xsd:annotation>
+			<xsd:documentation>Extension of timeType with the indication of the corresponding polarisation.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="timeType">
+				<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="missionPhaseIDType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of all valid BIOMASS mission phases.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="COM"/>
+			<xsd:enumeration value="TOM"/>
+			<xsd:enumeration value="INT"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sensorModeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid sensor mode abbreviations.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Measurement"/>
+			<xsd:enumeration value="RX Only"/>
+			<xsd:enumeration value="External Calibration"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="signalType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of valid signal types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="TxVandRx"/>
+			<xsd:enumeration value="TxHandRx"/>
+			<xsd:enumeration value="RxOnly"/>
+			<xsd:enumeration value="TxOnly-V"/>
+			<xsd:enumeration value="TxOnly-H"/>
+			<xsd:enumeration value="TxCal-V"/>
+			<xsd:enumeration value="TxCal-H"/>
+			<xsd:enumeration value="TxCal-V1"/>
+			<xsd:enumeration value="TxCal-V2"/>
+			<xsd:enumeration value="TxCal-H1"/>
+			<xsd:enumeration value="TxCal-H2"/>
+			<xsd:enumeration value="RxCal"/>
+			<xsd:enumeration value="ShCal"/>
+			<xsd:enumeration value="Idle"/>
+			<xsd:enumeration value="TxVandRx_S"/>
+			<xsd:enumeration value="TxHandRx_S"/>
+			<xsd:enumeration value="Noise"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="orbitPassType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the orbit pass direction values.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Ascending"/>
+			<xsd:enumeration value="Descending"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="projectionType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the image projection.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Slant Range"/>
+			<xsd:enumeration value="Ground Range"/>
+			<xsd:enumeration value="Slant Range"/>
+			<xsd:enumeration value="Latitude-Longitude based on DGG"/>
+			<xsd:enumeration value="DGG"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="pixelRepresentationType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of image pixel representation types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="I Q"/>
+			<xsd:enumeration value="Abs Phase"/>
+			<xsd:enumeration value="Abs"/>
+			<xsd:enumeration value="Probability of change"/>
+			<xsd:enumeration value="Computed forest mask"/>
+			<xsd:enumeration value="Forest Disturbance"/>
+			<xsd:enumeration value="Heat Map"/>
+			<xsd:enumeration value="Forest Height [m]"/>
+			<xsd:enumeration value="Forest height quality"/>
+			<xsd:enumeration value="Forest Mask"/>
+			<xsd:enumeration value="Ground Cancelled Backscatter"/>
+			<xsd:enumeration value="Above Ground Biomass [t/ha]"/>
+			<xsd:enumeration value="Above Ground Biomass quality [t/ha]"/>
+			<xsd:enumeration value="Acquisition ID image"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="pixelTypeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of image pixel data types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="32 bit Float"/>
+			<xsd:enumeration value="16 bit Signed Integer"/>
+			<xsd:enumeration value="16 bit Unsigned Integer"/>
+			<xsd:enumeration value="8 bit Unsigned Integer"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="pixelQuantityType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of pixel quantity types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Beta-Nought"/>
+			<xsd:enumeration value="Sigma-Nought"/>
+			<xsd:enumeration value="Gamma-Nought"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="compressionMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of TIFF compression methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NONE"/>
+			<xsd:enumeration value="DEFLATE"/>
+			<xsd:enumeration value="ZSTD"/>
+			<xsd:enumeration value="LERC"/>
+			<xsd:enumeration value="LERC_DEFLATE"/>
+			<xsd:enumeration value="LERC_ZSTD"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="productCompositionType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of product composition indicators. The valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e., as long as input L0 one.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Nominal"/>
+			<xsd:enumeration value="Merged"/>
+			<xsd:enumeration value="Partial"/>
+			<xsd:enumeration value="Incomplete"/>
+			<xsd:enumeration value="Not Framed"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dataFormatModeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of compression method names.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="BAQ 4 Bit"/>
+			<xsd:enumeration value="BAQ 5 Bit"/>
+			<xsd:enumeration value="BAQ 6 Bit"/>
+			<xsd:enumeration value="Bypass"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="processingModeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of processing modes.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Nominal"/>
+			<xsd:enumeration value="PARC"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="orbitAttitudeSourceType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of value sources of orbit and attitude data. "Downlink" or "Auxiliary".</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Downlink"/>
+			<xsd:enumeration value="Auxiliary"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="rfiMitigationMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of RFI mitigation methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Time"/>
+			<xsd:enumeration value="Frequency"/>
+			<xsd:enumeration value="Time and Frequency"/>
+			<xsd:enumeration value="Frequency and Time"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="rfiMaskType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of RFI masks.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Single"/>
+			<xsd:enumeration value="Multiple"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="rfiMaskGenerationMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of RFI mask generation methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="AND"/>
+			<xsd:enumeration value="OR"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="rangeReferenceFunctionType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the available range reference functions.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Nominal"/>
+			<xsd:enumeration value="Replica"/>
+			<xsd:enumeration value="Internal"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="rangeCompressionMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the available range compression methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Matched Filter"/>
+			<xsd:enumeration value="Inverse Filter"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dcMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of Doppler Centroid calculation/estimation methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Geometry"/>
+			<xsd:enumeration value="Combined"/>
+			<xsd:enumeration value="Fixed"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="weightingWindowType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of weighting window names.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Kaiser"/>
+			<xsd:enumeration value="Hamming"/>
+			<xsd:enumeration value="None"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="bistaticDelayCorrectionMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of bistatic delay correction methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Bulk"/>
+			<xsd:enumeration value="Full"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ionosphereHeightEstimationMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of ionosphere height estimation methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Automatic"/>
+			<xsd:enumeration value="Feature Tracking"/>
+			<xsd:enumeration value="Squint Sensitivity"/>
+			<xsd:enumeration value="Model"/>
+			<xsd:enumeration value="Fixed"/>
+			<xsd:enumeration value="NA"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ionosphereHeightSourceType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of stack ionosphere height sources.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="None"/>
+			<xsd:enumeration value="Reference Image"/>
+			<xsd:enumeration value="Manual"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="autofocusMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of autofocus methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Map Drift"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="internalCalibrationSourceType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the available internal calibration sources.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Extracted"/>
+			<xsd:enumeration value="Model"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="heightModelBaseType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Ellipsoid"/>
+			<xsd:enumeration value="SRTM"/>
+			<xsd:enumeration value="Copernicus DEM"/>
+			<xsd:enumeration value="BIOMASS DTM"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="heightModelType">
+		<xsd:simpleContent>
+			<xsd:extension base="heightModelBaseType">
+				<xsd:attribute name="version" type="xsd:string" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="coordinateReferenceSystemType">
+		<xsd:annotation>
+			<xsd:documentation>Coordinate reference systems, as per WKT representation [RD7].</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="geodeticReferenceFrameType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of geodetic reference frames.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="WGS84"/>
+			<xsd:enumeration value="ITRF2000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="datumType">
+		<xsd:sequence>
+			<xsd:element name="coordinateReferenceSystem" type="coordinateReferenceSystemType">
+				<xsd:annotation>
+					<xsd:documentation>Coordinate reference system.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geodeticReferenceFrame" type="geodeticReferenceFrameType">
+				<xsd:annotation>
+					<xsd:documentation>Geodetic reference frame.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="polarisationCombinationMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of polarisations combination methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="HV"/>
+			<xsd:enumeration value="VH"/>
+			<xsd:enumeration value="Average"/>
+			<xsd:enumeration value="None"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="primaryImageSelectionMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of coregistration primary image selection methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Geometry"/>
+			<xsd:enumeration value="Geometry and Quality"/>
+			<xsd:enumeration value="Temporal Baseline"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="coregistrationMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of coregistration methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Geometry"/>
+			<xsd:enumeration value="Geometry and Data"/>
+			<xsd:enumeration value="Automatic"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="baselineMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of baseline method types (e.g. SingleBaseline or MultiBaseline).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Single-Baseline"/>
+			<xsd:enumeration value="Multi-Baseline"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="primaryImageSelectionInformationType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of information used to select coregistration primary image.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Geometry"/>
+			<xsd:enumeration value="Geometry and RFI Correction"/>
+			<xsd:enumeration value="Geometry and FR Correction"/>
+			<xsd:enumeration value="Geometry and RFI+FR Corrections"/>
+			<xsd:enumeration value="Temporal Baseline"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="coregistrationExecutionPolicyType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of coregistration execution policy.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Nominal"/>
+			<xsd:enumeration value="Shift Estimation Only"/>
+			<xsd:enumeration value="Warping Only"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="skpPhaseCorrectionType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of supported corrections executed by SKP.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="None"/>
+			<xsd:enumeration value="Flattening Phase Screen"/>
+			<xsd:enumeration value="Ground Phase Screen"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="layerType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of LUT layer contents.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Faraday Rotation plane [rad]"/>
+			<xsd:enumeration value="Faraday Rotation [rad]"/>
+			<xsd:enumeration value="Faraday Rotation std [rad]"/>
+			<xsd:enumeration value="Phase screen [rad]"/>
+			<xsd:enumeration value="TEC [TECU]"/>
+			<xsd:enumeration value="Range shifts [m]"/>
+			<xsd:enumeration value="Azimuth shifts [m]"/>
+			<xsd:enumeration value="Autofocus phase screen [rad]"/>
+			<xsd:enumeration value="Autofocus phase screen std [rad]"/>
+			<xsd:enumeration value="RFI time domain mask HH"/>
+			<xsd:enumeration value="RFI time domain mask HV"/>
+			<xsd:enumeration value="RFI time domain mask VH"/>
+			<xsd:enumeration value="RFI time domain mask VV"/>
+			<xsd:enumeration value="RFI frequency domain mask HH"/>
+			<xsd:enumeration value="RFI frequency domain mask HV"/>
+			<xsd:enumeration value="RFI frequency domain mask VH"/>
+			<xsd:enumeration value="RFI frequency domain mask VV"/>
+			<xsd:enumeration value="Sigma-nought LUT"/>
+			<xsd:enumeration value="Gamma-nought LUT"/>
+			<xsd:enumeration value="Denoising map HH"/>
+			<xsd:enumeration value="Denoising map HV"/>
+			<xsd:enumeration value="Denoising map XX"/>
+			<xsd:enumeration value="Denoising map VH"/>
+			<xsd:enumeration value="Denoising map VV"/>
+			<xsd:enumeration value="Latitude [deg]"/>
+			<xsd:enumeration value="Longitude [deg]"/>
+			<xsd:enumeration value="Height [m]"/>
+			<xsd:enumeration value="Incidence angle [deg]"/>
+			<xsd:enumeration value="Elevation angle [deg]"/>
+			<xsd:enumeration value="Terrain slope [deg]"/>
+			<xsd:enumeration value="FNF"/>
+			<xsd:enumeration value="ACM"/>
+			<xsd:enumeration value="numberOfAverages"/>
+			<xsd:enumeration value="Azimuth coregistration shifts [m]"/>
+			<xsd:enumeration value="Azimuth orbit coregistration shifts [m]"/>
+			<xsd:enumeration value="Range coregistration shifts [m]"/>
+			<xsd:enumeration value="Range orbit coregistration shifts [m]"/>
+			<xsd:enumeration value="Coregistration shifts quality"/>
+			<xsd:enumeration value="Wavenumbers [rad/m]"/>
+			<xsd:enumeration value="Flattening phase screen [rad]"/>
+			<xsd:enumeration value="SKP calibration phase screen [rad]"/>
+			<xsd:enumeration value="SKP calibration phase screen quality"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="uomType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of unit of measures.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="s"/>
+			<xsd:enumeration value="m"/>
+			<xsd:enumeration value="samples"/>
+			<xsd:enumeration value="lines"/>
+			<xsd:enumeration value="deg"/>
+			<xsd:enumeration value="rad"/>
+			<xsd:enumeration value="Hz"/>
+			<xsd:enumeration value="Hz/s"/>
+			<xsd:enumeration value="MHz"/>
+			<xsd:enumeration value="dB"/>
+			<xsd:enumeration value="Mbps"/>
+			<xsd:enumeration value="C"/>
+			<xsd:enumeration value="K"/>
+			<xsd:enumeration value="deg/s"/>
+			<xsd:enumeration value="rad/s"/>
+			<xsd:enumeration value="mm/Km"/>
+			<xsd:enumeration value="deg/m"/>
+			<xsd:enumeration value="rad/m"/>
+			<xsd:enumeration value="1/m"/>
+			<xsd:enumeration value="t/ha"/>
+			<xsd:enumeration value="(rad/nT)^2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!--
+    ========================================================================
+    = Primitive type definitions
+    ========================================================================
+  -->
+	<xsd:simpleType name="bool">
+		<xsd:annotation>
+			<xsd:documentation>Boolean (true or false).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:boolean">
+			<xsd:pattern value="(false)|(true)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="unsignedIntWithGroup">
+		<xsd:annotation>
+			<xsd:documentation>Extension of unsignedInt with the indication of the corresponding LUT group of variables.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:unsignedInt">
+				<xsd:attribute name="group" type="groupType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="floatWithUnit">
+		<xsd:annotation>
+			<xsd:documentation>32 bit single precision floating point number.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:float">
+				<xsd:attribute name="units" type="uomType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="floatNormalizedPercentage">
+		<xsd:restriction base="xsd:float">
+			<xsd:minInclusive value="0.0"/>
+			<xsd:maxInclusive value="1.0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="floatWithPolarisation">
+		<xsd:annotation>
+			<xsd:documentation>Extension of float with the indication of the corresponding polarisation.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:float">
+				<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="floatWithChannel">
+		<xsd:annotation>
+			<xsd:documentation>Extension of float with the indication of the corresponding RGB channel.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:float">
+				<xsd:attribute name="channel" type="channelType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="doubleWithUnit">
+		<xsd:annotation>
+			<xsd:documentation>64 bit double precision floating point number.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:double">
+				<xsd:attribute name="units" type="uomType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="complex">
+		<xsd:annotation>
+			<xsd:documentation>64 bit complex number consisting of a 32 bit single precision floating point real part and a 32 bit single precision floating point imaginary part.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="re" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>32 bit single precision floating point real number.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="im" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>32 bit single precision floating point imaginary number.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="intArray">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of int values separated by spaces. The mandatory count attribute defines the number of elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="floatArray">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of float values separated by spaces. The mandatory count attribute defines the number of elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="floatArrayWithUnits">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of float values separated by spaces. The mandatory count attribute defines the number of elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+				<xsd:attribute name="units" type="uomType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="doubleArray">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of double precision floating point values separated by spaces. The mandatory count attribute defines the number of elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="doubleArrayWithUnits">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of double precision floating point values separated by spaces. The mandatory count attribute defines the number of elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+				<xsd:attribute name="units" type="uomType" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="complexArray">
+		<xsd:annotation>
+			<xsd:documentation>String containing an array of complex value pairs separated by spaces in the form of I Q I Q I Q ... The mandatory count attribute defines the number of complex elements in the array.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="minMaxType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:float"/>
+			<xsd:element name="max" type="xsd:float"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="minMaxTypeWithUnit">
+		<xsd:sequence>
+			<xsd:element name="min" type="floatWithUnit"/>
+			<xsd:element name="max" type="floatWithUnit"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="interferometricPairType">
+		<xsd:sequence>
+			<xsd:element name="primary" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Index of the primary inteferometric image with respect to a stack of images.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="secondary" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Index of the secondary interferometric image with respect to a stack of images.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="interferometricPairListType">
+		<xsd:sequence>
+			<xsd:element name="interferometricPairs" type="interferometricPairType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>List of interferometric pairs expressed as indices.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of interferometric pairs.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:simpleType name="ionosphereTypeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of the ionosphere types estimated by the BIC.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Linear"/>
+			<xsd:enumeration value="Fast-varying"/>
+			<xsd:enumeration value="None"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!--
+    ========================================================================
+    = Support type definitions
+    ========================================================================
+    -->
+	<xsd:complexType name="stateType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of current value [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="value" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Current value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="slantRangePolynomialType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="t0" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time origin for polynomial [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polynomial" type="doubleArray">
+				<xsd:annotation>
+					<xsd:documentation>Local estimate expressed as the following polynomial: X=c0+c1(tSR-t0)+c2(tSR-t0)^2+..., where tSR is the two-way slant range time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="azimuthPolynomialType">
+		<xsd:sequence>
+			<xsd:element name="slantRangeTime" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time corresponding to the start of the current polynomial validity area [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="t0" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time origin for polynomial [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polynomial" type="doubleArray">
+				<xsd:annotation>
+					<xsd:documentation>Local estimate expressed as the following polynomial: X=c0+c1(tAZ-t0)+c2(tAZ-t0)^2+..., where tAZ is the Zero Doppler azimuth time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="layerListType">
+		<xsd:sequence>
+			<xsd:element name="layer" type="layerType" minOccurs="1" maxOccurs="29">
+				<xsd:annotation>
+					<xsd:documentation>LUT layer content.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of layers.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="crossTalkList">
+		<xsd:sequence>
+			<xsd:element name="crossTalkHVRx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>H to V cross-talk on receive across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossTalkVHRx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>V to H cross-talk on receive across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossTalkVHTx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>V to H cross-talk on transmit across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossTalkHVTx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>H to V cross-talk on transmit across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="channelImbalanceList">
+		<xsd:sequence>
+			<xsd:element name="channelImbalHVRx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>H to V channel imbalance on receive across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="channelImbalHVTx" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>H to V channel imbalance on transmit across swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="rfiFMMitigationMethodType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NOTCH_FILTER"/>
+			<xsd:enumeration value="NEAREST_NEIGHBOUR_INTERPOLATION"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

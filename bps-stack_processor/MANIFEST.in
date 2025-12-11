@@ -1,0 +1,5 @@
+global-exclude __pycache__
+global-exclude *.py[co]
+prune test/
+include bps/stack_processor/xsd/*/*.xsd
+exclude MANIFEST.in

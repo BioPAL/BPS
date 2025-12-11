@@ -1,0 +1,426 @@
+# SPDX-FileCopyrightText: Aresys S.r.l. <info@aresys.it>
+# SPDX-License-Identifier: MIT
+
+"""
+The Ionospheric Background Removal module (IOB)
+-----------------------------------------------
+"""
+
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from datetime import timedelta
+from itertools import combinations
+from timeit import default_timer
+from typing import Dict, Optional, Tuple
+
+import numpy as np
+import numpy.typing as npt
+from arepytools.geometry.conversions import xyz2llh
+from bps.common import bps_logger
+
+from bps.stack_cal_processor.configuration import (
+    IOB_NAME,
+    BaselineMethodType,
+    StackCalConf,
+    StackDataSpecs,
+)
+from bps.stack_cal_processor.core.filtering import (
+    ConvolutionWindowType,
+    filter_validity_roi,
+)
+from bps.stack_cal_processor.core.iob.estimation import (
+    iono_phase_screen_model_estimation_multithreaded,
+)
+from bps.stack_cal_processor.core.iob.multibaseline import (
+    multi_baseline_estimation,
+    multi_baseline_interferometric_pair_indices,
+)
+from bps.stack_cal_processor.core.iob.preprocessing import (
+    execute_preprocessing_multithreaded,
+)
+from bps.stack_cal_processor.core.iob.singlebaseline import (
+    single_baseline_estimation,
+    single_baseline_interferometric_pair_indices,
+)
+from bps.stack_cal_processor.core.iob.splitspectrum import (
+    compute_split_spectrum_phase_biases,
+)
+from bps.stack_cal_processor.core.iob.utils import (
+    IobRuntimeError,
+    compute_averaged_looks,
+    rescale_slopes,
+)
+from bps.stack_cal_processor.core.signal_processing import (
+    compute_range_common_bands_and_sublook_freqs,
+)
+from bps.stack_cal_processor.core.utils import percentage
+
+# Machine precision for float32.
+__EPSILON = np.finfo(np.float32).resolution
+
+
+def remove_background_ionosphere(
+    *,
+    stack: Tuple[Tuple[npt.NDArray[complex], ...], ...],
+    synth_phases: Tuple[npt.NDArray[float], ...],
+    ionosphere_phases: Tuple[Optional[npt.NDArray[float]], ...],
+    range_shifts: Tuple[npt.NDArray[float], ...],
+    conf: StackCalConf.IobConf,
+    stack_specs: StackDataSpecs,
+    calib_reference_image_index: int,
+    coreg_primary_image_index: int,
+    max_num_threads: int,
+) -> Dict:
+    """
+    Run in-place the Slow Ionosphere Removal (IOB).
+
+    Parameters
+    ----------
+    stack: Tuple[Tuple[npt.NDArray[complex], ...], ...]
+        The multi-polarimetric image stack, i.e. [Nimg x Npol] images of
+        shape [Nazm x Nrng].
+
+    synth_phases: Tuple[npt.NDArray[float], ...] [rad]
+        The Nimg synthetic phases from DEM of shape [Nazm x Nrng].
+
+    ionosphere_phases: Tuple[Optional[npt.NDArray[float]], ...] [rad]
+        Optionally, Nimg ionospheric phases from L1 of shape [Nazm x Nrng].
+
+    range_shifts: Tuple[npt.NDArray[float], ...] [samples]
+        The Nimg coregistration range shifts of shape [Nazm x Nrng].
+
+    conf: StackCalConf.IobConf
+        Configuration of the IOB from the Aux PPS.
+
+    stack_specs: StackDataSpecs
+        The stack parmaeters (e.g. bandwidths, PRF's etc.).
+
+    calib_reference_image_index: int
+        The index of the calibration reference image.
+
+    coreg_primary_image_index: int
+        The index of the coregistration primary image.
+
+    max_num_threads: int
+        The maximum number of threads available.
+
+    Raises
+    ------
+    IobRuntimeError
+
+    Return
+    ------
+    Dict
+        An execution summary including the azimuth and range ionophere
+        slopes in [rad/s] together with the estimation quality.
+
+    """
+    # Start the IOB calibration.
+    bps_logger.info("%s started", IOB_NAME)
+    start_iob = default_timer()
+
+    # Just storing the number of ranges. This will be used later.
+    num_images = len(stack)
+    num_polarizations = len(stack[0])
+    num_azimuths, num_ranges = stack[0][0].shape
+    bps_logger.info(
+        "  Stack size: (Nimg=%d, Npol=%d). Image size: (Nazm=%d, Nrng=%d)",
+        num_images,
+        num_polarizations,
+        num_azimuths,
+        num_ranges,
+    )
+
+    # The slow-varying ionosphere may be not significant at low latitudes. If
+    # we are observing the world at low latitudes, we just skip.
+    reference_position = stack_specs.satellite_positions[calib_reference_image_index]
+    if np.abs(xyz2llh(reference_position)[0]) > conf.ionosphere_latitude_threshold:
+        bps_logger.warning(
+            "  Calibration reference image is outside of region affected by ionosphere: Skipped"
+        )
+        return {"product_validity": [True] * num_images, "is_solution_usable": False}
+
+    # The ROI size.
+    num_roi_azimuths, num_roi_ranges = (num_azimuths, num_ranges)
+    if conf.roi is not None:
+        num_roi_azimuths, num_roi_ranges = conf.roi[2:]
+        bps_logger.info("  Estimating parameters on ROI %s", conf.roi)
+
+    # Setup the printing options.
+    np.set_printoptions(formatter={"float": "{:0.4f}".format})
+
+    # Run the preprocessing step in parallel.
+    bps_logger.info("  Preprocessing the image frames")
+
+    if conf.apply_l1_iono_phase_screen_flag:
+        bps_logger.info(
+            "  Applying L1 iono phases back for images %s",
+            [
+                i
+                for i, ph in enumerate(ionosphere_phases)
+                if ph is not None and np.all(np.abs(ph) <= __EPSILON)
+            ],
+        )
+
+    preproc_images = execute_preprocessing_multithreaded(
+        stack_images=stack,
+        synth_phases=synth_phases,
+        ionosphere_phases=ionosphere_phases,
+        range_compression_params=stack_specs.range_compression_window_parameters,
+        range_compression_bands=stack_specs.range_compression_window_bands,
+        range_sampling_step=stack_specs.range_sampling_step,
+        reference_polarization_index=conf.polarization_index,
+        apply_l1_iono_phase_screen=conf.apply_l1_iono_phase_screen_flag,
+        roi=conf.roi,
+        num_worker_threads=max_num_threads,
+    )
+
+    # Cache all inteferometric pairs, defined according to the baseline method
+    # employed for calibration.
+    if conf.baseline_method == BaselineMethodType.SINGLE_BASELINE:
+        interferometric_pair_indices = single_baseline_interferometric_pair_indices(
+            num_images, calib_reference_image_index
+        )
+    elif conf.baseline_method == BaselineMethodType.MULTI_BASELINE:
+        interferometric_pair_indices = multi_baseline_interferometric_pair_indices(
+            num_images,
+        )
+    else:
+        raise IobRuntimeError(f"Unsupported baseline methond {conf.baseline_method}")
+
+    # We compute the range common bands, namely:
+    #
+    #  - range_common_band_frequencies_lh are the upper and lower bounds
+    #    f_L, f_H or the range common bands.
+    #  - range_look_frequencies_lh are the reference range sub-look frequencies.
+    #
+    # All frequencies are expressed wrt to central (dominant) frequency f_c.
+    #
+    bps_logger.info("  Computing range common bands")
+    (
+        range_common_band_frequencies_lh,
+        range_look_frequencies_lh,
+    ) = compute_range_common_bands_and_sublook_freqs(
+        interferometric_pair_indices=interferometric_pair_indices,
+        synth_images=synth_phases,
+        sampling_frequency=1 / stack_specs.range_sampling_step,
+        bandwidth=stack_specs.range_bandwidth,
+        look_band=conf.range_look_band,
+    )
+
+    # Cache the unbiasing phases for the split-spectrum algorithms.
+    # NOTE: We need to crop and subsample them to fit the interferogram
+    # sizes (they are filtered with a low-pass filter and subsampled).
+    bps_logger.info("  Computing phase biases due to imperfect coregistration")
+
+    filter_validity_roi_block = None
+    if conf.lowpass_window_type is not None:
+        filter_validity_roi_block = filter_validity_roi(
+            data_shape=(num_roi_azimuths, num_roi_ranges),
+            kernel_shape=conf.lowpass_filter_sizes,
+        )
+
+    phase_biases = compute_split_spectrum_phase_biases(
+        synth_phases=synth_phases,
+        range_coreg_shifts=range_shifts,
+        range_sampling_starts=stack_specs.range_sampling_starts,
+        range_sampling_step=stack_specs.range_sampling_step,
+        central_frequency=stack_specs.central_frequency,
+        coreg_primary_image_index=coreg_primary_image_index,
+        roi_block=filter_validity_roi_block,
+    )
+
+    bps_logger.info("  Running interferometric-based iono model estimation")
+
+    # The normalization factor for the quality estimation.
+    num_averaged_samples = compute_averaged_looks(
+        num_azimuths=num_roi_azimuths,
+        num_ranges=num_roi_ranges,
+        azimuth_bandwidth=stack_specs.azimuth_bandwidths[calib_reference_image_index],
+        azimuth_sampling_step=stack_specs.azimuth_sampling_step,
+        range_bandwidth=stack_specs.range_bandwidth,
+        range_sampling_step=stack_specs.range_sampling_step,
+    )
+
+    (
+        iono_azimuth_slopes,
+        iono_range_slopes,
+        iono_qualities,
+        succeded,
+    ) = iono_phase_screen_model_estimation_multithreaded(
+        interferometric_pair_indices=interferometric_pair_indices,
+        preprocessed_stack_images=preproc_images,
+        phase_biases=phase_biases,
+        central_frequency=stack_specs.central_frequency,
+        range_common_band_frequencies=range_common_band_frequencies_lh,
+        range_look_frequencies=range_look_frequencies_lh,
+        range_look_frequency_param=conf.range_look_frequency,
+        lowpass_kernels=_get_lowpass_kernels(conf),
+        num_averaged_samples=num_averaged_samples,
+        azimuth_sampling_step=stack_specs.azimuth_sampling_step,
+        range_sampling_step=stack_specs.range_sampling_step,
+        unwrap_phase=conf.phase_unwrapping_flag,
+        num_worker_threads=max_num_threads,
+    )
+
+    # If we selected a ROI, we need to rescale the slopes.
+    iono_range_slopes = rescale_slopes(
+        iono_range_slopes,
+        delta_in=num_roi_ranges,
+        delta_out=num_ranges,
+    )
+    iono_azimuth_slopes = rescale_slopes(
+        iono_azimuth_slopes,
+        delta_in=num_roi_azimuths,
+        delta_out=num_azimuths,
+    )
+
+    # Run the single-baseline estimation.
+    if conf.baseline_method is BaselineMethodType.SINGLE_BASELINE:
+        bps_logger.info("  Running the single-baseline estimation")
+        (
+            iono_azimuth_slopes,
+            iono_range_slopes,
+            iono_qualities,
+        ) = single_baseline_estimation(
+            calib_reference_image_index=calib_reference_image_index,
+            range_slopes=iono_range_slopes,
+            azimuth_slopes=iono_azimuth_slopes,
+            qualities=iono_qualities,
+            succeded=succeded,
+            num_images=num_images,
+        )
+
+    # Run the multi-baseline estimation.
+    elif conf.baseline_method is BaselineMethodType.MULTI_BASELINE:
+        bps_logger.info("  Running the multi-baseline estimation")
+        (
+            iono_azimuth_slopes,
+            iono_range_slopes,
+            iono_qualities,
+        ) = multi_baseline_estimation(
+            interferometric_pair_indices=interferometric_pair_indices,
+            calib_reference_image_index=calib_reference_image_index,
+            range_slopes=iono_range_slopes,
+            azimuth_slopes=iono_azimuth_slopes,
+            qualities=iono_qualities,
+            succeded=succeded,
+            uniform_weighting=conf.multi_baseline_uniform_weighting,
+            num_images=num_images,
+        )
+    else:
+        raise IobRuntimeError(f"Unsupported baseline method {conf.baseline_method}")
+
+    invalid = iono_qualities < conf.quality_threshold
+    if np.all(invalid):
+        bps_logger.warning("  Estimation qualities: %s", iono_qualities)
+        bps_logger.warning(
+            "  All estimated iono phase slopes are invalid. Skipping %s", IOB_NAME
+        )
+        return {"product_validity": [False] * num_images, "is_solution_usable": False}
+    elif np.any(invalid):
+        bps_logger.warning(
+            "  Estimations below quality threshold for images %s. Setting coeffs to 0.0",
+            [
+                i
+                for i in range(invalid.size)
+                if invalid[i] and i != calib_reference_image_index
+            ],
+        )
+        iono_azimuth_slopes[invalid] = 0
+        iono_range_slopes[invalid] = 0
+
+    bps_logger.info("  Azimuth slopes [deg/s]: %s", np.rad2deg(iono_azimuth_slopes))
+    bps_logger.info("  Range slopes [deg/s]: %s", np.rad2deg(iono_range_slopes))
+    bps_logger.info("  Estimation qualities: %s", iono_qualities)
+
+    # Remove the ionosphere from all images except for the reference image,
+    # since that is considered inosphere free (as per definition of
+    # multibaseline).
+
+    bps_logger.info("  Removing the ionospheric phase screen")
+
+    # NOTE: The axis are centered in the mean of np.arange(n). It is trivial to
+    # see that such mean is (n-1)/2.
+    axis_azimuth = (np.arange(num_azimuths) - (num_azimuths - 1) / 2).reshape(
+        -1, 1
+    ) * stack_specs.azimuth_sampling_step
+    axis_range = (np.arange(num_ranges) - (num_ranges - 1) / 2).reshape(
+        1, -1
+    ) * stack_specs.range_sampling_step
+
+    with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
+        # The core routine (this updates the images in-place). No need of JIT
+        # this one since there is no real performance gain.
+        def iono_sphere_screen_removal_core(args):
+            image_index, image = args
+            if image_index != calib_reference_image_index:
+                image[...] *= np.exp(
+                    (-1j * iono_azimuth_slopes[image_index]) * axis_azimuth
+                    + (-1j * iono_range_slopes[image_index]) * axis_range
+                )
+
+        # Spawn the mutlthreaded removal on all data.
+        for _ in executor.map(
+            iono_sphere_screen_removal_core,
+            [(idx, img) for idx, imgs in enumerate(stack) for img in imgs],
+        ):
+            pass
+
+    end_iob = default_timer()
+    bps_logger.info(
+        "  %s completed. Elapsed time [h:mm:ss]: %s",
+        IOB_NAME,
+        timedelta(seconds=end_iob - start_iob),
+    )
+
+    return {
+        "slow_ionosphere_azimuth_phase_screens": iono_azimuth_slopes,
+        "slow_ionosphere_range_phase_screens": iono_range_slopes,
+        "slow_ionosphere_qualities": iono_qualities,
+        "product_validity": ~invalid,
+        "is_solution_usable": True,
+    }
+
+
+def _get_lowpass_kernels(
+    conf: StackCalConf.IobConf,
+) -> Optional[Tuple[npt.NDArray[float], npt.NDArray[float]]]:
+    """Create the low-pass kernels in azimuth and range."""
+    # The output.
+    lowpass_kernels = None
+
+    # If NONE is selected, return no-kernel.
+    if conf.lowpass_window_type is None:
+        return lowpass_kernels
+
+    # Otherwise switch between supported types (HAMMING or KAISER).
+    if conf.lowpass_window_type is ConvolutionWindowType.HAMMING:
+        lowpass_kernels = (
+            np.hamming(conf.lowpass_filter_sizes[0]).reshape(-1, 1),
+            np.hamming(conf.lowpass_filter_sizes[1]).reshape(1, -1),
+        )
+    elif conf.lowpass_window_type is ConvolutionWindowType.KAISER:
+        if (
+            conf.lowpass_filter_kaiser_param is None
+            or conf.lowpass_filter_kaiser_param <= 0.0
+        ):
+            raise IobRuntimeError(
+                "Kaiser window parameter not specified for low-pass filter."
+            )
+        beta = np.pi * conf.lowpass_filter_kaiser_param
+
+        lowpass_kernels = (
+            np.kaiser(conf.lowpass_filter_sizes[0], beta).reshape(-1, 1),
+            np.kaiser(conf.lowpass_filter_sizes[1], beta).reshape(1, -1),
+        )
+    else:
+        raise IobRuntimeError(
+            f"{conf.lowpass_window_type} is not a supported window type."
+        )
+
+    # Return the normalized window.
+    return (
+        lowpass_kernels[0] / np.sum(lowpass_kernels[0]),
+        lowpass_kernels[1] / np.sum(lowpass_kernels[1]),
+    )

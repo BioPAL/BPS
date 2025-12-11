@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="delayListType">
+		<xsd:sequence>
+			<xsd:element name="delayGt1" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Delay for PARC Gt1 scattering response [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="delayGt2" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Delay for PARC Gt2 scattering response [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="delayX" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Delay for PARC X scattering response [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="delayY" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Delay for PARC Y scattering response [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rcsListType">
+		<xsd:sequence>
+			<xsd:element name="rcsGt1" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>RCS for PARC Gt1 scattering response [dBm2].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rcsGt2" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>RCS for PARC Gt2 scattering response [dBm2].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rcsX" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>RCS for PARC X scattering response [dBm2].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rcsY" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>RCS for PARC Y scattering response [dBm2].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="parcType">
+		<xsd:sequence>
+			<xsd:element name="parcID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>PARC identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="validityStart" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>PARC validity start time. Indicates when the calibrator starts being active (and then can be seen in the acquired images).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="validityStop" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>PARC validity stop time. Indicates when the calibrator stops being active (and then cannot be seen anymore in the acquired images).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="positionX" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>PARC ECEF X coordinate.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="positionY" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>PARC ECEF Y coordinate.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="positionZ" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>PARC ECEF Z coordinate.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="delayList" type="delayListType">
+				<xsd:annotation>
+					<xsd:documentation>List of PARC delays for each scattering response.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rcsList" type="rcsListType">
+				<xsd:annotation>
+					<xsd:documentation>List of PARC RCS values for each scattering response.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="parcListType">
+		<xsd:sequence>
+			<xsd:element name="parc" type="parcType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Parameters for a given calibration target (PARC).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="auxiliaryCalSiteInformationType">
+		<xsd:sequence>
+			<xsd:element name="parcList" type="parcListType">
+				<xsd:annotation>
+					<xsd:documentation>List of calibration targets (PARC) parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryCalSiteInformation" type="auxiliaryCalSiteInformationType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS auxiliary calibration site information element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

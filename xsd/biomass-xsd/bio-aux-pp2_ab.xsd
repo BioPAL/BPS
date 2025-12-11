@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:simpleType name="referenceSelectionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="refOnly"/>
+			<xsd:enumeration value="firstIterationOnly"/>
+			<xsd:enumeration value="weightedMean"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="auxiliaryL2bABProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="l2bAGBProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Digital Object Identifier (DOI) to be written in output products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="minimumL2aCoverage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum configurable percentage of the output tile to be processed, which the inputs provided to L2b processor shall coverage.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestMaskingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if forest/non-forest map masking should be performed during L2a products merging, false otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rejectedLandcoverClasses" type="intArray">
+				<xsd:annotation>
+					<xsd:documentation>rejectedLandcoverClasses Set of landcover class indices to ignore</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="backscatterLimits" type="backscatterLimitsType">
+				<xsd:annotation>
+					<xsd:documentation>Lower and upper limits on backscatter in linear units.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="angleLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Lower and upper limits on the local incidence angle in radians.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="meanAGBLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Lower and upper limits on the AGB mean in t/ha.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="stdAGBLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Lower and upper limits on the AGB std in t/ha.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="relativeAGBLimits" type="minMaxType">
+				<xsd:annotation>
+					<xsd:documentation>Lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="referenceSelection" type="referenceSelectionType">
+				<xsd:annotation>
+					<xsd:documentation>Selection of reference data (second iteration only). String with following possible values: refOnly, firstIterationOnly,weightedMean</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="indexingL" type="agbIndexingType">
+				<xsd:annotation>
+					<xsd:documentation>L parameter variability with polarization ’p’, date ’j’, forest class ’k’</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="indexingA" type="agbIndexingType">
+				<xsd:annotation>
+					<xsd:documentation>a parameter variability with polarization ’p’, date ’j’, forest class ’k’</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="indexingN" type="agbIndexingType">
+				<xsd:annotation>
+					<xsd:documentation>n parameter variability with polarization ’p’, date ’j’, forest class ’k’</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="useConstantN" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>If True, indexingN=p is forced</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valuesConstantN" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Values to use if useConstantN=True</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="regressionSolver" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Select the computational complexity for the regression:'float', 'double'</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="minimumPercentageOfFillableVoids" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>The minimum [%] of invalid pixels that triggers a new iteration.Default value is 5.0</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2bAB">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the ABG L2B MDS variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2bAB">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="AGB">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="AGBstandardDeviation">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="BPS_FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the BPS FNF image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="HeatMap">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the Heat Map. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="acquisitionIdImage">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryL2bABProcessingParameters" type="auxiliaryL2bABProcessingParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS configuration parameters for the L2b AGB Processor</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="agbIndexingType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of AGB algorithm indexings.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none"/>
+			<xsd:enumeration value="p"/>
+			<xsd:enumeration value="j"/>
+			<xsd:enumeration value="k"/>
+			<xsd:enumeration value="pj"/>
+			<xsd:enumeration value="pk"/>
+			<xsd:enumeration value="jk"/>
+			<xsd:enumeration value="pjk"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="backscatterLimitsType">
+		<xsd:sequence>
+			<xsd:element name="hh" type="minMaxType"/>
+			<xsd:element name="vh" type="minMaxType"/>
+			<xsd:element name="vv" type="minMaxType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,5 @@
+include bps/l1_framing_processor/orbit/*.so* 
+global-exclude __pycache__
+global-exclude *.py[co]
+prune test/
+exclude MANIFEST.in

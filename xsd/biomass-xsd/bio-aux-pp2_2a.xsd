@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:simpleType name="calibrationScreenType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none"/>
+			<xsd:enumeration value="geometry"/>
+			<xsd:enumeration value="skp"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="subsettingRuleType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="geometry"/>
+			<xsd:enumeration value="maintain all"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="operationalModeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="multi reference"/>
+			<xsd:enumeration value="single reference"/>
+			<xsd:enumeration value="insar pair"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="verticalProfileOptionType">
+		<xsd:annotation>
+			<xsd:documentation>default profile</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="default profile"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ModelInversionType">
+		<xsd:annotation>
+			<xsd:documentation>Default profile</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="single"/>
+			<xsd:enumeration value="dual"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="minMaxNumType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:float"/>
+			<xsd:element name="max" type="xsd:float"/>
+			<xsd:element name="num" type="xsd:unsignedShort"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="verticalRangeWithUnitsType">
+		<xsd:sequence>
+			<xsd:element name="min" type="floatWithUnit"/>
+			<xsd:element name="max" type="floatWithUnit"/>
+			<xsd:element name="sampling" type="xsd:unsignedShort"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="verticalReflectivityProfileType">
+		<xsd:sequence>
+			<xsd:element name="val" type="xsd:float" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of values</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="AUXPPacquisitionListType">
+		<xsd:sequence>
+			<xsd:element name="acquisitionFolderName" minOccurs="2" maxOccurs="3">
+				<xsd:annotation>
+					<xsd:documentation>Folder name which univocally identifies an acquisition of the stack.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="referenceImage" type="bool" use="required"/>
+							<xsd:attribute name="averageWavenumber" type="xsd:float" use="optional"/>
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="generalType">
+		<xsd:sequence>
+			<xsd:element name="applyCalibrationScreen" type="calibrationScreenType">
+				<xsd:annotation>
+					<xsd:documentation>Choose the phase calibration to be performed:“none”: no phase screen is applied“geometry”: only flattening phase screen is applied (i.e., as computed from acquisition geometry)“skp”: complete phase screen is applied (default)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestCoverageThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum percentage forest coverage in L2a product footprint, triggering L2a processing.Range of values from 0% to 100%, default 5%.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestMaskInterpolationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This parameter is a threshold to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid.This creates a safety buffer around forest border.Range of values from 0 to 1, default 0.5.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="subsettingRule" type="subsettingRuleType">
+				<xsd:annotation>
+					<xsd:documentation>Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase.Default value: “geometry”.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GroundCancellationTypeAGB">
+		<xsd:sequence>
+			<xsd:element name="computeGNPowerFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to compute the power of ground cancelled data (absolute square), False to keep amplitude data value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radiometricCalibrationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the incidence angle radiometric calibration has been applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="emphasizedForestHeight" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Value of the height [m] to be emphasized during ground cancellation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="operationalMode" type="operationalModeType">
+				<xsd:annotation>
+					<xsd:documentation>Choose the Ground Cancellation method to use. “multi reference”: multiple data computation using each image as reference, followed by data averaging. It is the default for AGB. “single reference”: direct computation with a preliminary automatic reference image selection. It is the default for FD. “insar pair”: debug operational mode, perform computation with only the two images specified in the element imagesPairSelection.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="imagesPairSelection" type="AUXPPacquisitionListType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If operationalMode is “insar pair”, ground cancellation is performed using only the two images specified here, otherwise this element is ignored.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="disableGroundCancellationFlag" type="bool" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Disable ground cancellation for debug. (Optional, default is OFF).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GroundCancellationTypeFD">
+		<xsd:sequence>
+			<xsd:element name="emphasizedForestHeight" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Value of the height [m] to be emphasized during ground cancellation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="operationalMode" type="operationalModeType">
+				<xsd:annotation>
+					<xsd:documentation>Choose the Ground Cancellation method to use. “multi reference”: multiple data computation using each image as reference, followed by data averaging. It is the default for AGB. “single reference”: direct computation with a preliminary automatic reference image selection. It is the default for FD. “insar pair”: debug operational mode, perform computation with only the two images specified in the element imagesPairSelection.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="imagesPairSelection" type="AUXPPacquisitionListType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If operationalMode is “insar pair”, ground cancellation is performed using only the two images specified here, otherwise this element is ignored.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="disableGroundCancellationFlag" type="bool" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Disable ground cancellation for debug. (Optional, default is OFF).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AGBType">
+		<xsd:sequence>
+			<xsd:element name="l2aAGBProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>MDS COG blocking algorithm size and NetCDF ADS chunking algorithm size. Same value is used for both data array dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product identifier: L2a AGB.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="enableProductFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to enable the AGB product computation, False to skip.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groundCancellation" type="GroundCancellationTypeAGB">
+				<xsd:annotation>
+					<xsd:documentation>Ground Cancellation algorithm parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Ground cancelled data averaging window size in [m] (product resolution) to be applied during multi looking.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="upsamplingFactor" type="xsd:unsignedByte">
+				<xsd:annotation>
+					<xsd:documentation>Upsampling factor, default value is 2.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2aAGB">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the L2a MDS and ADS NetCDF LUT variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FDType">
+		<xsd:sequence>
+			<xsd:element name="l2aFDProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>MDS COG blocking algorithm size and NetCDF ADS chunking algorithm size. Same value is used for both data array dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product identifier: L2a FD.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="enableProductFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to enable the FD product computation, False to skip.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groundCancellation" type="GroundCancellationTypeFD">
+				<xsd:annotation>
+					<xsd:documentation>Ground Cancellation algorithm parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="significanceLevel" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Confidence level to be applied in the change detection algorithm.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Product resolution in [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numericalDeterminantLimit" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Numerical determinant limit</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="upsamplingFactor" type="xsd:unsignedByte">
+				<xsd:annotation>
+					<xsd:documentation>Upsampling factor, default value is 2.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2aFD">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the L2a MDS and ADS NetCDF LUT variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FHType">
+		<xsd:sequence>
+			<xsd:element name="l2aFHProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>MDS COG blocking algorithm size and NetCDF ADS chunking algorithm size. Same value is used for both data array dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product identifier: L2a FH.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="enableProductFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to enable the FH product computation, False to skip.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="verticalReflectivityOption" type="verticalProfileOptionType">
+				<xsd:annotation>
+					<xsd:documentation>Specify which vertical reflectivity profile to use among the default profile verticalReflectivityDefaultProfile or a tomographic profile from external database (TBD).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="verticalReflectivityDefaultProfile" type="verticalReflectivityProfileType">
+				<xsd:annotation>
+					<xsd:documentation>Default vertical reflectivity profile function, stored as a vector of float values, used if verticalReflectivityOption is set to “default profile”.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="modelInversion" type="ModelInversionType">
+				<xsd:annotation>
+					<xsd:documentation>Model inversion algorithm to be used among single or dual baseline.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="spectralDecorrelationCompensationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if spectral decorrelation compensation has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SNRDecorrelationCompensationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if SNR decorrelation compensation has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="correctTerrainSlopesFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True (Default) if terrain slope correction is to be applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="normalisedHeightEstimationRange">
+				<xsd:annotation>
+					<xsd:documentation>Normalized range of height values from 0 to 1, where the canopy height estimation process has to be performed.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="false">
+					<xsd:complexContent>
+						<xsd:extension base="minMaxType">
+							<xsd:attribute name="unit"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="normalisedWavenumberEstimationRange">
+				<xsd:annotation>
+					<xsd:documentation>Normalized range of wavenumbers values from 0 to 2π, where the canopy height estimation process has to be performed.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="false">
+					<xsd:complexContent>
+						<xsd:extension base="minMaxNumType">
+							<xsd:attribute name="unit"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="groundToVolumeRatioRange">
+				<xsd:annotation>
+					<xsd:documentation>Range of ground to volume ratio values to be used as valid ones [dB], during the canopy height estimation process, default [min, max, num] = [-20, 20, 30].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="false">
+					<xsd:complexContent>
+						<xsd:extension base="minMaxNumType">
+							<xsd:attribute name="unit"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="temporalDecorrelationEstimationRange">
+				<xsd:annotation>
+					<xsd:documentation>Range of temporal decorrelation values to be used as valid ones, during the canopy height estimation process.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="false">
+					<xsd:complexContent>
+						<xsd:extension base="minMaxNumType">
+							<xsd:attribute name="unit"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="temporalDecorrelationGroundToVolumeRatio">
+				<xsd:annotation>
+					<xsd:documentation>Ratio of temporal decorrelation between ground and volume (0.0 means no temporal decorrelation for ground, while 1.0 means ground and volume are equally impacted by temporal decorrelation)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:float"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="residualDecorrelation">
+				<xsd:annotation>
+					<xsd:documentation>Residual decorrelation value to be used in error model computation.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:float"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="productResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Value to be used as the resolution on ground map and also to perform the covariance averaging in radar coordinates. In [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="uncertaintyValidvaluesLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Estimation valid values limits [m], values out of this limits are discarded and set to no data value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="verticalWavenumberValidvaluesLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Vertical wavenumber valid values limits [m], values of estimations out of this limits are discarded and set to no data value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lowerHeightLimit" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>FH estimates lower this limit [m] are discarded and set to no data value. Default 10.0 [m]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="upsamplingFactor" type="xsd:unsignedByte">
+				<xsd:annotation>
+					<xsd:documentation>Upsampling factor to decimate coherence, default value is 2.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2aFH">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the L2a MDS and ADS NetCDF LUT variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TFHType">
+		<xsd:sequence>
+			<xsd:element name="l2aTFHProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>MDS COG blocking algorithm size and NetCDF ADS chunking algorithm size. Same value is used for both data array dimension</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product identifier: L2a TOMO FH.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="enableProductFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to enable the FH product computation, False to skip.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="enableSuperResolution" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to enable the TOMO FH super resolution algorithm.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Value to be used as the resolution on ground map and also to perform the covariance averaging in radar coordinates. In [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="regularizationNoiseFactor" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>regularization Noise Factor</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="powerThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>power threshold</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="medianFactor" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>median Factor</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="estimationValidValuesLimits" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Estimation valid values limits [m], values of estimations out of this limits are discarded and set to no data value</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="verticalRange" type="verticalRangeWithUnitsType">
+				<xsd:annotation>
+					<xsd:documentation>Vertical range minimum and maximum height [m], sampling</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2aTFH">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the L2a MDS and ADS NetCDF LUT variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2aAGB">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="GN">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For the ground cancelled backscatter images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ADS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="localIncidenceAngle">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="least_significant_digit" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ADS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all ADS LUT.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2aFD">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FD">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="probabilityOfChange">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the probability of change image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="CFM">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ADS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="ACM">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor valid for all the covariance ADS LUT layers. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="least_significant_digit" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>For all the layers of covariance LUT ADS and for the number of averages ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="numberOfAverages">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ADS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all ADS LUT.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2aFH">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FH">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="Quality">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ADS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ADS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all ADS LUT.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2aTFH">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TFH">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="Quality">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both TOMO FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ADS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ADS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all ADS LUT.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="auxiliaryL2aProcessingParametersType">
+		<xsd:all>
+			<xsd:element name="general" type="generalType">
+				<xsd:annotation>
+					<xsd:documentation>L2a common processing parameters shared by the four l2a products (AGB, FD, FH, TOMO FH).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AGB" type="AGBType">
+				<xsd:annotation>
+					<xsd:documentation>L2a processing parameters for the AGB product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FD" type="FDType">
+				<xsd:annotation>
+					<xsd:documentation>L2a processing parameters for the FD product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FH" type="FHType">
+				<xsd:annotation>
+					<xsd:documentation>L2a processing parameters for the FH product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TFH" type="TFHType">
+				<xsd:annotation>
+					<xsd:documentation>L2a processing parameters for the TOMO FH product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:all>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryL2aProcessingParameters" type="auxiliaryL2aProcessingParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS auxiliary L2a processing parameters for each product (AGB, FD, FH, TOMO FH) and common parameters for the four products..</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,48 @@
+{% set name = "bps-transcoder" %}
+{% set version = "4.2.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: file://{{ RECIPE_DIR }}/../dist/bps_transcoder-{{ version }}.tar.gz
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.12
+    - setuptools
+    - wheel
+    - pip
+  run:
+    - python >=3.12
+    - numpy
+    - arepytools >=1.7.6
+    - gdal >=3.10,<3.11
+    - netcdf4
+    - py-opencv=*=*headless*
+    - pystac
+    - scipy >=1.10
+    - bps-common =={{ version }}
+
+test:
+  imports:
+    - bps
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: Biomass Transcoder package.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

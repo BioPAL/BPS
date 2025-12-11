@@ -1,0 +1,43 @@
+{% set name = "bps-l1_core_processor" %}
+{% set version = "4.2.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: file://{{ RECIPE_DIR }}/../dist/bps_l1_core_processor-{{ version }}.tar.gz
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.12
+    - setuptools
+    - wheel
+    - pip
+  run:
+    - python >=3.12
+    - numpy
+    - arepytools
+    - bps-common =={{ version }}
+
+test:
+  imports:
+    - bps
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: Biomass L1 core processor package.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

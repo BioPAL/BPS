@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="modelDriftType">
+		<xsd:sequence>
+			<xsd:element name="modelInterval">
+				<xsd:annotation>
+					<xsd:documentation>Interval between adjacent model values in the list [s].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="modelValues" type="complexArray">
+				<xsd:annotation>
+					<xsd:documentation>Array of modelled complex values. The array contains "count" complex floating point values separated by spaces. The first value in the array corresponds to the time at the ascending node of the current orbit. Model values for times that fall between the points in the model are obtained by linear interpolation between the two nearest points.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="intCalParametersType">
+		<xsd:sequence>
+			<xsd:element name="polarisation" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation to which this set of internal calibration parameters applies.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="modelDrift" type="modelDriftType">
+				<xsd:annotation>
+					<xsd:documentation>Model drift. The model is relative to the ascending node of the current orbit. Already includes transmit and receive channel imbalances.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="referenceDrift" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>Reference value for the normalization of the drifts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalDelay">
+				<xsd:annotation>
+					<xsd:documentation>Internal time delay [s] to be applied to range compressed data. The L1 Processor uses this parameter only in case ideal chirp is used and internal delay cannot be derived from internal calibration pulses.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="txChannelImbalance" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>Transmit channel imbalance to be applied to range compressed data. The L1 Processor uses this parameter only in case ideal chirp is used and channel imbalance cannot be derived from internal calibration pulses.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rxChannelImbalance" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>Receive channel imbalance to be applied to range compressed data. The L1 Processor uses this parameter only in case ideal chirp is used and channel imbalance cannot be derived from internal calibration pulses.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPowerTracking" type="complex">
+				<xsd:annotation>
+					<xsd:documentation>Transmit power tracking to be used for the computation of the combined secondary transmit patterns from the individual doublet patterns. The L1 Processor uses this parameter only in case it cannot be derived from internal calibration pulses.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noisePower">
+				<xsd:annotation>
+					<xsd:documentation>Nominal noise power value used in processing in case it cannot be derived from noise pulses [dB].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="intCalParametersListType">
+		<xsd:sequence>
+			<xsd:element name="intCalParameters" type="intCalParametersType" minOccurs="4" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Instrument parameters for all the polarizations of a given swath.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="ispType">
+		<xsd:sequence>
+			<xsd:element name="signalType" type="signalType">
+				<xsd:annotation>
+					<xsd:documentation>Signal type.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="priNumber" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of repetition of the current entry.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="repetitionNumber">
+				<xsd:annotation>
+					<xsd:documentation>Number of repetition of the block framed by the current entry and the entry identified together with the Return Address Offset (RAO) parameter. Set to -1 in case the number is not fixed (e.g., for initial and final slots).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int">
+						<xsd:minInclusive value="-1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="returnAddressOffset" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Offset identifying the entry where a repeated block starts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ispListType">
+		<xsd:sequence>
+			<xsd:element name="isp" type="ispType" maxOccurs="100">
+				<xsd:annotation>
+					<xsd:documentation>Element describing one unique or a series of unique transmission packets. The packets are identified by the packet signal type, the number of PRIs, the number of repetitions and the Return Address Offset (RAO).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="sectionType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Section name.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="repeatFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Section repeat flag. True for central slot, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ispList" type="ispListType">
+				<xsd:annotation>
+					<xsd:documentation>List of expected ISP within this section in the order they should be received.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="timelineParametersType">
+		<xsd:sequence>
+			<xsd:element name="section" type="sectionType" minOccurs="1" maxOccurs="5">
+				<xsd:annotation>
+					<xsd:documentation>Timeline section. The maximum number of timeline sections is set to 5: preamble, initial slot, central slot (including internal calibration sequence followed by science data sequence), final slot, postamble. Initial and final slots are typically partial, while central slot is typically repeated.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="acquisitionModeType">
+		<xsd:sequence>
+			<xsd:element name="acquisitionMode" type="acquisitionModeIDType">
+				<xsd:annotation>
+					<xsd:documentation>Acquisition mode (i.e., S1 INT, S1 TOM, S2 INT, ...).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="gstlIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Generic SAR Mode Timeline (GSTL) index.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="swath" type="swathType">
+				<xsd:annotation>
+					<xsd:documentation>Swath (S1, S2, S3).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="intCalParametersList" type="intCalParametersListType">
+				<xsd:annotation>
+					<xsd:documentation>Swath- and polarization-dependent instrument parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="timelineParametersOddRank" type="timelineParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Expected packet transmission sequence in case of odd rank.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="timelineParametersEvenRank" type="timelineParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Expected packet transmission sequence in case of even rank.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="acquisitionModeListType">
+		<xsd:sequence>
+			<xsd:element name="acquisitionMode" type="acquisitionModeType" maxOccurs="48">
+				<xsd:annotation>
+					<xsd:documentation>Instrument parameters for a given acquisition mode. The maximum number of entries in the list is set to 48, i.e. the currently foreseen number of GSTL indexes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="unBAQLUTType">
+		<xsd:sequence>
+			<xsd:element name="baqCode" type="dataFormatModeType">
+				<xsd:annotation>
+					<xsd:documentation>BAQ code (BAQ 4 Bit, BAQ 5 Bit or BAQ 6 Bit).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="magnitudeCode" type="intArray">
+				<xsd:annotation>
+					<xsd:documentation>Magnitude codes array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="normalizedIQ" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Normalized I and Q value for each magnitude code in magnitudeCode array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="unBAQLUTListType">
+		<xsd:sequence>
+			<xsd:element name="unBAQLUT" type="unBAQLUTType" minOccurs="3" maxOccurs="3">
+				<xsd:annotation>
+					<xsd:documentation>BAQ uncompressing look-up table for given BAQ code.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="unBAQSmallASMLUTType">
+		<xsd:sequence>
+			<xsd:element name="baqCode" type="dataFormatModeType">
+				<xsd:annotation>
+					<xsd:documentation>BAQ code (BAQ 4 Bit, BAQ 5 Bit or BAQ 6 Bit).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="asmValue" type="intArray">
+				<xsd:annotation>
+					<xsd:documentation>Average Signal Magnitude (ASM) values array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="uncompressedIQ" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Uncompressed I and Q value for each ASM value in asmValue array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="unBAQSmallASMLUTListType">
+		<xsd:sequence>
+			<xsd:element name="unBAQSmallASMLUT" type="unBAQSmallASMLUTType" minOccurs="3" maxOccurs="3">
+				<xsd:annotation>
+					<xsd:documentation>BAQ uncompressing look-up table for small ASM values and maximum magnitude for given BAQ code.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="temperatureLUTType">
+		<xsd:sequence>
+			<xsd:element name="temperatureCode" type="intArray">
+				<xsd:annotation>
+					<xsd:documentation>Temperature codes array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="temperatureValue" type="floatArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Temperature value [C] for each temperature code in temperatureCode array.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rawDataDecodingParametersType">
+		<xsd:sequence>
+			<xsd:element name="unBAQLUTList" type="unBAQLUTListType">
+				<xsd:annotation>
+					<xsd:documentation>BAQ uncompressing look-up tables. These LUT are taken from SAR Data ICD document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="unBAQSmallASMLUTList" type="unBAQSmallASMLUTListType">
+				<xsd:annotation>
+					<xsd:documentation>BAQ uncompressing look-up tables for small ASM values and maximum magnitude. These LUT are taken from SAR Data ICD document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="temperatureLUT" type="temperatureLUTType">
+				<xsd:annotation>
+					<xsd:documentation>Temperature calibration curve. This LUT is taken from SAR Data ICD document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Poly_Type">
+		<xsd:simpleContent>
+			<xsd:extension base="floatArray">
+				<xsd:attribute name="value" type="xsd:string" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="Poly_List_Type">
+		<xsd:sequence>
+			<xsd:element name="Polarisation" type="Poly_Type" minOccurs="2" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>Polynomial coefficients for current polarization</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="Temp_Variation_Type">
+		<xsd:sequence>
+			<xsd:element name="Ref_Frequency" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Reference frequency [MHz]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Date" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference date [UTC]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_1" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #1</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_2" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #2</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Amplitude" type="Poly_List_Type">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Phase" type="Poly_List_Type">
+				<xsd:annotation>
+					<xsd:documentation>Phase polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Freq_Variation_Type">
+		<xsd:sequence>
+			<xsd:element name="Ref_Temperature" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Reference temperature [C]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Date" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference date [UTC]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_1" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #1</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_2" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #2</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Amplitude" type="Poly_List_Type">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Phase" type="Poly_List_Type">
+				<xsd:annotation>
+					<xsd:documentation>Phase polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Temp_Freq_Variation_Type">
+		<xsd:sequence>
+			<xsd:element name="Temp_Variation" type="Temp_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>Polynomials describing variation with temperature</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Freq_Variation" type="Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>Polynomials describing variation with frequency</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ID_Type">
+		<xsd:sequence>
+			<xsd:element name="ParamID" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>ParamID list</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Weight" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Weights list</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="Freq_Variation_2_Type">
+		<xsd:sequence>
+			<xsd:element name="Ref_Temperature" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Reference temperature [C]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Date" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference date [UTC]</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_1" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #1</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Reference_2" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Reference document #2</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID1" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID1 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID2" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID2 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID3" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID3 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID4" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID4 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID5" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID5 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID6" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID6 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID7" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID7 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID8" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID8 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID9" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID9 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID10" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID10 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID11" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID11 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID12" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID12 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID13" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID13 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ID14" type="ID_Type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>ID14 weigths</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Temp_Freq_Variation_2_Type">
+		<xsd:sequence>
+			<xsd:element name="Freq_Variation" type="Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Weights describing variation with frequency</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Attenuator_Setting_Type">
+		<xsd:sequence>
+			<xsd:element name="Digital" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>List of settings for the 3 attenuators (A1, A2, A3)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PAS_TX_Cal_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_TXCal1_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal1_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_TXCal2_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal2_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_TXCal_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_TXCal1_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal1_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_TXCal2_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal2_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_TXCal_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_TXCal_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PAS_RX_Cal_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_RXCal_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RXCal_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_RXCal_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RXCal_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PAS_RX_Path_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_RX1" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RX1 polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_RX2" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RX2 polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PAS_RX_Cal_Path_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_RXCalPath_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RXCalPath_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_RXCalPath_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_RXCalPath_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CDN_TXCal_Type">
+		<xsd:sequence>
+			<xsd:element name="LCDN_TXCal_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_TXCal_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LCDN_TXCal_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_TXCal_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Attenuator_Setting" type="Attenuator_Setting_Type">
+				<xsd:annotation>
+					<xsd:documentation>Attenuators setting</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="A1" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A2" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A3" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="CDN_RXCal_Type">
+		<xsd:sequence>
+			<xsd:element name="LCDN_RXCal_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_RXCal_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LCDN_RXCal_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_RXCal_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Attenuator_Setting" type="Attenuator_Setting_Type">
+				<xsd:annotation>
+					<xsd:documentation>Attenuators setting</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="A1" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A2" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A3" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="CDN_ShCal_Type">
+		<xsd:sequence>
+			<xsd:element name="LCDN_ShCal_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_ShCal_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LCDN_ShCal_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LCDN_ShCal_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_CDN_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Attenuator_Setting" type="Attenuator_Setting_Type">
+				<xsd:annotation>
+					<xsd:documentation>Attenuators setting</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="A1" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A2" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="A3" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="PAS-CDN_Calibration_Cable_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_CDN_Nom" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_CDN_Nom polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_CDN_Red" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_CDN_Red polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PAS-FA_Cables_Type">
+		<xsd:sequence>
+			<xsd:element name="LPAS_FA1" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_FA1 polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LPAS_FA2" type="Temp_Freq_Variation_Type">
+				<xsd:annotation>
+					<xsd:documentation>LPAS_FA2 polynomials</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_A" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU A weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Thermistor_DCU_B" type="Temp_Freq_Variation_2_Type">
+				<xsd:annotation>
+					<xsd:documentation>Thermistor DCU B weights</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="characterisationDataType">
+		<xsd:sequence>
+			<xsd:element name="PAS_TX_Cal" type="PAS_TX_Cal_Type">
+				<xsd:annotation>
+					<xsd:documentation>PAS characterization data for PAS TX Cal (PAS-4452)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PAS_RX_Cal" type="PAS_RX_Cal_Type">
+				<xsd:annotation>
+					<xsd:documentation>Derived PAS RX Cal polynomial based on PAS characterization data</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PAS_RX_Path" type="PAS_RX_Path_Type">
+				<xsd:annotation>
+					<xsd:documentation>PAS characterization data for PAS RX Path (PAS-4502)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PAS_RX_Cal_Path" type="PAS_RX_Cal_Path_Type">
+				<xsd:annotation>
+					<xsd:documentation>PAS characterization data for PAS RX Cal Path (PAS-4454)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CDN_TXCal" type="CDN_TXCal_Type" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>CDN characterization data TXCal (CDN-390) for each combination of attenuators settings</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CDN_RXCal" type="CDN_RXCal_Type" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>CDN characterization data RXCal (CDN-390) for each combination of attenuators settings</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CDN_ShCal" type="CDN_ShCal_Type" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>CDN characterization data ShCal (CDN-390) for each combination of attenuators settings</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PAS-CDN_Calibration_Cable" type="PAS-CDN_Calibration_Cable_Type">
+				<xsd:annotation>
+					<xsd:documentation>PAS-CDN Calibration cable characterization data (HAR-5524)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PAS-FA_Cables" type="PAS-FA_Cables_Type">
+				<xsd:annotation>
+					<xsd:documentation>PAS-FA cable characterization data (HAR-5525)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="STT_Setting_Type">
+		<xsd:sequence>
+			<xsd:element name="CDN_Att1" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>List of settings for attenuator A1 (one for each signal type)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CDN_Att2" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>List of settings for attenuator A2 (one for each signal type)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CDN_Att3" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>List of settings for attenuator A3 (one for each signal type)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="ID" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="attenuatorsSettingsType">
+		<xsd:sequence>
+			<xsd:element name="STT_Setting" type="STT_Setting_Type" minOccurs="18" maxOccurs="18">
+				<xsd:annotation>
+					<xsd:documentation>List of attenuators settings (one for each ID=XY, with X=[A..I] and Y=[A..I])</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="auxiliaryInstrumentParametersType">
+		<xsd:sequence>
+			<xsd:element name="radarFrequency">
+				<xsd:annotation>
+					<xsd:documentation>Radar frequency [Hz].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="rollBias">
+				<xsd:annotation>
+					<xsd:documentation>Bias to be added to roll estimated from attitude to offset it (by default set to 0) [deg].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="-180.0"/>
+							<xsd:maxInclusive value="180.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="txStartTime">
+				<xsd:annotation>
+					<xsd:documentation>TX start time (T9) [s].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="calibrationSignalsSWP">
+				<xsd:annotation>
+					<xsd:documentation>Calibration signals Sampling Window Position (SWP) [s].</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:restriction base="floatWithUnit">
+							<xsd:minInclusive value="0.0"/>
+						</xsd:restriction>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="acquisitionModeList" type="acquisitionModeListType">
+				<xsd:annotation>
+					<xsd:documentation>List of instrument parameters for each foreseen acquisition mode (i.e., S1 INT, S1 TOM, S2 INT, ...). Each acquisition mode is one-to-one associated with a GSTL index.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawDataDecodingParameters" type="rawDataDecodingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Raw data decoding parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="characterisationData" type="characterisationDataType">
+				<xsd:annotation>
+					<xsd:documentation>Characterization data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="attenuatorsSettings" type="attenuatorsSettingsType">
+				<xsd:annotation>
+					<xsd:documentation>Attenuators settings.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryInstrumentParameters" type="auxiliaryInstrumentParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS auxiliary instrument parameters element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:bio="http://earth.esa.int/biomass/1.0" xmlns:sar="http://www.opengis.net/sar/2.1" xmlns:eop="http://www.opengis.net/eop/2.1"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://earth.esa.int/biomass/1.0" version="1.0">
+  <annotation>
+    <documentation>XML schema for the BIOMASS Main Product Header</documentation>
+  </annotation>
+  <import namespace="http://www.opengis.net/sar/2.1" schemaLocation="http://schemas.opengis.net/eompom/1.1/xsd/sar.xsd"/>
+  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+  <import namespace="http://www.opengis.net/eop/2.1" schemaLocation="http://schemas.opengis.net/eompom/1.1/xsd/eop.xsd"/>
+  <import namespace="http://www.opengis.net/ows/2.0" schemaLocation="http://schemas.opengis.net/ows/2.0/owsAll.xsd"/>
+  <element name="EarthObservation" type="bio:EarthObservationType" substitutionGroup="sar:EarthObservation">
+    <annotation>
+      <documentation>eop root element for BIOMASS SAR Earth Observation Product</documentation>
+    </annotation>
+  </element>
+  <complexType name="EarthObservationType">
+    <complexContent>
+      <extension base="sar:EarthObservationType"/>
+    </complexContent>
+  </complexType>
+  <complexType name="EarthObservationPropertyType">
+    <sequence minOccurs="0">
+      <element ref="bio:EarthObservation"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="Acquisition" type="bio:AcquisitionType" substitutionGroup="sar:Acquisition">
+    <annotation>
+      <documentation>Extends sar Acquisition for BIOMASS products</documentation>
+    </annotation>
+  </element>
+  <complexType name="AcquisitionType">
+    <complexContent>
+      <extension base="sar:AcquisitionType">
+        <sequence>
+          <element name="missionPhase" type="bio:missionPhaseType" minOccurs="0">
+            <annotation>
+              <documentation>Mission Phase</documentation>
+            </annotation>
+          </element>
+          <element name="instrumentConfID" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Instrument Configuration Identifier</documentation>
+            </annotation>
+          </element>
+          <element name="dataTakeID" type="integer" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Data Take Identifier</documentation>
+            </annotation>
+          </element>
+          <element name="orbitDriftFlag" type="boolean" minOccurs="0">
+            <annotation>
+              <documentation>Orbit drift flag</documentation>
+            </annotation>
+          </element>
+          <element name="globalCoverageID" type="bio:globalCoverageIDType" minOccurs="0">
+            <annotation>
+              <documentation>Global Coverage Identifier</documentation>
+            </annotation>
+          </element>
+          <element name="majorCycleID" type="bio:majorCycleIDType" minOccurs="0">
+            <annotation>
+              <documentation>Major Cycle identifier</documentation>
+            </annotation>
+          </element>
+          <element name="repeatCycleID" type="bio:repeatCycleIDType" minOccurs="0">
+            <annotation>
+              <documentation>Repeat Cycle identifier</documentation>
+            </annotation>
+          </element>
+          <element name="tileID" type="string" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Tile identifier</documentation>
+            </annotation>
+          </element>
+          <element name="basinID" type="string" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Retrieval basin identifier</documentation>
+            </annotation>
+          </element>
+          <element name="stackID" type="string" minOccurs="0">
+            <annotation>
+              <documentation>Stack identifier</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AcquisitionPropertyType">
+    <sequence>
+      <element ref="bio:Acquisition"/>
+    </sequence>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <simpleType name="missionPhaseType">
+    <restriction base="string">
+      <enumeration value="COMMISSIONING"/>
+      <enumeration value="INTERFEROMETRIC"/>
+      <enumeration value="TOMOGRAPHIC"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="globalCoverageIDType">
+    <restriction base="string">
+      <enumeration value="1"/>
+      <enumeration value="2"/>
+      <enumeration value="3"/>
+      <enumeration value="4"/>
+      <enumeration value="5"/>
+      <enumeration value="6"/>
+      <enumeration value="NA"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="majorCycleIDType">
+    <restriction base="string">
+      <enumeration value="1"/>
+      <enumeration value="2"/>
+      <enumeration value="3"/>
+      <enumeration value="4"/>
+      <enumeration value="5"/>
+      <enumeration value="6"/>
+      <enumeration value="7"/>
+      <enumeration value="NA"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="repeatCycleIDType">
+    <restriction base="string">
+      <enumeration value="1"/>
+      <enumeration value="2"/>
+      <enumeration value="3"/>
+      <enumeration value="4"/>
+      <enumeration value="5"/>
+      <enumeration value="6"/>
+      <enumeration value="7"/>
+      <enumeration value="8"/>
+      <enumeration value="DR"/>
+      <enumeration value="NA"/>
+    </restriction>
+  </simpleType>
+  <element name="ProductInformation" type="bio:ProductInformationType" substitutionGroup="eop:ProductInformation">
+    <annotation>
+      <documentation>Extends eop Product Information for sar BIOMASS products</documentation>
+    </annotation>
+  </element>
+  <complexType name="ProductInformationType">
+    <complexContent>
+      <extension base="eop:ProductInformationType">
+        <sequence>
+          <element name="rds" type="string" minOccurs="0">
+            <annotation>
+              <documentation>Representation data file related to xml product</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ProductInformationPropertyType">
+    <complexContent>
+      <extension base="eop:ProductInformationPropertyType">
+        <sequence>
+          <element ref="bio:ProductInformation"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="EarthObservationMetaData" type="bio:EarthObservationMetaDataType" substitutionGroup="eop:EarthObservationMetaData">
+    <annotation>
+      <documentation>Extends eop Earth Observation Metadata for sar BIOMASS products</documentation>
+    </annotation>
+  </element>
+  <complexType name="EarthObservationMetaDataType">
+    <complexContent>
+      <extension base="eop:EarthObservationMetaDataType">
+        <sequence>
+          <element name="TAI-UTC" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Difference in seconds between TAI and UTC times</documentation>
+            </annotation>
+          </element>
+          <element name="numOfTFs" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of Transfer Frames (TF) contained in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfTFsWithErrors" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of Transfer Frames (TF) with recovered errors in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfCorruptedTFs" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of corrupted Transfer Frames (TF) not included in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfISPs" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of Instrument Source Packets (ISP) contained in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfISPsWithErrors" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of Instrument Source Packets (ISP) with recovered errors in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfCorruptedISPs" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Number of Instrument Source Packets (ISP) not included in the RAW data set</documentation>
+            </annotation>
+          </element>
+          <element name="numOfLines" type="string" minOccurs="0">
+            <annotation>
+              <documentation>Number of lines in the L0 measurement data set for both receiving polarization channels. 2 comma separated integers, being numOfLinesHPol,numOfLinesVPol</documentation>
+            </annotation>
+          </element>
+          <element name="numOfMissingLines" type="string" minOccurs="0">
+            <annotation>
+              <documentation>Number of missing lines in the L0 measurement data set for both receiving polarization channels. 2 comma separated integers, being numOfMissingLinesHPol,numOfMissingLinesVPol</documentation>
+            </annotation>
+          </element>
+          <element name="numOfCorruptedLines" type="string" minOccurs="0">
+            <annotation>
+              <documentation>Number of corrupted lines in the L0 measurement data set for both receiving polarization channels. 2 comma separated integers, being numOfCorruptedLinesHPol,numOfCorruptedLinesVPol</documentation>
+            </annotation>
+          </element>
+          <element name="isIncomplete" type="boolean" minOccurs="0">
+            <annotation>
+              <documentation>Incomplete L1 Frame flag</documentation>
+            </annotation>
+          </element>
+          <element name="isPartial" type="boolean" minOccurs="0">
+            <annotation>
+              <documentation>Partial L0 Slice / L1 Frame flag</documentation>
+            </annotation>
+          </element>
+          <element name="isMerged" type="boolean" minOccurs="0">
+            <annotation>
+              <documentation>Merged L0 Slice / L1 Frame flag</documentation>
+            </annotation>
+          </element>
+          <element name="agbTileStatus" type="bio:agbTileStatusType" minOccurs="0">
+            <annotation>
+              <documentation>Status of AGB coverage over a tile</documentation>
+            </annotation>
+          </element>
+          <element name="agbTileIteration" type="integer" minOccurs="0">
+            <annotation>
+              <documentation>Iteration counter for the selected L2B AGB Tile</documentation>
+            </annotation>
+          </element>
+          <element name="refDoc" type="string" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Reference documentation</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <simpleType name="agbTileStatusType">
+    <restriction base="string">
+      <enumeration value="Complete"/>
+      <enumeration value="Partial"/>
+      <enumeration value="NotComplete"/>
+    </restriction>
+  </simpleType>
+  <complexType name="EarthObservationMetaDataPropertyType">
+    <sequence>
+      <element ref="bio:EarthObservationMetaData"/>
+    </sequence>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="ProcessingInformation" type="bio:ProcessingInformationType" substitutionGroup="eop:ProcessingInformation">
+    <annotation>
+      <documentation>Extends eop Processing Information for sar BIOMASS products</documentation>
+    </annotation>
+  </element>
+  <complexType name="ProcessingInformationType">
+    <complexContent>
+      <extension base="eop:ProcessingInformationType">
+        <sequence>
+          <element name="sourceProduct" type="string" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Source products identifier</documentation>
+            </annotation>
+          </element>
+          <element name="isCoregistrationPrimary" type="boolean" minOccurs="0">
+            <annotation>
+              <documentation>Coregistration Primary Image flag</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ProcessingInformationPropertyType">
+    <complexContent>
+      <extension base="eop:ProcessingInformationPropertyType">
+        <sequence>
+          <element ref="bio:ProcessingInformation"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>

@@ -1,0 +1,1470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="polarisationListType">
+		<xsd:sequence>
+			<xsd:element name="polarisation" type="polarisationType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation (HH, HV, VH, VV).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="acquisitionInformationType">
+		<xsd:sequence>
+			<xsd:element name="mission" type="missionType">
+				<xsd:annotation>
+					<xsd:documentation>Mission (BIOMASS).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="swath" type="swathType">
+				<xsd:annotation>
+					<xsd:documentation>Swath (S1, S2, S3).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productType" type="productType">
+				<xsd:annotation>
+					<xsd:documentation>Product type (SCS, DGM).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationList" type="polarisationListType">
+				<xsd:annotation>
+					<xsd:documentation>List of polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="startTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler start time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="stopTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler stop time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="missionPhaseID" type="missionPhaseIDType">
+				<xsd:annotation>
+					<xsd:documentation>Mission phase identifier (COM, TOM, INT).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="driftPhaseFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if in drift phase, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sensorMode" type="sensorModeType">
+				<xsd:annotation>
+					<xsd:documentation>Sensor mode (Measurement, RX Only, External Calibration).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="globalCoverageID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Global coverage identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="majorCycleID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Major cycle identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="repeatCycleID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Repeat cycle identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absoluteOrbitNumber" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Absolute orbit number at data set start time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="relativeOrbitNumber" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Relative orbit number (track) at data set start time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="orbitPass" type="orbitPassType">
+				<xsd:annotation>
+					<xsd:documentation>Orbit pass (Ascending, Descending).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="platformHeading" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Platform heading relative to North [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dataTakeID" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Data take identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="frame" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Frame identifier. This value is considered unique per beam. In case the product is non-framed, this field is empty. In case the product has been obtained from the merging of two frames, this number corresponds to the longer one.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productComposition" type="productCompositionType">
+				<xsd:annotation>
+					<xsd:documentation>Product composition indicator, where the valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e., as long as input L0 one.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="coordinateConversionType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="t0" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time origin for coordinate conversion polynomial [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sr0" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Slant range origin used for ground range calculation [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slantToGroundCoefficients" type="doubleArray">
+				<xsd:annotation>
+					<xsd:documentation>Coefficients to convert from slant range to ground range. Ground range = g0+g1(sr-sr0)+g2(sr-sr0)^2+g3(sr-sr0)^3+g4(sr-sr0)^4+...+gN(sr-sr0)^N, where sr is the slant range distance to the desired pixel and N is the number of coefficients in the array minus one.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="gr0" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Ground range origin used for slant range calculation [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groundToSlantCoefficients" type="doubleArray">
+				<xsd:annotation>
+					<xsd:documentation>Coefficients to convert from ground range to slant range coefficients. Slant range = s0+s1(gr-gr0)+s2(gr-gr0)^2+s3(gr-gr0)^3+s4(gr-gr0)^4+...+sN(gr-gr0)^N, where gr is the ground range distance to the desired pixel and N is the number of coefficients in the array minus one.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="coordinateConversionListType">
+		<xsd:sequence>
+			<xsd:element name="coordinateConversion" type="coordinateConversionType" minOccurs="0" maxOccurs="15">
+				<xsd:annotation>
+					<xsd:documentation>Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list maxOccurs is set to 15.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of coordinate conversion records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="sarImageType">
+		<xsd:sequence>
+			<xsd:element name="firstSampleSlantRangeTime" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time to first sample of the image [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lastSampleSlantRangeTime" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time to last sample of the image [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firstLineAzimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of the first line of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lastLineAzimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of the last line of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeTimeInterval" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Time spacing between range samples of the image [s]. For L1a products, this value is the inverse of the range sampling frequency. For L1b products, this value is obtained dividing rangePixelSpacing for half the speed of light.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthTimeInterval" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Time spacing between azimuth lines of the image [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangePixelSpacing" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Pixel spacing between range samples [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthPixelSpacing" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Nominal pixel spacing between azimuth lines [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfSamples" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of samples in the image (image width).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfLines" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of lines in the image (image length).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="projection" type="projectionType">
+				<xsd:annotation>
+					<xsd:documentation>Projection of the image, either Slant Range or Ground Range.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeCoordinateConversion" type="coordinateConversionListType">
+				<xsd:annotation>
+					<xsd:documentation>List of coordinateConversion records that describe conversion between the slant range and ground range coordinate systems. The list contains an entry for each 10 seconds. This list applies to and is filled in only for DGM products and therefore has a length of zero for SCS products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="datum" type="datumType">
+				<xsd:annotation>
+					<xsd:documentation>Datum used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="footprint" type="floatArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Image footprint, expressed as a list of latitude and longitude values separated by spaces [deg]. Values are specified for each of the 4 corner coordinates of the scene quicklook, starting with the first-right in flight direction and proceeding CCW (same convention used in MPH and overlay ADS).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelRepresentation" type="pixelRepresentationType">
+				<xsd:annotation>
+					<xsd:documentation>Representation of the image pixels within the image MDS (I Q, Abs Phase, Abs, Pow Phase, Pow).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelType" type="pixelTypeType">
+				<xsd:annotation>
+					<xsd:documentation>Data type of output pixels within the image MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelQuantity" type="pixelQuantityType">
+				<xsd:annotation>
+					<xsd:documentation>Physical quantity stored in output data (Beta-Nought, Sigma-Nought or Gamma-Nought).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noDataValue" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Pixel value in case of invalid data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="firstLineSensingTimeListType">
+		<xsd:sequence>
+			<xsd:element name="firstLineSensingTime" type="timeTypeWithPolarisation" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Sensing time of first line of the input RAW data for the current polarisation [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="lastLineSensingTimeListType">
+		<xsd:sequence>
+			<xsd:element name="lastLineSensingTime" type="timeTypeWithPolarisation" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Sensing time of last line of the input RAW data for the current polarisation [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="swpListType">
+		<xsd:sequence>
+			<xsd:element name="swp" type="stateType" maxOccurs="15">
+				<xsd:annotation>
+					<xsd:documentation>SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list maxOccurs is set to 15.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of SWP records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="swlListType">
+		<xsd:sequence>
+			<xsd:element name="swl" type="stateType" maxOccurs="15">
+				<xsd:annotation>
+					<xsd:documentation>SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list maxOccurs is set to 15.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of SWL records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="prfListType">
+		<xsd:sequence>
+			<xsd:element name="prf" type="stateType" maxOccurs="5">
+				<xsd:annotation>
+					<xsd:documentation>PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time. List maxOccurs is set to 5, considered as worst case.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of PRF records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="txPulseType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of transmitted pulse change [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPulseLength" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Transmit pulse length [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPulseStartFrequency" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Starting frequency of the transmit pulse [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPulseStartPhase" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Starting phase of the transmit pulse [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPulseRampRate" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The linear rate at which the frequency changes over the pulse duration [Hz/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="txPulseListType">
+		<xsd:sequence>
+			<xsd:element name="txPulse" type="txPulseType" maxOccurs="5">
+				<xsd:annotation>
+					<xsd:documentation>Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. List maxOccurs is set to 5, considered as worst case.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of transmitted pulse records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="rxGainListType">
+		<xsd:sequence>
+			<xsd:element name="rxGain" type="floatWithPolarisation" minOccurs="2" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>RX gain, extracted from RAS control message.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of RX gains within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="dataFormatType">
+		<xsd:sequence>
+			<xsd:element name="echoFormat" type="dataFormatModeType">
+				<xsd:annotation>
+					<xsd:documentation>Data format of echo packets.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="calibrationFormat" type="dataFormatModeType">
+				<xsd:annotation>
+					<xsd:documentation>Data format of calibration packets.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noiseFormat" type="dataFormatModeType">
+				<xsd:annotation>
+					<xsd:documentation>Data format of noise packets.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="meanBitRate" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The calculated mean bit rate for the segment provide as input to the processor [Mbps].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="instrumentParametersType">
+		<xsd:sequence>
+			<xsd:element name="firstLineSensingTimeList" type="firstLineSensingTimeListType">
+				<xsd:annotation>
+					<xsd:documentation>Sensing time of first line of the input RAW data for all the polarisations [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lastLineSensingTimeList" type="lastLineSensingTimeListType">
+				<xsd:annotation>
+					<xsd:documentation>Sensing time of last line of the input RAW data for all the polarisations [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfInputSamples" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of samples of the input RAW data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfInputLines" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of lines of the input RAW data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="swpList" type="swpListType">
+				<xsd:annotation>
+					<xsd:documentation>List of Sampling Window Position changes (SWP) [s]. The list contains an entry for each on-board SWP update.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="swlList" type="swlListType">
+				<xsd:annotation>
+					<xsd:documentation>List of Sampling Window Length changes (SWL) [s]. The list contains an entry for each on-board SWL update.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="prfList" type="prfListType">
+				<xsd:annotation>
+					<xsd:documentation>List of Pulse Repetition Frequency changes (PRF) [Hz]. The list contains an entry for each on-board PRF update.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rank" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Number of PRIs between transmitted pulse and received echo.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="txPulseList" type="txPulseListType">
+				<xsd:annotation>
+					<xsd:documentation>List of transmitted pulses. The list contains an entry for each on-board transmitted pulse update.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="instrumentConfigurationID" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Instrument configuration identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radarCarrierFrequency" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Radar carrier frequency [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rxGainList" type="rxGainListType">
+				<xsd:annotation>
+					<xsd:documentation>RX gain list.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="preambleFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if input RAW data contain preamble sequence, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="postambleFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if input RAW data contain postamble sequence, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="interleavedCalibrationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if input RAW data contain interleaved calibration sequences, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dataFormat" type="dataFormatType">
+				<xsd:annotation>
+					<xsd:documentation>Data format for instrument samples. There is one element corresponding to the data format for each packet type in the segment.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="errorCountersType">
+		<xsd:sequence>
+			<xsd:element name="numIspHeaderErrors" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of errors detected in ISP headers.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numIspMissing" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of missing ISP.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rawDataStatisticsType">
+		<xsd:sequence>
+			<xsd:element name="iBias" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Calculated I bias.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qBias" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Calculated Q bias.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="iqQuadratureDeparture" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Calculated I/Q quadrature departure.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="iqGainImbalance" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Calculated I/Q gain imbalance.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rawDataStatisticsListType">
+		<xsd:sequence>
+			<xsd:element name="rawDataStatistics" type="rawDataStatisticsType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Extracted RAW data I and Q channels statistics for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rawDataAnalysisType">
+		<xsd:sequence>
+			<xsd:element name="errorCounters" type="errorCountersType">
+				<xsd:annotation>
+					<xsd:documentation>Error counters computed starting from input Instrument Source Packets stream.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawDataStatisticsList" type="rawDataStatisticsListType">
+				<xsd:annotation>
+					<xsd:documentation>Extracted RAW data I and Q channels statistics for all the polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="spectrumProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="windowType" type="weightingWindowType">
+				<xsd:annotation>
+					<xsd:documentation>Name of the weighting window type used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="windowCoefficient" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Value of the weighting window coefficient used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="totalBandwidth" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Total available bandwidth [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingBandwidth" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Bandwidth used during processing [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lookBandwidth" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Bandwidth for each look used during processing [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfLooks" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of looks.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lookOverlap" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Overlap between looks [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="processingGainListType">
+		<xsd:sequence>
+			<xsd:element name="processingGain" type="floatWithPolarisation" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Processing gain computed and applied multiplicatively to the image during processing for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="noiseGainListType">
+		<xsd:sequence>
+			<xsd:element name="noiseGain" type="floatWithPolarisation" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Processing gain computed and applied multiplicatively to the thermal noise level before using it during denoising step for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="processingParametersType">
+		<xsd:sequence>
+			<xsd:element name="processorVersion" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Version of the processor used to generate the product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productGenerationTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Product generation time [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingMode" type="processingModeType">
+				<xsd:annotation>
+					<xsd:documentation>Processing mode (Nominal, PARC).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="orbitSource" type="orbitAttitudeSourceType">
+				<xsd:annotation>
+					<xsd:documentation>Source of the orbit data used during processing. Set to “Extracted” if the orbit information extracted from source packets is used during processing. Set to “Auxiliary” if the orbit information from an input auxiliary file is used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="attitudeSource" type="orbitAttitudeSourceType">
+				<xsd:annotation>
+					<xsd:documentation>Source of the attitude data used during processing. Set to “Extracted” if the attitude information extracted from source packets is used during processing. Set to “Auxiliary” if the attitude information from an input auxiliary file is used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawDataCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if raw data correction was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDetectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if RFI detection was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if RFI correction was performed, False otherwise. Implies activation of rfiDetectionFlag.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiMitigationMethod" type="rfiMitigationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Domain where the RFI mitigation step was performed (Time, Frequency, Time and Frequency, Frequency and Time).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiMask" type="rfiMaskType">
+				<xsd:annotation>
+					<xsd:documentation>RFI mask used for mitigation. Valid values are: "Single", to use the same mask for all the polarizations; "Multiple", to use a dedicated mask for each polarization.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiMaskGenerationMethod" type="rfiMaskGenerationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Polarization-dependent RFI masks combination method (AND, OR). Used only in case rfiMask is set to Single.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiFMChirpSource" type="rangeReferenceFunctionType">
+				<xsd:annotation>
+					<xsd:documentation>Chirp source for Frequency Domain detection</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiFMMitigationMethod" type="rfiFMMitigationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Frequency Domain mitigation method</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalCalibrationEstimationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if internal calibration estimation was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalCalibrationCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if internal calibration correction was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeReferenceFunctionSource" type="rangeReferenceFunctionType">
+				<xsd:annotation>
+					<xsd:documentation>Chirp source to be used for range compression (Nominal, Replica or Internal).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeCompressionMethod" type="rangeCompressionMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Range compression method used during processing (Matched Filter or Inverse Filter).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="extendedSwathProcessingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if processing was extended in the range direction including samples not having the full phase history, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dcMethod" type="dcMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Doppler Centroid estimation method used during processing (Geometry, Combined, Fixed).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dcValue" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Doppler centroid value used during processing [Hz]. Used only in case dcMethod is set to Fixed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="antennaPatternCorrection1Flag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if antenna pattern correction (first step) was applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="antennaPatternCorrection2Flag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if antenna pattern correction (second step) was applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="antennaCrossTalkCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if antenna cross-talk correction was applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeProcessingParameters" type="spectrumProcessingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Parameters used during range processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthProcessingParameters" type="spectrumProcessingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Parameters used during azimuth processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="bistaticDelayCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if bistatic delay correction was applied, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="bistaticDelayCorrectionMethod" type="bistaticDelayCorrectionMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Method used for bistatic delay correction (Bulk or Full).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeSpreadingLossCompensationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if range spreading loss compensation was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="referenceRange" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by 1/Grsl(R) where: Grsl(R) = cuberoot(rRef/R); and, R = slant range of sample.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingGainList" type="processingGainListType">
+				<xsd:annotation>
+					<xsd:documentation>Processing gain computed and applied multiplicatively to the image during processing for all the polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarimetricCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if polarimetric correction has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightDefocusingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if defocusing at ionosphere height has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimationMethod" type="ionosphereHeightEstimationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere height estimation method (Feature Tracking, Squint Sensitivity, Model).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayRotationCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if Faraday Rotation correction has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphericPhaseScreenCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if ionospheric phase screen correction has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groupDelayCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if group delay correction has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="autofocusFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if autofocus has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="autofocusMethod" type="autofocusMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Autofocus method used during processing (Map Drift).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="detectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if detection has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="thermalDenoisingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if thermal denoising has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noiseGainList" type="noiseGainListType">
+				<xsd:annotation>
+					<xsd:documentation>Processing gain computed and applied multiplicatively to the thermal noise level before using it during denoising step for all the polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groundProjectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if slant range to ground range conversion has been performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="internalCalibrationSequenceType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time in azimuth at which internal calibration parameters applies [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="driftAmplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude drift for the current power gain product (PGP).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="driftPhase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase drift for the current power gain product (PGP) [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="modelDriftAmplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude drift derived from model.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="modelDriftPhase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase drift derived from model [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="relativeDriftValidFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Indicates if the current amplitude and phase drifts are valid (within the configured threshold) when compared to the mean and standard deviation of all the amplitude and phase drifts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absoluteDriftValidFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Indicates if the current amplitude and phase drifts are valid (within the configured threshold) when compared to the value of the model.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossCorrelationBandwidth" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>3-dB pulse width of chirp replica cross-correlation function between the reconstructed replica and the nominal replica [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossCorrelationPslr" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Peak Side Lobe Ratio (PSLR) of replica cross-correlation function between the reconstructed replica and the nominal replica [dB].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossCorrelationIslr" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Integrated Side Lobe Ratio (ISLR) of cross-correlation function between the reconstructed replica and the nominal replica [dB].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="crossCorrelationPeakLocation" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Peak location of cross-correlation function between the reconstructed replica and the nominal replica [samples].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="reconstructedReplicaValidFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Indicates if the cross-correlation between the nominal replica and this extracted replica resulted in a valid peak location.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalTimeDelay" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Internal time delay [s] representing the calculated deviation of the location of this replica from the location of the transmitted pulse, i.e. the nominal replica.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalTxChannelImbalanceAmplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of instrument internal transmit channel imbalance.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalTxChannelImbalancePhase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of instrument internal transmit channel imbalance [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalRxChannelImbalanceAmplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of instrument internal receive channel imbalance.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalRxChannelImbalancePhase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of instrument internal receive channel imbalance [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="transmitPowerTrackingD1Amplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of transmit power tracking for doublet D1.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="transmitPowerTrackingD1Phase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of transmit power tracking for doublet D1 [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="receivePowerTrackingD1Amplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of receive power tracking for doublet D1.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="receivePowerTrackingD1Phase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of receive power tracking for doublet D1 [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="transmitPowerTrackingD2Amplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of transmit power tracking for doublet D2.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="transmitPowerTrackingD2Phase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of transmit power tracking for doublet D2 [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="receivePowerTrackingD2Amplitude" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Amplitude of receive power tracking for doublet D2.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="receivePowerTrackingD2Phase" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase of receive power tracking for doublet D2 [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="internalCalibrationSequenceListType">
+		<xsd:sequence>
+			<xsd:element name="internalCalibrationSequence" type="internalCalibrationSequenceType" minOccurs="0" maxOccurs="180">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration parameters derived from the calibration pulses. Considering the worst case (30 minutes datatake, one entry each 10 seconds), list maxOccurs is set to 180.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of internal calibration sequences for the current polarisation within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="internalCalibrationParametersListType">
+		<xsd:sequence>
+			<xsd:element name="internalCalibrationSequenceList" type="internalCalibrationSequenceListType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration parameters derived from the calibration pulses for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="noiseSequenceType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of the noise measurement [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noisePowerCorrectionFactor" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Noise power correction factor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfNoiseLines" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of noise lines used to calculate noise correction factor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="noiseSequenceListType">
+		<xsd:sequence>
+			<xsd:element name="noiseSequence" type="noiseSequenceType" minOccurs="0" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>Noise parameters derived from noise packets. List maxOccurs is set to 2 considering one entry for preamble and one for postamble noise sequences.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of noise sequences for the current polarisation within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="noiseListType">
+		<xsd:sequence>
+			<xsd:element name="noiseSequenceList" type="noiseSequenceListType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Noise parameters derived from the noise packets for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="internalCalibrationType">
+		<xsd:sequence>
+			<xsd:element name="internalCalibrationParametersUsed" type="internalCalibrationSourceType">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration parameters effectively used during processing (Model or Extracted).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeReferenceFunctionUsed" type="rangeReferenceFunctionType">
+				<xsd:annotation>
+					<xsd:documentation>Chirp source effectively used for range compression (Nominal, Replica or Internal). Can be different from rangeReferenceFunctionSource.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noiseParametersUsed" type="internalCalibrationSourceType">
+				<xsd:annotation>
+					<xsd:documentation>Noise parameters used during processing (Model or Extracted).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalCalibrationParametersList" type="internalCalibrationParametersListType">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration parameters list. This element contains lists of internal calibration parameters calculated from the calibration pulses extracted from the downlink. The list contains an entry for each calibration sequence contained in the input data and it is organised per polarisation. If the list is empty, the nominal parameters values in the instrument auxiliary data file will be used instead.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noiseList" type="noiseListType">
+				<xsd:annotation>
+					<xsd:documentation>Noise list. This element contains lists of noise parameters derived from the noise ISPs. The list contains an entry for each noise update made along azimuth and it is organised per polarisation. If the list is empty, the nominal noise value in the instrument auxiliary data file will be used instead.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rfiTMReportType">
+		<xsd:sequence>
+			<xsd:element name="percentageAffectedLines" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Percentage of input RAW data lines affected by RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="avgPercentageAffectedSamples" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Average percentage of affected input RAW data samples in the lines containing RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxPercentageAffectedSamples" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum percentage of input RAW data samples affected by RFI in the same line.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiTMReportListType">
+		<xsd:sequence>
+			<xsd:element name="rfiTMReport" type="rfiTMReportType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Time-domain RFI mitigation report.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiIsolatedFMReportType">
+		<xsd:sequence>
+			<xsd:element name="percentageAffectedLines" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Percentage of input RAW data lines affected by isolated RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxPercentageAffectedBW" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Max percentage of bandwidth affected by isolated RFI in a single line.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="avgPercentageAffectedBW" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Average percentage of bandwidth affected by isolated RFI</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiIsolatedFMReportListType">
+		<xsd:sequence>
+			<xsd:element name="rfiIsolatedFMReport" type="rfiIsolatedFMReportType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Frequency-domain isolated RFI mitigation report.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiPersistentFMReportType">
+		<xsd:sequence>
+			<xsd:element name="maxPercentageAffectedBW" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Max percentage of bandwidth affected by persistent RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="avgPercentageAffectedBW" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Average percentage of bandwidth affected by persistent RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="percentageAffectedLines" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Percentage of lines affected by persistent RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiPersistentFMReportListType">
+		<xsd:sequence>
+			<xsd:element name="rfiPersistentFMReport" type="rfiPersistentFMReportType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Frequency-domain persistent RFI mitigation report.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="rfiMitigationType">
+		<xsd:sequence>
+			<xsd:element name="rfiTMReportList" type="rfiTMReportListType" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>Time-domain RFI mitigation report list. This element is present only if time-domain RFI mitigation is performed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiIsolatedFMReportList" type="rfiIsolatedFMReportListType" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>Frequency-domain isolated RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiPersistentFMReportList" type="rfiPersistentFMReportListType" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>Frequency-domain persistent RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="dcEstimateType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="t0" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range time origin for polynomial [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geometryDCPolynomial" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Doppler Centroid estimated from orbit and attitude, expressed as the following polynomial (assuming 5 coefficients): DC=d0+d1(tSR-t0)+d2(tSR-t0)^2+d3(tSR-t0)^3+d4(tSR-t0)^4, where tSR is the two-way slant range time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="combinedDCPolynomial" type="floatArray">
+				<xsd:annotation>
+					<xsd:documentation>Doppler Centroid estimated from both orbit and attitude and data, expressed as the following polynomial (assuming 5 coefficients): DC=d0+d1(tSR-t0)+d2(tSR-t0)^2+d3(tSR-t0)^3+d4(tSR-t0)^4, where tSR is the two-way slant range time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="combinedDCValues" type="doubleArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Combined Doppler Centroid estimates [Hz]. Each estimate represents the Doppler Centroid frequency at the slant range time specified by combinedDCSlantRangeTimes, estimated within the current block. The values are averaged on all the polarisations used for estimation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="combinedDCSlantRangeTimes" type="doubleArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Two-way slant range times combinedDCValues are referred to [s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="combinedDCRMSError" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The RMS error of the Doppler Centroid estimate [Hz]. It is calculated as the average of the individual RMS residual errors between input fine Doppler Centroid estimates and the fitted polynomial. If the Doppler Centroid was not estimated with combined approach, this is set to 0.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="combinedDCRMSErrorAboveThreshold" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>False if the RMS error is below the acceptable threshold for the Doppler Centroid estimated with combined approach. True if the RMS error is greater than or equal to the acceptable threshold.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="dcEstimateListType">
+		<xsd:sequence>
+			<xsd:element name="dcEstimate" type="dcEstimateType" maxOccurs="150">
+				<xsd:annotation>
+					<xsd:documentation>Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list maxOccurs is set to 30.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of dcEstimate records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="fmRateEstimatesListType">
+		<xsd:sequence>
+			<xsd:element name="fmRateEstimate" type="slantRangePolynomialType" maxOccurs="150">
+				<xsd:annotation>
+					<xsd:documentation>Frequency Modulation rate estimate record. Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list maxOccurs is set to 30.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of fmRateEstimate records within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="dopplerParametersType">
+		<xsd:sequence>
+			<xsd:element name="dcEstimateList" type="dcEstimateListType">
+				<xsd:annotation>
+					<xsd:documentation>List of Doppler Centroid estimates that have been calculated during image processing. The list contains an entry for each Doppler Centroid estimate made along azimuth, i.e., each N seconds, where N is configurable.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fmRateEstimateList" type="fmRateEstimatesListType">
+				<xsd:annotation>
+					<xsd:documentation>List of Frequency Modulation rate estimates that have been calculated during image processing. The list contains an entry for each Frequency Modulation rate estimate made along azimuth, i.e., each N seconds, where N is configurable.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="calibrationConstantListType">
+		<xsd:sequence>
+			<xsd:element name="absoluteCalibrationConstant" type="floatWithPolarisation" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Absolute calibration constant applied multiplicatively to the image during processing for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="radiometricCalibrationType">
+		<xsd:sequence>
+			<xsd:element name="absoluteCalibrationConstantList" type="calibrationConstantListType">
+				<xsd:annotation>
+					<xsd:documentation>Absolute calibration constant. Already applied to the image during processing for all the polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="polarimetricDistortionType">
+		<xsd:sequence>
+			<xsd:element name="crossTalkList" type="crossTalkList">
+				<xsd:annotation>
+					<xsd:documentation>System cross-talk values</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="channelImbalanceList" type="channelImbalanceList">
+				<xsd:annotation>
+					<xsd:documentation>System channel imbalance values</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ionosphereCorrectionType">
+		<xsd:sequence>
+			<xsd:element name="ionosphereHeightUsed" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere height used for processing [m] (-1 if not available).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimated" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere height estimated using Feature Tracking or Squint Sensitivity method, if selected via configuration [m] (-1 if not available).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimationMethodSelected" type="ionosphereHeightEstimationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere height estimation method selected for ionospheric processing, between Feature Tracking and Squint Sensitivity, when ionosphereHeightEstimationMethod is set to Automatic (NA if not available).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimationLatitudeValue" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Latitude value used to select ionosphere height estimation method between Feature Tracking and Squint Sensitivity, when ionosphereHeightEstimationMethod is set to Automatic [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if ionosphere height estimation is completed successfully, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereHeightEstimationMethodUsed" type="ionosphereHeightEstimationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere height estimation method effectively used for ionospheric processing. Can be different from ionosphereHeightEstimationMethod and ionosphereHeightEstimationMethodSelected. (NA if not available)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="gaussianFilterComputationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if computed filter dimensions are below maximum allowed values, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayRotationCorrectionApplied" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Flag indicating if Faraday Rotation correction has been effectively applied or not. Can be different from faradayRotationCorrectionFlag.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="autofocusShiftsApplied" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>Flag indicating if correction of azimuth shift estimated through autofocus has been effectively applied or not. Can be different from autofocusFlag.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="geometryType">
+		<xsd:sequence>
+			<xsd:element name="heightModel" type="heightModelType">
+				<xsd:annotation>
+					<xsd:documentation>Digital Elevation Model (DEM) commanded for usage during processing (with version as attribute).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="heightModelUsedFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the DEM effectively used during processing is the commanded one reported in heightModel, False otherwise (i.e. ellipsoid has been used for contingency handling).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rollBias" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Bias added to roll estimated from attitude to offset it [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="qualityParametersType">
+		<xsd:sequence>
+			<xsd:element name="missingISPFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of missing ISP, expressed as a normalized fraction of the total number of ISP.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxISPGap" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Maximum number of gaps between science data ISPs.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxISPGapThreshold" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on maxISPGap. If maxISPGap exceeds this parameter, the processing will not continue.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidRawDataSamples" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid raw data samples (according to their mean and standard deviation), expressed as a normalized fraction of the total number of samples.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawMeanExpected" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This parameter specifies the expected mean of the samples in the extracted raw data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawMeanThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This is the value X such that the measured mean must fall between the rawMeanExpected-X and rawMeanExpected+X.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawStdExpected" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This parameter specifies the expected standard deviation of the samples in the extracted raw data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawStdThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This is the value X such that the measured standard deviation must fall between the rawStdExpected-X and rawStdExpected+X.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiTMFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Normalized fraction of image pixels impacted by time-domain RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxRFITMPercentage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum normalized percentage of image pixels impacted by time-domain RFI. If the percentage exceeds this parameter, the processing will not continue.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiFMFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Normalized fraction of image spectrum impacted by frequency-domain RFI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxRFIFMPercentage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum normalized percentage of image spectrum impacted by frequency-domain RFI. If the percentage exceeds this parameter, the processing will not continue.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidDriftFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid drift values, expressed as a normalized fraction of the total number of drifts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxInvalidDriftFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum number of invalid drift values allowed, expressed as a normalized fraction of the total number of drifts. If the percentage of the invalid drifts does not exceed this value, then the invalid drifts will be discarded and only the valid ones will be further used in the processing. Otherwise, all the calculated drift values will be discarded and replaced with the corresponding model values.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidReplicaFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid replicas, expressed as a normalized fraction of the total number of replicas extracted.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidDCEstimatesFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid DC estimated, expressed as a normalized fraction of the total number of DC estimates.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dcRMSErrorThreshold" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Doppler Centroid estimation root mean squared (RMS) error threshold [Hz]. If the RMS error of the Doppler Centroid combined estimates is above this threshold they are not used during processing; instead, the Doppler Centroid calculated from geometry is used.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="residualIonosphericPhaseScreenStd" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Quality measure of the ionospheric phase estimated by Faraday Rotation, expressed as standard deviation of the residual ionospheric phase screen [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidBlocksPercentage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Normalized fraction of image blocks that need to have estimated an azimuth shift higher than the maximum allowed one, used to consider an autofocus estimation valid or not.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidBlocksPercentageThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum normalized percentage of blocks within the image that need to have estimated an azimuth shift smaller than the maxValidShift threshold. If the minimum percentage is not met, no correction based on the azimuth shift estimates will be applied.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="qualityParametersListType">
+		<xsd:sequence>
+			<xsd:element name="qualityParameters" type="qualityParametersType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="qualityType">
+		<xsd:sequence>
+			<xsd:element name="overallProductQualityIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. Equal to 0 for valid products and to 1 for invalid ones.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qualityParametersList" type="qualityParametersListType">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters list. The list contains an entry for each polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

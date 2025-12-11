@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-l1-annotations.xsd"/>
+	<xsd:complexType name="staProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="processorVersion" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Version of the processor used to generate the product.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productGenerationTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Product generation time [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationsUsed" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Number of polarisations used for processing (3 or 4).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationCombinationMethod" type="polarisationCombinationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarisations are used).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="primaryImageSelectionMethod" type="primaryImageSelectionMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Coregistration primary image selection method (Geometry, Geometry and Quality).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coregistrationMethod" type="coregistrationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Coregistration method (Geometry, Geometry and Data).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="heightModel" type="heightModelType">
+				<xsd:annotation>
+					<xsd:documentation>Digital Elevation Model (DEM) used during coregistration.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDegradationEstimationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if estimation of degradation due to RFI filtering was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthSpectralFilteringFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if azimuth spectral filtering was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationUsedForSlowIonosphereRemoval" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used for the Slow-Ionosphere Remova (IOB) step.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationUsedForPhasePlaneRemoval" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used for estimation in the Phase-Plane-Removal (PPR) step.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="calibrationPrimaryImageFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if image used as primary for multi-baseline calibration steps is the same as the one used for coregistration, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRemovalFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if slow-varying ionospheric phase screen estimation and removal was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inSARCalibrationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if InSAR calibration was enabled, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpPhaseCalibrationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if SKP estimation was performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpPhaseCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if skpPhaseCorrectionFlag was enabled, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpPhaseCorrectionFlatteningOnlyFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if only the flattening phases was corrected by the SKP module, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpEstimationWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>SKP estimation window size [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpMedianFilterFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if median filter was applied to the SKP calibration phase screen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpMedianFilterWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>SKP median filter window size [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRemovalMultiBaselineThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold used for selecting the interferometric pair for slow-ionosphere calibration (IOB) as ratio of the critical baseline.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRemovalUse32BitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if IOB was run with 32-bit precision.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthSpectralFilteringUse32BitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if AZF was run with 32-bit precision.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inSARCalibrationUse32BitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if PPR was run with 32-bit precision.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpPhaseCalibrationUse32BitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if SKP was run with 32-bit precision.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staCoregistrationParametersType">
+		<xsd:sequence>
+			<xsd:element name="datum" type="datumType">
+				<xsd:annotation>
+					<xsd:documentation>Datum used during coregistration.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="primaryImage" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product name of coregistration primary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="secondaryImage" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product name of coregistration secondary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="primaryImageSelectionInformation" type="primaryImageSelectionInformationType">
+				<xsd:annotation>
+					<xsd:documentation>Information used to select coregistration primary image (Geometry, Geometry and RFI Correction, Geometry and FR Correction, Geometry and RFI+FR Corrections).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="normalBaseline" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Normal baseline between primary and secondary images [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="averageRangeCoregistrationShift" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Average coregistration shift along range direction [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="averageAzimuthCoregistrationShift" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Average coregistration shift along azimuth direction [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeSpectralFilteringFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if range spectral filtering was performed during the coregistration step, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationUsed" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used for shift estimation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staInSARParametersType">
+		<xsd:sequence>
+			<xsd:element name="calibrationPrimaryImage" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product name of multi-baseline calibration steps primary image (or, simply, calibration primary image).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthCommonBandwidth" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Azimuth bandwidth in common with primary image after azimuth spectral filtering step [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthCentralFrequency" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Azimuth central frequency after azimuth spectral filtering step [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRangePhaseScreen" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Estimated slope of background ionosphere in range direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereAzimuthPhaseScreen" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Estimated slope of background ionosphere in azimuth direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereQuality" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Quality of the background ionosphere estimation, between 0 (bad quality) and 1 (good quality).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRemovalInterferometricPairs" type="interferometricPairListType">
+				<xsd:annotation>
+					<xsd:documentation>Interferometric pairs used to estimate the slow-varying ionosphere calibration (multi-baseline and single-baseline).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangePhaseSlope" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase plane slope estimated by PPR, in slant-range direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthPhaseSlope" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase plane slope estimated by PPR, in along-track direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="baselineOrderingIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Index in of the product with respect to the baseline-based ordering.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenMean" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Circular mean of SKP calibration phase screen [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenStd" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Circular standard deviation of SKP calibration phase screen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenVar" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Circular dispersion of SKP calibration phase screen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenMAD" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Mean absolute deviation of SKP calibration phase screen [rad].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityParametersType">
+		<xsd:sequence>
+			<xsd:element name="invalidL1aDataSamples" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid L1a data samples (according to their mean and standard deviation), expressed as a normalized ratio of the total number of samples.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDecorrelation" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Decorrelation factor due to RFI strength.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDecorrelationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayDecorrelation" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Decorrelation factor due to Faraday residual.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayDecorrelationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to Faraday residual admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidResidualShiftsRatio" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Ratio of invalid residual coregistration shifts with respect to the number of pixels of the coregistration reference image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="residualShiftsQualityThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on residual coregistration shifts quality (between 0 and 1). Residual shifts with a quality lower than this threshold are not used for processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidSkpCalibrationPhaseScreenRatio" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Ratio between invalid SKP calibration phase estimations and the size of the SKP phase screen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenQualityThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the SKP estimation quality (between 0 and 1). Estimates with a quality lower than this threshold are not corrected. Used only in case skpPhaseCorrectionFlag is set to True and flatteningPhaseCorrectionFlag is set to False.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpDecompositionIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Error code for the SKP decomposition. Positive if the SKP decomposition hit a nonblocking contingency case (e.g. SVD decomposition failure etc.) and the exported SKP-related LUTs contain values obtained from a contingency handling procedure. 0 otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityParametersListType">
+		<xsd:sequence>
+			<xsd:element name="staQualityParameters" type="staQualityParametersType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityType">
+		<xsd:sequence>
+			<xsd:element name="overallProductQualityIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. Equal to 0 for valid products and to 1 for invalid ones.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staQualityParametersList" type="staQualityParametersListType">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters list. The list contains an entry for each polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staMainAnnotationType">
+		<xsd:sequence>
+			<xsd:element name="acquisitionInformation" type="acquisitionInformationType">
+				<xsd:annotation>
+					<xsd:documentation>Acquisition information DSR. This DSR contains information that applies to the entire data set.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sarImage" type="sarImageType">
+				<xsd:annotation>
+					<xsd:documentation>SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="instrumentParameters" type="instrumentParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawDataAnalysis" type="rawDataAnalysisType">
+				<xsd:annotation>
+					<xsd:documentation>RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingParameters" type="processingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters DSR. This DSR contains the exhaustive list of static SAR processing parameters and of corrections applied.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalCalibration" type="internalCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration DSR. This DSR contains the results of the internal calibration analysis performed by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiMitigation" type="rfiMitigationType">
+				<xsd:annotation>
+					<xsd:documentation>Radio Frequency Interference mitigation DSR. This DSR contains information on detected RFI and on their mitigation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dopplerParameters" type="dopplerParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Doppler parameters DSR. This DSR contains the Doppler Centroid (DC) and Frequency Modulation rate (FM) parameters estimated and used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radiometricCalibration" type="radiometricCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Radiometric calibration DSR. This DSR contains all the necessary information to absolutely calibrate the data pixels.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarimetricDistortion" type="polarimetricDistortionType">
+				<xsd:annotation>
+					<xsd:documentation>Polarimetric distortion DSR. This DSR contains the necessary information e.g. receive and transmit polarisation distortion matrix, allowing users to correct for them if not applied at processing level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereCorrection" type="ionosphereCorrectionType">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere correction DSR. This DSR contains the results of the ionosphere correction estimated and applied by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geometry" type="geometryType">
+				<xsd:annotation>
+					<xsd:documentation>Geometry DSR. This DSR contains all the necessary information to understand the Earth model/geometry used in the image and its geolocation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quality" type="qualityType">
+				<xsd:annotation>
+					<xsd:documentation>Quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="annotationLUT" type="layerListType">
+				<xsd:annotation>
+					<xsd:documentation>Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staProcessingParameters" type="staProcessingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Stack processing parameters DSR. This DSR contains the exhaustive list of static stack processing parameters and of corrections applied.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staCoregistrationParameters" type="staCoregistrationParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Stack coregistration parameters DSR. This DSR contains high-level information about data coregistration step.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staInSARParameters" type="staInSARParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Stack InSAR parameters DSR. This DSR contains high-level information about calibration steps.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staQuality" type="staQualityType">
+				<xsd:annotation>
+					<xsd:documentation>Stack quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="mainAnnotation" type="staMainAnnotationType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS L1c product main annotation element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

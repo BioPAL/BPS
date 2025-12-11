@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pylint.MASTER]
+fail-under = 8.0
+ignore = "models.py"
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = ["import-error", "logging-fstring-interpolation", "logging-not-lazy"]
+extension-pkg-whitelist = ["netCDF4"]
+
+[tool.pylint.FORMAT]
+max-line-length = 120

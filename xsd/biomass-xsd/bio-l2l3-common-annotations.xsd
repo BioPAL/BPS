@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="polarisationListType">
+		<xsd:sequence>
+			<xsd:element name="polarisation" minOccurs="3" maxOccurs="3">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation (HH, VH, VV).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="polarisationType"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="integerListType">
+		<xsd:sequence>
+			<xsd:element name="val" type="xsd:unsignedInt" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Integer numbers list.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="stringListType">
+		<xsd:sequence>
+			<xsd:element name="ID" type="xsd:string" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>String (identifiers) list, used for the DGG tiles in input neighbourhood for AGB parameter estimation</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="calABcoverageTilesListType">
+		<xsd:sequence>
+			<xsd:element name="tile" type="calABcoverageType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB coverage, current tile</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="calABcoverageType">
+		<xsd:sequence>
+			<xsd:element name="originalCoverage" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB original coverage, percentage and number of pixel values</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="filteredCoverage" type="calABfilteredCoverageType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, percentage and number of pixel values after each filtering. [RD] BPS_AGB_ATBD v3.1.2, equation 4.6</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="ID" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="calABfilteredCoverageType">
+		<xsd:sequence>
+			<xsd:element name="afterGlobalFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, percentage and number of pixel values after all filterings concatenated.[RD] BPS_AGB_ATBD v3.1.2, equation 4.6</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterAGBvalueFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, disaggregated percentage and number of pixel values after filtering only for mean AGB values limits.[RD] BPS_AGB_ATBD v3.1.2, equation 4.6, W</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterAGBstdFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB STD limits.[RD] BPS_AGB_ATBD v3.1.2, equation 4.6, U</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterAGBrelativeStdFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB relative STD limits.[RD] BPS_AGB_ATBD v3.1.2, equation 4.6, R</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterLCMClassFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB filtered coverage, disaggregated percentage and number of pixel values after filtering only for LCM class. RD] BPS_AGB_ATBD v3.1.2, equation 4.6, Ω_fcrej</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GNcoverageTilesListType">
+		<xsd:sequence>
+			<xsd:element name="tile" type="GNcoverageListType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Input GN products coverage, current tile</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GNcoverageListType">
+		<xsd:sequence>
+			<xsd:element name="GN" type="GNcoverageType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product coverage, current GN and current tile</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="ID" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="GNcoverageType">
+		<xsd:sequence>
+			<xsd:element name="originalCoverage" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product original coverage (current GN and current tile) percentage and number of pixel values</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="filteredCoverage" type="GNfilteredCoverageType">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product filtered (current GN and current tile) percentage and number of pixel values after each filtering.[RD] BPS_AGB_ATBD v3.1.2, equation 4.5</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="acquisitionID" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="GNfilteredCoverageType">
+		<xsd:sequence>
+			<xsd:element name="afterGlobalFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product filtered coverage, percentage and number of pixel values after all filterings concatenate.[RD] BPS_AGB_ATBD v3.1.2, equation 4.5</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterSigmaFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Sigma (backscatter) values limits.[RD] BPS_AGB_ATBD v3.1.2, equation 4.5, σ_p^0</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="afterAngleFiltering" type="percentPixelsType">
+				<xsd:annotation>
+					<xsd:documentation>Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Incidence Angle values limits. [RD] BPS_AGB_ATBD v3.1.2, equation 4.5, ϑ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="percentPixelsType">
+		<xsd:sequence>
+			<xsd:element name="percentage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>percentage value of valid pixels</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixels" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>absolute number of valid pixels</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="acquisitionListType">
+		<xsd:sequence>
+			<xsd:element name="acquisition" minOccurs="2" maxOccurs="8">
+				<xsd:annotation>
+					<xsd:documentation>Info about acquisition of the stack.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="false">
+					<xsd:complexContent>
+						<xsd:extension base="acquisitionType"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="acquisitionType">
+		<xsd:sequence>
+			<xsd:element name="FolderName">
+				<xsd:annotation>
+					<xsd:documentation>Folder name which univocally identifies an acquisition of the stack.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="staQuality" type="staQualityType"/>
+		</xsd:sequence>
+		<xsd:attribute name="referenceImage" type="bool" use="required"/>
+		<xsd:attribute name="averageWavenumber" type="xsd:float" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityType">
+		<xsd:sequence>
+			<xsd:element name="overallProductQualityIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. Equal to 0 for valid products and to 1 for invalid ones.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="staQualityParametersList" type="staQualityParametersListType">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters list. The list contains an entry for each polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityParametersListType">
+		<xsd:sequence>
+			<xsd:element name="staQualityParameters" type="staQualityParametersType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>Quality parameters for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="staQualityParametersType">
+		<xsd:sequence>
+			<xsd:element name="invalidL1aDataSamples" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid L1a data samples (according to their mean and standard deviation), expressed as a normalized fraction of the total number of samples.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDecorrelation" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Decorrelation factor due to RFI strength.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDecorrelationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayDecorrelation" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Decorrelation factor due to Faraday residual.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="faradayDecorrelationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to Faraday residual admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidResidualShiftsFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid residual coregistration shifts, expressed as a normalized fraction of the total number of residual coregistration shifts.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="residualShiftsQualityThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on residual coregistration shifts quality (between 0 and 1). Residual shifts with a quality lower than this threshold are not used for processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="invalidGroundPhasesScreenEstimatesFraction" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Number of invalid ground phase screen estimates, expressed as a normalized fraction of the total number of ground phase screen estimates.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="groundPhasesScreenQualityThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on ground phase screen estimation quality (between 0 and 1). Estimates with a quality lower than this threshold are not corrected. Used only in case skpPhaseCorrectionFlag is set to True.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpDecompositionIndex" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Error code for the SKP decomposition. Positive if the SKP decomposition hit a nonblocking contingency case (e.g. SVD decomposition failure etc.) and the exported SKP-related LUTs contain values obtained from a contingency handling procedure. 0 otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="productL2aType">
+		<xsd:sequence>
+			<xsd:element name="mission" type="missionType">
+				<xsd:annotation>
+					<xsd:documentation>Mission (BIOMASS).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="tileID" type="stringListType">
+				<xsd:annotation>
+					<xsd:documentation>List of DGG geographic tile identifiers.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="basinID" type="stringListType">
+				<xsd:annotation>
+					<xsd:documentation>List of DGG basin identifiers.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productType" type="productType">
+				<xsd:annotation>
+					<xsd:documentation>Product type</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="startTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Start time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="stopTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Stop time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radarCarrierFrequency" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Radar carrier frequency [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="missionPhaseID" type="missionPhaseIDType">
+				<xsd:annotation>
+					<xsd:documentation>Mission phase identifier (COMMISSIONING, TOMOGRAPHIC, INTERFEROMETRIC).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sensorMode" type="sensorModeType">
+				<xsd:annotation>
+					<xsd:documentation>Sensor mode (always "measurement")</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="globalCoverageID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Global coverage identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="swath" type="swathType">
+				<xsd:annotation>
+					<xsd:documentation>Swath (S1, S2, S3).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="majorCycleID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Major cycle identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absoluteOrbitNumber" type="integerListType">
+				<xsd:annotation>
+					<xsd:documentation>List of absolute orbit numbers at start time, one for each L1c.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="relativeOrbitNumber" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Relative orbit number (track) at start time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="orbitPass" type="orbitPassType">
+				<xsd:annotation>
+					<xsd:documentation>Orbit pass (Ascending, Descending).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dataTakeID" type="integerListType">
+				<xsd:annotation>
+					<xsd:documentation>List of data take identifiers, one for each L1c.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="frame" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Frame identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="platformHeading" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Platform heading relative to North [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestCoveragePercentage" type="xsd:double">
+				<xsd:annotation>
+					<xsd:documentation>Forest coverage of the input STA products, compute as a percentage of all the pixels in the STA footprint</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="selectedReferenceImage" type="selectedReferenceImageType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and operationalMode configuration has been set to “single reference”</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="selectedReferenceImageType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:unsignedByte">
+				<xsd:attribute name="acquisitionID" type="xsd:string" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="productL2bL3Type">
+		<xsd:sequence>
+			<xsd:element name="mission" type="missionType">
+				<xsd:annotation>
+					<xsd:documentation>Mission (BIOMASS).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="tileID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>DGG geographic tile identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="basinID" type="stringListType">
+				<xsd:annotation>
+					<xsd:documentation>List of DGG basin identifiers.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="productType" type="productType">
+				<xsd:annotation>
+					<xsd:documentation>Product type</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="startTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Start time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="stopTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Stop time of the image [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radarCarrierFrequency" type="doubleWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Radar carrier frequency [Hz].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="missionPhaseID" type="missionPhaseIDType">
+				<xsd:annotation>
+					<xsd:documentation>Mission phase identifier (COMMISSIONING, TOMOGRAPHIC, INTERFEROMETRIC).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sensorMode" type="sensorModeType">
+				<xsd:annotation>
+					<xsd:documentation>Sensor mode (always "measurement")</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="globalCoverageID" type="xsd:unsignedShort">
+				<xsd:annotation>
+					<xsd:documentation>Global coverage identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="contributingTiles" type="stringListType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>List of all the DGG tiles in the input neighbourhood, contributing for AGB parameter estimation</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="calABcoveragePerTile" type="calABcoverageTilesListType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>CAL_AB coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GNcoveragePerTile" type="GNcoverageTilesListType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Input GN products coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rasterImageType">
+		<xsd:sequence>
+			<xsd:element name="footprint" type="floatArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Image footprint, expressed as a list of latitude, longitude tuples in NE,SE,SW,NW order [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firstLatitudeValue" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>First latitude value of the image [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firstLongitudeValue" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>First longitude value of the image [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="latitudeSpacing" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Latitude spacing between samples [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="longitudeSpacing" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Loigitude spacing between samples [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfSamples" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of samples in the image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numberOfLines" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Total number of lines in the image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="projection" type="projectionType">
+				<xsd:annotation>
+					<xsd:documentation>Projection of the image: latitude longitude based on DGG.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="datum" type="datumType">
+				<xsd:annotation>
+					<xsd:documentation>Datum used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelRepresentation" type="pixelRepresentationChoiceType">
+				<xsd:annotation>
+					<xsd:documentation>Representation of the image pixels within the image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelType" type="pixelTypeChoiceType">
+				<xsd:annotation>
+					<xsd:documentation>Representation of the image pixels within the image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noDataValue" type="noDataValueChoiceType">
+				<xsd:annotation>
+					<xsd:documentation>Representation of the image pixels within the image.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="InputInformationL2aType">
+		<xsd:sequence>
+			<xsd:element name="productType" type="productType">
+				<xsd:annotation>
+					<xsd:documentation>Product type ("STA")</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="overallProductsQualityIndex" type="xsd:unsignedByte">
+				<xsd:annotation>
+					<xsd:documentation>Quality index based on the "overallProductQualityIndex" of the single STA input data, giving a qualitative overall idea of the input stack. Equal to "0" if all STA feature "overallProductQualityIndex"=False and to "1" if at least one is degraded.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nominalStack" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if it is a nominal stack (3 STA products for INT phase or 7 STA products for TOM phase), False otherwise</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationList" type="polarisationListType">
+				<xsd:annotation>
+					<xsd:documentation>List of polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="projection" type="projectionType">
+				<xsd:annotation>
+					<xsd:documentation>Projection of the input acquisitions, always Slant Range.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="footprint" type="floatArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Image footprint, expressed as a list of latitude, longitude tuples in NE,SE,SW,NW order [deg].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="verticalWavenumbers" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Minimum and maximum values of the vertical wavenumbers [rad/m] in the read and used Input STA products</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="heightOfAmbiguity" type="minMaxTypeWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Minimum and maximum values of the height of ambiguity (HoA) [m], computed from the vertical wavenumbers in the read and used Input STA products</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="acquisitionList" type="acquisitionListType">
+				<xsd:annotation>
+					<xsd:documentation>Folder name of each acquisition composing the stack.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="generalConfigurationParametersType">
+		<xsd:sequence>
+			<xsd:element name="applyCalibrationScreen" type="calibrationScreenType">
+				<xsd:annotation>
+					<xsd:documentation>The performed phase calibration:“none”: no phase screen has been applied; “geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry); “skp”: complete phase screen has been applied (default)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestCoverageThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum percentage forest coverage in L2a product footprint, used to trigger L2a processing. Range of values from 0% to 100%, default 5%.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestMaskInterpolationThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>This parameter is a threshold used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="subsettingRule" type="subsettingRuleType">
+				<xsd:annotation>
+					<xsd:documentation>In case of more than three acquisitions in input (TOM phase), this is the rule which has been used to select 3 acquisitions from the 7/8 of TOM phase, choosing, the baselines corresponding to the ones of INT phase.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="InputInformationL2bL3ListType">
+		<xsd:sequence>
+			<xsd:element name="L2aInputs" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:all>
+						<xsd:element name="L2aProductFolderName" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>L2a DSR product folder name.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="L2aProductDate" type="xsd:string">
+							<xsd:annotation>
+								<xsd:documentation>L2a product date.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="L1Inputs" type="InputInformationL2aType"/>
+					</xsd:all>
+					<xsd:attribute name="significanceLevel" type="xsd:float" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:simpleType name="calibrationScreenType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none"/>
+			<xsd:enumeration value="geometry"/>
+			<xsd:enumeration value="skp"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="subsettingRuleType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="geometry"/>
+			<xsd:enumeration value="maintain all"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="operationalModeType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="single reference"/>
+			<xsd:enumeration value="multi reference"/>
+			<xsd:enumeration value="insar pair"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="bps_fnfType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of Forest Mask: CFM from FD processor or FNF.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="FNF"/>
+			<xsd:enumeration value="CFM"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="minMaxNumType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of min max.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:float"/>
+			<xsd:element name="max" type="xsd:float"/>
+			<xsd:element name="num" type="xsd:unsignedShort"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="agbIndexingType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of AGB algorithm indexings.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none"/>
+			<xsd:enumeration value="p"/>
+			<xsd:enumeration value="j"/>
+			<xsd:enumeration value="k"/>
+			<xsd:enumeration value="pj"/>
+			<xsd:enumeration value="pk"/>
+			<xsd:enumeration value="jk"/>
+			<xsd:enumeration value="pjk"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="backscatterLimitsType">
+		<xsd:sequence>
+			<xsd:element name="hh" type="minMaxType"/>
+			<xsd:element name="vh" type="minMaxType"/>
+			<xsd:element name="vv" type="minMaxType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="pixelRepresentationChoiceType">
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element name="FD" type="pixelRepresentationType"/>
+					<xsd:element name="CFM" type="pixelRepresentationType"/>
+					<xsd:element name="probabilityOfChange" type="pixelRepresentationType"/>
+					<xsd:element name="FD_heatMap" type="pixelRepresentationType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:sequence>
+					<xsd:element name="FH" type="pixelRepresentationType"/>
+					<xsd:element name="Quality" type="pixelRepresentationType"/>
+					<xsd:element name="FH_heatMap" type="pixelRepresentationType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:sequence>
+					<xsd:element name="GN" type="pixelRepresentationType"/>
+				</xsd:sequence>
+				<xsd:sequence>
+					<xsd:element name="AGB" type="pixelRepresentationType"/>
+					<xsd:element name="AGB_STANDARD_DEVIATION" type="pixelRepresentationType"/>
+					<xsd:element name="AGB_heatMap" type="pixelRepresentationType"/>
+				</xsd:sequence>
+			</xsd:choice>
+			<xsd:element name="BPS_FNF" type="pixelRepresentationType" minOccurs="0"/>
+			<xsd:element name="Acquisition_id_image" type="pixelRepresentationType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="pixelTypeChoiceType">
+		<xsd:sequence>
+			<xsd:element name="floatPixelType" type="pixelTypeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Data type of output pixels within the image, for float32 data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="intPixelType" type="pixelTypeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Data type of output pixels within the image, for uint8 data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="noDataValueChoiceType">
+		<xsd:sequence>
+			<xsd:element name="floatNoDataValue" type="xsd:float" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Pixel value in case of invalid data, for float32 data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="intNoDataValue" type="xsd:unsignedByte" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Pixel value in case of invalid data, for uint8 data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,6 @@
+include bps/stack_cal_processor/resources/cal_confxml_template.xml
+include bps/stack_cal_processor/resources/cal_inxml_template.xml
+global-exclude __pycache__
+global-exclude *.py[co]
+prune test/
+exclude MANIFEST.in

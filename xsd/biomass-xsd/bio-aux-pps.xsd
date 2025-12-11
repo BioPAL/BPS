@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="generalType">
+		<xsd:sequence>
+			<xsd:element name="polarisationCombinationMethod" type="polarisationCombinationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarisations are used).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="outerParallelizationMaxCores" type="xsd:unsignedInt" default="0">
+				<xsd:annotation>
+					<xsd:documentation>Maximum number of parallel instances (outer parallelization). This number shall be lower or equal to the total number of cores specified in the Job Order. It allows to control memory consumption. Default value is 0, i.e., the number of cores set in the Job Order is used.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="allowDuplicateImagesFlag" type="bool" default="false">
+				<xsd:annotation>
+					<xsd:documentation>Allow duplicated products in job-order. When set to false, the processor exits with an error if the input stack contains duplicated images.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="flatteningPhaseBiasCompensationFlag" type="bool" default="true">
+				<xsd:annotation>
+					<xsd:documentation>If true, biases due to DEM upsampling residuals are compensated. Defaults to true.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="primaryImageSelectionType">
+		<xsd:sequence>
+			<xsd:element name="primaryImageSelectionInformation" type="primaryImageSelectionInformationType">
+				<xsd:annotation>
+					<xsd:documentation>Information to be used to select coregistration primary image (Geometry, Geometry and RFI Correction, Geometry and FR Correction, Geometry and RFI+FR Corrections).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDecorrelationThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="faradayDecorrelationThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Maximum decorrelation factor due to Faraday residual admissible to use the image as the primary image.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="coregistrationType">
+		<xsd:sequence>
+			<xsd:element name="coregistrationMethod" type="coregistrationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Coregistration method (Geometry, Geometry and Data, Automatic).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeSpectralFilteringFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if range spectral filtering has to be performed (during coregistration), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="residualShiftsQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on residual coregistration shifts quality (between 0 and 1). Residual shifts with a quality lower than this threshold are not used for processing. Used only in case coregistrationMethod is set to Geometry and Data.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="polarisationUsed" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used as primary for coregistration.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="blockQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the cross-correlation, as a measure of coregistration quality (between 0 and 1).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="fittingQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on quality for the estimated shifts to be accepted as valid (between 0 and 1).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="minValidBlocks">
+				<xsd:annotation>
+					<xsd:documentation>Minimum percentage of valid blocks to accept a coregistration result (negative to disable, maximum 100).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:short">
+						<xsd:minInclusive value="-1"/>
+						<xsd:maxInclusive value="100"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="azimuthMaxShift">
+				<xsd:annotation>
+					<xsd:documentation>Maximum pixel shift that can be estimated in azimuth direction (in pixel). Recommended value: 5.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="azimuthBlockSize">
+				<xsd:annotation>
+					<xsd:documentation>Size of the estimation blocks used when computing cross-correlation in azimuth direction (in pixel). Recommended value: 101.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="azimuthMinOverlap">
+				<xsd:annotation>
+					<xsd:documentation>Minimum azimuth overlap required for shifts estimated using cross-correlation (in pixel). Recommended value: 0.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:short">
+						<xsd:minInclusive value="0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="rangeMaxShift">
+				<xsd:annotation>
+					<xsd:documentation>Maximum pixel shift that can be estimated in range direction (in pixel). Recommended value: 5.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="rangeBlockSize">
+				<xsd:annotation>
+					<xsd:documentation>Size of the estimation blocks used for speckle tracking in range direction (in pixel). Recommended value: 51.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="rangeMinOverlap">
+				<xsd:annotation>
+					<xsd:documentation>Minimum range overlap required for shifts estimated using cross-correlation (in pixel). Recommended value: 0.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:short">
+						<xsd:minInclusive value="0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="modelBasedFitFlag" type="bool" default="false">
+				<xsd:annotation>
+					<xsd:documentation>True if model-based fit should be performed after estimating shifts via cross-correlation. Defaults to false.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lowPassFilterType">
+				<xsd:annotation>
+					<xsd:documentation>Type of low-pass filter applied to shifts estimated via cross-correlation. This parameter is ignored/unused when 'modelBasedFitFlag' is set to 'true'. Supported values are "Average" and "Gaussian". Recommended value is "Average".</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="Average"/>
+						<xsd:enumeration value="Gaussian"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="lowPassFilterOrder">
+				<xsd:annotation>
+					<xsd:documentation>Low-pass filter order. Used only if "Average" is selected. Recommended value is 1.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="lowPassFilterStdDev">
+				<xsd:annotation>
+					<xsd:documentation>Standard deviation of the Gaussian low-pass filter. Recommended value is 0.84089642.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minExclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="exportDebugProductsFlag" type="bool" default="false">
+				<xsd:annotation>
+					<xsd:documentation>True if all products for debugging needs to be exported. Defaults to False.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coregistrationExecutionPolicy" type="coregistrationExecutionPolicyType">
+				<xsd:annotation>
+					<xsd:documentation>As to whether the coregistration should be run nominally (i.e. shift estimation and image warping), shift estimation only, or image warping only (which requires user provided coregistration shifts). Accepted policies are Nominal, Shift Estimation Only, and Warping Only. Defaults to Nominal.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rfiDegradationEstimationType">
+		<xsd:sequence>
+			<xsd:element name="rfiDegradationEstimationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if estimation of degradation due to RFI filtering has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="azimuthSpectralFilteringType">
+		<xsd:sequence>
+			<xsd:element name="azimuthSpectralFilteringFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if azimuth spectral filtering has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="usePrimaryWeightingWindowFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if azimuth spectral filtering should use the azimuth spectral window of the primary as common azimuth window (recommended configuration). Otherwise, use the selected window.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="spectralWeightingWindow" type="weightingWindowType" default="Hamming">
+				<xsd:annotation>
+					<xsd:documentation>The user provided common spectral window (default: Hamming).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="spectralWeightingWindowParameter">
+				<xsd:annotation>
+					<xsd:documentation>The parameter of the spectral weighting window (to be interpreted depending on the window).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minExclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="use32bitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used for model estimations instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="slowIonosphereRemovalType">
+		<xsd:sequence>
+			<xsd:element name="slowIonosphereRemovalFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if slow-varying ionospheric phase screen estimation and removal has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="primaryImageFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if image to be used as primary for multi-baseline calibration steps is the same as the one to be used for coregistration, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationUsed" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used in the estimation of the slow-varying ionosphere removal step. Recommended value is HH.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compensateL1IonoPhaseScreenFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the ionospheric phase screen from L1 should be compensated during split-spectrum. Defaults to True.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rangeLookBandwidth">
+				<xsd:annotation>
+					<xsd:documentation>Range looks bandwidth percentage (from 0 to 1).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="rangeLookFrequency">
+				<xsd:annotation>
+					<xsd:documentation>Range looks center frequency (from 0 to 0.5).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="0.5"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="phaseUnwrappingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the single-baseline phase slope estimation should perform a prelimimnary phase unwrapping, False otherwise. Defaulted to True.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="latitudeThreshold" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Latitude threshold above/below (North/South) which the IOB will be skipped [deg] (even if the IOB is enabled by flag)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="baselineMethod" type="baselineMethodType" default="Multi-Baseline">
+				<xsd:annotation>
+					<xsd:documentation>The baseline method, i.e. Single-Baseline or Multi-Baseline. Defaulted to Multi-Baseline.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="unweightedMultiBaselineEstimation" type="bool" default="false">
+				<xsd:annotation>
+					<xsd:documentation>True if the Multi-Baseline estimation should use uniform weighting instead of weights from Single-Baseline estimation. Defaulted to false.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere estimations below this threshold will be ignored. Values between 0 and 1.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="sublookWindowAzimuthSize">
+				<xsd:annotation>
+					<xsd:documentation>Window size in along-track direction to generate the sub-looks interferograms [px]. Recommended value is 501, i.e., approximately 200m.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="sublookWindowRangeSize">
+				<xsd:annotation>
+					<xsd:documentation>Window size in slant-range direction to generate the sub-looks interferograms [px]. Recommended value is 41, i.e., approximately 200m.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="multiBaselineCriticalBaselineThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Maximum allowed percentage of CB displacement for multi-baseline pairs. Suggested value 0.45 (i.e. 45% CB).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="minCoherenceThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the coherence to consider a pixel usable for fitting the phase plane. Recommended value is 0.0.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="minUsablePixelRatio">
+				<xsd:annotation>
+					<xsd:documentation>Minimum ratio of pixels that are usable for fitting the phase plane according to the minimum coherence and phase unwrap test. Recommended value is 0.05 (5%).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="maxDeltaPhaseUnwrapTest" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Pixelwise threshold applied to the phase difference between high and low interferogram downstream of phase unwrapping [rad]. If the phase difference exceeds this threshold value, the pixel is discarded during phase screen estiamation. See stack ATBD. Recommended value is 0.5 radians.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="use32bitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used for model estimations instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="inSARCalibrationType">
+		<xsd:sequence>
+			<xsd:element name="inSARCalibrationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the InSAR calibration step is active. False otherwise</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarisationUsed" type="polarisationType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisation used in the estimation of the InSAR calibration's phase removal step. Recommended value is HH.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fft2ZeroPaddingUpsamplingFactor">
+				<xsd:annotation>
+					<xsd:documentation>Multiplicative factor that controls zero-padding before FFT2 to increasing frequency-domain sampling density. It must be at least 1.0. Recommended value is 1.2.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="fft2PeakWindowSize">
+				<xsd:annotation>
+					<xsd:documentation>Size of the local window used for parabolic interpolation of the FFT2 around the max/peak. It must be at least 3 (and odd). Recommended value is 3.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="use32bitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used for model estimations instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="skpPhaseCalibrationType">
+		<xsd:sequence>
+			<xsd:element name="skpPhaseEstimationFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if ground steering phases estimation has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="phaseCorrection" type="skpPhaseCorrectionType">
+				<xsd:annotation>
+					<xsd:documentation>Type of phase correction executed by the SKP. None: Disable the SKP Phase correction. flatteningPhaseScreen: Correct DSI only. groundPhaseScreen: Correct DSI and forest disturbance.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="estimationWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Estimation window size [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpCalibrationPhaseScreenQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on SKP phase estimation quality (between 0 and 1). Estimates with a quality lower than this threshold are not corrected. Used only in case skpPhaseCorrectionFlag is set to True.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="overallProductQualityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the percentage of ground phase estimations to consider the SKP valid (between 0 and 1).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxInclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="medianFilterFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if post-processing of the SKP calibration phase screen via median filter has to be performed, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="medianFilterWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Median filter window size [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="excludeMPMBPolarizationCrossCovarianceFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the MPMB coherence matrix should only contain autocovariances (i.e. HH vs HH and not HH vs. VH etc.), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="use32bitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used for model estimations instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="l1cProductExportType">
+		<xsd:sequence>
+			<xsd:element name="l1ProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Digital Object Identifier (DOI) to be written in output products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelRepresentation" type="pixelRepresentationType">
+				<xsd:annotation>
+					<xsd:documentation>Representation of the image pixels within the image MDS (I Q, Abs Phase, Abs, Pow Phase, Pow).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="pixelQuantity" type="pixelQuantityType">
+				<xsd:annotation>
+					<xsd:documentation>Physical quantity stored in output data (Beta-Nought, Sigma-Nought or Gamma-Nought).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absCompressionMethod" type="compressionMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Abs values TIFF compression method.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absMaxZError" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum error threshold on abs values. Used only in case absCompressionMethod is set to LERC, LERC_DEFLATE or LERC_ZSTD. If set to 0, compression is lossless. If set to -1, value is computed dynamically w.r.t. a percentile value defined by absMaxZErrorPercentile.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="absMaxZErrorPercentile" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Percentile value to compute dynamically absMaxZError. Used only in case absMaxZError is set to -1.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="phaseCompressionMethod" type="compressionMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Phase values TIFF compression method.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="phaseMaxZError" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Maximum error threshold on phase values [rad]. Used only in case phaseCompressionMethod is set to LERC, LERC_DEFLATE or LERC_ZSTD. If set to 0, compression is lossless. If set to -1, value is computed dynamically w.r.t. a percentile value defined by phaseMaxZErrorPercentile.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="phaseMaxZErrorPercentile" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Percentile value to compute dynamically phaseMaxZError. Used only in case phaseMaxZError is set to -1.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="noPixelValue" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Pixel value in case of invalid data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qlRangeDecimationFactor">
+				<xsd:annotation>
+					<xsd:documentation>Quick-look ADS range decimation factor w.r.t. output L1 product sampling grid.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="qlRangeAveragingFactor">
+				<xsd:annotation>
+					<xsd:documentation>Quick-look ADS range averaging factor.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="qlAzimuthDecimationFactor">
+				<xsd:annotation>
+					<xsd:documentation>Quick-look ADS azimuth decimation factor w.r.t. output L1 product sampling grid.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="qlAzimuthAveragingFactor">
+				<xsd:annotation>
+					<xsd:documentation>Quick-look ADS azimuth averaging factor.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="qlAbsoluteScalingFactor">
+				<xsd:annotation>
+					<xsd:documentation>Absolute scaling factor to be applied to quick-look ADS.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minExclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staProductType">
+		<xsd:sequence>
+			<xsd:element name="productID" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Product identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="general" type="generalType">
+				<xsd:annotation>
+					<xsd:documentation>General processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="primaryImageSelection" type="primaryImageSelectionType">
+				<xsd:annotation>
+					<xsd:documentation>Primary image selection processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coregistration" type="coregistrationType">
+				<xsd:annotation>
+					<xsd:documentation>Coregistration processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiDegradationEstimation" type="rfiDegradationEstimationType">
+				<xsd:annotation>
+					<xsd:documentation>RFI degradation estimation processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="azimuthSpectralFiltering" type="azimuthSpectralFilteringType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters of the Azimuth Spectral Filtering (AZF).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="slowIonosphereRemoval" type="slowIonosphereRemovalType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters of the Background Ionosphere Removal (IOB).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inSARCalibration" type="inSARCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters of the InSAR calibration step.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpPhaseCalibration" type="skpPhaseCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters of the Sum-of-Kronecker-Products (SKP).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="l1cProductExport" type="l1cProductExportType">
+				<xsd:annotation>
+					<xsd:documentation>L1c product export processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="staProductListType">
+		<xsd:sequence>
+			<xsd:element name="staProduct" type="staProductType">
+				<xsd:annotation>
+					<xsd:documentation>Stack processing parameters for a given product ID.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="auxiliarySTAProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="staProductList" type="staProductListType">
+				<xsd:annotation>
+					<xsd:documentation>List of stack processing parameters for each product the Stack Processor is capable of generating (i.e., SM_STA__1S, ...).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliarySTAProcessingParameters" type="auxiliarySTAProcessingParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS auxiliary stack processing parameters element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

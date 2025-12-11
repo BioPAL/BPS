@@ -1,0 +1,7 @@
+include bps/l1_processor/resources/bulletinb-348.txt
+include bps/l1_processor/autofocus/complib/*.so
+include bps/l1_processor/xsd/*/*.xsd 
+global-exclude __pycache__
+global-exclude *.py[co]
+prune test/
+exclude MANIFEST.in
