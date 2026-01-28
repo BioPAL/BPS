@@ -17,10 +17,8 @@ from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common, common_types
 from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io.common_annotation_l1 import (
-    IonosphereCorrection,
-    PolarimetricDistortionType,
-)
+from bps.transcoder.io.common_annotation_l1 import PolarimetricDistortionType
+from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l0product import BIOMASSL0Product
 from bps.transcoder.sarproduct.l1_annotations import DCAnnotations, RFIMasksStatistics
@@ -279,7 +277,7 @@ class BIOMASSL1Product(SARProduct):
         rfi_masks_statistics: RFIMasksStatistics | None = None,
         dc_annotations: DCAnnotations | None = None,
         dc_fallback_activated: bool = False,
-        iono_cal_report: IonosphereCorrection | None = None,
+        iono_cal_report: IonosphericCalibrationReport | None = None,
     ) -> None:
         """Init the BPS L1 product"""
         SARProduct.__init__(self)

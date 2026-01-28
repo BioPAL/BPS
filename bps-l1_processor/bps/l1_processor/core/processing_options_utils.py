@@ -132,6 +132,7 @@ def retrieve_processing_settings(
         ionospheric_calibration_enabled=aux_pp1_conf.is_ionospheric_calibration_enabled(),
         rfi_use_chirp_product=rfi_use_chirp_product,
         rfi_operation_mode=rfi_operation_mode,
+        drop_azimuth_focuser_margin=aux_pp1_conf.azimuth_compression.azimuth_focusing_margins_removal_flag,
     )
 
 

@@ -34,6 +34,8 @@ class L1QualityIndex(QualityIndex):
 
     inconsistent_phasescreen_and_rangeshifts_luts: bool = False
 
+    geomagnetic_equator_fallback_activated: bool = False
+
     number_of_failing_estimations_above_threshold: bool = False
 
     _bit_map = {
@@ -45,5 +47,6 @@ class L1QualityIndex(QualityIndex):
         "iri_model_used_as_fallback": 25,
         "gaussian_filter_size_out_of_boundaries": 26,
         "inconsistent_phasescreen_and_rangeshifts_luts": 27,
-        "number_of_failing_estimations_above_threshold": 28,
+        "geomagnetic_equator_fallback_activated": 28,
+        "number_of_failing_estimations_above_threshold": 30,
     }

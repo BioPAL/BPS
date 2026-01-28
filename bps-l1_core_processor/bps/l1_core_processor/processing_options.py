@@ -91,6 +91,7 @@ class BPSL1CoreProcessingOptions:
         ionospheric_calibration_enabled: bool = True
         rfi_use_chirp_product: Literal["ANNOTATION", "PRODUCT", "AUTO"] = "AUTO"
         rfi_operation_mode: Literal["DETECTION_ONLY", "DETECTION_AND_MITIGATION"] = "DETECTION_AND_MITIGATION"
+        drop_azimuth_focuser_margin: bool = True
 
     @dataclass
     class ExternalResources:

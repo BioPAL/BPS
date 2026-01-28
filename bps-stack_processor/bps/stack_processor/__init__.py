@@ -10,7 +10,7 @@ Biomass Stack Processor
 -----------------------
 """
 
-__version__ = "4.2.2"
+__version__ = "4.3.0"
 
 BPS_STACK_PROCESSOR_NAME = "Biomass Stack Processor"
 

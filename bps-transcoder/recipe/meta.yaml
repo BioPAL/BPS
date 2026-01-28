@@ -1,5 +1,5 @@
 {% set name = "bps-transcoder" %}
-{% set version = "4.2.2" %}
+{% set version = "4.3.0" %}
 
 package:
   name: {{ name|lower }}
@@ -25,7 +25,7 @@ requirements:
     - arepytools >=1.7.6
     - gdal >=3.10,<3.11
     - netcdf4
-    - py-opencv=*=*headless*
+    - py-opencv <4.13=*headless*
     - pystac
     - scipy >=1.10
     - bps-common =={{ version }}

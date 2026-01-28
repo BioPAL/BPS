@@ -3642,6 +3642,15 @@ class Bpsl1CoreProcessingSettingsType:
             "required": True,
         },
     )
+    drop_azimuth_focuser_margin: Optional[bool] = field(
+        default=None,
+        metadata={
+            "name": "DropAzimuthFocuserMargin",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
 
     @dataclass
     class AzimuthCompression:

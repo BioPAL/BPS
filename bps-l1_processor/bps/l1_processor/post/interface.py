@@ -29,7 +29,7 @@ from bps.l1_processor.processor_interface.joborder_l1 import L1JobOrder
 from bps.l1_processor.settings.intermediate_names import IntermediateProductID
 from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io.common_annotation_l1 import IonosphereCorrection
+from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l0product_reader import read_l0_product
 from bps.transcoder.sarproduct.biomass_l1product import (
@@ -445,7 +445,7 @@ def export_in_bps_format(
     add_monitoring_product: bool = False,
     calibration_tag: str | None = None,
     gdal_num_threads: int = 1,
-    iono_cal_report: IonosphereCorrection | None = None,
+    iono_cal_report: IonosphericCalibrationReport | None = None,
 ):
     """_summary_
 

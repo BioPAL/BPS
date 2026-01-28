@@ -18,7 +18,6 @@ from bps.l1_processor.post.interface import (
     export_in_bps_format,
     fill_bps_transcoder_configuration,
 )
-from bps.l1_processor.post.read_iono_cal_report import read_iono_cal_report
 from bps.l1_processor.post.rfi_masks_statistics import compute_rfi_masks_statistics
 from bps.l1_processor.processor_interface.aux_pp1 import AuxProcessingParametersL1, DopplerEstimationConf
 from bps.l1_processor.processor_interface.joborder_l1 import (
@@ -28,6 +27,7 @@ from bps.l1_processor.processor_interface.joborder_l1 import (
 )
 from bps.l1_processor.settings.intermediate_names import IntermediateProductID
 from bps.l1_processor.settings.l1_intermediates import L1CoreProcessorOutputProducts
+from bps.transcoder.io.iono_cal_report import read_iono_cal_report
 from bps.transcoder.io.preprocessor_report import parse_annotations
 from bps.transcoder.sarproduct.l1_annotations import DCAnnotations
 
@@ -139,5 +139,5 @@ def run_l1_post_processing(
             dc_fallback_activated=dc_fallback_activated,
             add_monitoring_product=add_monitoring,
             gdal_num_threads=job_order.device_resources.num_threads,
-            iono_cal_report=iono_cal_report.ionosphere_correction if iono_cal_report else None,
+            iono_cal_report=iono_cal_report if iono_cal_report else None,
         )

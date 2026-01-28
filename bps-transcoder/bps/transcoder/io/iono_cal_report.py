@@ -6,8 +6,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Read ionospheric calibration report
------------------------------------
+Ionospheric calibration report
+------------------------------
 """
 
 import xml.etree.ElementTree as ET
@@ -23,6 +23,8 @@ class IonosphericCalibrationReport:
     """Ionospheric calibration report"""
 
     ionosphere_correction: IonosphereCorrection
+    phase_screen_correction_applied: bool
+    group_delay_correction_applied: bool
     constant_sign_geomagnetic_field: bool
 
 
@@ -60,6 +62,8 @@ def read_iono_cal_report(report: Path) -> IonosphericCalibrationReport:
     height_estimation_method_used_str = content.get("HeightEstimationMethodUsed")
     gaussian_filter_computation_flag_str = content.get("GaussianFilterComputationFlag")
     faraday_rotation_correction_applied_str = content.get("FaradayRotationCorrectionApplied")
+    phase_screen_correction_applied_str = content.get("PhaseScreenCorrectionApplied")
+    group_delay_correction_applied_str = content.get("GroupDelayCorrectionApplied")
     constant_geomagnetic_field_str = content.get("ConstantSignGeomagneticField")
 
     if (
@@ -71,6 +75,8 @@ def read_iono_cal_report(report: Path) -> IonosphericCalibrationReport:
         or height_estimation_method_used_str is None
         or gaussian_filter_computation_flag_str is None
         or faraday_rotation_correction_applied_str is None
+        or phase_screen_correction_applied_str is None
+        or group_delay_correction_applied_str is None
         or constant_geomagnetic_field_str is None
     ):
         raise RuntimeError(f"Missing mandatory field in Ionospheric Calibration report file: {report}")
@@ -107,5 +113,7 @@ def read_iono_cal_report(report: Path) -> IonosphericCalibrationReport:
             faraday_rotation_correction_applied=_translate_bool(faraday_rotation_correction_applied_str),
             autofocus_shifts_applied=False,
         ),
+        phase_screen_correction_applied=_translate_bool(phase_screen_correction_applied_str),
+        group_delay_correction_applied=_translate_bool(group_delay_correction_applied_str),
         constant_sign_geomagnetic_field=_translate_bool(constant_geomagnetic_field_str),
     )

@@ -458,7 +458,15 @@ def calibration(
         )
 
         num_acq = len(scs_acq_list)
-        pol_names_for_log = ["HH", "XP", "VV"]  # just needee for logging reasons
+        if num_pols == 3:
+            pol_names_for_log = ["HH", "XP", "VV"]  # just needee for logging reasons
+        if num_pols == 4:
+            pol_names_for_log = [
+                "HH",
+                "HV",
+                "VH",
+                "VV",
+            ]  # just needee for logging reasons
 
         # interpolate ground phase screens over SCS data axis, if needed
         if not scs_acq_list[0][0].shape == geometry_gnd_phase_screens_rad[0].shape:

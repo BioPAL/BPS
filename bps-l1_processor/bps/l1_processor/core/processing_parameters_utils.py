@@ -174,8 +174,7 @@ def fill_doppler_estimator_conf(
 
 
 def fill_azimuth_conf(
-    conf: aux_pp1.AzimuthCompressionConf,
-    swath: str,
+    conf: aux_pp1.AzimuthCompressionConf, swath: str, ionospheric_correction_enabled: bool
 ) -> configuration.AzimuthConf:
     """Fill azimuth configuration"""
     params = conf.parameters.get(Swath(swath))
@@ -203,9 +202,13 @@ def fill_azimuth_conf(
         if conf.bistatic_delay_correction_method == aux_pp1.AzimuthCompressionConf.Method.BULK:
             bistatic_delay_correction_mode = configuration.AzimuthConf.BistaticDelayCorrectionMode.SCENE_CENTER
 
+    keep_margin_during_azimuth_focusing = (
+        not conf.azimuth_focusing_margins_removal_flag or ionospheric_correction_enabled
+    )
+
     pad_result_keep_margin = 3
     pad_result_remove_margin = 0
-    pad_result = pad_result_remove_margin if conf.azimuth_focusing_margins_removal_flag else pad_result_keep_margin
+    pad_result = pad_result_keep_margin if keep_margin_during_azimuth_focusing else pad_result_remove_margin
 
     return configuration.AzimuthConf(
         lines_in_block=conf.block_lines,
@@ -465,6 +468,7 @@ def fill_sarfoc_processing_parameters(
             fill_azimuth_conf(
                 pp1.azimuth_compression,
                 swath.name,
+                pp1.is_ionospheric_calibration_enabled(),
             )
             for swath in STRIPMAP_SWATHS
         ],

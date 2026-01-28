@@ -1050,7 +1050,7 @@ class BIOMASSL1ProductWriter:
 
         # - ionosphereCorrection
         if self.product.iono_cal_report is not None:
-            ionospheric_annotation = self.product.iono_cal_report
+            ionospheric_annotation = self.product.iono_cal_report.ionosphere_correction
         else:
             ionospheric_annotation = common_annotation_l1.IonosphereCorrection(
                 ionosphere_height_used=-1.0,
@@ -1137,6 +1137,15 @@ class BIOMASSL1ProductWriter:
             == common.IonosphereHeightEstimationMethodType.MODEL
         )
 
+        if self.product.iono_cal_report is not None:
+            geomagnetic_equator_fallback_activated = (
+                not self.product.iono_cal_report.constant_sign_geomagnetic_field
+                and not self.product.iono_cal_report.phase_screen_correction_applied
+                and not self.product.iono_cal_report.group_delay_correction_applied
+            )
+        else:
+            geomagnetic_equator_fallback_activated = False
+
         quality_index = L1QualityIndex(
             raw_data_stats_out_of_boundaries=any(v > 0 for _, v in invalid_raw_data_samples.items()),
             int_cal_sequence_above_threshold=invalid_drift_fraction > 0
@@ -1147,6 +1156,7 @@ class BIOMASSL1ProductWriter:
             iri_model_used_as_fallback=iri_model_used and not iri_model_requested,
             gaussian_filter_size_out_of_boundaries=not ionospheric_annotation.gaussian_filter_computation_flag,
             inconsistent_phasescreen_and_rangeshifts_luts=False,
+            geomagnetic_equator_fallback_activated=geomagnetic_equator_fallback_activated,
             number_of_failing_estimations_above_threshold=not ionospheric_annotation.autofocus_shifts_applied,
         )
         overall_product_quality_index = quality_index.encode()

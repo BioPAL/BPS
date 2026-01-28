@@ -38,7 +38,7 @@ EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
 EXPECTED_PROCESSOR_NAME = "L1F_P"
 """Processor name for Biomass L1 framing processor"""
 
-EXPECTED_PROCESSOR_VERSION = "04.22"
+EXPECTED_PROCESSOR_VERSION = "04.30"
 """Processor version for Biomass L1 framing processor"""
 
 EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME

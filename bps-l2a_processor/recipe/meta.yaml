@@ -1,5 +1,5 @@
 {% set name = "bps-l2a_processor" %}
-{% set version = "4.2.2" %}
+{% set version = "4.3.0" %}
 
 package:
   name: {{ name|lower }}
@@ -30,7 +30,7 @@ requirements:
     - numexpr
     - xsdata
     - netcdf4
-    - py-opencv=*=*headless*
+    - py-opencv <4.13=*headless*
     - bps-common =={{ version }}
     - bps-transcoder =={{ version }}
 

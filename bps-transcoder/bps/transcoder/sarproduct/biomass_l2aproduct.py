@@ -21,7 +21,10 @@ from bps.transcoder.io import (
     main_annotation_models_l2a_gn,
     main_annotation_models_l2a_tfh,
 )
-from bps.transcoder.utils.production_model_utils import encode_product_name_id_value
+from bps.transcoder.utils.production_model_utils import (
+    encode_product_name_id_value,
+    translate_com_phase_negative_values,
+)
 from bps.transcoder.utils.time_conversions import (
     pdt_to_compact_date,
     pdt_to_compact_string,
@@ -504,7 +507,7 @@ class BIOMASSL2aProduct:
                 + (
                     "___"
                     if self.main_ads_product.mission_phase_id[0] == "C"
-                    else f"{self.main_ads_product.relative_orbit_number:03d}"
+                    else f"{translate_com_phase_negative_values(self.main_ads_product.relative_orbit_number):03d}"
                 ),
                 "F" + ("___" if self.main_ads_product.frame == 0 else f"{self.main_ads_product.frame:03d}"),
                 ("__" if baseline_id == 0 else f"{baseline_id:02d}"),

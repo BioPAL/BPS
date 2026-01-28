@@ -306,6 +306,7 @@ def translate_bps_l1_core_processor_processing_options_to_model(
         polarimetric_compensator=are_conf.Bpsl1CoreProcessingSettingsType.PolarimetricCompensator(
             enable_ionospheric_calibration=processing_options.settings.ionospheric_calibration_enabled
         ),
+        drop_azimuth_focuser_margin=processing_options.settings.drop_azimuth_focuser_margin,
     )
 
     output_products = are_conf.SarfocOutputProductsType(

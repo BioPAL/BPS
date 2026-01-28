@@ -177,7 +177,7 @@ def translate_repeat_cycle_id(
     identifier: int,
 ) -> int:
     """Translate repeat cycle ID"""
-    if identifier in range(1, 9):
+    if identifier in range(1, 99):
         return identifier
     return 0
 
