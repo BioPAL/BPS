@@ -41,6 +41,7 @@ from bps.common.io.common_types import (
     LayerType,
     MinMaxType,
     MinMaxTypeWithUnit,
+    PolarisationCombinationMethodType,
     PolarisationType,
     SlantRangePolynomialType,
     StateType,
@@ -973,6 +974,10 @@ class GeneralType:
     subsetting_rule
         Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines
         corresponding to the ones of INT phase.Default value: “geometry”.
+    polarisation_combination_method
+        Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV
+        ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed
+        (all the four polarisations are used).
     """
 
     class Meta:
@@ -1009,6 +1014,15 @@ class GeneralType:
         default=None,
         metadata={
             "name": "subsettingRule",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    polarisation_combination_method: Optional[PolarisationCombinationMethodType] = field(
+        default=None,
+        metadata={
+            "name": "polarisationCombinationMethod",
             "type": "Element",
             "namespace": "",
             "required": True,

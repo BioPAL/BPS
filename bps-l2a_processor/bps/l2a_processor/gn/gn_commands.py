@@ -19,7 +19,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types
+from bps.common.io import common_types, translate_common
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_aux_pp2_2a import OperationalModeType
@@ -209,7 +209,7 @@ class GN:
         ) = sigma_naught_normalisation(
             ground_cancelled,
             np.deg2rad(self.stack_lut_list[self.primary_image_index]["incidenceAngle"].astype(np.float32)),
-            np.deg2rad(self.stack_lut_list[self.primary_image_index]["terrainSlope"].astype(np.float32)),
+            np.deg2rad(self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32)),
             self.stack_lut_axes_dict["axis_primary_az_s"],
             self.stack_lut_axes_dict["axis_primary_sr_s"],
             self.scs_axes_dict["scs_axis_az_s"],
@@ -606,6 +606,9 @@ class GN:
             self.aux_pp2_2a.general.forest_coverage_threshold,
             self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
             common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            translate_common.translate_polarisation_combination_method_to_model(
+                self.aux_pp2_2a.general.polarisation_combination_method
+            ),
         )
 
         least_significant_digit = self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.least_significant_digit

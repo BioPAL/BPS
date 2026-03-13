@@ -81,6 +81,7 @@ def translate_model_to_general_conf(
     assert conf.height_model.value is not None
     assert conf.height_model.version is not None
     assert conf.height_model_margin is not None
+    assert conf.height_model_fallback_flag is not None
     assert conf.height_model_margin.value is not None
     assert conf.parc_processing is not None
     assert conf.parc_processing.parc_roisamples is not None
@@ -91,6 +92,7 @@ def translate_model_to_general_conf(
         requested_height_model_version=conf.height_model.version,
         height_model=GeneralConf.EarthModel(conf.height_model.value.name),
         height_model_version=conf.height_model.version,
+        height_model_fallback_flag=str_to_bool(conf.height_model_fallback_flag),
         height_model_margin=conf.height_model_margin.value,
         parc_roi_samples=conf.parc_processing.parc_roisamples,
         parc_roi_lines=conf.parc_processing.parc_roilines,
@@ -674,6 +676,8 @@ def translate_model_to_l1_product_export_conf(
     assert conf.lut_azimuth_decimation_factor_list is not None
     assert conf.lut_block_size is not None
     assert conf.lut_layers_completeness_flag is not None
+    assert conf.l1a_ql_colour_coding_method is not None
+    assert conf.l1b_ql_colour_coding_method is not None
     assert conf.ql_range_averaging_factor is not None
     assert conf.ql_range_decimation_factor is not None
     assert conf.ql_azimuth_averaging_factor is not None
@@ -707,6 +711,12 @@ def translate_model_to_l1_product_export_conf(
         lut_azimuth_decimation_factor=translate_lut_decimation_factors(conf.lut_azimuth_decimation_factor_list),
         lut_block_size=conf.lut_block_size,
         lut_layers_completeness_flag=str_to_bool(conf.lut_layers_completeness_flag),
+        l1a_ql_colour_coding_method=translate_common.translate_l1ac_ql_colour_coding_method_type(
+            conf.l1a_ql_colour_coding_method
+        ),
+        l1b_ql_colour_coding_method=translate_common.translate_l1b_ql_colour_coding_method_type(
+            conf.l1b_ql_colour_coding_method
+        ),
         ql_range_averaging_factor=conf.ql_range_averaging_factor,
         ql_range_decimation_factor=conf.ql_range_decimation_factor,
         ql_azimuth_averaging_factor=conf.ql_azimuth_averaging_factor,

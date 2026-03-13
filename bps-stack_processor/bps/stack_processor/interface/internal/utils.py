@@ -164,7 +164,6 @@ def fill_full_accuracy_preproc_conf(
     """
     return FullAccuracyPreProcessingConfType(
         coreg_reference_polarization=coreg_conf.polarization_used,
-        enable_common_band_range_filter=int(coreg_conf.range_spectral_filtering_flag),
         azimuth_max_shift=coreg_conf.azimuth_max_shift,
         azimuth_block_size=coreg_conf.azimuth_block_size,
         azimuth_min_overlap=coreg_conf.azimuth_min_overlap,

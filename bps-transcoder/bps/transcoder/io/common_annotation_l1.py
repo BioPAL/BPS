@@ -242,11 +242,20 @@ class RawDataStatisticsType:
 
 
 @dataclass
+class PowerRatioType:
+    """In/out-of-band power ratio"""
+
+    azimuth_time: PreciseDateTime
+    value: float
+
+
+@dataclass
 class RawDataAnalysisType:
     """Raw data analysis"""
 
     error_counters: ErrorCountersType
     raw_data_statistics_list: list[RawDataStatisticsType]
+    iobpr_list: dict[common.PolarisationType, list[PowerRatioType]]
 
 
 @dataclass

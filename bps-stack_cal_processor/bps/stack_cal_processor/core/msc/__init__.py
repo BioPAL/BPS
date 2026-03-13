@@ -6,6 +6,6 @@
 # SPDX-License-Identifier: MIT
 
 """
-Phase Plane Rmoval (PPR)
-------------------------
+Multi-Squint Calibration (MSC)
+------------------------------
 """

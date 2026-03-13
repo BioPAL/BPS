@@ -249,7 +249,7 @@ class BIOMASSL1ProductWriter:
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}dataTakeID")
         xml6.text = str(self.product.datatake_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}orbitDriftFlag")
-        xml6.text = "false"
+        xml6.text = "true" if self.product.orbit_drift_flag else "false"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.global_coverage_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}majorCycleID")
@@ -321,14 +321,16 @@ class BIOMASSL1ProductWriter:
         )
         xml6.text = "EPSG:4326"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}fileName")
+        if self.product.type == "SCS":
+            quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
+            if not quicklook_file.exists():
+                quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
+        else:
+            quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
         xml7 = ET.SubElement(
             xml6,
             "{" + MPH_NAMESPACES["ows"] + "}ServiceReference",
-            attrib={
-                "{" + MPH_NAMESPACES["xlink"] + "}href": build_relative_href_path(
-                    self.product_path.joinpath(self.content.quicklook)
-                )
-            },
+            attrib={"{" + MPH_NAMESPACES["xlink"] + "}href": build_relative_href_path(quicklook_file)},
         )
         xml8 = ET.SubElement(xml7, "{" + MPH_NAMESPACES["ows"] + "}RequestMessage")
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["eop"] + "}product")
@@ -762,7 +764,7 @@ class BIOMASSL1ProductWriter:
 
         # - rawDataAnalysis
         raw_data_analysis_values = (
-            RawDataAnalysis.from_report(self.product.preproc_report)
+            RawDataAnalysis.from_report(self.product.preproc_report, self.product.polarization_list)
             if self.product.preproc_report is not None
             else RawDataAnalysis.from_polarization_list(self.product.polarization_list)
         )
@@ -1218,7 +1220,8 @@ class BIOMASSL1ProductWriter:
             "height": common.LayerType.HEIGHT_M,
             "incidenceAngle": common.LayerType.INCIDENCE_ANGLE_DEG,
             "elevationAngle": common.LayerType.ELEVATION_ANGLE_DEG,
-            "terrainSlope": common.LayerType.TERRAIN_SLOPE_DEG,
+            "rangeTerrainSlope": common.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+            "azimuthTerrainSlope": common.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
             "sigmaNought": common.LayerType.SIGMA_NOUGHT_LUT,
             "gammaNought": common.LayerType.GAMMA_NOUGHT_LUT,
         }
@@ -1251,7 +1254,9 @@ class BIOMASSL1ProductWriter:
         self,
         orbit_xml_template_string: str,
         attitude_xml_template_string: str,
-        quicklook_file: Path | None = None,
+        quicklook_pauli_file: Path | None = None,
+        quicklook_hsv_file: Path | None = None,
+        quicklook_lexicographic_file: Path | None = None,
     ):
         """Write product to disk"""
         bps_logger.info(f"Writing BIOMASS L1 product: {self.product.name}")
@@ -1291,15 +1296,29 @@ class BIOMASSL1ProductWriter:
         attitude_file_path.write_text(attitude_xml_string, encoding="utf-8")
 
         # Write quick-look file
-        if quicklook_file is not None:
-            bps_logger.debug("..quick-look file")
-            shutil.copyfile(quicklook_file, self.product_path.joinpath(self.content.quicklook))
+        if quicklook_pauli_file is not None:
+            bps_logger.debug("..quick-look file (Pauli decomposition)")
+            shutil.copyfile(quicklook_pauli_file, self.product_path.joinpath(self.content.quicklook_pauli))
+        if quicklook_hsv_file is not None:
+            bps_logger.debug("..quick-look file (HSV representation)")
+            shutil.copyfile(quicklook_hsv_file, self.product_path.joinpath(self.content.quicklook_hsv))
+        if quicklook_lexicographic_file is not None:
+            bps_logger.debug("..quick-look file (lexicographic representation)")
+            shutil.copyfile(
+                quicklook_lexicographic_file, self.product_path.joinpath(self.content.quicklook_lexicographic)
+            )
 
         # Write overlay file
         bps_logger.debug("..overlay file")
+        if self.product.type == "SCS":
+            quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
+            if not quicklook_file.exists():
+                quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
+        else:
+            quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
         write_overlay_file(
             self.product_path.joinpath(self.content.overlay),
-            self.product_path.joinpath(self.content.quicklook),
+            quicklook_file,
             self.product.name,
             self.product.footprint,
             "L1 Product Overlay ADS",

@@ -226,6 +226,24 @@
 			<xsd:enumeration value="LERC_ZSTD"/>
 		</xsd:restriction>
 	</xsd:simpleType>
+	<xsd:simpleType name="l1acQlColourCodingMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of L1a and L1c products quick-looks colour coding methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Pauli"/>
+			<xsd:enumeration value="HSV"/>
+			<xsd:enumeration value="Pauli and HSV"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="l1bQlColourCodingMethodType">
+		<xsd:annotation>
+			<xsd:documentation>Enumeration of L1b products quick-looks colour coding methods.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Lexicographic"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 	<xsd:simpleType name="productCompositionType">
 		<xsd:annotation>
 			<xsd:documentation>Enumeration of product composition indicators. The valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e., as long as input L0 one.</xsd:documentation>
@@ -534,7 +552,8 @@
 			<xsd:enumeration value="Height [m]"/>
 			<xsd:enumeration value="Incidence angle [deg]"/>
 			<xsd:enumeration value="Elevation angle [deg]"/>
-			<xsd:enumeration value="Terrain slope [deg]"/>
+			<xsd:enumeration value="Range terrain slope [deg]"/>
+			<xsd:enumeration value="Azimuth terrain slope [deg]"/>
 			<xsd:enumeration value="FNF"/>
 			<xsd:enumeration value="ACM"/>
 			<xsd:enumeration value="numberOfAverages"/>
@@ -545,6 +564,7 @@
 			<xsd:enumeration value="Coregistration shifts quality"/>
 			<xsd:enumeration value="Wavenumbers [rad/m]"/>
 			<xsd:enumeration value="Flattening phase screen [rad]"/>
+			<xsd:enumeration value="Ionosphere phase screens [rad]"/>
 			<xsd:enumeration value="SKP calibration phase screen [rad]"/>
 			<xsd:enumeration value="SKP calibration phase screen quality"/>
 		</xsd:restriction>
@@ -834,7 +854,7 @@
 	</xsd:complexType>
 	<xsd:complexType name="layerListType">
 		<xsd:sequence>
-			<xsd:element name="layer" type="layerType" minOccurs="1" maxOccurs="29">
+			<xsd:element name="layer" type="layerType" minOccurs="1" maxOccurs="30">
 				<xsd:annotation>
 					<xsd:documentation>LUT layer content.</xsd:documentation>
 				</xsd:annotation>
@@ -888,6 +908,17 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="NOTCH_FILTER"/>
 			<xsd:enumeration value="NEAREST_NEIGHBOUR_INTERPOLATION"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="skpPhaseCalibrationPostprocessingType">
+		<xsd:annotation>
+			<xsd:documentation>Postprocessing methods for the SKP calibration phase screen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="None"/>
+			<xsd:enumeration value="Goldstein"/>
+			<xsd:enumeration value="Boxcar"/>
+			<xsd:enumeration value="Median"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>

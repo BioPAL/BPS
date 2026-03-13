@@ -11,6 +11,7 @@ AUX PP1 Translation
 """
 
 import numpy as np
+from bps.common.io import translate_common
 from bps.l2a_processor.core.aux_pp2_2a import (
     ADSfloatCompressionType,
     AuxProcessingParametersL2A,
@@ -58,11 +59,14 @@ def translate_model_to_general_conf(
     assert conf.forest_mask_interpolation_threshold is not None
     assert conf.subsetting_rule is not None
     assert conf.subsetting_rule.value is not None
+    assert conf.polarisation_combination_method is not None
+    pol_method = translate_common.translate_polarisation_combination_method(conf.polarisation_combination_method)
     return GeneralConf(
         apply_calibration_screen=conf.apply_calibration_screen,
         forest_coverage_threshold=conf.forest_coverage_threshold,
         forest_mask_interpolation_threshold=conf.forest_mask_interpolation_threshold,
         subsetting_rule=GeneralConf.SubsettingRules(conf.subsetting_rule.value),
+        polarisation_combination_method=pol_method,
     )
 
 

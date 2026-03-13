@@ -13,6 +13,7 @@ Writer for the BIOMASS L1c Products
 import copy
 import shutil
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Generic
 from xml.dom import minidom
@@ -51,8 +52,13 @@ from bps.transcoder.utils.production_model_utils import (
     translate_repeat_cycle_id,
 )
 from bps.transcoder.utils.quicklook_utils import (
+    ColourCodingMethod,
     QuickLookConf,
+    compute_coherence_quicklook,
+    compute_interferogram_quicklook,
     compute_quicklook_from_pol_data,
+    write_coherence_quicklook_to_file,
+    write_interferogram_quicklook_to_file,
     write_quicklook_to_file,
 )
 from bps.transcoder.utils.time_conversions import (
@@ -89,7 +95,8 @@ STACK_LUT_LAYER_MAP = {
     "height": main_annotation_models.LayerType.HEIGHT_M,
     "incidenceAngle": main_annotation_models.LayerType.INCIDENCE_ANGLE_DEG,
     "elevationAngle": main_annotation_models.LayerType.ELEVATION_ANGLE_DEG,
-    "terrainSlope": main_annotation_models.LayerType.TERRAIN_SLOPE_DEG,
+    "rangeTerrainSlope": main_annotation_models.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+    "azimuthTerrainSlope": main_annotation_models.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
     # Coregistration LUTs.
     "azimuthCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_COREGISTRATION_SHIFTS_M,
     "azimuthOrbitCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M,
@@ -98,10 +105,20 @@ STACK_LUT_LAYER_MAP = {
     "coregistrationShiftsQuality": main_annotation_models.LayerType.COREGISTRATION_SHIFTS_QUALITY,
     "waveNumbers": main_annotation_models.LayerType.WAVENUMBERS_RAD_M,
     "flatteningPhaseScreen": main_annotation_models.LayerType.FLATTENING_PHASE_SCREEN_RAD,
+    # MSC LUTS.
+    "ionospherePhaseScreens": main_annotation_models.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
     # SKP LUTs.
     "skpCalibrationPhaseScreen": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_RAD,
     "skpCalibrationPhaseScreenQuality": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_QUALITY,
 }
+
+
+@dataclass
+class IonosphereAxes:
+    """Store the ionosphere axes."""
+
+    ionosphere_azimuth_axis: npt.NDArray[float]  # [s].
+    ionosphere_slant_range_axis: npt.NDArray[float]  # [s].
 
 
 class BIOMASSStackProductWriter:
@@ -117,12 +134,16 @@ class BIOMASSStackProductWriter:
         file_name_aux_pps: str,
         file_name_fnf: str,
         source_product_names: tuple[str, ...],
+        coherence: np.ndarray | None,
         product_lut: dict,
         lut_axes_primary: tuple[npt.NDArray[PreciseDateTime], npt.NDArray[float]],
         ql_conf: QuickLookConf,
+        ionosphere_axes: IonosphereAxes | None = None,
+        ql_export_coherence_flag: bool = True,
+        ql_export_interferogram_flag: bool = True,
         stack_nodata_mask: npt.NDArray[float] | None = None,
         stack_id: StackUniqueID | None = None,
-        gdal_num_threads: int = 1,
+        num_threads: int = 1,
         processor_name: str = "",
         processor_version: str = "",
     ) -> None:
@@ -152,6 +173,9 @@ class BIOMASSStackProductWriter:
         source_product_names: tuple[str, ...]
             Names of all L1a source products.
 
+        coherence: np.ndarray | None
+            Optionally, the coherence.
+
         product_lut: dict = {}
             Look-up table associated to the current product.
 
@@ -161,13 +185,22 @@ class BIOMASSStackProductWriter:
         ql_conf: QuickLookConf
             Configuration for exporting the quick-looks.
 
+        ionosphere_axes: IonosphereEstimationAnnot | None = None
+            Optionally, the annotation associated to the ionosphere estimation step.
+
+        ql_export_coherence_flag: bool = True
+            Whether to export the coherence quick-look.
+
+        ql_export_interferogram_flag: bool = True
+            Whether to export the interferogram quick-look.
+
         stack_nodata_mask: npt.NDArray[float]
             A mask that specifies which pixels have no common stack data.
 
         stack_id: StackUniqueID | None
             The unique stack identifier.
 
-        gdal_num_threads: int = 1
+        num_threads: int = 1
             Number of threads used to write the GeoTIFF data.
 
         processor_name: str = ""
@@ -181,14 +214,18 @@ class BIOMASSStackProductWriter:
         self.source_product1_path = source_product1_path
         self.source_product2_path = source_product2_path
         self.source_product_names = source_product_names
+        self.coherence = coherence
         self.file_name_aux_pps = file_name_aux_pps
         self.file_name_fnf = file_name_fnf
         self.product_lut = product_lut
         self.lut_axes_primary = lut_axes_primary
+        self.ionosphere_axes = ionosphere_axes
         self.ql_conf = ql_conf
+        self.ql_export_coherence_flag = ql_export_coherence_flag
+        self.ql_export_interferogram_flag = ql_export_interferogram_flag
         self.stack_nodata_mask = stack_nodata_mask
         self.stack_id = stack_id
-        self.gdal_num_threads = gdal_num_threads
+        self.num_threads = num_threads
         self.processor_name = processor_name
         self.processor_version = processor_version
 
@@ -241,17 +278,11 @@ class BIOMASSStackProductWriter:
 
         # Write quick-look file.
         bps_logger.debug("Writing quick-look file")
-        self.__write_quicklook_file()
+        self.__write_quicklook_files()
 
         # Write overlay file.
         bps_logger.debug("Writing overlay file")
-        write_overlay_file(
-            self.product_structure.overlay_file,
-            self.product_structure.quicklook_file,
-            self.product.name,
-            self.product.stack_footprint,
-            "L1 Product Overlay ADS",
-        )
+        self.__write_overlay_files()
 
         # Write schema files
         bps_logger.debug("Writing schema files")
@@ -405,7 +436,7 @@ class BIOMASSStackProductWriter:
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}dataTakeID")
         xml6.text = str(self.product.datatake_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}orbitDriftFlag")
-        xml6.text = "false"
+        xml6.text = "true" if self.product.orbit_drift_flag else "false"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.global_coverage_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}majorCycleID")
@@ -479,12 +510,17 @@ class BIOMASSStackProductWriter:
         )
         xml6.text = "EPSG:4326"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}fileName")
+        quicklook_file = self.product_structure.frame_quicklook_pauli_file
+        if quicklook_file is None or not quicklook_file.exists():
+            quicklook_file = self.product_structure.frame_quicklook_hsv_file
+        assert quicklook_file is not None and quicklook_file.exists()
+
         xml7 = ET.SubElement(
             xml6,
             "{" + MPH_NAMESPACES["ows"] + "}ServiceReference",
             attrib={
                 "{" + MPH_NAMESPACES["xlink"] + "}href": _relative_href_path(
-                    self.product_structure.quicklook_file,
+                    quicklook_file,
                     root_dir=product_path,
                 )
             },
@@ -541,14 +577,42 @@ class BIOMASSStackProductWriter:
                 self.product_structure.schema_files["aux_att_xsd"],
             ),
             (
-                self.product_structure.quicklook_file,
+                self.product_structure.frame_quicklook_pauli_file,
                 None,
             ),
             (
-                self.product_structure.overlay_file,
+                self.product_structure.frame_quicklook_hsv_file,
+                None,
+            ),
+            (
+                self.product_structure.frame_overlay_file,
                 self.product_structure.schema_files["l1_ovr_xsd"],
             ),
         ]
+        if self.coherence is not None:
+            if self.ql_export_coherence_flag:
+                files += [
+                    (
+                        self.product_structure.coherence_quicklook_file,
+                        None,
+                    ),
+                    (
+                        self.product_structure.coherence_overlay_file,
+                        self.product_structure.schema_files["l1_ovr_xsd"],
+                    ),
+                ]
+            if self.ql_export_interferogram_flag:
+                files += [
+                    (
+                        self.product_structure.interferogram_quicklook_file,
+                        None,
+                    ),
+                    (
+                        self.product_structure.interferogram_overlay_file,
+                        self.product_structure.schema_files["l1_ovr_xsd"],
+                    ),
+                ]
+
         for file_path, xsd_file in files:
             if file_path is not None and file_path.exists():
                 _add_file_to_mph(xml3, file_path, product_path, xsd_file)
@@ -637,7 +701,7 @@ class BIOMASSStackProductWriter:
             nodata_value=self.product.product_nodata_value,
             block_size=self.product.sar_image_parameters.block_size,
             overview_resampling="NEAREST",
-            gdal_num_threads=self.gdal_num_threads,
+            gdal_num_threads=self.num_threads,
         )
 
         geotiff_conf_phase = copy.copy(geotiff_conf_abs)
@@ -921,17 +985,18 @@ class BIOMASSStackProductWriter:
                 warn_on_missing=True,
                 warning_msg="is missing from L1a product or due to coregistration failure",
             )
-        self.__populate_lut(
-            root=lut_geometry_group,
-            lut_name="terrainSlope",
-            lut_type=np.float32,
-            lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-            lut_description="Terrain Slope",
-            lut_unit=None,  # As per L1_PFD (L1a LUTs).
-            expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
-            warn_on_missing=True,
-            warning_msg="is missing from L1a product",
-        )
+        for axis in ("azimuth", "range"):
+            self.__populate_lut(
+                root=lut_geometry_group,
+                lut_name=f"{axis}TerrainSlope",
+                lut_type=np.float32,
+                lut_axes=("relativeAzimuthTime", "slantRangeTime"),
+                lut_description="{:s} Terrain Slope".format(axis.capitalize()),
+                lut_unit="deg",
+                expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
+                warn_on_missing=True,
+                warning_msg="is missing from L1a product",
+            )
 
         lut_coreg_group = ncfile.createGroup("coregistration")
         for axis in ("azimuth", "range"):
@@ -990,6 +1055,14 @@ class BIOMASSStackProductWriter:
             warn_on_missing=True,
             warning_msg="data is missing due to coregistration failure",
         )
+
+        if "ionospherePhaseScreens" in self.product_lut:
+            if self.ionosphere_axes is None:
+                raise RuntimeError("Missing ionosphere axes for LUT ADS")
+            self.__populate_msc_lut(
+                ncfile=ncfile,
+                ionosphere_axes=self.ionosphere_axes,
+            )
 
         if "skpCalibrationPhaseScreen" in self.product_lut:
             lut_skp_group = ncfile.createGroup("skpPhaseCalibration")
@@ -1052,27 +1125,155 @@ class BIOMASSStackProductWriter:
             self.product_structure.attitude2_file,
         )
 
-    def __write_quicklook_file(self):
+    def __write_quicklook_files(self):
         """Write the quick-looks."""
         # Possibly, apply the no-data mask of the stack.
         data = self.product.data_list
+        stack_data_mask = np.full(data[0].shape, True)
         if self.stack_nodata_mask is not None:
-            stack_nodata_mask = np.isfinite(self.stack_nodata_mask)
-            data = [d * stack_nodata_mask for d in data]
+            stack_data_mask = np.isfinite(self.stack_nodata_mask)
+            data = [d * stack_data_mask for d in data]
 
-        write_quicklook_to_file(
-            compute_quicklook_from_pol_data(
-                dict(zip(self.product.polarization_list, data)),
-                self.ql_conf,
-            ),
-            self.product_structure.quicklook_file,
+        quicklook_rgb = compute_quicklook_from_pol_data(
+            dict(zip(self.product.polarization_list, data)),
+            self.ql_conf,
+            l1_product_type="l1c",
         )
+        if ColourCodingMethod.PAULI in quicklook_rgb:
+            write_quicklook_to_file(
+                quicklook_rgb[ColourCodingMethod.PAULI], self.product_structure.frame_quicklook_pauli_file
+            )
+        if ColourCodingMethod.HSV in quicklook_rgb:
+            write_quicklook_to_file(
+                quicklook_rgb[ColourCodingMethod.HSV], self.product_structure.frame_quicklook_hsv_file
+            )
+
+        if self.coherence is not None:
+            coherence = np.abs(self.coherence)
+            interferogram = np.angle(self.coherence)
+
+            if self.ql_export_coherence_flag:
+                write_coherence_quicklook_to_file(
+                    compute_coherence_quicklook(
+                        coherence,
+                        stack_data_mask,
+                        self.ql_conf,
+                    ),
+                    self.product_structure.coherence_quicklook_file,
+                )
+
+            if self.ql_export_interferogram_flag:
+                write_interferogram_quicklook_to_file(
+                    compute_interferogram_quicklook(
+                        interferogram,
+                        stack_data_mask,
+                        self.ql_conf,
+                    ),
+                    self.product_structure.interferogram_quicklook_file,
+                )
+
+    def __write_overlay_files(self):
+        """Write the KML overlay files."""
+        quicklook_file = self.product_structure.frame_quicklook_pauli_file
+        if quicklook_file is None or not quicklook_file.exists():
+            quicklook_file = self.product_structure.frame_quicklook_hsv_file
+        assert quicklook_file is not None and quicklook_file.exists()
+        write_overlay_file(
+            self.product_structure.frame_overlay_file,
+            quicklook_file,
+            self.product.name,
+            self.product.stack_footprint,
+            "STA Product Overlay ADS",
+        )
+        if self.coherence is not None:
+            if self.ql_export_coherence_flag:
+                write_overlay_file(
+                    self.product_structure.coherence_overlay_file,
+                    self.product_structure.coherence_quicklook_file,
+                    self.product.name,
+                    self.product.stack_footprint,
+                    "STA Product Coherence Overlay ADS",
+                )
+            if self.ql_export_interferogram_flag:
+                write_overlay_file(
+                    self.product_structure.interferogram_overlay_file,
+                    self.product_structure.interferogram_quicklook_file,
+                    self.product.name,
+                    self.product.stack_footprint,
+                    "STA Product Interferogram Overlay ADS",
+                )
 
     def __write_schema_files(self):
         """Write the schemas (copy)."""
         copy_biomass_xsd_files(
             self.product_structure.xsd_schema_dir,
             [f.name for f in self.product_structure.schema_files.values()],
+        )
+
+    def __populate_msc_lut(
+        self,
+        *,
+        ncfile: NetCDF4Dataset,
+        ionosphere_axes: IonosphereAxes,
+    ):
+        """Popoluate the MSC LUT ADS."""
+        # Add the along-track axis.
+        ncfile.createDimension(
+            "ionosphereRelativeAzimuthTime",
+            int(ionosphere_axes.ionosphere_azimuth_axis.size),
+        )
+        az_axis_var = ncfile.createVariable(
+            "ionosphereRelativeAzimuthTime",
+            np.float32,
+            ("ionosphereRelativeAzimuthTime",),
+            compression="zlib",
+            complevel=ZLIB_L1C_COMPLEVEL,
+        )
+        az_axis_var.units = "s"
+        az_axis_var[:] = ionosphere_axes.ionosphere_azimuth_axis
+
+        # Add the slant-range axis.
+        ncfile.createDimension(
+            "ionosphereSlantRangeTime",
+            int(ionosphere_axes.ionosphere_slant_range_axis.size),
+        )
+        rg_axis_var = ncfile.createVariable(
+            "ionosphereSlantRangeTime",
+            np.float32,
+            ("ionosphereSlantRangeTime",),
+            compression="zlib",
+            complevel=ZLIB_L1C_COMPLEVEL,
+        )
+        rg_axis_var.units = "s"
+        rg_axis_var[:] = ionosphere_axes.ionosphere_slant_range_axis
+
+        # Add the layer dimension.
+        ncfile.createDimension(
+            "ionosphereLayers",
+            self.product_lut["ionospherePhaseScreens"].shape[-1],
+        )
+
+        # Add the ionosphere LUTs.
+        lut_msc_group = ncfile.createGroup("multiSquintCalibration")
+        lut_var = lut_msc_group.createVariable(
+            "ionospherePhaseScreens",
+            np.float32,
+            (
+                "ionosphereRelativeAzimuthTime",
+                "ionosphereSlantRangeTime",
+                "ionosphereLayers",
+            ),
+            compression="zlib",
+            complevel=ZLIB_L1C_COMPLEVEL,
+            fill_value=self.product.product_nodata_value,
+        )
+        lut_var.units = "rad"
+        lut_var.description = "Ionosphere Phase Screens [rad]"
+        lut_var[:, :, :] = np.nan_to_num(
+            self.product_lut["ionospherePhaseScreens"],
+            nan=self.product.product_nodata_value,
+            posinf=self.product.product_nodata_value,
+            neginf=self.product.product_nodata_value,
         )
 
     def __populate_axes(
@@ -1130,7 +1331,7 @@ class BIOMASSStackProductWriter:
 
         data = np.full(expected_shape, np.nan)
         if lut_name in self.product_lut:
-            data = self.product_lut[lut_name].copy()
+            data = self.product_lut[lut_name]
         elif warn_on_missing:
             assert warning_msg is not None, "missing a valid warning message"
             bps_logger.warning("LUT %s %s", lut_name, warning_msg)
@@ -1140,8 +1341,12 @@ class BIOMASSStackProductWriter:
                 f"{lut_name} has invalid shape (got={data.shape}, expected={expected_shape})"
             )
 
-        data[np.isnan(data)] = self.product.product_nodata_value
-        lut_var[:, :] = data
+        lut_var[:, :] = np.nan_to_num(
+            data,
+            nan=self.product.product_nodata_value,
+            posinf=self.product.product_nodata_value,
+            neginf=self.product.product_nodata_value,
+        )
 
     def __raise_if_inconsistent_l1c_product(self):
         """Run a minimal validation on the L1c product."""

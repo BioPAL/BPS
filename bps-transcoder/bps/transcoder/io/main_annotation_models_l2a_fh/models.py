@@ -46,6 +46,7 @@ from bps.common.io.common_types import (
     OrbitPassType,
     PixelRepresentationType,
     PixelTypeType,
+    PolarisationCombinationMethodType,
     PolarisationType,
     ProductType,
     ProjectionType,

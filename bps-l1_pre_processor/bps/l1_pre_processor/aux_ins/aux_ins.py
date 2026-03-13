@@ -46,6 +46,7 @@ class AuxInsProduct:
     instrument_file: Path
     antenna_pattern_file: Path
     chirp_files: dict[AcquisitionMode, Path]
+    on_board_filter_file: Path
 
     @classmethod
     def from_product(cls, aux_ins_product: Path) -> Self:
@@ -68,9 +69,10 @@ class AuxInsProduct:
         """
         aux_ins_raw_content = retrieve_aux_product_data_content(aux_ins_product)
 
-        antenna_pattern_file: Path | None = None
         instrument_file: Path | None = None
+        antenna_pattern_file: Path | None = None
         chirp_files: dict[AcquisitionMode, Path] = {}
+        on_board_filter_file: Path | None = None
 
         for file in aux_ins_raw_content:
             if "antenna_patterns" in file.stem:
@@ -91,6 +93,12 @@ class AuxInsProduct:
                 if phase_id == MissionPhaseID.TOMOGRAPHIC:
                     chirp_files[(swath, MissionPhaseID.COMMISSIONING)] = file
 
+            elif "on_board_filters" in file.stem:
+                if on_board_filter_file is not None:
+                    raise InvalidAuxInsProduct(aux_ins_product)
+
+                on_board_filter_file = file
+
             elif "ins.xml" in file.name:
                 if instrument_file is not None:
                     raise InvalidAuxInsProduct(aux_ins_product)
@@ -100,9 +108,10 @@ class AuxInsProduct:
                 raise InvalidAuxInsProduct(aux_ins_product)
 
         if (
-            antenna_pattern_file is None
-            or instrument_file is None
+            instrument_file is None
+            or antenna_pattern_file is None
             or len(set(chirp_files.values())) != EXPECTED_NUMBER_OF_CHIRP_FILES
+            or on_board_filter_file is None
         ):
             raise InvalidAuxInsProduct(aux_ins_product)
 
@@ -110,6 +119,7 @@ class AuxInsProduct:
             instrument_file=instrument_file,
             antenna_pattern_file=antenna_pattern_file,
             chirp_files=chirp_files,
+            on_board_filter_file=on_board_filter_file,
         )
 
 

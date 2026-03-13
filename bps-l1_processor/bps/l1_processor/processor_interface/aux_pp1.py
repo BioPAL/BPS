@@ -47,6 +47,7 @@ class GeneralConf:
     requested_height_model_version: str
     height_model: EarthModel
     height_model_version: str
+    height_model_fallback_flag: bool
     height_model_margin: float
     parc_roi_samples: int
     parc_roi_lines: int
@@ -451,6 +452,8 @@ class L1ProductExportConf:
     lut_azimuth_decimation_factor: LutDecimationFactors
     lut_block_size: int
     lut_layers_completeness_flag: bool
+    l1a_ql_colour_coding_method: common.ColourCodingMethod
+    l1b_ql_colour_coding_method: common.ColourCodingMethod
     ql_range_decimation_factor: int
     ql_range_averaging_factor: int
     ql_azimuth_decimation_factor: int

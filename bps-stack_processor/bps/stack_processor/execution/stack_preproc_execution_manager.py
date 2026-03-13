@@ -26,6 +26,7 @@ from bps.common import MissionPhaseID, bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import raise_if_roi_is_invalid
 from bps.common.toi_utils import TimeOfInterest
+from bps.common.utils import cross_pol_merging
 from bps.stack_cal_processor.core.utils import get_time_axis
 from bps.stack_pre_processor.core.geometry import compute_ecef_dem
 from bps.stack_pre_processor.core.preprocessing import (
@@ -36,7 +37,6 @@ from bps.stack_pre_processor.core.preprocessing import (
     compute_rfi_degradation_indices,
     compute_spatial_baselines,
     compute_temporal_baselines,
-    cross_pol_merging,
     prepare_stack_data,
 )
 from bps.stack_pre_processor.core.utils import (
@@ -72,7 +72,8 @@ GEOMETRY_LUT_NAMES = [
     "height",
     "elevationAngle",
     "incidenceAngle",
-    "terrainSlope",
+    "rangeTerrainSlope",
+    "azimuthTerrainSlope",
 ]
 
 # File that flags that the pre-processor was successfully executed.

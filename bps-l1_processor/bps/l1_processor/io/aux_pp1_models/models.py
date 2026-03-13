@@ -43,6 +43,8 @@ from bps.common.io.common_types import (
     InterferometricPairType,
     InternalCalibrationSourceType,
     IonosphereHeightEstimationMethodType,
+    L1AcQlColourCodingMethodType,
+    L1BQlColourCodingMethodType,
     LayerListType,
     LayerType,
     MinMaxType,
@@ -844,6 +846,9 @@ class GeneralType:
     ----------
     height_model
         Digital Elevation Model (DEM) to be used during processing.
+    height_model_fallback_flag
+        True to allow fallback to Ellipsoid in case selected Digital Elevation Model (DEM) is not found, False
+        otherwise. Default value is False.
     height_model_margin
         Margin kept during the extraction of Digital Elevation Model (DEM) to be used during processing [deg].
     parc_processing
@@ -863,6 +868,16 @@ class GeneralType:
             "type": "Element",
             "namespace": "",
             "required": True,
+        },
+    )
+    height_model_fallback_flag: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "heightModelFallbackFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
         },
     )
     height_model_margin: Optional[FloatWithUnit] = field(
@@ -1852,6 +1867,10 @@ class L1ProductExportType:
     lut_layers_completeness_flag
         True if all the layers of the Look-Up Tables (LUT) ADS have to be included in output L1M product too, False
         if RFI masks and ionosphere binary layers shall be removed. Default value is True.
+    l1a_ql_colour_coding_method
+        Colour coding method to be used for output L1a (SCS) products quick-look. Default value is Pauli.
+    l1b_ql_colour_coding_method
+        Colour coding method to be used for output L1b (DGM) products quick-look. Default value is Lexicographic.
     ql_range_decimation_factor
         Quick-look ADS range decimation factor w.r.t. output L1 product sampling grid.
     ql_range_averaging_factor
@@ -1999,6 +2018,24 @@ class L1ProductExportType:
             "namespace": "",
             "required": True,
             "pattern": r"(false)|(true)",
+        },
+    )
+    l1a_ql_colour_coding_method: Optional[L1AcQlColourCodingMethodType] = field(
+        default=None,
+        metadata={
+            "name": "l1aQlColourCodingMethod",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    l1b_ql_colour_coding_method: Optional[L1BQlColourCodingMethodType] = field(
+        default=None,
+        metadata={
+            "name": "l1bQlColourCodingMethod",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
         },
     )
     ql_range_decimation_factor: Optional[int] = field(

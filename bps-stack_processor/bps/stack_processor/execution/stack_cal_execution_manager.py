@@ -10,30 +10,42 @@ Stack Calibration Execution Manager
 -----------------------------------
 """
 
+import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
+from arepytools.io import open_product_folder
+from arepytools.io.metadata import EPolarization
 from bps.common import bps_logger
+from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
 from bps.common.fnf_utils import read_fnf_mask
+from bps.common.io import common
+from bps.common.roi_utils import RegionOfInterest
+from bps.common.runner_helper import run_application
 from bps.stack_cal_processor.configuration import (
     AZF_NAME,
-    CAL_NAME,
     IOB_NAME,
-    PPR_NAME,
+    MSC_NAME,
     SKP_NAME,
     fill_stack_data_specs,
 )
 from bps.stack_cal_processor.core.azf.azimuthfilter import azimuth_spectral_filtering
 from bps.stack_cal_processor.core.iob.backgroundiono import remove_background_ionosphere
-from bps.stack_cal_processor.core.ppr.phaseremoval import remove_phase_plane
+from bps.stack_cal_processor.core.msc.mscalibration import multi_squint_calibration
 from bps.stack_cal_processor.core.skp.skpcalibration import skp_calibration
 from bps.stack_cal_processor.core.skp.skpquality import SkpFnFQualityMask
+from bps.stack_cal_processor.core.utils import read_productfolder_data_by_polarization
 from bps.stack_cal_processor.input_manager import (
     StackCalProcessorInputManager,
     StackCalProcessorInputProducts,
     select_calibration_reference_image,
 )
+from bps.stack_coreg_processor.input_file import BPSCoregProcessorInputFile, CoregProcessorInputFile
+from bps.stack_coreg_processor.interface import write_coreg_configuration_file, write_coreg_input_file
+from bps.stack_processor import __version__ as VERSION
+from bps.stack_processor.execution.utils import setup_coreg_processor_env
 from bps.stack_processor.interface.external.aux_pps import AuxiliaryStaprocessingParameters
 from bps.stack_processor.interface.external.joborder_stack import StackJobOrder
 from bps.stack_processor.interface.external.utils import (
@@ -41,8 +53,15 @@ from bps.stack_processor.interface.external.utils import (
     parse_user_provided_calib_reference_image_index,
 )
 from bps.stack_processor.interface.internal.intermediates import (
+    CoregistrationOutputProducts,
     StackPreProcessorOutputProducts,
 )
+from bps.stack_processor.interface.internal.utils import (
+    fill_stack_coreg_processor_config,
+)
+
+# The stop and resume path for the warping.
+STOP_AND_RESUME_PATH = "WARPING_COMPLETE.json"
 
 
 class StackCalExecutionManager:
@@ -198,7 +217,7 @@ class StackCalExecutionManager:
         enabled_modules = {
             AZF_NAME: self.aux_pps.azimuth_spectral_filtering.azimuth_spectral_filtering_flag,
             IOB_NAME: self.aux_pps.slow_ionosphere_removal.slow_ionosphere_removal_flag,
-            CAL_NAME: self.aux_pps.in_sar_calibration.in_sar_calibration_flag,
+            MSC_NAME: self.aux_pps.multi_squint_calibration.multi_squint_calibration_flag,
             SKP_NAME: self.aux_pps.skp_phase_calibration.skp_phase_estimation_flag,
         }
         if not any(enabled for _, enabled in enabled_modules.items()):
@@ -265,19 +284,29 @@ class StackCalExecutionManager:
                 max_num_threads=num_worker_threads,
             )
 
-        # The InSAR phase calibration. As of now, this only runs the phase
-        # plane removal.
-        if enabled_modules[CAL_NAME]:
-            calibration_products[CAL_NAME] = {
-                PPR_NAME: remove_phase_plane(
-                    stack=stack_images,
-                    synth_phases=synth_phases,
-                    conf=stack_cal_conf.ppr_conf,
-                    stack_specs=stack_data_specs,
-                    coreg_primary_image_index=coreg_primary_image_index,
-                    max_num_threads=num_worker_threads,
-                )
-            }
+        # Run the Multi-Squint Calibration (MSC).
+        if enabled_modules[MSC_NAME]:
+            stack_noshifts = _StackWarpingManager(
+                job_order=self.job_order,
+                aux_pps=self.aux_pps,
+                breakpoint_dir=self.breakpoint_dir,
+            ).warp_stack_multithreaded(
+                stack_pre_proc_output_products=stack_pre_proc_output_products,
+                stack_coreg_proc_output_products=stack_coreg_proc_output_products,
+                coreg_primary_image_index=stack_pre_proc_exec_products["coreg_primary_image_index"],
+                polarizations=stack_pre_proc_exec_products["stack_polarizations"],
+                roi=stack_pre_proc_exec_products["stack_roi"],
+                max_num_threads=num_worker_threads,
+            )
+            calibration_products[MSC_NAME] = multi_squint_calibration(
+                stack=stack_images,
+                stack_noshifts=stack_noshifts,
+                synth_phases=synth_phases,
+                conf=stack_cal_conf.msc_conf,
+                stack_specs=stack_data_specs,
+                coreg_primary_image_index=coreg_primary_image_index,
+                max_num_threads=num_worker_threads,
+            )
 
         # Run the SKP calibration.
         if enabled_modules[SKP_NAME]:
@@ -305,6 +334,274 @@ class StackCalExecutionManager:
             "calibration_products": calibration_products,
             "calib_reference_image_index": calib_reference_image_index,
         }
+
+
+class _StackWarpingManager:
+    """
+    Handle the warping of a stack given azimuth and range shifts using
+    the BPSStackProcessor coregistration binary.
+
+    Parameters
+    ----------
+    job_order: StackJobOrder
+        The job-order used by the stack.
+
+    aux_pps: AuxiliaryStaprocessingParameters
+        User configuration stored in the AUX PPS.
+
+    breakpoint_dir: Path
+        Path to the stack working directory.
+
+    """
+
+    def __init__(
+        self,
+        *,
+        job_order: StackJobOrder,
+        aux_pps: AuxiliaryStaprocessingParameters,
+        breakpoint_dir: Path,
+    ):
+        """Instantiate the object."""
+        # Set the internal configuration.
+        self.breakpoint_dir = breakpoint_dir
+        self.breakpoint_dir.mkdir(parents=True, exist_ok=True)
+
+        self.sta_p_env, self.sta_p_bin = setup_coreg_processor_env(self.breakpoint_dir)
+
+        # Prepare the coregistration configuration. Coregistration method must
+        # be set to "Geometry" otherwise the BPSStackProcessor stops.
+        self.coreg_configuration_file_path = self.breakpoint_dir / "coregWarpingConfig.xml"
+        write_coreg_configuration_file(
+            fill_stack_coreg_processor_config(
+                aux_pps=aux_pps,
+                coregistration_method=common.CoregistrationMethodType.GEOMETRY,
+                execution_policy=common.CoregistrationExecutionPolicyType.WARPING_ONLY,
+                export_distance_product=False,
+            ),
+            self.coreg_configuration_file_path,
+        )
+
+        # Write the general configuration file.
+        self.bps_configuration_file_path = self.breakpoint_dir / "coregConf.xml"
+        write_bps_configuration_file(
+            fill_bps_configuration_file(
+                job_order.processor_configuration,
+                task_name="STA_P",
+                processor_name="STA_P",
+                processor_version=bps_logger.get_version_in_logger_format(VERSION),
+                node_name=bps_logger.get_default_logger_node(),
+            ),
+            self.bps_configuration_file_path,
+        )
+
+    def warp_stack_multithreaded(
+        self,
+        *,
+        stack_pre_proc_output_products: list[StackPreProcessorOutputProducts],
+        stack_coreg_proc_output_products: list[CoregistrationOutputProducts],
+        coreg_primary_image_index: int,
+        polarizations: tuple[EPolarization, ...],
+        roi: RegionOfInterest | None = None,
+        max_num_threads: int = 1,
+    ) -> tuple[tuple[npt.NDArray[complex], ...] | None, ...]:
+        """Warp the secondary images of a stack by applying the coregistration
+        shifts (including residuals from data) in range direction, and only
+        using geometry in azimuth direction.
+
+        Parameters
+        ----------
+        stack_pre_proc_output_products: list[StackPreProcessorOutputProducts]
+            The pre-processor's output products.
+
+        stack_coreg_proc_output_products: CoregistrationOutputProducts
+            The stack coreg processor intermediate products (containing the
+            coregistration shifts' products).
+
+        coreg_primary_image_index: int
+            The index of the coregistration primary image.
+
+        polarizations: tuple[EPolarization, ...]
+            The stack polarizations.
+
+        roi: RegionOfInterest | None = None
+            Possibly a region of interest.
+
+        max_num_threads: int = 1
+            Number of threads assigned to the job.
+
+        Raises
+        ------
+        StackWarpingManagerRuntimeError
+
+        Return
+        ------
+        tuple[npt.NDArray[complex], ...]
+            The warped image.
+
+        """
+        # Reserve a list for storing the stack.
+        nimages = len(stack_coreg_proc_output_products)
+        warped_stack = [None] * nimages
+
+        # If the warping was already executed. Just read the data.
+        if self._status_file_path().is_file():
+            bps_logger.info("Stack without azimuth residual shifts already available. Loading stack")
+            warped_stack = self._read_warped_stack_from_status_file_multithreaded(
+                num_images=nimages,
+                polarizations=polarizations,
+                roi=roi,
+                max_num_threads=max_num_threads,
+            )
+        else:
+            bps_logger.info("Coregistering stack without azimuth residual shifts")
+
+            # Run the coregisration process multithreaded.
+            with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
+                # The warping coref function.
+                def warp_image_fn(index_s):
+                    warped_stack[index_s] = self.warp_image(
+                        stack_pre_proc_primary_output_products=stack_pre_proc_output_products[
+                            coreg_primary_image_index
+                        ],
+                        stack_pre_proc_secondary_output_products=stack_pre_proc_output_products[index_s],
+                        stack_coreg_proc_secondary_output_products=stack_coreg_proc_output_products[index_s],
+                        polarizations=polarizations,
+                        roi=roi,
+                    )
+
+                for _ in executor.map(
+                    warp_image_fn,
+                    (i for i in range(nimages) if i != coreg_primary_image_index),
+                ):
+                    pass
+
+            self._write_status_file(
+                stack_pre_proc_output_products=stack_pre_proc_output_products,
+                coreg_primary_image_index=coreg_primary_image_index,
+            )
+
+        # Validate the stack.
+        npolarizations = len(polarizations)
+        if (
+            len(warped_stack) != nimages
+            or warped_stack[coreg_primary_image_index] is not None
+            or any(warped_stack[i] is None for i in range(nimages) if i != coreg_primary_image_index)
+            or any(len(warped_stack[i]) != npolarizations for i in range(nimages) if i != coreg_primary_image_index)
+        ):
+            raise RuntimeError("Broken stack_cal_processor working directory.")
+
+        return tuple(warped_stack)
+
+    def warp_image(
+        self,
+        *,
+        stack_pre_proc_primary_output_products: StackPreProcessorOutputProducts,
+        stack_pre_proc_secondary_output_products: StackPreProcessorOutputProducts,
+        stack_coreg_proc_secondary_output_products: CoregistrationOutputProducts,
+        polarizations: tuple[EPolarization, ...],
+        roi: RegionOfInterest | None = None,
+    ) -> tuple[npt.NDArray[complex], ...]:
+        """Execute the image warping of a product."""
+        # The output path.
+        output_pf_path = self._bps_coreg_output_pf_path(stack_pre_proc_secondary_output_products)
+        output_pf_path.parent.mkdir(exist_ok=True)
+
+        # Write the coregistration input files.
+        coreg_input_file_path = output_pf_path.parent / "coregInput.xml"
+        write_coreg_input_file(
+            BPSCoregProcessorInputFile(
+                coregistration_input=CoregProcessorInputFile(
+                    primary_product=stack_pre_proc_primary_output_products.raw_data_product,
+                    secondary_product=stack_pre_proc_secondary_output_products.raw_data_product,
+                    ecef_grid_product=stack_pre_proc_primary_output_products.xyz_product,
+                    output_path=output_pf_path.parent,
+                    coreg_conf_file=self.coreg_configuration_file_path,
+                    az_shifts_product=stack_coreg_proc_secondary_output_products.az_geo_shifts_product,
+                    rg_shifts_product=stack_coreg_proc_secondary_output_products.rg_shifts_product,
+                ),
+                bps_configuration_file=self.bps_configuration_file_path,
+                bps_log_file=bps_logger.get_log_file().absolute(),
+            ),
+            coreg_input_file_path,
+        )
+
+        # Execute the coregistration.
+        bps_logger.debug("Running %s", self.sta_p_bin)
+        run_application(self.sta_p_env, self.sta_p_bin, coreg_input_file_path, 1)
+
+        # Read the data.
+        bps_logger.debug("Loading coregistered image %s", output_pf_path)
+        output_pf = open_product_folder(output_pf_path)
+        return tuple(
+            read_productfolder_data_by_polarization(output_pf, polarization=pol, roi=roi) for pol in polarizations
+        )
+
+    def _write_status_file(
+        self,
+        *,
+        stack_pre_proc_output_products: list[StackPreProcessorOutputProducts],
+        coreg_primary_image_index: int,
+    ):
+        """Write the status file with the output information."""
+        warped_stack_info = {
+            f"{i:02d}": str(self._bps_coreg_output_pf_path(stack_pre_proc_output_products[i]))
+            for i in range(len(stack_pre_proc_output_products))
+            if i != coreg_primary_image_index
+        }
+        if not all(Path(pf_path).exists() for pf_path in warped_stack_info.values()):
+            raise RuntimeError("Invalid status file in stack_cal_processor's intermediate data dir")
+
+        self._status_file_path().write_text(
+            json.dumps(warped_stack_info, indent=2),
+            encoding="utf-8",
+        )
+
+    def _status_file_path(self):
+        """The status file generated only when the warping is complete."""
+        return Path(self.breakpoint_dir / STOP_AND_RESUME_PATH)
+
+    def _read_warped_stack_from_status_file_multithreaded(
+        self,
+        *,
+        num_images: int,
+        polarizations: tuple[EPolarization, ...],
+        roi: RegionOfInterest | None = None,
+        max_num_threads: int = 1,
+    ) -> tuple[tuple[npt.NDArray[complex], ...] | None, ...]:
+        """Read the stack using the info stored in the status file."""
+        # Storage for the output.
+        warped_stack = [None] * num_images
+
+        # Read multi-threaded.
+        with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
+            # Read the status file.
+            warped_stack_info = json.loads(
+                self._status_file_path().read_text(encoding="utf-8"),
+            )
+
+            def read_image_fn(i):
+                pf = open_product_folder(warped_stack_info[f"{i:02d}"])
+                warped_stack[i] = tuple(
+                    read_productfolder_data_by_polarization(pf, polarization=pol, roi=roi) for pol in polarizations
+                )
+
+            for _ in executor.map(
+                read_image_fn,
+                sorted([int(i) for i in warped_stack_info]),
+            ):
+                pass
+
+        return tuple(warped_stack)
+
+    def _bps_coreg_output_pf_path(
+        self,
+        stack_pre_proc_secondary_output_products: StackPreProcessorOutputProducts,
+    ) -> Path:
+        """The BPSStackProcessor bin append the suffix _Cor to the output PF."""
+        output_pf_name = stack_pre_proc_secondary_output_products.raw_data_product.name
+        unique_id = stack_pre_proc_secondary_output_products.raw_data_product.parent.name
+        output_pf_path = self.breakpoint_dir / unique_id / f"{output_pf_name}_Cor"
+        return output_pf_path.resolve()
 
 
 def _read_skp_fnf_mask(

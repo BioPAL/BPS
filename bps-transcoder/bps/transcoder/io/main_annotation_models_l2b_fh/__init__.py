@@ -68,6 +68,7 @@ from bps.transcoder.io.main_annotation_models_l2b_fh.models import (
     PixelRepresentationType,
     PixelTypeChoiceType,
     PixelTypeType,
+    PolarisationCombinationMethodType,
     PolarisationListType,
     PolarisationType,
     ProcessingParametersL2AType,

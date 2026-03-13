@@ -59,11 +59,6 @@ def translate_vrt_file(vrt_info: VRTInfo) -> vrt.Vrtdataset:
         )
 
     gcp_list = [gcp_to_gcp_type(gcp_count, gcp) for gcp_count, gcp in enumerate(vrt_info.ground_corner_points_ecef)]
-    longitudes = [gcp.x for gcp in gcp_list]
-    if max(longitudes) - min(longitudes) > 180:
-        for gcp in gcp_list:
-            if gcp.x < 0:
-                gcp.x += 360.0
     gcp_vrt_list = [vrt.GcplistType(gcp=gcp_list, projection=get_wgs84_wkt())]
 
     data_type = vrt.DataTypeType.CFLOAT32

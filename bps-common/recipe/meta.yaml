@@ -1,5 +1,5 @@
 {% set name = "bps-common" %}
-{% set version = "4.3.0" %}
+{% set version = "4.4.0" %}
 
 package:
   name: {{ name|lower }}
@@ -22,7 +22,7 @@ requirements:
   run:
     - python >=3.12
     - arepyextras-runner
-    - numpy
+    - numpy<2.3
     - arepytools >=1.7.6
     - xsdata
     - xmlschema

@@ -1163,9 +1163,9 @@ class BIOMASSL2bAGBProductWriter:
                 assert full_fname3 is not None
 
                 # Scale float values to be integers in the [0:255] range
-                imm_to_save1 = 255.0 * imm_to_save1 / np.max(imm_to_save1)
-                imm_to_save2 = 255.0 * imm_to_save2 / np.max(imm_to_save2)
-                imm_to_save3 = 255.0 * imm_to_save3 / np.max(imm_to_save3)
+                imm_to_save1 = 255.0 * imm_to_save1 / np.nanmax(imm_to_save1)
+                imm_to_save2 = 255.0 * imm_to_save2 / np.nanmax(imm_to_save2)
+                imm_to_save3 = 255.0 * imm_to_save3 / np.nanmax(imm_to_save3)
                 imm_to_save1[np.isnan(imm_to_save1)] = 0.0
                 imm_to_save2[np.isnan(imm_to_save2)] = 0.0
                 imm_to_save3[np.isnan(imm_to_save3)] = 0.0
@@ -1205,7 +1205,7 @@ class BIOMASSL2bAGBProductWriter:
                 assert fname is not None
 
                 # Scale float values to be integers in the [0:255] range
-                imm_to_save = 255.0 * imm_to_save / np.max(imm_to_save)
+                imm_to_save = 255.0 * imm_to_save / np.nanmax(imm_to_save)
                 imm_to_save[np.isnan(imm_to_save)] = 0.0
                 imm_to_save = imm_to_save.astype(np.uint8)
 

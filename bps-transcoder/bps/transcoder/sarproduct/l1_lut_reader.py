@@ -44,7 +44,8 @@ VALID_LUT_LAYERS = [
     "height",
     "incidenceAngle",
     "elevationAngle",
-    "terrainSlope",
+    "rangeTerrainSlope",
+    "azimuthTerrainSlope",
     "faradayRotationPlane",
     "faradayRotationStd",
 ]

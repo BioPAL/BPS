@@ -32,12 +32,28 @@ class RawDataStatistics:
 
 
 @dataclass
+class PowerRatio:
+    """In/out-of-band power ratio"""
+
+    time: PreciseDateTime
+    value: float = 0.0
+
+
+def fill_power_ratio(
+    measurement: PowerRatio,
+) -> common_annotation_l1.PowerRatioType:
+    """Fill in/out-of-band power ratio measurement type"""
+    return common_annotation_l1.PowerRatioType(azimuth_time=measurement.time, value=measurement.value)
+
+
+@dataclass
 class RawDataAnalysis:
     """Raw data analysis"""
 
     num_isp_header_errors: int = 0
     num_isp_missing: int = 0
     raw_data_statistics_list: list[RawDataStatistics] = field(default_factory=list)
+    power_ratios: dict[Literal["H/H", "H/V", "V/H", "V/V"], list[PowerRatio]] = field(default_factory=dict)
 
     @classmethod
     def from_polarization_list(cls, polarization_list: list[Literal["H/H", "V/V", "H/V", "V/H"]]) -> Self:
@@ -49,8 +65,20 @@ class RawDataAnalysis:
         )
 
     @classmethod
-    def from_report(cls, report: L1PreProcAnnotations) -> Self:
+    def from_report(
+        cls, report: L1PreProcAnnotations, polarization_list: list[Literal["H/H", "H/V", "V/H", "V/V"]]
+    ) -> Self:
         """Fill the raw data analysis from the report"""
+        power_ratios: dict[Literal["H/H", "H/V", "V/H", "V/V"], list[PowerRatio]] = {}
+        for polarization in polarization_list:
+            power_ratios[polarization] = [
+                PowerRatio(
+                    time=measurement.time,
+                    value=measurement.power_ratios.get(polarization, float(0.0)),
+                )
+                for measurement in report.iobpr_measurements
+            ]
+
         return cls(
             num_isp_header_errors=report.corrupted_packets,
             num_isp_missing=report.missing_packets,
@@ -66,6 +94,7 @@ class RawDataAnalysis:
                 )
                 for stats in report.raw_data_statistics
             ],
+            power_ratios=power_ratios,
         )
 
     def to_annotation(self) -> common_annotation_l1.RawDataAnalysisType:
@@ -75,6 +104,11 @@ class RawDataAnalysis:
             "H/V": common.PolarisationType.HV,
             "V/H": common.PolarisationType.VH,
             "V/V": common.PolarisationType.VV,
+        }
+
+        power_ratios = {
+            polarisation_dict[polarization]: [fill_power_ratio(measurement) for measurement in measurements]
+            for polarization, measurements in self.power_ratios.items()
         }
 
         return common_annotation_l1.RawDataAnalysisType(
@@ -92,6 +126,7 @@ class RawDataAnalysis:
                 )
                 for stats in self.raw_data_statistics_list
             ],
+            iobpr_list=power_ratios,
         )
 
 

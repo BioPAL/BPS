@@ -168,6 +168,103 @@ def single_baseline_interferometric_pair_indices(
     return tuple((reference_image_index, i) for i in range(num_images) if i != reference_image_index)
 
 
+def sequential_baseline_interferometric_pair_indices(
+    num_images: int,
+    *,
+    reference_image_index: int,
+    flatten: bool,
+) -> tuple[tuple[int, int], ...] | tuple[int, int]:
+    """
+    Compute the squential interferometric pairs.
+
+    Sequential interferometric pairs are defined as follows. Assume
+    f5 to be the reference image (e.g. calibration primary):
+
+                   f1  f2  f3  f4  f5  f6  f7  f8  f9
+                               *   **   *
+                           *   *        *   *
+                       *   *                *   *
+                   *   *                        *   *
+
+    Parameters
+    ----------
+    num_images: int
+        The number of stack frames.
+
+    reference_image_index: int
+        The reference image index.
+
+    flatten: bool
+        If true, sequentially yields 1 pair at a time (left first, then
+        right). If false, yields the left/right pair at each call.
+
+    Raises
+    ------
+    ValueError
+
+    Example
+    -------
+    >>> list(sequential_baseline_interferometric_pair_indices(7, reference_image_index=2, flatten=False))
+    [((1, 2), (2, 3)), ((0, 1), (3, 4)), ((4, 5),), ((5, 6),)]
+
+    >>> list(sequential_baseline_interferometric_pair_indices(7, reference_image_index=2, flatten=True))
+    [(1, 2), (2, 3), (0, 1), (3, 4), (4, 5), (5, 6)]
+
+    Yields
+    ------
+    tuple[tuple[int, int], ...]
+        If `flatten` is false, the next left and right interferometric
+        pair indices and a single tuple if only 1 adjacent pair exists.
+        If `flatten` is set to true, the next pair (left first, then
+        right).
+
+    """
+    if num_images < 2:
+        raise ValueError("Al least 2 images are needed for sequential pairs")
+    if not 0 <= reference_image_index < num_images:
+        raise ValueError(f"Invalid {reference_image_index=}")
+
+    # Helper function to compute the next left pair.
+    def move_left_fn(pair):
+        if pair is None or pair[0] <= 0:
+            return None
+        return (pair[0] - 1, pair[1] - 1)
+
+    # Helper function to compute the next right pair.
+    def move_right_fn(pair):
+        if pair is None or pair[1] >= num_images - 1:
+            return None
+        return (pair[0] + 1, pair[1] + 1)
+
+    left_pair = None
+    if reference_image_index > 0:
+        left_pair = (reference_image_index - 1, reference_image_index)
+
+    right_pair = None
+    if reference_image_index < num_images - 1:
+        right_pair = (reference_image_index, reference_image_index + 1)
+
+    while left_pair is not None or right_pair is not None:
+        # If flattened, yield one pair at a time. Otherwise, yield
+        # both pairs. We need to reverse the left tuple to have it
+        # sorted as (primary, secondary).
+        if flatten:
+            if left_pair is not None:
+                yield left_pair[::-1]
+            if right_pair is not None:
+                yield right_pair
+        else:
+            pair_out = []
+            if left_pair is not None:
+                pair_out.append(left_pair[::-1])
+            if right_pair is not None:
+                pair_out.append(right_pair)
+            yield tuple(pair_out)
+
+        left_pair = move_left_fn(left_pair)
+        right_pair = move_right_fn(right_pair)
+
+
 def validate_interferometric_pairs(
     interferometric_pair_indices: tuple[tuple[int, int], ...],
     num_images: int,

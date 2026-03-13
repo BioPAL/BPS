@@ -1439,14 +1439,13 @@ class BIOMASSL2aProductWriter:
         )
 
         # # - processing parameters
-        subsetting_rule = self.product.main_ads_processing_parameters.general_configuration.subsetting_rule
         general_configuration_parameters = common_annotation_models_l2.GeneralConfigurationParametersType(
             self.product.main_ads_processing_parameters.general_configuration.apply_calibration_screen,
             self.product.main_ads_processing_parameters.general_configuration.forest_coverage_threshold,
             self.product.main_ads_processing_parameters.general_configuration.forest_mask_interpolation_threshold,
-            subsetting_rule,
+            self.product.main_ads_processing_parameters.general_configuration.subsetting_rule,
+            self.product.main_ads_processing_parameters.general_configuration.polarisation_combination_method,
         )
-
         processor_version = self.product.main_ads_processing_parameters.processor_version
         PRODUCT_GENERATION_TIME_MS = self.product.main_ads_processing_parameters.product_generation_time.isoformat(
             timespec="microseconds"

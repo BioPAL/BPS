@@ -63,11 +63,6 @@
 					<xsd:documentation>Coregistration method (Geometry, Geometry and Data, Automatic).</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="rangeSpectralFilteringFlag" type="bool">
-				<xsd:annotation>
-					<xsd:documentation>True if range spectral filtering has to be performed (during coregistration), False otherwise.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
 			<xsd:element name="residualShiftsQualityThreshold">
 				<xsd:annotation>
 					<xsd:documentation>Threshold on residual coregistration shifts quality (between 0 and 1). Residual shifts with a quality lower than this threshold are not used for processing. Used only in case coregistrationMethod is set to Geometry and Data.</xsd:documentation>
@@ -407,11 +402,11 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:complexType name="inSARCalibrationType">
+	<xsd:complexType name="multiSquintCalibrationType">
 		<xsd:sequence>
-			<xsd:element name="inSARCalibrationFlag" type="bool">
+			<xsd:element name="multiSquintCalibrationFlag" type="bool">
 				<xsd:annotation>
-					<xsd:documentation>True if the InSAR calibration step is active. False otherwise</xsd:documentation>
+					<xsd:documentation>True if the Multi-Squint calibration step is active. False otherwise</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="polarisationUsed" type="polarisationType">
@@ -419,29 +414,311 @@
 					<xsd:documentation>Polarisation used in the estimation of the InSAR calibration's phase removal step. Recommended value is HH.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="fft2ZeroPaddingUpsamplingFactor">
+			<xsd:element name="seedRangeCoherenceThreshold">
 				<xsd:annotation>
-					<xsd:documentation>Multiplicative factor that controls zero-padding before FFT2 to increasing frequency-domain sampling density. It must be at least 1.0. Recommended value is 1.2.</xsd:documentation>
+					<xsd:documentation>Coherence threshold used for range seeding during the ionosphere model inversion. Recommended value is 0.3.</xsd:documentation>
 				</xsd:annotation>
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:float">
-						<xsd:minInclusive value="1.0"/>
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
-			<xsd:element name="fft2PeakWindowSize">
+			<xsd:element name="edgeGuard" type="xsd:unsignedInt">
 				<xsd:annotation>
-					<xsd:documentation>Size of the local window used for parabolic interpolation of the FFT2 around the max/peak. It must be at least 3 (and odd). Recommended value is 3.</xsd:documentation>
+					<xsd:documentation>Ignore border pixels (in along-track direction). Recommended value is 11.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="validAzimuthThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Ratio of valid lines/azimuth/rows used to fallback to central range duing range seeding. Recommended value is 0.1.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="propagationStepInversionMethod">
+				<xsd:annotation>
+					<xsd:documentation>Inversion method used during the ionosphere range propagation step. Supported values are "Propagation" and "Derivative". Recommended value is "Projection".</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="Projection"/>
+						<xsd:enumeration value="Derivative"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="minIonoRangeCandidate" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Minimum ionospheric range candidate used for estimating the ionosphere layers [m]. Recommended value is 200,000 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxIonoRangeCandidate" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Maximum ionospheric range candidate used for estimating the ionosphere layers [m]. Recommended value is 700,000 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numIonoRangeCandidates">
+				<xsd:annotation>
+					<xsd:documentation>Number of ionosphere range candidates used for estimating the ionosphere layers. Recommended value is 25.</xsd:documentation>
 				</xsd:annotation>
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:unsignedInt">
-						<xsd:minInclusive value="3"/>
+						<xsd:minInclusive value="1"/>
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
-			<xsd:element name="use32bitFlag" type="bool">
+			<xsd:element name="robustLayerEstimationHighResNumSlices">
+				<xsd:annotation>
+					<xsd:documentation>Number of range slices for high resolution ionosphere layer estimation. Recommended value is 5.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="robustLayerEstimationLowResNumSlices">
+				<xsd:annotation>
+					<xsd:documentation>Number of range slices for low resolution ionosphere layer estimation. Recommended value is 3.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="layerAdditionThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Minimum required coherence gain to accept a new ionospheric layer candidate. Recommended value is 5e-3.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="maxNumIonosphereLayers" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Cap the number of ionosphere layers used for calibration. Use 0 to disable capping. Recommended value is 5.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxIonoRangeOffset" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Global buffer for ionosphere (celestial) axis in along-track direction [m]. Recommended value is 50,000 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionoRangeEstimationMaxIterationsDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range estimation's composite iterative step ("Derivative"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeEstimationMaxIterationsProjection">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range estimation's composite iterative step ("Projection"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeEstimationConvergenceThresholdDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range estimation's composite iterative step ("Derivative"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeEstimationConvergenceThresholdProjection">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range estimation's composite iterative step ("Projection"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeSeedingMaxIterationsDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range seeding's composite iterative step ("Derivative"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeSeedingMaxIterationsProjection">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range seeding's composite iterative step ("Projection"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeSeedingConvergenceThresholdDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range seeding's composite iterative step ("Derivative"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangeSeedingConvergenceThresholdProjection">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range seeding's composite iterative step ("Projection"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangePropagationMaxIterationsDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range propagation's composite iterative step ("Derivative"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangePropagationMaxIterationsProjection">
+				<xsd:annotation>
+					<xsd:documentation>Max iterations for the ionosphere range propagation's composite iterative step ("Projection"). Recommended value is 100.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:unsignedInt">
+						<xsd:minInclusive value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangePropagationConvergenceThresholdDerivative">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range propagation's composite iterative step ("Derivative"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ionoRangePropagationConvergenceThresholdProjection">
+				<xsd:annotation>
+					<xsd:documentation>Convergence threshold for the ionosphere range propagation's composite iterative step ("Projection"). Recommended value is 5e-4.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="forceMultiSquintIonoCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>If true, force the Multi-Squint ionosphere estimation irrespectively of the coherence gain.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="disableMultiSquintIonoCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>If true, disable the Multi-Squint ionosphere estimation irrespectively of the coherence gain.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The multi-looking window in along-track direction used for estimating the coherence (coherence test) [m]. Recommended value is 100 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The multi-looking window in slant-range direction used for estimating the coherence (coherence test) [m]. Recommended value is 100 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceSubbandResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Sub-band resolution of the Multi-Squint coherence matrix [m]. Recommended value is 300 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceHighResAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The high resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m]. Recommended value is 0 meters (full resolution).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceHighResRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The high resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m]. Recommended value is 250 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceLowResAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The low resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m]. Recommended value is 250 meters (full resolution).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceLowResRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The low resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m]. Recommended value is 300 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceValidityThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Restrict the area for the coherence gain check. Recommended value is 0.3.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceImprovementThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the coherence gian to trigger the Multi-Squint ionosphere calibration. Recommended value is 0.3.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="multiSquintCoherenceLowResThreshold">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the average Multi-Squint coherence to trigger a lowering of the resolution. Recommended value is 0.1.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.0"/>
+						<xsd:maxExclusive value="1.0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="use32bitEstimationFlag" type="bool">
 				<xsd:annotation>
 					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used for model estimations instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="use32bitCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if 32-bit precision (aka complex64 and float32) has to be used ionosphere correction instead of 64-bit precision (aka complex128 and float64), False otherwise.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
@@ -485,14 +762,19 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
-			<xsd:element name="medianFilterFlag" type="bool">
+			<xsd:element name="calibrationPhasePostprocessing" type="skpPhaseCalibrationPostprocessingType">
 				<xsd:annotation>
-					<xsd:documentation>True if post-processing of the SKP calibration phase screen via median filter has to be performed, False otherwise.</xsd:documentation>
+					<xsd:documentation>Whether to post-process the SKP calibration phase screen via "Goldstein" filter, "Boxcar" filter, "Median" filter, or no filtering ("None"). It defaults to no filtering.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="medianFilterWindowSize" type="floatWithUnit">
+			<xsd:element name="postprocessingFilterWindowSize" type="floatWithUnit">
 				<xsd:annotation>
-					<xsd:documentation>Median filter window size [m].</xsd:documentation>
+					<xsd:documentation>Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). It defaults to 1000 meters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="goldsteinFilterWindowSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Size of the filtering frequency window to be used for post-processing the SKP phase screen [px] (only "Goldstein"). It defaults to 5 pixels.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="excludeMPMBPolarizationCrossCovarianceFlag" type="bool">
@@ -559,6 +841,11 @@
 					<xsd:documentation>Pixel value in case of invalid data.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="l1cQlColourCodingMethod" type="l1acQlColourCodingMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Colour coding method to be used for output products quick-look. Default value is Pauli.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="qlRangeDecimationFactor">
 				<xsd:annotation>
 					<xsd:documentation>Quick-look ADS range decimation factor w.r.t. output L1 product sampling grid.</xsd:documentation>
@@ -609,6 +896,16 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
+			<xsd:element name="qlExportCoherenceFlag" type="bool" default="true">
+				<xsd:annotation>
+					<xsd:documentation>If true, export the coherence quick-look ADS for secondary frames.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="qlExportInterferogramFlag" type="bool" default="true">
+				<xsd:annotation>
+					<xsd:documentation>If true, export the interferogram quick-look ADS for secondary frames.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="staProductType">
@@ -648,9 +945,9 @@
 					<xsd:documentation>Processing parameters of the Background Ionosphere Removal (IOB).</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="inSARCalibration" type="inSARCalibrationType">
+			<xsd:element name="multiSquintCalibration" type="multiSquintCalibrationType">
 				<xsd:annotation>
-					<xsd:documentation>Processing parameters of the InSAR calibration step.</xsd:documentation>
+					<xsd:documentation>Processing parameters of the Multi-Squint calibration step (MSC).</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="skpPhaseCalibration" type="skpPhaseCalibrationType">

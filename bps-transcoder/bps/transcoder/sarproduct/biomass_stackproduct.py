@@ -15,17 +15,22 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+import bps.common.io.common_types.models as common_models
+import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.common.io.translate_common import (
     translate_bool,
     translate_datetime,
+    translate_float_array,
+    translate_float_array_to_model,
+    translate_float_array_with_units,
+    translate_float_array_with_units_to_model,
     translate_interferometric_pair_list,
     translate_interferometric_pair_list_to_model,
 )
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
 from bps.transcoder.io import main_annotation_models_l1c as l1c_annotations
-from bps.transcoder.io.main_annotation_models_l1c.models import StaQualityParametersType
 from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.utils.production_model_utils import encode_product_name_id_value
 from bps.transcoder.utils.time_conversions import (
@@ -55,7 +60,8 @@ REQUIRED_LUT_LAYERS = [
     "longitude",
     "rangeCoregistrationShifts",
     "rangeOrbitCoregistrationShifts",
-    "terrainSlope",
+    "rangeTerrainSlope",
+    "azimuthTerrainSlope",
     "waveNumbers",
 ]
 
@@ -70,6 +76,7 @@ LUT_LAYERS = [
     "denoisingXX",
     "denoisingVH",
     "denoisingVV",
+    "ionospherePhaseScreens",
     "skpCalibrationPhaseScreen",
     "skpCalibrationPhaseScreenQuality",
     "sigmaNought",
@@ -105,20 +112,32 @@ class BIOMASSStackProcessingParameters:
     rfi_degradation_estimation_flag: bool
     azimuth_spectral_filtering_flag: bool
     polarization_used_for_slow_ionosphere_removal: common.PolarisationType
-    polarization_used_for_phase_plane_removal: common.PolarisationType
+    polarization_used_for_multi_squint_calibration: common.PolarisationType
     calibration_primary_image_flag: bool
     slow_ionosphere_removal_flag: bool
-    in_sar_calibration_flag: bool
+    multi_squint_calibration_flag: bool
+    multi_squint_calibration_force_ionosphere_correction_flag: bool
+    multi_squint_calibration_disable_ionosphere_correction_flag: bool
+    multi_squint_calibration_coherence_improvement_threshold: float
+    multi_squint_calibration_coherence_azimuth_window_size: float
+    multi_squint_calibration_coherence_range_window_size: float
+    multi_squint_calibration_multi_squint_coherence_subband_resolution: float
+    multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size: float
+    multi_squint_calibration_multi_squint_high_res_coherence_range_window_size: float
+    multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size: float
+    multi_squint_calibration_multi_squint_low_res_coherence_range_window_size: float
     skp_phase_calibration_flag: bool
     skp_phase_correction_flag: bool
     skp_phase_correction_flattening_only_flag: bool
     skp_estimation_window_size: float
-    skp_median_filter_flag: bool
-    skp_median_filter_window_size: float
+    skp_calibration_phase_postprocessing: str
+    skp_postprocessing_filter_window_size: float
+    skp_goldstein_filter_window_size: int
     azimuth_spectral_filtering_use_32bit_flag: bool
     slow_ionosphere_removal_multi_baseline_threshold: float
     slow_ionosphere_removal_use_32bit_flag: bool
-    in_sar_calibration_use_32bit_flag: bool
+    multi_squint_estimation_use_32bit_flag: bool
+    multi_squint_correction_use_32bit_flag: bool
     skp_phase_calibration_use_32bit_flag: bool
 
     @classmethod
@@ -138,20 +157,36 @@ class BIOMASSStackProcessingParameters:
             rfi_degradation_estimation_flag=translate_bool(annot.rfi_degradation_estimation_flag),
             azimuth_spectral_filtering_flag=translate_bool(annot.azimuth_spectral_filtering_flag),
             polarization_used_for_slow_ionosphere_removal=annot.polarisation_used_for_slow_ionosphere_removal,
-            polarization_used_for_phase_plane_removal=annot.polarisation_used_for_phase_plane_removal,
+            polarization_used_for_multi_squint_calibration=annot.polarisation_used_for_multi_squint_calibration,
             calibration_primary_image_flag=translate_bool(annot.calibration_primary_image_flag),
             slow_ionosphere_removal_flag=translate_bool(annot.slow_ionosphere_removal_flag),
-            in_sar_calibration_flag=translate_bool(annot.in_sarcalibration_flag),
+            multi_squint_calibration_flag=translate_bool(annot.multi_squint_calibration_flag),
+            multi_squint_calibration_force_ionosphere_correction_flag=translate_bool(
+                annot.multi_squint_calibration_force_ionosphere_correction_flag
+            ),
+            multi_squint_calibration_disable_ionosphere_correction_flag=translate_bool(
+                annot.multi_squint_calibration_disable_ionosphere_correction_flag
+            ),
+            multi_squint_calibration_coherence_improvement_threshold=annot.multi_squint_calibration_coherence_improvement_threshold,
+            multi_squint_calibration_coherence_azimuth_window_size=annot.multi_squint_calibration_coherence_azimuth_window_size.value,
+            multi_squint_calibration_coherence_range_window_size=annot.multi_squint_calibration_coherence_range_window_size.value,
+            multi_squint_calibration_multi_squint_coherence_subband_resolution=annot.multi_squint_calibration_multi_squint_coherence_sub_band_resolution.value,
+            multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size=annot.multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size.value,
+            multi_squint_calibration_multi_squint_high_res_coherence_range_window_size=annot.multi_squint_calibration_multi_squint_high_res_coherence_range_window_size.value,
+            multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size=annot.multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size.value,
+            multi_squint_calibration_multi_squint_low_res_coherence_range_window_size=annot.multi_squint_calibration_multi_squint_low_res_coherence_range_window_size.value,
             skp_phase_calibration_flag=translate_bool(annot.skp_phase_calibration_flag),
             skp_phase_correction_flag=translate_bool(annot.skp_phase_correction_flag),
             skp_phase_correction_flattening_only_flag=translate_bool(annot.skp_phase_correction_flattening_only_flag),
             skp_estimation_window_size=annot.skp_estimation_window_size.value,
-            skp_median_filter_flag=translate_bool(annot.skp_median_filter_flag),
-            skp_median_filter_window_size=annot.skp_median_filter_window_size.value,
+            skp_calibration_phase_postprocessing=annot.skp_calibration_phase_postprocessing.value,
+            skp_postprocessing_filter_window_size=annot.skp_postprocessing_filter_window_size.value,
+            skp_goldstein_filter_window_size=annot.skp_goldstein_filter_window_size,
             slow_ionosphere_removal_multi_baseline_threshold=annot.slow_ionosphere_removal_multi_baseline_threshold,
             azimuth_spectral_filtering_use_32bit_flag=translate_bool(annot.azimuth_spectral_filtering_use32_bit_flag),
             slow_ionosphere_removal_use_32bit_flag=translate_bool(annot.slow_ionosphere_removal_use32_bit_flag),
-            in_sar_calibration_use_32bit_flag=translate_bool(annot.in_sarcalibration_use32_bit_flag),
+            multi_squint_estimation_use_32bit_flag=translate_bool(annot.multi_squint_estimation_use32_bit_flag),
+            multi_squint_correction_use_32bit_flag=translate_bool(annot.multi_squint_correction_use32_bit_flag),
             skp_phase_calibration_use_32bit_flag=translate_bool(annot.skp_phase_calibration_use32_bit_flag),
         )
 
@@ -163,7 +198,7 @@ class BIOMASSStackProcessingParameters:
             polarisations_used=self.polarizations_used,
             polarisation_combination_method=self.polarization_combination_method,
             polarisation_used_for_slow_ionosphere_removal=self.polarization_used_for_slow_ionosphere_removal,
-            polarisation_used_for_phase_plane_removal=self.polarization_used_for_phase_plane_removal,
+            polarisation_used_for_multi_squint_calibration=self.polarization_used_for_multi_squint_calibration,
             primary_image_selection_method=self.primary_image_selection_method,
             coregistration_method=self.coregistration_method,
             calibration_primary_image_flag=self.calibration_primary_image_flag,
@@ -171,7 +206,38 @@ class BIOMASSStackProcessingParameters:
             rfi_degradation_estimation_flag=self.rfi_degradation_estimation_flag,
             azimuth_spectral_filtering_flag=self.azimuth_spectral_filtering_flag,
             slow_ionosphere_removal_flag=self.slow_ionosphere_removal_flag,
-            in_sarcalibration_flag=self.in_sar_calibration_flag,
+            multi_squint_calibration_flag=self.multi_squint_calibration_flag,
+            multi_squint_calibration_force_ionosphere_correction_flag=self.multi_squint_calibration_force_ionosphere_correction_flag,
+            multi_squint_calibration_disable_ionosphere_correction_flag=self.multi_squint_calibration_disable_ionosphere_correction_flag,
+            multi_squint_calibration_coherence_improvement_threshold=self.multi_squint_calibration_coherence_improvement_threshold,
+            multi_squint_calibration_multi_squint_coherence_sub_band_resolution=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_multi_squint_coherence_subband_resolution,
+                units="m",
+            ),
+            multi_squint_calibration_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_coherence_azimuth_window_size,
+                units="m",
+            ),
+            multi_squint_calibration_coherence_range_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_coherence_range_window_size,
+                units="m",
+            ),
+            multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size,
+                units="m",
+            ),
+            multi_squint_calibration_multi_squint_high_res_coherence_range_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_multi_squint_high_res_coherence_range_window_size,
+                units="m",
+            ),
+            multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size,
+                units="m",
+            ),
+            multi_squint_calibration_multi_squint_low_res_coherence_range_window_size=main_annotation_models.FloatWithUnit(
+                self.multi_squint_calibration_multi_squint_low_res_coherence_range_window_size,
+                units="m",
+            ),
             skp_phase_calibration_flag=self.skp_phase_calibration_flag,
             skp_phase_correction_flag=self.skp_phase_correction_flag,
             skp_phase_correction_flattening_only_flag=self.skp_phase_correction_flattening_only_flag,
@@ -179,15 +245,19 @@ class BIOMASSStackProcessingParameters:
                 value=float(self.skp_estimation_window_size),
                 units="m",
             ),
-            skp_median_filter_flag=self.skp_median_filter_flag,
-            skp_median_filter_window_size=main_annotation_models.FloatWithUnit(
-                value=float(self.skp_median_filter_window_size),
+            skp_calibration_phase_postprocessing=common_models.SkpPhaseCalibrationPostprocessingType(
+                self.skp_calibration_phase_postprocessing.capitalize()
+            ),
+            skp_postprocessing_filter_window_size=main_annotation_models.FloatWithUnit(
+                value=float(self.skp_postprocessing_filter_window_size),
                 units="m",
             ),
+            skp_goldstein_filter_window_size=self.skp_goldstein_filter_window_size,
             slow_ionosphere_removal_multi_baseline_threshold=self.slow_ionosphere_removal_multi_baseline_threshold,
             azimuth_spectral_filtering_use32_bit_flag=self.azimuth_spectral_filtering_use_32bit_flag,
             slow_ionosphere_removal_use32_bit_flag=self.slow_ionosphere_removal_use_32bit_flag,
-            in_sarcalibration_use32_bit_flag=self.in_sar_calibration_use_32bit_flag,
+            multi_squint_estimation_use32_bit_flag=self.multi_squint_estimation_use_32bit_flag,
+            multi_squint_correction_use32_bit_flag=self.multi_squint_correction_use_32bit_flag,
             skp_phase_calibration_use32_bit_flag=self.skp_phase_calibration_use_32bit_flag,
         )
 
@@ -203,7 +273,6 @@ class BIOMASSStackCoregistrationParameters:
     average_azimuth_coregistration_shift: float
     average_range_coregistration_shift: float
     normal_baseline: float
-    range_spectral_filtering_flag: bool
     polarization_used: common.PolarisationType
 
     @classmethod
@@ -220,7 +289,6 @@ class BIOMASSStackCoregistrationParameters:
             average_azimuth_coregistration_shift=annot.average_azimuth_coregistration_shift.value,
             average_range_coregistration_shift=annot.average_range_coregistration_shift.value,
             normal_baseline=annot.normal_baseline.value,
-            range_spectral_filtering_flag=translate_bool(annot.range_spectral_filtering_flag),
             polarization_used=annot.polarisation_used,
         )
 
@@ -243,7 +311,6 @@ class BIOMASSStackCoregistrationParameters:
                 value=float(self.normal_baseline),
                 units="m",
             ),
-            range_spectral_filtering_flag=self.range_spectral_filtering_flag,
             polarisation_used=self.polarization_used,
         )
 
@@ -259,8 +326,14 @@ class BIOMASSStackInSARParameters:
     slow_ionosphere_range_phase_screen: float
     slow_ionosphere_quality: float
     slow_ionosphere_removal_interferometric_pairs: list[tuple[int, int]]
-    azimuth_phase_slope: float
-    range_phase_slope: float
+    multi_squint_calibration_low_resolution_flag: bool
+    multi_squint_calibration_azimuth_phase_slope: float
+    multi_squint_calibration_range_phase_slope: float
+    multi_squint_calibration_azimuth_shift: float
+    multi_squint_calibration_azimuth_frequency_centroid: float
+    multi_squint_calibration_ionospheric_layer_altitudes: list[float]
+    multi_squint_calibration_coherence_check_value: float
+    multi_squint_calibration_ionosphere_correction_flag: bool
     baseline_ordering_index: int
     skp_calibration_phase_screen_mean: float
     skp_calibration_phase_screen_std: float
@@ -281,8 +354,20 @@ class BIOMASSStackInSARParameters:
             slow_ionosphere_removal_interferometric_pairs=translate_interferometric_pair_list(
                 annot.slow_ionosphere_removal_interferometric_pairs
             ),
-            azimuth_phase_slope=annot.azimuth_phase_slope.value,
-            range_phase_slope=annot.range_phase_slope.value,
+            multi_squint_calibration_low_resolution_flag=translate_bool(
+                annot.multi_squint_calibration_low_resolution_flag,
+            ),
+            multi_squint_calibration_azimuth_phase_slope=annot.multi_squint_calibration_azimuth_phase_slope.value,
+            multi_squint_calibration_range_phase_slope=annot.multi_squint_calibration_range_phase_slope.value,
+            multi_squint_calibration_azimuth_shift=annot.multi_squint_calibration_azimuth_shift.value,
+            multi_squint_calibration_azimuth_frequency_centroid=annot.multi_squint_calibration_azimuth_frequency_centroid.value,
+            multi_squint_calibration_ionospheric_layer_altitudes=translate_float_array_with_units(
+                annot.multi_squint_calibration_ionospheric_layer_altitudes,
+            ),
+            multi_squint_calibration_coherence_check_value=annot.multi_squint_calibration_coherence_check_value,
+            multi_squint_calibration_ionosphere_correction_flag=translate_bool(
+                annot.multi_squint_calibration_ionosphere_correction_flag,
+            ),
             baseline_ordering_index=annot.baseline_ordering_index,
             skp_calibration_phase_screen_mean=annot.skp_calibration_phase_screen_mean.value,
             skp_calibration_phase_screen_std=annot.skp_calibration_phase_screen_std,
@@ -314,13 +399,30 @@ class BIOMASSStackInSARParameters:
             slow_ionosphere_removal_interferometric_pairs=translate_interferometric_pair_list_to_model(
                 self.slow_ionosphere_removal_interferometric_pairs
             ),
-            azimuth_phase_slope=main_annotation_models.FloatWithUnit(
-                value=float(self.azimuth_phase_slope),
+            multi_squint_calibration_low_resolution_flag=bool(self.multi_squint_calibration_low_resolution_flag),
+            multi_squint_calibration_azimuth_phase_slope=main_annotation_models.FloatWithUnit(
+                value=float(self.multi_squint_calibration_azimuth_phase_slope),
                 units="rad/s",
             ),
-            range_phase_slope=main_annotation_models.FloatWithUnit(
-                value=float(self.range_phase_slope),
+            multi_squint_calibration_range_phase_slope=main_annotation_models.FloatWithUnit(
+                value=float(self.multi_squint_calibration_range_phase_slope),
                 units="rad/s",
+            ),
+            multi_squint_calibration_azimuth_shift=main_annotation_models.FloatWithUnit(
+                value=float(self.multi_squint_calibration_azimuth_shift),
+                units="m",
+            ),
+            multi_squint_calibration_azimuth_frequency_centroid=main_annotation_models.FloatWithUnit(
+                value=float(self.multi_squint_calibration_azimuth_frequency_centroid),
+                units="1/m",
+            ),
+            multi_squint_calibration_ionospheric_layer_altitudes=translate_float_array_with_units_to_model(
+                [float(h) for h in self.multi_squint_calibration_ionospheric_layer_altitudes],
+                units=common.UomType.M,
+            ),
+            multi_squint_calibration_coherence_check_value=float(self.multi_squint_calibration_coherence_check_value),
+            multi_squint_calibration_ionosphere_correction_flag=bool(
+                self.multi_squint_calibration_ionosphere_correction_flag
             ),
             baseline_ordering_index=int(self.baseline_ordering_index),
             skp_calibration_phase_screen_mean=main_annotation_models.FloatWithUnit(
@@ -340,6 +442,41 @@ class BIOMASSStackInSARParameters:
 class BIOMASSStackQualityParameters:
     """Data struct for the BIOMASS Stack Quality parameters."""
 
+    @dataclass
+    class CoherenceHistogram:
+        bins: np.ndarray
+        pdf_values: np.ndarray
+
+        @classmethod
+        def from_l1c_annotation(
+            cls, annot: l1c_annotations.StaQualityParametersType.CoherenceHistogram
+        ) -> BIOMASSStackQualityParameters.CoherenceHistogram:
+            """Unmarshall from L1c coherence histogram annotation object."""
+            return cls(
+                bins=np.array(translate_float_array(annot.bins)),
+                pdf_values=np.array(translate_float_array(annot.pdf_values)),
+            )
+
+        def to_l1c_annotation(self) -> l1c_annotations.StaQualityParametersType.CoherenceHistogram:
+            """Marshall to an L1c annotation."""
+            return l1c_annotations.StaQualityParametersType.CoherenceHistogram(
+                bins=translate_float_array_to_model(self.bins.tolist()),
+                pdf_values=translate_float_array_to_model(self.pdf_values.tolist()),
+            )
+
+        @classmethod
+        def from_coherence_abs(cls, coherence: np.ndarray) -> BIOMASSStackQualityParameters.CoherenceHistogram:
+            """Compute bins and pdf of the coherence"""
+            hist, bins = np.histogram(
+                coherence[np.logical_and(coherence > 0, coherence <= 1.0)],  # It also excludes nan, +inf, and -inf.
+                bins=np.linspace(0, 1, 51),
+                density=True,
+            )
+            return cls(
+                bins=0.5 * (bins[:-1] + bins[1:]),
+                pdf_values=hist,
+            )
+
     polarization: common.PolarisationType
     invalid_l1a_data_samples: float
     rfi_decorrelation: float
@@ -351,9 +488,15 @@ class BIOMASSStackQualityParameters:
     invalid_skp_calibration_phase_screen_ratio: float
     skp_calibration_phase_screen_quality_threshold: float
     skp_decomposition_index: int
+    coherence_mean: float
+    coherence_std: float
+    coherence_min: float
+    coherence_max: float
+    coherence_median: float
+    coherence_histogram: CoherenceHistogram
 
     @classmethod
-    def from_l1c_main_annotation(cls, annot: StaQualityParametersType) -> BIOMASSStackQualityParameters:
+    def from_l1c_main_annotation(cls, annot: l1c_annotations.StaQualityParametersType) -> BIOMASSStackQualityParameters:
         """Unmarshall from L1c main annotation object."""
         return cls(
             polarization=annot.polarisation,
@@ -367,6 +510,14 @@ class BIOMASSStackQualityParameters:
             invalid_skp_calibration_phase_screen_ratio=annot.invalid_skp_calibration_phase_screen_ratio,
             skp_calibration_phase_screen_quality_threshold=annot.skp_calibration_phase_screen_quality_threshold,
             skp_decomposition_index=annot.skp_decomposition_index,
+            coherence_mean=annot.coherence_mean,
+            coherence_std=annot.coherence_std,
+            coherence_min=annot.coherence_min,
+            coherence_max=annot.coherence_max,
+            coherence_median=annot.coherence_median,
+            coherence_histogram=BIOMASSStackQualityParameters.CoherenceHistogram.from_l1c_annotation(
+                annot.coherence_histogram
+            ),
         )
 
     def to_l1c_annotation(self) -> l1c_annotations.StaQualityParametersType:
@@ -383,6 +534,14 @@ class BIOMASSStackQualityParameters:
             invalid_skp_calibration_phase_screen_ratio=float(self.invalid_skp_calibration_phase_screen_ratio),
             skp_calibration_phase_screen_quality_threshold=float(self.skp_calibration_phase_screen_quality_threshold),
             skp_decomposition_index=int(self.skp_decomposition_index),
+            coherence_mean=float(self.coherence_mean),
+            coherence_std=float(self.coherence_std),
+            coherence_min=float(self.coherence_min),
+            coherence_max=float(self.coherence_max),
+            coherence_median=float(self.coherence_median),
+            coherence_histogram=BIOMASSStackQualityParameters.CoherenceHistogram.to_l1c_annotation(
+                self.coherence_histogram
+            ),
         )
 
 

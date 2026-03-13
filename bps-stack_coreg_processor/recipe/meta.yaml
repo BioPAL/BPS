@@ -1,5 +1,5 @@
 {% set name = "bps-stack_coreg_processor" %}
-{% set version = "4.3.0" %}
+{% set version = "4.4.0" %}
 
 package:
   name: {{ name|lower }}
@@ -22,6 +22,7 @@ requirements:
   run:
     - python >=3.12
     - numpy
+    - xmltodict
     - arepytools >=1.7.6
     - arepyextras-runner
     - bps-common =={{ version }}

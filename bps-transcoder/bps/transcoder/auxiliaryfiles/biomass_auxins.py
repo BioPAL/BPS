@@ -41,6 +41,7 @@ class BIOMASSAuxInsStructure:
         self.parameters_file = None
         self.antenna_patterns_file = None
         self.chirp_replicas_files = None
+        self.on_board_filters_file = None
         self.schema_files = None
 
         self.__set_product_paths()
@@ -68,6 +69,10 @@ class BIOMASSAuxInsStructure:
             # - Chirp replicas files
             self.chirp_replicas_files = glob(
                 os.path.join(self.product_path, self.data_subfolder, "*_chirp_replicas_*.nc")
+            )
+            # - On-board filters file
+            self.on_board_filters_file = glob(
+                os.path.join(self.product_path, self.data_subfolder, "*_on_board_filters.nc")
             )
             # - Schema files
             self.schema_files = glob(os.path.join(self.product_path, self.schema_subfolder, "*.xsd"))
@@ -103,6 +108,15 @@ class BIOMASSAuxInsStructure:
                 chirp_replica_file_root + "_chirp_replicas_s3_int.nc",
                 chirp_replica_file_root + "_chirp_replicas_s3_tom.nc",
             ]
+            # - Antenna patterns file
+            self.on_board_filters_file = (
+                os.path.join(
+                    self.product_path,
+                    self.data_subfolder,
+                    product_name.lower()[:-10],
+                )
+                + "_on_board_filters.nc"
+            )
             # - Schema files
             self.schema_files = [
                 os.path.join(self.product_path, self.schema_subfolder, f)

@@ -158,7 +158,7 @@ def get_acquisition(root: ET.Element) -> MPHAcquisition:
         mission_phase_id=mission_phase_id_text,
         instrument_configuration_id=int(instrument_configuration_id_text),
         datatake_id=int(datatake_id_text),
-        orbit_drift_flag=orbit_direction_text.lower() == "true",
+        orbit_drift_flag=orbit_drift_flag_text.lower() == "true",
         global_coverage_id=decode_mph_id_value(global_coverage_id_text),
         major_cycle_id=decode_mph_id_value(major_cycle_id_text),
         repeat_cycle_id=decode_mph_id_value(repeat_cycle_id_text),

@@ -21,8 +21,8 @@ from bps.stack_processor.interface.external.aux_pps import (
     AzimuthSpectralFilteringConf,
     CoregistrationConf,
     GeneralConf,
-    InSarCalibrationConf,
     L1cProductExportConf,
+    MultiSquintCalibrationConf,
     RfiDegradationEstimationConf,
     SkpPhaseCalibrationConf,
     SlowIonosphereRemovalConf,
@@ -78,7 +78,6 @@ def translate_model_to_coregistration_conf(
     """Translate internal calibration section to the corresponding conf."""
     return CoregistrationConf(
         coregistration_method=translate_common.translate_coregistration_method(conf.coregistration_method),
-        range_spectral_filtering_flag=translate_common.translate_bool(conf.range_spectral_filtering_flag),
         residual_shift_quality_threshold=conf.residual_shifts_quality_threshold,
         polarization_used=translate_polarization_tag(
             conf.polarisation_used.value,
@@ -187,8 +186,11 @@ def translate_model_to_skp_calibration_conf(
         estimation_window_size=translate_common.translate_float_with_unit(conf.estimation_window_size),
         skp_calibration_phase_screen_quality_threshold=conf.skp_calibration_phase_screen_quality_threshold,
         overall_product_quality_threshold=conf.overall_product_quality_threshold,
-        median_filter_flag=translate_common.translate_bool(conf.median_filter_flag),
-        median_filter_window_size=translate_common.translate_float_with_unit(conf.median_filter_window_size),
+        calibration_phase_postprocessing=conf.calibration_phase_postprocessing.value.upper(),
+        postprocessing_filter_window_size=translate_common.translate_float_with_unit(
+            conf.postprocessing_filter_window_size
+        ),
+        goldstein_filter_window_size=conf.goldstein_filter_window_size,
         exclude_mpmb_polarization_cross_covariance_flag=translate_common.translate_bool(
             conf.exclude_mpmbpolarization_cross_covariance_flag
         ),
@@ -215,31 +217,68 @@ def translate_model_to_l1c_product_export_conf(
         phase_compression_method=translate_compression_method(conf.phase_compression_method),
         phase_max_z_error=conf.phase_max_zerror.value,
         no_pixel_value=conf.no_pixel_value,
+        l1c_ql_colour_coding_method=translate_common.translate_l1ac_ql_colour_coding_method_type(
+            conf.l1c_ql_colour_coding_method
+        ),
         ql_range_decimation_factor=conf.ql_range_decimation_factor,
         ql_range_averaging_factor=conf.ql_range_averaging_factor,
         ql_azimuth_decimation_factor=conf.ql_azimuth_decimation_factor,
         ql_azimuth_averaging_factor=conf.ql_azimuth_averaging_factor,
         ql_absolute_scaling_factor=conf.ql_absolute_scaling_factor,
+        ql_export_coherence_flag=translate_common.translate_bool(conf.ql_export_coherence_flag),
+        ql_export_interferogram_flag=translate_common.translate_bool(conf.ql_export_interferogram_flag),
     )
 
 
-def translate_model_to_in_sar_calibration_conf(
-    conf: aux_pps_models.InSarcalibrationType,
-) -> InSarCalibrationConf:
-    """Translate InSAR calibration configuration to corresponding conf."""
-    return InSarCalibrationConf(
-        in_sar_calibration_flag=translate_common.translate_bool(
-            conf.in_sarcalibration_flag,
+def translate_model_to_multi_squint_calibration_conf(
+    conf: aux_pps_models.MultiSquintCalibrationType,
+) -> MultiSquintCalibrationConf:
+    """Translate Multi-Squint calibration type to corresponding conf."""
+    return MultiSquintCalibrationConf(
+        multi_squint_calibration_flag=translate_common.translate_bool(conf.multi_squint_calibration_flag),
+        polarization_used=translate_polarization_tag(conf.polarisation_used.value, poltype="arepytools"),
+        seed_range_coherence_threshold=conf.seed_range_coherence_threshold,
+        edge_guard=conf.edge_guard,
+        valid_azimuth_threshold=conf.valid_azimuth_threshold,
+        propagation_step_inversion_method=conf.propagation_step_inversion_method.value.lower(),
+        min_iono_range_candidate=conf.min_iono_range_candidate.value,
+        max_iono_range_candidate=conf.max_iono_range_candidate.value,
+        num_iono_range_candidates=conf.num_iono_range_candidates,
+        robust_layer_estimation_high_res_num_slices=conf.robust_layer_estimation_high_res_num_slices,
+        robust_layer_estimation_low_res_num_slices=conf.robust_layer_estimation_low_res_num_slices,
+        layer_addition_threshold=conf.layer_addition_threshold,
+        max_num_ionosphere_layers=conf.max_num_ionosphere_layers,
+        max_iono_range_offset=conf.max_iono_range_offset.value,
+        iono_range_estimation_max_iterations_derivative=conf.iono_range_estimation_max_iterations_derivative,
+        iono_range_estimation_max_iterations_projection=conf.iono_range_estimation_max_iterations_projection,
+        iono_range_estimation_convergence_threshold_derivative=conf.iono_range_estimation_convergence_threshold_derivative,
+        iono_range_estimation_convergence_threshold_projection=conf.iono_range_estimation_convergence_threshold_projection,
+        iono_range_seeding_max_iterations_derivative=conf.iono_range_seeding_max_iterations_derivative,
+        iono_range_seeding_max_iterations_projection=conf.iono_range_seeding_max_iterations_projection,
+        iono_range_seeding_convergence_threshold_derivative=conf.iono_range_seeding_convergence_threshold_derivative,
+        iono_range_seeding_convergence_threshold_projection=conf.iono_range_seeding_convergence_threshold_projection,
+        iono_range_propagation_max_iterations_derivative=conf.iono_range_propagation_max_iterations_derivative,
+        iono_range_propagation_max_iterations_projection=conf.iono_range_propagation_max_iterations_projection,
+        iono_range_propagation_convergence_threshold_derivative=conf.iono_range_propagation_convergence_threshold_derivative,
+        iono_range_propagation_convergence_threshold_projection=conf.iono_range_propagation_convergence_threshold_projection,
+        force_multi_squint_iono_correction_flag=translate_common.translate_bool(
+            conf.force_multi_squint_iono_correction_flag
         ),
-        polarization_used=translate_polarization_tag(
-            conf.polarisation_used.value,
-            poltype="arepytools",
+        disable_multi_squint_iono_correction_flag=translate_common.translate_bool(
+            conf.disable_multi_squint_iono_correction_flag
         ),
-        fft2_zero_padding_upsampling_factor=conf.fft2_zero_padding_upsampling_factor,
-        fft2_peak_window_size=conf.fft2_peak_window_size,
-        use_32bit_flag=translate_common.translate_bool(
-            conf.use32bit_flag,
-        ),
+        coherence_azimuth_window_size=conf.coherence_azimuth_window_size.value,
+        coherence_range_window_size=conf.coherence_range_window_size.value,
+        multi_squint_coherence_subband_resolution=conf.multi_squint_coherence_subband_resolution.value,
+        multi_squint_coherence_high_res_azimuth_window_size=conf.multi_squint_coherence_high_res_azimuth_window_size.value,
+        multi_squint_coherence_high_res_range_window_size=conf.multi_squint_coherence_high_res_range_window_size.value,
+        multi_squint_coherence_low_res_azimuth_window_size=conf.multi_squint_coherence_low_res_azimuth_window_size.value,
+        multi_squint_coherence_low_res_range_window_size=conf.multi_squint_coherence_low_res_range_window_size.value,
+        multi_squint_coherence_validity_threshold=conf.multi_squint_coherence_validity_threshold,
+        multi_squint_coherence_improvement_threshold=conf.multi_squint_coherence_improvement_threshold,
+        multi_squint_coherence_low_res_threshold=conf.multi_squint_coherence_low_res_threshold,
+        use_32bit_estimation_flag=translate_common.translate_bool(conf.use32bit_estimation_flag),
+        use_32bit_correction_flag=translate_common.translate_bool(conf.use32bit_correction_flag),
     )
 
 
@@ -263,8 +302,8 @@ def translate_model_to_sta_product_conf(
         slow_ionosphere_removal=translate_model_to_slow_ionosphere_removal_conf(
             model.sta_product_list.sta_product.slow_ionosphere_removal
         ),
-        in_sar_calibration=translate_model_to_in_sar_calibration_conf(
-            model.sta_product_list.sta_product.in_sarcalibration,
+        multi_squint_calibration=translate_model_to_multi_squint_calibration_conf(
+            model.sta_product_list.sta_product.multi_squint_calibration
         ),
         skp_phase_calibration=translate_model_to_skp_calibration_conf(
             model.sta_product_list.sta_product.skp_phase_calibration

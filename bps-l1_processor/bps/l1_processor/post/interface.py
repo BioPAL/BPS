@@ -297,6 +297,8 @@ def fill_quicklook_parameters(
         _description_
     """
     quicklook_parameters = QuicklookParameters(
+        l1a_ql_colour_coding_method=aux_pp1.l1_product_export.l1a_ql_colour_coding_method,
+        l1b_ql_colour_coding_method=aux_pp1.l1_product_export.l1b_ql_colour_coding_method,
         ql_range_decimation_factor=aux_pp1.l1_product_export.ql_range_decimation_factor,
         ql_range_averaging_factor=aux_pp1.l1_product_export.ql_range_averaging_factor,
         ql_azimuth_decimation_factor=aux_pp1.l1_product_export.ql_azimuth_decimation_factor,
@@ -580,10 +582,9 @@ def export_in_bps_format(
     )
 
     # Write quicklook to standard product
-    standard_quicklook_file = standard_bps_product_writer.product_path.joinpath(
-        standard_bps_product_writer.content.quicklook
-    )
     quicklook_conf = quicklook_utils.QuickLookConf(
+        l1a_colour_coding_method=configuration.quicklook_parameters.l1a_ql_colour_coding_method,
+        l1b_colour_coding_method=configuration.quicklook_parameters.l1b_ql_colour_coding_method,
         range_decimation_factor=configuration.quicklook_parameters.ql_range_decimation_factor,
         range_averaging_factor=configuration.quicklook_parameters.ql_range_averaging_factor,
         azimuth_decimation_factor=configuration.quicklook_parameters.ql_azimuth_decimation_factor
@@ -605,8 +606,28 @@ def export_in_bps_format(
         quicklook_conf,
     )
 
-    assert standard_quicklook_file is not None, "Quicklook file is None"
-    quicklook_utils.write_quicklook_to_file(quicklook_rgb, Path(standard_quicklook_file))
+    standard_quicklook_pauli_file = standard_quicklook_hsv_file = standard_quicklook_lexicographic_file = None
+    if quicklook_utils.ColourCodingMethod.PAULI in quicklook_rgb:
+        standard_quicklook_pauli_file = standard_bps_product_writer.product_path.joinpath(
+            standard_bps_product_writer.content.quicklook_pauli
+        )
+        quicklook_utils.write_quicklook_to_file(
+            quicklook_rgb[quicklook_utils.ColourCodingMethod.PAULI], Path(standard_quicklook_pauli_file)
+        )
+    if quicklook_utils.ColourCodingMethod.HSV in quicklook_rgb:
+        standard_quicklook_hsv_file = standard_bps_product_writer.product_path.joinpath(
+            standard_bps_product_writer.content.quicklook_hsv
+        )
+        quicklook_utils.write_quicklook_to_file(
+            quicklook_rgb[quicklook_utils.ColourCodingMethod.HSV], Path(standard_quicklook_hsv_file)
+        )
+    if quicklook_utils.ColourCodingMethod.LEXICOGRAPHIC in quicklook_rgb:
+        standard_quicklook_lexicographic_file = standard_bps_product_writer.product_path.joinpath(
+            standard_bps_product_writer.content.quicklook_lexicographic
+        )
+        quicklook_utils.write_quicklook_to_file(
+            quicklook_rgb[quicklook_utils.ColourCodingMethod.LEXICOGRAPHIC], Path(standard_quicklook_lexicographic_file)
+        )
 
     # Write standard product
     standard_bps_product_writer.write(orbit_xml_template_string, attitude_xml_template_string)
@@ -637,5 +658,7 @@ def export_in_bps_format(
         ).write(
             orbit_xml_template_string,
             attitude_xml_template_string,
-            Path(standard_quicklook_file),
+            Path(standard_quicklook_pauli_file) if standard_quicklook_pauli_file else None,
+            Path(standard_quicklook_hsv_file) if standard_quicklook_hsv_file else None,
+            Path(standard_quicklook_lexicographic_file) if standard_quicklook_lexicographic_file else None,
         )

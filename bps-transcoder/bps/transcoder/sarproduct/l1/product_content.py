@@ -35,7 +35,9 @@ class L1ProductContent:
     attitude: Path
 
     preview_folder: Path
-    quicklook: Path
+    quicklook_pauli: Path | None
+    quicklook_hsv: Path | None
+    quicklook_lexicographic: Path | None
     overlay: Path
 
     schema_folder: Path
@@ -84,7 +86,12 @@ class L1ProductContent:
         attitude = navigation_folder.joinpath(name_root + "_att.xml")
 
         preview_folder = Path("preview")
-        quicklook = preview_folder.joinpath(name_root + "_ql.png")
+        quicklook_pauli = quicklook_hsv = quicklook_lexicographic = None
+        if scs_product:
+            quicklook_pauli = preview_folder.joinpath(name_root + "_ql_pauli.png")
+            quicklook_hsv = preview_folder.joinpath(name_root + "_ql_hsv.png")
+        else:
+            quicklook_lexicographic = preview_folder.joinpath(name_root + "_ql_lexicographic.png")
         overlay = preview_folder.joinpath(name_root + "_map.kml")
 
         schema_folder = Path("schema")
@@ -114,7 +121,9 @@ class L1ProductContent:
             orbit=orbit,
             attitude=attitude,
             preview_folder=preview_folder,
-            quicklook=quicklook,
+            quicklook_pauli=quicklook_pauli,
+            quicklook_hsv=quicklook_hsv,
+            quicklook_lexicographic=quicklook_lexicographic,
             overlay=overlay,
             schema_folder=schema_folder,
             l1ab_main_ann_xsd=l1ab_main_ann_xsd,
@@ -165,7 +174,15 @@ class L1ProductContent:
                 self.aux_att_xsd,
             ),
             (
-                self.quicklook,
+                self.quicklook_pauli,
+                None,
+            ),
+            (
+                self.quicklook_hsv,
+                None,
+            ),
+            (
+                self.quicklook_lexicographic,
                 None,
             ),
             (

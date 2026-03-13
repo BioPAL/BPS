@@ -23,9 +23,8 @@ from bps.common.io import common
 from bps.common.io.parsing import ParsingError, validate
 from bps.stack_cal_processor.configuration import (
     AZF_NAME,
-    CAL_NAME,
     IOB_NAME,
-    PPR_NAME,
+    MSC_NAME,
     SKP_NAME,
     UNITS_CAL_CONFIG,
     BaselineMethodType,
@@ -36,9 +35,8 @@ from bps.stack_pre_processor.configuration import PrimaryImageSelectionConf
 # Just a conversion from field name to module name.
 _FIELD_TO_MODULE_NAME = {
     "azimuth_spectral_filtering": AZF_NAME,
-    "phase_plane_removal": PPR_NAME,
     "slow_ionosphere_removal": IOB_NAME,
-    "in_sar_calibration": CAL_NAME,
+    "multi_squint_calibration": MSC_NAME,
     "skp_phase_calibration": SKP_NAME,
 }
 
@@ -61,6 +59,11 @@ _UNITS_AUX_PPS_VALUES = {
     "ql_range_averaging_factor": " [px]",
     "ql_azimuth_decimation_factor": " [px]",
     "ql_azimuth_averaging_factor": " [px]",
+    "multi_squint_coherence_subband_resolution": " [m]",
+    "multi_squint_coherence_high_res_azimuth_window_size": " [m]",
+    "multi_squint_coherence_high_res_range_window_size": " [m]",
+    "multi_squint_coherence_low_res_azimuth_window_size": "[m]",
+    "multi_squint_coherence_low_res_range_window_size": " [m]",
     **UNITS_CAL_CONFIG,
 }
 
@@ -92,7 +95,6 @@ class CoregistrationConf:
     """Coregistration configuration."""
 
     coregistration_method: common.CoregistrationMethodType
-    range_spectral_filtering_flag: bool
     residual_shift_quality_threshold: float
     polarization_used: EPolarization
     block_quality_threshold: float
@@ -155,14 +157,49 @@ class SlowIonosphereRemovalConf:
 
 
 @dataclass
-class InSarCalibrationConf:
-    """Configuration of the InSAR calibration module."""
+class MultiSquintCalibrationConf:
+    """Configuration of the Multi-Squint Calibration Module (MSC)."""
 
-    in_sar_calibration_flag: bool
+    multi_squint_calibration_flag: bool
     polarization_used: EPolarization
-    fft2_zero_padding_upsampling_factor: float
-    fft2_peak_window_size: int
-    use_32bit_flag: bool
+    seed_range_coherence_threshold: float
+    edge_guard: int
+    valid_azimuth_threshold: float
+    propagation_step_inversion_method: str
+    min_iono_range_candidate: float
+    max_iono_range_candidate: float
+    num_iono_range_candidates: int
+    robust_layer_estimation_high_res_num_slices: float
+    robust_layer_estimation_low_res_num_slices: float
+    layer_addition_threshold: float
+    max_num_ionosphere_layers: int
+    max_iono_range_offset: float
+    iono_range_estimation_max_iterations_derivative: int
+    iono_range_estimation_max_iterations_projection: int
+    iono_range_estimation_convergence_threshold_derivative: float
+    iono_range_estimation_convergence_threshold_projection: float
+    iono_range_seeding_max_iterations_derivative: int
+    iono_range_seeding_max_iterations_projection: int
+    iono_range_seeding_convergence_threshold_derivative: float
+    iono_range_seeding_convergence_threshold_projection: float
+    iono_range_propagation_max_iterations_derivative: int
+    iono_range_propagation_max_iterations_projection: int
+    iono_range_propagation_convergence_threshold_derivative: float
+    iono_range_propagation_convergence_threshold_projection: float
+    force_multi_squint_iono_correction_flag: bool
+    disable_multi_squint_iono_correction_flag: bool
+    coherence_azimuth_window_size: float
+    coherence_range_window_size: float
+    multi_squint_coherence_subband_resolution: float
+    multi_squint_coherence_high_res_azimuth_window_size: float
+    multi_squint_coherence_high_res_range_window_size: float
+    multi_squint_coherence_low_res_azimuth_window_size: float
+    multi_squint_coherence_low_res_range_window_size: float
+    multi_squint_coherence_validity_threshold: float
+    multi_squint_coherence_improvement_threshold: float
+    multi_squint_coherence_low_res_threshold: float
+    use_32bit_estimation_flag: bool
+    use_32bit_correction_flag: bool
 
 
 @dataclass
@@ -176,13 +213,19 @@ class SkpPhaseCalibrationConf:
         FLATTENING_PHASE_SCREEN = "FLATTENING PHASE SCREEN"
         GROUND_PHASE_SCREEN = "GROUND PHASE SCREEN"
 
+    @property
+    def phase_correction_flag(self):
+        """Return true if any phase correction is applied. False otherwise."""
+        return self.phase_correction != SkpPhaseCalibrationConf.SkpPhaseCorrectionType.NONE
+
     skp_phase_estimation_flag: bool
     phase_correction: SkpPhaseCorrectionType
     estimation_window_size: float  # [m].
     skp_calibration_phase_screen_quality_threshold: float
     overall_product_quality_threshold: float
-    median_filter_flag: bool
-    median_filter_window_size: float  # [m].
+    calibration_phase_postprocessing: str
+    postprocessing_filter_window_size: float  # [m].
+    goldstein_filter_window_size: int  # [px].
     exclude_mpmb_polarization_cross_covariance_flag: bool
     use_32bit_flag: bool
 
@@ -209,11 +252,14 @@ class L1cProductExportConf:
     phase_compression_method: CompressionMethodType | None
     phase_max_z_error: float
     no_pixel_value: float
+    l1c_ql_colour_coding_method: common.ColourCodingMethod
     ql_range_decimation_factor: int
     ql_range_averaging_factor: int
     ql_azimuth_decimation_factor: int
     ql_azimuth_averaging_factor: int
     ql_absolute_scaling_factor: float
+    ql_export_coherence_flag: bool
+    ql_export_interferogram_flag: bool
 
 
 @dataclass
@@ -226,8 +272,8 @@ class AuxiliaryStaprocessingParameters:
     coregistration: CoregistrationConf
     rfi_degradation_estimation: RfiDegradationEstimationConf
     azimuth_spectral_filtering: AzimuthSpectralFilteringConf
-    in_sar_calibration: InSarCalibrationConf
     slow_ionosphere_removal: SlowIonosphereRemovalConf
+    multi_squint_calibration: MultiSquintCalibrationConf
     skp_phase_calibration: SkpPhaseCalibrationConf
     l1c_product_export: L1cProductExportConf
 
@@ -272,8 +318,8 @@ def log_aux_pps_summary(aux_pps: AuxiliaryStaprocessingParameters):
         enabled_modules.append("azimuth_spectral_filtering")
     if aux_pps.slow_ionosphere_removal.slow_ionosphere_removal_flag:
         enabled_modules.append("slow_ionosphere_removal")
-    if aux_pps.in_sar_calibration.in_sar_calibration_flag:
-        enabled_modules.append("in_sar_calibration")
+    if aux_pps.multi_squint_calibration.multi_squint_calibration_flag:
+        enabled_modules.append("multi_squint_calibration")
     if aux_pps.skp_phase_calibration.skp_phase_estimation_flag:
         enabled_modules.append("skp_phase_calibration")
 
@@ -377,7 +423,7 @@ def validate_aux_pps_parameters(aux_pps: AuxiliaryStaprocessingParameters):
     if aux_pps.coregistration.range_min_overlap < 0:
         raise AuxPPSInvalidValue("rangeMinOverlap must be a non-negative integer")
     if aux_pps.coregistration.low_pass_filter_type not in {"Average", "Gaussian"}:
-        raise AuxPPSInvalidValue("lowPassFilterTYpe must be either 'Average' or 'Gaussian'")
+        raise AuxPPSInvalidValue("lowPassFilterType must be either 'Average' or 'Gaussian'")
     if aux_pps.coregistration.low_pass_filter_order <= 0:
         raise AuxPPSInvalidValue("lowPassFilterOrder must be a positive integer")
     if aux_pps.coregistration.low_pass_filter_std_dev <= 0:
@@ -409,15 +455,13 @@ def validate_aux_pps_parameters(aux_pps: AuxiliaryStaprocessingParameters):
     if not 0 <= aux_pps.slow_ionosphere_removal.min_coherence_threshold <= 1:
         raise AuxPPSInvalidValue("minCoherenceThreshold (IOB) must be between 0 and 1")
 
-    # Preliminary check on the PPR.
-    if aux_pps.in_sar_calibration.fft2_peak_window_size % 2 == 0:
-        raise AuxPPSInvalidValue("fft2PeakWindowSize (PPR) must be an odd integer")
-
     # Preliminary check on the SKP.
     if aux_pps.skp_phase_calibration.estimation_window_size <= 0.0:
         raise AuxPPSInvalidValue("estimationWindowSize (SKP) must be positive")
-    if aux_pps.skp_phase_calibration.median_filter_window_size <= 0.0:
-        raise AuxPPSInvalidValue("medianFilterWindowSize (SKP) must be positive")
+    if aux_pps.skp_phase_calibration.postprocessing_filter_window_size <= 0.0:
+        raise AuxPPSInvalidValue("postprocessingFilterWindowSize (SKP) must be positive")
+    if aux_pps.skp_phase_calibration.goldstein_filter_window_size < 1:
+        raise AuxPPSInvalidValue("goldsteinFilterWindowSize (SKP) must be a positive integer")
     if not 0 <= aux_pps.skp_phase_calibration.skp_calibration_phase_screen_quality_threshold <= 1:
         raise AuxPPSInvalidValue("skpCalibrationPhaseScreenQualityThreshold (SKP) must be between 0 and 1")
     if not 0 <= aux_pps.skp_phase_calibration.overall_product_quality_threshold <= 1:

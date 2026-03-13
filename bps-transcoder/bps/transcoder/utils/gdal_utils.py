@@ -189,11 +189,6 @@ def write_geotiff(
 
     if ecef_gcp_list is not None:
         gcp_list = [_to_gdal_gcp(gcp) for gcp in ecef_gcp_list]
-        longitudes = [gcp.GCPX for gcp in gcp_list]
-        if max(longitudes) - min(longitudes) > 180:
-            for gcp in gcp_list:
-                if gcp.GCPX < 0:
-                    gcp.GCPX += 360.0
 
         mem_dataset.SetGCPs(gcp_list, mem_dataset.GetProjection())
     elif geotransform is not None:

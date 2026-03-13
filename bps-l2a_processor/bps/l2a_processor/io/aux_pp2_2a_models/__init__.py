@@ -54,6 +54,7 @@ from bps.l2a_processor.io.aux_pp2_2a_models.models import (
     MinMaxTypeWithUnit,
     ModelInversionType,
     OperationalModeType,
+    PolarisationCombinationMethodType,
     PolarisationType,
     SlantRangePolynomialType,
     StateType,

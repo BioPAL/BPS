@@ -215,6 +215,15 @@ class PixelQuantityType(Enum):
     GAMMA_NOUGHT = "Gamma-Nought"
 
 
+class ColourCodingMethod(Enum):
+    """Quicklook colour coding methods"""
+
+    PAULI = "Pauli"
+    HSV = "HSV"
+    PAULI_AND_HSV = "Pauli and HSV"
+    LEXICOGRAPHIC = "Lexicographic"
+
+
 class MissionType(Enum):
     """BIOMASS mission name"""
 
@@ -350,7 +359,8 @@ class LayerType(Enum):
     HEIGHT_M = "Height [m]"
     INCIDENCE_ANGLE_DEG = "Incidence angle [deg]"
     ELEVATION_ANGLE_DEG = "Elevation angle [deg]"
-    TERRAIN_SLOPE_DEG = "Terrain slope [deg]"
+    RANGE_TERRAIN_SLOPE_DEG = "Range terrain slope [deg]"
+    AZIMUTH_TERRAIN_SLOPE_DEG = "Azimuth terrain slope [deg]"
     FNF = "FNF"
     ACM = "ACM"
     NUMBER_OF_AVERAGES = "numberOfAverages"

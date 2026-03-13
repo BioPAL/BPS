@@ -29,6 +29,7 @@ from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_TFH,
 )
 from bps.common.translate_job_order import get_bps_logger_level
+from bps.common.utils import cross_pol_merging
 from bps.l2a_processor import BPS_L2A_PROCESSOR_NAME
 from bps.l2a_processor.basins import BASINS
 from bps.l2a_processor.core.aux_pp2_2a import GeneralConf
@@ -62,6 +63,12 @@ warnings.filterwarnings("ignore", message="divide by zero encountered")
 
 TROPIC_OF_CANCER_LATITUDE = 23.45
 TROPIC_OF_CAPRICORN_LATITUDE = -23.45
+ALLOWED_POLARIZATIONS_SEQUENCE = (
+    ["H/H", "X/X", "V/V"],
+    ["H/H", "H/V", "V/V"],
+    ["H/H", "V/H", "V/V"],
+    ["H/H", "H/V", "V/H", "V/V"],
+)
 
 
 def run_l2a_processing(
@@ -217,12 +224,15 @@ def run_l2a_processing(
                     "sigmaNought",
                     "denoisingHH",
                     "denoisingXX",
+                    "denoisingHV",
+                    "denoisingVH",
                     "denoisingVV",
                     "height",
                     "latitude",
                     "longitude",
                     "incidenceAngle",
-                    "terrainSlope",
+                    "rangeTerrainSlope",
+                    "azimuthTerrainSlope",
                     "waveNumbers",
                     "skpCalibrationPhaseScreen",
                     "flatteningPhaseScreen",
@@ -235,10 +245,58 @@ def run_l2a_processing(
             counter += 1
     del lut
 
+    # Merging cross polarisations:
+    #   Chech input polarisation sequence
     for stack_product_to_check in stack_products_list:
-        if not stack_product_to_check.polarization_list == ["H/H", "X/X", "V/V"]:
-            error_msg = f"Wrong polarizations found in input product: {stack_product_to_check.polarization_list}; L2A works with ['H/H', 'X/X', 'V/V'] instead."
-            raise ValueError(error_msg)
+        pols = stack_product_to_check.polarization_list
+
+        if pols not in ALLOWED_POLARIZATIONS_SEQUENCE:
+            raise ValueError(
+                f"Invalid polarization sequence in input product: {pols}."
+                f"Expected exactly one sequence from {ALLOWED_POLARIZATIONS_SEQUENCE}"
+            )
+    if (
+        len(stack_product_to_check.polarization_list) == 3
+        and aux_pp2_2a.general.polarisation_combination_method is not None
+    ):
+        bps_logger.warning(
+            f"Found 3 polarisations in input products, AUX PP2 2A polarisation combination method is '{aux_pp2_2a.general.polarisation_combination_method.value}', setting to 'None'"
+        )
+        aux_pp2_2a.general.polarisation_combination_method = None
+
+    # Merging if needed (only if input sequence is ["H/H", "H/V", "V/H", "V/V"])
+    if len(stack_product_to_check.polarization_list) == 4:
+        if aux_pp2_2a.general.polarisation_combination_method is None:
+            raise ValueError(
+                "Found 4 polarisations in input products, AUX PP2 2A polarisation combination method is set to 'None', expected one from 'Average', 'VH', 'HV'"
+            )
+        bps_logger.info(
+            f"Cross polarisation merging using AUX PP2 2A polarisation combination method '{aux_pp2_2a.general.polarisation_combination_method.value}'"
+        )
+        for stack_data, lut_data, lut_axes in zip(stack_products_list, stack_lut_list, lut_axes_primary_list):
+            _ = cross_pol_merging(
+                data_list=stack_data.data_list,
+                swath_info_list=stack_data.swath_info_list,
+                polarization_list=stack_data.polarization_list,
+                metadata_list=[
+                    stack_data.raster_info_list,
+                    stack_data.burst_info_list,
+                    stack_data.sampling_constants_list,
+                    stack_data.acquisition_timeline_list,
+                    stack_data.data_statistics_list,
+                    stack_data.dc_vector_list,
+                    stack_data.dr_vector_list,
+                    stack_data.slant_to_ground_list,
+                    stack_data.ground_to_slant_list,
+                    stack_data.pulse_list,
+                ],
+                lut_data=lut_data,
+                lut_axes=(
+                    {"denoisingHV": lut_axes[0]},  # Element 0
+                    {"denoisingHV": lut_axes[1]},  # Element 1
+                ),
+                xpol_merging_method=aux_pp2_2a.general.polarisation_combination_method,
+            )
 
     # Phase screen to be used:
     skp_phases_screen = None

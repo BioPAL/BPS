@@ -19,7 +19,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types
+from bps.common.io import common_types, translate_common
 from bps.common.l2_joborder_tags import L2A_OUTPUT_PRODUCT_FD
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
@@ -671,6 +671,9 @@ class FD:
             self.aux_pp2_2a.general.forest_coverage_threshold,
             self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
             common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            translate_common.translate_polarisation_combination_method_to_model(
+                self.aux_pp2_2a.general.polarisation_combination_method
+            ),
         )
 
         least_significant_digit_acm = self.aux_pp2_2a.fd.compression_options.ads.acm.least_significant_digit

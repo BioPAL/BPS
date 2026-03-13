@@ -57,6 +57,11 @@ def select_dem(job_order: L1JobOrder, aux_pp1: AuxProcessingParametersL1) -> Pat
                 dem_db = dem_db_candidate
 
     if dem_db is None:
+        if not aux_pp1.general.height_model_fallback_flag:
+            raise RuntimeError(
+                "Cannot proceed without DEM database: "
+                + "fallback to Ellipsoid can be enabled through the AUX_PP1 'heightModelFallbackFlag'"
+            )
         bps_logger.warning("Height model set to 'WGS84'")
         aux_pp1.general.height_model = GeneralConf.EarthModel.ELLIPSOID
         aux_pp1.general.height_model_version = ""

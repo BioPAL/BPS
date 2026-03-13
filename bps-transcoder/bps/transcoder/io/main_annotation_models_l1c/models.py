@@ -70,6 +70,7 @@ from bps.common.io.common_types import (
     RfiMaskType,
     RfiMitigationMethodType,
     SensorModeType,
+    SkpPhaseCalibrationPostprocessingType,
     SlantRangePolynomialType,
     StateType,
     SwathType,
@@ -91,6 +92,7 @@ from bps.transcoder.io.common_annotation_models_l1 import (
     FirstLineSensingTimeListType,
     FmRateEstimatesListType,
     GeometryType,
+    InOutBandPowerRatioListType,
     InstrumentParametersType,
     InternalCalibrationParametersListType,
     InternalCalibrationSequenceListType,
@@ -104,6 +106,8 @@ from bps.transcoder.io.common_annotation_models_l1 import (
     NoiseSequenceType,
     PolarimetricDistortionType,
     PolarisationListType,
+    PowerRatioListType,
+    PowerRatioType,
     PrfListType,
     ProcessingGainListType,
     ProcessingParametersType,
@@ -163,6 +167,19 @@ class StaQualityParametersType:
         Error code for the SKP decomposition. Positive if the SKP decomposition hit a nonblocking contingency case
         (e.g. SVD decomposition failure etc.) and the exported SKP-related LUTs contain values obtained from a
         contingency handling procedure. 0 otherwise.
+    coherence_mean
+        Mean coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.
+    coherence_std
+        Standard deviation of the coherence (amplitude) of the calibrated L1c frame with respect to the
+        coregistration primary.
+    coherence_min
+        Minimum coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.
+    coherence_max
+        Maximum coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.
+    coherence_median
+        Median coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.
+    coherence_histogram
+        Coherence distribution of the calibrated L1c frame with respect to the coregistration primary.
     polarisation
     """
 
@@ -259,6 +276,60 @@ class StaQualityParametersType:
             "required": True,
         },
     )
+    coherence_mean: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "coherenceMean",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    coherence_std: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "coherenceStd",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    coherence_min: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "coherenceMin",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    coherence_max: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "coherenceMax",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    coherence_median: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "coherenceMedian",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    coherence_histogram: Optional["StaQualityParametersType.CoherenceHistogram"] = field(
+        default=None,
+        metadata={
+            "name": "coherenceHistogram",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
     polarisation: Optional[PolarisationType] = field(
         default=None,
         metadata={
@@ -266,6 +337,35 @@ class StaQualityParametersType:
             "required": True,
         },
     )
+
+    @dataclass
+    class CoherenceHistogram:
+        """
+        Parameters
+        ----------
+        bins
+            The bins of the coherence histrogram.
+        pdf_values
+            The PDF values of the coherence histrogram.
+        """
+
+        bins: Optional[FloatArray] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "namespace": "",
+                "required": True,
+            },
+        )
+        pdf_values: Optional[FloatArray] = field(
+            default=None,
+            metadata={
+                "name": "pdfValues",
+                "type": "Element",
+                "namespace": "",
+                "required": True,
+            },
+        )
 
 
 @dataclass
@@ -288,8 +388,6 @@ class StaCoregistrationParametersType:
         Average coregistration shift along range direction [m].
     average_azimuth_coregistration_shift
         Average coregistration shift along azimuth direction [m].
-    range_spectral_filtering_flag
-        True if range spectral filtering was performed during the coregistration step, False otherwise.
     polarisation_used
         Polarisation used for shift estimation.
     """
@@ -359,16 +457,6 @@ class StaCoregistrationParametersType:
             "required": True,
         },
     )
-    range_spectral_filtering_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "rangeSpectralFilteringFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
-    )
     polarisation_used: Optional[PolarisationType] = field(
         default=None,
         metadata={
@@ -400,10 +488,22 @@ class StaInSarparametersType:
     slow_ionosphere_removal_interferometric_pairs
         Interferometric pairs used to estimate the slow-varying ionosphere calibration (multi-baseline and single-
         baseline).
-    range_phase_slope
-        Phase plane slope estimated by PPR, in slant-range direction [rad/s].
-    azimuth_phase_slope
-        Phase plane slope estimated by PPR, in along-track direction [rad/s].
+    multi_squint_calibration_low_resolution_flag
+        True if Multi-Squint calibration was executed in low resolution modality, False otherwise.
+    multi_squint_calibration_range_phase_slope
+        Phase plane slope estimated by the Multi-Squint Calibration module, in slant-range direction [rad/s].
+    multi_squint_calibration_azimuth_phase_slope
+        Phase plane slope estimated by Multi-Squint Calibration moduke, in along-track direction [rad/s].
+    multi_squint_calibration_azimuth_shift
+        Constant shift in along-track direction estimated from spectral analysis on the Multi-Squint coherence [m].
+    multi_squint_calibration_azimuth_frequency_centroid
+        Spatial (along-track) frequency centroid from spectral analysis on the Multi-Squint coherence [m].
+    multi_squint_calibration_ionospheric_layer_altitudes
+        Altitude of the ionospheric layers estimated by the Multi-Squint Calibration module.
+    multi_squint_calibration_coherence_check_value
+        Coherence improvement used during the coherence check of the Multi-Squint Calibration module.
+    multi_squint_calibration_ionosphere_correction_flag
+        True if the Multi-Squint Calibration module executed the ionosphere correction. False otherwise.
     baseline_ordering_index
         Index in of the product with respect to the baseline-based ordering.
     skp_calibration_phase_screen_mean
@@ -482,22 +582,78 @@ class StaInSarparametersType:
             "required": True,
         },
     )
-    range_phase_slope: Optional[FloatWithUnit] = field(
+    multi_squint_calibration_low_resolution_flag: Optional[str] = field(
         default=None,
         metadata={
-            "name": "rangePhaseSlope",
+            "name": "multiSquintCalibrationLowResolutionFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
+        },
+    )
+    multi_squint_calibration_range_phase_slope: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationRangePhaseSlope",
             "type": "Element",
             "namespace": "",
             "required": True,
         },
     )
-    azimuth_phase_slope: Optional[FloatWithUnit] = field(
+    multi_squint_calibration_azimuth_phase_slope: Optional[FloatWithUnit] = field(
         default=None,
         metadata={
-            "name": "azimuthPhaseSlope",
+            "name": "multiSquintCalibrationAzimuthPhaseSlope",
             "type": "Element",
             "namespace": "",
             "required": True,
+        },
+    )
+    multi_squint_calibration_azimuth_shift: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationAzimuthShift",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_azimuth_frequency_centroid: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationAzimuthFrequencyCentroid",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_ionospheric_layer_altitudes: Optional[FloatArrayWithUnits] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationIonosphericLayerAltitudes",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_coherence_check_value: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationCoherenceCheckValue",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_ionosphere_correction_flag: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationIonosphereCorrectionFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
         },
     )
     baseline_ordering_index: Optional[int] = field(
@@ -574,15 +730,37 @@ class StaProcessingParametersType:
         True if azimuth spectral filtering was performed, False otherwise.
     polarisation_used_for_slow_ionosphere_removal
         Polarisation used for the Slow-Ionosphere Remova (IOB) step.
-    polarisation_used_for_phase_plane_removal
-        Polarisation used for estimation in the Phase-Plane-Removal (PPR) step.
+    polarisation_used_for_multi_squint_calibration
+        Polarisation used for estimation in the Multi-Squint Calibration (MSC) step.
     calibration_primary_image_flag
         True if image used as primary for multi-baseline calibration steps is the same as the one used for
         coregistration, False otherwise.
     slow_ionosphere_removal_flag
         True if slow-varying ionospheric phase screen estimation and removal was performed, False otherwise.
-    in_sarcalibration_flag
-        True if InSAR calibration was enabled, False otherwise.
+    multi_squint_calibration_flag
+        True if Multi-Squint calibration module was enabled, False otherwise.
+    multi_squint_calibration_force_ionosphere_correction_flag
+        True if Multi-Squint ionosphere calibration step was forcefully executed by user, False otherwise.
+    multi_squint_calibration_disable_ionosphere_correction_flag
+        True if Multi-Squint ionosphere calibration step was forcefully executed by user, False otherwise.
+    multi_squint_calibration_coherence_improvement_threshold
+        Threshold on the coherence gian that was used to trigger the Multi-Squint ionosphere calibration step.
+    multi_squint_calibration_coherence_azimuth_window_size
+        The multi-looking window in along-track direction used for estimating the standard coherence (coherence
+        test) [m].
+    multi_squint_calibration_coherence_range_window_size
+        The multi-looking window in slant-range direction used for estimating the standard coherence (coherence
+        test) [m].
+    multi_squint_calibration_multi_squint_coherence_sub_band_resolution
+        The squint axis resolution of the Multi-Squint cohrence matrix [m].
+    multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size
+        The high resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m].
+    multi_squint_calibration_multi_squint_high_res_coherence_range_window_size
+        The high resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m].
+    multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size
+        The low resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m].
+    multi_squint_calibration_multi_squint_low_res_coherence_range_window_size
+        The low resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m].
     skp_phase_calibration_flag
         True if SKP estimation was performed, False otherwise.
     skp_phase_correction_flag
@@ -591,10 +769,12 @@ class StaProcessingParametersType:
         True if only the flattening phases was corrected by the SKP module, False otherwise.
     skp_estimation_window_size
         SKP estimation window size [m].
-    skp_median_filter_flag
-        True if median filter was applied to the SKP calibration phase screen.
-    skp_median_filter_window_size
-        SKP median filter window size [m].
+    skp_calibration_phase_postprocessing
+        Postprocessing applied to the SKP calibration phase screens.
+    skp_postprocessing_filter_window_size
+        Filter window size used in SKP postprocessing in case of "Boxcar" or "Median" filter [m].
+    skp_goldstein_filter_window_size
+        Filter window size used in SKP postprocessing in case of "Goldstein" filter [px].
     slow_ionosphere_removal_multi_baseline_threshold
         Threshold used for selecting the interferometric pair for slow-ionosphere calibration (IOB) as ratio of the
         critical baseline.
@@ -602,8 +782,10 @@ class StaProcessingParametersType:
         True if IOB was run with 32-bit precision.
     azimuth_spectral_filtering_use32_bit_flag
         True if AZF was run with 32-bit precision.
-    in_sarcalibration_use32_bit_flag
-        True if PPR was run with 32-bit precision.
+    multi_squint_estimation_use32_bit_flag
+        True if the estimation step of the MSC was run with 32-bit precision.
+    multi_squint_correction_use32_bit_flag
+        True if the ionosphere correction step of the MSC was run with 32-bit precision.
     skp_phase_calibration_use32_bit_flag
         True if SKP was run with 32-bit precision.
     """
@@ -704,10 +886,10 @@ class StaProcessingParametersType:
             "required": True,
         },
     )
-    polarisation_used_for_phase_plane_removal: Optional[PolarisationType] = field(
+    polarisation_used_for_multi_squint_calibration: Optional[PolarisationType] = field(
         default=None,
         metadata={
-            "name": "polarisationUsedForPhasePlaneRemoval",
+            "name": "polarisationUsedForMultiSquintCalibration",
             "type": "Element",
             "namespace": "",
             "required": True,
@@ -733,14 +915,106 @@ class StaProcessingParametersType:
             "pattern": r"(false)|(true)",
         },
     )
-    in_sarcalibration_flag: Optional[str] = field(
+    multi_squint_calibration_flag: Optional[str] = field(
         default=None,
         metadata={
-            "name": "inSARCalibrationFlag",
+            "name": "multiSquintCalibrationFlag",
             "type": "Element",
             "namespace": "",
             "required": True,
             "pattern": r"(false)|(true)",
+        },
+    )
+    multi_squint_calibration_force_ionosphere_correction_flag: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationForceIonosphereCorrectionFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
+        },
+    )
+    multi_squint_calibration_disable_ionosphere_correction_flag: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationDisableIonosphereCorrectionFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
+        },
+    )
+    multi_squint_calibration_coherence_improvement_threshold: Optional[float] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationCoherenceImprovementThreshold",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationCoherenceAzimuthWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_coherence_range_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationCoherenceRangeWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_multi_squint_coherence_sub_band_resolution: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationMultiSquintCoherenceSubBandResolution",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationMultiSquintHighResCoherenceAzimuthWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_multi_squint_high_res_coherence_range_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationMultiSquintHighResCoherenceRangeWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationMultiSquintLowResCoherenceAzimuthWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    multi_squint_calibration_multi_squint_low_res_coherence_range_window_size: Optional[FloatWithUnit] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCalibrationMultiSquintLowResCoherenceRangeWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
         },
     )
     skp_phase_calibration_flag: Optional[str] = field(
@@ -782,20 +1056,28 @@ class StaProcessingParametersType:
             "required": True,
         },
     )
-    skp_median_filter_flag: Optional[str] = field(
+    skp_calibration_phase_postprocessing: Optional[SkpPhaseCalibrationPostprocessingType] = field(
         default=None,
         metadata={
-            "name": "skpMedianFilterFlag",
+            "name": "skpCalibrationPhasePostprocessing",
             "type": "Element",
             "namespace": "",
             "required": True,
-            "pattern": r"(false)|(true)",
         },
     )
-    skp_median_filter_window_size: Optional[FloatWithUnit] = field(
+    skp_postprocessing_filter_window_size: Optional[FloatWithUnit] = field(
         default=None,
         metadata={
-            "name": "skpMedianFilterWindowSize",
+            "name": "skpPostprocessingFilterWindowSize",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    skp_goldstein_filter_window_size: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "skpGoldsteinFilterWindowSize",
             "type": "Element",
             "namespace": "",
             "required": True,
@@ -830,10 +1112,20 @@ class StaProcessingParametersType:
             "pattern": r"(false)|(true)",
         },
     )
-    in_sarcalibration_use32_bit_flag: Optional[str] = field(
+    multi_squint_estimation_use32_bit_flag: Optional[str] = field(
         default=None,
         metadata={
-            "name": "inSARCalibrationUse32BitFlag",
+            "name": "multiSquintEstimationUse32BitFlag",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": r"(false)|(true)",
+        },
+    )
+    multi_squint_correction_use32_bit_flag: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "multiSquintCorrectionUse32BitFlag",
             "type": "Element",
             "namespace": "",
             "required": True,

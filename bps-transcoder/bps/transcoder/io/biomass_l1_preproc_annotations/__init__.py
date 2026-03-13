@@ -20,6 +20,7 @@ from bps.transcoder.io.biomass_l1_preproc_annotations.models import (
     L1PreProcessorAnnotations,
     NoiseSequenceType,
     PolarizationType,
+    PowerRatioType,
     PowerTrackingType,
     PowerTrackingTypeDoublet,
     PowerTrackingTypePolarization,

@@ -20,7 +20,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types
+from bps.common.io import common_types, translate_common
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_job_order import L2A_OUTPUT_PRODUCT_TFH
@@ -275,7 +275,9 @@ class TOMO_FH:
         forest_height = forest_height.T
 
         # This is from BPS:
-        terrain_slope_rad = np.deg2rad(self.stack_lut_list[self.primary_image_index]["terrainSlope"].astype(np.float32))
+        terrain_slope_rad = np.deg2rad(
+            self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32)
+        )
 
         # Preliminary interpolation: reference terrain slope
         if not (len(az_vec_subs) == terrain_slope_rad.shape[0] and len(rg_vec_subs) == terrain_slope_rad.shape[1]):
@@ -716,6 +718,9 @@ class TOMO_FH:
             self.aux_pp2_2a.general.forest_coverage_threshold,
             self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
             common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            translate_common.translate_polarisation_combination_method_to_model(
+                self.aux_pp2_2a.general.polarisation_combination_method
+            ),
         )
 
         compression_options_tomo_fh = main_annotation_models_l2a_tfh.CompressionOptionsL2A(

@@ -13,6 +13,7 @@ RFI activation mask
 from pathlib import Path
 
 import numpy as np
+from bps.common import bps_logger
 from netCDF4 import Dataset
 from numpy import typing as npt
 from pyproj import Transformer
@@ -49,6 +50,26 @@ def _normalize_longitudes(
     return footprint, mask_lon_axis
 
 
+def _reorder_points_counterclockwise(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """Reorder points in counterclockwise order, ensuring the first point is repeated at the end to close the polygon if needed."""
+
+    pts = points[:-1] if points[0] == points[-1] else points
+    pts = np.asarray(pts, dtype=float)
+    centroid = pts.mean(axis=0)
+    angles = np.arctan2(pts[:, 1] - centroid[1], pts[:, 0] - centroid[0])
+    # Sort by angle
+    sorted_pts = pts[np.argsort(angles)]
+
+    ordered = [tuple(pt) for pt in sorted_pts]
+    ordered.append(ordered[0])
+
+    poly = Polygon(ordered)
+    if not poly.exterior.is_ccw:
+        ordered = ordered[::-1]
+
+    return ordered
+
+
 def compute_rfi_activation_mask_overlap_fraction(
     footprint: list[tuple[float, float]],
     activation_mask: npt.NDArray[np.bool_],
@@ -58,7 +79,9 @@ def compute_rfi_activation_mask_overlap_fraction(
     """Compute the fraction [0, 1] of the footprint that overlaps an active mask region."""
 
     footprint, mask_lon_axis = _normalize_longitudes(footprint, mask_lon_axis)
+    footprint = _reorder_points_counterclockwise(footprint)
     footprint_latlon = Polygon(footprint)
+    bps_logger.debug(f"RFI mask footprint intersection - footprint after normalization and reordering: {footprint}")
 
     if not footprint_latlon.is_valid or footprint_latlon.area == 0:
         raise RuntimeError(f"Invalid footprint: {footprint}")

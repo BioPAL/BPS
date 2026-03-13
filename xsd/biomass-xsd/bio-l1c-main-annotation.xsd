@@ -53,9 +53,9 @@
 					<xsd:documentation>Polarisation used for the Slow-Ionosphere Remova (IOB) step.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="polarisationUsedForPhasePlaneRemoval" type="polarisationType">
+			<xsd:element name="polarisationUsedForMultiSquintCalibration" type="polarisationType">
 				<xsd:annotation>
-					<xsd:documentation>Polarisation used for estimation in the Phase-Plane-Removal (PPR) step.</xsd:documentation>
+					<xsd:documentation>Polarisation used for estimation in the Multi-Squint Calibration (MSC) step.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="calibrationPrimaryImageFlag" type="bool">
@@ -68,9 +68,59 @@
 					<xsd:documentation>True if slow-varying ionospheric phase screen estimation and removal was performed, False otherwise.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="inSARCalibrationFlag" type="bool">
+			<xsd:element name="multiSquintCalibrationFlag" type="bool">
 				<xsd:annotation>
-					<xsd:documentation>True if InSAR calibration was enabled, False otherwise.</xsd:documentation>
+					<xsd:documentation>True if Multi-Squint calibration module was enabled, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationForceIonosphereCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if Multi-Squint ionosphere calibration step was forcefully executed by user, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationDisableIonosphereCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if Multi-Squint ionosphere calibration step was forcefully executed by user, False otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationCoherenceImprovementThreshold" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Threshold on the coherence gian that was used to trigger the Multi-Squint ionosphere calibration step.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationCoherenceAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The multi-looking window in along-track direction used for estimating the standard coherence (coherence test) [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationCoherenceRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The multi-looking window in slant-range direction used for estimating the standard coherence (coherence test) [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationMultiSquintCoherenceSubBandResolution" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The squint axis resolution of the Multi-Squint cohrence matrix [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationMultiSquintHighResCoherenceAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The high resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationMultiSquintHighResCoherenceRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The high resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationMultiSquintLowResCoherenceAzimuthWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The low resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationMultiSquintLowResCoherenceRangeWindowSize" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>The low resolution multi-look window in slant-range direction for the Multi-Squint cohrence matrix [m].</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="skpPhaseCalibrationFlag" type="bool">
@@ -93,14 +143,19 @@
 					<xsd:documentation>SKP estimation window size [m].</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="skpMedianFilterFlag" type="bool">
+			<xsd:element name="skpCalibrationPhasePostprocessing" type="skpPhaseCalibrationPostprocessingType">
 				<xsd:annotation>
-					<xsd:documentation>True if median filter was applied to the SKP calibration phase screen.</xsd:documentation>
+					<xsd:documentation>Postprocessing applied to the SKP calibration phase screens.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="skpMedianFilterWindowSize" type="floatWithUnit">
+			<xsd:element name="skpPostprocessingFilterWindowSize" type="floatWithUnit">
 				<xsd:annotation>
-					<xsd:documentation>SKP median filter window size [m].</xsd:documentation>
+					<xsd:documentation>Filter window size used in SKP postprocessing in case of "Boxcar" or "Median" filter [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="skpGoldsteinFilterWindowSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Filter window size used in SKP postprocessing in case of "Goldstein" filter [px].</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="slowIonosphereRemovalMultiBaselineThreshold" type="xsd:float">
@@ -118,9 +173,14 @@
 					<xsd:documentation>True if AZF was run with 32-bit precision.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="inSARCalibrationUse32BitFlag" type="bool">
+			<xsd:element name="multiSquintEstimationUse32BitFlag" type="bool">
 				<xsd:annotation>
-					<xsd:documentation>True if PPR was run with 32-bit precision.</xsd:documentation>
+					<xsd:documentation>True if the estimation step of the MSC was run with 32-bit precision.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCorrectionUse32BitFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the ionosphere correction step of the MSC was run with 32-bit precision.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="skpPhaseCalibrationUse32BitFlag" type="bool">
@@ -167,11 +227,6 @@
 					<xsd:documentation>Average coregistration shift along azimuth direction [m].</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="rangeSpectralFilteringFlag" type="bool">
-				<xsd:annotation>
-					<xsd:documentation>True if range spectral filtering was performed during the coregistration step, False otherwise.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
 			<xsd:element name="polarisationUsed" type="polarisationType">
 				<xsd:annotation>
 					<xsd:documentation>Polarisation used for shift estimation.</xsd:documentation>
@@ -216,14 +271,44 @@
 					<xsd:documentation>Interferometric pairs used to estimate the slow-varying ionosphere calibration (multi-baseline and single-baseline).</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="rangePhaseSlope" type="floatWithUnit">
+			<xsd:element name="multiSquintCalibrationLowResolutionFlag" type="bool">
 				<xsd:annotation>
-					<xsd:documentation>Phase plane slope estimated by PPR, in slant-range direction [rad/s].</xsd:documentation>
+					<xsd:documentation>True if Multi-Squint calibration was executed in low resolution modality, False otherwise.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="azimuthPhaseSlope" type="floatWithUnit">
+			<xsd:element name="multiSquintCalibrationRangePhaseSlope" type="floatWithUnit">
 				<xsd:annotation>
-					<xsd:documentation>Phase plane slope estimated by PPR, in along-track direction [rad/s].</xsd:documentation>
+					<xsd:documentation>Phase plane slope estimated by the Multi-Squint Calibration module, in slant-range direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationAzimuthPhaseSlope" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Phase plane slope estimated by Multi-Squint Calibration moduke, in along-track direction [rad/s].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationAzimuthShift" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Constant shift in along-track direction estimated from spectral analysis on the Multi-Squint coherence [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationAzimuthFrequencyCentroid" type="floatWithUnit">
+				<xsd:annotation>
+					<xsd:documentation>Spatial (along-track) frequency centroid from spectral analysis on the Multi-Squint coherence [m].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationIonosphericLayerAltitudes" type="floatArrayWithUnits">
+				<xsd:annotation>
+					<xsd:documentation>Altitude of the ionospheric layers estimated by the Multi-Squint Calibration module.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationCoherenceCheckValue" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Coherence improvement used during the coherence check of the Multi-Squint Calibration module.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiSquintCalibrationIonosphereCorrectionFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if the Multi-Squint Calibration module executed the ionosphere correction. False otherwise.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="baselineOrderingIndex" type="xsd:unsignedInt">
@@ -304,6 +389,50 @@
 				<xsd:annotation>
 					<xsd:documentation>Error code for the SKP decomposition. Positive if the SKP decomposition hit a nonblocking contingency case (e.g. SVD decomposition failure etc.) and the exported SKP-related LUTs contain values obtained from a contingency handling procedure. 0 otherwise.</xsd:documentation>
 				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceMean" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Mean coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceStd" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Standard deviation of the coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceMin" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceMax" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Maximum coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceMedian" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Median coherence (amplitude) of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="coherenceHistogram">
+				<xsd:annotation>
+					<xsd:documentation>Coherence distribution of the calibrated L1c frame with respect to the coregistration primary.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="bins" type="floatArray">
+							<xsd:annotation>
+								<xsd:documentation>The bins of the coherence histrogram.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="pdfValues" type="floatArray">
+							<xsd:annotation>
+								<xsd:documentation>The PDF values of the coherence histrogram.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>

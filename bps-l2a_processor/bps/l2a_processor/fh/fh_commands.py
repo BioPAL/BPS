@@ -20,7 +20,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types
+from bps.common.io import common_types, translate_common
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A, MinMaxNumType, MinMaxType
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_job_order import L2A_OUTPUT_PRODUCT_FH
@@ -207,7 +207,7 @@ class FH:
                 [lut["denoisingVV"].astype(np.float64) for lut in self.stack_lut_list],
             ],
             [lut["sigmaNought"] for lut in self.stack_lut_list],
-            np.deg2rad(self.stack_lut_list[self.primary_image_index]["terrainSlope"].astype(np.float32))
+            np.deg2rad(self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32))
             * int(
                 self.aux_pp2_2a.fh.correct_terrain_slopes_flag
             ),  # set to zero the slope if not to be used (from AUX-PP)
@@ -667,6 +667,9 @@ class FH:
             self.aux_pp2_2a.general.forest_coverage_threshold,
             self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
             common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            translate_common.translate_polarisation_combination_method_to_model(
+                self.aux_pp2_2a.general.polarisation_combination_method
+            ),
         )
 
         compression_options_fh = main_annotation_models_l2a_fh.CompressionOptionsL2A(
@@ -1161,6 +1164,11 @@ def covariance_4d_to_correlation_4d(
 
     # Normalization of the covariance to get coherence
     coherence = normalization_factor * covariance
+
+    # Set complex coherence with absolute value larger than 1 to exactly one, phase is also set to zero
+    coherence[np.abs(coherence) > 1] = 1.0 + 0.0j
+    # Set complex coherence to zero where it is not a value
+    coherence[np.isnan(coherence)] = 0.0 + 0.0j
 
     # the function returns also the reshaped covariance diagonal, also moveaxis to get:
     # N_az x N_rg x (MxP))]
@@ -1857,15 +1865,9 @@ def compute_lut_kh_mu_tempdec(
     if lut_kh_axis[0] == 0.0:
         lut_kh_axis[0] = np.min([1.0e-06, lut_kh_axis[1] / 2])
 
-    lut_mu_axis = np.power(
-        10.0,
-        np.linspace(
-            ground_to_volume_ratio_range.min,
-            ground_to_volume_ratio_range.max,
-            ground_to_volume_ratio_range.num,
-            dtype=np.float32,
-        )
-        / 10.0,
+    # Linear sampling of LUT MU axis
+    lut_mu_axis = np.linspace(
+        ground_to_volume_ratio_range.min, ground_to_volume_ratio_range.max, ground_to_volume_ratio_range.num
     )
 
     height_axis_n_samples = len(profile)
@@ -2175,8 +2177,8 @@ def range_decorrelation_compensation(
         range decorrelation compensated coherence
     """
 
-    rg_deco = 1 - np.abs(resolution_rg / (2 * np.pi / vertical_wavenumber_mat)) * np.cos(
-        inc_angle_terrain_corrected_rad
-    )
+    # Removed from here the incidence angle cosine therm:
+    # this deviated from the theory but more consistent with empirically determined Kz critical
+    rg_deco = 1 - np.abs(resolution_rg / (2 * np.pi / vertical_wavenumber_mat))
 
     return optimized_coherence_mat / rg_deco

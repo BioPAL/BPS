@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 import numpy as np
+from bps.common.io import common
 from bps.l2a_processor.io.aux_pp2_2a_models import CalibrationScreenType
 from bps.transcoder.io import common_annotation_models_l2
 
@@ -32,6 +33,7 @@ class GeneralConf:
     forest_coverage_threshold: float
     forest_mask_interpolation_threshold: float
     subsetting_rule: SubsettingRules
+    polarisation_combination_method: common.PolarisationCombinationMethodType | None
 
 
 class OperationalModeType(Enum):

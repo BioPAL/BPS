@@ -580,6 +580,11 @@
 					<xsd:documentation>In case of more than three acquisitions in input (TOM phase), this is the rule which has been used to select 3 acquisitions from the 7/8 of TOM phase, choosing, the baselines corresponding to the ones of INT phase.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="polarisationCombinationMethod" type="polarisationCombinationMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarisations are used).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="InputInformationL2bL3ListType">

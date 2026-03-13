@@ -1,5 +1,5 @@
 {% set name = "bps-l2a_processor" %}
-{% set version = "4.3.0" %}
+{% set version = "4.4.0" %}
 
 package:
   name: {{ name|lower }}

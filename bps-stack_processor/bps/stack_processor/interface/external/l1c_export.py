@@ -10,13 +10,13 @@ Export L1c Products
 -------------------
 """
 
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
 import scipy as sp
-from arepytools.io import open_product_folder
 from arepytools.io.metadata import EPolarization, RasterInfo
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
@@ -28,9 +28,8 @@ from bps.common.io.common_types.models import (
 from bps.common.roi_utils import RegionOfInterest
 from bps.stack_cal_processor.configuration import (
     AZF_NAME,
-    CAL_NAME,
     IOB_NAME,
-    PPR_NAME,
+    MSC_NAME,
     SKP_NAME,
     StackDataSpecs,
 )
@@ -39,12 +38,13 @@ from bps.stack_cal_processor.core.filtering import (
     build_sparse_uniform_filter_matrix,
 )
 from bps.stack_cal_processor.core.floating_precision import EstimationDType
+from bps.stack_cal_processor.core.msc.utils import compute_ionosphere_axes, los_range_ground_to_altitude
+from bps.stack_cal_processor.core.signal_processing import compute_coherence
 from bps.stack_cal_processor.core.utils import (
     compute_spatial_azimuth_shifts,
     compute_spatial_range_shifts,
     get_time_axis,
     interpolate_on_grid_nn,
-    read_productfolder_data,
 )
 from bps.stack_processor import BPS_STACK_PROCESSOR_NAME
 from bps.stack_processor import __version__ as VERSION
@@ -72,6 +72,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct import (
 )
 from bps.transcoder.sarproduct.biomass_stackproduct_writer import (
     BIOMASSStackProductWriter,
+    IonosphereAxes,
 )
 from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.sarproduct.sta.quality_index import StackQualityIndex
@@ -86,7 +87,6 @@ def export_l1c_product(
     job_order: StackJobOrder,
     aux_pps: AuxiliaryStaprocessingParameters,
     stack_pre_proc_exec_products: dict,
-    stack_coreg_proc_output_products: dict,
     stack_coreg_exec_products: dict,
     lut_shift_exec_products: dict,
     stack_cal_proc_exec_products: dict,
@@ -99,7 +99,7 @@ def export_l1c_product(
     image_index: int,
     stack_id: StackUniqueID,
     fnf_mask_file: Path | None,
-    gdal_num_threads: int,
+    num_threads: int,
 ):
     """
     Export the L1c product.
@@ -114,9 +114,6 @@ def export_l1c_product(
 
     stack_pre_proc_exec_products: dict
         The output of the StackPreProcessorExecutionManager.
-
-    stack_coreg_proc_output_products: dict
-        The products of coregistration.
 
     stack_coreg_exec_products: dict
         The by-products the coreg processor.
@@ -155,14 +152,27 @@ def export_l1c_product(
     fnf_mask_file: Optional[Path],
         Optionally, the path to the employed FNF mask (.tiff).
 
-    gdal_num_threads: int
-        Number of threads GDAL is allowed to use to export the GeoTIFFs.
+    num_threads: int
+        Number of threads assigned for the job.
 
     """
     # Just shortcuts.
     coreg_primary_image_index = stack_pre_proc_exec_products["coreg_primary_image_index"]
     primary_product = stack_pre_proc_exec_products["l1a_product_data"][coreg_primary_image_index]
     secondary_product = stack_pre_proc_exec_products["l1a_product_data"][image_index]
+
+    # Compute the coherence for visualization.
+    flattening_phases = stack_cal_proc_exec_products["flattening_phases"]
+    if aux_pps.skp_phase_calibration.skp_phase_estimation_flag and aux_pps.skp_phase_calibration.phase_correction_flag:
+        flattening_phases = np.zeros_like(flattening_phases)
+
+    coherences = _compute_coherences(
+        calibrated_stack=stack_cal_proc_exec_products["calibrated_stack_images"],
+        flattening_phases=flattening_phases,
+        coreg_primary_image_index=coreg_primary_image_index,
+        image_index=image_index,
+        num_threads=num_threads,
+    )
 
     # The LUT for the current data.
     lut_data = lut_shift_exec_products["lut_data"][image_index]
@@ -182,7 +192,6 @@ def export_l1c_product(
         flattening_phases=stack_cal_proc_exec_products["flattening_phases"],
         vertical_wavenumbers=stack_cal_proc_exec_products["vertical_wavenumbers"],
         stack_data_specs=stack_cal_proc_exec_products["stack_data_specs"],
-        stack_coreg_proc_output_products=stack_coreg_proc_output_products,
         lut_nodata_mask=lut_nodata_mask,
         lut_primary_axes_indices=lut_primary_axes_indices,
         full_primary_axes=full_primary_axes,
@@ -192,9 +201,7 @@ def export_l1c_product(
         coreg_range_geo_shifts=lut_data["rangeOrbitCoregistrationShifts"],
         primary_coreg_azimuth_shifts=primary_coreg_azimuth_shifts,
         primary_coreg_range_shifts=primary_coreg_range_shifts,
-        coreg_primary_image_index=coreg_primary_image_index,
         image_index=image_index,
-        stack_roi=stack_pre_proc_exec_products["stack_roi"],
     )
     lut_data.update(stack_lut_data)
 
@@ -240,24 +247,31 @@ def export_l1c_product(
     # The stack InSAR parameters.
     stack_insar_parameters = _fill_stack_insar_parameters(
         job_order=job_order,
-        stack_sar_data=secondary_product,
         spatial_ordering=stack_pre_proc_exec_products["stack_spatial_ordering"],
         calibration_products=stack_cal_proc_exec_products["calibration_products"],
         stack_data_specs=stack_cal_proc_exec_products["stack_data_specs"],
         calib_reference_image_index=calib_reference_image_index,
         image_index=image_index,
+        incidence_angle=np.nanmean(np.deg2rad(lut_data["incidenceAngle"])),
     )
 
     # The stack quality info.
     stack_quality = _fill_stack_quality(
         aux_pps=aux_pps,
         calibration_products=stack_cal_proc_exec_products["calibration_products"],
-        image_index=image_index,
         stack_polarizations=stack_pre_proc_exec_products["stack_polarizations"],
         rfi_indices=stack_pre_proc_exec_products["rfi_indices"][image_index],
         faraday_decorrelation=stack_pre_proc_exec_products["faraday_rotations"][image_index],
         invalid_residual_shifts_ratio=lut_shift_exec_products["invalid_residual_shifts_ratios"][image_index],
         overall_product_quality_index=overall_product_quality_index,
+        coherences=[_abs_or_zero(coh) for coh in coherences],
+    )
+
+    ionosphere_axes = _fill_ionosphere_axes(
+        calibration_products=stack_cal_proc_exec_products["calibration_products"],
+        stack_specs=stack_cal_proc_exec_products["stack_data_specs"],
+        image_index=image_index,
+        incidence_angle=np.nanmean(np.deg2rad(lut_data["incidenceAngle"])),
     )
 
     # The fnf mask product name.
@@ -275,8 +289,10 @@ def export_l1c_product(
         path_primary_l1a=job_order.input_stack[coreg_primary_image_index],
         path_secondary_l1a=job_order.input_stack[image_index],
         l1c_export_conf=aux_pps.l1c_product_export,
+        coherence=coherences[0],  # We just export the QL of 1 polarization.
         lut_dict=lut_data,
         lut_axes_primary=lut_axes_primary,
+        ionosphere_axes=ionosphere_axes,
         stack_processing_parameters=stack_processing_parameters,
         stack_coregistration_parameters=stack_coregistration_parameters,
         stack_in_sarparameters=stack_insar_parameters,
@@ -288,7 +304,7 @@ def export_l1c_product(
         file_name_aux_pps=job_order.auxiliary_files.name,
         file_name_fnf=file_name_fnf,
         add_monitoring_product=True,
-        gdal_num_threads=gdal_num_threads,
+        num_threads=num_threads,
     )
 
 
@@ -302,7 +318,7 @@ def export_l1c_products(
     lut_shift_exec_products: dict,
     stack_cal_proc_exec_products: dict,
     fnf_mask_file: Path | None,
-    gdal_num_threads: int = 1,
+    num_threads: int = 1,
 ):
     """
     Export the L1c products.
@@ -333,8 +349,8 @@ def export_l1c_products(
     fnf_mask_file Optional[Path]
         Optionally, a path to the used FNF mask (.tiff).
 
-    gdal_num_threads: int
-        Number of threads GDAL is allowed to use to export the GeoTIFFs.
+    num_threads: int
+        Number of threads assigned for the job.
 
     """
     # Just a couple of shortcuts.
@@ -405,7 +421,6 @@ def export_l1c_products(
             job_order=job_order,
             aux_pps=aux_pps,
             stack_pre_proc_exec_products=stack_pre_proc_exec_products,
-            stack_coreg_proc_output_products=stack_coreg_proc_output_products,
             stack_coreg_exec_products=stack_coreg_exec_products,
             lut_shift_exec_products=lut_shift_exec_products,
             stack_cal_proc_exec_products=stack_cal_proc_exec_products,
@@ -418,7 +433,7 @@ def export_l1c_products(
             image_index=image_index,
             stack_id=stack_id,
             fnf_mask_file=fnf_mask_file,
-            gdal_num_threads=gdal_num_threads,
+            num_threads=num_threads,
         )
 
 
@@ -453,7 +468,7 @@ def _compute_stack_unique_id(
         start_time = round_precise_datetime(
             l1a_data.raster_info_list[0].lines_start
             + stack_data_specs.azimuth_sampling_step
-            * (np.mean(lut_data["azimuthCoregistrationShifts"][0]) + stack_roi[0]),
+            * (np.nanmean(lut_data["azimuthCoregistrationShifts"][0]) + stack_roi[0]),
             timespec="microseconds",
         )
         # The stop time is simply the start time increased by the extent of the
@@ -592,7 +607,6 @@ def _fill_stack_luts(
     flattening_phases: tuple[npt.NDArray[float], ...],
     vertical_wavenumbers: tuple[npt.NDArray[float] | None, ...],
     stack_data_specs: StackDataSpecs,
-    stack_coreg_proc_output_products: tuple[CoregistrationOutputProducts, ...],
     lut_nodata_mask: npt.NDArray[float],
     lut_primary_axes_indices: tuple[npt.NDArray[int], npt.NDArray[int]],
     full_primary_axes: tuple[npt.NDArray[float], npt.NDArray[float]],
@@ -602,9 +616,7 @@ def _fill_stack_luts(
     coreg_range_geo_shifts: npt.NDArray[float],
     primary_coreg_azimuth_shifts: npt.NDArray[float],
     primary_coreg_range_shifts: npt.NDArray[float],
-    coreg_primary_image_index: int,
     image_index: int,
-    stack_roi: tuple[int, int, int, int] | None = None,
 ) -> tuple[
     dict,
     tuple[npt.NDArray[float], npt.NDArray[float]],
@@ -656,19 +668,15 @@ def _fill_stack_luts(
     if "coregistrationShiftsQuality" in stack_lut:
         stack_lut["coregistrationShiftsQuality"] *= lut_nodata_mask
 
-    # The vertical wavenumbers (Kz). Note that if the stack ROI, we need to
-    # reload the full resolution data.
+    # The vertical wavenumbers (Kz).
     kz = vertical_wavenumbers[image_index]
     if kz is None:
-        kz_pf = open_product_folder(stack_coreg_proc_output_products[image_index].kz_product)
-        kz = read_productfolder_data(kz_pf, roi=stack_roi)
+        raise RuntimeError("Vertical wavenumbers cannot be None")
 
-    # NOTE: If the stack ROI is not None, we need to reload the full resolution
-    # data.
+    # The DSI data (phi_flat).
     flattening_phases = flattening_phases[image_index]
     if flattening_phases is None:
-        flattening_phases_pf = open_product_folder(stack_coreg_proc_output_products[image_index].synth_product)
-        flattening_phases = read_productfolder_data(flattening_phases_pf, roi=stack_roi)
+        raise RuntimeError("Flattening phases cannot be None")
 
     # We guarantee consistency between L1c and L2, we ensure that we compute
     # the flattning phases screens exactly as computed in the SKP (if enabled).
@@ -710,6 +718,15 @@ def _fill_stack_luts(
     stack_lut["waveNumbers"] = kz * lut_nodata_mask
     stack_lut["flatteningPhaseScreen"] = flattening_phases * lut_nodata_mask
 
+    # Populate the ionosphere phase screens.
+    if (
+        MSC_NAME in calibration_products
+        and calibration_products[MSC_NAME]["is_solution_usable"]
+        and calibration_products[MSC_NAME]["ionosphere_estimation_outputs"][image_index] is not None
+    ):
+        iono_output = calibration_products[MSC_NAME]["ionosphere_estimation_outputs"][image_index]
+        stack_lut["ionospherePhaseScreens"] = iono_output.iono_layer_phase_screens
+
     # The SKP-calibration products.
     if SKP_NAME in calibration_products and calibration_products[SKP_NAME]["is_solution_usable"]:
         skp_products = calibration_products[SKP_NAME]
@@ -728,19 +745,19 @@ def _fill_stack_luts(
 
     return (
         stack_lut,
-        np.mean(coreg_azimuth_shifts[0]) * stack_data_specs.azimuth_sampling_step,  # [s].
+        np.nanmean(coreg_azimuth_shifts[0]) * stack_data_specs.azimuth_sampling_step,  # [s].
     )
 
 
 def _fill_stack_insar_parameters(
     *,
     job_order: StackJobOrder,
-    stack_sar_data: SARProduct,
     spatial_ordering: tuple[int, ...],
     calibration_products: dict,
     stack_data_specs: StackDataSpecs,
     calib_reference_image_index: int,
     image_index: int,
+    incidence_angle: float,
 ) -> BIOMASSStackInSARParameters:
     """
     Populate a BIOMASSStackInSARParameters object.
@@ -749,9 +766,6 @@ def _fill_stack_insar_parameters(
     ----------
     job_order: StackJobOrder
         The STA_P JobOrder object.
-
-    stack_sar_data: SARProduct
-        The SAR data of the calibrated stack product.
 
     spatial_ordering: tuple[int, ...]
         The index permutation that increasingly orders the stack
@@ -773,6 +787,9 @@ def _fill_stack_insar_parameters(
     ------
     BIOMASSStackInSARParameters
         The stack InSAR parameters of the job.
+
+    IonosphereAxes | None
+        The ionosphere estimation annotation object.
 
     """
     # Some optional by-products.
@@ -801,14 +818,29 @@ def _fill_stack_insar_parameters(
         slow_ionosphere_quality = iob_products["slow_ionosphere_qualities"][image_index]
         slow_ionosphere_removal_interferometric_pairs = iob_products["interferometric_pairs"]
 
-    # The InSAR calibration products.
-    azimuth_phase_slope = 0.0  # [rad/s].
-    range_phase_slope = 0.0  # [rad/s].
-    if CAL_NAME in calibration_products:
-        in_sar_calibration_products = calibration_products[CAL_NAME]
-        if PPR_NAME in in_sar_calibration_products and in_sar_calibration_products[PPR_NAME]["is_solution_usable"]:
-            azimuth_phase_slope = in_sar_calibration_products[PPR_NAME]["azimuth_phase_slopes"][image_index]
-            range_phase_slope = in_sar_calibration_products[PPR_NAME]["range_phase_slopes"][image_index]
+    # The products of the MSC module.
+    low_resolution_flag = False
+    azimuth_phase_slope = 0.0
+    range_phase_slope = 0.0
+    azimuth_shift = 0.0
+    azimuth_frequency_centroid = 0.0
+    iono_layer_altitudes = []
+    coherence_check_value = 0.0
+    iono_correction_flag = False
+    if MSC_NAME in calibration_products and calibration_products[MSC_NAME]["is_solution_usable"]:
+        msc_products = calibration_products[MSC_NAME]
+        low_resolution_flag = msc_products["low_resolution_switches"][image_index]
+        azimuth_phase_slope = msc_products["azimuth_phase_slopes"][image_index]
+        range_phase_slope = msc_products["range_phase_slopes"][image_index]
+        iono_correction_flag = msc_products["ionosphere_estimation_outputs"][image_index] is not None
+        if iono_correction_flag:
+            coherence_check_value = msc_products["coherence_checks"][image_index].improvement
+            azimuth_shift = msc_products["azimuth_shift_outputs"][image_index].azimuth_shift
+            azimuth_frequency_centroid = msc_products["azimuth_shift_outputs"][image_index].azimuth_frequency_centroid
+            iono_layer_altitudes = los_range_ground_to_altitude(
+                msc_products["ionosphere_estimation_outputs"][image_index].ionosphere_layer_ranges,
+                incidence_angle=incidence_angle,
+            )
 
     # The SKP-calibration products.
     skp_calibration_phase_screen_mean = 0.0
@@ -835,8 +867,14 @@ def _fill_stack_insar_parameters(
         slow_ionosphere_azimuth_phase_screen=slow_ionosphere_azimuth_phase_screen,
         slow_ionosphere_quality=slow_ionosphere_quality,
         slow_ionosphere_removal_interferometric_pairs=slow_ionosphere_removal_interferometric_pairs,
-        azimuth_phase_slope=azimuth_phase_slope,
-        range_phase_slope=range_phase_slope,
+        multi_squint_calibration_low_resolution_flag=low_resolution_flag,
+        multi_squint_calibration_azimuth_phase_slope=azimuth_phase_slope,
+        multi_squint_calibration_range_phase_slope=range_phase_slope,
+        multi_squint_calibration_azimuth_shift=azimuth_shift,
+        multi_squint_calibration_azimuth_frequency_centroid=azimuth_frequency_centroid,
+        multi_squint_calibration_ionospheric_layer_altitudes=iono_layer_altitudes,
+        multi_squint_calibration_coherence_check_value=coherence_check_value,
+        multi_squint_calibration_ionosphere_correction_flag=iono_correction_flag,
         baseline_ordering_index=int(spatial_ordering[image_index]),
         skp_calibration_phase_screen_mean=skp_calibration_phase_screen_mean,
         skp_calibration_phase_screen_std=skp_calibration_phase_screen_std,
@@ -849,12 +887,12 @@ def _fill_stack_quality(
     *,
     aux_pps: AuxiliaryStaprocessingParameters,
     calibration_products: dict,
-    image_index: int,
     stack_polarizations: tuple[EPolarization, ...],
     rfi_indices: dict[EPolarization, float],
     faraday_decorrelation: float,
     invalid_residual_shifts_ratio: float,
     overall_product_quality_index: np.uint32,
+    coherences: list[npt.NDArray[float]],
     invalid_l1a_samples_ratio: float = 0.0,
 ) -> BIOMASSStackQuality:
     """Fill the BIOMASSStackQuality structure"""
@@ -884,8 +922,21 @@ def _fill_stack_quality(
                 skp_calibration_phase_screen_quality_threshold=aux_pps.skp_phase_calibration.skp_calibration_phase_screen_quality_threshold,
                 skp_decomposition_index=skp_decomposition_index,
                 polarization=translate_polarization(polarization),
+                coherence_mean=np.nanmean(coherence),
+                coherence_std=np.nanstd(coherence),
+                coherence_min=np.nanmin(coherence),
+                coherence_max=np.nanmax(coherence),
+                coherence_median=np.nanmedian(coherence),
+                coherence_histogram=(
+                    BIOMASSStackQualityParameters.CoherenceHistogram.from_coherence_abs(coherence)
+                    if coherence.size > 1
+                    else BIOMASSStackQualityParameters.CoherenceHistogram(
+                        bins=np.array([], dtype=np.float64),
+                        pdf_values=np.array([], dtype=np.float64),
+                    )
+                ),
             )
-            for polarization in stack_polarizations
+            for polarization, coherence in zip(stack_polarizations, coherences)
         ],
     )
 
@@ -938,25 +989,69 @@ def _fill_stack_processing_parameters(
         polarization_used_for_slow_ionosphere_removal=translate_polarization(
             aux_pps.slow_ionosphere_removal.polarization_used
         ),
-        polarization_used_for_phase_plane_removal=translate_polarization(aux_pps.in_sar_calibration.polarization_used),
+        polarization_used_for_multi_squint_calibration=translate_polarization(
+            aux_pps.multi_squint_calibration.polarization_used,
+        ),
         slow_ionosphere_removal_flag=aux_pps.slow_ionosphere_removal.slow_ionosphere_removal_flag,
-        in_sar_calibration_flag=aux_pps.in_sar_calibration.in_sar_calibration_flag,
+        multi_squint_calibration_flag=aux_pps.multi_squint_calibration.multi_squint_calibration_flag,
+        multi_squint_calibration_force_ionosphere_correction_flag=aux_pps.multi_squint_calibration.force_multi_squint_iono_correction_flag,
+        multi_squint_calibration_disable_ionosphere_correction_flag=aux_pps.multi_squint_calibration.disable_multi_squint_iono_correction_flag,
+        multi_squint_calibration_coherence_improvement_threshold=aux_pps.multi_squint_calibration.multi_squint_coherence_improvement_threshold,
+        multi_squint_calibration_coherence_azimuth_window_size=aux_pps.multi_squint_calibration.coherence_azimuth_window_size,
+        multi_squint_calibration_coherence_range_window_size=aux_pps.multi_squint_calibration.coherence_range_window_size,
+        multi_squint_calibration_multi_squint_coherence_subband_resolution=aux_pps.multi_squint_calibration.multi_squint_coherence_subband_resolution,
+        multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size=aux_pps.multi_squint_calibration.multi_squint_coherence_high_res_azimuth_window_size,
+        multi_squint_calibration_multi_squint_high_res_coherence_range_window_size=aux_pps.multi_squint_calibration.multi_squint_coherence_high_res_range_window_size,
+        multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size=aux_pps.multi_squint_calibration.multi_squint_coherence_low_res_azimuth_window_size,
+        multi_squint_calibration_multi_squint_low_res_coherence_range_window_size=aux_pps.multi_squint_calibration.multi_squint_coherence_low_res_range_window_size,
         skp_phase_calibration_flag=aux_pps.skp_phase_calibration.skp_phase_estimation_flag,
         skp_phase_correction_flag=skp_phase_correction_flag(aux_pps.skp_phase_calibration),
         skp_phase_correction_flattening_only_flag=skp_phase_correction_flattening_only_flag(
             aux_pps.skp_phase_calibration
         ),
         skp_estimation_window_size=aux_pps.skp_phase_calibration.estimation_window_size,
-        skp_median_filter_flag=aux_pps.skp_phase_calibration.median_filter_flag,
-        skp_median_filter_window_size=aux_pps.skp_phase_calibration.median_filter_window_size,
+        skp_calibration_phase_postprocessing=aux_pps.skp_phase_calibration.calibration_phase_postprocessing,
+        skp_postprocessing_filter_window_size=aux_pps.skp_phase_calibration.postprocessing_filter_window_size,
+        skp_goldstein_filter_window_size=aux_pps.skp_phase_calibration.goldstein_filter_window_size,
         slow_ionosphere_removal_multi_baseline_threshold=(
             aux_pps.slow_ionosphere_removal.multi_baseline_critical_baseline_threshold
         ),
         slow_ionosphere_removal_use_32bit_flag=aux_pps.slow_ionosphere_removal.use_32bit_flag,
         azimuth_spectral_filtering_use_32bit_flag=aux_pps.azimuth_spectral_filtering.use_32bit_flag,
-        in_sar_calibration_use_32bit_flag=aux_pps.in_sar_calibration.use_32bit_flag,
+        multi_squint_estimation_use_32bit_flag=aux_pps.multi_squint_calibration.use_32bit_estimation_flag,
+        multi_squint_correction_use_32bit_flag=aux_pps.multi_squint_calibration.use_32bit_correction_flag,
         skp_phase_calibration_use_32bit_flag=aux_pps.skp_phase_calibration.use_32bit_flag,
     )
+
+
+def _fill_ionosphere_axes(
+    *,
+    calibration_products: dict,
+    stack_specs: StackDataSpecs,
+    image_index: int,
+    incidence_angle: float,
+) -> IonosphereAxes | None:
+    """Fill the ionosphere estimation annotation."""
+    if (
+        MSC_NAME in calibration_products
+        and calibration_products[MSC_NAME]["is_solution_usable"]
+        and calibration_products[MSC_NAME]["ionosphere_estimation_outputs"][image_index] is not None
+    ):
+        iono_output = calibration_products[MSC_NAME]["ionosphere_estimation_outputs"][image_index]
+        iono_slant_range_axis = calibration_products[MSC_NAME]["ionosphere_slant_range_space_axes"][image_index]
+        ionosphere_azimuth_axis, ionosphere_slant_range_axis = compute_ionosphere_axes(
+            ionosphere_azimuth_space_axis=iono_output.azimuth_iono_space_axis,
+            ionosphere_slant_range_space_axis=iono_slant_range_axis,
+            ionosphere_los_range_ground=np.nanmean(iono_output.ionosphere_layer_ranges),
+            satellite_ground_speed=stack_specs.satellite_ground_speeds[image_index],
+            incidence_angle=incidence_angle,
+            earth_radius=stack_specs.earth_radii[image_index],
+        )
+        return IonosphereAxes(
+            ionosphere_azimuth_axis=ionosphere_azimuth_axis,
+            ionosphere_slant_range_axis=ionosphere_slant_range_axis,
+        )
+    return None
 
 
 def _fill_stack_coregistration_parameters(
@@ -990,7 +1085,6 @@ def _fill_stack_coregistration_parameters(
         average_azimuth_coregistration_shift=average_azimuth_coreg_shifts,
         average_range_coregistration_shift=average_range_coreg_shifts,
         normal_baseline=normal_baseline,
-        range_spectral_filtering_flag=aux_pps.coregistration.range_spectral_filtering_flag,
         polarization_used=translate_polarization(aux_pps.coregistration.polarization_used),
     )
 
@@ -1004,8 +1098,10 @@ def _export_to_l1c_format(
     path_secondary_l1a: Path,
     l1c_export_conf: L1cProductExportConf,
     configuration: BIOMASSStackProductConfiguration,
+    coherence: np.ndarray | None,
     lut_dict: dict,
     lut_axes_primary: tuple[npt.NDArray[PreciseDateTime], npt.NDArray[float]],
+    ionosphere_axes: IonosphereAxes | None,
     stack_processing_parameters: BIOMASSStackProcessingParameters,
     stack_coregistration_parameters: BIOMASSStackCoregistrationParameters,
     stack_in_sarparameters: BIOMASSStackInSARParameters,
@@ -1016,12 +1112,13 @@ def _export_to_l1c_format(
     input_stack: tuple[str, ...],
     file_name_aux_pps: str | None = None,
     file_name_fnf: str | None = None,
-    gdal_num_threads: int = 1,
+    num_threads: int = 1,
     add_monitoring_product: bool = True,
 ):
     """Export data to L1c product."""
     # The Quick-look exporting configurations.
     ql_conf = QuickLookConf(
+        l1c_colour_coding_method=l1c_export_conf.l1c_ql_colour_coding_method,
         azimuth_decimation_factor=l1c_export_conf.ql_azimuth_decimation_factor,
         azimuth_averaging_factor=l1c_export_conf.ql_azimuth_averaging_factor,
         range_decimation_factor=l1c_export_conf.ql_range_decimation_factor,
@@ -1065,12 +1162,16 @@ def _export_to_l1c_format(
         source_product_names=input_stack,
         product_lut=lut_dict,
         lut_axes_primary=lut_axes_primary,
+        ionosphere_axes=ionosphere_axes,
+        coherence=coherence,
         ql_conf=ql_conf,
+        ql_export_coherence_flag=l1c_export_conf.ql_export_coherence_flag,
+        ql_export_interferogram_flag=l1c_export_conf.ql_export_interferogram_flag,
         stack_nodata_mask=stack_nodata_mask,
         processor_name=BPS_STACK_PROCESSOR_NAME,
         processor_version=VERSION,
         stack_id=stack_id,
-        gdal_num_threads=gdal_num_threads,
+        num_threads=num_threads,
     ).write()
 
     # If required, export monitoring product too. A monitoring product is an
@@ -1110,13 +1211,17 @@ def _export_to_l1c_format(
             file_name_aux_pps=file_name_aux_pps,
             file_name_fnf=file_name_fnf,
             source_product_names=input_stack,
+            coherence=coherence,
             product_lut=lut_dict,
             lut_axes_primary=lut_axes_primary,
+            ionosphere_axes=ionosphere_axes,
+            ql_conf=ql_conf,
+            ql_export_coherence_flag=l1c_export_conf.ql_export_coherence_flag,
+            ql_export_interferogram_flag=l1c_export_conf.ql_export_interferogram_flag,
             stack_nodata_mask=stack_nodata_mask,
             processor_name=BPS_STACK_PROCESSOR_NAME,
             processor_version=VERSION,
             stack_id=stack_id,
-            ql_conf=ql_conf,
         ).write()
 
 
@@ -1198,7 +1303,7 @@ def _reshape_raster_info(
 
 def _has_calibration_product(
     calibration_products: dict,
-    cal_module_name: Literal[AZF_NAME, CAL_NAME, SKP_NAME],
+    cal_module_name: Literal[AZF_NAME, MSC_NAME, SKP_NAME],
 ) -> bool:
     """Check if the solution is valid for selected module name."""
     return cal_module_name in calibration_products
@@ -1261,3 +1366,39 @@ def _slant_range_space_to_slant_range_time_polycoeffs(
         float(coeffs_x_sr[0] + coeffs_x_sr[1] * sp.constants.speed_of_light / 2 * t0),
         float(coeffs_x_sr[1] * sp.constants.speed_of_light / 2),
     ]
+
+
+def _compute_coherences(
+    *,
+    calibrated_stack: tuple[tuple[npt.NDArray[complex], ...], ...],
+    flattening_phases: tuple[npt.NDArray[float], ...] | None,
+    coreg_primary_image_index: int,
+    image_index: int,
+    num_threads: int,
+) -> list[npt.NDArray[float] | None]:
+    """Compute the coherence of a secondary image."""
+    if image_index == coreg_primary_image_index:
+        return [None] * len(calibrated_stack[image_index])
+
+    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+        # The primary frame and DSI.
+        image_p = calibrated_stack[coreg_primary_image_index]
+        dsi_p = flattening_phases[coreg_primary_image_index]
+
+        # The secondary frame and DSI.
+        image_s = calibrated_stack[image_index]
+        dsi_s = flattening_phases[image_index]
+
+        # The coherence main runner.
+        def compute_coherence_fn(pol: int) -> npt.NDArray[complex]:
+            return compute_coherence(
+                image_p=image_p[pol] * np.exp(1j * dsi_p, dtype=np.complex64),
+                image_s=image_s[pol] * np.exp(1j * dsi_s, dtype=np.complex64),
+            )
+
+        return list(executor.map(compute_coherence_fn, range(len(image_p))))
+
+
+def _abs_or_zero(values: npt.NDArray | None) -> npt.NDArray[float]:
+    """Return the abs of `values` if not None, else `default_value`"""
+    return np.abs(values) if values is not None else np.zeros((1,))

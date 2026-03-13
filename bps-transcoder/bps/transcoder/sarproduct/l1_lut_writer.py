@@ -37,6 +37,7 @@ from bps.transcoder.utils.production_model_utils import (
     translate_repeat_cycle_id,
 )
 from netCDF4 import Dataset
+from pyproj import Geod
 from scipy.constants import speed_of_light as LIGHTSPEED
 
 ZETA = LIGHTSPEED * H / (4.0 * np.pi**2 * ELECTRON_MASS * ALPHAINV)
@@ -158,9 +159,51 @@ class GeometricLUTData:
     height: np.ndarray
     incidence_angle_deg: np.ndarray
     elevation_angle_deg: np.ndarray
-    terrain_slope: np.ndarray
+    range_terrain_slope: np.ndarray
+    azimuth_terrain_slope: np.ndarray
     sigma_nought: np.ndarray
     gamma_nought: np.ndarray
+
+
+def compute_azimuth_terrain_slope(llh: np.ndarray) -> np.ndarray:
+    """Compute of terrain slope along azimuth.
+
+    Input and outputs are in degrees.
+    The slope is computed as the angle between the local tangent plane of the terrain and the horizontal plane,
+    along the azimuth direction.
+
+    It is positive when the terrain is rising in the direction of flight, negative when it is falling.
+    """
+    geod = Geod(ellps="WGS84")
+    lines, samples, _ = llh.shape
+
+    height = llh[:, :, 2]
+
+    # Central differences for interior points
+    h_prev = height[:-2, :]  # rows 0..lines-3
+    h_next = height[2:, :]  # rows 2..lines-1
+
+    lat_prev = llh[:-2, :, 0]
+    lon_prev = llh[:-2, :, 1]
+    lat_next = llh[2:, :, 0]
+    lon_next = llh[2:, :, 1]
+
+    # compute horizontal distances vectorized
+    _, _, distance = geod.inv(lon_prev, lat_prev, lon_next, lat_next, radians=False)
+
+    # slope for interior points
+    slope_deg = np.zeros((lines, samples))
+    slope_deg[1:-1, :] = np.degrees(np.arctan((h_next - h_prev) / distance))
+
+    # Forward difference for first row
+    _, _, distanceStart = geod.inv(llh[0, :, 1], llh[0, :, 0], llh[1, :, 1], llh[1, :, 0])
+    slope_deg[0, :] = np.degrees(np.arctan((height[1, :] - height[0, :]) / distanceStart))
+
+    # Backward difference for last row
+    _, _, distanceStop = geod.inv(llh[-2, :, 1], llh[-2, :, 0], llh[-1, :, 1], llh[-1, :, 0])
+    slope_deg[-1, :] = np.degrees(np.arctan((height[-1, :] - height[-2, :]) / distanceStop))
+
+    return slope_deg
 
 
 def compute_geometric_lut(
@@ -184,7 +227,8 @@ def compute_geometric_lut(
     )
 
     elevation_angle = np.rad2deg(dem_data.elevation_angles)
-    terrain_slope = incidence_angles - np.rad2deg(dem_data.incidence_angles)
+    range_terrain_slope = incidence_angles - np.rad2deg(dem_data.incidence_angles)
+    azimuth_terrain_slope = compute_azimuth_terrain_slope(np.stack((lat, lon, height), axis=-1))
     sigma_nought = np.sin(dem_data.incidence_angles)
     gamma_nought = np.tan(dem_data.incidence_angles)
 
@@ -194,7 +238,8 @@ def compute_geometric_lut(
         height=height,
         incidence_angle_deg=incidence_angles,
         elevation_angle_deg=elevation_angle,
-        terrain_slope=terrain_slope,
+        range_terrain_slope=range_terrain_slope,
+        azimuth_terrain_slope=azimuth_terrain_slope,
         sigma_nought=sigma_nought,
         gamma_nought=gamma_nought,
     )
@@ -542,7 +587,10 @@ def write_lut_file(
         LutVar("height", "Height", "m", geometric_data.height, *llh_var_info),
         LutVar("incidenceAngle", "Incidence Angle", "deg", geometric_data.incidence_angle_deg, *geo_var_info),
         LutVar("elevationAngle", "Elevation Angle", "deg", geometric_data.elevation_angle_deg, *geo_var_info),
-        LutVar("terrainSlope", "Terrain Slope", None, geometric_data.terrain_slope, *geo_var_info),
+        LutVar("rangeTerrainSlope", "Range Terrain Slope", None, geometric_data.range_terrain_slope, *geo_var_info),
+        LutVar(
+            "azimuthTerrainSlope", "Azimuth Terrain Slope", None, geometric_data.azimuth_terrain_slope, *geo_var_info
+        ),
     ]
 
     group = ncfile.createGroup("geometry")

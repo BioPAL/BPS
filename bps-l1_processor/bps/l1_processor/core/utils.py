@@ -19,6 +19,7 @@ from pathlib import Path
 from arepytools.io import open_product_folder
 from bps.common.io.parsing import ParsingError, parse, serialize
 from bps.l1_processor.core.chirp_replica_utils import analyse_chirp_replica
+from bps.l1_processor.core.iobpr_utils import analyse_raw_product
 from bps.transcoder.io.biomass_l1_preproc_annotations import models
 from bps.transcoder.io.preprocessor_report import InvalidL1PreProcAnnotations
 
@@ -61,10 +62,10 @@ def save_reference_extracted_raw_annotation(extracted_raw: Path, reference_annot
     shutil.copy2(reference_metadata, reference_annotation)
 
 
-def update_bps_l1_pre_processor_report_file(report_file: Path, chirp_product: Path):
+def update_bps_l1_pre_processor_report_file_with_chirp_pars(report_file: Path, chirp_product: Path):
     """Update pre-processor report file with chirp replica parameters"""
     try:
-        chirp_parameters_model: models.L1PreProcessorAnnotations = parse(
+        report_model: models.L1PreProcessorAnnotations = parse(
             report_file.read_text(), models.L1PreProcessorAnnotations
         )
     except ParsingError as exc:
@@ -72,7 +73,7 @@ def update_bps_l1_pre_processor_report_file(report_file: Path, chirp_product: Pa
 
     chirp_parameters = analyse_chirp_replica(chirp_product)
 
-    chirp_parameters_model.chirp_replica_parameters = [
+    report_model.chirp_replica_parameters = [
         models.L1PreProcessorAnnotations.ChirpReplicaParameters(
             float(pars.bandwidth),
             float(pars.pslr),
@@ -84,5 +85,33 @@ def update_bps_l1_pre_processor_report_file(report_file: Path, chirp_product: Pa
         for pars in chirp_parameters
     ]
 
-    chirp_parameters_text = serialize(chirp_parameters_model)
-    report_file.write_text(chirp_parameters_text, encoding="utf-8")
+    report_text = serialize(report_model)
+    report_file.write_text(report_text, encoding="utf-8")
+
+
+def update_bps_l1_pre_processor_report_file_with_iobpr(report_file: Path, raw_product: Path, obf_file: Path):
+    """Update pre-processor report file with in/out-of-band power ratio measurements"""
+    try:
+        report_model: models.L1PreProcessorAnnotations = parse(
+            report_file.read_text(), models.L1PreProcessorAnnotations
+        )
+    except ParsingError as exc:
+        raise InvalidL1PreProcAnnotations from exc
+
+    iobpr_measurements = analyse_raw_product(raw_product, obf_file)
+
+    report_model.in_out_band_power_ratio_data = [
+        models.L1PreProcessorAnnotations.InOutBandPowerRatioData(
+            reference_time=key,
+            power_ratios=models.L1PreProcessorAnnotations.InOutBandPowerRatioData.PowerRatios(
+                [
+                    models.PowerRatioType(value=float(val[1]), polarization=models.PolarizationType(val[0]))
+                    for val in value
+                ]
+            ),
+        )
+        for key, value in iobpr_measurements.items()
+    ]
+
+    report_text = serialize(report_model)
+    report_file.write_text(report_text, encoding="utf-8")

@@ -1035,15 +1035,74 @@ def translate_raw_data_statistics_list_to_model(
     )
 
 
+def translate_power_ratio(
+    power_ratio: common_annotation_models_l1.PowerRatioType,
+) -> common_annotation_l1.PowerRatioType:
+    """Translate in/out-of-band power ratio"""
+    assert power_ratio.azimuth_time is not None
+    assert power_ratio.value is not None
+    return common_annotation_l1.PowerRatioType(
+        azimuth_time=translate_common.translate_datetime(power_ratio.azimuth_time),
+        value=power_ratio.value,
+    )
+
+
+def translate_power_ratio_to_model(
+    power_ratio: common_annotation_l1.PowerRatioType,
+) -> common_annotation_models_l1.PowerRatioType:
+    """Translate in/out-of-band power ratio"""
+    return common_annotation_models_l1.PowerRatioType(
+        azimuth_time=translate_common.translate_datetime_to_model(power_ratio.azimuth_time),
+        value=power_ratio.value,
+    )
+
+
+def translate_power_ratio_list(
+    power_ratios: common_annotation_models_l1.PowerRatioListType,
+) -> tuple[common.PolarisationType, list[common_annotation_l1.PowerRatioType]]:
+    """Translate in/out-of-band power ratio list"""
+    assert power_ratios.polarisation is not None
+    assert power_ratios.count is not None
+    if len(power_ratios.power_ratio) != power_ratios.count:
+        raise RuntimeError(
+            "Inconsistency in in/out-of-band power ratio list: "
+            + f"{len(power_ratios.power_ratio)} length and count: {power_ratios.count} do not match"
+        )
+
+    return translate_common.translate_polarisation_type(power_ratios.polarisation), [
+        translate_power_ratio(power_ratio) for power_ratio in power_ratios.power_ratio
+    ]
+
+
+def translate_power_ratio_list_to_model(
+    polarisation: common.PolarisationType,
+    power_ratios: list[common_annotation_l1.PowerRatioType],
+) -> common_annotation_models_l1.PowerRatioListType:
+    """Translate in/out-of-band power ratio list"""
+    return common_annotation_models_l1.PowerRatioListType(
+        power_ratio=[translate_power_ratio_to_model(power_ratio) for power_ratio in power_ratios],
+        count=len(power_ratios),
+        polarisation=translate_common.translate_polarisation_type_to_model(polarisation),
+    )
+
+
 def translate_raw_data_analysis(
     analysis: common_annotation_models_l1.RawDataAnalysisType,
 ) -> common_annotation_l1.RawDataAnalysisType:
     """Translate raw data analysis"""
     assert analysis.error_counters is not None
     assert analysis.raw_data_statistics_list is not None
+    assert analysis.in_out_band_power_ratio_list is not None
+
+    power_ratios = {}
+    for power_ratio in analysis.in_out_band_power_ratio_list.power_ratio_list:
+        pol, power_ratio_list = translate_power_ratio_list(power_ratio)
+        power_ratios[pol] = power_ratio_list
+
     return common_annotation_l1.RawDataAnalysisType(
         error_counters=translate_error_counters(analysis.error_counters),
         raw_data_statistics_list=translate_raw_data_statistics_list(analysis.raw_data_statistics_list),
+        iobpr_list=power_ratios,
     )
 
 
@@ -1051,9 +1110,15 @@ def translate_raw_data_analysis_to_model(
     analysis: common_annotation_l1.RawDataAnalysisType,
 ) -> common_annotation_models_l1.RawDataAnalysisType:
     """Translate raw data analysis"""
+    power_ratios = common_annotation_models_l1.InOutBandPowerRatioListType(
+        [translate_power_ratio_list_to_model(pol, power_ratio) for pol, power_ratio in analysis.iobpr_list.items()],
+        count=len(analysis.iobpr_list),
+    )
+
     return common_annotation_models_l1.RawDataAnalysisType(
         error_counters=translate_error_counters_to_model(analysis.error_counters),
         raw_data_statistics_list=translate_raw_data_statistics_list_to_model(analysis.raw_data_statistics_list),
+        in_out_band_power_ratio_list=power_ratios,
     )
 
 

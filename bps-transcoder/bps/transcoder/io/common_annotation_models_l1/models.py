@@ -157,6 +157,40 @@ class NoiseSequenceType:
 
 
 @dataclass
+class PowerRatioType:
+    """
+    Parameters
+    ----------
+    azimuth_time
+        Zero Doppler azimuth time of the in/out-of-band power ratio measurement [UTC].
+    value
+        In/out-of-band power ratio measurement.
+    """
+
+    class Meta:
+        name = "powerRatioType"
+
+    azimuth_time: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "azimuthTime",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
+        },
+    )
+    value: Optional[float] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+
+
+@dataclass
 class NoiseSequenceListType:
     """
     Parameters
@@ -206,6 +240,42 @@ class PolarisationListType:
 
     polarisation: list[PolarisationType] = field(
         default_factory=list, metadata={"type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4}
+    )
+    count: Optional[int] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
+class PowerRatioListType:
+    """
+    Parameters
+    ----------
+    power_ratio
+        In/out-of-band power ratio measurements. Considering the worst case (entire slice processed non-framed, one
+        entry each 5 seconds), list maxOccurs is set to 30.
+    polarisation
+    count
+        Number of in/out-of-band power ratio measurements for the current polarisation within the list.
+    """
+
+    class Meta:
+        name = "powerRatioListType"
+
+    power_ratio: list[PowerRatioType] = field(
+        default_factory=list,
+        metadata={"name": "powerRatio", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 150},
+    )
+    polarisation: Optional[PolarisationType] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
     )
     count: Optional[int] = field(
         default=None,
@@ -1013,6 +1083,32 @@ class GeometryType:
             "name": "rollBias",
             "type": "Element",
             "namespace": "",
+            "required": True,
+        },
+    )
+
+
+@dataclass
+class InOutBandPowerRatioListType:
+    """
+    Parameters
+    ----------
+    power_ratio_list
+        In/out-of-band power ratio measurements for the current polarisation.
+    count
+    """
+
+    class Meta:
+        name = "inOutBandPowerRatioListType"
+
+    power_ratio_list: list[PowerRatioListType] = field(
+        default_factory=list,
+        metadata={"name": "powerRatioList", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4},
+    )
+    count: Optional[int] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
             "required": True,
         },
     )
@@ -2845,6 +2941,9 @@ class RawDataAnalysisType:
         Error counters computed starting from input Instrument Source Packets stream.
     raw_data_statistics_list
         Extracted RAW data I and Q channels statistics for all the polarisations.
+    in_out_band_power_ratio_list
+        In/out-of-band power ratio list. This element contains lists of in/out-of-band power ratio measurements. The
+        list contains an entry for each measurement made along azimuth and it is organised per polarisation.
     """
 
     class Meta:
@@ -2863,6 +2962,15 @@ class RawDataAnalysisType:
         default=None,
         metadata={
             "name": "rawDataStatisticsList",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    in_out_band_power_ratio_list: Optional[InOutBandPowerRatioListType] = field(
+        default=None,
+        metadata={
+            "name": "inOutBandPowerRatioList",
             "type": "Element",
             "namespace": "",
             "required": True,

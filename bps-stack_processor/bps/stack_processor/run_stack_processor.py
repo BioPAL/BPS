@@ -432,11 +432,6 @@ def run_stack_processor(
         timedelta(seconds=calibration_end_time - calibration_start_time),
     )
 
-    # Clean the pre-processor working directory.
-    if not keep_intermediates:
-        bps_logger.info("Removing coreg processor's intermediate outputs")
-        remove_intermediate_outputs(stack_coreg_proc_brk_dir=stack_coreg_proc_brk_folder)
-
     # STA_P step 4: Export the L1c products.
     l1c_writing_start_time = default_timer()
     bps_logger.info("Exporting L1c products to %s", job_order.output_path.output_directory)
@@ -450,7 +445,7 @@ def run_stack_processor(
         lut_shift_exec_products=lut_shift_exec_products,
         stack_cal_proc_exec_products=stack_cal_proc_exec_products,
         fnf_mask_file=fnf_mask_file,
-        gdal_num_threads=num_worker_threads,
+        num_threads=num_worker_threads,
     )
 
     l1c_writing_end_time = default_timer()

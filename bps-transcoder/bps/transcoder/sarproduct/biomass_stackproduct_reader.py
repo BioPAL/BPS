@@ -330,10 +330,27 @@ class BIOMASSStackProductReader:
                 )
             )
 
+        lut_iono_axes = (None, None)
+        if "ionospherePhaseScreens" in lut_dict:
+            lut_iono_axes = (
+                self.__read_lut_dimension(
+                    dataset=lut_annotation,
+                    dimension="ionosphereRelativeAzimuthTime",
+                    warn_on_missing=True,
+                    dtype=np.float64,
+                ),
+                self.__read_lut_dimension(
+                    dataset=lut_annotation,
+                    dimension="ionosphereSlantRangeTime",
+                    warn_on_missing=True,
+                    dtype=np.float64,
+                ),
+            )
+
         return (
             lut_dict,
             lut_axes_main,
-            (None, None),  # See docstring. Soon to be deprecated.
+            lut_iono_axes,  # See docstring. Soon to be deprecated.
         )
 
     def __read_mph_file(self):

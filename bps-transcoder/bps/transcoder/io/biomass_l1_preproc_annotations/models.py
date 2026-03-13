@@ -135,6 +135,24 @@ class DriftType:
 
 
 @dataclass
+class PowerRatioType:
+    value: Optional[float] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+    polarization: Optional[PolarizationType] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
 class PowerTrackingType(FcomplexNumberType):
     role: Optional[PowerTrackingTypeRole] = field(
         default=None,
@@ -349,6 +367,13 @@ class L1PreProcessorAnnotations:
             "name": "NoisePostambleV",
             "type": "Element",
             "required": True,
+        },
+    )
+    in_out_band_power_ratio_data: list["L1PreProcessorAnnotations.InOutBandPowerRatioData"] = field(
+        default_factory=list,
+        metadata={
+            "name": "InOutBandPowerRatioData",
+            "type": "Element",
         },
     )
 
@@ -573,6 +598,36 @@ class L1PreProcessorAnnotations:
                 default_factory=list,
                 metadata={
                     "name": "Drift",
+                    "type": "Element",
+                    "max_occurs": 4,
+                },
+            )
+
+    @dataclass
+    class InOutBandPowerRatioData:
+        reference_time: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "ReferenceTime",
+                "type": "Element",
+                "required": True,
+            },
+        )
+        power_ratios: Optional["L1PreProcessorAnnotations.InOutBandPowerRatioData.PowerRatios"] = field(
+            default=None,
+            metadata={
+                "name": "PowerRatios",
+                "type": "Element",
+                "required": True,
+            },
+        )
+
+        @dataclass
+        class PowerRatios:
+            power_ratio: list[PowerRatioType] = field(
+                default_factory=list,
+                metadata={
+                    "name": "PowerRatio",
                     "type": "Element",
                     "max_occurs": 4,
                 },

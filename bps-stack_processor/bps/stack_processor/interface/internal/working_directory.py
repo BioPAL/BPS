@@ -17,6 +17,9 @@ from typing import Any
 
 import numpy as np
 from bps.common import bps_logger
+from bps.stack_processor.execution.stack_cal_execution_manager import (
+    STOP_AND_RESUME_PATH as CAL_STOP_AND_RESUME_PATH,
+)
 from bps.stack_processor.execution.stack_coreg_execution_manager import (
     STOP_AND_RESUME_PATH as COREG_STOP_AND_RESUME_PATH,
 )
@@ -104,15 +107,6 @@ def raise_if_aux_pps_is_not_compatible_for_resume(
                 "Found compatibility issues: {}".format(errors)
             )
 
-    # Check that it is a fresh run and not a corrupted working directory.
-    else:
-        if (working_dir / PRE_PROC_STOP_AND_RESUME_PATH).is_file() or (
-            working_dir / COREG_STOP_AND_RESUME_PATH
-        ).is_file():
-            raise StackWorkingDirError(
-                "Woring directory not as expected. Breakpoint completion file found but no previous AUX-PPS"
-            )
-
 
 def raise_if_job_order_is_not_compatible_for_resume(
     current_job_order: StackJobOrder,
@@ -169,24 +163,6 @@ def raise_if_job_order_is_not_compatible_for_resume(
             raise StackWorkingDirError(
                 "Cannot resume STA_P. Current job order not compatible with previous one. "
                 "Found compatibility issues: {}".format(errors)
-            )
-    else:
-        stack_pre_proc_stop_and_resume_path = (
-            working_dir / STACK_PRE_PROC_INTERMEDIATE_FOLDER / PRE_PROC_STOP_AND_RESUME_PATH
-        )
-        stack_coreg_proc_stop_and_resume_path = (
-            working_dir / STACK_COREG_PROC_INTERMEDIATE_FOLDER / COREG_STOP_AND_RESUME_PATH
-        )
-        stack_cal_proc_stop_and_resume_path = (
-            working_dir / STACK_CAL_PROC_INTERMEDIATE_FOLDER / COREG_STOP_AND_RESUME_PATH
-        )
-        if (
-            stack_pre_proc_stop_and_resume_path.exists()
-            or stack_coreg_proc_stop_and_resume_path.exists()
-            or stack_cal_proc_stop_and_resume_path.exists()
-        ):
-            raise StackWorkingDirError(
-                "Woring directory not as expected. Breakpoint completion file found but no previous job order"
             )
 
 
@@ -273,7 +249,7 @@ def remove_intermediate_outputs(
     if stack_coreg_proc_brk_dir is not None:
         _remove_content(stack_coreg_proc_brk_dir, keep_files=[COREG_STOP_AND_RESUME_PATH])
     if stack_cal_proc_brk_dir is not None:
-        _remove_content(stack_cal_proc_brk_dir, keep_files=[COREG_STOP_AND_RESUME_PATH])
+        _remove_content(stack_cal_proc_brk_dir, keep_files=[CAL_STOP_AND_RESUME_PATH])
     if stack_working_dir is not None:
         shutil.rmtree(stack_working_dir / STACK_PRE_PROC_INTERMEDIATE_FOLDER, ignore_errors=True)
         shutil.rmtree(stack_working_dir / STACK_COREG_PROC_INTERMEDIATE_FOLDER, ignore_errors=True)

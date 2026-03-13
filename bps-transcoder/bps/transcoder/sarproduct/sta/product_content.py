@@ -56,8 +56,12 @@ class BIOMASSStackProductStructure:
     │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_i_phase.tiff
     │   └── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_i.vrt
     ├── preview
-    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_map.kml
-    │   └── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_ql.png
+    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_l1c_ql.kml
+    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_l1c_map.kml
+    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_coh_ql.kml
+    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_coh_map.kml
+    │   ├── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_itf_ql.kml
+    │   └── bio_s1_sta__1s_20170206t164349_20170206t164400_i_g03_m03_c03_t000_f001_itf_map.png
     └── schema
         ├── bio-aux-attitude.xsd
         ├── bio-aux-orbit.xsd
@@ -100,11 +104,26 @@ class BIOMASSStackProductStructure:
     attitude2_file: Path
     """Path to the secondary (coregistered) attitude file (XML)."""
 
-    quicklook_file: Path
-    """Path to the quick-look preview file (png)."""
+    frame_quicklook_pauli_file: Path | None
+    """Path to the frame quick-look preview file (png, Pauli decomposition)."""
 
-    overlay_file: Path
-    """Path to the KML overlay preview file (KML)."""
+    frame_quicklook_hsv_file: Path | None
+    """Path to the frame quick-look preview file (png, HSV representation)."""
+
+    frame_overlay_file: Path
+    """Path to the frame KML overlay preview file (KML)."""
+
+    coherence_quicklook_file: Path
+    """Path to the coherence quick-look preview file (png)."""
+
+    coherence_overlay_file: Path
+    """Path to the coherence KML overlay preview file (KML)."""
+
+    interferogram_quicklook_file: Path
+    """Path the interferogram quick-look preview file (.png)."""
+
+    interferogram_overlay_file: Path
+    """Path to the interferogram KML overlay file (KML)."""
 
     schema_files: dict[str, Path]
     """Paths to the XSD schema file (XSDs)."""
@@ -246,16 +265,70 @@ class BIOMASSStackProductStructure:
         )[0]
 
         # Quick-look and overview file.
-        self.quicklook_file = _find_files(
+        self.frame_quicklook_pauli_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*l1c_ql_pauli.png",
+                )
+            ),
+            None,
+        )
+        self.frame_quicklook_hsv_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*l1c_ql_hsv.png",
+                )
+            ),
+            None,
+        )
+        if self.frame_quicklook_pauli_file is None and self.frame_quicklook_hsv_file is None:
+            raise InvalidBIOMASSStackProductStructureError(
+                f"Neither Pauli nor HSV quick-look preview files were found in {self.preview_dir} for product {self.product_path.name}"
+            )
+
+        self.frame_overlay_file = _find_files(
             self.preview_dir,
-            pattern=f"{product_name_stem}*_ql.png",
+            pattern=f"{product_name_stem}*l1c_map.kml",
             expected_num_files=1,
         )[0]
-        self.overlay_file = _find_files(
-            self.preview_dir,
-            pattern=f"{product_name_stem}*_map.kml",
-            expected_num_files=1,
-        )[0]
+        self.coherence_quicklook_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*coh_ql.png",
+                ),
+            ),
+            None,
+        )
+        self.coherence_overlay_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*coh_map.kml",
+                ),
+            ),
+            None,
+        )
+        self.interferogram_quicklook_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*itf_ql.png",
+                ),
+            ),
+            None,
+        )
+        self.interferogram_overlay_file = next(
+            iter(
+                _find_files(
+                    self.preview_dir,
+                    pattern=f"{product_name_stem}*itf_map.kml",
+                ),
+            ),
+            None,
+        )
 
         # Schema files.
         self.schema_files = _find_files(
@@ -298,9 +371,14 @@ class BIOMASSStackProductStructure:
         self.orbit2_file = self.navigation_coregistered_dir / f"{product_name_stem}_orb.xml"
         self.attitude2_file = self.navigation_coregistered_dir / f"{product_name_stem}_att.xml"
 
-        # Quick-look and overlay file.
-        self.quicklook_file = self.preview_dir / f"{product_name_stem}_ql.png"
-        self.overlay_file = self.preview_dir / f"{product_name_stem}_map.kml"
+        # Quick-looks and overlay files.
+        self.frame_quicklook_pauli_file = self.preview_dir / f"{product_name_stem}_l1c_ql_pauli.png"
+        self.frame_quicklook_hsv_file = self.preview_dir / f"{product_name_stem}_l1c_ql_hsv.png"
+        self.frame_overlay_file = self.preview_dir / f"{product_name_stem}_l1c_map.kml"
+        self.coherence_quicklook_file = self.preview_dir / f"{product_name_stem}_coh_ql.png"
+        self.coherence_overlay_file = self.preview_dir / f"{product_name_stem}_coh_map.kml"
+        self.interferogram_quicklook_file = self.preview_dir / f"{product_name_stem}_itf_ql.png"
+        self.interferogram_overlay_file = self.preview_dir / f"{product_name_stem}_itf_map.kml"
 
         # - Schema files
         self.schema_files = {
@@ -364,9 +442,9 @@ class BIOMASSStackProductStructure:
         self.xsd_schema_dir.mkdir(**mkdir_options)
 
 
-def _find_files(root_dir: Path, *, pattern: str, expected_num_files: int) -> list[Path | None]:
+def _find_files(root_dir: Path, *, pattern: str, expected_num_files: int | None = None) -> list[Path | None]:
     """Possibly find file from root directory matching pattern."""
     matched_paths = list(root_dir.glob(pattern))
-    if len(matched_paths) != expected_num_files:
+    if expected_num_files is not None and len(matched_paths) != expected_num_files:
         raise InvalidBIOMASSStackProductStructureError(f"Missing '{pattern}' file from {root_dir}")
     return matched_paths

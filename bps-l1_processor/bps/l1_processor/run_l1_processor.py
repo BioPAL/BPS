@@ -22,6 +22,7 @@ from bps.common.configuration import (
     write_bps_configuration_file,
 )
 from bps.l1_core_processor.processing_options import BPSL1CoreProcessorStep
+from bps.l1_pre_processor.aux_ins.aux_ins import AuxInsProduct
 from bps.l1_processor import __version__ as VERSION
 from bps.l1_processor.aux_tec.utils import retrieve_single_decompressed_ionex_file
 from bps.l1_processor.core.parsing import parse_aux_pp1
@@ -36,11 +37,13 @@ from bps.l1_processor.core.utils import (
     retrieve_rxv_data_file,
     save_reference_extracted_raw_annotation,
     update_bps_l1_core_processor_status_file,
-    update_bps_l1_pre_processor_report_file,
+    update_bps_l1_pre_processor_report_file_with_chirp_pars,
+    update_bps_l1_pre_processor_report_file_with_iobpr,
 )
 from bps.l1_processor.folder_layout import FolderLayout
 from bps.l1_processor.intermediate_footprint import (
     add_footprint_file_to_intermediate_products,
+    compute_footprint_from_product,
 )
 from bps.l1_processor.io.l0_mph_utils import L0MainProductHeader
 from bps.l1_processor.iri.ionospheric_app import run_iri_wrapper
@@ -95,17 +98,19 @@ def input_quad_pol_check(product: Path) -> bool:
     return True
 
 
-def determine_rfi_activation(
-    footprint: list[tuple[float, float]] | None, mask_file: Path | None, aux_pp1: AuxProcessingParametersL1
-):
+def determine_rfi_activation(raw_product: Path, mask_file: Path | None, aux_pp1: AuxProcessingParametersL1):
     match aux_pp1.rfi_mitigation.activation_mode:
         case "MaskBased":
-            if footprint is None:
-                raise RuntimeError("Missing footprint in L0 product: cannot determine RFI mitigation activation")
             if mask_file is None:
                 raise RuntimeError(
                     "Missing RFI activation mask file in AUX_PP1 product: cannot determine RFI mitigation activation"
                 )
+            bps_logger.debug(f"Determining RFI mitigation activation based on footprint and mask file '{mask_file}'")
+
+            footprint = compute_footprint_from_product(raw_product)
+            footprint = [(geo_point.lon, geo_point.lat) for geo_point in footprint.to_metadata().geo_points[:4]]
+            bps_logger.debug(f"Footprint corners (lon, lat): {footprint}")
+
             aux_pp1.rfi_mitigation.activation_mode = (
                 "Enabled"
                 if is_rfi_mitigation_enabled_given_footprint(
@@ -208,11 +213,6 @@ def run_l1_processing_impl(
             )
             aux_pp1.rfi_mitigation.activation_mode = job_order_setting
 
-    determine_rfi_activation(
-        main_product_header.footprint, mask_file=aux_pp1_product.rfi_activation_mask, aux_pp1=aux_pp1
-    )
-    assert aux_pp1.rfi_mitigation.activation_mode in ("Enabled", "Disabled")
-
     if not quad_pol_level0_product:
         message = f"Input L0S product is not quad pol: {job_order.io_products.input.input_standard}"
         if aux_pp1.general.dual_polarisation_processing_flag:
@@ -222,7 +222,7 @@ def run_l1_processing_impl(
             bps_logger.error(message)
             raise RuntimeError(
                 "Cannot proceed with dual pol data: "
-                + "dual pol processing can be enabled through the AUX_PP1 'DualPolarisationProcessingFlag'"
+                + "dual pol processing can be enabled through the AUX_PP1 'dualPolarisationProcessingFlag'"
             )
 
     # Fallback on WGS84 in case of missing DEM DB
@@ -307,6 +307,13 @@ def run_l1_processing_impl(
         update_and_write_status(current_step)
     else:
         bps_logger.info("L1PreProcessor already completed")
+
+    determine_rfi_activation(
+        layout.pre_processor_outputs.extracted_raw_product,
+        mask_file=aux_pp1_product.rfi_activation_mask,
+        aux_pp1=aux_pp1,
+    )
+    assert aux_pp1.rfi_mitigation.activation_mode in ("Enabled", "Disabled")
 
     if isinstance(job_order.io_products, L1RXOnlyProducts):
         output_dir_rx_only = layout.pre_processor_outputs.directory.parent
@@ -402,7 +409,16 @@ def run_l1_processing_impl(
 
         if aux_pp1.range_compression.range_reference_function_source == ChirpSource.REPLICA:
             assert chirp_replica_product is not None
-            update_bps_l1_pre_processor_report_file(layout.pre_processor_outputs.report_file, chirp_replica_product)
+            update_bps_l1_pre_processor_report_file_with_chirp_pars(
+                layout.pre_processor_outputs.report_file, chirp_replica_product
+            )
+
+        aux_ins_product = AuxInsProduct.from_product(job_order.auxiliary_files.instrument_parameters)
+        update_bps_l1_pre_processor_report_file_with_iobpr(
+            layout.pre_processor_outputs.report_file,
+            layout.pre_processor_outputs.extracted_raw_product,
+            aux_ins_product.on_board_filter_file,
+        )
 
         shutil.copy2(
             layout.pre_processor_outputs.report_file,

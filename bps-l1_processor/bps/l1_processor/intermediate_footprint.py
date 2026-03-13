@@ -83,8 +83,8 @@ class FootprintPoints:
         center: np.ndarray,
     ) -> FootprintPoints:
         """From points"""
-        sorted_by_lat = np.array(corners)
-        sorted_by_lat = np.sort(sorted_by_lat, axis=0)
+        sorted_by_lat = np.array(corners).squeeze()
+        sorted_by_lat = sorted_by_lat[np.argsort(sorted_by_lat[:, 0])]
 
         def _split_west_east(corner):
             west_point = corner[0]
@@ -136,12 +136,12 @@ class FootprintSarPoints:
     def from_raster_info(cls, raster_info: metadata.RasterInfo) -> FootprintSarPoints:
         """From metadata raster info"""
         range_length = (raster_info.samples - 1) * raster_info.samples_step
-        near_range = raster_info.samples_start
+        near_range: float = raster_info.samples_start  # type: ignore
         far_range = near_range + range_length
         central_range = near_range + range_length / 2
 
         azimuth_length = (raster_info.lines - 1) * raster_info.lines_step
-        start_azimuth: PreciseDateTime = raster_info.lines_start  # type: ignore
+        start_azimuth = raster_info.lines_start_date
         stop_azimuth = start_azimuth + azimuth_length
         central_azimuth = start_azimuth + azimuth_length / 2
 
@@ -222,6 +222,19 @@ def _write_footprint_file_into_products(products: list[Path], corners: metadata.
     _copy_file_to_destinations(footprint_files[0], footprint_files[1:])
 
 
+def compute_footprint_from_product(product: Path, dem_product: Path | None = None) -> FootprintPoints:
+    """Compute footprint from a product, using DEM if available"""
+    reference_metadata = _retrieve_reference_metadata(product)
+
+    footprint_computer = (
+        partial(_compute_from_dem, dem_product=dem_product)
+        if dem_product is not None and dem_product.exists()
+        else partial(_compute_from_ellipsoid, reference_metadata=reference_metadata)
+    )
+
+    return _compute_footprint(reference_metadata, footprint_computer)
+
+
 def add_footprint_file_to_intermediate_products(
     core_outputs: L1CoreProcessorOutputProducts,
     additional_products: list[Path] | None = None,
@@ -236,14 +249,6 @@ def add_footprint_file_to_intermediate_products(
     slc_product = core_outputs.output_products.get(core_outputs.main_slc_id)
     assert slc_product is not None
 
-    reference_metadata = _retrieve_reference_metadata(slc_product.path)
-
-    footprint_computer = (
-        partial(_compute_from_dem, dem_product=dem_lut.path)
-        if dem_lut.path.exists()
-        else partial(_compute_from_ellipsoid, reference_metadata=reference_metadata)
-    )
-
-    footprint = _compute_footprint(reference_metadata, footprint_computer)
+    footprint = compute_footprint_from_product(slc_product.path, dem_product=dem_lut.path)
 
     _write_footprint_file_into_products(core_outputs.list_products() + additional_products, footprint.to_metadata())

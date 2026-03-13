@@ -35,8 +35,7 @@ from bps.stack_cal_processor.core.utils import (
 # The names of the modules.
 AZF_NAME = "azimuthSpectralFilter"
 IOB_NAME = "slowIonosphereRemoval"
-CAL_NAME = "inSarPhaseCalibration"
-PPR_NAME = "phasePlaneRemoval"
+MSC_NAME = "multiSquintCalibration"
 SKP_NAME = "skpPhaseCalibration"
 
 
@@ -48,13 +47,24 @@ UNITS_CAL_CONFIG = {
     "max_lh_phase_delta": " [rad]",
     "sublook_window_sizes": " [px]",
     "split_spectrum_decimation_factors": " [px]",
-    # PPR.
-    "fft2_peak_window_size": " [px]",
+    # MSC.
+    "edge_guard": " [px]",
+    "min_iono_range_candidate": " [m]",
+    "max_iono_range_candidate": " [m]",
+    "max_iono_range_offset": " [m]",
+    "coherence_azimuth_window_size": " [m]",
+    "coherence_range_window_size": " [m]",
+    "ms_coherence_subband_resolution": " [m]",
+    "ms_coherence_high_res_azimuth_window_size": " [m]",
+    "ms_coherence_high_res_range_window_size": " [m]",
+    "ms_coherence_low_res_azimuth_window_size": "[m]",
+    "ms_coherence_low_res_range_window_size": " [m]",
     # SKP.
     "estimation_window_size": " [m]",
     "output_azimuth_subsampling_step": " [px]",
     "output_range_subsampling_step": " [px]",
-    "median_filter_window_size": " [m]",
+    "postprocessing_filter_window_size": " [m]",
+    "goldstein_filter_window_size": " [px]",
 }
 
 
@@ -64,6 +74,16 @@ class BaselineMethodType(Enum):
 
     SINGLE_BASELINE = "SINGLE_BASELINE"
     MULTI_BASELINE = "MULTI_BASELINE"
+
+
+# The post-processing supported for SKP.
+class SkpPostprocessingFilterType(Enum):
+    """The supported filter types for SKP post-processing"""
+
+    GOLDSTEIN = "GOLDSTEIN"
+    BOXCAR = "BOXCAR"
+    MEDIAN = "MEDIAN"
+    NONE = "NONE"
 
 
 @dataclass
@@ -161,26 +181,131 @@ class StackCalConf:
         """Use 32-bit precision (aka complex64 and float32) for model estimations."""
 
     @dataclass
-    class PprConf:
-        """Configuration of the Phase Plane Removal (PPR)."""
+    class MscConf:
+        """Configuration of the Multi-Squint calibration module (MSC)."""
 
-        class PprValueError(ValueError):
-            """Handle a generic invalid value in the IOB configuration."""
+        class MscValueError(ValueError):
+            """Handle a generic invalid value in the MSC configuration."""
 
-            def __init__(self, message: str = ""):
-                super().__init__(f"[{PPR_NAME}] {message}")
+            def __init__(self, message: str):
+                super().__init__(f"[{MSC_NAME}] {message}")
 
         polarization_index: int = 0
-        """Reference polarization index used for estimating the coherences/inteferograms."""
+        """Reference polarization index used for the estimation."""
 
-        fft2_zero_padding_upsampling_factor: float = 1.2
-        """Multiplicative factor that controls zero-padding before FFT2 to increasing frequency-domain sampling density."""
+        seed_range_coherence_threshold: float = 0.3
+        """Coherence threshold used for range seeding during the ionosphere model inversion."""
 
-        fft2_peak_window_size: int = 3
-        """Size of the local window used for parabolic interpolation of the FFT2 around the max/peak."""
+        edge_guard: int = 11
+        """Ignore border pixels (in along-track direction)."""
 
-        use_32bit_precision: bool = True
-        """Use 32-bit precision (aka complex64 and float32) for model estimation."""
+        valid_azimuth_threshold: float = 0.1
+        """Ratio of valid lines/azimuth/rows used to fallback to central range duing range seeding."""
+
+        propagation_step_inversion_method: str = "projection"
+        """Inversion method used during the ionosphere range propagation step."""
+
+        min_iono_range_candidate: float = 200 * 1e3  # [m].
+        """Minimum ionosphere range candidate used for estimating the ionosphere layers."""
+
+        max_iono_range_candidate: float = 700 * 1e3  # [m].
+        """Minimum ionosphere range candidate used for estimating the ionosphere layers."""
+
+        num_iono_range_candidates: int = 25
+        """Number of ionosphere range candidates used for estimating the ionosphere layers."""
+
+        robust_layer_estimation_high_res_num_slices: int = 5
+        """Number of range slices for high resolution ionosphere layer estimation."""
+
+        robust_layer_estimation_low_res_num_slices: int = 3
+        """Number of range slices for low resolution ionosphere layer estimation."""
+
+        max_num_iono_layers: int = 5
+        """Cap the number of ionosphere layers used for calibration."""
+
+        max_iono_range_offset: float = 50 * 1e3
+        """Global buffer for ionosphere (celestial) axis in along-track direction."""
+
+        iono_range_estimation_max_iterations_derivative: int = 100
+        """Max iterations for the ionosphere range estimation's composite iterative step ('derivative')."""
+
+        iono_range_estimation_max_iterations_projection: int = 100
+        """Max iterations for the ionosphere range estimation's composite iterative step ('projection')."""
+
+        iono_range_estimation_convergence_threshold_derivative: float = 5e-4
+        """Convergence threshold for the ionosphere range estimation's composite iterative step ('derivative')."""
+
+        iono_range_estimation_convergence_threshold_projection: float = 5e-4
+        """Convergence threshold for the ionosphere range estimation's composite iterative step ('projection')."""
+
+        iono_range_seeding_max_iterations_derivative: int = 100
+        """Max iterations for the ionosphere range seeding's composite iterative step ('derivative')."""
+
+        iono_range_seeding_max_iterations_projection: int = 100
+        """Max iterations for the ionosphere range seeding's composite iterative step ('projection')."""
+
+        iono_range_seeding_convergence_threshold_derivative: float = 5e-4
+        """Convergence threshold for the ionosphere range seeding's composite iterative step ('derivative')."""
+
+        iono_range_seeding_convergence_threshold_projection: float = 5e-4
+        """Convergence threshold for the ionosphere range seeding's composite iterative step ('projection')."""
+
+        iono_range_propagation_max_iterations_derivative: int = 100
+        """Max iterations for the ionosphere range propagation's composite iterative step ('derivative')."""
+
+        iono_range_propagation_max_iterations_projection: int = 100
+        """Max iterations for the ionosphere range propagation's composite iterative step ('projection')."""
+
+        iono_range_propagation_convergence_threshold_derivative: float = 5e-4
+        """Convergence threshold for the ionosphere range propagation's composite iterative step ('derivative')."""
+
+        iono_range_propagation_convergence_threshold_projection: float = 5e-4
+        """Convergence threshold for the ionosphere range propagation's composite iterative step ('projection')."""
+
+        force_multi_squint_iono_correction: float = False
+        """If true, force the Multi-Squint ionosphere estimation irrespectively of the coherence gain."""
+
+        disable_multi_squint_iono_correction: float = False
+        """If true, disable the Multi-Squint ionosphere estimation irrespectively of the coherence gain."""
+
+        coherence_azimuth_window_size: float = 100
+        """The multi-looking window in along-track direction used for estimating the coherence (cohrence test)."""
+
+        coherence_range_window_size: float = 100
+        """The multi-looking window in slant-range direction used for estimating the coherence (cohrence test)."""
+
+        ms_coherence_subband_azimuth_resolution: float = 300.0  # [m].
+        """Sub-band resolution of the Multi-Squint coherence matrix."""
+
+        ms_coherence_high_resolution_azimuth_window_size: float = 0.0  # [m].
+        """The high resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix."""
+
+        ms_coherence_high_resolution_range_window_size: float = 250.0  # [m].
+        """The high resolution multi-look window in slant-range direction for the Multi-Squint coherence matrix."""
+
+        ms_coherence_low_resolution_azimuth_window_size: float = 200.0  # [m].
+        """The low resolution multi-look window in along-track direction for the Multi-Squint cohrence matrix."""
+
+        ms_coherence_low_resolution_range_window_size: float = 300.0  # [m].
+        """The low resolution multi-look window in slant-range direction for the Multi-Squint coherence matrix."""
+
+        ms_coherence_validity_threshold: float = 0.3
+        """Restrict the area for the coherence gain check."""
+
+        ms_coherence_improvement_threshold: float = 0.3
+        """Threshold on the coherence gian to trigger the Multi-Squint ionosphere calibration."""
+
+        ms_coherence_low_res_threshold: float = 0.1
+        """Threshold on the average Multi-Squint coherence to trigger a lowering of the resolution."""
+
+        layer_addition_threshold: float = 5e-3
+        """Minimum required coherence gain to accept a new ionospheric layer candidate."""
+
+        use_32bit_precision_estimation: bool = True
+        """Use 32-bit precision (aka complex64 and float32) for model estimations."""
+
+        use_32bit_precision_correction: bool = True
+        """Use 32-bit precision (aka complex64 and float32) for data correction."""
 
     @dataclass
     class SkpConf:
@@ -216,11 +341,14 @@ class StackCalConf:
         nyquist_window_bounds: tuple[float, float] = (0.5, 0.9)  # [0-1]
         """Control the ratio between SKP estimation window and L1a LUT resolution."""
 
-        median_filter_flag: bool = False
-        """Post-process the estimated SKP phase screens with a median filter."""
+        calibration_phase_postprocessing: SkpPostprocessingFilterType = SkpPostprocessingFilterType.GOLDSTEIN
+        """How the SKP calibration phase must be postprocessed."""
 
-        median_filter_window_size: float = 1000.0  # [m].
-        """Size of the median filter's window (same in range and azimuth)."""
+        postprocessing_filter_window_size: float = 1000.0  # [m].
+        """Size of the postprocessing filter window (same in range and azimuth)."""
+
+        goldstein_filter_window_size: int = 5  # [px].
+        """Size of the Goldstein filter window (in frequency space)."""
 
         exclude_mpmb_polarization_cross_covariance_flag: bool = False
         """If true, exclude the polarization cross-covariances when computing the MPMB coherence matrix."""
@@ -234,8 +362,8 @@ class StackCalConf:
     iob_conf: IobConf | None = None
     """The Background Ionosphere Removal (IOB) configurations."""
 
-    ppr_conf: PprConf | None = None
-    """Phase Plane Removal (PPR) configurations."""
+    msc_conf: MscConf | None = None
+    """The Multi-Squint Calibration (MSC) configurations."""
 
     skp_conf: SkpConf | None = None
     """The Sum-of-Kronecker-Product (SKP) configurations."""

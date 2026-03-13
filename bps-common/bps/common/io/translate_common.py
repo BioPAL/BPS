@@ -523,6 +523,34 @@ def translate_pixel_quantity_type_to_model(
     return common_types.PixelQuantityType[quantity.name]
 
 
+def translate_l1ac_ql_colour_coding_method_type(
+    quantity: common_types.L1AcQlColourCodingMethodType,
+) -> common.ColourCodingMethod:
+    """Translate colour coding method"""
+    return common.ColourCodingMethod[quantity.name]
+
+
+def translate_l1ac_ql_colour_coding_method_type_to_model(
+    quantity: common.ColourCodingMethod,
+) -> common_types.L1AcQlColourCodingMethodType:
+    """Translate colour coding method"""
+    return common_types.L1AcQlColourCodingMethodType[quantity.name]
+
+
+def translate_l1b_ql_colour_coding_method_type(
+    quantity: common_types.L1BQlColourCodingMethodType,
+) -> common.ColourCodingMethod:
+    """Translate colour coding method"""
+    return common.ColourCodingMethod[quantity.name]
+
+
+def translate_l1b_ql_colour_coding_method_type_to_model(
+    quantity: common.ColourCodingMethod,
+) -> common_types.L1BQlColourCodingMethodType:
+    """Translate colour coding method"""
+    return common_types.L1BQlColourCodingMethodType[quantity.name]
+
+
 def translate_mission_type(
     mission: common_types.MissionType,
 ) -> common.MissionType:

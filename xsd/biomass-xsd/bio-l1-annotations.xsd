@@ -528,6 +528,45 @@
 		</xsd:sequence>
 		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
 	</xsd:complexType>
+	<xsd:complexType name="powerRatioType">
+		<xsd:sequence>
+			<xsd:element name="azimuthTime" type="timeType">
+				<xsd:annotation>
+					<xsd:documentation>Zero Doppler azimuth time of the in/out-of-band power ratio measurement [UTC].</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="value" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>In/out-of-band power ratio measurement.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="powerRatioListType">
+		<xsd:sequence>
+			<xsd:element name="powerRatio" type="powerRatioType" maxOccurs="150">
+				<xsd:annotation>
+					<xsd:documentation>In/out-of-band power ratio measurements. Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list maxOccurs is set to 30.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Number of in/out-of-band power ratio measurements for the current polarisation within the list.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="inOutBandPowerRatioListType">
+		<xsd:sequence>
+			<xsd:element name="powerRatioList" type="powerRatioListType" minOccurs="1" maxOccurs="4">
+				<xsd:annotation>
+					<xsd:documentation>In/out-of-band power ratio measurements for the current polarisation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+	</xsd:complexType>
 	<xsd:complexType name="rawDataAnalysisType">
 		<xsd:sequence>
 			<xsd:element name="errorCounters" type="errorCountersType">
@@ -538,6 +577,11 @@
 			<xsd:element name="rawDataStatisticsList" type="rawDataStatisticsListType">
 				<xsd:annotation>
 					<xsd:documentation>Extracted RAW data I and Q channels statistics for all the polarisations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inOutBandPowerRatioList" type="inOutBandPowerRatioListType">
+				<xsd:annotation>
+					<xsd:documentation>In/out-of-band power ratio list. This element contains lists of in/out-of-band power ratio measurements. The list contains an entry for each measurement made along azimuth and it is organised per polarisation.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>

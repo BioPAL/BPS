@@ -647,7 +647,8 @@ def mpmb_covariance_estimation(
         f"    data shape after decimation: Azimuth {mpmb_covariance.shape[2]} samples, Slant-range {mpmb_covariance.shape[3]} samples"
     )
 
-    return mpmb_covariance
+    # Invert phase sign to align with phase conventions observed during BIOMASS IOC
+    return np.conjugate(mpmb_covariance)
 
 
 def _build_filtering_matrix(
@@ -811,32 +812,21 @@ def get_dgg_sampling(
     lon_min = latlon_coverage[2]
     lon_max = latlon_coverage[3]
 
-    dgg_sampling_extracted = {}
-    if lat_min >= 60 or lat_max <= -60:
-        # Data completely inside 60 to 70 band
+    # Find the latitude closest to equator
+    min_abs_lat = min(abs(lat_min), abs(lat_max))
+
+    if min_abs_lat >= 60:
+        # Both latitude edges are over 60°
         dgg_sampling_extracted = dgg_sampling_dict["60-70"]
-        bps_logger.info(
-            "    DGG sampling set to parameters of additional latitudinal band, between  60° and 70° N and S"
-        )
-    elif (lat_min < 60 and lat_max > 60) or (lat_max < -60 and lat_min > -60):
-        # Data across the 60 latitude: setting to "60-70"
-        dgg_sampling_extracted = dgg_sampling_dict["60-70"]
-        bps_logger.info(
-            "    DGG sampling set to parameters of additional latitudinal band, between  60° and 70° N and S"
-        )
-    elif lat_min >= 50 or lat_max <= -50:
-        # Data completely inside 50 to 60 band
+        bps_logger.info("    DGG sampling set to parameters of additional latitudinal band, between 60° and 70° N/S")
+
+    elif min_abs_lat >= 50:
+        # At least one latitude edge is below 60°, but none is below 50°
         dgg_sampling_extracted = dgg_sampling_dict["50-60"]
-        bps_logger.info(
-            "    DGG sampling set to parameters of additional latitudinal band, between  50° and 60° N and S"
-        )
-    elif (lat_min < 50 and lat_max > 50) or (lat_max < -50 and lat_min > -50):
-        # Data across the 50 latitude: setting to "50-60"
-        dgg_sampling_extracted = dgg_sampling_dict["50-60"]
-        bps_logger.info(
-            "    DGG sampling set to parameters of additional latitudinal band, between  60° and 70° N and S"
-        )
-    elif lat_min > -50 or lat_max < 50:
+        bps_logger.info("    DGG sampling set to parameters of additional latitudinal band, between 50° and 60° N/S")
+
+    else:
+        # At least one latitude edge is below 50° (closest to equator)
         dgg_sampling_extracted = dgg_sampling_dict["0-50"]
         bps_logger.info("    DGG sampling set to parameters of central latitudinal band, between 50°S and 50°N")
 

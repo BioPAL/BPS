@@ -65,6 +65,7 @@ from bps.transcoder.io.common_annotation_models_l2.models import (
     PixelRepresentationType,
     PixelTypeChoiceType,
     PixelTypeType,
+    PolarisationCombinationMethodType,
     PolarisationListType,
     PolarisationType,
     ProductL2AType,

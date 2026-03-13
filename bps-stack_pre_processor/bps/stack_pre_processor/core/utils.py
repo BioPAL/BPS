@@ -272,9 +272,9 @@ def compute_interferometric_baselines(
     assert norm_versor.shape == (3, 1), f"{norm_versor.shape=} is not (3, 1)"
 
     return (
-        float(baseline_vector.T @ norm_versor),
-        float(baseline_vector.T @ los_versor),
-        float(baseline_vector.T @ velocity_versor),
+        float(np.squeeze(baseline_vector.T @ norm_versor)),
+        float(np.squeeze(baseline_vector.T @ los_versor)),
+        float(np.squeeze(baseline_vector.T @ velocity_versor)),
     )
 
 

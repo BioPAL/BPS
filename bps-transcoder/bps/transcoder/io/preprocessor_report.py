@@ -71,6 +71,14 @@ class NoiseSequence:
 
 
 @dataclass
+class IOBPRMeasure:
+    """In/out-of-band power ratio measure"""
+
+    time: PreciseDateTime
+    power_ratios: dict[str, float]
+
+
+@dataclass
 class L1PreProcAnnotations:
     """Annotations"""
 
@@ -101,6 +109,8 @@ class L1PreProcAnnotations:
     noise_preamble_v: NoiseSequence
     noise_postamble_h: NoiseSequence
     noise_postamble_v: NoiseSequence
+
+    iobpr_measurements: list[IOBPRMeasure]
 
 
 def translate_compression_level_from_model(
@@ -210,6 +220,24 @@ def translate_noise_sequence_from_model(model: models.NoiseSequenceType) -> Nois
     )
 
 
+def translate_iobpr_measurements_from_model(
+    model: models.L1PreProcessorAnnotations.InOutBandPowerRatioData,
+) -> IOBPRMeasure:
+    """Translate in/out-of-band power ratio measurements annotations from model"""
+    assert model.reference_time is not None
+    assert model.power_ratios is not None
+
+    power_ratios: dict[str, float] = {}
+    for power_ratio in model.power_ratios.power_ratio:
+        assert power_ratio.value is not None
+        assert power_ratio.polarization is not None
+        pol = power_ratio.polarization.value
+        value = power_ratio.value
+        power_ratios[pol] = value
+
+    return IOBPRMeasure(time=PreciseDateTime.from_utc_string(model.reference_time), power_ratios=power_ratios)
+
+
 def translate_annotation_from_model(
     model: models.L1PreProcessorAnnotations,
 ) -> L1PreProcAnnotations:
@@ -285,6 +313,9 @@ def translate_annotation_from_model(
         noise_preamble_v=translate_noise_sequence_from_model(model.noise_preamble_v),
         noise_postamble_h=translate_noise_sequence_from_model(model.noise_postamble_h),
         noise_postamble_v=translate_noise_sequence_from_model(model.noise_postamble_v),
+        iobpr_measurements=[
+            translate_iobpr_measurements_from_model(data) for data in model.in_out_band_power_ratio_data
+        ],
     )
 
 

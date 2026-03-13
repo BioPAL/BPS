@@ -15,7 +15,7 @@ import logging
 import numpy as np
 from arepytools.io.metadata import EPolarization
 from bps.common.joborder import DeviceResources, ProcessorConfiguration
-from bps.stack_cal_processor.configuration import StackCalConf
+from bps.stack_cal_processor.configuration import SkpPostprocessingFilterType, StackCalConf
 from bps.stack_processor.interface.external.aux_pps import (
     AuxiliaryStaprocessingParameters,
     SkpPhaseCalibrationConf,
@@ -131,27 +131,62 @@ def fill_stack_cal_conf_from_aux_pps(
             use_32bit_precision=aux_pps_iob_conf.use_32bit_flag,
         )
 
-    # Fill parameters of the Phase Plane Removla (PPR) module.
-    ppr_conf = None
-    if aux_pps.in_sar_calibration.in_sar_calibration_flag:
+    # Fill the parameters of the Multi-Squint Calibration (MSC) module.
+    msc_conf = None
+    if aux_pps.multi_squint_calibration.multi_squint_calibration_flag:
+        aux_pps_msc_conf = aux_pps.multi_squint_calibration
         try:
-            calib_polarization_index = polarizations.index(aux_pps.in_sar_calibration.polarization_used)
+            calib_polarization_index = polarizations.index(aux_pps_msc_conf.polarization_used)
         except ValueError as ex:
-            raise StackCalConf.PprConf.PprValueError(
+            raise StackCalConf.MscConf.MscValueError(
                 "Selected calibration reference polarization {} is not available (stack pols: {})".format(
-                    aux_pps.in_sar_calibration.polarization_used,
+                    aux_pps_msc_conf.polarization_used,
                     [p.value for p in polarizations],
                 )
             ) from ex
 
-        ppr_conf = StackCalConf.PprConf(
+        msc_conf = StackCalConf.MscConf(
             polarization_index=calib_polarization_index,
-            fft2_zero_padding_upsampling_factor=aux_pps.in_sar_calibration.fft2_zero_padding_upsampling_factor,
-            fft2_peak_window_size=aux_pps.in_sar_calibration.fft2_peak_window_size,
-            use_32bit_precision=aux_pps.in_sar_calibration.use_32bit_flag,
+            seed_range_coherence_threshold=aux_pps_msc_conf.seed_range_coherence_threshold,
+            edge_guard=aux_pps_msc_conf.edge_guard,
+            valid_azimuth_threshold=aux_pps_msc_conf.valid_azimuth_threshold,
+            propagation_step_inversion_method=aux_pps_msc_conf.propagation_step_inversion_method,
+            min_iono_range_candidate=aux_pps_msc_conf.min_iono_range_candidate,
+            max_iono_range_candidate=aux_pps_msc_conf.max_iono_range_candidate,
+            num_iono_range_candidates=aux_pps_msc_conf.num_iono_range_candidates,
+            robust_layer_estimation_high_res_num_slices=aux_pps_msc_conf.robust_layer_estimation_high_res_num_slices,
+            robust_layer_estimation_low_res_num_slices=aux_pps_msc_conf.robust_layer_estimation_low_res_num_slices,
+            layer_addition_threshold=aux_pps_msc_conf.layer_addition_threshold,
+            max_num_iono_layers=aux_pps_msc_conf.max_num_ionosphere_layers,
+            max_iono_range_offset=aux_pps_msc_conf.max_iono_range_offset,
+            iono_range_estimation_max_iterations_derivative=aux_pps_msc_conf.iono_range_estimation_max_iterations_derivative,
+            iono_range_estimation_max_iterations_projection=aux_pps_msc_conf.iono_range_estimation_max_iterations_projection,
+            iono_range_estimation_convergence_threshold_derivative=aux_pps_msc_conf.iono_range_estimation_convergence_threshold_derivative,
+            iono_range_estimation_convergence_threshold_projection=aux_pps_msc_conf.iono_range_estimation_convergence_threshold_projection,
+            iono_range_seeding_max_iterations_derivative=aux_pps_msc_conf.iono_range_seeding_max_iterations_derivative,
+            iono_range_seeding_max_iterations_projection=aux_pps_msc_conf.iono_range_seeding_max_iterations_projection,
+            iono_range_seeding_convergence_threshold_derivative=aux_pps_msc_conf.iono_range_seeding_convergence_threshold_derivative,
+            iono_range_seeding_convergence_threshold_projection=aux_pps_msc_conf.iono_range_seeding_convergence_threshold_projection,
+            iono_range_propagation_max_iterations_derivative=aux_pps_msc_conf.iono_range_propagation_max_iterations_derivative,
+            iono_range_propagation_max_iterations_projection=aux_pps_msc_conf.iono_range_propagation_max_iterations_projection,
+            iono_range_propagation_convergence_threshold_derivative=aux_pps_msc_conf.iono_range_propagation_convergence_threshold_derivative,
+            iono_range_propagation_convergence_threshold_projection=aux_pps_msc_conf.iono_range_propagation_convergence_threshold_projection,
+            force_multi_squint_iono_correction=aux_pps_msc_conf.force_multi_squint_iono_correction_flag,
+            disable_multi_squint_iono_correction=aux_pps_msc_conf.disable_multi_squint_iono_correction_flag,
+            coherence_azimuth_window_size=aux_pps_msc_conf.coherence_azimuth_window_size,
+            coherence_range_window_size=aux_pps_msc_conf.coherence_range_window_size,
+            ms_coherence_high_resolution_azimuth_window_size=aux_pps_msc_conf.multi_squint_coherence_high_res_azimuth_window_size,
+            ms_coherence_high_resolution_range_window_size=aux_pps_msc_conf.multi_squint_coherence_high_res_range_window_size,
+            ms_coherence_low_resolution_azimuth_window_size=aux_pps_msc_conf.multi_squint_coherence_low_res_azimuth_window_size,
+            ms_coherence_low_resolution_range_window_size=aux_pps_msc_conf.multi_squint_coherence_low_res_range_window_size,
+            ms_coherence_validity_threshold=aux_pps_msc_conf.multi_squint_coherence_validity_threshold,
+            ms_coherence_improvement_threshold=aux_pps_msc_conf.multi_squint_coherence_improvement_threshold,
+            ms_coherence_low_res_threshold=aux_pps_msc_conf.multi_squint_coherence_low_res_threshold,
+            use_32bit_precision_estimation=aux_pps_msc_conf.use_32bit_estimation_flag,
+            use_32bit_precision_correction=aux_pps_msc_conf.use_32bit_correction_flag,
         )
 
-    # Fill parameters of the Sum-of-Kronecker-Products (SKP) module.
+    # Fill the parameters of the Sum-of-Kronecker-Products (SKP) module.
     skp_conf = None
     if aux_pps.skp_phase_calibration.skp_phase_estimation_flag:
         aux_pps_skp_conf = aux_pps.skp_phase_calibration
@@ -162,21 +197,26 @@ def fill_stack_cal_conf_from_aux_pps(
             skp_calibration_phase_screen_quality_threshold=aux_pps_skp_conf.skp_calibration_phase_screen_quality_threshold,
             output_azimuth_subsampling_step=skp_lut_azimuth_decimation_factor,
             output_range_subsampling_step=skp_lut_range_decimation_factor,
-            median_filter_flag=aux_pps_skp_conf.median_filter_flag,
-            median_filter_window_size=aux_pps_skp_conf.median_filter_window_size,
+            calibration_phase_postprocessing=SkpPostprocessingFilterType(
+                aux_pps_skp_conf.calibration_phase_postprocessing
+            ),
+            postprocessing_filter_window_size=aux_pps_skp_conf.postprocessing_filter_window_size,
+            goldstein_filter_window_size=aux_pps_skp_conf.goldstein_filter_window_size,
             exclude_mpmb_polarization_cross_covariance_flag=aux_pps_skp_conf.exclude_mpmb_polarization_cross_covariance_flag,
             use_32bit_precision=aux_pps_skp_conf.use_32bit_flag,
         )
 
         if aux_pps_skp_conf.estimation_window_size <= 0.0:
             raise StackCalConf.SkpConf.SkpValueError("Estimation window size must be positive")
-        if aux_pps_skp_conf.median_filter_window_size <= 0.0:
-            raise StackCalConf.SkpConf.SkpValueError("Median filter window size must be positive")
+        if aux_pps_skp_conf.postprocessing_filter_window_size <= 0.0:
+            raise StackCalConf.SkpConf.SkpValueError("Postpricessing filter window size must be positive")
+        if aux_pps_skp_conf.goldstein_filter_window_size < 1:
+            raise StackCalConf.SkpConf.SkpValueError("Goldstein filter window size must be a positive integer")
 
     return StackCalConf(
         azf_conf=azf_conf,
         iob_conf=iob_conf,
-        ppr_conf=ppr_conf,
+        msc_conf=msc_conf,
         skp_conf=skp_conf,
     )
 

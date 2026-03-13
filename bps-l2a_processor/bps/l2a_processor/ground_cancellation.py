@@ -236,8 +236,13 @@ def ground_cancellation(
 
             elif num_acq == 2:
                 # Simplified algorithm: difference from the two, the order is not influent
-                ground_cancelled_list.append(scs_acq_list[0] - scs_acq_list[1])
+                notch_final = scs_acq_list[0] - scs_acq_list[1]
                 mask_final = np.zeros((Naz, Nrg), dtype=np.uint8)
+
+                # FD is always complex, AGB may be abs ** 2
+                if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
+                    notch_final = np.abs(notch_final) ** 2
+                ground_cancelled_list.append(notch_final)
 
             elif aux_pp2_conf_gn.operational_mode == OperationalModeType.SINGLE_REFERENCE:
                 # compute ground notch
@@ -254,9 +259,9 @@ def ground_cancellation(
 
                 notch_final[mask_final == 1] = 0
 
+                # FD is always complex, AGB may be abs ** 2
                 if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
                     notch_final = np.abs(notch_final) ** 2
-
                 ground_cancelled_list.append(notch_final)
 
             elif aux_pp2_conf_gn.operational_mode == OperationalModeType.MULTI_REFERENCE:
@@ -291,8 +296,11 @@ def ground_cancellation(
                     mask_final = mask_final + i_valid
 
                 mask_final[mask_final == 0] = 1
+                notch_final = np.sqrt(notch_final / mask_final)
 
-                ground_cancelled_list.append(np.sqrt(notch_final / mask_final))
+                if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
+                    notch_final = np.abs(notch_final) ** 2
+                ground_cancelled_list.append(notch_final)
 
         stop_time = datetime.now()
         elapsed_time = (stop_time - start_time).total_seconds()

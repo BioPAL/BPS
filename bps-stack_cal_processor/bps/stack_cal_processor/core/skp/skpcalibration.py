@@ -20,6 +20,7 @@ import numpy.typing as npt
 from bps.common import bps_logger
 from bps.stack_cal_processor.configuration import (
     SKP_NAME,
+    SkpPostprocessingFilterType,
     StackCalConf,
     StackDataSpecs,
     log_calibration_params,
@@ -36,7 +37,8 @@ from bps.stack_cal_processor.core.skp.mpmb import (
     assemble_mpmb_coherence_matrix_multithreaded,
 )
 from bps.stack_cal_processor.core.skp.postprocessing import (
-    apply_median_filter_skp_phases_multithreaded,
+    apply_postprocessing_filter,
+    compute_postprocessing_filter_window_size,
 )
 from bps.stack_cal_processor.core.skp.preprocessing import (
     remove_synthetic_phase_multithreaded,
@@ -334,21 +336,6 @@ def skp_calibration(
         num_worker_threads=max_num_threads,
     )
 
-    if conf.median_filter_flag:
-        bps_logger.info("Apply median filter to estimated SKP phases")
-        skp_calibration_phases = apply_median_filter_skp_phases_multithreaded(
-            skp_calibration_phases,
-            azimuth_sampling_step=stack_specs.azimuth_sampling_step,
-            azimuth_subsampling_step=conf.output_azimuth_subsampling_step,
-            range_sampling_step=stack_specs.range_sampling_step,
-            range_subsampling_step=conf.output_range_subsampling_step,
-            satellite_ground_speed=satellite_ground_speed_coreg_primary,
-            incidence_angle=incidence_angle_coreg_primary,
-            filter_window_size=conf.median_filter_window_size,
-            dtypes=estimation_dtypes,
-            num_worker_threads=max_num_threads,
-        )
-
     # Computing quality and valid ratio.
     if skp_fnf_mask is None:
         bps_logger.warning("No FNF mask provided, setting all qualities to 1.0")
@@ -359,6 +346,26 @@ def skp_calibration(
             skp_fnf_mask=skp_fnf_mask,
             skp_azimuth_axis=azimuth_axis[azimuth_output_indices],
             skp_range_axis=range_axis[range_output_indices],
+        )
+
+    # Possibly, postprocess the SKP calibration phase with a filter.
+    if conf.calibration_phase_postprocessing != SkpPostprocessingFilterType.NONE:
+        bps_logger.info(
+            "Apply %s filter to estimated SKP phases",
+            conf.calibration_phase_postprocessing.value.capitalize(),
+        )
+        skp_calibration_phases = apply_postprocessing_filter(
+            skp_calibration_phases,
+            filter_type=conf.calibration_phase_postprocessing,
+            filter_window=compute_postprocessing_filter_window_size(
+                filter_type=conf.calibration_phase_postprocessing,
+                azimuth_sampling_step=stack_specs.azimuth_sampling_step * conf.output_azimuth_subsampling_step,
+                range_sampling_step=stack_specs.range_sampling_step * conf.output_range_subsampling_step,
+                satellite_ground_speed=satellite_ground_speed_coreg_primary,
+                incidence_angle=incidence_angle_coreg_primary,
+                postprocessing_filter_window_size=conf.postprocessing_filter_window_size,
+                goldstein_filter_window_size=conf.goldstein_filter_window_size,
+            ),
         )
 
     # The validity mask.

@@ -21,6 +21,7 @@ from bps.stack_cal_processor.core.azf.windowing import (
     none_window_bank,
 )
 from bps.stack_cal_processor.core.floating_precision import EstimationDType
+from bps.stack_cal_processor.core.msc.warping import apply_constant_azimuth_shifts_interp_inplace_multithreaded
 from bps.stack_cal_processor.core.skp.skpdecomposition import skp_processing
 from bps.stack_cal_processor.core.utils import query_grid_mask
 from bps.stack_processor.interface.external.aux_pps import (
@@ -51,6 +52,9 @@ def _precompilation_task(aux_pps: AuxiliaryStaprocessingParameters):
     _precompile_numba_azf(
         EstimationDType.from_32bit_flag(use_32bit_flag=aux_pps.azimuth_spectral_filtering.use_32bit_flag),
     )
+    _precompile_numba_msc(
+        EstimationDType.from_32bit_flag(use_32bit_flag=aux_pps.multi_squint_calibration.use_32bit_estimation_flag),
+    )
     _precompile_numba_skp(
         EstimationDType.from_32bit_flag(use_32bit_flag=aux_pps.skp_phase_calibration.use_32bit_flag),
     )
@@ -76,6 +80,15 @@ def _precompile_numba_azf(dtypes: EstimationDType):
     colwise_roll(
         data=np.ones((5, 5), dtype=dtypes.float_dtype),
         shift=np.arange(5),
+    )
+
+
+def _precompile_numba_msc(dtypes: EstimationDType):
+    """Force numba to precompile the MSC code."""
+    apply_constant_azimuth_shifts_interp_inplace_multithreaded(
+        mpol_image=(np.ones((3, 3), dtypes.complex_dtype),),
+        flattening_phase_screen=np.zeros((3, 3), dtype=np.float64),
+        azimuth_residual_shift=np.array([0.0], dtype=dtypes.float_dtype)[0],
     )
 
 

@@ -22,6 +22,11 @@
 					<xsd:documentation>Digital Elevation Model (DEM) to be used during processing.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="heightModelFallbackFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True to allow fallback to Ellipsoid in case selected Digital Elevation Model (DEM) is not found, False otherwise. Default value is False.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="heightModelMargin">
 				<xsd:annotation>
 					<xsd:documentation>Margin kept during the extraction of Digital Elevation Model (DEM) to be used during processing [deg].</xsd:documentation>
@@ -1261,6 +1266,16 @@
 			<xsd:element name="lutLayersCompletenessFlag" type="bool">
 				<xsd:annotation>
 					<xsd:documentation>True if all the layers of the Look-Up Tables (LUT) ADS have to be included in output L1M product too, False if RFI masks and ionosphere binary layers shall be removed. Default value is True.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="l1aQlColourCodingMethod" type="l1acQlColourCodingMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Colour coding method to be used for output L1a (SCS) products quick-look. Default value is Pauli.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="l1bQlColourCodingMethod" type="l1bQlColourCodingMethodType">
+				<xsd:annotation>
+					<xsd:documentation>Colour coding method to be used for output L1b (DGM) products quick-look. Default value is Lexicographic.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="qlRangeDecimationFactor">

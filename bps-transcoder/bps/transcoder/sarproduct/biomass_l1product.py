@@ -217,6 +217,8 @@ class LUTParameters:
 class QuicklookParameters:
     """Quicklook parameters"""
 
+    l1a_ql_colour_coding_method: common.ColourCodingMethod
+    l1b_ql_colour_coding_method: common.ColourCodingMethod
     ql_range_decimation_factor: int
     ql_range_averaging_factor: int
     ql_azimuth_decimation_factor: int
@@ -532,6 +534,8 @@ def _default_lut_parameters() -> LUTParameters:
 
 def _default_quicklook_parameters() -> QuicklookParameters:
     return QuicklookParameters(
+        l1a_ql_colour_coding_method=common.ColourCodingMethod.PAULI,
+        l1b_ql_colour_coding_method=common.ColourCodingMethod.LEXICOGRAPHIC,
         ql_range_decimation_factor=20,
         ql_range_averaging_factor=20,
         ql_azimuth_decimation_factor=120,

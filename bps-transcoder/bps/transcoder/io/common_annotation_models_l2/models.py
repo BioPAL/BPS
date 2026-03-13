@@ -46,6 +46,7 @@ from bps.common.io.common_types import (
     OrbitPassType,
     PixelRepresentationType,
     PixelTypeType,
+    PolarisationCombinationMethodType,
     PolarisationType,
     ProductType,
     ProjectionType,
@@ -406,6 +407,10 @@ class GeneralConfigurationParametersType:
     subsetting_rule
         In case of more than three acquisitions in input (TOM phase), this is the rule which has been used to select
         3 acquisitions from the 7/8 of TOM phase, choosing, the baselines corresponding to the ones of INT phase.
+    polarisation_combination_method
+        Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV
+        ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed
+        (all the four polarisations are used).
     """
 
     class Meta:
@@ -442,6 +447,15 @@ class GeneralConfigurationParametersType:
         default=None,
         metadata={
             "name": "subsettingRule",
+            "type": "Element",
+            "namespace": "",
+            "required": True,
+        },
+    )
+    polarisation_combination_method: Optional[PolarisationCombinationMethodType] = field(
+        default=None,
+        metadata={
+            "name": "polarisationCombinationMethod",
             "type": "Element",
             "namespace": "",
             "required": True,

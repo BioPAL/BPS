@@ -10,143 +10,199 @@ SKP Postprocessing Module
 -------------------------
 """
 
-from concurrent.futures import ThreadPoolExecutor
-
+import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from bps.common import bps_logger
-from bps.stack_cal_processor.core.floating_precision import (
-    EstimationDType,
-    assert_list_numeric_types_equal,
-)
-from bps.stack_cal_processor.core.skp.utils import (
-    window_to_azimuth_pixels,
-    window_to_range_pixels,
-)
+from bps.stack_cal_processor.configuration import SkpPostprocessingFilterType
+from bps.stack_cal_processor.core.skp.utils import SkpRuntimeError, window_to_azimuth_pixels, window_to_range_pixels
 
 
-def apply_median_filter_skp_phases_multithreaded(
-    skp_calibration_phases: tuple[npt.NDArray[float], ...],
+def compute_postprocessing_filter_window_size(
     *,
+    filter_type: SkpPostprocessingFilterType,
     azimuth_sampling_step: float,
-    azimuth_subsampling_step: int,
     range_sampling_step: float,
-    range_subsampling_step: int,
-    incidence_angle: float,
     satellite_ground_speed: float,
-    filter_window_size: float,
-    dtypes: EstimationDType,
-    num_worker_threads: int = 1,
-) -> tuple[npt.NDArray[float], ...]:
+    incidence_angle: float,
+    postprocessing_filter_window_size: float,
+    goldstein_filter_window_size: int,
+) -> tuple[int, int]:
     """
-    Post-process the SKP calibration phase screen via median filter.
+    Compute the size (in pixels) of the filtering window. If "Goldstein" is
+    selected, the window size is in frequency domain.
 
     Parameters
     ----------
-    skp_calibration_phases: tuple[npt.NDArray[float], ...] [rad]
-        The SKP calibration phases.
+    filter_type: SkpPostprocessingFilterType
+        The postprocessing filter type.
 
     azimuth_sampling_step: float [s]
         Sampling step in azimuth direction.
 
-    azimuth_subsampling_step: int [px]
-        Subsampling step in azimuth direction that was used to obtain the
-        SKP calibration phase screens.
-
     range_sampling_step: float [s]
         Sampling step in range direction.
-
-    range_subsampling_step: int [px]
-        Subsampling step in range direction that was used to obtain the SKP
-        calibration phase screens.
-
-    incidence_angle: float [rad]
-        The incidence angle.
 
     satellite_ground_speed: float [m/s]
         Speed of the satellite at the ground level.
 
-    filter_window_size: float [m]
-        Size of the median filter window.
+    incidence_angle: float [rad]
+        The incidence angle.
 
-    dtypes: EstimationDType
-        Floating point precision used for the estiamtions.
+    postprocessing_filter_window_size: float  [m]
+        The desired postprocessing spatial window size. Used only for "Boxcar"
+        and "Median".
 
-    num_worker_threads: int = 1
-        Number of parallel threads assigned to this task.
-
-    Raises
-    ------
-    ValueError
+    goldstein_filter_window_size: int  [px]
+        The filter window size to be used for the Goldstein filter. Used only
+        if `filter_type` is "Goldstein".
 
     Return
     ------
-    tuple[npt.NDArray[float], ...] [rad]
-        The post-processed SKP calibration phase screens.
+    tuple[int, int]  [px]
+        The filtering window in pixels. Both are always odd values.
 
     """
-    # Minimal check on the input arguments.
-    if filter_window_size < 0.0:
-        raise ValueError("Median filter window must be positive")
-    if num_worker_threads < 1:
-        raise ValueError("Number of worker threads must be a positive integer")
+    if filter_type is SkpPostprocessingFilterType.GOLDSTEIN:
+        return (goldstein_filter_window_size, goldstein_filter_window_size)
 
-    # Just an extra check on the input dtypes.
-    assert_list_numeric_types_equal(
-        skp_calibration_phases,
-        expected_dtype=dtypes.float_dtype,
-    )
-
-    # This is always a positive integer as per implementation of the conversion
-    # function.
-    #
-    # NOTE: We need to multiply the sampling step by the subsampling step used
-    # to compute the SKP calibration phase screens in order to obtain the
-    # correct window size in pixels.
-    #
-    # NOTE: If it's even, we make it odd. That means that if it's 0, it becomes
-    # 1 (i.e. no filtering).
     azimuth_window_size = window_to_azimuth_pixels(
-        window_size=filter_window_size,
-        azimuth_sampling_step=azimuth_sampling_step * azimuth_subsampling_step,
+        window_size=postprocessing_filter_window_size,
+        azimuth_sampling_step=azimuth_sampling_step,
         satellite_ground_speed=satellite_ground_speed,
     )
-    if azimuth_window_size % 2 == 0:
-        azimuth_window_size += 1
-
-    # See comment/notes above.
     range_window_size = window_to_range_pixels(
-        window_size=filter_window_size,
-        range_sampling_step=range_sampling_step * range_subsampling_step,
+        window_size=postprocessing_filter_window_size,
+        range_sampling_step=range_sampling_step,
         incidence_angle=incidence_angle,
     )
-    if range_window_size % 2 == 0:
-        range_window_size += 1
+    return (
+        2 * (azimuth_window_size // 2) + 1,
+        2 * (range_window_size // 2) + 1,
+    )
 
-    # Nothing to do, we simply return the input SKP calibration phases.
-    if azimuth_window_size * range_window_size == 1:
-        bps_logger.warning("Selected median filter size is too small. Skipping it.")
+
+def apply_postprocessing_filter(
+    skp_calibration_phases: npt.NDArray[float],
+    *,
+    filter_type: SkpPostprocessingFilterType,
+    filter_window: tuple[int, int],
+) -> npt.NDArray[float]:
+    """
+    Apply the selected post-processing filter.
+
+    Parameters
+    ----------
+    skp_calibration_phases: npt.NDArray[float]  [rad]
+        The (wrapped) SKP calibration phase screens.
+
+    filter_type: SkpPostprocessingFilterType
+        The selected filter type.
+
+    filter_window: tuple[int, int]  [px]
+        Size of the filtering window in pixels. For "Goldstein" this
+        is in frequency domain.
+
+    Return
+    ------
+    npt.NDArray[float]  [rad]
+        The (wrapped) filtered SKP phase screens.
+
+    Raises
+    ------
+    SkpRuntimeError
+
+    """
+    # If we get no-filtering, we just skip.
+    if filter_type is SkpPostprocessingFilterType.NONE:
         return skp_calibration_phases
 
-    bps_logger.debug("Median filter window size: [%d x %d]", azimuth_window_size, range_window_size)
+    bps_logger.debug("Filter window size [px]: %s", filter_window)
 
-    with ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
-        # Apply median filter.
-        def apply_median_filter_fn(skp_phi, image_index):
-            return sp.ndimage.median_filter(
-                skp_phi,
-                mode="constant",
-                cval=0.0,
-                size=(azimuth_window_size, range_window_size),
-            )
-
-        skp_calibration_phases = tuple(
-            executor.map(
-                apply_median_filter_fn,
-                skp_calibration_phases,
-                range(len(skp_calibration_phases)),
-            )
+    if filter_type is SkpPostprocessingFilterType.GOLDSTEIN:
+        return _apply_goldstein_filter(
+            skp_calibration_phases,
+            filter_window=filter_window,
         )
-        assert_list_numeric_types_equal(skp_calibration_phases, expected_dtype=dtypes.float_dtype)
 
-    return skp_calibration_phases
+    if filter_type is SkpPostprocessingFilterType.BOXCAR:
+        return _apply_boxcar_filter(
+            skp_calibration_phases,
+            filter_window=filter_window,
+        )
+
+    if filter_type is SkpPostprocessingFilterType.MEDIAN:
+        return np.array(
+            [_apply_pivotal_median_filter(phi, filter_window=filter_window) for phi in skp_calibration_phases],
+            dtype=skp_calibration_phases[0].dtype,
+        )
+
+    raise SkpRuntimeError(f"Unsupported filter type {filter_type}")
+
+
+def _apply_goldstein_filter(
+    skp_calibration_phases: npt.NDArray[float],
+    filter_window: tuple[int, int],
+    alpha: float = 0.5,
+    eps: float = 1e-6,
+) -> npt.NDArray[float]:
+    """Apply the Goldstein filter to each calibration phase screen."""
+    skp_calibration_phases = np.asarray(skp_calibration_phases)
+    phi_freq = sp.fft.fftshift(sp.fft.fft2(np.exp(1j * skp_calibration_phases)), axes=(-2, -1))
+    power_smooth = sp.ndimage.uniform_filter(np.abs(phi_freq), size=(1, *filter_window))
+    weights = (power_smooth / (power_smooth.max(axis=(-2, -1), keepdims=True) + eps)) ** alpha
+    return np.angle(sp.fft.ifft2(sp.fft.ifftshift(phi_freq * weights, axes=(-2, -1))))
+
+
+def _apply_boxcar_filter(
+    skp_calibration_phases: npt.NDArray[float],
+    filter_window: tuple[int, int],
+) -> npt.NDArray[float]:
+    """Apply a boxcar filter to each calibration phase screen."""
+    return np.arctan2(
+        sp.ndimage.uniform_filter(np.sin(skp_calibration_phases), size=(1, *filter_window)),
+        sp.ndimage.uniform_filter(np.cos(skp_calibration_phases), size=(1, *filter_window)),
+    )
+
+
+def _apply_pivotal_median_filter(
+    skp_calibration_phases: npt.NDArray[float],
+    filter_window: tuple[int, int],
+) -> npt.NDArray[float]:
+    """Apply the pivotal median filter as in Lanari et al. "Generation of
+    digital elevation models by using SIR-C/X-SAR multifrequency two-pass
+    interferometry: The Etna case study." IEEE Transactions on Geoscience and
+    Remote Sensing (1996)
+
+    """
+
+    # Just a shortcut to wrap the phase screen.
+    def wrap_phase(ph):
+        return (ph + np.pi) % (2 * np.pi) - np.pi
+
+    # Apply some padding to the phase screen.
+    win_az, win_rg = filter_window
+    pad_az = win_az // 2
+    pad_rg = win_rg // 2
+    skp_calibration_phases = np.pad(
+        skp_calibration_phases,
+        ((pad_az, pad_az), (pad_rg, pad_rg)),
+        mode="reflect",
+    )
+
+    # Create the filter window
+    windows = np.lib.stride_tricks.sliding_window_view(skp_calibration_phases, (win_az, win_rg))
+    filter_window = windows.reshape(*windows.shape[:2], win_az * win_rg)
+
+    # Compute the pivot as the phase of the medians of real and imaginary parts.
+    pivot = np.arctan2(
+        np.median(np.sin(filter_window), axis=2),
+        np.median(np.cos(filter_window), axis=2),
+    )
+
+    # Compute the median of the residuals,
+    median_res = np.median(
+        wrap_phase(filter_window - pivot[:, :, np.newaxis]),
+        axis=2,
+    )
+    return wrap_phase(pivot + median_res)

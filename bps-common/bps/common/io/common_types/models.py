@@ -250,7 +250,8 @@ class LayerType(Enum):
     HEIGHT_M = "Height [m]"
     INCIDENCE_ANGLE_DEG = "Incidence angle [deg]"
     ELEVATION_ANGLE_DEG = "Elevation angle [deg]"
-    TERRAIN_SLOPE_DEG = "Terrain slope [deg]"
+    RANGE_TERRAIN_SLOPE_DEG = "Range terrain slope [deg]"
+    AZIMUTH_TERRAIN_SLOPE_DEG = "Azimuth terrain slope [deg]"
     FNF = "FNF"
     ACM = "ACM"
     NUMBER_OF_AVERAGES = "numberOfAverages"
@@ -261,6 +262,7 @@ class LayerType(Enum):
     COREGISTRATION_SHIFTS_QUALITY = "Coregistration shifts quality"
     WAVENUMBERS_RAD_M = "Wavenumbers [rad/m]"
     FLATTENING_PHASE_SCREEN_RAD = "Flattening phase screen [rad]"
+    IONOSPHERE_PHASE_SCREENS_RAD = "Ionosphere phase screens [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_RAD = "SKP calibration phase screen [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_QUALITY = "SKP calibration phase screen quality"
 
@@ -670,7 +672,7 @@ class LayerListType:
         name = "layerListType"
 
     layer: list[LayerType] = field(
-        default_factory=list, metadata={"type": "Element", "min_occurs": 1, "max_occurs": 29}
+        default_factory=list, metadata={"type": "Element", "min_occurs": 1, "max_occurs": 30}
     )
     count: Optional[int] = field(
         default=None,
@@ -1100,6 +1102,17 @@ class WeightingWindowType(Enum):
     NONE = "None"
 
 
+class PolarisationCombinationMethodType(Enum):
+    """
+    Enumeration of polarisations combination methods.
+    """
+
+    HV = "HV"
+    VH = "VH"
+    AVERAGE = "Average"
+    NONE = "None"
+
+
 class CompressionMethodType(Enum):
     """
     Enumeration of TIFF compression methods.
@@ -1111,6 +1124,24 @@ class CompressionMethodType(Enum):
     LERC = "LERC"
     LERC_DEFLATE = "LERC_DEFLATE"
     LERC_ZSTD = "LERC_ZSTD"
+
+
+class L1AcQlColourCodingMethodType(Enum):
+    """
+    Enumeration of L1a and L1c products quick-looks colour coding methods.
+    """
+
+    PAULI = "Pauli"
+    HSV = "HSV"
+    PAULI_AND_HSV = "Pauli and HSV"
+
+
+class L1BQlColourCodingMethodType(Enum):
+    """
+    Enumeration of L1b products quick-looks colour coding methods.
+    """
+
+    LEXICOGRAPHIC = "Lexicographic"
 
 
 class BaselineMethodType(Enum):
@@ -1142,17 +1173,6 @@ class CoregistrationMethodType(Enum):
     AUTOMATIC = "Automatic"
 
 
-class PolarisationCombinationMethodType(Enum):
-    """
-    Enumeration of polarisations combination methods.
-    """
-
-    HV = "HV"
-    VH = "VH"
-    AVERAGE = "Average"
-    NONE = "None"
-
-
 class PrimaryImageSelectionInformationType(Enum):
     """
     Enumeration of information used to select coregistration primary image.
@@ -1163,6 +1183,17 @@ class PrimaryImageSelectionInformationType(Enum):
     GEOMETRY_AND_FR_CORRECTION = "Geometry and FR Correction"
     GEOMETRY_AND_RFI_FR_CORRECTIONS = "Geometry and RFI+FR Corrections"
     TEMPORAL_BASELINE = "Temporal Baseline"
+
+
+class SkpPhaseCalibrationPostprocessingType(Enum):
+    """
+    Postprocessing methods for the SKP calibration phase screen.
+    """
+
+    NONE = "None"
+    GOLDSTEIN = "Goldstein"
+    BOXCAR = "Boxcar"
+    MEDIAN = "Median"
 
 
 class SkpPhaseCorrectionType(Enum):
