@@ -28,6 +28,7 @@ from bps.common.io.translate_common import translate_datetime
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file
 from bps.transcoder.io import (
     aux_orb_models,
+    main_annotation_models_l1ab,
     main_annotation_models_l1c,
     translate_common_annotation_l1,
 )
@@ -404,14 +405,19 @@ class BIOMASSStackProductReader:
         # Read main annotation file.
         # If is_primary_immage is True, then read main_annotation1_file,
         # otherwise read main_annotation2_file for coregistered image.
+        main_annotation_model: main_annotation_models_l1ab.MainAnnotation | main_annotation_models_l1c.MainAnnotation
         if is_primary_image:
             main_annotation_path = Path(self.product_structure.main_annotation1_file)
+            main_annotation_model = parse(
+                main_annotation_path.read_text(encoding="utf-8"),
+                main_annotation_models_l1ab.MainAnnotation,
+            )
         else:
             main_annotation_path = Path(self.product_structure.main_annotation2_file)
-        main_annotation_model: main_annotation_models_l1c.MainAnnotation = parse(
-            main_annotation_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1c.MainAnnotation,
-        )
+            main_annotation_model = parse(
+                main_annotation_path.read_text(encoding="utf-8"),
+                main_annotation_models_l1c.MainAnnotation,
+            )
 
         # Fill attributes.
         temp_product = SARProduct()
@@ -693,6 +699,7 @@ class BIOMASSStackProductReader:
             self.product_primary = temp_product
         else:
             self.product = temp_product
+            assert isinstance(main_annotation_model, main_annotation_models_l1c.MainAnnotation)
             self.stack_processing_parameters = BIOMASSStackProcessingParameters.from_l1c_main_annotation(
                 main_annotation_model
             )

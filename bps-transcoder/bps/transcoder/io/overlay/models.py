@@ -10,11 +10,12 @@ XSD Overlay models
 ------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Optional
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DataType:
     """
     Parameters
@@ -24,24 +25,20 @@ class DataType:
     name
     """
 
-    value: Optional[str] = field(
-        default=None,
+    value: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IconType:
     """
     Parameters
@@ -50,17 +47,15 @@ class IconType:
         A local file specification or URL used to load the desired image and overlay it on the map.
     """
 
-    href: Optional[str] = field(
-        default=None,
+    href: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LatLonQuadType:
     """
     Parameters
@@ -71,17 +66,15 @@ class LatLonQuadType:
         pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel.
     """
 
-    coordinates: Optional[str] = field(
-        default=None,
+    coordinates: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LineStyleType:
     """
     Parameters
@@ -92,25 +85,21 @@ class LineStyleType:
         Line width.
     """
 
-    color: Optional[str] = field(
-        default=None,
+    color: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    width: Optional[int] = field(
-        default=None,
+    width: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LinearRingType:
     """
     Parameters
@@ -122,17 +111,15 @@ class LinearRingType:
         line first pixel, last line first pixel.
     """
 
-    coordinates: Optional[str] = field(
-        default=None,
+    coordinates: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolyStyleType:
     """
     Parameters
@@ -141,17 +128,15 @@ class PolyStyleType:
         Line style.
     """
 
-    color: Optional[str] = field(
-        default=None,
+    color: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TimeStampType:
     """
     Parameters
@@ -160,32 +145,28 @@ class TimeStampType:
         Overlay time stamp in ISO 8601 format (YYYY-MM-DDThh:mm:ss).
     """
 
-    when: Optional[str] = field(
-        default=None,
+    when: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LatLonQuad:
     class Meta:
         namespace = "http://www.google.com/kml/ext/2.2"
 
-    coordinates: Optional[str] = field(
-        default=None,
+    coordinates: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ExtendedDataType:
     """
     Parameters
@@ -205,7 +186,7 @@ class ExtendedDataType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GroundOverlayType:
     """
     Parameters
@@ -223,52 +204,38 @@ class GroundOverlayType:
         Structure containing the latitude and longitude coordinates used to position the image overlay on the map.
     """
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    visibility: Optional[int] = field(
-        default=None,
+    visibility: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    time_stamp: Optional[TimeStampType] = field(
-        default=None,
+    time_stamp: TimeStampType = field(
         metadata={
             "name": "TimeStamp",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    icon: Optional[IconType] = field(
-        default=None,
+    icon: IconType = field(
         metadata={
             "name": "Icon",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lat_lon_quad: Optional[LatLonQuad] = field(
-        default=None,
-        metadata={
-            "name": "LatLonQuad",
-            "type": "Element",
-            "namespace": "http://www.google.com/kml/ext/2.2",
-            "required": True,
-        },
+    lat_lon_quad: LatLonQuad = field(
+        metadata={"name": "LatLonQuad", "type": "Element", "namespace": "http://www.google.com/kml/ext/2.2"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StyleType:
     """
     Parameters
@@ -279,27 +246,23 @@ class StyleType:
         Polygon style.
     """
 
-    line_style: Optional[LineStyleType] = field(
-        default=None,
+    line_style: LineStyleType = field(
         metadata={
             "name": "LineStyle",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    poly_style: Optional[PolyStyleType] = field(
-        default=None,
+    poly_style: PolyStyleType = field(
         metadata={
             "name": "PolyStyle",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OuterBoundaryIsType:
     """
     Parameters
@@ -311,18 +274,16 @@ class OuterBoundaryIsType:
     class Meta:
         name = "outerBoundaryIsType"
 
-    linear_ring: Optional[LinearRingType] = field(
-        default=None,
+    linear_ring: LinearRingType = field(
         metadata={
             "name": "LinearRing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolygonType:
     """
     Parameters
@@ -335,35 +296,29 @@ class PolygonType:
         Polygon outer boundary description.
     """
 
-    tessellate: Optional[int] = field(
-        default=None,
+    tessellate: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    altitude_mode: Optional[str] = field(
-        default=None,
+    altitude_mode: str = field(
         metadata={
             "name": "altitudeMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    outer_boundary_is: Optional[OuterBoundaryIsType] = field(
-        default=None,
+    outer_boundary_is: OuterBoundaryIsType = field(
         metadata={
             "name": "outerBoundaryIs",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PlacemarkType:
     """
     Parameters
@@ -383,61 +338,49 @@ class PlacemarkType:
         Structure containing the latitude and longitude coordinates used to position the image overlay on the map.
     """
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    visibility: Optional[int] = field(
-        default=None,
+    visibility: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    time_stamp: Optional[TimeStampType] = field(
-        default=None,
+    time_stamp: TimeStampType = field(
         metadata={
             "name": "TimeStamp",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    style: Optional[StyleType] = field(
-        default=None,
+    style: StyleType = field(
         metadata={
             "name": "Style",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    extended_data: Optional[ExtendedDataType] = field(
-        default=None,
+    extended_data: ExtendedDataType = field(
         metadata={
             "name": "ExtendedData",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polygon: Optional[PolygonType] = field(
-        default=None,
+    polygon: PolygonType = field(
         metadata={
             "name": "Polygon",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DocumentType:
     """
     Parameters
@@ -453,43 +396,35 @@ class DocumentType:
         Contains the metadata associated to the overlay.
     """
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    description: Optional[str] = field(
-        default=None,
+    description: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ground_overlay: Optional[GroundOverlayType] = field(
-        default=None,
+    ground_overlay: GroundOverlayType = field(
         metadata={
             "name": "GroundOverlay",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    placemark: Optional[PlacemarkType] = field(
-        default=None,
+    placemark: PlacemarkType = field(
         metadata={
             "name": "Placemark",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KmlType:
     """
     Parameters
@@ -501,18 +436,16 @@ class KmlType:
     class Meta:
         name = "kmlType"
 
-    document: Optional[DocumentType] = field(
-        default=None,
+    document: DocumentType = field(
         metadata={
             "name": "Document",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Kml(KmlType):
     """
     BIOMASS L1 products overlay element.

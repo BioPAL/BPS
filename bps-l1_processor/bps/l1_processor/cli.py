@@ -27,7 +27,6 @@ from bps.l1_processor.processor_interface.joborder_l1 import L1JobOrder
 
 def get_bulletin_path() -> Path:
     """Get default bulletin position inside the installed package"""
-    # pylint: disable-next=too-many-function-args
     return importlib.resources.files(bps.l1_processor).joinpath("resources", "bulletinb-348.txt")
 
 

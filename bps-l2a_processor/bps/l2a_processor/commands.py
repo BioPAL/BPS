@@ -260,7 +260,7 @@ def run_l2a_processing(
         and aux_pp2_2a.general.polarisation_combination_method is not None
     ):
         bps_logger.warning(
-            f"Found 3 polarisations in input products, AUX PP2 2A polarisation combination method is '{aux_pp2_2a.general.polarisation_combination_method.value}', setting to 'None'"
+            f"Merging is not required for 3-polarisation inputs. Resetting AUX PP2 2A combination method '{aux_pp2_2a.general.polarisation_combination_method.value}' with 'None'"
         )
         aux_pp2_2a.general.polarisation_combination_method = None
 
@@ -268,7 +268,7 @@ def run_l2a_processing(
     if len(stack_product_to_check.polarization_list) == 4:
         if aux_pp2_2a.general.polarisation_combination_method is None:
             raise ValueError(
-                "Found 4 polarisations in input products, AUX PP2 2A polarisation combination method is set to 'None', expected one from 'Average', 'VH', 'HV'"
+                "With 4-polarisation inputs, a merging method is required. 'None' cannot be used; please choose between 'Average', 'VH', and 'HV'."
             )
         bps_logger.info(
             f"Cross polarisation merging using AUX PP2 2A polarisation combination method '{aux_pp2_2a.general.polarisation_combination_method.value}'"

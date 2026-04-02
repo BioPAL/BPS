@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-l1-annotations.xsd"/>
+	<xsd:complexType name="mainAnnotationType">
+		<xsd:sequence>
+			<xsd:element name="acquisitionInformation" type="acquisitionInformationType">
+				<xsd:annotation>
+					<xsd:documentation>Acquisition information DSR. This DSR contains information that applies to the entire data set.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sarImage" type="sarImageType">
+				<xsd:annotation>
+					<xsd:documentation>SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="instrumentParameters" type="instrumentParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rawDataAnalysis" type="rawDataAnalysisType">
+				<xsd:annotation>
+					<xsd:documentation>RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingParameters" type="processingParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters DSR. This DSR contains the exhaustive list of static SAR processing parameters and of corrections applied.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="internalCalibration" type="internalCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Internal calibration DSR. This DSR contains the results of the internal calibration analysis performed by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rfiMitigation" type="rfiMitigationType">
+				<xsd:annotation>
+					<xsd:documentation>Radio Frequency Interference mitigation DSR. This DSR contains information on detected RFI and on their mitigation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dopplerParameters" type="dopplerParametersType">
+				<xsd:annotation>
+					<xsd:documentation>Doppler parameters DSR. This DSR contains the Doppler Centroid (DC) and Frequency Modulation rate (FM) parameters estimated and used during processing.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="radiometricCalibration" type="radiometricCalibrationType">
+				<xsd:annotation>
+					<xsd:documentation>Radiometric calibration DSR. This DSR contains all the necessary information to absolutely calibrate the data pixels.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="polarimetricDistortion" type="polarimetricDistortionType">
+				<xsd:annotation>
+					<xsd:documentation>Polarimetric distortion DSR. This DSR contains the necessary information e.g. receive and transmit polarisation distortion matrix, allowing users to correct for them if not applied at processing level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ionosphereCorrection" type="ionosphereCorrectionType">
+				<xsd:annotation>
+					<xsd:documentation>Ionosphere correction DSR. This DSR contains the results of the ionosphere correction estimated and applied by the processor.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="geometry" type="geometryType">
+				<xsd:annotation>
+					<xsd:documentation>Geometry DSR. This DSR contains all the necessary information to understand the Earth model/geometry used in the image and its geolocation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quality" type="qualityType">
+				<xsd:annotation>
+					<xsd:documentation>Quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="annotationLUT" type="layerListType">
+				<xsd:annotation>
+					<xsd:documentation>Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="mainAnnotation" type="mainAnnotationType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS L1a/b product main annotation element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

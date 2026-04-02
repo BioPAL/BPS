@@ -322,7 +322,6 @@ def apply_filter_bank(
     central_frequencies = (frequencies_low + frequencies_high) / 2
 
     # Shift the spectrum.
-    # pylint: disable=invalid-sequence-index
     image[...] = sp.fft.ifft(
         colwise_roll(
             sp.fft.fft(image_pad, axis=0) * filter_bank,
@@ -596,7 +595,6 @@ def colwise_roll(data: npt.NDArray, shift: npt.NDArray[int]) -> npt.NDArray:
 
     rolled_data = np.empty_like(data)
 
-    # pylint: disable=not-an-iterable
     for col in nb.prange(data.shape[1]):
         if shift[col] != 0:
             rolled_data[:, col] = np.roll(data[:, col], shift[col])

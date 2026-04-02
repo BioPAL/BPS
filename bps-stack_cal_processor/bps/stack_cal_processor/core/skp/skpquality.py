@@ -86,7 +86,7 @@ def compute_skp_fnf_quality(
         axes_out=(skp_azimuth_axis, skp_range_axis),
     )
     lon_coreg_primary = interpolate_on_grid(
-        skp_fnf_mask.longitudes,
+        _normalize_longitudes(skp_fnf_mask.longitudes),
         axes_in=(skp_fnf_mask.azimuth_axis, skp_fnf_mask.range_axis),
         axes_out=(skp_azimuth_axis, skp_range_axis),
     )
@@ -103,3 +103,10 @@ def compute_skp_fnf_quality(
         nodata_fill_value=np.nan,
         nodata_value=skp_fnf_mask.fnf_mask.nodata_value,
     )
+
+
+def _normalize_longitudes(longitudes: np.ndarray) -> np.ndarray:
+    """Handle the antimeridian crossing."""
+    if np.ptp(longitudes) > np.pi:  # Crosses antimeridian.
+        return longitudes % (2 * np.pi)
+    return longitudes

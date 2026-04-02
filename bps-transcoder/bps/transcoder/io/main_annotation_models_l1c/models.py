@@ -10,9 +10,10 @@ XSD Main annotation models l1c
 ------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AutofocusMethodType,
@@ -135,7 +136,7 @@ from bps.transcoder.io.common_annotation_models_l1 import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityParametersType:
     """
     Parameters
@@ -186,159 +187,125 @@ class StaQualityParametersType:
     class Meta:
         name = "staQualityParametersType"
 
-    invalid_l1a_data_samples: Optional[float] = field(
-        default=None,
+    invalid_l1a_data_samples: float = field(
         metadata={
             "name": "invalidL1aDataSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_decorrelation: Optional[float] = field(
-        default=None,
+    rfi_decorrelation: float = field(
         metadata={
             "name": "rfiDecorrelation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_decorrelation_threshold: Optional[float] = field(
-        default=None,
+    rfi_decorrelation_threshold: float = field(
         metadata={
             "name": "rfiDecorrelationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    faraday_decorrelation: Optional[float] = field(
-        default=None,
+    faraday_decorrelation: float = field(
         metadata={
             "name": "faradayDecorrelation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    faraday_decorrelation_threshold: Optional[float] = field(
-        default=None,
+    faraday_decorrelation_threshold: float = field(
         metadata={
             "name": "faradayDecorrelationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    invalid_residual_shifts_ratio: Optional[float] = field(
-        default=None,
+    invalid_residual_shifts_ratio: float = field(
         metadata={
             "name": "invalidResidualShiftsRatio",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    residual_shifts_quality_threshold: Optional[float] = field(
-        default=None,
+    residual_shifts_quality_threshold: float = field(
         metadata={
             "name": "residualShiftsQualityThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    invalid_skp_calibration_phase_screen_ratio: Optional[float] = field(
-        default=None,
+    invalid_skp_calibration_phase_screen_ratio: float = field(
         metadata={
             "name": "invalidSkpCalibrationPhaseScreenRatio",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_screen_quality_threshold: Optional[float] = field(
-        default=None,
+    skp_calibration_phase_screen_quality_threshold: float = field(
         metadata={
             "name": "skpCalibrationPhaseScreenQualityThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_decomposition_index: Optional[int] = field(
-        default=None,
+    skp_decomposition_index: int = field(
         metadata={
             "name": "skpDecompositionIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_mean: Optional[float] = field(
-        default=None,
+    coherence_mean: float = field(
         metadata={
             "name": "coherenceMean",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_std: Optional[float] = field(
-        default=None,
+    coherence_std: float = field(
         metadata={
             "name": "coherenceStd",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_min: Optional[float] = field(
-        default=None,
+    coherence_min: float = field(
         metadata={
             "name": "coherenceMin",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_max: Optional[float] = field(
-        default=None,
+    coherence_max: float = field(
         metadata={
             "name": "coherenceMax",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_median: Optional[float] = field(
-        default=None,
+    coherence_median: float = field(
         metadata={
             "name": "coherenceMedian",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coherence_histogram: Optional["StaQualityParametersType.CoherenceHistogram"] = field(
-        default=None,
+    coherence_histogram: StaQualityParametersType.CoherenceHistogram = field(
         metadata={
             "name": "coherenceHistogram",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation: Optional[PolarisationType] = field(
-        default=None,
+    polarisation: PolarisationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class CoherenceHistogram:
         """
         Parameters
@@ -349,26 +316,22 @@ class StaQualityParametersType:
             The PDF values of the coherence histrogram.
         """
 
-        bins: Optional[FloatArray] = field(
-            default=None,
+        bins: FloatArray = field(
             metadata={
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        pdf_values: Optional[FloatArray] = field(
-            default=None,
+        pdf_values: FloatArray = field(
             metadata={
                 "name": "pdfValues",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaCoregistrationParametersType:
     """
     Parameters
@@ -395,80 +358,64 @@ class StaCoregistrationParametersType:
     class Meta:
         name = "staCoregistrationParametersType"
 
-    datum: Optional[DatumType] = field(
-        default=None,
+    datum: DatumType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    primary_image: Optional[str] = field(
-        default=None,
+    primary_image: str = field(
         metadata={
             "name": "primaryImage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    secondary_image: Optional[str] = field(
-        default=None,
+    secondary_image: str = field(
         metadata={
             "name": "secondaryImage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    primary_image_selection_information: Optional[PrimaryImageSelectionInformationType] = field(
-        default=None,
+    primary_image_selection_information: PrimaryImageSelectionInformationType = field(
         metadata={
             "name": "primaryImageSelectionInformation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    normal_baseline: Optional[FloatWithUnit] = field(
-        default=None,
+    normal_baseline: FloatWithUnit = field(
         metadata={
             "name": "normalBaseline",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    average_range_coregistration_shift: Optional[FloatWithUnit] = field(
-        default=None,
+    average_range_coregistration_shift: FloatWithUnit = field(
         metadata={
             "name": "averageRangeCoregistrationShift",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    average_azimuth_coregistration_shift: Optional[FloatWithUnit] = field(
-        default=None,
+    average_azimuth_coregistration_shift: FloatWithUnit = field(
         metadata={
             "name": "averageAzimuthCoregistrationShift",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation_used: Optional[PolarisationType] = field(
-        default=None,
+    polarisation_used: PolarisationType = field(
         metadata={
             "name": "polarisationUsed",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaInSarparametersType:
     """
     Parameters
@@ -519,191 +466,151 @@ class StaInSarparametersType:
     class Meta:
         name = "staInSARParametersType"
 
-    calibration_primary_image: Optional[str] = field(
-        default=None,
+    calibration_primary_image: str = field(
         metadata={
             "name": "calibrationPrimaryImage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_common_bandwidth: Optional[FloatWithUnit] = field(
-        default=None,
+    azimuth_common_bandwidth: FloatWithUnit = field(
         metadata={
             "name": "azimuthCommonBandwidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_central_frequency: Optional[FloatWithUnit] = field(
-        default=None,
+    azimuth_central_frequency: FloatWithUnit = field(
         metadata={
             "name": "azimuthCentralFrequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_range_phase_screen: Optional[FloatWithUnit] = field(
-        default=None,
+    slow_ionosphere_range_phase_screen: FloatWithUnit = field(
         metadata={
             "name": "slowIonosphereRangePhaseScreen",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_azimuth_phase_screen: Optional[FloatWithUnit] = field(
-        default=None,
+    slow_ionosphere_azimuth_phase_screen: FloatWithUnit = field(
         metadata={
             "name": "slowIonosphereAzimuthPhaseScreen",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_quality: Optional[float] = field(
-        default=None,
+    slow_ionosphere_quality: float = field(
         metadata={
             "name": "slowIonosphereQuality",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_removal_interferometric_pairs: Optional[InterferometricPairListType] = field(
-        default=None,
+    slow_ionosphere_removal_interferometric_pairs: InterferometricPairListType = field(
         metadata={
             "name": "slowIonosphereRemovalInterferometricPairs",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_low_resolution_flag: Optional[str] = field(
-        default=None,
+    multi_squint_calibration_low_resolution_flag: str = field(
         metadata={
             "name": "multiSquintCalibrationLowResolutionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_calibration_range_phase_slope: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_range_phase_slope: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationRangePhaseSlope",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_azimuth_phase_slope: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_azimuth_phase_slope: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationAzimuthPhaseSlope",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_azimuth_shift: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_azimuth_shift: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationAzimuthShift",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_azimuth_frequency_centroid: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_azimuth_frequency_centroid: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationAzimuthFrequencyCentroid",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_ionospheric_layer_altitudes: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    multi_squint_calibration_ionospheric_layer_altitudes: FloatArrayWithUnits = field(
         metadata={
             "name": "multiSquintCalibrationIonosphericLayerAltitudes",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_coherence_check_value: Optional[float] = field(
-        default=None,
+    multi_squint_calibration_coherence_check_value: float = field(
         metadata={
             "name": "multiSquintCalibrationCoherenceCheckValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_ionosphere_correction_flag: Optional[str] = field(
-        default=None,
+    multi_squint_calibration_ionosphere_correction_flag: str = field(
         metadata={
             "name": "multiSquintCalibrationIonosphereCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    baseline_ordering_index: Optional[int] = field(
-        default=None,
+    baseline_ordering_index: int = field(
         metadata={
             "name": "baselineOrderingIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_screen_mean: Optional[FloatWithUnit] = field(
-        default=None,
+    skp_calibration_phase_screen_mean: FloatWithUnit = field(
         metadata={
             "name": "skpCalibrationPhaseScreenMean",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_screen_std: Optional[float] = field(
-        default=None,
+    skp_calibration_phase_screen_std: float = field(
         metadata={
             "name": "skpCalibrationPhaseScreenStd",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_screen_var: Optional[float] = field(
-        default=None,
+    skp_calibration_phase_screen_var: float = field(
         metadata={
             "name": "skpCalibrationPhaseScreenVar",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_screen_mad: Optional[FloatWithUnit] = field(
-        default=None,
+    skp_calibration_phase_screen_mad: FloatWithUnit = field(
         metadata={
             "name": "skpCalibrationPhaseScreenMAD",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaProcessingParametersType:
     """
     Parameters
@@ -793,358 +700,269 @@ class StaProcessingParametersType:
     class Meta:
         name = "staProcessingParametersType"
 
-    processor_version: Optional[str] = field(
-        default=None,
+    processor_version: str = field(
         metadata={
             "name": "processorVersion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_generation_time: Optional[str] = field(
-        default=None,
+    product_generation_time: str = field(
         metadata={
             "name": "productGenerationTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    polarisations_used: Optional[int] = field(
-        default=None,
+    polarisations_used: int = field(
         metadata={
             "name": "polarisationsUsed",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation_combination_method: Optional[PolarisationCombinationMethodType] = field(
-        default=None,
+    polarisation_combination_method: PolarisationCombinationMethodType = field(
         metadata={
             "name": "polarisationCombinationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    primary_image_selection_method: Optional[PrimaryImageSelectionMethodType] = field(
-        default=None,
+    primary_image_selection_method: PrimaryImageSelectionMethodType = field(
         metadata={
             "name": "primaryImageSelectionMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    coregistration_method: Optional[CoregistrationMethodType] = field(
-        default=None,
+    coregistration_method: CoregistrationMethodType = field(
         metadata={
             "name": "coregistrationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    height_model: Optional[HeightModelType] = field(
-        default=None,
+    height_model: HeightModelType = field(
         metadata={
             "name": "heightModel",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_degradation_estimation_flag: Optional[str] = field(
-        default=None,
+    rfi_degradation_estimation_flag: str = field(
         metadata={
             "name": "rfiDegradationEstimationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    azimuth_spectral_filtering_flag: Optional[str] = field(
-        default=None,
+    azimuth_spectral_filtering_flag: str = field(
         metadata={
             "name": "azimuthSpectralFilteringFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    polarisation_used_for_slow_ionosphere_removal: Optional[PolarisationType] = field(
-        default=None,
+    polarisation_used_for_slow_ionosphere_removal: PolarisationType = field(
         metadata={
             "name": "polarisationUsedForSlowIonosphereRemoval",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation_used_for_multi_squint_calibration: Optional[PolarisationType] = field(
-        default=None,
+    polarisation_used_for_multi_squint_calibration: PolarisationType = field(
         metadata={
             "name": "polarisationUsedForMultiSquintCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    calibration_primary_image_flag: Optional[str] = field(
-        default=None,
+    calibration_primary_image_flag: str = field(
         metadata={
             "name": "calibrationPrimaryImageFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    slow_ionosphere_removal_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "slowIonosphereRemovalFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    slow_ionosphere_removal_flag: str = field(
+        metadata={"name": "slowIonosphereRemovalFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    multi_squint_calibration_flag: Optional[str] = field(
-        default=None,
+    multi_squint_calibration_flag: str = field(
         metadata={
             "name": "multiSquintCalibrationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_calibration_force_ionosphere_correction_flag: Optional[str] = field(
-        default=None,
+    multi_squint_calibration_force_ionosphere_correction_flag: str = field(
         metadata={
             "name": "multiSquintCalibrationForceIonosphereCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_calibration_disable_ionosphere_correction_flag: Optional[str] = field(
-        default=None,
+    multi_squint_calibration_disable_ionosphere_correction_flag: str = field(
         metadata={
             "name": "multiSquintCalibrationDisableIonosphereCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_calibration_coherence_improvement_threshold: Optional[float] = field(
-        default=None,
+    multi_squint_calibration_coherence_improvement_threshold: float = field(
         metadata={
             "name": "multiSquintCalibrationCoherenceImprovementThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_coherence_azimuth_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationCoherenceAzimuthWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_coherence_range_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_coherence_range_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationCoherenceRangeWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_multi_squint_coherence_sub_band_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_multi_squint_coherence_sub_band_resolution: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationMultiSquintCoherenceSubBandResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationMultiSquintHighResCoherenceAzimuthWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_multi_squint_high_res_coherence_range_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_multi_squint_high_res_coherence_range_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationMultiSquintHighResCoherenceRangeWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationMultiSquintLowResCoherenceAzimuthWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multi_squint_calibration_multi_squint_low_res_coherence_range_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    multi_squint_calibration_multi_squint_low_res_coherence_range_window_size: FloatWithUnit = field(
         metadata={
             "name": "multiSquintCalibrationMultiSquintLowResCoherenceRangeWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_phase_calibration_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "skpPhaseCalibrationFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    skp_phase_calibration_flag: str = field(
+        metadata={"name": "skpPhaseCalibrationFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    skp_phase_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "skpPhaseCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    skp_phase_correction_flag: str = field(
+        metadata={"name": "skpPhaseCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    skp_phase_correction_flattening_only_flag: Optional[str] = field(
-        default=None,
+    skp_phase_correction_flattening_only_flag: str = field(
         metadata={
             "name": "skpPhaseCorrectionFlatteningOnlyFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    skp_estimation_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    skp_estimation_window_size: FloatWithUnit = field(
         metadata={
             "name": "skpEstimationWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_calibration_phase_postprocessing: Optional[SkpPhaseCalibrationPostprocessingType] = field(
-        default=None,
+    skp_calibration_phase_postprocessing: SkpPhaseCalibrationPostprocessingType = field(
         metadata={
             "name": "skpCalibrationPhasePostprocessing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_postprocessing_filter_window_size: Optional[FloatWithUnit] = field(
-        default=None,
+    skp_postprocessing_filter_window_size: FloatWithUnit = field(
         metadata={
             "name": "skpPostprocessingFilterWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_goldstein_filter_window_size: Optional[int] = field(
-        default=None,
+    skp_goldstein_filter_window_size: int = field(
         metadata={
             "name": "skpGoldsteinFilterWindowSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_removal_multi_baseline_threshold: Optional[float] = field(
-        default=None,
+    slow_ionosphere_removal_multi_baseline_threshold: float = field(
         metadata={
             "name": "slowIonosphereRemovalMultiBaselineThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    slow_ionosphere_removal_use32_bit_flag: Optional[str] = field(
-        default=None,
+    slow_ionosphere_removal_use32_bit_flag: str = field(
         metadata={
             "name": "slowIonosphereRemovalUse32BitFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    azimuth_spectral_filtering_use32_bit_flag: Optional[str] = field(
-        default=None,
+    azimuth_spectral_filtering_use32_bit_flag: str = field(
         metadata={
             "name": "azimuthSpectralFilteringUse32BitFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_estimation_use32_bit_flag: Optional[str] = field(
-        default=None,
+    multi_squint_estimation_use32_bit_flag: str = field(
         metadata={
             "name": "multiSquintEstimationUse32BitFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    multi_squint_correction_use32_bit_flag: Optional[str] = field(
-        default=None,
+    multi_squint_correction_use32_bit_flag: str = field(
         metadata={
             "name": "multiSquintCorrectionUse32BitFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    skp_phase_calibration_use32_bit_flag: Optional[str] = field(
-        default=None,
+    skp_phase_calibration_use32_bit_flag: str = field(
         metadata={
             "name": "skpPhaseCalibrationUse32BitFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityParametersListType:
     """
     Parameters
@@ -1161,16 +979,14 @@ class StaQualityParametersListType:
         default_factory=list,
         metadata={"name": "staQualityParameters", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityType:
     """
     Parameters
@@ -1185,27 +1001,23 @@ class StaQualityType:
     class Meta:
         name = "staQualityType"
 
-    overall_product_quality_index: Optional[int] = field(
-        default=None,
+    overall_product_quality_index: int = field(
         metadata={
             "name": "overallProductQualityIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_quality_parameters_list: Optional[StaQualityParametersListType] = field(
-        default=None,
+    sta_quality_parameters_list: StaQualityParametersListType = field(
         metadata={
             "name": "staQualityParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaMainAnnotationType:
     """
     Parameters
@@ -1266,169 +1078,133 @@ class StaMainAnnotationType:
     class Meta:
         name = "staMainAnnotationType"
 
-    acquisition_information: Optional[AcquisitionInformationType] = field(
-        default=None,
+    acquisition_information: AcquisitionInformationType = field(
         metadata={
             "name": "acquisitionInformation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sar_image: Optional[SarImageType] = field(
-        default=None,
+    sar_image: SarImageType = field(
         metadata={
             "name": "sarImage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    instrument_parameters: Optional[InstrumentParametersType] = field(
-        default=None,
+    instrument_parameters: InstrumentParametersType = field(
         metadata={
             "name": "instrumentParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_data_analysis: Optional[RawDataAnalysisType] = field(
-        default=None,
+    raw_data_analysis: RawDataAnalysisType = field(
         metadata={
             "name": "rawDataAnalysis",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    processing_parameters: Optional[ProcessingParametersType] = field(
-        default=None,
+    processing_parameters: ProcessingParametersType = field(
         metadata={
             "name": "processingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    internal_calibration: Optional[InternalCalibrationType] = field(
-        default=None,
+    internal_calibration: InternalCalibrationType = field(
         metadata={
             "name": "internalCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_mitigation: Optional[RfiMitigationType] = field(
-        default=None,
+    rfi_mitigation: RfiMitigationType = field(
         metadata={
             "name": "rfiMitigation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    doppler_parameters: Optional[DopplerParametersType] = field(
-        default=None,
+    doppler_parameters: DopplerParametersType = field(
         metadata={
             "name": "dopplerParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    radiometric_calibration: Optional[RadiometricCalibrationType] = field(
-        default=None,
+    radiometric_calibration: RadiometricCalibrationType = field(
         metadata={
             "name": "radiometricCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarimetric_distortion: Optional[PolarimetricDistortionType] = field(
-        default=None,
+    polarimetric_distortion: PolarimetricDistortionType = field(
         metadata={
             "name": "polarimetricDistortion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_correction: Optional[IonosphereCorrectionType] = field(
-        default=None,
+    ionosphere_correction: IonosphereCorrectionType = field(
         metadata={
             "name": "ionosphereCorrection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    geometry: Optional[GeometryType] = field(
-        default=None,
+    geometry: GeometryType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    quality: Optional[QualityType] = field(
-        default=None,
+    quality: QualityType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    annotation_lut: Optional[LayerListType] = field(
-        default=None,
+    annotation_lut: LayerListType = field(
         metadata={
             "name": "annotationLUT",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_processing_parameters: Optional[StaProcessingParametersType] = field(
-        default=None,
+    sta_processing_parameters: StaProcessingParametersType = field(
         metadata={
             "name": "staProcessingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_coregistration_parameters: Optional[StaCoregistrationParametersType] = field(
-        default=None,
+    sta_coregistration_parameters: StaCoregistrationParametersType = field(
         metadata={
             "name": "staCoregistrationParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_in_sarparameters: Optional[StaInSarparametersType] = field(
-        default=None,
+    sta_in_sarparameters: StaInSarparametersType = field(
         metadata={
             "name": "staInSARParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_quality: Optional[StaQualityType] = field(
-        default=None,
+    sta_quality: StaQualityType = field(
         metadata={
             "name": "staQuality",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MainAnnotation(StaMainAnnotationType):
     """
     BIOMASS L1c product main annotation element.

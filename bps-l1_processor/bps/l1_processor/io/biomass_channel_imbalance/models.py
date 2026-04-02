@@ -10,34 +10,31 @@ XSD BPS Channel imbalance file models
 -------------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FcomplexNumberType:
     class Meta:
         name = "FComplexNumberType"
         target_namespace = "biomass_common"
 
-    real: Optional[float] = field(
-        default=None,
+    real: float = field(
         metadata={
             "name": "Real",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
-    imag: Optional[float] = field(
-        default=None,
+    imag: float = field(
         metadata={
             "name": "Imag",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
 
 
@@ -59,32 +56,23 @@ class UnitType(Enum):
     UTC = "Utc"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelDelayType:
     class Meta:
         target_namespace = "biomass_common"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    swath: Optional[SwathType] = field(
-        default=None,
+    value: float = field()
+    swath: SwathType = field(
         metadata={
             "name": "Swath",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
-    polarization: Optional[PolarizationType] = field(
-        default=None,
+    polarization: PolarizationType = field(
         metadata={
             "name": "Polarization",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
     uo_m: UnitType = field(
         init=False,
@@ -97,37 +85,33 @@ class ChannelDelayType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelImbalanceType:
     class Meta:
         target_namespace = "biomass_common"
 
-    tx: Optional[FcomplexNumberType] = field(
-        default=None,
+    tx: FcomplexNumberType = field(
         metadata={
             "name": "TX",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
-    rx: Optional[FcomplexNumberType] = field(
-        default=None,
+    rx: FcomplexNumberType = field(
         metadata={
             "name": "RX",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelImbalance(ChannelImbalanceType):
     pass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelDelaysType:
     class Meta:
         target_namespace = "biomass_common"

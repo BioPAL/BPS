@@ -10,23 +10,19 @@ XSD Attitude models
 -------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
-from typing import Optional
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AngleType:
     class Meta:
         name = "Angle_Type"
 
-    value: Optional[Decimal] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: Decimal = field()
     unit: str = field(
         init=False,
         default="deg",
@@ -37,17 +33,12 @@ class AngleType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MaxGapType:
     class Meta:
         name = "Max_Gap_Type"
 
-    value: Optional[Decimal] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: Decimal = field()
     unit: str = field(
         init=False,
         default="s",
@@ -58,51 +49,39 @@ class MaxGapType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class QuaternionComponentType:
     class Meta:
         name = "Quaternion_Component_Type"
 
-    value: Optional[Decimal] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: Decimal = field()
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourceType:
     class Meta:
         name = "Source_Type"
 
-    system: Optional[str] = field(
-        default=None,
+    system: str = field(
         metadata={
             "name": "System",
             "type": "Element",
-            "required": True,
         },
     )
-    creator: Optional[str] = field(
-        default=None,
+    creator: str = field(
         metadata={
             "name": "Creator",
             "type": "Element",
-            "required": True,
         },
     )
-    creator_version: Optional[str] = field(
-        default=None,
+    creator_version: str = field(
         metadata={
             "name": "Creator_Version",
             "type": "Element",
-            "required": True,
         },
     )
-    creation_date: Optional[str] = field(
-        default=None,
-        metadata={"name": "Creation_Date", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    creation_date: str = field(
+        metadata={"name": "Creation_Date", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
 
 
@@ -113,22 +92,20 @@ class TimeReferenceType(Enum):
     GPS = "GPS"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ValidityPeriodType:
     class Meta:
         name = "Validity_Period_Type"
 
-    validity_start: Optional[str] = field(
-        default=None,
-        metadata={"name": "Validity_Start", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    validity_start: str = field(
+        metadata={"name": "Validity_Start", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
-    validity_stop: Optional[str] = field(
-        default=None,
-        metadata={"name": "Validity_Stop", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    validity_stop: str = field(
+        metadata={"name": "Validity_Stop", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AngleTimeType:
     class Meta:
         name = "Angle_Time_Type"
@@ -136,147 +113,110 @@ class AngleTimeType:
     value: str = field(
         default="",
         metadata={
-            "required": True,
-            "pattern": r"[A-Z0-9]{3}=(\d{4}-(((01|03|05|07|08|10|12)-(0[1-9]|[1,2][0-9]|3[0,1]))|((04|06|09|11)-(0[1-9]|[1,2][0-9]|30))|(02-(0[1-9]|[1,2][0-9])))T([0,1][0-9]|2[0-3])(:[0-5][0-9]){2}|0000-00-00T00:00:00|9999-99-99T99:99:99)(.\d*)?",
+            "pattern": r"[A-Z0-9]{3}=(\d{4}-(((01|03|05|07|08|10|12)-(0[1-9]|[1,2][0-9]|3[0,1]))|((04|06|09|11)-(0[1-9]|[1,2][0-9]|30))|(02-(0[1-9]|[1,2][0-9])))T([0,1][0-9]|2[0-3])(:[0-5][0-9]){2}|0000-00-00T00:00:00|9999-99-99T99:99:99)(.\d*)?"
         },
     )
-    ref: Optional[TimeReferenceType] = field(
-        default=None,
+    ref: TimeReferenceType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FixedHeaderType:
     class Meta:
         name = "Fixed_Header_Type"
 
-    file_name: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "File_Name",
-            "type": "Element",
-            "required": True,
-            "pattern": r"(bio_aux_att____.+)|(bio_.+_att)",
-        },
+    file_name: str = field(
+        metadata={"name": "File_Name", "type": "Element", "pattern": r"(bio_aux_att____.+)|(bio_.+_att)"}
     )
-    file_description: Optional[str] = field(
-        default=None,
+    file_description: str = field(
         metadata={
             "name": "File_Description",
             "type": "Element",
-            "required": True,
         },
     )
-    notes: Optional[str] = field(
-        default=None,
+    notes: str = field(
         metadata={
             "name": "Notes",
             "type": "Element",
-            "required": True,
         },
     )
-    mission: Optional[str] = field(
-        default=None, metadata={"name": "Mission", "type": "Element", "required": True, "pattern": r"BIOMASS"}
-    )
-    file_class: Optional[str] = field(
-        default=None, metadata={"name": "File_Class", "type": "Element", "required": True, "pattern": r"OPER"}
-    )
-    file_type: Optional[str] = field(
-        default=None, metadata={"name": "File_Type", "type": "Element", "required": True, "pattern": r"AUX_ATT___"}
-    )
-    validity_period: Optional[ValidityPeriodType] = field(
-        default=None,
+    mission: str = field(metadata={"name": "Mission", "type": "Element", "pattern": r"BIOMASS"})
+    file_class: str = field(metadata={"name": "File_Class", "type": "Element", "pattern": r"OPER"})
+    file_type: str = field(metadata={"name": "File_Type", "type": "Element", "pattern": r"AUX_ATT___"})
+    validity_period: ValidityPeriodType = field(
         metadata={
             "name": "Validity_Period",
             "type": "Element",
-            "required": True,
         },
     )
-    file_version: Optional[str] = field(
-        default=None, metadata={"name": "File_Version", "type": "Element", "required": True, "pattern": r"[0-9]{4}"}
-    )
-    eoffs_version: Optional[str] = field(
-        default=None,
+    file_version: str = field(metadata={"name": "File_Version", "type": "Element", "pattern": r"[0-9]{4}"})
+    eoffs_version: str = field(
         metadata={
             "name": "EOFFS_Version",
             "type": "Element",
-            "required": True,
         },
     )
-    source: Optional[SourceType] = field(
-        default=None,
+    source: SourceType = field(
         metadata={
             "name": "Source",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AnglesDataType:
     class Meta:
         name = "Angles_Data_Type"
 
-    time: Optional[AngleTimeType] = field(
-        default=None,
+    time: AngleTimeType = field(
         metadata={
             "name": "Time",
             "type": "Element",
-            "required": True,
         },
     )
-    pitch: Optional[AngleType] = field(
-        default=None,
+    pitch: AngleType = field(
         metadata={
             "name": "Pitch",
             "type": "Element",
-            "required": True,
         },
     )
-    roll: Optional[AngleType] = field(
-        default=None,
+    roll: AngleType = field(
         metadata={
             "name": "Roll",
             "type": "Element",
-            "required": True,
         },
     )
-    yaw: Optional[AngleType] = field(
-        default=None,
+    yaw: AngleType = field(
         metadata={
             "name": "Yaw",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttitudeHeaderType:
     class Meta:
         name = "Attitude_Header_Type"
 
-    fixed_header: Optional[FixedHeaderType] = field(
-        default=None,
+    fixed_header: FixedHeaderType = field(
         metadata={
             "name": "Fixed_Header",
             "type": "Element",
-            "required": True,
         },
     )
-    variable_header: Optional[object] = field(
+    variable_header: None | object = field(
         default=None,
         metadata={
             "name": "Variable_Header",
             "type": "Element",
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -285,54 +225,44 @@ class AttitudeHeaderType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class QuaternionType:
     class Meta:
         name = "Quaternion_Type"
 
-    time: Optional[AngleTimeType] = field(
-        default=None,
+    time: AngleTimeType = field(
         metadata={
             "name": "Time",
             "type": "Element",
-            "required": True,
         },
     )
-    q1: Optional[QuaternionComponentType] = field(
-        default=None,
+    q1: QuaternionComponentType = field(
         metadata={
             "name": "Q1",
             "type": "Element",
-            "required": True,
         },
     )
-    q2: Optional[QuaternionComponentType] = field(
-        default=None,
+    q2: QuaternionComponentType = field(
         metadata={
             "name": "Q2",
             "type": "Element",
-            "required": True,
         },
     )
-    q3: Optional[QuaternionComponentType] = field(
-        default=None,
+    q3: QuaternionComponentType = field(
         metadata={
             "name": "Q3",
             "type": "Element",
-            "required": True,
         },
     )
-    q4: Optional[QuaternionComponentType] = field(
-        default=None,
+    q4: QuaternionComponentType = field(
         metadata={
             "name": "Q4",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ListOfAttitudeAnglesType:
     class Meta:
         name = "List_of_Attitude_Angles_Type"
@@ -345,16 +275,14 @@ class ListOfAttitudeAnglesType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ListOfQuaternionsType:
     class Meta:
         name = "List_of_Quaternions_Type"
@@ -367,98 +295,82 @@ class ListOfQuaternionsType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttitudeAnglesDataType:
     class Meta:
         name = "Attitude_Angles_Data_Type"
 
-    reference_frame: Optional[str] = field(
-        default=None,
+    reference_frame: str = field(
         metadata={
             "name": "Reference_Frame",
             "type": "Element",
-            "required": True,
         },
     )
-    list_of_attitude_angles: Optional[ListOfAttitudeAnglesType] = field(
-        default=None,
+    list_of_attitude_angles: ListOfAttitudeAnglesType = field(
         metadata={
             "name": "List_of_Attitude_Angles",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class QuaternionDataType:
     class Meta:
         name = "Quaternion_Data_Type"
 
-    reference_frame: Optional[str] = field(
-        default=None,
+    reference_frame: str = field(
         metadata={
             "name": "Reference_Frame",
             "type": "Element",
-            "required": True,
         },
     )
-    list_of_quaternions: Optional[ListOfQuaternionsType] = field(
-        default=None,
+    list_of_quaternions: ListOfQuaternionsType = field(
         metadata={
             "name": "List_of_Quaternions",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttitudeDataBlockType:
     class Meta:
         name = "Attitude_Data_Block_Type"
 
-    attitude_file_type: Optional[str] = field(
-        default=None,
+    attitude_file_type: str = field(
         metadata={
             "name": "Attitude_File_Type",
             "type": "Element",
-            "required": True,
         },
     )
-    attitude_data_type: Optional[str] = field(
-        default=None,
+    attitude_data_type: str = field(
         metadata={
             "name": "Attitude_Data_Type",
             "type": "Element",
-            "required": True,
         },
     )
-    max_gap: Optional[MaxGapType] = field(
-        default=None,
+    max_gap: MaxGapType = field(
         metadata={
             "name": "Max_Gap",
             "type": "Element",
-            "required": True,
         },
     )
-    attitude_angles_data: Optional[AttitudeAnglesDataType] = field(
+    attitude_angles_data: None | AttitudeAnglesDataType = field(
         default=None,
         metadata={
             "name": "Attitude_Angles_Data",
             "type": "Element",
         },
     )
-    quaternion_data: Optional[QuaternionDataType] = field(
+    quaternion_data: None | QuaternionDataType = field(
         default=None,
         metadata={
             "name": "Quaternion_Data",
@@ -474,7 +386,7 @@ class AttitudeDataBlockType:
             "required": True,
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -483,28 +395,24 @@ class AttitudeDataBlockType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttitudeFileType:
     class Meta:
         name = "Attitude_File_Type"
 
-    earth_observation_header: Optional[AttitudeHeaderType] = field(
-        default=None,
+    earth_observation_header: AttitudeHeaderType = field(
         metadata={
             "name": "Earth_Observation_Header",
             "type": "Element",
-            "required": True,
         },
     )
-    data_block: Optional[AttitudeDataBlockType] = field(
-        default=None,
+    data_block: AttitudeDataBlockType = field(
         metadata={
             "name": "Data_Block",
             "type": "Element",
-            "required": True,
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -513,7 +421,7 @@ class AttitudeFileType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EarthObservationFile(AttitudeFileType):
     class Meta:
         name = "Earth_Observation_File"

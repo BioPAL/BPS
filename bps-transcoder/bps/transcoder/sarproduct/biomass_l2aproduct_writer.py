@@ -1213,8 +1213,8 @@ class BIOMASSL2aProductWriter:
 
         # - product
         mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id_list = common_annotation_models_l2.StringListType(self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(self.product.main_ads_product.basin_id_list)
+        tile_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
+        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
 
         assert self.product_structure.schema_files is not None
         if L2A_OUTPUT_PRODUCT_FD in self.product_structure.schema_files[0]:
@@ -1240,14 +1240,14 @@ class BIOMASSL2aProductWriter:
         swath = common_annotation_models_l2.SwathType(self.product.main_ads_product.swath)
         major_cycle_id = translate_major_cycle_id(self.product.main_ads_product.major_cycle_id)
         absolute_orbit_number = common_annotation_models_l2.IntegerListType(
-            [
+            val=[
                 translate_com_phase_negative_values(absolute_orbit_number)
                 for absolute_orbit_number in self.product.main_ads_product.absolute_orbit_number
             ]
         )
         relative_orbit_number = translate_com_phase_negative_values(self.product.main_ads_product.relative_orbit_number)
         orbit_pass = common_annotation_models_l2.OrbitPassType(self.product.main_ads_product.orbit_pass)
-        datatake_id = common_annotation_models_l2.IntegerListType(self.product.main_ads_product.datatake_id)
+        datatake_id = common_annotation_models_l2.IntegerListType(val=self.product.main_ads_product.datatake_id)
         frame = translate_frame_id(self.product.main_ads_product.frame)
         platform_heading = common_annotation_models_l2.DoubleWithUnit(
             value=self.product.main_ads_product.platform_heading,
@@ -1265,95 +1265,95 @@ class BIOMASSL2aProductWriter:
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
             product = main_annotation_models_l2a_fd.ProductL2AType(
-                mission,
-                tile_id_list,
-                basin_id_list,
-                product_type,
-                start_time,
-                stop_time,
-                radar_carrier_frequency,
-                mission_phase_id,
-                sensor_mode,
-                global_coverage_id,
-                swath,
-                major_cycle_id,
-                absolute_orbit_number,
-                relative_orbit_number,
-                orbit_pass,
-                datatake_id,
-                frame,
-                platform_heading,
-                forest_coverage_percentage,
-                selected_reference_image,
+                mission=mission,
+                tile_id=tile_id_list,
+                basin_id=basin_id_list,
+                product_type=product_type,
+                start_time=start_time,
+                stop_time=stop_time,
+                radar_carrier_frequency=radar_carrier_frequency,
+                mission_phase_id=mission_phase_id,
+                sensor_mode=sensor_mode,
+                global_coverage_id=global_coverage_id,
+                swath=swath,
+                major_cycle_id=major_cycle_id,
+                absolute_orbit_number=absolute_orbit_number,
+                relative_orbit_number=relative_orbit_number,
+                orbit_pass=orbit_pass,
+                data_take_id=datatake_id,
+                frame=frame,
+                platform_heading=platform_heading,
+                forest_coverage_percentage=forest_coverage_percentage,
+                selected_reference_image=selected_reference_image,
             )
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
             product = main_annotation_models_l2a_fh.ProductL2AType(
-                mission,
-                tile_id_list,
-                basin_id_list,
-                product_type,
-                start_time,
-                stop_time,
-                radar_carrier_frequency,
-                mission_phase_id,
-                sensor_mode,
-                global_coverage_id,
-                swath,
-                major_cycle_id,
-                absolute_orbit_number,
-                relative_orbit_number,
-                orbit_pass,
-                datatake_id,
-                frame,
-                platform_heading,
-                forest_coverage_percentage,
-                selected_reference_image,
+                mission=mission,
+                tile_id=tile_id_list,
+                basin_id=basin_id_list,
+                product_type=product_type,
+                start_time=start_time,
+                stop_time=stop_time,
+                radar_carrier_frequency=radar_carrier_frequency,
+                mission_phase_id=mission_phase_id,
+                sensor_mode=sensor_mode,
+                global_coverage_id=global_coverage_id,
+                swath=swath,
+                major_cycle_id=major_cycle_id,
+                absolute_orbit_number=absolute_orbit_number,
+                relative_orbit_number=relative_orbit_number,
+                orbit_pass=orbit_pass,
+                data_take_id=datatake_id,
+                frame=frame,
+                platform_heading=platform_heading,
+                forest_coverage_percentage=forest_coverage_percentage,
+                selected_reference_image=selected_reference_image,
             )
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
             product = main_annotation_models_l2a_gn.ProductL2AType(
-                mission,
-                tile_id_list,
-                basin_id_list,
-                product_type,
-                start_time,
-                stop_time,
-                radar_carrier_frequency,
-                mission_phase_id,
-                sensor_mode,
-                global_coverage_id,
-                swath,
-                major_cycle_id,
-                absolute_orbit_number,
-                relative_orbit_number,
-                orbit_pass,
-                datatake_id,
-                frame,
-                platform_heading,
-                forest_coverage_percentage,
-                selected_reference_image,
+                mission=mission,
+                tile_id=tile_id_list,
+                basin_id=basin_id_list,
+                product_type=product_type,
+                start_time=start_time,
+                stop_time=stop_time,
+                radar_carrier_frequency=radar_carrier_frequency,
+                mission_phase_id=mission_phase_id,
+                sensor_mode=sensor_mode,
+                global_coverage_id=global_coverage_id,
+                swath=swath,
+                major_cycle_id=major_cycle_id,
+                absolute_orbit_number=absolute_orbit_number,
+                relative_orbit_number=relative_orbit_number,
+                orbit_pass=orbit_pass,
+                data_take_id=datatake_id,
+                frame=frame,
+                platform_heading=platform_heading,
+                forest_coverage_percentage=forest_coverage_percentage,
+                selected_reference_image=selected_reference_image,
             )
         if self.product.product_type == L2A_OUTPUT_PRODUCT_TFH:
             product = main_annotation_models_l2a_tfh.ProductL2AType(
-                mission,
-                tile_id_list,
-                basin_id_list,
-                product_type,
-                start_time,
-                stop_time,
-                radar_carrier_frequency,
-                mission_phase_id,
-                sensor_mode,
-                global_coverage_id,
-                swath,
-                major_cycle_id,
-                absolute_orbit_number,
-                relative_orbit_number,
-                orbit_pass,
-                datatake_id,
-                frame,
-                platform_heading,
-                forest_coverage_percentage,
-                selected_reference_image,
+                mission=mission,
+                tile_id=tile_id_list,
+                basin_id=basin_id_list,
+                product_type=product_type,
+                start_time=start_time,
+                stop_time=stop_time,
+                radar_carrier_frequency=radar_carrier_frequency,
+                mission_phase_id=mission_phase_id,
+                sensor_mode=sensor_mode,
+                global_coverage_id=global_coverage_id,
+                swath=swath,
+                major_cycle_id=major_cycle_id,
+                absolute_orbit_number=absolute_orbit_number,
+                relative_orbit_number=relative_orbit_number,
+                orbit_pass=orbit_pass,
+                data_take_id=datatake_id,
+                frame=frame,
+                platform_heading=platform_heading,
+                forest_coverage_percentage=forest_coverage_percentage,
+                selected_reference_image=selected_reference_image,
             )
 
         footprint = ""
@@ -1390,18 +1390,18 @@ class BIOMASSL2aProductWriter:
         pixel_type = self.product.main_ads_raster_image.pixel_type
         no_data_value = self.product.main_ads_raster_image.no_data_value
         raster_image = common_annotation_models_l2.RasterImageType(
-            footprint,
-            first_latitude_value,
-            first_longitude_value,
-            latitude_spacing,
-            longitude_spacing,
-            number_of_samples,
-            number_of_lines,
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+            footprint=footprint,
+            first_latitude_value=first_latitude_value,
+            first_longitude_value=first_longitude_value,
+            latitude_spacing=latitude_spacing,
+            longitude_spacing=longitude_spacing,
+            number_of_samples=number_of_samples,
+            number_of_lines=number_of_lines,
+            projection=projection,
+            datum=datum,
+            pixel_representation=pixel_representation,
+            pixel_type=pixel_type,
+            no_data_value=no_data_value,
         )
 
         # # - inputInformation
@@ -1411,9 +1411,9 @@ class BIOMASSL2aProductWriter:
         for acquisition_type in self.product.main_ads_input_information.acquisition_list.acquisition:
             list_acq.append(
                 common_annotation_models_l2.AcquisitionType(
-                    acquisition_type.folder_name,
-                    acquisition_type.sta_quality,
-                    acquisition_type.reference_image,
+                    folder_name=acquisition_type.folder_name,
+                    sta_quality=acquisition_type.sta_quality,
+                    reference_image=acquisition_type.reference_image,
                     average_wavenumber=(
                         float(acquisition_type.average_wavenumber)
                         if acquisition_type.average_wavenumber is not None
@@ -1427,24 +1427,24 @@ class BIOMASSL2aProductWriter:
         )
 
         input_information = common_annotation_models_l2.InputInformationL2AType(
-            common_types.ProductType.STA,
-            self.product.main_ads_input_information.overall_products_quality_index,
-            self.product.main_ads_input_information.nominal_stack,
-            polarisation_list,
-            common_types.ProjectionType.SLANT_RANGE,
-            footprint,
-            self.product.main_ads_input_information.vertical_wavenumbers,
-            self.product.main_ads_input_information.height_of_ambiguity,
-            acquisition_list,  # acquisition list
+            product_type=common_types.ProductType.STA,
+            overall_products_quality_index=self.product.main_ads_input_information.overall_products_quality_index,
+            nominal_stack=self.product.main_ads_input_information.nominal_stack,
+            polarisation_list=polarisation_list,
+            projection=common_types.ProjectionType.SLANT_RANGE,
+            footprint=footprint,
+            vertical_wavenumbers=self.product.main_ads_input_information.vertical_wavenumbers,
+            height_of_ambiguity=self.product.main_ads_input_information.height_of_ambiguity,
+            acquisition_list=acquisition_list,
         )
 
         # # - processing parameters
         general_configuration_parameters = common_annotation_models_l2.GeneralConfigurationParametersType(
-            self.product.main_ads_processing_parameters.general_configuration.apply_calibration_screen,
-            self.product.main_ads_processing_parameters.general_configuration.forest_coverage_threshold,
-            self.product.main_ads_processing_parameters.general_configuration.forest_mask_interpolation_threshold,
-            self.product.main_ads_processing_parameters.general_configuration.subsetting_rule,
-            self.product.main_ads_processing_parameters.general_configuration.polarisation_combination_method,
+            apply_calibration_screen=self.product.main_ads_processing_parameters.general_configuration.apply_calibration_screen,
+            forest_coverage_threshold=self.product.main_ads_processing_parameters.general_configuration.forest_coverage_threshold,
+            forest_mask_interpolation_threshold=self.product.main_ads_processing_parameters.general_configuration.forest_mask_interpolation_threshold,
+            subsetting_rule=self.product.main_ads_processing_parameters.general_configuration.subsetting_rule,
+            polarisation_combination_method=self.product.main_ads_processing_parameters.general_configuration.polarisation_combination_method,
         )
         processor_version = self.product.main_ads_processing_parameters.processor_version
         PRODUCT_GENERATION_TIME_MS = self.product.main_ads_processing_parameters.product_generation_time.isoformat(
@@ -1475,22 +1475,22 @@ class BIOMASSL2aProductWriter:
             upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
 
             processing_parameters = main_annotation_models_l2a_fd.ProcessingParametersL2AType(
-                processor_version,
-                PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters,
-                emphasized_forest_height,
-                operational_mode,
-                (
+                processor_version=processor_version,
+                product_generation_time=PRODUCT_GENERATION_TIME_MS,
+                general_configuration_parameters=general_configuration_parameters,
+                emphasized_forest_height=emphasized_forest_height,
+                operational_mode=operational_mode,
+                images_pair_selection=(
                     self.product.main_ads_processing_parameters.images_pair_selection
                     if operational_mode == common_annotation_models_l2.OperationalModeType.INSAR_PAIR
                     else None
                 ),
-                disable_ground_cancellation_flag,
-                significance_level,
-                product_resolution,
-                numerical_determinant_limit,
-                upsampling_factor,
-                compression_options,
+                disable_ground_cancellation_flag=disable_ground_cancellation_flag,
+                significance_level=significance_level,
+                product_resolution=product_resolution,
+                numerical_determinant_limit=numerical_determinant_limit,
+                upsampling_factor=upsampling_factor,
+                compression_options=compression_options,
             )
 
             # - annotationLUT
@@ -1499,14 +1499,14 @@ class BIOMASSL2aProductWriter:
                 main_annotation_models_l2a_fd.LayerType.ACM,
                 main_annotation_models_l2a_fd.LayerType.NUMBER_OF_AVERAGES,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer, count=len(layer))
+            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
             main_annotation_model = main_annotation_models_l2a_fd.MainAnnotation(
-                product,
-                raster_image,
-                input_information,
-                processing_parameters,
-                annotation_lut,
+                product=product,
+                raster_image=raster_image,
+                input_information=input_information,
+                processing_parameters=processing_parameters,
+                annotation_lut=annotation_lut,
             )
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
@@ -1514,7 +1514,7 @@ class BIOMASSL2aProductWriter:
                 self.product.main_ads_processing_parameters.vertical_reflectivity_option
             )
             vertical_reflectivity_default_profile = main_annotation_models_l2a_fh.VerticalReflectivityProfileType(
-                [
+                val=[
                     float(value)
                     for value in self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile
                 ],
@@ -1566,41 +1566,41 @@ class BIOMASSL2aProductWriter:
             upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
 
             processing_parameters = main_annotation_models_l2a_fh.ProcessingParametersL2AType(
-                processor_version,
-                PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters,
-                vertical_reflectivity_option,
-                vertical_reflectivity_default_profile,
-                model_inversion,
-                spectral_decorrelation_compensation_flag,
-                snr_decorrelation_compensation_flag,
-                correct_terrain_slopes_flag,
-                normalised_height_estimation_range,
-                normalised_wavenumber_estimation_range,
-                ground_to_volume_ratio_range,
-                temporal_decorrelation_estimation_range,
-                temporal_decorrelation_ground_to_volume_ratio,
-                residual_decorrelation,
-                product_resolution,
-                uncertainty_valid_values_limits,
-                vertical_wavenumber_valid_values_limits,
-                lower_height_limit,
-                upsampling_factor,
-                compression_options,
+                processor_version=processor_version,
+                product_generation_time=PRODUCT_GENERATION_TIME_MS,
+                general_configuration_parameters=general_configuration_parameters,
+                vertical_reflectivity_option=vertical_reflectivity_option,
+                vertical_reflectivity_default_profile=vertical_reflectivity_default_profile,
+                model_inversion=model_inversion,
+                spectral_decorrelation_compensation_flag=spectral_decorrelation_compensation_flag,
+                snrdecorrelation_compensation=snr_decorrelation_compensation_flag,
+                correct_terrain_slopes_flag=correct_terrain_slopes_flag,
+                normalised_height_estimation_range=normalised_height_estimation_range,
+                normalised_wavenumber_estimation_range=normalised_wavenumber_estimation_range,
+                ground_to_volume_ratio_range=ground_to_volume_ratio_range,
+                temporal_decorrelation_estimation_range=temporal_decorrelation_estimation_range,
+                temporal_decorrelation_ground_to_volume_ratio=temporal_decorrelation_ground_to_volume_ratio,
+                residual_decorrelation=residual_decorrelation,
+                product_resolution=product_resolution,
+                uncertainty_validvalues_limits=uncertainty_valid_values_limits,
+                vertical_wavenumber_validvalues_limits=vertical_wavenumber_valid_values_limits,
+                lower_height_limit=lower_height_limit,
+                upsampling_factor=upsampling_factor,
+                compression_options=compression_options,
             )
 
             # - annotationLUT
             layer = [
                 main_annotation_models_l2a_fh.LayerType.FNF,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer, count=len(layer))
+            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
             main_annotation_model = main_annotation_models_l2a_fh.MainAnnotation(
-                product,
-                raster_image,
-                input_information,
-                processing_parameters,
-                annotation_lut,
+                product=product,
+                raster_image=raster_image,
+                input_information=input_information,
+                processing_parameters=processing_parameters,
+                annotation_lut=annotation_lut,
             )
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
@@ -1625,22 +1625,22 @@ class BIOMASSL2aProductWriter:
             upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
 
             processing_parameters = main_annotation_models_l2a_gn.ProcessingParametersL2AType(
-                processor_version,
-                PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters,
-                emphasized_forest_height,
-                operational_mode,
-                compute_gn_power_flag,
-                radiometric_calibration_flag,
-                (
+                processor_version=processor_version,
+                product_generation_time=PRODUCT_GENERATION_TIME_MS,
+                general_configuration_parameters=general_configuration_parameters,
+                emphasized_forest_height=emphasized_forest_height,
+                operational_mode=operational_mode,
+                compute_gnpower_flag=compute_gn_power_flag,
+                radiometric_calibration_flag=radiometric_calibration_flag,
+                images_pair_selection=(
                     self.product.main_ads_processing_parameters.images_pair_selection
                     if operational_mode == common_annotation_models_l2.OperationalModeType.INSAR_PAIR
                     else None
                 ),
-                disable_ground_cancellation_flag,
-                product_resolution,
-                upsampling_factor,
-                compression_options,
+                disable_ground_cancellation_flag=disable_ground_cancellation_flag,
+                product_resolution=product_resolution,
+                upsampling_factor=upsampling_factor,
+                compression_options=compression_options,
             )
 
             # - annotationLUT
@@ -1648,14 +1648,14 @@ class BIOMASSL2aProductWriter:
                 main_annotation_models_l2a_gn.LayerType.FNF,
                 main_annotation_models_l2a_gn.LayerType.INCIDENCE_ANGLE_DEG,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer, count=int(2))
+            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=int(2))
 
             main_annotation_model = main_annotation_models_l2a_gn.MainAnnotation(
-                product,
-                raster_image,
-                input_information,
-                processing_parameters,
-                annotation_lut,
+                product=product,
+                raster_image=raster_image,
+                input_information=input_information,
+                processing_parameters=processing_parameters,
+                annotation_lut=annotation_lut,
             )
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_TFH:
@@ -1667,16 +1667,16 @@ class BIOMASSL2aProductWriter:
             )
 
             processing_parameters = main_annotation_models_l2a_tfh.ProcessingParametersL2AType(
-                processor_version,
-                PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters,
-                enable_super_resolution,
-                product_resolution,
-                self.product.main_ads_processing_parameters.regularization_noise_factor,
-                self.product.main_ads_processing_parameters.power_threshold,
-                self.product.main_ads_processing_parameters.median_factor,
-                self.product.main_ads_processing_parameters.estimation_valid_values_limits,
-                compression_options,
+                processor_version=processor_version,
+                product_generation_time=PRODUCT_GENERATION_TIME_MS,
+                general_configuration_parameters=general_configuration_parameters,
+                enable_super_resolution=enable_super_resolution,
+                product_resolution=product_resolution,
+                regularization_noise_factor=self.product.main_ads_processing_parameters.regularization_noise_factor,
+                power_threshold=self.product.main_ads_processing_parameters.power_threshold,
+                median_factor=self.product.main_ads_processing_parameters.median_factor,
+                estimation_valid_values_limits=self.product.main_ads_processing_parameters.estimation_valid_values_limits,
+                compression_options=compression_options,
             )
 
             # - annotationLUT

@@ -10,9 +10,10 @@ XSD PP2 2B FD models
 --------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -50,7 +51,7 @@ from bps.common.io.common_types import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2BFd:
     """
     Parameters
@@ -63,74 +64,60 @@ class CompressionOptionsL2BFd:
     class Meta:
         name = "compressionOptionsL2bFD"
 
-    mds: Optional["CompressionOptionsL2BFd.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2BFd.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        fd: Optional["CompressionOptionsL2BFd.Mds.Fd"] = field(
-            default=None,
+        fd: CompressionOptionsL2BFd.Mds.Fd = field(
             metadata={
                 "name": "FD",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        probability_of_change: Optional["CompressionOptionsL2BFd.Mds.ProbabilityOfChange"] = field(
-            default=None,
+        probability_of_change: CompressionOptionsL2BFd.Mds.ProbabilityOfChange = field(
             metadata={
                 "name": "probabilityOfChange",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        cfm: Optional["CompressionOptionsL2BFd.Mds.Cfm"] = field(
-            default=None,
+        cfm: CompressionOptionsL2BFd.Mds.Cfm = field(
             metadata={
                 "name": "CFM",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        heat_map: Optional["CompressionOptionsL2BFd.Mds.HeatMap"] = field(
-            default=None,
+        heat_map: CompressionOptionsL2BFd.Mds.HeatMap = field(
             metadata={
                 "name": "HeatMap",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        acquisition_id_image: Optional["CompressionOptionsL2BFd.Mds.AcquisitionIdImage"] = field(
-            default=None,
+        acquisition_id_image: CompressionOptionsL2BFd.Mds.AcquisitionIdImage = field(
             metadata={
                 "name": "acquisitionIdImage",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fd:
             """
             Parameters
@@ -139,17 +126,15 @@ class CompressionOptionsL2BFd:
                 ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class ProbabilityOfChange:
             """
             Parameters
@@ -161,26 +146,22 @@ class CompressionOptionsL2BFd:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Cfm:
             """
             Parameters
@@ -189,17 +170,15 @@ class CompressionOptionsL2BFd:
                 ZSTD algorithm compression factor for the CFM image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class HeatMap:
             """
             Parameters
@@ -208,17 +187,15 @@ class CompressionOptionsL2BFd:
                 ZSTD algorithm compression factor for the Heat Map image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class AcquisitionIdImage:
             """
             Parameters
@@ -227,18 +204,16 @@ class CompressionOptionsL2BFd:
                 ZSTD algorithm compression factor for the acquisitionIdImage image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2BFdprocessingParametersType:
     """
     Parameters
@@ -254,36 +229,30 @@ class AuxiliaryL2BFdprocessingParametersType:
     class Meta:
         name = "auxiliaryL2bFDProcessingParametersType"
 
-    l2b_fdproduct_doi: Optional[str] = field(
-        default=None,
+    l2b_fdproduct_doi: str = field(
         metadata={
             "name": "l2bFDProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    minimum_l2a_coverage: Optional[float] = field(
-        default=None,
+    minimum_l2a_coverage: float = field(
         metadata={
             "name": "minimumL2aCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2BFd] = field(
-        default=None,
+    compression_options: CompressionOptionsL2BFd = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2BFdprocessingParameters(AuxiliaryL2BFdprocessingParametersType):
     """
     BIOMASS configuration parameters for the L2b FD Processor.

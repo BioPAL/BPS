@@ -1,0 +1,26 @@
+[tool.fawltydeps]
+actions = ['check_undeclared', 'check_unused']
+output_format = 'human_detailed'
+code = ['bps']
+ignore_unused = [
+    'bps-common',
+    'bps-transcoder',
+    'bps-l1_pre_processor',
+    'bps-l1_core_processor',
+    'bps-stack_pre_processor',
+    'bps-stack_cal_processor',
+    'bps-stack_coreg_processor',
+    'coverage',                  # dev dependency
+    'ruff',                      # dev dependency
+    'nox',                       # dev dependency
+    'unittest-xml-reporting',    # dev dependency
+]
+verbosity = 1
+
+[tool.fawltydeps.custom_mapping]
+arepyextras-runner = ["arepyextras"]
+gdal = ["osgeo"]
+netCDF4 = ["netCDF4"]
+opencv-python-headless = ["cv2"]
+scikit-image = ["skimage"]
+scikit-learn = ["sklearn"]

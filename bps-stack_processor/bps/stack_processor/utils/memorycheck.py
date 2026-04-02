@@ -29,9 +29,6 @@ from bps.transcoder.utils.product_name import (
     parse_l1product_name,
 )
 
-# We need to suffix _MB in this module, so we suppress warnings.
-# pylint: disable=invalid-name
-
 # Some extra amount of RAM usage to account for deviations from the reported
 # values, and to be on the safe side.
 _STANDARD_SAFETY_OVERHEAD_MB = 1500  # 1.5 GB.

@@ -1,5 +1,5 @@
 {% set name = "bps-common" %}
-{% set version = "4.4.0" %}
+{% set version = "4.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -16,14 +16,13 @@ build:
 requirements:
   host:
     - python >=3.12
-    - setuptools
-    - wheel
+    - hatchling
     - pip
   run:
     - python >=3.12
     - arepyextras-runner
-    - numpy<2.3
-    - arepytools >=1.7.6
+    - numpy
+    - arepytools >=1.8.1
     - xsdata
     - xmlschema
     - gdal >=3.10,<3.11

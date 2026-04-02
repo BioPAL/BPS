@@ -584,9 +584,6 @@ def spectral_window_removal(
         The input data with removed spectral window.
 
     """
-    # pylint seems to be getting confused with sp.fft.fft.
-    # pylint: disable=no-member,invalid-sequence-index
-
     # FFT the original image.
     image_freq = sp.fft.fft(image, axis=axis)
 

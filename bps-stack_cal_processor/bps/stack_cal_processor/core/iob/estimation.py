@@ -193,7 +193,6 @@ def pairwise_ionosphere_estimations_multithreaded(
                     stack_specs=stack_specs,
                     estimation_dtypes=estimation_dtypes,
                 )
-            # pylint: disable=broad-exception-caught
             except Exception as ex:
                 bps_logger.warning("Iono estimation failed for pair %s", pair_ps)
                 bps_logger.debug("Got error: %s", ex)
@@ -473,7 +472,6 @@ def least_square_ionosphere_estimation(
     axis_indices_azimuth = np.arange(num_azimuths).reshape(-1, 1) * decimation_factors[0]
     axis_indices_range = np.arange(num_ranges).reshape(1, -1) * decimation_factors[1]
 
-    # pylint: disable=invalid-name
     F = np.hstack(
         [
             np.ones_like(weights).reshape(-1, 1),
@@ -581,7 +579,6 @@ def _multi_baseline_combine(
     num_images: int,
 ) -> tuple[npt.NDArray[float], npt.NDArray[float], npt.NDArray[float]]:
     """Combine the IOB pairwise estimation via Multi-Baseline method."""
-    # pylint: disable=invalid-name
     # Pack the azimuth and range slope estimations into arrays. Invalid
     # estimations will be taken care of later.
     num_pairs = len(iob_estimations)

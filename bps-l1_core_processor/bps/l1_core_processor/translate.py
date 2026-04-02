@@ -69,19 +69,17 @@ def translate_area_time_coordinates(area_to_process: PFSelectorAreaTimeCoordinat
             duration=area_to_process.azimuth_time_interval.duration,
         )
 
-    range_time_interval: list[PfselectorRangeTimeIntervalType] = []
+    range_time_interval: PfselectorRangeTimeIntervalType | None = None
     if area_to_process.range_time_interval is not None:
-        range_time_interval.append(
-            PfselectorRangeTimeIntervalType(
-                absolute_start_time=area_to_process.range_time_interval.start_time,
-                duration=area_to_process.range_time_interval.duration,
-            )
+        range_time_interval = PfselectorRangeTimeIntervalType(
+            absolute_start_time=area_to_process.range_time_interval.start_time,
+            duration=area_to_process.range_time_interval.duration,
         )
 
     swaths = None
     if len(area_to_process.swaths) > 0:
         swaths = PfselectorSwathNamesType(
-            [PfselectorSwathNameType(name=swath_name) for swath_name in area_to_process.swaths]
+            swath=[PfselectorSwathNameType(name=swath_name) for swath_name in area_to_process.swaths]
         )
 
     return PfselectorAreaType(
@@ -104,7 +102,7 @@ def translate_area_raster_coordinates(area_to_process: PFSelectorAreaRasterCoord
         if swath.lines_interval is not None:
             raster_coordinates_swath.line_interval = to_index(swath.lines_interval)
         if swath.samples_interval is not None:
-            raster_coordinates_swath.sample_interval = [to_index(swath.samples_interval)]
+            raster_coordinates_swath.sample_interval = to_index(swath.samples_interval)
         raster_coordinates.swath.append(raster_coordinates_swath)
 
     return PfselectorAreaType(raster_coordinates=raster_coordinates)
@@ -222,7 +220,7 @@ def translate_bps_l1_core_processor_input_file_to_model(
         bps_l1_core_processor_step.input_phase_screen_product = str(input_file.input_phase_screen_product)
 
     return are_input.AresysXmlInput(
-        [are_input.AresysXmlInputType.Step(bpsl1_core_processor=bps_l1_core_processor_step, number=1, total=1)]
+        step=[are_input.AresysXmlInputType.Step(bpsl1_core_processor=bps_l1_core_processor_step, number=1, total=1)]
     )
 
 
@@ -285,7 +283,7 @@ def translate_bps_l1_core_processor_processing_options_to_model(
 
     core_processor_settings = are_conf.SarfocProcessingSettingsType(
         digital_elevation_model=[
-            are_conf.SarfocDigitalElevationModelType(value=earth_model.value, id=step.value)
+            are_conf.SarfocDigitalElevationModelType(value=are_conf.DemTypes(value=earth_model.value), id=step.value)
             for step, earth_model in processing_options.settings.dem.items()
         ],
         prfchange_data_post_processing=processing_options.settings.prf_change_data_post_processing,
@@ -328,7 +326,7 @@ def translate_bps_l1_core_processor_processing_options_to_model(
     )
 
     interface_settings = are_conf.Bpsl1CoreProcessorInterfaceSettingsType(
-        products_format=processing_options.interface_settings.products_format.value,
+        products_format=are_conf.FormatType(value=processing_options.interface_settings.products_format.value),
         enable_quick_look_generation=processing_options.interface_settings.enable_quick_look_generation,
         remove_intermediate_products=processing_options.interface_settings.remove_intermediate_products,
     )
@@ -400,9 +398,10 @@ def translate_rfi_mitigation_conf_to_model(
     )
 
     if conf.frequency_domain_conf:
-        model.rfimitigation_frequency_domain_conf = [
-            translate_rfi_frequency_domain_conf_to_model(conf.frequency_domain_conf)
-        ]
+        model.rfimitigation_frequency_domain_conf = translate_rfi_frequency_domain_conf_to_model(
+            conf.frequency_domain_conf
+        )
+
     if conf.time_domain_conf:
         model.rfimitigation_time_domain_conf = translate_rfi_time_domain_conf_to_model(conf.time_domain_conf)
 
@@ -508,7 +507,7 @@ def translate_doppler_estimator_conf_to_model(
         maxamb=conf.maxamb,
         sthr=conf.sthr,
         varth=conf.varth,
-        pol_weights=are_conf.StripmapDcConfType.PolWeights(conf.pol_weights),
+        pol_weights=are_conf.StripmapDcConfType.PolWeights(w=conf.pol_weights),
         dc_estimation_method=are_conf.DcEstimationMethodsTypes(conf.dc_estimation_method.name),
         attitude_fitting=are_conf.AttitudeFittingTypes(conf.attitude_fitting.name),
         poly_changing_freq=conf.poly_changing_freq,
@@ -569,13 +568,13 @@ def translate_azimuth_focuser_conf_to_model(
     if conf.nominal_block_memory_size_cpu or conf.nominal_block_memory_size_gpu:
         model.nominal_block_memory_size = are_conf.AzimuthConfType.NominalBlockMemorySize(
             cpu=(
-                are_conf.MemorySizeType(conf.nominal_block_memory_size_cpu)
+                are_conf.MemorySizeType(value=conf.nominal_block_memory_size_cpu)
                 if conf.nominal_block_memory_size_cpu
                 else None
             )
         )
         if conf.nominal_block_memory_size_gpu:
-            model.nominal_block_memory_size.gpu = [are_conf.MemorySizeType(conf.nominal_block_memory_size_gpu)]
+            model.nominal_block_memory_size.gpu = are_conf.MemorySizeType(value=conf.nominal_block_memory_size_gpu)
 
     return model
 
@@ -584,11 +583,22 @@ def translate_radiometric_calibration_conf_to_model(
     conf: RadiometricCalibrationConf,
 ) -> are_conf.RangeCompensatorConfType:
     """Translate radiometric calibration configuration object to the XSD model structure"""
+    perform_incidence_compensation = (
+        conf.output_quantity is not None and conf.output_quantity != RadiometricCalibrationConf.OutputQuantity.BETA
+    )
+    output_quantity = None
+    if perform_incidence_compensation:
+        assert conf.output_quantity
+        output_quantity = are_conf.OutputQuantityType(conf.output_quantity.name)
+
     model = are_conf.RangeCompensatorConfType(
         beam=conf.swath,
         rslreference_distance=conf.rsl_reference_distance,
         perform_rslcompensation=int(conf.perform_rsl_compensation),
         perform_pattern_compensation=int(conf.perform_pattern_compensation),
+        perform_incidence_compensation=are_conf.RangeCompensatorConfType.PerformIncidenceCompensation(
+            value=int(perform_incidence_compensation), output_quantity=output_quantity
+        ),
         perform_line_correction=conf.perform_line_correction,
         fast_mode=int(conf.fast_mode) if conf.fast_mode else None,
         external_calibration_factor=are_conf.RangeCompensatorConfType.ExternalCalibrationFactor(
@@ -598,20 +608,6 @@ def translate_radiometric_calibration_conf_to_model(
             ),
             apply=(int(conf.apply_external_calibration_factor) if conf.apply_external_calibration_factor else None),
         ),
-    )
-
-    perform_incidence_compensation = (
-        conf.output_quantity is not None and conf.output_quantity != RadiometricCalibrationConf.OutputQuantity.BETA
-    )
-
-    output_quantity = None
-
-    if perform_incidence_compensation:
-        assert conf.output_quantity
-        output_quantity = are_conf.OutputQuantityType(conf.output_quantity.name)
-
-    model.perform_incidence_compensation = are_conf.RangeCompensatorConfType.PerformIncidenceCompensation(
-        value=int(perform_incidence_compensation), output_quantity=output_quantity
     )
 
     if conf.processing_gain:

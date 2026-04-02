@@ -909,8 +909,8 @@ class BIOMASSL2bAGBProductWriter:
 
         # - product
         mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id = common_annotation_models_l2.StringListType(self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(self.product.main_ads_product.basin_id_list)
+        tile_id = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
+        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
         product_type = common_annotation_models_l2.ProductType.AGB_L2_B
 
         start_time = self.start_time_l2a.isoformat(timespec="microseconds")[:-1]
@@ -927,23 +927,23 @@ class BIOMASSL2bAGBProductWriter:
         sensor_mode = common_annotation_models_l2.SensorModeType(self.product.main_ads_product.sensor_mode)
 
         contributing_tiles = common_annotation_models_l2.StringListType(
-            self.product.main_ads_product.contributing_tiles
+            id=self.product.main_ads_product.contributing_tiles
         )
 
         product = main_annotation_models_l2b_agb.ProductL2BL3Type(
-            mission,
-            tile_id.id[0],
-            basin_id_list,
-            product_type,
-            start_time,
-            stop_time,
-            radar_carrier_frequency,
-            mission_phase_id,
-            sensor_mode,
-            translate_global_coverage_id(self.product.main_ads_product.global_coverage_id),
-            contributing_tiles,
-            self.product.main_ads_product.cal_ab_coverage_per_tile,
-            self.product.main_ads_product.gncoverage_per_tile,
+            mission=mission,
+            tile_id=tile_id.id[0],
+            basin_id=basin_id_list,
+            product_type=product_type,
+            start_time=start_time,
+            stop_time=stop_time,
+            radar_carrier_frequency=radar_carrier_frequency,
+            mission_phase_id=mission_phase_id,
+            sensor_mode=sensor_mode,
+            global_coverage_id=translate_global_coverage_id(self.product.main_ads_product.global_coverage_id),
+            contributing_tiles=contributing_tiles,
+            cal_abcoverage_per_tile=self.product.main_ads_product.cal_ab_coverage_per_tile,
+            gncoverage_per_tile=self.product.main_ads_product.gncoverage_per_tile,
         )
 
         footprint = ""
@@ -981,23 +981,23 @@ class BIOMASSL2bAGBProductWriter:
         pixel_type = self.product.main_ads_raster_image.pixel_type
         no_data_value = self.product.main_ads_raster_image.no_data_value
         raster_image = common_annotation_models_l2.RasterImageType(
-            footprint,
-            first_latitude_value,
-            first_longitude_value,
-            latitude_spacing,
-            longitude_spacing,
-            number_of_samples,
-            number_of_lines,
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+            footprint=footprint,
+            first_latitude_value=first_latitude_value,
+            first_longitude_value=first_longitude_value,
+            latitude_spacing=latitude_spacing,
+            longitude_spacing=longitude_spacing,
+            number_of_samples=number_of_samples,
+            number_of_lines=number_of_lines,
+            projection=projection,
+            datum=datum,
+            pixel_representation=pixel_representation,
+            pixel_type=pixel_type,
+            no_data_value=no_data_value,
         )
 
         # # - inputInformation
         input_information_l2b = common_annotation_models_l2.InputInformationL2BL3ListType(
-            self.product.main_ads_input_information.input_information.l2a_inputs,
+            l2a_inputs=self.product.main_ads_input_information.input_information.l2a_inputs,
             count=len(self.product.main_ads_input_information.input_information.l2a_inputs),
         )
 
@@ -1009,7 +1009,7 @@ class BIOMASSL2bAGBProductWriter:
         forest_masking_flag = str(self.product.main_ads_processing_parameters.forest_masking_flag).lower()
 
         rejected_landcover_classes = common_annotation_models_l2.IntArray(
-            self.product.main_ads_processing_parameters.rejected_landcover_classes,
+            value=self.product.main_ads_processing_parameters.rejected_landcover_classes,
             count=len(self.product.main_ads_processing_parameters.rejected_landcover_classes),
         )
 
@@ -1027,39 +1027,39 @@ class BIOMASSL2bAGBProductWriter:
 
         use_constant_n = str(self.product.main_ads_processing_parameters.use_constant_n).lower()
         values_constant_n = common_annotation_models_l2.FloatArray(
-            self.product.main_ads_processing_parameters.values_constant_n,
+            value=self.product.main_ads_processing_parameters.values_constant_n,
             count=len(self.product.main_ads_processing_parameters.values_constant_n),
         )
         regression_solver = self.product.main_ads_processing_parameters.regression_solver
         processing_parameters = main_annotation_models_l2b_agb.ProcessingParametersL2BType(
-            self.product.main_ads_processing_parameters.processor_version,
-            PRODUCT_GENERATION_TIME_MS,
-            forest_masking_flag,
-            self.product.main_ads_processing_parameters.minumum_l2a_coverage,
-            rejected_landcover_classes,
-            backscatter_limits,
-            self.product.main_ads_processing_parameters.angle_limits,
-            self.product.main_ads_processing_parameters.mean_agblimits,
-            self.product.main_ads_processing_parameters.std_agblimits,
-            self.product.main_ads_processing_parameters.relative_agblimits,
-            self.product.main_ads_processing_parameters.reference_selection,
-            self.product.main_ads_processing_parameters.indexing_l,
-            self.product.main_ads_processing_parameters.indexing_a,
-            self.product.main_ads_processing_parameters.indexing_n,
-            use_constant_n,
-            values_constant_n,
-            regression_solver,
-            self.product.main_ads_processing_parameters.regression_matrix_subsampling_factor,
-            self.product.main_ads_processing_parameters.minimum_percentage_of_fillable_voids,
-            self.product.main_ads_processing_parameters.estimated_parameters,
-            self.product.main_ads_processing_parameters.compression_options,
+            processor_version=self.product.main_ads_processing_parameters.processor_version,
+            product_generation_time=PRODUCT_GENERATION_TIME_MS,
+            forest_masking_flag=forest_masking_flag,
+            minimum_l2a_coverage=self.product.main_ads_processing_parameters.minumum_l2a_coverage,
+            rejected_landcover_classes=rejected_landcover_classes,
+            backscatter_limits=backscatter_limits,
+            angle_limits=self.product.main_ads_processing_parameters.angle_limits,
+            mean_agblimits=self.product.main_ads_processing_parameters.mean_agblimits,
+            std_agblimits=self.product.main_ads_processing_parameters.std_agblimits,
+            relative_agblimits=self.product.main_ads_processing_parameters.relative_agblimits,
+            reference_selection=self.product.main_ads_processing_parameters.reference_selection,
+            indexing_l=self.product.main_ads_processing_parameters.indexing_l,
+            indexing_a=self.product.main_ads_processing_parameters.indexing_a,
+            indexing_n=self.product.main_ads_processing_parameters.indexing_n,
+            use_constant_n=use_constant_n,
+            values_constant_n=values_constant_n,
+            regression_solver=regression_solver,
+            regression_matrix_subsampling_factor=self.product.main_ads_processing_parameters.regression_matrix_subsampling_factor,
+            minimum_percentage_of_fillable_voids=self.product.main_ads_processing_parameters.minimum_percentage_of_fillable_voids,
+            estimated_parameters=self.product.main_ads_processing_parameters.estimated_parameters,
+            compression_options=self.product.main_ads_processing_parameters.compression_options,
         )
 
         main_annotation_model = main_annotation_models_l2b_agb.MainAnnotation(
-            product,
-            raster_image,
-            input_information_l2b,
-            processing_parameters,
+            product=product,
+            raster_image=raster_image,
+            input_information=input_information_l2b,
+            processing_parameters=processing_parameters,
         )
 
         # Write main annotation file

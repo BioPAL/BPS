@@ -40,21 +40,6 @@ def translate_model_to_comp_fd_conf(
     conf: aux_pp2_2b_fd_models.CompressionOptionsL2BFd,
 ) -> AuxProcessingParametersL2BFD.CompressionConf:
     """Translate FD Compression configuration section to the corresponding conf"""
-
-    assert conf.mds is not None
-    assert conf.mds.fd is not None
-    assert conf.mds.fd.compression_factor is not None
-    assert conf.mds.probability_of_change is not None
-    assert conf.mds.probability_of_change.compression_factor is not None
-    assert conf.mds.probability_of_change.max_z_error is not None
-    assert conf.mds.cfm is not None
-    assert conf.mds.cfm.compression_factor is not None
-    assert conf.mds.heat_map is not None
-    assert conf.mds.heat_map.compression_factor is not None
-    assert conf.mds.acquisition_id_image is not None
-    assert conf.mds.acquisition_id_image.compression_factor is not None
-    assert conf.mds_block_size is not None
-
     return AuxProcessingParametersL2BFD.CompressionConf(
         mds=AuxProcessingParametersL2BFD.CompressionConf.MDS(
             fd=IntCompressionType(
@@ -82,11 +67,6 @@ def translate_model_to_aux_processing_parameters_l2b_fd(
     model: aux_pp2_2b_fd_models.AuxiliaryL2BFdprocessingParameters,
 ) -> AuxProcessingParametersL2BFD:
     """Translate aux pp2 2b fd to the corresponding structure"""
-
-    assert model.l2b_fdproduct_doi is not None
-    assert model.compression_options is not None
-    assert model.minimum_l2a_coverage is not None
-
     return AuxProcessingParametersL2BFD(
         model.l2b_fdproduct_doi,
         minimumL2acoverage=model.minimum_l2a_coverage,

@@ -92,7 +92,7 @@ def translate_l1preprocessor_input_file_to_model(
 
     if input_file.output_ssp_headers_file:
         biomass_step.output_sspheaders_file = aresys_inputfile_models.OutputSspheadersFileType(
-            str(input_file.output_ssp_headers_file),
+            value=str(input_file.output_ssp_headers_file),
             format=aresys_inputfile_models.OutputSspheadersFileTypeFormat.CSV,
         )
 
@@ -100,7 +100,9 @@ def translate_l1preprocessor_input_file_to_model(
         biomass_step.output_report_file = str(input_file.output_report_file)
 
     return aresys_inputfile_models.AresysXmlInput(
-        [aresys_inputfile_models.AresysXmlInputType.Step(biomass_l0_import_pre_proc=biomass_step, number=1, total=1)]
+        step=[
+            aresys_inputfile_models.AresysXmlInputType.Step(biomass_l0_import_pre_proc=biomass_step, number=1, total=1)
+        ]
     )
 
 
@@ -137,8 +139,8 @@ def translate_l1preprocessor_configuration_to_model(
     )
 
     int_cal_conf = aresys_configuration_models.BiomassIntCalConfType(
-        aresys_configuration_models.BiomassIntCalConfTypeInternalCalibrationSource(
-            conf.internal_calibration_source.value
+        internal_calibration_source=aresys_configuration_models.BiomassIntCalConfTypeInternalCalibrationSource(
+            value=conf.internal_calibration_source.value
         ),
         max_drift_amplitude_std_fraction=conf.max_drift_amplitude_std_fraction,
         max_drift_phase_std_fraction=conf.max_drift_phase_std_fraction,

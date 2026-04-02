@@ -10,9 +10,10 @@ XSD common types
 ----------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class ChannelType(Enum):
@@ -25,11 +26,11 @@ class ChannelType(Enum):
     BLUE = "BLUE"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Complex:
     """
-    64 bit complex number consisting of a 32 bit single precision floating point
-    real part and a 32 bit single precision floating point imaginary part.
+    64 bit complex number consisting of a 32 bit single precision floating point real part and a 32 bit single
+    precision floating point imaginary part.
 
     Parameters
     ----------
@@ -42,26 +43,22 @@ class Complex:
     class Meta:
         name = "complex"
 
-    re: Optional[float] = field(
-        default=None,
+    re: float = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
-    im: Optional[float] = field(
-        default=None,
+    im: float = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ComplexArray:
-    """String containing an array of complex value pairs separated by spaces in the
-    form of I Q I Q I Q ...
+    """
+    String containing an array of complex value pairs separated by spaces in the form of I Q I Q I Q ...
 
     The mandatory count attribute defines the number of complex elements in the array.
     """
@@ -69,25 +66,18 @@ class ComplexArray:
     class Meta:
         name = "complexArray"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DoubleArray:
-    """String containing an array of double precision floating point values
-    separated by spaces.
+    """
+    String containing an array of double precision floating point values separated by spaces.
 
     The mandatory count attribute defines the number of elements in the array.
     """
@@ -95,24 +85,18 @@ class DoubleArray:
     class Meta:
         name = "doubleArray"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FloatArray:
-    """String containing an array of float values separated by spaces.
+    """
+    String containing an array of float values separated by spaces.
 
     The mandatory count attribute defines the number of elements in the array.
     """
@@ -120,17 +104,10 @@ class FloatArray:
     class Meta:
         name = "floatArray"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
@@ -161,9 +138,10 @@ class HeightModelBaseType(Enum):
     BIOMASS_DTM = "BIOMASS DTM"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IntArray:
-    """String containing an array of int values separated by spaces.
+    """
+    String containing an array of int values separated by spaces.
 
     The mandatory count attribute defines the number of elements in the array.
     """
@@ -171,22 +149,15 @@ class IntArray:
     class Meta:
         name = "intArray"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InterferometricPairType:
     """
     Parameters
@@ -200,18 +171,14 @@ class InterferometricPairType:
     class Meta:
         name = "interferometricPairType"
 
-    primary: Optional[int] = field(
-        default=None,
+    primary: int = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
-    secondary: Optional[int] = field(
-        default=None,
+    secondary: int = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
@@ -265,25 +232,23 @@ class LayerType(Enum):
     IONOSPHERE_PHASE_SCREENS_RAD = "Ionosphere phase screens [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_RAD = "SKP calibration phase screen [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_QUALITY = "SKP calibration phase screen quality"
+    INTERFEROGRAM_RAD = "Interferogram [rad]"
+    COHERENCE = "Coherence"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MinMaxType:
     class Meta:
         name = "minMaxType"
 
-    min: Optional[float] = field(
-        default=None,
+    min: float = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
-    max: Optional[float] = field(
-        default=None,
+    max: float = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
@@ -330,7 +295,7 @@ class UomType(Enum):
     RAD_N_T_2 = "(rad/nT)^2"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelImbalanceList:
     """
     Parameters
@@ -344,25 +309,21 @@ class ChannelImbalanceList:
     class Meta:
         name = "channelImbalanceList"
 
-    channel_imbal_hvrx: Optional[Complex] = field(
-        default=None,
+    channel_imbal_hvrx: Complex = field(
         metadata={
             "name": "channelImbalHVRx",
             "type": "Element",
-            "required": True,
         },
     )
-    channel_imbal_hvtx: Optional[Complex] = field(
-        default=None,
+    channel_imbal_hvtx: Complex = field(
         metadata={
             "name": "channelImbalHVTx",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CrossTalkList:
     """
     Parameters
@@ -380,41 +341,33 @@ class CrossTalkList:
     class Meta:
         name = "crossTalkList"
 
-    cross_talk_hvrx: Optional[Complex] = field(
-        default=None,
+    cross_talk_hvrx: Complex = field(
         metadata={
             "name": "crossTalkHVRx",
             "type": "Element",
-            "required": True,
         },
     )
-    cross_talk_vhrx: Optional[Complex] = field(
-        default=None,
+    cross_talk_vhrx: Complex = field(
         metadata={
             "name": "crossTalkVHRx",
             "type": "Element",
-            "required": True,
         },
     )
-    cross_talk_vhtx: Optional[Complex] = field(
-        default=None,
+    cross_talk_vhtx: Complex = field(
         metadata={
             "name": "crossTalkVHTx",
             "type": "Element",
-            "required": True,
         },
     )
-    cross_talk_hvtx: Optional[Complex] = field(
-        default=None,
+    cross_talk_hvtx: Complex = field(
         metadata={
             "name": "crossTalkHVTx",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DatumType:
     """
     Parameters
@@ -428,28 +381,24 @@ class DatumType:
     class Meta:
         name = "datumType"
 
-    coordinate_reference_system: Optional[str] = field(
-        default=None,
+    coordinate_reference_system: str = field(
         metadata={
             "name": "coordinateReferenceSystem",
             "type": "Element",
-            "required": True,
         },
     )
-    geodetic_reference_frame: Optional[GeodeticReferenceFrameType] = field(
-        default=None,
+    geodetic_reference_frame: GeodeticReferenceFrameType = field(
         metadata={
             "name": "geodeticReferenceFrame",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DoubleArrayWithUnits:
-    """String containing an array of double precision floating point values
-    separated by spaces.
+    """
+    String containing an array of double precision floating point values separated by spaces.
 
     The mandatory count attribute defines the number of elements in the array.
     """
@@ -457,29 +406,20 @@ class DoubleArrayWithUnits:
     class Meta:
         name = "doubleArrayWithUnits"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    units: Optional[UomType] = field(
-        default=None,
+    units: UomType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DoubleWithUnit:
     """
     64 bit double precision floating point number.
@@ -488,24 +428,18 @@ class DoubleWithUnit:
     class Meta:
         name = "doubleWithUnit"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    units: Optional[UomType] = field(
-        default=None,
+    value: float = field()
+    units: UomType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FloatArrayWithUnits:
-    """String containing an array of float values separated by spaces.
+    """
+    String containing an array of float values separated by spaces.
 
     The mandatory count attribute defines the number of elements in the array.
     """
@@ -513,29 +447,20 @@ class FloatArrayWithUnits:
     class Meta:
         name = "floatArrayWithUnits"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    count: Optional[int] = field(
-        default=None,
+    value: str = field(default="")
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    units: Optional[UomType] = field(
-        default=None,
+    units: UomType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FloatWithChannel:
     """
     Extension of float with the indication of the corresponding RGB channel.
@@ -544,22 +469,15 @@ class FloatWithChannel:
     class Meta:
         name = "floatWithChannel"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    channel: Optional[ChannelType] = field(
-        default=None,
+    value: float = field()
+    channel: ChannelType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FloatWithPolarisation:
     """
     Extension of float with the indication of the corresponding polarisation.
@@ -568,22 +486,15 @@ class FloatWithPolarisation:
     class Meta:
         name = "floatWithPolarisation"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    polarisation: Optional[PolarisationType] = field(
-        default=None,
+    value: float = field()
+    polarisation: PolarisationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FloatWithUnit:
     """
     32 bit single precision floating point number.
@@ -592,42 +503,28 @@ class FloatWithUnit:
     class Meta:
         name = "floatWithUnit"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    units: Optional[UomType] = field(
-        default=None,
+    value: float = field()
+    units: UomType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class HeightModelType:
     class Meta:
         name = "heightModelType"
 
-    value: Optional[HeightModelBaseType] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    version: Optional[str] = field(
-        default=None,
+    value: HeightModelBaseType = field()
+    version: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InterferometricPairListType:
     """
     Parameters
@@ -648,16 +545,14 @@ class InterferometricPairListType:
             "type": "Element",
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LayerListType:
     """
     Parameters
@@ -674,16 +569,14 @@ class LayerListType:
     layer: list[LayerType] = field(
         default_factory=list, metadata={"type": "Element", "min_occurs": 1, "max_occurs": 30}
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TimeTypeWithPolarisation:
     """
     Extension of timeType with the indication of the corresponding polarisation.
@@ -692,44 +585,32 @@ class TimeTypeWithPolarisation:
     class Meta:
         name = "timeTypeWithPolarisation"
 
-    value: str = field(
-        default="", metadata={"required": True, "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"}
-    )
-    polarisation: Optional[PolarisationType] = field(
-        default=None,
+    value: str = field(default="", metadata={"pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"})
+    polarisation: PolarisationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class UnsignedIntWithGroup:
     """
-    Extension of unsignedInt with the indication of the corresponding LUT group of
-    variables.
+    Extension of unsignedInt with the indication of the corresponding LUT group of variables.
     """
 
     class Meta:
         name = "unsignedIntWithGroup"
 
-    value: Optional[int] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    group: Optional[GroupType] = field(
-        default=None,
+    value: int = field()
+    group: GroupType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AzimuthPolynomialType:
     """
     Parameters
@@ -746,49 +627,38 @@ class AzimuthPolynomialType:
     class Meta:
         name = "azimuthPolynomialType"
 
-    slant_range_time: Optional[DoubleWithUnit] = field(
-        default=None,
+    slant_range_time: DoubleWithUnit = field(
         metadata={
             "name": "slantRangeTime",
             "type": "Element",
-            "required": True,
         },
     )
-    t0: Optional[str] = field(
-        default=None,
-        metadata={"type": "Element", "required": True, "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"},
-    )
-    polynomial: Optional[DoubleArray] = field(
-        default=None,
+    t0: str = field(metadata={"type": "Element", "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"})
+    polynomial: DoubleArray = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MinMaxTypeWithUnit:
     class Meta:
         name = "minMaxTypeWithUnit"
 
-    min: Optional[FloatWithUnit] = field(
-        default=None,
+    min: FloatWithUnit = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
-    max: Optional[FloatWithUnit] = field(
-        default=None,
+    max: FloatWithUnit = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SlantRangePolynomialType:
     """
     Parameters
@@ -805,27 +675,21 @@ class SlantRangePolynomialType:
     class Meta:
         name = "slantRangePolynomialType"
 
-    azimuth_time: Optional[str] = field(
-        default=None,
+    azimuth_time: str = field(
         metadata={
             "name": "azimuthTime",
             "type": "Element",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    t0: Optional[DoubleWithUnit] = field(
-        default=None,
+    t0: DoubleWithUnit = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
-    polynomial: Optional[DoubleArray] = field(
-        default=None,
+    polynomial: DoubleArray = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )
 
@@ -909,9 +773,8 @@ class MissionType(Enum):
 
 
 class OrbitAttitudeSourceType(Enum):
-    """Enumeration of value sources of orbit and attitude data.
-
-    "Downlink" or "Auxiliary".
+    """
+    Enumeration of value sources of orbit and attitude data. "Downlink" or "Auxiliary".
     """
 
     DOWNLINK = "Downlink"
@@ -979,9 +842,14 @@ class ProcessingModeType(Enum):
 
 
 class ProductCompositionType(Enum):
-    """Enumeration of product composition indicators.
+    """
+    Enumeration of product composition indicators.
 
-    The valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e., as long as input L0 one.
+    The valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is
+    resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not
+    nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product
+    length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e.,
+    as long as input L0 one.
     """
 
     NOMINAL = "Nominal"
@@ -1146,7 +1014,9 @@ class L1BQlColourCodingMethodType(Enum):
 
 class BaselineMethodType(Enum):
     """
-    Enumeration of baseline method types (e.g. SingleBaseline or MultiBaseline).
+    Enumeration of baseline method types (e.g.
+
+    SingleBaseline or MultiBaseline).
     """
 
     SINGLE_BASELINE = "Single-Baseline"
@@ -1254,7 +1124,7 @@ class SignalType(Enum):
     NOISE = "Noise"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StateType:
     """
     Parameters
@@ -1268,19 +1138,15 @@ class StateType:
     class Meta:
         name = "stateType"
 
-    azimuth_time: Optional[str] = field(
-        default=None,
+    azimuth_time: str = field(
         metadata={
             "name": "azimuthTime",
             "type": "Element",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    value: Optional[FloatWithUnit] = field(
-        default=None,
+    value: FloatWithUnit = field(
         metadata={
             "type": "Element",
-            "required": True,
         },
     )

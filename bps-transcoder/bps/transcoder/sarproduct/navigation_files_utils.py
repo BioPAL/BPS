@@ -56,67 +56,59 @@ def fill_attitude_file_template_str(arf: np.ndarray, time_array: np.ndarray) -> 
     file_name = FILE_NAME_TEMPLATE_STRING
 
     quaternions = transform.Rotation.from_matrix(arf).as_quat(canonical=True)
-    reference_frame = "EARTH_FIXED"
 
     start: PreciseDateTime = time_array[0]
     stop: PreciseDateTime = time_array[-1]
     validity_start = "UTC=" + start.isoformat(timespec="seconds")[:-1]
     validity_stop = "UTC=" + stop.isoformat(timespec="seconds")[:-1]
 
-    file_description = "Attitude File"
-    notes = ""
-    mission = "BIOMASS"
-    file_class = "OPER"
-    file_type = "AUX_ATT___"
-    validity_period = aux_att_models.ValidityPeriodType(validity_start=validity_start, validity_stop=validity_stop)
-    file_version = "0001"
-    eoffs_version = "3.0"
-    source = aux_att_models.SourceType(
-        system="",
-        creator="BPS",
-        creator_version="1.0.0",
-        creation_date="UTC=" + creation_date,
+    earth_observation_header = aux_att_models.AttitudeHeaderType(
+        fixed_header=aux_att_models.FixedHeaderType(
+            file_name=file_name,
+            file_description="Attitude File",
+            notes="",
+            mission="BIOMASS",
+            file_class="OPER",
+            file_type="AUX_ATT___",
+            validity_period=aux_att_models.ValidityPeriodType(
+                validity_start=validity_start, validity_stop=validity_stop
+            ),
+            file_version="0001",
+            eoffs_version="3.0",
+            source=aux_att_models.SourceType(
+                system="",
+                creator="BPS",
+                creator_version="1.0.0",
+                creation_date="UTC=" + creation_date,
+            ),
+        ),
+        variable_header="",
     )
-    fixed_header = aux_att_models.FixedHeaderType(
-        file_name,
-        file_description,
-        notes,
-        mission,
-        file_class,
-        file_type,
-        validity_period,
-        file_version,
-        eoffs_version,
-        source,
-    )
-
-    variable_header = ""
-
-    earth_observation_header = aux_att_models.AttitudeHeaderType(fixed_header, variable_header)
-
-    attitude_file_type = "Sat_Nominal_Attitude"
-    attitude_data_type = "Quaternions"
-    max_gap = aux_att_models.MaxGapType(value=Decimal(str(2.0 * np.mean(np.diff(time_array)))))
 
     quaternions_list = [
         translate_attitude_record_to_quaternion_model(AttitudeRecord(time=time, quaternion=quaternion))
         for time, quaternion in zip(time_array, quaternions)
     ]
 
-    list_of_quaternions = aux_att_models.ListOfQuaternionsType(quaternions_list, count=len(quaternions_list))
-    quaternion_data = aux_att_models.QuaternionDataType(reference_frame, list_of_quaternions)
-
     data_block = aux_att_models.AttitudeDataBlockType(
-        attitude_file_type, attitude_data_type, max_gap, None, quaternion_data
+        attitude_file_type="Sat_Nominal_Attitude",
+        attitude_data_type="Quaternions",
+        max_gap=aux_att_models.MaxGapType(value=Decimal(str(2.0 * np.mean(np.diff(time_array))))),
+        attitude_angles_data=None,
+        quaternion_data=aux_att_models.QuaternionDataType(
+            reference_frame="EARTH_FIXED",
+            list_of_quaternions=aux_att_models.ListOfQuaternionsType(
+                quaternions=quaternions_list, count=len(quaternions_list)
+            ),
+        ),
     )
-
-    schema_version = "3.0"
 
     earth_observation_file_model = aux_att_models.EarthObservationFile(
-        earth_observation_header, data_block, Decimal(value=schema_version)
+        earth_observation_header=earth_observation_header,
+        data_block=data_block,
+        schema_version=Decimal(value="3.0"),
     )
 
-    # Write attitude file
     return serialize(earth_observation_file_model)
 
 
@@ -151,64 +143,57 @@ def fill_orbit_file_template_str(
     validity_start = start_time.isoformat(timespec="seconds")[:-1]
     validity_stop = (start_time + (nsv - 1) * time_step).isoformat(timespec="seconds")[:-1]
 
-    file_description = "Orbit File"
-    notes = ""
-    mission = "BIOMASS"
-    file_class = "OPER"
-    file_type = "AUX_ORB___"
-    validity_period = aux_orb_models.ValidityPeriodType(
-        validity_start="UTC=" + validity_start, validity_stop="UTC=" + validity_stop
-    )
-    file_version = "0001"
-    eoffs_version = "3.0"
-    source = aux_orb_models.SourceType(
-        system="",
-        creator="BPS",
-        creator_version="1.0.0",
-        creation_date="UTC=" + CREATION_DATE_TEMPLATE_STRING,
-    )
-    fixed_header = aux_orb_models.FixedHeaderType(
-        FILE_NAME_TEMPLATE_STRING,
-        file_description,
-        notes,
-        mission,
-        file_class,
-        file_type,
-        validity_period,
-        file_version,
-        eoffs_version,
-        source,
+    earth_observation_header = aux_orb_models.RestitutedOrbitHeaderType(
+        fixed_header=aux_orb_models.FixedHeaderType(
+            file_name=FILE_NAME_TEMPLATE_STRING,
+            file_description="Orbit File",
+            notes="",
+            mission="BIOMASS",
+            file_class="OPER",
+            file_type="AUX_ORB___",
+            validity_period=aux_orb_models.ValidityPeriodType(
+                validity_start="UTC=" + validity_start, validity_stop="UTC=" + validity_stop
+            ),
+            file_version="0001",
+            eoffs_version="3.0",
+            source=aux_orb_models.SourceType(
+                system="",
+                creator="BPS",
+                creator_version="1.0.0",
+                creation_date="UTC=" + CREATION_DATE_TEMPLATE_STRING,
+            ),
+        ),
+        variable_header=aux_orb_models.OrbitFileVariableHeader(
+            ref_frame=aux_orb_models.OrbitFileVariableHeaderRefFrame.EARTH_FIXED,
+            time_reference=aux_orb_models.OrbitFileVariableHeaderTimeReference.UTC,
+        ),
     )
 
-    ref_frame = aux_orb_models.OrbitFileVariableHeaderRefFrame.EARTH_FIXED
-    time_reference = aux_orb_models.OrbitFileVariableHeaderTimeReference.UTC
-    variable_header = aux_orb_models.OrbitFileVariableHeader(ref_frame, time_reference)
-
-    earth_observation_header = aux_orb_models.RestitutedOrbitHeaderType(fixed_header, variable_header)
-
-    osv_list = list()
-    for sv in range(nsv):
-        tai = "TAI=" + (start_time + sv * time_step + tai_utc_difference).isoformat(timespec="microseconds")[:-1]
-        utc = "UTC=" + (start_time + sv * time_step).isoformat(timespec="microseconds")[:-1]
-        ut1 = "UT1=" + (start_time + sv * time_step).isoformat(timespec="microseconds")[:-1]
-        absolute_orbit = 0
-        x = aux_orb_models.PositionComponentType(value=float(position[sv, 0]))
-        y = aux_orb_models.PositionComponentType(value=float(position[sv, 1]))
-        z = aux_orb_models.PositionComponentType(value=float(position[sv, 2]))
-        vx = aux_orb_models.VelocityComponentType(value=float(velocity[sv, 0]))
-        vy = aux_orb_models.VelocityComponentType(value=float(velocity[sv, 1]))
-        vz = aux_orb_models.VelocityComponentType(value=float(velocity[sv, 2]))
-        quality = "0000000000000"
-        osv = aux_orb_models.OsvType(tai, utc, ut1, absolute_orbit, x, y, z, vx, vy, vz, quality)
-        osv_list.append(osv)
-    list_of_osvs = aux_orb_models.ListOfOsvsType(osv_list, count=nsv)
-
-    data_block = aux_orb_models.RestitutedOrbitDataBlockType(list_of_osvs)
-
-    schema_version = "3.0"
+    data_block = aux_orb_models.RestitutedOrbitDataBlockType(
+        list_of_osvs=aux_orb_models.ListOfOsvsType(
+            osv=[
+                aux_orb_models.OsvType(
+                    tai="TAI="
+                    + (start_time + sv * time_step + tai_utc_difference).isoformat(timespec="microseconds")[:-1],
+                    utc="UTC=" + (start_time + sv * time_step).isoformat(timespec="microseconds")[:-1],
+                    ut1="UT1=" + (start_time + sv * time_step).isoformat(timespec="microseconds")[:-1],
+                    absolute_orbit=0,
+                    x=aux_orb_models.PositionComponentType(value=Decimal.from_float(float(position[sv, 0]))),
+                    y=aux_orb_models.PositionComponentType(value=Decimal.from_float(float(position[sv, 1]))),
+                    z=aux_orb_models.PositionComponentType(value=Decimal.from_float(float(position[sv, 2]))),
+                    vx=aux_orb_models.VelocityComponentType(value=Decimal.from_float(float(velocity[sv, 0]))),
+                    vy=aux_orb_models.VelocityComponentType(value=Decimal.from_float(float(velocity[sv, 1]))),
+                    vz=aux_orb_models.VelocityComponentType(value=Decimal.from_float(float(velocity[sv, 2]))),
+                    quality="0000000000000",
+                )
+                for sv in range(nsv)
+            ],
+            count=nsv,
+        )
+    )
 
     earth_observation_file_model = aux_orb_models.EarthObservationFile(
-        earth_observation_header, data_block, schema_version
+        earth_observation_header=earth_observation_header, data_block=data_block, schema_version=Decimal("3.0")
     )
 
     return serialize(earth_observation_file_model)

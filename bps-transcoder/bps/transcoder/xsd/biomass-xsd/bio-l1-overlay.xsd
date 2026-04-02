@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2018 sp1 (x64) (http://www.altova.com) by (ARESYS srl) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:import namespace="http://www.google.com/kml/ext/2.2" schemaLocation="./bio-l1-overlay-support.xsd"/>
+	<xsd:complexType name="TimeStampType">
+		<xsd:sequence>
+			<xsd:element name="when" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Overlay time stamp in ISO 8601 format (YYYY-MM-DDThh:mm:ss).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="IconType">
+		<xsd:sequence>
+			<xsd:element name="href" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>A local file specification or URL used to load the desired image and overlay it on the map.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LatLonQuadType">
+		<xsd:sequence>
+			<xsd:element name="coordinates" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: lon,lat lon,lat lon,lat lon,lat lon,lat. The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LineStyleType">
+		<xsd:sequence>
+			<xsd:element name="color" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Line color in 32 bit hex format (AABBGGRR order).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="width" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Line width.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PolyStyleType">
+		<xsd:sequence>
+			<xsd:element name="color" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Line style.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StyleType">
+		<xsd:sequence>
+			<xsd:element name="LineStyle" type="LineStyleType">
+				<xsd:annotation>
+					<xsd:documentation>Line style.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PolyStyle" type="PolyStyleType">
+				<xsd:annotation>
+					<xsd:documentation>Polygon style.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DataType">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Metadata value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="ExtendedDataType">
+		<xsd:sequence>
+			<xsd:element name="Data" type="DataType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Metadata.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LinearRingType">
+		<xsd:sequence>
+			<xsd:element name="coordinates" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height. The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="outerBoundaryIsType">
+		<xsd:sequence>
+			<xsd:element name="LinearRing" type="LinearRingType">
+				<xsd:annotation>
+					<xsd:documentation>Linear ring description.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PolygonType">
+		<xsd:sequence>
+			<xsd:element name="tessellate" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Tessellate option.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="altitudeMode" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Altitude mode option.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="outerBoundaryIs" type="outerBoundaryIsType">
+				<xsd:annotation>
+					<xsd:documentation>Polygon outer boundary description.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GroundOverlayType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Name of the ground overlay.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="visibility" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TimeStamp" type="TimeStampType">
+				<xsd:annotation>
+					<xsd:documentation>Structure containing the time stamp of the overlay that can be used for dynamic visualizations over time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Icon" type="IconType">
+				<xsd:annotation>
+					<xsd:documentation>Structure describing the image file used on the map overlay.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="gx:LatLonQuad">
+				<xsd:annotation>
+					<xsd:documentation>Structure containing the latitude and longitude coordinates used to position the image overlay on the map.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PlacemarkType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Name of the placemark.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="visibility" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TimeStamp" type="TimeStampType">
+				<xsd:annotation>
+					<xsd:documentation>Structure containing the time stamp of the placemark that can be used for dynamic visualizations over time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Style" type="StyleType">
+				<xsd:annotation>
+					<xsd:documentation>Structure describing the stype used to display the placemark.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ExtendedData" type="ExtendedDataType">
+				<xsd:annotation>
+					<xsd:documentation>Structure containing the metadata associated to the overlay.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Polygon" type="PolygonType">
+				<xsd:annotation>
+					<xsd:documentation>Structure containing the latitude and longitude coordinates used to position the image overlay on the map.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Name of the document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="description" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Description of the document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GroundOverlay" type="GroundOverlayType">
+				<xsd:annotation>
+					<xsd:documentation>Contains the parameters required to specify the footprint of the image and overlay the quicklook image on a map.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Placemark" type="PlacemarkType">
+				<xsd:annotation>
+					<xsd:documentation>Contains the metadata associated to the overlay.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="kmlType">
+		<xsd:sequence>
+			<xsd:element name="Document" type="DocumentType">
+				<xsd:annotation>
+					<xsd:documentation>Document container for KML components.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="kml" type="kmlType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS L1 products overlay element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

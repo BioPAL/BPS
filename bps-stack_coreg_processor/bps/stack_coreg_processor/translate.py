@@ -242,7 +242,7 @@ def translate_bps_coreg_input_file_to_model(
     )
 
     return are_input.AresysXmlInput(
-        [are_input.AresysXmlInputType.Step(bpsstack_processor=bpsstack_processor_step, number=1, total=1)]
+        step=[are_input.AresysXmlInputType.Step(bpsstack_processor=bpsstack_processor_step, number=1, total=1)]
     )
 
 

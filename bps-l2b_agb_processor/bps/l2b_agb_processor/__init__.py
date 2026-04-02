@@ -10,6 +10,6 @@ Biomass L2b AGB Processor
 -------------------------
 """
 
-__version__ = "4.4.0"
+__version__ = "4.4.1"
 
 BPS_L2B_AGB_PROCESSOR_NAME = "Biomass L2b AGB Processor"

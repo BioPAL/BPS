@@ -133,14 +133,6 @@ def translate_raw_data_statistics(
     raw_data_stats: models.L1PreProcessorAnnotations.RawDataStatistics,
 ) -> RawDataStatistics:
     """Translate from model"""
-
-    assert raw_data_stats.mean_i is not None
-    assert raw_data_stats.mean_q is not None
-    assert raw_data_stats.std_dev_i is not None
-    assert raw_data_stats.std_dev_q is not None
-    assert raw_data_stats.quadrature_departure is not None
-    assert raw_data_stats.polarization is not None
-
     return RawDataStatistics(
         bias_i=raw_data_stats.mean_i,
         bias_q=raw_data_stats.mean_q,
@@ -155,13 +147,6 @@ def translate_chirp_replica_parameters(
     chirp_replica_pars: models.L1PreProcessorAnnotations.ChirpReplicaParameters,
 ) -> ChirpReplicaParameters:
     """Translate from model"""
-
-    assert chirp_replica_pars.bandwidth is not None
-    assert chirp_replica_pars.pslr is not None
-    assert chirp_replica_pars.islr is not None
-    assert chirp_replica_pars.location_error is not None
-    assert chirp_replica_pars.validity_flag is not None
-
     return ChirpReplicaParameters(
         bandwidth=chirp_replica_pars.bandwidth,
         pslr=chirp_replica_pars.pslr,
@@ -175,27 +160,14 @@ def translate_int_cal_sequences_from_model(
     model: models.L1PreProcessorAnnotations.InternalCalibrationData,
 ) -> IntCalSequence:
     """Translate int cal sequences annotations from model"""
-    assert model.reference_time is not None
-    assert model.drifts is not None
-    assert model.excitation_coefficients is not None
-
     drifts: dict[str, complex] = {}
     for drift in model.drifts.drift:
-        assert drift.real is not None
-        assert drift.imag is not None
-        assert drift.polarization is not None
         pol = drift.polarization.value
         value = complex(drift.real, drift.imag)
         drifts[pol] = value
 
     coeffs: dict[tuple[str, str, str], complex] = {}
     for coeff in model.excitation_coefficients.power_tracking:
-        assert coeff.real is not None
-        assert coeff.imag is not None
-        assert coeff.polarization is not None
-        assert coeff.doublet is not None
-        assert coeff.role is not None
-
         pol = coeff.polarization.value
         doublet = coeff.doublet.value
         role = coeff.role.value
@@ -210,9 +182,6 @@ def translate_int_cal_sequences_from_model(
 
 def translate_noise_sequence_from_model(model: models.NoiseSequenceType) -> NoiseSequence:
     """Translate noise sequence annotations from model"""
-    assert model.reference_time is not None
-    assert model.average_noise is not None
-    assert model.num_lines is not None
     return NoiseSequence(
         time=PreciseDateTime.from_utc_string(model.reference_time),
         average_noise=model.average_noise,
@@ -224,13 +193,8 @@ def translate_iobpr_measurements_from_model(
     model: models.L1PreProcessorAnnotations.InOutBandPowerRatioData,
 ) -> IOBPRMeasure:
     """Translate in/out-of-band power ratio measurements annotations from model"""
-    assert model.reference_time is not None
-    assert model.power_ratios is not None
-
     power_ratios: dict[str, float] = {}
     for power_ratio in model.power_ratios.power_ratio:
-        assert power_ratio.value is not None
-        assert power_ratio.polarization is not None
         pol = power_ratio.polarization.value
         value = power_ratio.value
         power_ratios[pol] = value
@@ -242,32 +206,6 @@ def translate_annotation_from_model(
     model: models.L1PreProcessorAnnotations,
 ) -> L1PreProcAnnotations:
     """Translate annotation from model"""
-
-    assert model.ispformat is not None
-    assert model.ispformat.echo is not None
-    assert model.ispformat.calibration is not None
-    assert model.ispformat.noise is not None
-    assert model.isperrors is not None
-    assert model.isperrors.num_corrupted_packets is not None
-    assert model.isperrors.num_missing_packets is not None
-    assert model.noise_data is not None
-    assert model.noise_data.preamble_present is not None
-    assert model.noise_data.postamble_present is not None
-    assert model.gain_param_code_h is not None
-    assert model.gain_param_code_v is not None
-    assert model.channel_delays is not None
-    assert model.channel_imbalance is not None
-    assert model.channel_imbalance.tx is not None
-    assert model.channel_imbalance.tx.real is not None
-    assert model.channel_imbalance.tx.imag is not None
-    assert model.channel_imbalance.rx is not None
-    assert model.channel_imbalance.rx.real is not None
-    assert model.channel_imbalance.rx.imag is not None
-    assert model.noise_preamble_h is not None
-    assert model.noise_preamble_v is not None
-    assert model.noise_postamble_h is not None
-    assert model.noise_postamble_v is not None
-
     echo_baq_compression = translate_compression_level_from_model(model.ispformat.echo)
     calibration_baq_compression = translate_compression_level_from_model(model.ispformat.calibration)
     noise_baq_compression = translate_compression_level_from_model(model.ispformat.noise)
@@ -282,8 +220,6 @@ def translate_annotation_from_model(
 
     channel_delays = {}
     for delay in model.channel_delays.channel_delay:
-        assert delay.polarization is not None
-        assert delay.value is not None
         channel_delays[delay.polarization.value] = delay.value
 
     channel_imbalance_tx = complex(model.channel_imbalance.tx.real, model.channel_imbalance.tx.imag)

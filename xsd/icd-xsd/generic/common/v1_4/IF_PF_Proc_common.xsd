@@ -1,0 +1,170 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.1">
+	<xs:annotation>
+		<xs:documentation>This schema defines the format of the repository common elements and types.</xs:documentation>
+	</xs:annotation>
+	<xs:element name="Alternative_ID" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Alternative identifier. This value shall be copied into the Alternative_ID field of the Job Order. The Task’s executable shall be able to recognize it.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Baseline">
+		<xs:annotation>
+			<xs:documentation>Baseline ID (2 zero-padded digits) of the output product to be generated. It is set by the PF and shall be used by the processor to assign the baseline of the output product.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[0-9]{2}"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Cfg_ID" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Identifier of the configuration file to be passed to the Task executable via the Job Order. This ID is a helper for a Task to identify configuration files of a given category (e.g. DEM, …) </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Disk_Space" type="xs:positiveInteger">
+		<xs:annotation>
+			<xs:documentation>Minimum amount of disk space, in megabytes, required on the processing node in order to complete the processing.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="File_Class" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>File Class for this production request. It is set by the PF and shall be used by the processor to assign the file class to the output products.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="File_Dir" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Pathname of the directory where the output products shall be written by the processor and from where the PF shall retrieve them.
+The path can be an absolute or a relative one. In case of a relative path it is considered relative to the working directory.
+If File_Dir is empty or not present, it is assumed that this directory corresponds to the working directory.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="File_Name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Absolute path of the input file.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="File_Name_Pattern" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Expression that univocally identifies the output product (or products) among the files available within the working directory. This field is copied into the corresponding “File_Name_Pattern” field of the Job Order for information (Wildcards are allowed).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="File_Type" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>A valid product file type (see the products naming convention of the specific mission).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Input_ID" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Input identifier. The PF shall copy this value into the Input_ID filed of the Job Order. The Task’s executable shall be able to recognize it.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Intermediate_Output_ID" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Identifier of the intermediate output. The Task’s executable shall be able to recognize it.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Processor_Name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Name of the processor to which this Task Table refers.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Processor_Version">
+		<xs:annotation>
+			<xs:documentation>Version of the processor. Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”).</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[0-9]{2}\.[0-9]{2}"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Task_Name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Name of the Task. Within a Task Table, Task_Name shall be unique.
+
+The name is copied by the PF into the Job Order and shall be used, by the Task executable, to identify its own section (i.e. the Task element having the same Task_Name) within the Job Order.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Task_Version">
+		<xs:annotation>
+			<xs:documentation>Version of the Task. Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”).
+It may be used by a Task executable for consistency check (by ensuring that the Task’s hardcoded version corresponds to the one executed in the Job Order).</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[0-9]{2}\.[0-9]{2}"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:complexType name="Cfg_File_Type">
+		<xs:sequence>
+			<xs:element ref="Cfg_ID"/>
+			<xs:element name="Cfg_File_Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Configuration file to be passed to the task executable via the Job Order. The path must be an absolute one, or relative to the root directory of the processor installation tree.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RAMDISK_Type">
+		<xs:sequence>
+			<xs:element name="Amount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" >
+			<xs:annotation>
+					<xs:documentation>Minimum size of the RAM disk, in megabytes, that is required by the Task executable in order to meet the nominal performance requirement.
+					If the following Scalable parameter is set to “Yes”, the PF is allowed to increase or decrease this value applying a scaling factor and to specify, in
+					the Job Order, the updated maximum amount of RAM disk that the Task is allowed to use. In such a case, the same scaling factor will be applied to all Tasks where the Scalable flag is set to “Yes”.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Mount_Path" type="xs:string"  minOccurs="1" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>Absolute mount path of the RAM disk. The value is copied by the PF into the same field of the Job Order</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+		<xs:complexType name="RAMDISK_Type_Scalable">
+				<xs:sequence>
+					<xs:element name="Amount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" >
+					<xs:annotation>
+							<xs:documentation>Minimum size of the RAM disk, in megabytes, that is required by the Task executable in order to meet the nominal performance requirement.
+							If the following Scalable parameter is set to “Yes”, the PF is allowed to increase or decrease this value applying a scaling factor and to specify, in
+							the Job Order, the updated maximum amount of RAM disk that the Task is allowed to use. In such a case, the same scaling factor will be applied to all Tasks where the Scalable flag is set to “Yes”.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Scalable" type="xs:string" minOccurs="1" maxOccurs="1" >
+					    <xs:annotation>
+							<xs:documentation>Scalability flag for the maximum amount of RAM disk. Possible values are: 
+							* “Yes”: the PF shall apply a scaling factor to the maximum amount of RAM disk defined by the Amount parameter and the updated value shall be copied into the Job Order 
+							* “No”: the scaling factor is not applied. The original value is copied by the PF into the Job Order </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Mount_Path" type="xs:string"  minOccurs="1" maxOccurs="1" >
+					<xs:annotation>
+						<xs:documentation>Absolute mount path of the RAM disk. The value is copied by the PF into the same field of the Job Order</xs:documentation>
+					</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Parameter_Type">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name of the parameter.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Value of the parameter.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="YesNo_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="No"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

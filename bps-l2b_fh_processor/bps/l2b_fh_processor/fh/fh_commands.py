@@ -397,8 +397,8 @@ class FHL2B:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_dict = {
             "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
@@ -440,27 +440,27 @@ class FHL2B:
 
         # main_ads_processing_parameters
         compression_options_fh = main_annotation_models_l2b_fh.CompressionOptionsL2B(
-            main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
-                main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
-                    self.aux_pp2_fh.compression_options.mds.fh.compression_factor,
-                    self.aux_pp2_fh.compression_options.mds.fh.max_z_error,
+            mds=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
+                fh=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
+                    compression_factor=self.aux_pp2_fh.compression_options.mds.fh.compression_factor,
+                    max_z_error=self.aux_pp2_fh.compression_options.mds.fh.max_z_error,
                 ),
-                main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
-                    self.aux_pp2_fh.compression_options.mds.fhquality.compression_factor,
-                    self.aux_pp2_fh.compression_options.mds.fhquality.max_z_error,
+                quality=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
+                    compression_factor=self.aux_pp2_fh.compression_options.mds.fhquality.compression_factor,
+                    max_z_error=self.aux_pp2_fh.compression_options.mds.fhquality.max_z_error,
                 ),
-                main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
-                    self.aux_pp2_fh.compression_options.mds.bps_fnf.compression_factor
+                bps_fnf=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
+                    compression_factor=self.aux_pp2_fh.compression_options.mds.bps_fnf.compression_factor
                 ),
-                main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
-                    self.aux_pp2_fh.compression_options.mds.heatmap.compression_factor,
-                    self.aux_pp2_fh.compression_options.mds.heatmap.max_z_error,
+                heat_map=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
+                    compression_factor=self.aux_pp2_fh.compression_options.mds.heatmap.compression_factor,
+                    max_z_error=self.aux_pp2_fh.compression_options.mds.heatmap.max_z_error,
                 ),
-                main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
-                    self.aux_pp2_fh.compression_options.mds.acquisition_id_image.compression_factor
+                acquisition_id_image=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                    compression_factor=self.aux_pp2_fh.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
-            self.aux_pp2_fh.compression_options.mds_block_size,
+            mds_block_size=self.aux_pp2_fh.compression_options.mds_block_size,
         )
 
         main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFH(

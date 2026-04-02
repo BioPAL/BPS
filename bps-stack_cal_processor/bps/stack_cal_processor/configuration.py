@@ -341,17 +341,23 @@ class StackCalConf:
         nyquist_window_bounds: tuple[float, float] = (0.5, 0.9)  # [0-1]
         """Control the ratio between SKP estimation window and L1a LUT resolution."""
 
-        calibration_phase_postprocessing: SkpPostprocessingFilterType = SkpPostprocessingFilterType.GOLDSTEIN
+        calibration_phase_postprocessing: SkpPostprocessingFilterType = SkpPostprocessingFilterType.NONE
         """How the SKP calibration phase must be postprocessed."""
 
         postprocessing_filter_window_size: float = 1000.0  # [m].
         """Size of the postprocessing filter window (same in range and azimuth)."""
 
         goldstein_filter_window_size: int = 5  # [px].
-        """Size of the Goldstein filter window (in frequency space)."""
+        """Size of the filtering window on Goldstein weights (in frequency space)."""
+
+        goldstein_filter_alpha: float = 0.5  # [adim]
+        """The Goldstein alpha parameter."""
 
         exclude_mpmb_polarization_cross_covariance_flag: bool = False
         """If true, exclude the polarization cross-covariances when computing the MPMB coherence matrix."""
+
+        cross_pol_merging_flag: bool = True
+        """If true, run cross-pol merging in the stack."""
 
         use_32bit_precision: bool = True
         """Use 32-bit precision (aka complex64 and float32) for model estimations."""

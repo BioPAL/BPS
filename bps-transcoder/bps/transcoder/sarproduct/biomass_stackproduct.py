@@ -76,6 +76,8 @@ LUT_LAYERS = [
     "denoisingXX",
     "denoisingVH",
     "denoisingVV",
+    "coherence",
+    "interferogram",
     "ionospherePhaseScreens",
     "skpCalibrationPhaseScreen",
     "skpCalibrationPhaseScreenQuality",
@@ -211,46 +213,42 @@ class BIOMASSStackProcessingParameters:
             multi_squint_calibration_disable_ionosphere_correction_flag=self.multi_squint_calibration_disable_ionosphere_correction_flag,
             multi_squint_calibration_coherence_improvement_threshold=self.multi_squint_calibration_coherence_improvement_threshold,
             multi_squint_calibration_multi_squint_coherence_sub_band_resolution=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_multi_squint_coherence_subband_resolution,
-                units="m",
+                value=self.multi_squint_calibration_multi_squint_coherence_subband_resolution,
+                units=common_models.UomType.M,
             ),
             multi_squint_calibration_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_coherence_azimuth_window_size,
-                units="m",
+                value=self.multi_squint_calibration_coherence_azimuth_window_size, units=common_models.UomType.M
             ),
             multi_squint_calibration_coherence_range_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_coherence_range_window_size,
-                units="m",
+                value=self.multi_squint_calibration_coherence_range_window_size, units=common_models.UomType.M
             ),
             multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size,
-                units="m",
+                value=self.multi_squint_calibration_multi_squint_high_res_coherence_azimuth_window_size,
+                units=common_models.UomType.M,
             ),
             multi_squint_calibration_multi_squint_high_res_coherence_range_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_multi_squint_high_res_coherence_range_window_size,
-                units="m",
+                value=self.multi_squint_calibration_multi_squint_high_res_coherence_range_window_size,
+                units=common_models.UomType.M,
             ),
             multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size,
-                units="m",
+                value=self.multi_squint_calibration_multi_squint_low_res_coherence_azimuth_window_size,
+                units=common_models.UomType.M,
             ),
             multi_squint_calibration_multi_squint_low_res_coherence_range_window_size=main_annotation_models.FloatWithUnit(
-                self.multi_squint_calibration_multi_squint_low_res_coherence_range_window_size,
-                units="m",
+                value=self.multi_squint_calibration_multi_squint_low_res_coherence_range_window_size,
+                units=common_models.UomType.M,
             ),
             skp_phase_calibration_flag=self.skp_phase_calibration_flag,
             skp_phase_correction_flag=self.skp_phase_correction_flag,
             skp_phase_correction_flattening_only_flag=self.skp_phase_correction_flattening_only_flag,
             skp_estimation_window_size=main_annotation_models.FloatWithUnit(
-                value=float(self.skp_estimation_window_size),
-                units="m",
+                value=float(self.skp_estimation_window_size), units=common_models.UomType.M
             ),
             skp_calibration_phase_postprocessing=common_models.SkpPhaseCalibrationPostprocessingType(
                 self.skp_calibration_phase_postprocessing.capitalize()
             ),
             skp_postprocessing_filter_window_size=main_annotation_models.FloatWithUnit(
-                value=float(self.skp_postprocessing_filter_window_size),
-                units="m",
+                value=float(self.skp_postprocessing_filter_window_size), units=common_models.UomType.M
             ),
             skp_goldstein_filter_window_size=self.skp_goldstein_filter_window_size,
             slow_ionosphere_removal_multi_baseline_threshold=self.slow_ionosphere_removal_multi_baseline_threshold,
@@ -300,16 +298,13 @@ class BIOMASSStackCoregistrationParameters:
             secondary_image=self.secondary_image,
             primary_image_selection_information=self.primary_image_selection_information,
             average_azimuth_coregistration_shift=main_annotation_models.FloatWithUnit(
-                value=float(self.average_azimuth_coregistration_shift),
-                units="m",
+                value=float(self.average_azimuth_coregistration_shift), units=common_models.UomType.M
             ),
             average_range_coregistration_shift=main_annotation_models.FloatWithUnit(
-                value=float(self.average_range_coregistration_shift),
-                units="m",
+                value=float(self.average_range_coregistration_shift), units=common_models.UomType.M
             ),
             normal_baseline=main_annotation_models.FloatWithUnit(
-                value=float(self.normal_baseline),
-                units="m",
+                value=float(self.normal_baseline), units=common_models.UomType.M
             ),
             polarisation_used=self.polarization_used,
         )
@@ -380,20 +375,16 @@ class BIOMASSStackInSARParameters:
         return l1c_annotations.StaInSarparametersType(
             calibration_primary_image=self.calibration_primary_image,
             azimuth_common_bandwidth=main_annotation_models.FloatWithUnit(
-                value=float(self.azimuth_common_bandwidth),
-                units="Hz",
+                value=float(self.azimuth_common_bandwidth), units=common_models.UomType.HZ
             ),
             azimuth_central_frequency=main_annotation_models.FloatWithUnit(
-                value=float(self.azimuth_central_frequency),
-                units="Hz",
+                value=float(self.azimuth_central_frequency), units=common_models.UomType.HZ
             ),
             slow_ionosphere_azimuth_phase_screen=main_annotation_models.FloatWithUnit(
-                value=float(self.slow_ionosphere_azimuth_phase_screen),
-                units="rad/s",
+                value=float(self.slow_ionosphere_azimuth_phase_screen), units=common_models.UomType.RAD_S
             ),
             slow_ionosphere_range_phase_screen=main_annotation_models.FloatWithUnit(
-                value=float(self.slow_ionosphere_range_phase_screen),
-                units="rad/s",
+                value=float(self.slow_ionosphere_range_phase_screen), units=common_models.UomType.RAD_S
             ),
             slow_ionosphere_quality=float(self.slow_ionosphere_quality),
             slow_ionosphere_removal_interferometric_pairs=translate_interferometric_pair_list_to_model(
@@ -401,20 +392,17 @@ class BIOMASSStackInSARParameters:
             ),
             multi_squint_calibration_low_resolution_flag=bool(self.multi_squint_calibration_low_resolution_flag),
             multi_squint_calibration_azimuth_phase_slope=main_annotation_models.FloatWithUnit(
-                value=float(self.multi_squint_calibration_azimuth_phase_slope),
-                units="rad/s",
+                value=float(self.multi_squint_calibration_azimuth_phase_slope), units=common_models.UomType.RAD_S
             ),
             multi_squint_calibration_range_phase_slope=main_annotation_models.FloatWithUnit(
-                value=float(self.multi_squint_calibration_range_phase_slope),
-                units="rad/s",
+                value=float(self.multi_squint_calibration_range_phase_slope), units=common_models.UomType.RAD_S
             ),
             multi_squint_calibration_azimuth_shift=main_annotation_models.FloatWithUnit(
-                value=float(self.multi_squint_calibration_azimuth_shift),
-                units="m",
+                value=float(self.multi_squint_calibration_azimuth_shift), units=common_models.UomType.M
             ),
             multi_squint_calibration_azimuth_frequency_centroid=main_annotation_models.FloatWithUnit(
                 value=float(self.multi_squint_calibration_azimuth_frequency_centroid),
-                units="1/m",
+                units=common_models.UomType.VALUE_1_M,
             ),
             multi_squint_calibration_ionospheric_layer_altitudes=translate_float_array_with_units_to_model(
                 [float(h) for h in self.multi_squint_calibration_ionospheric_layer_altitudes],
@@ -426,14 +414,12 @@ class BIOMASSStackInSARParameters:
             ),
             baseline_ordering_index=int(self.baseline_ordering_index),
             skp_calibration_phase_screen_mean=main_annotation_models.FloatWithUnit(
-                value=float(self.skp_calibration_phase_screen_mean),
-                units="rad",
+                value=float(self.skp_calibration_phase_screen_mean), units=common_models.UomType.RAD
             ),
             skp_calibration_phase_screen_std=float(self.skp_calibration_phase_screen_std),
             skp_calibration_phase_screen_var=float(self.skp_calibration_phase_screen_var),
             skp_calibration_phase_screen_mad=main_annotation_models.FloatWithUnit(
-                value=float(self.skp_calibration_phase_screen_mad),
-                units="rad",
+                value=float(self.skp_calibration_phase_screen_mad), units=common_models.UomType.RAD
             ),
         )
 

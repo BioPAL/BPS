@@ -111,7 +111,9 @@ def fill_bps_l1_processing_parameters(
         ],
         internal_calibration_estimation_flag=internal_calibration_estimation_flag,
         internal_calibration_correction_flag=internal_calibration_correction_flag,
-        internal_calibration_source=aux_pp1.internal_calibration_correction.internal_calibration_source,
+        internal_calibration_source=common.InternalCalibrationSourceType[
+            aux_pp1.internal_calibration_correction.internal_calibration_source.name
+        ],
         range_reference_function_source=common.RangeReferenceFunctionType[
             aux_pp1.range_compression.range_reference_function_source.name
         ],
@@ -171,7 +173,9 @@ def fill_bps_l1_processing_parameters(
         },
         detection_flag=aux_pp1.multilook.apply_detection,
         thermal_denoising_flag=aux_pp1.thermal_denoising.thermal_denoising_flag,
-        noise_parameters_source=aux_pp1.thermal_denoising.noise_parameters_source,
+        noise_parameters_source=common.InternalCalibrationSourceType[
+            aux_pp1.thermal_denoising.noise_parameters_source.value
+        ],
         ground_projection_flag=aux_pp1.ground_projection.ground_projection_flag,
         requested_height_model=translate_earth_model(aux_pp1.general.requested_height_model),
         requested_height_model_version=aux_pp1.general.requested_height_model_version,

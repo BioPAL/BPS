@@ -62,13 +62,6 @@ def translate_spectrum_processing_parameters_type(
     params: common_annotation_models_l1.SpectrumProcessingParametersType,
 ) -> common_annotation_l1.SpectrumProcessingParametersType:
     """Translate spectrum proc params"""
-    assert params.window_type is not None
-    assert params.window_coefficient is not None
-    assert params.total_bandwidth is not None
-    assert params.processing_bandwidth is not None
-    assert params.look_bandwidth is not None
-    assert params.number_of_looks is not None
-    assert params.look_overlap is not None
     return common_annotation_l1.SpectrumProcessingParametersType(
         window_type=translate_common.translate_weighting_window_type(params.window_type),
         window_coefficient=params.window_coefficient,
@@ -84,7 +77,6 @@ def translate_spectrum_processing_parameters_type_to_model(
     params: common_annotation_l1.SpectrumProcessingParametersType,
 ) -> common_annotation_models_l1.SpectrumProcessingParametersType:
     """Translate spectrum proc params"""
-
     return common_annotation_models_l1.SpectrumProcessingParametersType(
         window_type=translate_common.translate_weighting_window_type_to_model(params.window_type),
         window_coefficient=float(params.window_coefficient),
@@ -105,49 +97,6 @@ def translate_spectrum_processing_parameters_type_to_model(
 def translate_processing_parameters(
     params: common_annotation_models_l1.ProcessingParametersType,
 ) -> common_annotation_l1.ProcessingParameters:
-    assert params.processor_version is not None
-    assert params.product_generation_time is not None
-    assert params.processing_mode is not None
-    assert params.orbit_source is not None
-    assert params.attitude_source is not None
-    assert params.raw_data_correction_flag is not None
-    assert params.rfi_detection_flag is not None
-    assert params.rfi_correction_flag is not None
-    assert params.rfi_mitigation_method is not None
-    assert params.rfi_mask is not None
-    assert params.rfi_mask_generation_method is not None
-    assert params.rfi_fmmitigation_method is not None
-    assert params.rfi_fmchirp_source is not None
-    assert params.internal_calibration_estimation_flag is not None
-    assert params.internal_calibration_correction_flag is not None
-    assert params.range_reference_function_source is not None
-    assert params.range_compression_method is not None
-    assert params.extended_swath_processing_flag is not None
-    assert params.dc_method is not None
-    assert params.dc_value is not None
-    assert params.antenna_pattern_correction1_flag is not None
-    assert params.antenna_pattern_correction2_flag is not None
-    assert params.antenna_cross_talk_correction_flag is not None
-    assert params.range_processing_parameters is not None
-    assert params.azimuth_processing_parameters is not None
-    assert params.bistatic_delay_correction_flag is not None
-    assert params.bistatic_delay_correction_method is not None
-    assert params.range_spreading_loss_compensation_flag is not None
-    assert params.reference_range is not None
-    assert params.processing_gain_list is not None
-    assert params.polarimetric_correction_flag is not None
-    assert params.ionosphere_height_defocusing_flag is not None
-    assert params.ionosphere_height_estimation_method is not None
-    assert params.faraday_rotation_correction_flag is not None
-    assert params.ionospheric_phase_screen_correction_flag is not None
-    assert params.group_delay_correction_flag is not None
-    assert params.autofocus_flag is not None
-    assert params.autofocus_method is not None
-    assert params.detection_flag is not None
-    assert params.thermal_denoising_flag is not None
-    assert params.noise_gain_list is not None
-    assert params.ground_projection_flag is not None
-
     return common_annotation_l1.ProcessingParameters(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime(params.product_generation_time),
@@ -306,14 +255,6 @@ def translate_dc_estimate_type(
     section: common_annotation_models_l1.DcEstimateType,
 ) -> common_annotation_l1.DcEstimateType:
     """Translate dc annotatoin section"""
-    assert section.azimuth_time is not None
-    assert section.t0 is not None
-    assert section.geometry_dcpolynomial is not None
-    assert section.combined_dcpolynomial is not None
-    assert section.combined_dcvalues is not None
-    assert section.combined_dcslant_range_times is not None
-    assert section.combined_dcrmserror is not None
-    assert section.combined_dcrmserror_above_threshold is not None
     return common_annotation_l1.DcEstimateType(
         azimuth_time=translate_common.translate_datetime(section.azimuth_time),
         t0=translate_common.translate_double_with_unit(section.t0),
@@ -358,7 +299,6 @@ def translate_dc_estimate_list_type(
     dc_estimates: common_annotation_models_l1.DcEstimateListType,
 ) -> list[common_annotation_l1.DcEstimateType]:
     """Translate list of dc estimate"""
-    assert dc_estimates.count is not None
     if len(dc_estimates.dc_estimate) != dc_estimates.count:
         raise RuntimeError(
             "Inconsistency in dc estimate list: "
@@ -373,7 +313,7 @@ def translate_dc_estimate_list_type_to_model(
 ) -> common_annotation_models_l1.DcEstimateListType:
     """Translate list of dc estimate"""
     return common_annotation_models_l1.DcEstimateListType(
-        [translate_dc_estimate_type_to_model(dc_estimate) for dc_estimate in dc_estimates],
+        dc_estimate=[translate_dc_estimate_type_to_model(dc_estimate) for dc_estimate in dc_estimates],
         count=len(dc_estimates),
     )
 
@@ -382,12 +322,6 @@ def translate_coordinate_conversion_type(
     conversion: common_annotation_models_l1.CoordinateConversionType,
 ) -> common_annotation_l1.CoordinateConversionType:
     """Translate coordinate conversion section"""
-    assert conversion.azimuth_time is not None
-    assert conversion.t0 is not None
-    assert conversion.sr0 is not None
-    assert conversion.slant_to_ground_coefficients is not None
-    assert conversion.gr0 is not None
-    assert conversion.ground_to_slant_coefficients is not None
     return common_annotation_l1.CoordinateConversionType(
         azimuth_time=translate_common.translate_datetime(conversion.azimuth_time),
         t0=translate_common.translate_double_with_unit(conversion.t0),
@@ -420,7 +354,6 @@ def translate_coordinate_conversion_list_type(
     conversions: common_annotation_models_l1.CoordinateConversionListType,
 ) -> list[common_annotation_l1.CoordinateConversionType]:
     """Translate list of coordinate conversions"""
-    assert conversions.count is not None
     if len(conversions.coordinate_conversion) != conversions.count:
         raise RuntimeError(
             "Inconsistency in coordinate conversions list: "
@@ -435,7 +368,7 @@ def translate_coordinate_conversion_list_type_to_model(
 ) -> common_annotation_models_l1.CoordinateConversionListType:
     """Translate list of coordinate conversions"""
     return common_annotation_models_l1.CoordinateConversionListType(
-        [translate_coordinate_conversion_type_to_model(conversion) for conversion in conversions],
+        coordinate_conversion=[translate_coordinate_conversion_type_to_model(conversion) for conversion in conversions],
         count=len(conversions),
     )
 
@@ -444,25 +377,6 @@ def translate_sar_image(
     image: common_annotation_models_l1.SarImageType,
 ) -> common_annotation_l1.SarImageType:
     """Translate SAR Image section"""
-    assert image.first_sample_slant_range_time is not None
-    assert image.last_sample_slant_range_time is not None
-    assert image.first_line_azimuth_time is not None
-    assert image.last_line_azimuth_time is not None
-    assert image.range_time_interval is not None
-    assert image.azimuth_time_interval is not None
-    assert image.range_pixel_spacing is not None
-    assert image.azimuth_pixel_spacing is not None
-    assert image.number_of_samples is not None
-    assert image.number_of_lines is not None
-    assert image.projection is not None
-    assert image.range_coordinate_conversion is not None
-    assert image.datum is not None
-    assert image.footprint is not None
-    assert image.pixel_representation is not None
-    assert image.pixel_type is not None
-    assert image.pixel_quantity is not None
-    assert image.no_data_value is not None
-
     return common_annotation_l1.SarImageType(
         first_sample_slant_range_time=translate_common.translate_double_with_unit(image.first_sample_slant_range_time),
         last_sample_slant_range_time=translate_common.translate_double_with_unit(image.last_sample_slant_range_time),
@@ -529,7 +443,6 @@ def translate_polarisation_list(
     polarisations: common_annotation_models_l1.PolarisationListType,
 ) -> list[common.PolarisationType]:
     """Translate polarisation list"""
-    assert polarisations.count is not None
     if len(polarisations.polarisation) != polarisations.count:
         raise RuntimeError(
             "Inconsistency in polarisation list: "
@@ -582,26 +495,6 @@ def translate_acquisition_information(
     info: common_annotation_models_l1.AcquisitionInformationType,
 ) -> common_annotation_l1.AcquisitionInformationType:
     """Translate acquisition information"""
-    assert info.mission is not None
-    assert info.swath is not None
-    assert info.product_type is not None
-    assert info.polarisation_list is not None
-    assert info.start_time is not None
-    assert info.stop_time is not None
-    assert info.mission_phase_id is not None
-    assert info.drift_phase_flag is not None
-    assert info.sensor_mode is not None
-    assert info.global_coverage_id is not None
-    assert info.major_cycle_id is not None
-    assert info.repeat_cycle_id is not None
-    assert info.absolute_orbit_number is not None
-    assert info.relative_orbit_number is not None
-    assert info.orbit_pass is not None
-    assert info.platform_heading is not None
-    assert info.data_take_id is not None
-    assert info.frame is not None
-    assert info.product_composition is not None
-
     return common_annotation_l1.AcquisitionInformationType(
         mission=translate_common.translate_mission_type(info.mission),
         swath=translate_common.translate_swath_type(info.swath),
@@ -629,11 +522,6 @@ def translate_tx_pulse(
     pulse: common_annotation_models_l1.TxPulseType,
 ) -> common_annotation_l1.TxPulseType:
     """Translate TX pulse"""
-    assert pulse.azimuth_time is not None
-    assert pulse.tx_pulse_length is not None
-    assert pulse.tx_pulse_start_frequency is not None
-    assert pulse.tx_pulse_start_phase is not None
-    assert pulse.tx_pulse_ramp_rate is not None
     return common_annotation_l1.TxPulseType(
         azimuth_time=translate_common.translate_datetime(pulse.azimuth_time),
         tx_pulse_length=translate_common.translate_double_with_unit(pulse.tx_pulse_length),
@@ -668,10 +556,6 @@ def translate_data_format_type(
     data_format: common_annotation_models_l1.DataFormatType,
 ) -> common_annotation_l1.DataFormatType:
     """Translate data format"""
-    assert data_format.echo_format is not None
-    assert data_format.calibration_format is not None
-    assert data_format.noise_format is not None
-    assert data_format.mean_bit_rate is not None
     return common_annotation_l1.DataFormatType(
         echo_format=translate_common.translate_data_format_mode(data_format.echo_format),
         calibration_format=translate_common.translate_data_format_mode(data_format.calibration_format),
@@ -757,25 +641,6 @@ def translate_instrument_parameters(
     params: common_annotation_models_l1.InstrumentParametersType,
 ) -> common_annotation_l1.InstrumentParametersType:
     """Translate instrument parameters"""
-
-    assert params.first_line_sensing_time_list is not None
-    assert params.first_line_sensing_time_list.first_line_sensing_time is not None
-    assert params.last_line_sensing_time_list is not None
-    assert params.last_line_sensing_time_list.last_line_sensing_time is not None
-    assert params.number_of_input_samples is not None
-    assert params.number_of_input_lines is not None
-    assert params.swp_list is not None
-    assert params.swl_list is not None
-    assert params.prf_list is not None
-    assert params.rank is not None
-    assert params.tx_pulse_list is not None
-    assert params.instrument_configuration_id is not None
-    assert params.radar_carrier_frequency is not None
-    assert params.rx_gain_list is not None
-    assert params.preamble_flag is not None
-    assert params.postamble_flag is not None
-    assert params.interleaved_calibration_flag is not None
-    assert params.data_format is not None
     return common_annotation_l1.InstrumentParametersType(
         first_line_sensing_time_list=_translate_list_time_with_pol(
             params.first_line_sensing_time_list.first_line_sensing_time
@@ -813,23 +678,23 @@ def translate_instrument_parameters_to_model(
 
     return common_annotation_models_l1.InstrumentParametersType(
         first_line_sensing_time_list=common_annotation_models_l1.FirstLineSensingTimeListType(
-            first_line_sensing_time_list, len(first_line_sensing_time_list)
+            first_line_sensing_time=first_line_sensing_time_list, count=len(first_line_sensing_time_list)
         ),
         last_line_sensing_time_list=common_annotation_models_l1.LastLineSensingTimeListType(
-            last_line_sensing_time_list, len(last_line_sensing_time_list)
+            last_line_sensing_time=last_line_sensing_time_list, count=len(last_line_sensing_time_list)
         ),
         number_of_input_samples=params.number_of_input_samples,
         number_of_input_lines=params.number_of_input_lines,
-        swp_list=common_annotation_models_l1.SwpListType(swp_list, len(swp_list)),
-        swl_list=common_annotation_models_l1.SwlListType(swl_list, len(swl_list)),
-        prf_list=common_annotation_models_l1.PrfListType(prf_list, len(prf_list)),
+        swp_list=common_annotation_models_l1.SwpListType(swp=swp_list, count=len(swp_list)),
+        swl_list=common_annotation_models_l1.SwlListType(swl=swl_list, count=len(swl_list)),
+        prf_list=common_annotation_models_l1.PrfListType(prf=prf_list, count=len(prf_list)),
         rank=params.rank,
         tx_pulse_list=_translate_tx_pulse_list_to_model(params.tx_pulse_list),
         instrument_configuration_id=params.instrument_configuration_id,
         radar_carrier_frequency=translate_common.translate_double_with_unit_to_model(
             params.radar_carrier_frequency, units=common.UomType.HZ
         ),
-        rx_gain_list=common_annotation_models_l1.RxGainListType(rx_gain_list, len(rx_gain_list)),
+        rx_gain_list=common_annotation_models_l1.RxGainListType(rx_gain=rx_gain_list, count=len(rx_gain_list)),
         preamble_flag=translate_common.translate_bool_to_model(params.preamble_flag),
         postamble_flag=translate_common.translate_bool_to_model(params.postamble_flag),
         interleaved_calibration_flag=translate_common.translate_bool_to_model(params.interleaved_calibration_flag),
@@ -841,17 +706,6 @@ def translate_ionosphere_correction(
     info: common_annotation_models_l1.IonosphereCorrectionType,
 ) -> common_annotation_l1.IonosphereCorrection:
     """Translate ionosphere correction section"""
-
-    assert info.ionosphere_height_used is not None
-    assert info.ionosphere_height_estimated is not None
-    assert info.ionosphere_height_estimation_method_selected is not None
-    assert info.ionosphere_height_estimation_latitude_value is not None
-    assert info.ionosphere_height_estimation_flag is not None
-    assert info.ionosphere_height_estimation_method_used is not None
-    assert info.gaussian_filter_computation_flag is not None
-    assert info.faraday_rotation_correction_applied is not None
-    assert info.autofocus_shifts_applied is not None
-
     return common_annotation_l1.IonosphereCorrection(
         ionosphere_height_used=translate_common.translate_float_with_unit(info.ionosphere_height_used),
         ionosphere_height_estimated=translate_common.translate_float_with_unit(info.ionosphere_height_estimated),
@@ -875,7 +729,6 @@ def translate_ionosphere_correction_to_model(
     info: common_annotation_l1.IonosphereCorrection,
 ) -> common_annotation_models_l1.IonosphereCorrectionType:
     """Translate ionosphere correction section"""
-
     return common_annotation_models_l1.IonosphereCorrectionType(
         ionosphere_height_used=translate_common.translate_float_with_unit_to_model(
             info.ionosphere_height_used, units=common.UomType.M
@@ -909,7 +762,6 @@ def translate_fm_rate_estimate_list(
     fm_rate_estimates: common_annotation_models_l1.FmRateEstimatesListType,
 ) -> list[common.SlantRangePolynomialType]:
     """Translate list of fm rate estimate"""
-    assert fm_rate_estimates.count is not None
     if len(fm_rate_estimates.fm_rate_estimate) != fm_rate_estimates.count:
         raise RuntimeError(
             "Inconsistency in fm rate estimate list: "
@@ -927,7 +779,7 @@ def translate_fm_rate_estimate_list_to_model(
 ) -> common_annotation_models_l1.FmRateEstimatesListType:
     """Translate list of fm rate estimate"""
     return common_annotation_models_l1.FmRateEstimatesListType(
-        [
+        fm_rate_estimate=[
             translate_common.translate_slant_range_polynomial_to_model(fm_rate_estimate)
             for fm_rate_estimate in fm_rate_estimates
         ],
@@ -939,8 +791,6 @@ def translate_doppler_parameters(
     params: common_annotation_models_l1.DopplerParametersType,
 ) -> common_annotation_l1.DopplerParametersType:
     """Translate doppler parameters section"""
-    assert params.dc_estimate_list is not None
-    assert params.fm_rate_estimate_list is not None
     return common_annotation_l1.DopplerParametersType(
         dc_estimate_list=translate_dc_estimate_list_type(params.dc_estimate_list),
         fm_rate_estimate_list=translate_fm_rate_estimate_list(params.fm_rate_estimate_list),
@@ -961,9 +811,6 @@ def translate_error_counters(
     counters: common_annotation_models_l1.ErrorCountersType,
 ) -> common_annotation_l1.ErrorCountersType:
     """Translate error counters"""
-    assert counters.num_isp_header_errors is not None
-    assert counters.num_isp_missing is not None
-
     return common_annotation_l1.ErrorCountersType(
         num_isp_header_errors=counters.num_isp_header_errors,
         num_isp_missing=counters.num_isp_missing,
@@ -984,11 +831,6 @@ def translate_raw_data_statistics(
     stats: common_annotation_models_l1.RawDataStatisticsType,
 ) -> common_annotation_l1.RawDataStatisticsType:
     """Translate raw data statistics"""
-    assert stats.i_bias is not None
-    assert stats.q_bias is not None
-    assert stats.iq_quadrature_departure is not None
-    assert stats.iq_gain_imbalance is not None
-    assert stats.polarisation is not None
     return common_annotation_l1.RawDataStatisticsType(
         i_bias=stats.i_bias,
         q_bias=stats.q_bias,
@@ -1015,7 +857,6 @@ def translate_raw_data_statistics_list(
     stat_list: common_annotation_models_l1.RawDataStatisticsListType,
 ) -> list[common_annotation_l1.RawDataStatisticsType]:
     """Translate raw data statistics list"""
-    assert stat_list.count is not None
     if len(stat_list.raw_data_statistics) != stat_list.count:
         raise RuntimeError(
             "Inconsistency in raw data statistics list: "
@@ -1039,8 +880,6 @@ def translate_power_ratio(
     power_ratio: common_annotation_models_l1.PowerRatioType,
 ) -> common_annotation_l1.PowerRatioType:
     """Translate in/out-of-band power ratio"""
-    assert power_ratio.azimuth_time is not None
-    assert power_ratio.value is not None
     return common_annotation_l1.PowerRatioType(
         azimuth_time=translate_common.translate_datetime(power_ratio.azimuth_time),
         value=power_ratio.value,
@@ -1061,8 +900,6 @@ def translate_power_ratio_list(
     power_ratios: common_annotation_models_l1.PowerRatioListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.PowerRatioType]]:
     """Translate in/out-of-band power ratio list"""
-    assert power_ratios.polarisation is not None
-    assert power_ratios.count is not None
     if len(power_ratios.power_ratio) != power_ratios.count:
         raise RuntimeError(
             "Inconsistency in in/out-of-band power ratio list: "
@@ -1090,10 +927,6 @@ def translate_raw_data_analysis(
     analysis: common_annotation_models_l1.RawDataAnalysisType,
 ) -> common_annotation_l1.RawDataAnalysisType:
     """Translate raw data analysis"""
-    assert analysis.error_counters is not None
-    assert analysis.raw_data_statistics_list is not None
-    assert analysis.in_out_band_power_ratio_list is not None
-
     power_ratios = {}
     for power_ratio in analysis.in_out_band_power_ratio_list.power_ratio_list:
         pol, power_ratio_list = translate_power_ratio_list(power_ratio)
@@ -1111,7 +944,9 @@ def translate_raw_data_analysis_to_model(
 ) -> common_annotation_models_l1.RawDataAnalysisType:
     """Translate raw data analysis"""
     power_ratios = common_annotation_models_l1.InOutBandPowerRatioListType(
-        [translate_power_ratio_list_to_model(pol, power_ratio) for pol, power_ratio in analysis.iobpr_list.items()],
+        power_ratio_list=[
+            translate_power_ratio_list_to_model(pol, power_ratio) for pol, power_ratio in analysis.iobpr_list.items()
+        ],
         count=len(analysis.iobpr_list),
     )
 
@@ -1126,32 +961,6 @@ def translate_internal_calibration_sequence(
     sequence: common_annotation_models_l1.InternalCalibrationSequenceType,
 ) -> common_annotation_l1.InternalCalibrationSequenceType:
     """Translate internal calibration sequence"""
-    assert sequence.azimuth_time is not None
-    assert sequence.drift_amplitude is not None
-    assert sequence.drift_phase is not None
-    assert sequence.model_drift_amplitude is not None
-    assert sequence.model_drift_phase is not None
-    assert sequence.relative_drift_valid_flag is not None
-    assert sequence.absolute_drift_valid_flag is not None
-    assert sequence.cross_correlation_bandwidth is not None
-    assert sequence.cross_correlation_pslr is not None
-    assert sequence.cross_correlation_islr is not None
-    assert sequence.cross_correlation_peak_location is not None
-    assert sequence.reconstructed_replica_valid_flag is not None
-    assert sequence.internal_time_delay is not None
-    assert sequence.internal_tx_channel_imbalance_amplitude is not None
-    assert sequence.internal_tx_channel_imbalance_phase is not None
-    assert sequence.internal_rx_channel_imbalance_amplitude is not None
-    assert sequence.internal_rx_channel_imbalance_phase is not None
-    assert sequence.transmit_power_tracking_d1_amplitude is not None
-    assert sequence.transmit_power_tracking_d1_phase is not None
-    assert sequence.receive_power_tracking_d1_amplitude is not None
-    assert sequence.receive_power_tracking_d1_phase is not None
-    assert sequence.transmit_power_tracking_d2_amplitude is not None
-    assert sequence.transmit_power_tracking_d2_phase is not None
-    assert sequence.receive_power_tracking_d2_amplitude is not None
-    assert sequence.receive_power_tracking_d2_phase is not None
-
     return common_annotation_l1.InternalCalibrationSequenceType(
         azimuth_time=translate_common.translate_datetime(sequence.azimuth_time),
         drift_amplitude=sequence.drift_amplitude,
@@ -1258,8 +1067,6 @@ def translate_internal_calibration_sequence_list(
     sequences: common_annotation_models_l1.InternalCalibrationSequenceListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.InternalCalibrationSequenceType]]:
     """Translate internal calibration sequence list"""
-    assert sequences.polarisation is not None
-    assert sequences.count is not None
     if len(sequences.internal_calibration_sequence) != sequences.count:
         raise RuntimeError(
             "Inconsistency in internal calibration sequence list: "
@@ -1289,9 +1096,6 @@ def translate_noise_sequence(
     sequence: common_annotation_models_l1.NoiseSequenceType,
 ) -> common_annotation_l1.NoiseSequenceType:
     """Translate noise sequence"""
-    assert sequence.azimuth_time is not None
-    assert sequence.noise_power_correction_factor is not None
-    assert sequence.number_of_noise_lines is not None
     return common_annotation_l1.NoiseSequenceType(
         azimuth_time=translate_common.translate_datetime(sequence.azimuth_time),
         noise_power_correction_factor=sequence.noise_power_correction_factor,
@@ -1314,8 +1118,6 @@ def translate_noise_sequence_list(
     sequences: common_annotation_models_l1.NoiseSequenceListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.NoiseSequenceType]]:
     """Translate internal calibration sequence list"""
-    assert sequences.polarisation is not None
-    assert sequences.count is not None
     if len(sequences.noise_sequence) != sequences.count:
         raise RuntimeError(
             "Inconsistency in noise sequence list: "
@@ -1343,12 +1145,6 @@ def translate_internal_calibration(
     cal: common_annotation_models_l1.InternalCalibrationType,
 ) -> common_annotation_l1.InternalCalibrationType:
     """Translate internal calibration"""
-    assert cal.internal_calibration_parameters_used is not None
-    assert cal.range_reference_function_used is not None
-    assert cal.noise_parameters_used is not None
-    assert cal.internal_calibration_parameters_list is not None
-    assert cal.noise_list is not None
-
     int_cal_sequences = {}
     for sequence in cal.internal_calibration_parameters_list.internal_calibration_sequence_list:
         pol, sequence_list = translate_internal_calibration_sequence_list(sequence)
@@ -1378,14 +1174,16 @@ def translate_internal_calibration_to_model(
     """Translate internal calibration"""
 
     int_cal_sequences = common_annotation_models_l1.InternalCalibrationParametersListType(
-        [
+        internal_calibration_sequence_list=[
             translate_internal_calibration_sequence_list_to_model(pol, sequence)
             for pol, sequence in cal.internal_calibration_parameters_list.items()
         ],
         count=len(cal.internal_calibration_parameters_list),
     )
     noise_sequences = common_annotation_models_l1.NoiseListType(
-        [translate_noise_sequence_list_to_model(pol, sequence) for pol, sequence in cal.noise_list.items()],
+        noise_sequence_list=[
+            translate_noise_sequence_list_to_model(pol, sequence) for pol, sequence in cal.noise_list.items()
+        ],
         count=len(cal.noise_list),
     )
 
@@ -1408,10 +1206,6 @@ def translate_rfi_tmreport_type(
     report: common_annotation_models_l1.RfiTmreportType,
 ) -> common_annotation_l1.RfiTmreportType:
     """Translate time domain report item"""
-    assert report.polarisation is not None
-    assert report.percentage_affected_lines is not None
-    assert report.avg_percentage_affected_samples is not None
-    assert report.max_percentage_affected_samples is not None
     return common_annotation_l1.RfiTmreportType(
         polarisation=translate_common.translate_polarisation_type(report.polarisation),
         percentage_affected_lines=report.percentage_affected_lines,
@@ -1436,7 +1230,6 @@ def translate_rfi_tmreport_list_type(
     reports: common_annotation_models_l1.RfiTmreportListType,
 ) -> list[common_annotation_l1.RfiTmreportType]:
     """Translate list of rfi tm report"""
-    assert reports.count is not None
     if len(reports.rfi_tmreport) != reports.count:
         raise RuntimeError(
             "Inconsistency in rfi tm report list: "
@@ -1451,7 +1244,7 @@ def translate_rfi_tmreport_list_type_to_model(
 ) -> common_annotation_models_l1.RfiTmreportListType:
     """Translate list of rfi tm report"""
     return common_annotation_models_l1.RfiTmreportListType(
-        [translate_rfi_tmreport_type_to_model(report) for report in reports],
+        rfi_tmreport=[translate_rfi_tmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
@@ -1460,10 +1253,6 @@ def translate_rfi_isolated_fmreport_type(
     report: common_annotation_models_l1.RfiIsolatedFmreportType,
 ) -> common_annotation_l1.RfiIsolatedFmreportType:
     """Translate isolated RI report item"""
-    assert report.polarisation is not None
-    assert report.percentage_affected_lines is not None
-    assert report.max_percentage_affected_bw is not None
-    assert report.avg_percentage_affected_bw is not None
     return common_annotation_l1.RfiIsolatedFmreportType(
         polarisation=translate_common.translate_polarisation_type(report.polarisation),
         percentage_affected_lines=report.percentage_affected_lines,
@@ -1488,7 +1277,6 @@ def translate_rfi_isolated_fmreport_list_type(
     reports: common_annotation_models_l1.RfiIsolatedFmreportListType,
 ) -> list[common_annotation_l1.RfiIsolatedFmreportType]:
     """Translate list of  rfi isolated fm report"""
-    assert reports.count is not None
     if len(reports.rfi_isolated_fmreport) != reports.count:
         raise RuntimeError(
             "Inconsistency in rfi isolated fm report list: "
@@ -1503,7 +1291,7 @@ def translate_rfi_isolated_fmreport_list_type_to_model(
 ) -> common_annotation_models_l1.RfiIsolatedFmreportListType:
     """Translate list of  rfi isolated fm report"""
     return common_annotation_models_l1.RfiIsolatedFmreportListType(
-        [translate_rfi_isolated_fmreport_type_to_model(report) for report in reports],
+        rfi_isolated_fmreport=[translate_rfi_isolated_fmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
@@ -1512,10 +1300,6 @@ def translate_rfi_persistent_fmreport_type(
     report: common_annotation_models_l1.RfiPersistentFmreportType,
 ) -> common_annotation_l1.RfiPersistentFmreportType:
     """Translate persistent frequency domain report item"""
-    assert report.polarisation is not None
-    assert report.percentage_affected_lines is not None
-    assert report.max_percentage_affected_bw is not None
-    assert report.avg_percentage_affected_bw is not None
     return common_annotation_l1.RfiPersistentFmreportType(
         polarisation=translate_common.translate_polarisation_type(report.polarisation),
         percentage_affected_lines=report.percentage_affected_lines,
@@ -1540,7 +1324,6 @@ def translate_rfi_persistent_fmreport_list(
     reports: common_annotation_models_l1.RfiPersistentFmreportListType,
 ) -> list[common_annotation_l1.RfiPersistentFmreportType]:
     """Translate persistent frequency domain report item list"""
-    assert reports.count is not None
     if len(reports.rfi_persistent_fmreport) != reports.count:
         raise RuntimeError(
             "Inconsistency in rfi persistent fm report list: "
@@ -1555,7 +1338,7 @@ def translate_rfi_persistent_fmreport_list_type_to_model(
 ) -> common_annotation_models_l1.RfiPersistentFmreportListType:
     """Translate persistent frequency domain report item list"""
     return common_annotation_models_l1.RfiPersistentFmreportListType(
-        [translate_rfi_persistent_fmreport_type_to_model(report) for report in reports],
+        rfi_persistent_fmreport=[translate_rfi_persistent_fmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
@@ -1604,9 +1387,6 @@ def translate_radiometric_calibration(
     info: common_annotation_models_l1.RadiometricCalibrationType,
 ) -> common_annotation_l1.RadiometricCalibrationType:
     """Translate radiometric calibration section"""
-
-    assert info.absolute_calibration_constant_list is not None
-
     calibrations = [
         translate_common.translate_float_with_polarisation(values)
         for values in info.absolute_calibration_constant_list.absolute_calibration_constant
@@ -1621,7 +1401,6 @@ def translate_radiometric_calibration_to_model(
     info: common_annotation_l1.RadiometricCalibrationType,
 ) -> common_annotation_models_l1.RadiometricCalibrationType:
     """Translate radiometric calibration section"""
-
     calibrations = [
         translate_common.translate_float_with_polarisation_to_model((value, pol))
         for pol, value in info.absolute_calibration_constant_list.items()
@@ -1629,7 +1408,7 @@ def translate_radiometric_calibration_to_model(
 
     return common_annotation_models_l1.RadiometricCalibrationType(
         absolute_calibration_constant_list=common_annotation_models_l1.CalibrationConstantListType(
-            calibrations, len(calibrations)
+            absolute_calibration_constant=calibrations, count=len(calibrations)
         ),
     )
 
@@ -1638,9 +1417,6 @@ def translate_geometry(
     geometry: common_annotation_models_l1.GeometryType,
 ) -> common_annotation_l1.GeometryType:
     """Translate geometry"""
-    assert geometry.height_model is not None
-    assert geometry.height_model_used_flag is not None
-    assert geometry.roll_bias is not None
     return common_annotation_l1.GeometryType(
         height_model=translate_common.translate_height_model(geometry.height_model),
         height_model_used_flag=translate_common.translate_bool(geometry.height_model_used_flag),
@@ -1663,28 +1439,6 @@ def translate_quality_parameters(
     params: common_annotation_models_l1.QualityParametersType,
 ) -> common_annotation_l1.QualityParametersType:
     """Translate quality parameters"""
-    assert params.missing_ispfraction is not None
-    assert params.max_ispgap is not None
-    assert params.max_ispgap_threshold is not None
-    assert params.invalid_raw_data_samples is not None
-    assert params.raw_mean_expected is not None
-    assert params.raw_mean_threshold is not None
-    assert params.raw_std_expected is not None
-    assert params.raw_std_threshold is not None
-    assert params.rfi_tmfraction is not None
-    assert params.max_rfitmpercentage is not None
-    assert params.rfi_fmfraction is not None
-    assert params.max_rfifmpercentage is not None
-    assert params.invalid_drift_fraction is not None
-    assert params.max_invalid_drift_fraction is not None
-    assert params.invalid_replica_fraction is not None
-    assert params.invalid_dcestimates_fraction is not None
-    assert params.dc_rmserror_threshold is not None
-    assert params.residual_ionospheric_phase_screen_std is not None
-    assert params.invalid_blocks_percentage is not None
-    assert params.invalid_blocks_percentage_threshold is not None
-    assert params.polarisation is not None
-
     return common_annotation_l1.QualityParametersType(
         missing_ispfraction=params.missing_ispfraction,
         max_ispgap=params.max_ispgap,
@@ -1716,7 +1470,6 @@ def translate_quality_parameters_to_model(
     params: common_annotation_l1.QualityParametersType,
 ) -> common_annotation_models_l1.QualityParametersType:
     """Translate quality parameters"""
-
     return common_annotation_models_l1.QualityParametersType(
         missing_ispfraction=float(params.missing_ispfraction),
         max_ispgap=params.max_ispgap,
@@ -1750,8 +1503,6 @@ def translate_quality(
     quality: common_annotation_models_l1.QualityType,
 ) -> common_annotation_l1.QualityType:
     """Translate quality"""
-    assert quality.overall_product_quality_index is not None
-    assert quality.quality_parameters_list is not None
     return common_annotation_l1.QualityType(
         overall_product_quality_index=quality.overall_product_quality_index,
         quality_parameters_list=[
@@ -1777,9 +1528,6 @@ def translate_polarimetric_distortion(
     distortion: common_annotation_models_l1.PolarimetricDistortionType,
 ) -> common_annotation_l1.PolarimetricDistortionType:
     """Polarimetric distortion type"""
-    assert distortion.cross_talk_list is not None
-    assert distortion.channel_imbalance_list is not None
-
     return common_annotation_l1.PolarimetricDistortionType(
         cross_talk=translate_common.translate_cross_talk_list(distortion.cross_talk_list),
         channel_imbalance=translate_common.translate_channel_imbalance_list(distortion.channel_imbalance_list),

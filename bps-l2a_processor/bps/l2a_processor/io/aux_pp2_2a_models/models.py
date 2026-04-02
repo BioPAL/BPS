@@ -10,9 +10,10 @@ XSD PP2 2A models
 -----------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -51,7 +52,7 @@ from bps.common.io.common_types import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxppacquisitionListType:
     """
     Parameters
@@ -64,7 +65,7 @@ class AuxppacquisitionListType:
     class Meta:
         name = "AUXPPacquisitionListType"
 
-    acquisition_folder_name: list["AuxppacquisitionListType.AcquisitionFolderName"] = field(
+    acquisition_folder_name: list[AuxppacquisitionListType.AcquisitionFolderName] = field(
         default_factory=list,
         metadata={
             "name": "acquisitionFolderName",
@@ -74,27 +75,19 @@ class AuxppacquisitionListType:
             "max_occurs": 3,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class AcquisitionFolderName:
-        value: str = field(
-            default="",
-            metadata={
-                "required": True,
-            },
+        value: str = field(default="")
+        reference_image: str = field(
+            metadata={"name": "referenceImage", "type": "Attribute", "pattern": r"(false)|(true)"}
         )
-        reference_image: Optional[str] = field(
-            default=None,
-            metadata={"name": "referenceImage", "type": "Attribute", "required": True, "pattern": r"(false)|(true)"},
-        )
-        average_wavenumber: Optional[float] = field(
+        average_wavenumber: None | float = field(
             default=None,
             metadata={
                 "name": "averageWavenumber",
@@ -118,7 +111,7 @@ class CalibrationScreenType(Enum):
     SKP = "skp"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2AAgb:
     """
     Parameters
@@ -134,56 +127,46 @@ class CompressionOptionsL2AAgb:
     class Meta:
         name = "compressionOptionsL2aAGB"
 
-    mds: Optional["CompressionOptionsL2AAgb.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2AAgb.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads: Optional["CompressionOptionsL2AAgb.Ads"] = field(
-        default=None,
+    ads: CompressionOptionsL2AAgb.Ads = field(
         metadata={
             "name": "ADS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads_block_size: Optional[int] = field(
-        default=None,
+    ads_block_size: int = field(
         metadata={
             "name": "ADS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        gn: Optional["CompressionOptionsL2AAgb.Mds.Gn"] = field(
-            default=None,
+        gn: CompressionOptionsL2AAgb.Mds.Gn = field(
             metadata={
                 "name": "GN",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Gn:
             """
             Parameters
@@ -196,47 +179,39 @@ class CompressionOptionsL2AAgb:
                 compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ads:
-        fnf: Optional["CompressionOptionsL2AAgb.Ads.Fnf"] = field(
-            default=None,
+        fnf: CompressionOptionsL2AAgb.Ads.Fnf = field(
             metadata={
                 "name": "FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        local_incidence_angle: Optional["CompressionOptionsL2AAgb.Ads.LocalIncidenceAngle"] = field(
-            default=None,
+        local_incidence_angle: CompressionOptionsL2AAgb.Ads.LocalIncidenceAngle = field(
             metadata={
                 "name": "localIncidenceAngle",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fnf:
             """
             Parameters
@@ -245,17 +220,15 @@ class CompressionOptionsL2AAgb:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class LocalIncidenceAngle:
             """
             Parameters
@@ -268,26 +241,22 @@ class CompressionOptionsL2AAgb:
                 reliable value. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            least_significant_digit: Optional[int] = field(
-                default=None,
+            least_significant_digit: int = field(
                 metadata={
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2AFd:
     """
     Parameters
@@ -303,74 +272,60 @@ class CompressionOptionsL2AFd:
     class Meta:
         name = "compressionOptionsL2aFD"
 
-    mds: Optional["CompressionOptionsL2AFd.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2AFd.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads: Optional["CompressionOptionsL2AFd.Ads"] = field(
-        default=None,
+    ads: CompressionOptionsL2AFd.Ads = field(
         metadata={
             "name": "ADS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads_block_size: Optional[int] = field(
-        default=None,
+    ads_block_size: int = field(
         metadata={
             "name": "ADS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        fd: Optional["CompressionOptionsL2AFd.Mds.Fd"] = field(
-            default=None,
+        fd: CompressionOptionsL2AFd.Mds.Fd = field(
             metadata={
                 "name": "FD",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        probability_of_change: Optional["CompressionOptionsL2AFd.Mds.ProbabilityOfChange"] = field(
-            default=None,
+        probability_of_change: CompressionOptionsL2AFd.Mds.ProbabilityOfChange = field(
             metadata={
                 "name": "probabilityOfChange",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        cfm: Optional["CompressionOptionsL2AFd.Mds.Cfm"] = field(
-            default=None,
+        cfm: CompressionOptionsL2AFd.Mds.Cfm = field(
             metadata={
                 "name": "CFM",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fd:
             """
             Parameters
@@ -379,17 +334,15 @@ class CompressionOptionsL2AFd:
                 ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class ProbabilityOfChange:
             """
             Parameters
@@ -401,26 +354,22 @@ class CompressionOptionsL2AFd:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Cfm:
             """
             Parameters
@@ -429,47 +378,39 @@ class CompressionOptionsL2AFd:
                 ZSTD algorithm compression factor for the FD image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ads:
-        fnf: Optional["CompressionOptionsL2AFd.Ads.Fnf"] = field(
-            default=None,
+        fnf: CompressionOptionsL2AFd.Ads.Fnf = field(
             metadata={
                 "name": "FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        acm: Optional["CompressionOptionsL2AFd.Ads.Acm"] = field(
-            default=None,
+        acm: CompressionOptionsL2AFd.Ads.Acm = field(
             metadata={
                 "name": "ACM",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        number_of_averages: Optional["CompressionOptionsL2AFd.Ads.NumberOfAverages"] = field(
-            default=None,
+        number_of_averages: CompressionOptionsL2AFd.Ads.NumberOfAverages = field(
             metadata={
                 "name": "numberOfAverages",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fnf:
             """
             Parameters
@@ -478,17 +419,15 @@ class CompressionOptionsL2AFd:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Acm:
             """
             Parameters
@@ -501,25 +440,21 @@ class CompressionOptionsL2AFd:
                 decimal place in the data that is a reliable value. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            least_significant_digit: Optional[int] = field(
-                default=None,
+            least_significant_digit: int = field(
                 metadata={
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class NumberOfAverages:
             """
             Parameters
@@ -528,18 +463,16 @@ class CompressionOptionsL2AFd:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2AFh:
     """
     Parameters
@@ -555,65 +488,53 @@ class CompressionOptionsL2AFh:
     class Meta:
         name = "compressionOptionsL2aFH"
 
-    mds: Optional["CompressionOptionsL2AFh.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2AFh.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads: Optional["CompressionOptionsL2AFh.Ads"] = field(
-        default=None,
+    ads: CompressionOptionsL2AFh.Ads = field(
         metadata={
             "name": "ADS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads_block_size: Optional[int] = field(
-        default=None,
+    ads_block_size: int = field(
         metadata={
             "name": "ADS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        fh: Optional["CompressionOptionsL2AFh.Mds.Fh"] = field(
-            default=None,
+        fh: CompressionOptionsL2AFh.Mds.Fh = field(
             metadata={
                 "name": "FH",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        quality: Optional["CompressionOptionsL2AFh.Mds.Quality"] = field(
-            default=None,
+        quality: CompressionOptionsL2AFh.Mds.Quality = field(
             metadata={
                 "name": "Quality",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fh:
             """
             Parameters
@@ -625,26 +546,22 @@ class CompressionOptionsL2AFh:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Quality:
             """
             Parameters
@@ -656,38 +573,32 @@ class CompressionOptionsL2AFh:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ads:
-        fnf: Optional["CompressionOptionsL2AFh.Ads.Fnf"] = field(
-            default=None,
+        fnf: CompressionOptionsL2AFh.Ads.Fnf = field(
             metadata={
                 "name": "FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fnf:
             """
             Parameters
@@ -696,18 +607,16 @@ class CompressionOptionsL2AFh:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2ATfh:
     """
     Parameters
@@ -723,65 +632,53 @@ class CompressionOptionsL2ATfh:
     class Meta:
         name = "compressionOptionsL2aTFH"
 
-    mds: Optional["CompressionOptionsL2ATfh.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2ATfh.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads: Optional["CompressionOptionsL2ATfh.Ads"] = field(
-        default=None,
+    ads: CompressionOptionsL2ATfh.Ads = field(
         metadata={
             "name": "ADS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads_block_size: Optional[int] = field(
-        default=None,
+    ads_block_size: int = field(
         metadata={
             "name": "ADS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        tfh: Optional["CompressionOptionsL2ATfh.Mds.Tfh"] = field(
-            default=None,
+        tfh: CompressionOptionsL2ATfh.Mds.Tfh = field(
             metadata={
                 "name": "TFH",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        quality: Optional["CompressionOptionsL2ATfh.Mds.Quality"] = field(
-            default=None,
+        quality: CompressionOptionsL2ATfh.Mds.Quality = field(
             metadata={
                 "name": "Quality",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Tfh:
             """
             Parameters
@@ -793,26 +690,22 @@ class CompressionOptionsL2ATfh:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Quality:
             """
             Parameters
@@ -824,38 +717,32 @@ class CompressionOptionsL2ATfh:
                 allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ads:
-        fnf: Optional["CompressionOptionsL2ATfh.Ads.Fnf"] = field(
-            default=None,
+        fnf: CompressionOptionsL2ATfh.Ads.Fnf = field(
             metadata={
                 "name": "FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fnf:
             """
             Parameters
@@ -864,44 +751,36 @@ class CompressionOptionsL2ATfh:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MinMaxNumType:
     class Meta:
         name = "minMaxNumType"
 
-    min: Optional[float] = field(
-        default=None,
+    min: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max: Optional[float] = field(
-        default=None,
+    max: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    num: Optional[int] = field(
-        default=None,
+    num: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
@@ -919,13 +798,13 @@ class SubsettingRuleType(Enum):
 
 class VerticalProfileOptionType(Enum):
     """
-    Default profile.
+    default profile.
     """
 
     DEFAULT_PROFILE = "default profile"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class VerticalReflectivityProfileType:
     """
     Parameters
@@ -946,16 +825,14 @@ class VerticalReflectivityProfileType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GeneralType:
     """
     Parameters
@@ -983,54 +860,44 @@ class GeneralType:
     class Meta:
         name = "generalType"
 
-    apply_calibration_screen: Optional[CalibrationScreenType] = field(
-        default=None,
+    apply_calibration_screen: CalibrationScreenType = field(
         metadata={
             "name": "applyCalibrationScreen",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_coverage_threshold: Optional[float] = field(
-        default=None,
+    forest_coverage_threshold: float = field(
         metadata={
             "name": "forestCoverageThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_mask_interpolation_threshold: Optional[float] = field(
-        default=None,
+    forest_mask_interpolation_threshold: float = field(
         metadata={
             "name": "forestMaskInterpolationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    subsetting_rule: Optional[SubsettingRuleType] = field(
-        default=None,
+    subsetting_rule: SubsettingRuleType = field(
         metadata={
             "name": "subsettingRule",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation_combination_method: Optional[PolarisationCombinationMethodType] = field(
-        default=None,
+    polarisation_combination_method: PolarisationCombinationMethodType = field(
         metadata={
             "name": "polarisationCombinationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GroundCancellationTypeAgb:
     """
     Parameters
@@ -1056,45 +923,32 @@ class GroundCancellationTypeAgb:
     class Meta:
         name = "GroundCancellationTypeAGB"
 
-    compute_gnpower_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "computeGNPowerFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    compute_gnpower_flag: str = field(
+        metadata={"name": "computeGNPowerFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    radiometric_calibration_flag: Optional[str] = field(
-        default=None,
+    radiometric_calibration_flag: str = field(
         metadata={
             "name": "radiometricCalibrationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    emphasized_forest_height: Optional[FloatWithUnit] = field(
-        default=None,
+    emphasized_forest_height: FloatWithUnit = field(
         metadata={
             "name": "emphasizedForestHeight",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    operational_mode: Optional[OperationalModeType] = field(
-        default=None,
+    operational_mode: OperationalModeType = field(
         metadata={
             "name": "operationalMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    images_pair_selection: Optional[AuxppacquisitionListType] = field(
+    images_pair_selection: None | AuxppacquisitionListType = field(
         default=None,
         metadata={
             "name": "imagesPairSelection",
@@ -1102,7 +956,7 @@ class GroundCancellationTypeAgb:
             "namespace": "",
         },
     )
-    disable_ground_cancellation_flag: Optional[str] = field(
+    disable_ground_cancellation_flag: None | str = field(
         default=None,
         metadata={
             "name": "disableGroundCancellationFlag",
@@ -1113,7 +967,7 @@ class GroundCancellationTypeAgb:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GroundCancellationTypeFd:
     """
     Parameters
@@ -1135,25 +989,21 @@ class GroundCancellationTypeFd:
     class Meta:
         name = "GroundCancellationTypeFD"
 
-    emphasized_forest_height: Optional[FloatWithUnit] = field(
-        default=None,
+    emphasized_forest_height: FloatWithUnit = field(
         metadata={
             "name": "emphasizedForestHeight",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    operational_mode: Optional[OperationalModeType] = field(
-        default=None,
+    operational_mode: OperationalModeType = field(
         metadata={
             "name": "operationalMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    images_pair_selection: Optional[AuxppacquisitionListType] = field(
+    images_pair_selection: None | AuxppacquisitionListType = field(
         default=None,
         metadata={
             "name": "imagesPairSelection",
@@ -1161,7 +1011,7 @@ class GroundCancellationTypeFd:
             "namespace": "",
         },
     )
-    disable_ground_cancellation_flag: Optional[str] = field(
+    disable_ground_cancellation_flag: None | str = field(
         default=None,
         metadata={
             "name": "disableGroundCancellationFlag",
@@ -1172,38 +1022,32 @@ class GroundCancellationTypeFd:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class VerticalRangeWithUnitsType:
     class Meta:
         name = "verticalRangeWithUnitsType"
 
-    min: Optional[FloatWithUnit] = field(
-        default=None,
+    min: FloatWithUnit = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max: Optional[FloatWithUnit] = field(
-        default=None,
+    max: FloatWithUnit = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sampling: Optional[int] = field(
-        default=None,
+    sampling: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Agbtype:
     """
     Parameters
@@ -1228,73 +1072,54 @@ class Agbtype:
     class Meta:
         name = "AGBType"
 
-    l2a_agbproduct_doi: Optional[str] = field(
-        default=None,
+    l2a_agbproduct_doi: str = field(
         metadata={
             "name": "l2aAGBProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_id: Optional[str] = field(
-        default=None,
+    product_id: str = field(
         metadata={
             "name": "productID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    enable_product_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "enableProductFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    enable_product_flag: str = field(
+        metadata={"name": "enableProductFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    ground_cancellation: Optional[GroundCancellationTypeAgb] = field(
-        default=None,
+    ground_cancellation: GroundCancellationTypeAgb = field(
         metadata={
             "name": "groundCancellation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    product_resolution: FloatWithUnit = field(
         metadata={
             "name": "productResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    upsampling_factor: Optional[int] = field(
-        default=None,
+    upsampling_factor: int = field(
         metadata={
             "name": "upsamplingFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2AAgb] = field(
-        default=None,
+    compression_options: CompressionOptionsL2AAgb = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Fdtype:
     """
     Parameters
@@ -1323,91 +1148,68 @@ class Fdtype:
     class Meta:
         name = "FDType"
 
-    l2a_fdproduct_doi: Optional[str] = field(
-        default=None,
+    l2a_fdproduct_doi: str = field(
         metadata={
             "name": "l2aFDProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_id: Optional[str] = field(
-        default=None,
+    product_id: str = field(
         metadata={
             "name": "productID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    enable_product_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "enableProductFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    enable_product_flag: str = field(
+        metadata={"name": "enableProductFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    ground_cancellation: Optional[GroundCancellationTypeFd] = field(
-        default=None,
+    ground_cancellation: GroundCancellationTypeFd = field(
         metadata={
             "name": "groundCancellation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    significance_level: Optional[float] = field(
-        default=None,
+    significance_level: float = field(
         metadata={
             "name": "significanceLevel",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    product_resolution: FloatWithUnit = field(
         metadata={
             "name": "productResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    numerical_determinant_limit: Optional[float] = field(
-        default=None,
+    numerical_determinant_limit: float = field(
         metadata={
             "name": "numericalDeterminantLimit",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    upsampling_factor: Optional[int] = field(
-        default=None,
+    upsampling_factor: int = field(
         metadata={
             "name": "upsamplingFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2AFd] = field(
-        default=None,
+    compression_options: CompressionOptionsL2AFd = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Fhtype:
     """
     Parameters
@@ -1469,230 +1271,178 @@ class Fhtype:
     class Meta:
         name = "FHType"
 
-    l2a_fhproduct_doi: Optional[str] = field(
-        default=None,
+    l2a_fhproduct_doi: str = field(
         metadata={
             "name": "l2aFHProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_id: Optional[str] = field(
-        default=None,
+    product_id: str = field(
         metadata={
             "name": "productID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    enable_product_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "enableProductFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    enable_product_flag: str = field(
+        metadata={"name": "enableProductFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    vertical_reflectivity_option: Optional[VerticalProfileOptionType] = field(
-        default=None,
+    vertical_reflectivity_option: VerticalProfileOptionType = field(
         metadata={
             "name": "verticalReflectivityOption",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vertical_reflectivity_default_profile: Optional[VerticalReflectivityProfileType] = field(
-        default=None,
+    vertical_reflectivity_default_profile: VerticalReflectivityProfileType = field(
         metadata={
             "name": "verticalReflectivityDefaultProfile",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    model_inversion: Optional[ModelInversionType] = field(
-        default=None,
+    model_inversion: ModelInversionType = field(
         metadata={
             "name": "modelInversion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    spectral_decorrelation_compensation_flag: Optional[str] = field(
-        default=None,
+    spectral_decorrelation_compensation_flag: str = field(
         metadata={
             "name": "spectralDecorrelationCompensationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    snrdecorrelation_compensation_flag: Optional[str] = field(
-        default=None,
+    snrdecorrelation_compensation_flag: str = field(
         metadata={
             "name": "SNRDecorrelationCompensationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    correct_terrain_slopes_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "correctTerrainSlopesFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    correct_terrain_slopes_flag: str = field(
+        metadata={"name": "correctTerrainSlopesFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    normalised_height_estimation_range: Optional["Fhtype.NormalisedHeightEstimationRange"] = field(
-        default=None,
+    normalised_height_estimation_range: Fhtype.NormalisedHeightEstimationRange = field(
         metadata={
             "name": "normalisedHeightEstimationRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    normalised_wavenumber_estimation_range: Optional["Fhtype.NormalisedWavenumberEstimationRange"] = field(
-        default=None,
+    normalised_wavenumber_estimation_range: Fhtype.NormalisedWavenumberEstimationRange = field(
         metadata={
             "name": "normalisedWavenumberEstimationRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ground_to_volume_ratio_range: Optional["Fhtype.GroundToVolumeRatioRange"] = field(
-        default=None,
+    ground_to_volume_ratio_range: Fhtype.GroundToVolumeRatioRange = field(
         metadata={
             "name": "groundToVolumeRatioRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    temporal_decorrelation_estimation_range: Optional["Fhtype.TemporalDecorrelationEstimationRange"] = field(
-        default=None,
+    temporal_decorrelation_estimation_range: Fhtype.TemporalDecorrelationEstimationRange = field(
         metadata={
             "name": "temporalDecorrelationEstimationRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    temporal_decorrelation_ground_to_volume_ratio: Optional[float] = field(
-        default=None,
+    temporal_decorrelation_ground_to_volume_ratio: float = field(
         metadata={
             "name": "temporalDecorrelationGroundToVolumeRatio",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    residual_decorrelation: Optional[float] = field(
-        default=None,
+    residual_decorrelation: float = field(
         metadata={
             "name": "residualDecorrelation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    product_resolution: FloatWithUnit = field(
         metadata={
             "name": "productResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    uncertainty_validvalues_limits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    uncertainty_validvalues_limits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "uncertaintyValidvaluesLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vertical_wavenumber_validvalues_limits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    vertical_wavenumber_validvalues_limits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "verticalWavenumberValidvaluesLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lower_height_limit: Optional[FloatWithUnit] = field(
-        default=None,
+    lower_height_limit: FloatWithUnit = field(
         metadata={
             "name": "lowerHeightLimit",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    upsampling_factor: Optional[int] = field(
-        default=None,
+    upsampling_factor: int = field(
         metadata={
             "name": "upsamplingFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2AFh] = field(
-        default=None,
+    compression_options: CompressionOptionsL2AFh = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class NormalisedHeightEstimationRange(MinMaxType):
-        unit: Optional[object] = field(
+        unit: None | object = field(
             default=None,
             metadata={
                 "type": "Attribute",
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class NormalisedWavenumberEstimationRange(MinMaxNumType):
-        unit: Optional[object] = field(
+        unit: None | object = field(
             default=None,
             metadata={
                 "type": "Attribute",
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class GroundToVolumeRatioRange(MinMaxNumType):
-        unit: Optional[object] = field(
+        unit: None | object = field(
             default=None,
             metadata={
                 "type": "Attribute",
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class TemporalDecorrelationEstimationRange(MinMaxNumType):
-        unit: Optional[object] = field(
+        unit: None | object = field(
             default=None,
             metadata={
                 "type": "Attribute",
@@ -1700,7 +1450,7 @@ class Fhtype:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Tfhtype:
     """
     Parameters
@@ -1735,110 +1485,78 @@ class Tfhtype:
     class Meta:
         name = "TFHType"
 
-    l2a_tfhproduct_doi: Optional[str] = field(
-        default=None,
+    l2a_tfhproduct_doi: str = field(
         metadata={
             "name": "l2aTFHProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_id: Optional[str] = field(
-        default=None,
+    product_id: str = field(
         metadata={
             "name": "productID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    enable_product_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "enableProductFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    enable_product_flag: str = field(
+        metadata={"name": "enableProductFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    enable_super_resolution: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "enableSuperResolution",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    enable_super_resolution: str = field(
+        metadata={"name": "enableSuperResolution", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    product_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    product_resolution: FloatWithUnit = field(
         metadata={
             "name": "productResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    regularization_noise_factor: Optional[float] = field(
-        default=None,
+    regularization_noise_factor: float = field(
         metadata={
             "name": "regularizationNoiseFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    power_threshold: Optional[float] = field(
-        default=None,
+    power_threshold: float = field(
         metadata={
             "name": "powerThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    median_factor: Optional[int] = field(
-        default=None,
+    median_factor: int = field(
         metadata={
             "name": "medianFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    estimation_valid_values_limits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    estimation_valid_values_limits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "estimationValidValuesLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vertical_range: Optional[VerticalRangeWithUnitsType] = field(
-        default=None,
+    vertical_range: VerticalRangeWithUnitsType = field(
         metadata={
             "name": "verticalRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2ATfh] = field(
-        default=None,
+    compression_options: CompressionOptionsL2ATfh = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2AProcessingParametersType:
     """
     Parameters
@@ -1858,57 +1576,47 @@ class AuxiliaryL2AProcessingParametersType:
     class Meta:
         name = "auxiliaryL2aProcessingParametersType"
 
-    general: Optional[GeneralType] = field(
-        default=None,
+    general: GeneralType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    agb: Optional[Agbtype] = field(
-        default=None,
+    agb: Agbtype = field(
         metadata={
             "name": "AGB",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    fd: Optional[Fdtype] = field(
-        default=None,
+    fd: Fdtype = field(
         metadata={
             "name": "FD",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    fh: Optional[Fhtype] = field(
-        default=None,
+    fh: Fhtype = field(
         metadata={
             "name": "FH",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tfh: Optional[Tfhtype] = field(
-        default=None,
+    tfh: Tfhtype = field(
         metadata={
             "name": "TFH",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2AProcessingParameters(AuxiliaryL2AProcessingParametersType):
     """
-    BIOMASS auxiliary L2a processing parameters for each product (AGB, FD, FH, TOMO
-    FH) and common parameters for the four products..
+    BIOMASS auxiliary L2a processing parameters for each product (AGB, FD, FH, TOMO FH) and common parameters for
+    the four products..
     """
 
     class Meta:

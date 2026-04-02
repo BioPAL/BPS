@@ -29,15 +29,6 @@ def translate_model_to_delays(
     delays_model: DelayListType,
 ) -> dict[ScatteringResponse, float]:
     """Translate delays"""
-    assert delays_model.delay_gt1 is not None
-    assert delays_model.delay_gt1.value is not None
-    assert delays_model.delay_gt2 is not None
-    assert delays_model.delay_gt2.value is not None
-    assert delays_model.delay_x is not None
-    assert delays_model.delay_x.value is not None
-    assert delays_model.delay_y is not None
-    assert delays_model.delay_y.value is not None
-
     return {
         ScatteringResponse.GT1: delays_model.delay_gt1.value,
         ScatteringResponse.GT2: delays_model.delay_gt2.value,
@@ -48,15 +39,6 @@ def translate_model_to_delays(
 
 def translate_model_to_rcs(rcs_model: RcsListType) -> dict[ScatteringResponse, float]:
     """Translate rcs"""
-    assert rcs_model.rcs_gt1 is not None
-    assert rcs_model.rcs_gt1.value is not None
-    assert rcs_model.rcs_gt2 is not None
-    assert rcs_model.rcs_gt2.value is not None
-    assert rcs_model.rcs_x is not None
-    assert rcs_model.rcs_x.value is not None
-    assert rcs_model.rcs_y is not None
-    assert rcs_model.rcs_y.value is not None
-
     return {
         ScatteringResponse.GT1: rcs_model.rcs_gt1.value,
         ScatteringResponse.GT2: rcs_model.rcs_gt2.value,
@@ -67,14 +49,6 @@ def translate_model_to_rcs(rcs_model: RcsListType) -> dict[ScatteringResponse, f
 
 def translate_model_to_parc_info(parc_info_model: ParcType) -> ParcInfo:
     """Translate parc info"""
-    assert parc_info_model.parc_id is not None
-    assert parc_info_model.validity_start is not None
-    assert parc_info_model.validity_stop is not None
-    assert parc_info_model.position_x is not None
-    assert parc_info_model.position_y is not None
-    assert parc_info_model.position_z is not None
-    assert parc_info_model.delay_list is not None
-    assert parc_info_model.rcs_list is not None
     return ParcInfo(
         parc_id=parc_info_model.parc_id,
         validity_interval=(
@@ -97,9 +71,6 @@ def translate_model_to_parc_info_list(
     parc_info_model: AuxiliaryCalSiteInformation,
 ) -> ParcInfoList:
     """Translate parc info model into corresponding object"""
-    assert parc_info_model.parc_list is not None
-    assert parc_info_model.parc_list.count is not None
-
     if parc_info_model.parc_list.count != len(parc_info_model.parc_list.parc):
         raise InvalidParcInfo(
             "Count does not correspond to parc info list size: "

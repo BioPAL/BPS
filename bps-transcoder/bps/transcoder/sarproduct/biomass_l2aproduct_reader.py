@@ -243,15 +243,9 @@ class BIOMASSL2aProductReader:
         else:
             baseline = int(baseline_string)
 
-        assert radar_carrier_frequency is not None
         assert global_coverage_id is not None
         assert major_cycle_id is not None
-        assert absolute_orbit_number is not None
-        assert relative_orbit_number is not None
-        assert datatake_id is not None
         assert frame is not None
-        assert platform_heading is not None
-        assert forest_coverage_percentage is not None
 
         self.main_ads_product = BIOMASSL2aMainADSproduct(
             mission,
@@ -277,19 +271,6 @@ class BIOMASSL2aProductReader:
             selected_reference_image,
         )
 
-        assert main_annotation_model.raster_image is not None
-        assert main_annotation_model.raster_image.first_latitude_value is not None
-        assert main_annotation_model.raster_image.first_longitude_value is not None
-        assert main_annotation_model.raster_image.latitude_spacing is not None
-        assert main_annotation_model.raster_image.longitude_spacing is not None
-        assert main_annotation_model.raster_image.number_of_samples is not None
-        assert main_annotation_model.raster_image.number_of_lines is not None
-        assert main_annotation_model.raster_image.projection is not None
-        assert main_annotation_model.raster_image.datum is not None
-        assert main_annotation_model.raster_image.pixel_representation is not None
-        assert main_annotation_model.raster_image.pixel_type is not None
-        assert main_annotation_model.raster_image.no_data_value is not None
-
         first_latitude_value = main_annotation_model.raster_image.first_latitude_value.value
         first_longitude_value = main_annotation_model.raster_image.first_longitude_value.value
         latitude_spacing = main_annotation_model.raster_image.latitude_spacing.value
@@ -302,14 +283,6 @@ class BIOMASSL2aProductReader:
         pixel_representation = main_annotation_model.raster_image.pixel_representation
         pixel_type = main_annotation_model.raster_image.pixel_type
         no_data_value = main_annotation_model.raster_image.no_data_value
-
-        assert main_annotation_model.raster_image.footprint is not None
-        assert first_latitude_value is not None
-        assert first_longitude_value is not None
-        assert latitude_spacing is not None
-        assert longitude_spacing is not None
-        assert number_of_samples is not None
-        assert number_of_lines is not None
 
         footprint = main_annotation_model.raster_image.footprint.value.split(" ")
         footprint = [float(v) for v in footprint]
@@ -329,27 +302,18 @@ class BIOMASSL2aProductReader:
             no_data_value,
         )
 
-        assert main_annotation_model.input_information is not None
-        assert main_annotation_model.input_information.product_type is not None
-        assert main_annotation_model.input_information.polarisation_list is not None
-        assert main_annotation_model.input_information.projection is not None
-        assert main_annotation_model.input_information.footprint is not None
-        assert main_annotation_model.input_information.acquisition_list is not None
-        assert main_annotation_model.input_information.overall_products_quality_index is not None
-        assert main_annotation_model.input_information.nominal_stack is not None
-
         # retro compatibility
         if main_annotation_model.input_information.vertical_wavenumbers is None:
             vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-                common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
-                common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
+                min=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
+                max=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
             )
         else:
             vertical_wavenumbers_info = main_annotation_model.input_information.vertical_wavenumbers
         if main_annotation_model.input_information.height_of_ambiguity is None:
             height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-                common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
-                common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
+                min=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
+                max=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
             )
         else:
             height_of_ambiguity_info = main_annotation_model.input_information.height_of_ambiguity
@@ -366,8 +330,6 @@ class BIOMASSL2aProductReader:
             acquisition_list=main_annotation_model.input_information.acquisition_list,
         )
 
-        assert main_annotation_model.processing_parameters is not None
-        assert main_annotation_model.processing_parameters.product_resolution is not None
         if not self.product_type == "FP_TFH_L2A":
             assert main_annotation_model.processing_parameters.upsampling_factor is not None
 
@@ -381,11 +343,7 @@ class BIOMASSL2aProductReader:
 
         if not self.product_type == "FP_TFH_L2A":
             upsampling_factor = main_annotation_model.processing_parameters.upsampling_factor
-        assert processor_version is not None
-        assert product_generation_time is not None
-        assert general_configuration is not None
-        assert compression_options is not None
-        assert product_resolution is not None
+
         if not self.product_type == "FP_TFH_L2A":
             assert upsampling_factor is not None
 
@@ -495,8 +453,6 @@ class BIOMASSL2aProductReader:
             assert main_annotation_model.processing_parameters.compute_gnpower_flag is not None
             assert main_annotation_model.processing_parameters.radiometric_calibration_flag is not None
             assert main_annotation_model.processing_parameters.disable_ground_cancellation_flag is not None
-            assert main_annotation_model.processing_parameters.compression_options is not None
-            assert main_annotation_model.processing_parameters.compression_options.ads is not None
             assert main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle is not None
             least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle.least_significant_digit
             emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
@@ -529,11 +485,6 @@ class BIOMASSL2aProductReader:
             )
 
         elif self.product_type == "FP_TFH_L2A":
-            assert main_annotation_model.processing_parameters.regularization_noise_factor is not None
-            assert main_annotation_model.processing_parameters.power_threshold is not None
-            assert main_annotation_model.processing_parameters.median_factor is not None
-            assert main_annotation_model.processing_parameters.estimation_valid_values_limits is not None
-
             enable_super_resolution = str_to_bool(main_annotation_model.processing_parameters.enable_super_resolution)
 
             self.main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersTOMOFH(

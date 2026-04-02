@@ -63,7 +63,6 @@ def write_product_folder(
             data=data,
             raster_info=raster_info,
         )
-        # pylint: disable-next=broad-exception-caught
     except Exception as err:
         bps_logger.error("Cannot export intermediate product to %s", output_pf_path)
         raise StackCoregProcessorRuntimeError(err) from err

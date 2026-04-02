@@ -722,7 +722,6 @@ class StackCalProcessorInputManager:
                 doppler_centroids_product = np.array(
                     doppler_centroids_poly_gen.evaluate((azimuth_times, range_times))
                 ).reshape(-1)
-                # pylint: disable-next=broad-exception-caught
             except Exception:
                 bps_logger.warning(
                     "Could not initialize the doppler centroids for image '%s'. Setting them to 0's",

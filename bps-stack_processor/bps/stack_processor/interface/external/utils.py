@@ -202,7 +202,9 @@ def fill_stack_cal_conf_from_aux_pps(
             ),
             postprocessing_filter_window_size=aux_pps_skp_conf.postprocessing_filter_window_size,
             goldstein_filter_window_size=aux_pps_skp_conf.goldstein_filter_window_size,
+            goldstein_filter_alpha=aux_pps_skp_conf.goldstein_filter_alpha,
             exclude_mpmb_polarization_cross_covariance_flag=aux_pps_skp_conf.exclude_mpmb_polarization_cross_covariance_flag,
+            cross_pol_merging_flag=aux_pps_skp_conf.cross_pol_merging_flag,
             use_32bit_precision=aux_pps_skp_conf.use_32bit_flag,
         )
 

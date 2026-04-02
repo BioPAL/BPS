@@ -1,0 +1,36 @@
+{% set name = "bps-l1_binaries" %}
+{% set version = "4.4.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  binary_relocation: false  # we handle with patchelf
+  missing_dso_whitelist:
+    - libpthread.so.0
+    - libdl.so.2
+    - libc.so.6
+    - libm.so.6
+    - /lib64/ld-linux-x86-64.so.2
+
+requirements:
+  build:
+    - patchelf=0.15.0
+  run:
+    - libgomp
+    - libgcc-ng
+    - libstdcxx-ng
+    - libgfortran-ng
+
+about:
+  summary: "Biomass L1 processor binaries"
+  license: "Custom license"
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

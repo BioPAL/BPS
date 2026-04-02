@@ -1,0 +1,28 @@
+# Byte-compiled / optimized
+__pycache__
+*.py[co]
+
+# Distribution / packaging
+build
+.nox
+local_channel
+
+# Other
+*.bak
+
+# Ignore local debug/run vscode configuration
+.vscode/launch.json
+
+# C++ executables XSD should not be committed
+xsd/bricksar-xsd/*
+
+# data
+L1_executables
+bps-l1_binaries/bin
+bps-l1_binaries/lib
+bps-stack_binaries/bin
+bps-stack_binaries/lib
+*/dist
+
+# local test config
+test/integration/config/local.toml

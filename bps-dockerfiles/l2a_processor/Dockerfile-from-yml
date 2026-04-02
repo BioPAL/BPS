@@ -1,0 +1,20 @@
+FROM bps-prereq:latest
+
+COPY pkgs /tmp/python-packages
+COPY environment.yml /tmp/environment.yml
+
+ENV NUMBA_CACHE_DIR "/tmp/numba"
+
+USER root
+RUN mkdir /tmp/numba && \
+    chmod 777 /tmp/numba && \
+    bash -c "conda index --verbose /tmp/python-packages && \
+    conda env update --file /tmp/environment.yml && \
+    conda clean -afy" && \
+    rm -rf /tmp/numba/* && \
+    rm -fr /tmp/python-packages && \
+    rm -fr /tmp/environment.yml && \
+    ln -s /opt/conda_folder/envs/env/bin/bps_l2a_processor /usr/local/bin/
+
+USER nobody
+CMD /bin/bash

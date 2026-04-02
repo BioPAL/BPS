@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-l2l3-common-annotations.xsd"/>
+	<xsd:include schemaLocation="./bio-l2l3-agb-proc-annotations.xsd"/>
+	<xsd:complexType name="mainAnnotationType">
+		<xsd:sequence>
+			<xsd:element name="product" type="productL2bL3Type">
+				<xsd:annotation>
+					<xsd:documentation>Product L2b and L3 DSR. This DSR contains the L2b/L3 product information.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rasterImage" type="rasterImageType">
+				<xsd:annotation>
+					<xsd:documentation>Raster image DSR. This DSR contains all the necessary information to exploit the L2b/L3 raster images.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inputInformation" type="InputInformationL2bL3ListType">
+				<xsd:annotation>
+					<xsd:documentation>Input Information L2b/L3 DSR. This DSR contains the necessary information to identify the L2a products in input to L2b or to L3 processor and also a list of all the L1c acquisitions used to generate those L2a products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingParameters" type="processingParametersL2bType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters DSR. This DSR contains the description of L2b/L3 processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="mainAnnotation" type="mainAnnotationType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS L2b AGB product main annotation element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

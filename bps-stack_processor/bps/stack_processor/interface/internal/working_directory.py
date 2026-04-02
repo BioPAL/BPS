@@ -83,7 +83,7 @@ def raise_if_aux_pps_is_not_compatible_for_resume(
         try:
             validate_aux_pps_xsd_schema(previous_aux_pps_path)
             previous_aux_pps = parse_aux_pps(previous_aux_pps_path.read_text(encoding="utf-8"))
-        # pylint: disable-next=broad-exception-caught
+
         except Exception as exc:
             raise StackWorkingDirParsingError(f"Stored AUX-PPS {previous_aux_pps_path} is no longer valid.") from exc
 
@@ -135,7 +135,7 @@ def raise_if_job_order_is_not_compatible_for_resume(
         # Parse the previuos job order, raise if it does not parse.
         try:
             previous_job_order = parse_stack_job_order(previous_job_order_path.read_text(encoding="utf-8"))
-        # pylint: disable-next=broad-exception-caught
+
         except Exception as exc:
             raise StackWorkingDirParsingError(
                 f"Stored job order {previous_job_order_path} is no longer valid."

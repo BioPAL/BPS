@@ -151,20 +151,6 @@ class BIOMASSL2bFHProductReader:
             main_annotation_models_l2b_fh.MainAnnotation,
         )
 
-        assert main_annotation_model is not None
-        assert main_annotation_model.product is not None
-
-        assert main_annotation_model.product.mission is not None
-        assert main_annotation_model.product.tile_id is not None
-        assert main_annotation_model.product.basin_id is not None
-        assert main_annotation_model.product.product_type is not None
-        assert main_annotation_model.product.start_time is not None
-        assert main_annotation_model.product.stop_time is not None
-        assert main_annotation_model.product.radar_carrier_frequency is not None
-        assert main_annotation_model.product.mission_phase_id is not None
-        assert main_annotation_model.product.sensor_mode is not None
-        assert main_annotation_model.product.global_coverage_id is not None
-
         mission = main_annotation_model.product.mission.value
         tile_id_list = [main_annotation_model.product.tile_id]  # one element list
         basin_id_list = main_annotation_model.product.basin_id.id
@@ -182,7 +168,6 @@ class BIOMASSL2bFHProductReader:
         else:
             baseline = int(baseline_string)
 
-        assert radar_carrier_frequency is not None
         assert global_coverage_id is not None
         self.main_ads_product = BIOMASSL2bFHMainADSproduct(
             mission,
@@ -198,20 +183,6 @@ class BIOMASSL2bFHProductReader:
             baseline,
         )
 
-        assert main_annotation_model.raster_image is not None
-
-        assert main_annotation_model.raster_image.first_latitude_value is not None
-        assert main_annotation_model.raster_image.first_longitude_value is not None
-        assert main_annotation_model.raster_image.latitude_spacing is not None
-        assert main_annotation_model.raster_image.longitude_spacing is not None
-        assert main_annotation_model.raster_image.number_of_samples is not None
-        assert main_annotation_model.raster_image.number_of_lines is not None
-        assert main_annotation_model.raster_image.projection is not None
-        assert main_annotation_model.raster_image.datum is not None
-        assert main_annotation_model.raster_image.pixel_representation is not None
-        assert main_annotation_model.raster_image.pixel_type is not None
-        assert main_annotation_model.raster_image.no_data_value is not None
-
         first_latitude_value = main_annotation_model.raster_image.first_latitude_value.value
         first_longitude_value = main_annotation_model.raster_image.first_longitude_value.value
         latitude_spacing = main_annotation_model.raster_image.latitude_spacing.value
@@ -223,14 +194,6 @@ class BIOMASSL2bFHProductReader:
         pixel_representation = main_annotation_model.raster_image.pixel_representation
         pixel_type = main_annotation_model.raster_image.pixel_type
         no_data_value = main_annotation_model.raster_image.no_data_value
-
-        assert main_annotation_model.raster_image.footprint is not None
-        assert first_latitude_value is not None
-        assert first_longitude_value is not None
-        assert latitude_spacing is not None
-        assert longitude_spacing is not None
-        assert number_of_samples is not None
-        assert number_of_lines is not None
 
         footprint = main_annotation_model.raster_image.footprint.value.split(" ")
         footprint = [float(v) for v in footprint]
@@ -250,17 +213,13 @@ class BIOMASSL2bFHProductReader:
             no_data_value,
         )
 
-        assert main_annotation_model.input_information is not None
         self.main_ads_input_information = BIOMASSL2bFHMainADSInputInformation(
             common_annotation_models_l2.InputInformationL2BL3ListType(
-                main_annotation_model.input_information.l2a_inputs,
-                len(main_annotation_model.input_information.l2a_inputs),
+                l2a_inputs=main_annotation_model.input_information.l2a_inputs,
+                count=len(main_annotation_model.input_information.l2a_inputs),
             )
         )
 
-        assert main_annotation_model.processing_parameters is not None
-        assert main_annotation_model.processing_parameters.minimum_l2a_coverage is not None
-        assert main_annotation_model.processing_parameters.forest_masking_flag is not None
         processor_version = main_annotation_model.processing_parameters.processor_version
         product_generation_time = main_annotation_model.processing_parameters.product_generation_time
         forest_masking_flag = str_to_bool(main_annotation_model.processing_parameters.forest_masking_flag)
@@ -270,11 +229,6 @@ class BIOMASSL2bFHProductReader:
         roll_off_factor_azimuth = main_annotation_model.processing_parameters.roll_off_factor_azimuth
         roll_off_factor_range = main_annotation_model.processing_parameters.roll_off_factor_range
 
-        assert processor_version is not None
-        assert product_generation_time is not None
-        assert bps_fnf is not None
-        assert compression_options is not None
-        assert minumum_l2a_coverage is not None
         self.main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFH(
             processor_version,
             product_generation_time,  # type: ignore

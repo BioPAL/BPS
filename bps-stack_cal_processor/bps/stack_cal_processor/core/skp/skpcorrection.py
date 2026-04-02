@@ -25,7 +25,7 @@ from bps.stack_cal_processor.core.floating_precision import (
     assert_list_numeric_types_equal,
 )
 from bps.stack_cal_processor.core.skp.utils import SkpRuntimeError
-from bps.stack_cal_processor.core.utils import interpolate_on_grid
+from bps.stack_cal_processor.core.utils import interpolate_on_grid, interpolate_on_grid_nn
 
 
 def apply_skp_correction_multithreaded(
@@ -33,11 +33,11 @@ def apply_skp_correction_multithreaded(
     stack: tuple[tuple[npt.NDArray[complex]], ...],
     skp_flattening_phases: tuple[npt.NDArray[float], ...],
     skp_calibration_phases: tuple[npt.NDArray[float], ...],
+    skp_calibration_valid_mask: npt.NDArray[bool],
     azimuth_axis: npt.NDArray[float],
     range_axis: npt.NDArray[float],
     azimuth_subsampling_indices: npt.NDArray[int],
     range_subsampling_indices: npt.NDArray[int],
-    quality_threshold: float,
     dtypes: EstimationDType,
     num_worker_threads: int = 1,
 ):
@@ -56,6 +56,9 @@ def apply_skp_correction_multithreaded(
     skp_calibration_phases: tuple[npt.NDArray[float], ...] [rad]
         The Nimg calibration phases from SKP of shape [Nazm' x Nrng'].
 
+    skp_calibration_valid_mask: npt.NDArray[bool]
+        The SKP calibration validity mask.
+
     azimuth_axis: npt.NDArray[float] [s]
         The [1 x Nazm] stack's relative azimuth axis.
 
@@ -69,9 +72,6 @@ def apply_skp_correction_multithreaded(
     range_subsampling_indices: npt.NDArray[int]
         The SKP subsampling indices in range. This must match
         the size of the SKP ground phases.
-
-    quality_threshold: float
-        The minimum quality for the SKP phase to be corrected.
 
     dtypes: EstimationDType
         Floating point precision used for the estiamtions.
@@ -110,20 +110,31 @@ def apply_skp_correction_multithreaded(
     cal_azimuth_axis = azimuth_axis[0:last_azimuth]
     cal_range_axis = range_axis[0:last_range]
 
+    # The validity mask.
+    skp_calibration_valid_mask = interpolate_on_grid_nn(
+        skp_calibration_valid_mask,
+        axes_in=(skp_azimuth_axis, skp_range_axis),
+        axes_out=(cal_azimuth_axis, cal_range_axis),
+    )
+
     skp_removal_phases = []
     with ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
         # Upsample the SKP ground phases to the full grid.
         def upsample_skp_correction_phases_fn(phi_flat, phi_skp):
-            return interpolate_on_grid(
-                phi_flat,
-                axes_in=(skp_azimuth_axis, skp_range_axis),
-                axes_out=(cal_azimuth_axis, cal_range_axis),
-            ).astype(dtypes.float_dtype) + interpolate_on_grid(
-                phi_skp,
-                axes_in=(skp_azimuth_axis, skp_range_axis),
-                axes_out=(cal_azimuth_axis, cal_range_axis),
-                phase_interpolation=True,
-            ).astype(dtypes.float_dtype)
+            return (
+                interpolate_on_grid(
+                    phi_flat,
+                    axes_in=(skp_azimuth_axis, skp_range_axis),
+                    axes_out=(cal_azimuth_axis, cal_range_axis),
+                ).astype(dtypes.float_dtype)
+                + interpolate_on_grid(
+                    phi_skp,
+                    axes_in=(skp_azimuth_axis, skp_range_axis),
+                    axes_out=(cal_azimuth_axis, cal_range_axis),
+                    phase_interpolation=True,
+                ).astype(dtypes.float_dtype)
+                * skp_calibration_valid_mask
+            )
 
         skp_removal_phases = list(
             executor.map(upsample_skp_correction_phases_fn, skp_flattening_phases, skp_calibration_phases)

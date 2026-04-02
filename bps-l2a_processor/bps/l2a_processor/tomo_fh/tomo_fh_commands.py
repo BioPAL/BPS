@@ -578,8 +578,8 @@ class TOMO_FH:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_dict = {
             "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
@@ -651,13 +651,13 @@ class TOMO_FH:
                 )
 
             sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters_list,
-                len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
+                sta_quality_parameters=sta_quality_parameters_list,
+                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
             )
 
             sta_quality = common_annotation_models_l2.StaQualityType(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index,
-                sta_quality_parameters_list,
+                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+                sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
@@ -679,11 +679,11 @@ class TOMO_FH:
 
         # Compute height of ambiguity from the average wavenumbers
         vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(
+            min=common_annotation_models_l2.FloatWithUnit(
                 value=float(min(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
-            common_annotation_models_l2.FloatWithUnit(
+            max=common_annotation_models_l2.FloatWithUnit(
                 value=float(max(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),

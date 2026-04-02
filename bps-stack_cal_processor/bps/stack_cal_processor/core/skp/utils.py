@@ -10,13 +10,14 @@ Utilities for the SKP module
 ----------------------------
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
+from typing import Self
 
 import numba as nb
 import numpy as np
 import numpy.typing as npt
+from arepytools.io.metadata import EPolarization
+from bps.common import bps_logger
 from bps.stack_cal_processor.configuration import SKP_NAME
 from bps.stack_cal_processor.core.floating_precision import EstimationDType
 from scipy import constants
@@ -40,7 +41,7 @@ class SkpPhaseScreenStats:
     mad_phase: float  # [rad].
 
     @classmethod
-    def from_phase_screen(cls, phase_screen: npt.NDArray[float]) -> SkpPhaseScreenStats:
+    def from_phase_screen(cls, phase_screen: npt.NDArray[float]) -> Self:
         """Create SkpPhaseScreenStats from a given phase screen."""
         return cls(
             avg_phase=circmean(phase_screen, low=-np.pi, high=np.pi),
@@ -116,7 +117,6 @@ def normalize_coherence(
         Then normalized covariance matrix (i.e. the coherence matrix).
 
     """
-    # pylint: disable=not-an-iterable
     if covariance.shape[0] != covariance.shape[1]:
         raise SkpRuntimeError("matrix must be a square matrix")
 
@@ -360,3 +360,61 @@ def compute_skp_calibration_phases_statistics(
     """
 
     return tuple(SkpPhaseScreenStats.from_phase_screen(phase_screen) for phase_screen in skp_calibration_phases)
+
+
+def merge_cross_polarizations(
+    stack_images: tuple[tuple[npt.NDArray[complex], ...], ...],
+    stack_polarizations: tuple[EPolarization, ...],
+    cross_pol_merging_flag: bool,
+) -> tuple[tuple[npt.NDArray[complex], ...], ...]:
+    """
+    Merge the cross-polarizations.
+
+    Parameters
+    ----------
+    stack_images: tuple[tuple[npt.NDArray[complex], ...], ...]
+        The multi-polarimetric image stack, i.e. [Nimg x Npol] images of
+        shape [Nazm x Nrng].
+
+    stack_polarizations: tuple[EPolarization, ...]
+        The polarizations associated to the stack.
+
+    cross_pol_merging_flag: bool
+        Whether to run or not the cross-pol merging.
+
+    Returns
+    -------
+    tuple[tuple[npt.NDArray[complex], ...], ...]
+        The stack with merged cross-polarizations.
+
+    """
+    # If cross-pol merging is off or cross-pol merging was already on in the
+    # pre-processor, we just return the imput stack.
+    if not cross_pol_merging_flag or EPolarization.xx in set(stack_polarizations):
+        return stack_images
+
+    # If either HV or VH are missing from the stack, we cannot run any cross-pol
+    # merging (e.g. polarisationCombinationMethod=HV).
+    if not {EPolarization.hv, EPolarization.vh}.issubset(stack_polarizations):
+        bps_logger.warning("Missing one of H/V or V/H. Skipping cross-pol merging")
+        return stack_images
+
+    # We exect all 4 polarization to be available at this stage.
+    if not {EPolarization.hh, EPolarization.vv}.issubset(stack_polarizations):
+        raise SkpRuntimeError("Stack misses one of H/H and V/V")
+
+    # Run the cross pol merging.
+    index_hh = stack_polarizations.index(EPolarization.hh)
+    index_hv = stack_polarizations.index(EPolarization.hv)
+    index_vh = stack_polarizations.index(EPolarization.vh)
+    index_vv = stack_polarizations.index(EPolarization.vv)
+
+    bps_logger.info("Merging cross-polarizations H/V and V/H")
+    return tuple(
+        (
+            image[index_hh],
+            0.5 * (image[index_hv] + image[index_vh]),
+            image[index_vv],
+        )
+        for image in stack_images
+    )

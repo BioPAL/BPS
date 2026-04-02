@@ -33,9 +33,7 @@ Z_RANGE_DEFAULT_SAMPLES = 61  # That is, 1 sample every 1 m.
 
 
 # NOTE: The routine within this module use lots of matrices. It makes sense to
-# call matrices with capitalized letters. We suppress the pylint error to avoid
-# too many complains.
-# pylint: disable=invalid-name
+# call matrices with capitalized letters.
 
 
 @nb.njit(cache=True, nogil=True)
@@ -137,7 +135,6 @@ def skp_low_rank_decomposition(
     #
     RA = np.empty((m * m_, n * n_), dtype=dtype)
 
-    # pylint: disable=not-an-iterable
     for k in nb.prange(m_):
         for i in nb.prange(m):
             RA[k * m_ + i, :] = mpmb_coherence[i * n : (i + 1) * n, k * n_ : (k + 1) * n_].T.flatten()
@@ -359,7 +356,6 @@ def skp_estimate_scattering_coherences(
         )
 
     # Rescale Cs and Rs.
-    # pylint: disable-next=not-an-iterable
     for r in nb.prange(SKP_RANK):
         Cs[r, ...] *= Rs[r, 0, 0] * L[r]
         Rs[r, ...] /= Rs[r, 0, 0]
@@ -605,7 +601,6 @@ def skp_processing(
     phi_cal = np.empty((num_images, 4), dtype=float_dtype)
 
     errors = False
-    # pylint: disable-next=not-an-iterable
     for k in nb.prange(4):
         if np.isnan(Rs[k]).any():
             qualities[k] = 0
@@ -633,13 +628,12 @@ def skp_processing(
     curr_kz = np.reshape(subsampled_vertical_wavenumbers[:, azm, rng].flatten(), (num_images, 1))
 
     # Current calibration phases.
-    A_cal = np.exp(1j * curr_kz * spectra_z).astype(complex_dtype) / num_images
+    A_cal = np.exp(-1j * curr_kz * spectra_z).astype(complex_dtype) / num_images
     curr_phi_cal = phi_cal[:, np.argmax(qualities)]
     M_cal = np.diag(np.exp(-1j * curr_phi_cal).astype(complex_dtype))
 
     # Spectra estimation.
     spectra_aux = np.empty((spectra_z.size, 4), dtype=complex_dtype)
-    # pylint: disable-next=not-an-iterable
     for k in nb.prange(4):
         Rs[k] = M_cal @ Rs[k] @ M_cal.conj().T
         spectra_aux[:, k] = np.diag(np.abs(A_cal.conj().T @ Rs[k] @ A_cal))
@@ -659,7 +653,7 @@ def skp_processing(
     ground_relative_z = spectra_z[np.min(max_indices)]
 
     # The calibration calibration phases.
-    skp_phi_cal = curr_phi_cal + curr_kz.flatten() * ground_relative_z
+    skp_phi_cal = curr_phi_cal - curr_kz.flatten() * ground_relative_z
     return (
         azm,
         rng,

@@ -128,7 +128,7 @@ def estimate_phase_slopes_pairwise(
     # compute the peak.
     win = fft2_peak_window_size // 2
 
-    peak_azm, peak_rng = np.unravel_index(np.argmax(spectrum), spectrum.shape)  # pylint: disable=unbalanced-tuple-unpacking
+    peak_azm, peak_rng = np.unravel_index(np.argmax(spectrum), spectrum.shape)
     delta_peak_azm, delta_peak_rng, _ = refine_peak(
         spectrum[peak_azm - win : peak_azm + win + 1, peak_rng - win : peak_rng + win + 1],
     )
@@ -194,7 +194,7 @@ def refine_peak(values: npt.NDArray[float]) -> tuple[float, float, npt.NDArray[f
     reg.fit(phi, vals)
 
     # Compute vertex (maximum/minimum) analytically.
-    A = np.array([[2 * reg.coef_[0], reg.coef_[2]], [reg.coef_[2], 2 * reg.coef_[1]]])  # pylint: disable=invalid-name
+    A = np.array([[2 * reg.coef_[0], reg.coef_[2]], [reg.coef_[2], 2 * reg.coef_[1]]])
     b_vec = reg.coef_[3:5]
     d_azm, d_rng = -np.linalg.inv(A) @ b_vec
 

@@ -63,7 +63,6 @@ def hamming_window_bank(
     """
     window = np.zeros((nsamples, centers.size), dtype=dtype)
 
-    # pylint: disable=not-an-iterable
     for rng in nb.prange(window.shape[1]):
         param = min(
             np.int32(np.round(0.5 * frequency_bandwidths[rng] * nsamples / sampling_frequency) * 2),
@@ -125,7 +124,6 @@ def kaiser_window_bank(
     """
     window = np.zeros((nsamples, centers.size), dtype=dtype)
 
-    # pylint: disable=not-an-iterable
     for rng in nb.prange(window.shape[1]):
         param = min(
             np.int32(np.round(0.5 * frequency_bandwidths[rng] * nsamples / sampling_frequency) * 2),
@@ -185,10 +183,8 @@ def none_window_bank(
         containing ones.
 
     """
-    # pylint: disable=unused-argument
     window = np.zeros((nsamples, centers.size), dtype=dtype)
 
-    # pylint: disable=not-an-iterable
     for rng in nb.prange(window.shape[1]):
         param = min(
             np.int32(np.round(0.5 * frequency_bandwidths[rng] * nsamples / sampling_frequency) * 2),

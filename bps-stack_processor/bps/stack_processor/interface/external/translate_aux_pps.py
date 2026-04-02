@@ -191,9 +191,11 @@ def translate_model_to_skp_calibration_conf(
             conf.postprocessing_filter_window_size
         ),
         goldstein_filter_window_size=conf.goldstein_filter_window_size,
+        goldstein_filter_alpha=conf.goldstein_filter_alpha,
         exclude_mpmb_polarization_cross_covariance_flag=translate_common.translate_bool(
             conf.exclude_mpmbpolarization_cross_covariance_flag
         ),
+        cross_pol_merging_flag=translate_common.translate_bool(conf.cross_pol_merging_flag),
         use_32bit_flag=translate_common.translate_bool(conf.use32bit_flag),
     )
 

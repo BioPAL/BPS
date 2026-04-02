@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0">
+	<xs:include schemaLocation="../../common/v1_4/IF_PF_Proc_common.xsd"/>
+	<xs:annotation>
+		<xs:documentation>The Job Order file contains all the settings required for a processor execution. It is derived from the various parameters and selection rules defined in the underlying Task Table, the specific event triggering the processing as well as of the PF specific context (paths, resources, etc.). The Job Order specifies in particular:
+- Configuration settings
+- List of Tasks
+- Processing resources
+- List of Input files
+- Directories to be used for Output/Intermediate file list and location
+- Potential activation of selected breakpoints
+- Specific processor configuration file
+- Processing parameters
+The Root element of the "Job Order" I/F is the Job_Order xml element.
+
+2023/11/29: update to ICD 1.4 (List_of_RAMDISK, schemaLocation is optional) Checked 2024/03/13
+</xs:documentation>
+	</xs:annotation>
+	<xs:element name="Job_Order" type="Job_Order_Type">
+		<xs:annotation>
+			<xs:documentation>Root element of the "Job Order" I/F XML document.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Job_Order_Type">
+		<xs:sequence>
+			<xs:element name="Processor_Configuration" type="Processor_Configuration_Type">
+				<xs:annotation>
+					<xs:documentation>Processor configuration.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="List_of_Tasks">
+				<xs:annotation>
+					<xs:documentation>List of Task elements.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Task" type="JO_Task_Type" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Information for the specific Task.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="schemaName" type="xs:string"/>
+		<xs:attribute name="schemaVersion" type="xs:string"/>
+		<xs:attribute name="schemaLocation" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<!--=====================================================================-->
+	<xs:complexType name="AOI_Type">
+		<xs:annotation>
+			<xs:documentation>Area of interest of the processing request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Geometry" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>List of coordinates defining the polygon of the requested area to be processed. The coordinates are specified using latitude, longitude pairs in a counter-clockwise orientation with last point equal to first point. E.g.:
+<Geometry>
+-8.015716 -63.764648 -6.809171 -63.251038 -6.967323 -62.789612 -8.176149 -63.278503 -8.015716 -63.764648
+</Geometry>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JO_Input_Type">
+		<xs:sequence>
+			<xs:element ref="Input_ID"/>
+			<xs:element ref="Alternative_ID"/>
+			<xs:element name="List_of_Selected_Inputs">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Selected_Input" type="Selected_Input_Type" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JO_Intermediate_Output_Type">
+		<xs:sequence>
+			<xs:element ref="Intermediate_Output_ID"/>
+			<xs:element name="Intermediate_Output_File" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Absolute path of the intermediate output file.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JO_Output_Type">
+		<xs:sequence>
+			<xs:element ref="File_Type"/>
+			<xs:element ref="File_Name_Pattern"/>
+			<xs:element ref="File_Dir" minOccurs="0"/>
+			<xs:element ref="Baseline"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JO_Task_Type">
+		<xs:sequence>
+			<xs:element ref="Task_Name"/>
+			<xs:element ref="Task_Version"/>
+			<xs:element name="Number_of_CPU_Cores" type="xs:float">
+				<xs:annotation>
+					<xs:documentation>Maximum Number of CPU cores that the Task executable is allowed to use for the processing. The executable shall ensure that the number of used cores does not exceed this limit. Depending of the PF implementation (e.g. use of virtual machines or containers), this value may also correspond to a physical limit set by the host.
+ 
+The nominal number of cores required by the Task is defined in the relevant CPU_Cores/Number element of the Task Table.
+
+In case the parameter CPU_Cores/Scalable of the Task Table is set to “Yes”, the PF can apply a scaling factor to that nominal value, resulting in a lower or higher number of cores that can be used by the Task. If the parameter CPU_Cores/Scalable is instead set to “No”, then the value of Number_of_CPU_Cores is copied as it is from the CPU_Cores/Number parameter of the Task Table.
+
+The value “0” is also allowed for this field, meaning that the amount of used CPU cores is negligible.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Amount_of_RAM" type="xs:positiveInteger">
+				<xs:annotation>
+					<xs:documentation>Maximum amount of RAM  in megabytes  that the Task executable is allowed to use for the processing. The executable shall ensure that the used amount of RAM does not exceed this limit. Depending of the PF implementation (e.g. use of virtual machines or containers), this value may also correspond to a physical limit set by the host.
+					The nominal amount of RAM required by the Task is defined in the relevant RAM/Amount element of the Task Table.
+					In case the parameter RAM/Scalable of the Task Table is set to “Yes”, the PF can apply a scaling factor to that nominal value, resulting in a lower or higher amount of RAM that can be used by the Task. If the parameter RAM/Scalable is instead set to “No”, then the value of Amount_of_RAM is copied as it is from the RAM/Amount parameter of the Task Table.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="List_of_RAMDISKs" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>List of RAM-based volumes.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RAMDISK" type="RAMDISK_Type" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Specification of the required RAM-based volumes.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Number_of_GPU_Cores" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Number of GPU cores in that the Task executable is allowed to use for the processing. The executable shall ensure that the used amount of GPUs does not exceed this limit. Depending of the PF implementation (e.g. use of virtual machines or containers), this value may also correspond to a physical limit set by the host.
+ 
+The nominal amount of GPUs required by the Task is defined in the relevant GPU/Cores/Number element of the Task Table.
+
+In case the parameter GPU/Cores/Scalable of the Task Table is set to “Yes”, the PF can apply a scaling factor to that nominal value, resulting in a lower or higher amount of GPU cores that can be used by the Task. If the parameter GPU/Cores/Scalable is instead set to “No”, then the value of Number_of_GPU is copied as it is from the GPU/Cores/Number parameter of the Task Table.
+
+This element shall always be defined if the Task_Table Task.GPU element is defined and will be set to "0" if Mandatory flsg is set to "false" and no GPU is assigned to the Task.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Amount_of_GPU_RAM" type="xs:positiveInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Maximum amount of GPU RAM in megabytes  that the Task executable is allowed to use for the processing. The executable shall ensure that the used amount of GPU RAM does not exceed this limit. Depending of the PF implementation (e.g. use of virtual machines or containers), this value may also correspond to a physical limit set by the host.
+ 
+The nominal amount of GPU RAM required by the Task is defined in the relevant GPU/RAM/Amount element of the Task Table.
+
+In case the parameter GPU/RAM/Scalable of the Task Table is set to “Yes”, the PF can apply a scaling factor to that nominal value, resulting in a lower or higher amount of GPU RAM that can be used by the Task. If the parameter GPU/RAM/Scalable is instead set to “No”, then the value of Amount_of_RAM is copied as it is from the GPU/RAM/Amount parameter of the Task Table.
+
+This element shall always be defined if the Task_Table Task.GPU element is defined and will be set to "0" if Mandatory flsg is set to "false" and no GPU is assigned to the Task.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="Disk_Space"/>
+			<xs:element name="List_of_Proc_Parameters">
+				<xs:annotation>
+					<xs:documentation>List of processing parameters copied from the Task Table or possibly overruled by the PF (e.g. from a manual request) depending on PF capability.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Proc_Parameter" type="Parameter_Type" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>By default, processing parameters are copied from the Task Table.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="List_of_Cfg_Files">
+				<xs:annotation>
+					<xs:documentation>List of Cfg_File elements copied from the corresponding list of the Task Table.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Cfg_File" type="Cfg_File_Type" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Task’s configuration.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="List_of_Inputs">
+				<xs:annotation>
+					<xs:documentation>List of Input elements.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Input" type="JO_Input_Type" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Description of the Task’s input data.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="List_of_Outputs">
+				<xs:annotation>
+					<xs:documentation>List of Output elements.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Output" type="JO_Output_Type" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Description of the Task’s output data.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="List_of_Intermediate_Outputs">
+				<xs:annotation>
+					<xs:documentation>List of intermediate  outputs. This parameter is considered only if the Intermediate_Output_Enable flag is set to “true”.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Intermediate_Output" type="JO_Intermediate_Output_Type" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Task’s enabled breakpoint.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Selected_Input_Type">
+		<xs:sequence>
+			<xs:element ref="File_Type"/>
+			<xs:element name="List_of_File_Names">
+				<xs:annotation>
+					<xs:documentation>List of File_Name elements.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="File_Name" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Metadata_Parameter_Type_TO-BE-REMOVED">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name of the metadata parameter.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Value of the metadata parameter.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Processor_Configuration_Type">
+		<xs:sequence>
+			<xs:element ref="File_Class"/>
+			<xs:element ref="Processor_Name"/>
+			<xs:element ref="Processor_Version"/>
+			<xs:element name="Processing_Node" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identifier of the node where the processor is running. This must be used by the processor to identify the node in the messages generated by the logging interface.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="List_of_Stdout_Log_Levels">
+				<xs:annotation>
+					<xs:documentation>List of log levels allowed to be emitted to the standard output stream.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Stdout_Log_Level" minOccurs="0" maxOccurs="5">
+							<xs:annotation>
+								<xs:documentation>Allowed logging level for the standard output stream. Possible values are:
+•	“DEBUG”
+•	“INFO”
+•	“PROGRESS”
+•	“WARNING”
+•	“ERROR”
+Only messages having level equal to this value will be printed.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="DEBUG"/>
+									<xs:enumeration value="INFO"/>
+									<xs:enumeration value="PROGRESS"/>
+									<xs:enumeration value="WARNING"/>
+									<xs:enumeration value="ERROR"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="List_of_Stderr_Log_Levels">
+				<xs:annotation>
+					<xs:documentation>List of log levels allowed to be emitted to the standard error stream.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Stderr_Log_Level" minOccurs="0" maxOccurs="5">
+							<xs:annotation>
+								<xs:documentation>Allowed logging level for the standard error stream. Possible values are:
+•	“DEBUG”
+•	“INFO”
+•	“PROGRESS”
+•	“WARNING”
+•	“ERROR”
+Only messages having level equal to this value will be printed.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="DEBUG"/>
+									<xs:enumeration value="INFO"/>
+									<xs:enumeration value="PROGRESS"/>
+									<xs:enumeration value="WARNING"/>
+									<xs:enumeration value="ERROR"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Intermediate_Output_Enable" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Breakpoint enabling flag:
+•	“true”: the breakpoints are enabled.
+•	“false”: the breakpoints are disabled.
+Note that this flag will enable/disable any kind of breakpoint functionality generation implemented by the processor (via Job Order or other processor internal mechanisms).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Processing_Station" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name or identifier of the processing facility hosting the processor.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Request" type="Request_Type">
+				<xs:annotation>
+					<xs:documentation>This field specifies the request criteria. Child elements are optional but at least one of them should be present.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Request_Type_TO-BE-REMOVED">
+		<xs:sequence>
+			<xs:element name="TOI" type="TOI_Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Time of interest of the processing request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AOI" type="AOI_Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Area of interest of the processing request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="List_of_Metadata_Parameters" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>List of product metadata parameters defining the processing request.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Metadata_Parameter" type="Parameter_Type" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Metadata parameter.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Request_Type">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="TOI" maxOccurs="1" type="TOI_Type" />
+				<xs:element name="AOI" minOccurs="0" maxOccurs="1" type="AOI_Type" />
+				<xs:element name="List_of_Metadata_Parameters" minOccurs="0" maxOccurs="1" type="List_of_Metadata_Parameters_Type" />
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="AOI" maxOccurs="1" type="AOI_Type" />
+				<xs:element name="List_of_Metadata_Parameters" minOccurs="0" maxOccurs="1" type="List_of_Metadata_Parameters_Type" />
+			</xs:sequence>
+			<xs:element name="List_of_Metadata_Parameters" maxOccurs="1" type="List_of_Metadata_Parameters_Type" />
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="List_of_Metadata_Parameters_Type">
+		<xs:annotation>
+			<xs:documentation>List of product metadata parameters defining the processing request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Metadata_Parameter" type="Parameter_Type" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Metadata parameter.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TOI_Type">
+		<xs:annotation>
+			<xs:documentation>Time of interest of the processing request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Start" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>UTC start time of the processing request. String value has the format:
+YYYY-MM-DDThh:mm:ss.uuuuuu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Stop" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>UTC stop time of the processing request. String value has the format:
+YYYY-MM-DDThh:mm:ss.uuuuuu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--=====================================================================-->
+</xs:schema>

@@ -10,9 +10,10 @@ XSD Main annotation models l1ab
 -------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AutofocusMethodType,
@@ -130,7 +131,7 @@ from bps.transcoder.io.common_annotation_models_l1 import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MainAnnotationType:
     """
     Parameters
@@ -180,133 +181,105 @@ class MainAnnotationType:
     class Meta:
         name = "mainAnnotationType"
 
-    acquisition_information: Optional[AcquisitionInformationType] = field(
-        default=None,
+    acquisition_information: AcquisitionInformationType = field(
         metadata={
             "name": "acquisitionInformation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sar_image: Optional[SarImageType] = field(
-        default=None,
+    sar_image: SarImageType = field(
         metadata={
             "name": "sarImage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    instrument_parameters: Optional[InstrumentParametersType] = field(
-        default=None,
+    instrument_parameters: InstrumentParametersType = field(
         metadata={
             "name": "instrumentParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_data_analysis: Optional[RawDataAnalysisType] = field(
-        default=None,
+    raw_data_analysis: RawDataAnalysisType = field(
         metadata={
             "name": "rawDataAnalysis",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    processing_parameters: Optional[ProcessingParametersType] = field(
-        default=None,
+    processing_parameters: ProcessingParametersType = field(
         metadata={
             "name": "processingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    internal_calibration: Optional[InternalCalibrationType] = field(
-        default=None,
+    internal_calibration: InternalCalibrationType = field(
         metadata={
             "name": "internalCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_mitigation: Optional[RfiMitigationType] = field(
-        default=None,
+    rfi_mitigation: RfiMitigationType = field(
         metadata={
             "name": "rfiMitigation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    doppler_parameters: Optional[DopplerParametersType] = field(
-        default=None,
+    doppler_parameters: DopplerParametersType = field(
         metadata={
             "name": "dopplerParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    radiometric_calibration: Optional[RadiometricCalibrationType] = field(
-        default=None,
+    radiometric_calibration: RadiometricCalibrationType = field(
         metadata={
             "name": "radiometricCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarimetric_distortion: Optional[PolarimetricDistortionType] = field(
-        default=None,
+    polarimetric_distortion: PolarimetricDistortionType = field(
         metadata={
             "name": "polarimetricDistortion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_correction: Optional[IonosphereCorrectionType] = field(
-        default=None,
+    ionosphere_correction: IonosphereCorrectionType = field(
         metadata={
             "name": "ionosphereCorrection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    geometry: Optional[GeometryType] = field(
-        default=None,
+    geometry: GeometryType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    quality: Optional[QualityType] = field(
-        default=None,
+    quality: QualityType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    annotation_lut: Optional[LayerListType] = field(
-        default=None,
+    annotation_lut: LayerListType = field(
         metadata={
             "name": "annotationLUT",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MainAnnotation(MainAnnotationType):
     """
     BIOMASS L1a/b product main annotation element.

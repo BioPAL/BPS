@@ -225,7 +225,6 @@ def run_l1_core_processing(
         )
 
     else:
-        # pylint: disable-next=import-outside-toplevel
         from bps.l1_processor.core.run_autofocus import run_with_autofocus
 
         run_with_autofocus(env, core_processor_interface, core_processor_files)

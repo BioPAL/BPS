@@ -1177,7 +1177,7 @@ class AGBL2B:
                 )
             )
         cal_ab_coverage_per_tile_obj = common_annotation_models_l2.CalAbcoverageTilesListType(
-            list_cal_ab_coverage_per_tile
+            tile=list_cal_ab_coverage_per_tile
         )
 
         # Fill the gn_coverage_per_tile object with proper types
@@ -1244,8 +1244,8 @@ class AGBL2B:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_d = {
             "agb": common_types.PixelRepresentationType.ABOVE_GROUND_BIOMASS_T_HA,
@@ -1335,26 +1335,26 @@ class AGBL2B:
         )
 
         compression_options_agb = main_annotation_models_l2b_agb.CompressionOptionsL2B(
-            main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds(
-                main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.Agb(
-                    self.aux_pp2_ab.compression_options.mds.AGB.compression_factor,
-                    self.aux_pp2_ab.compression_options.mds.AGB.max_z_error,
+            mds=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds(
+                agb=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.Agb(
+                    compression_factor=self.aux_pp2_ab.compression_options.mds.AGB.compression_factor,
+                    max_z_error=self.aux_pp2_ab.compression_options.mds.AGB.max_z_error,
                 ),
-                main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AgbstandardDeviation(
-                    self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.compression_factor,
-                    self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.max_z_error,
+                agbstandard_deviation=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AgbstandardDeviation(
+                    compression_factor=self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.compression_factor,
+                    max_z_error=self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.max_z_error,
                 ),
-                main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.BpsFnf(
-                    self.aux_pp2_ab.compression_options.mds.bps_fnf.compression_factor
+                bps_fnf=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.BpsFnf(
+                    compression_factor=self.aux_pp2_ab.compression_options.mds.bps_fnf.compression_factor
                 ),
-                main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.HeatMap(
-                    self.aux_pp2_ab.compression_options.mds.heatmap.compression_factor
+                heat_map=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.HeatMap(
+                    compression_factor=self.aux_pp2_ab.compression_options.mds.heatmap.compression_factor
                 ),
-                main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AcquisitionIdImage(
-                    self.aux_pp2_ab.compression_options.mds.acquisition_id_image.compression_factor
+                acquisition_id_image=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                    compression_factor=self.aux_pp2_ab.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
-            self.aux_pp2_ab.compression_options.mds_block_size,
+            mds_block_size=self.aux_pp2_ab.compression_options.mds_block_size,
         )
 
         main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersAGB(

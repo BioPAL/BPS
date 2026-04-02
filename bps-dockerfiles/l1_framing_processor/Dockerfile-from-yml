@@ -1,0 +1,18 @@
+FROM bps-prereq:latest
+
+COPY lib/* /usr/local/lib/
+COPY pkgs /tmp/python-packages
+COPY environment.yml /tmp/environment.yml
+
+ENV LD_LIBRARY_PATH /usr/local/lib
+
+USER root
+RUN bash -c "conda index --verbose /tmp/python-packages && \
+    conda env update --file /tmp/environment.yml && \
+    conda clean -afy" && \
+    rm -fr /tmp/python-packages && \
+    rm -f /tmp/environment.yml && \
+    ln -s /opt/conda_folder/envs/env/bin/bps_l1_framing_processor /usr/local/bin/
+
+USER nobody
+CMD /bin/bash

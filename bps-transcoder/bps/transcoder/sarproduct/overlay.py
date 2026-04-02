@@ -64,14 +64,14 @@ def translate_overlay_file(overlay_info: Overlay) -> overlay.Kml:
     product_duration = overlay_info.product_stop_time - overlay_info.product_start_time
     product_mid_time = overlay_info.product_start_time + product_duration / 2
 
-    time_stamp = overlay.TimeStampType(datetime_to_str(product_mid_time))
+    time_stamp = overlay.TimeStampType(when=datetime_to_str(product_mid_time))
 
     ground_overlay = overlay.GroundOverlayType(
         name="Ground overlay",
         visibility=1,
         time_stamp=time_stamp,
         icon=overlay.IconType(href=overlay_info.quicklook_file_name),
-        lat_lon_quad=overlay.LatLonQuad(footprint_to_str(overlay_info.footprint)),
+        lat_lon_quad=overlay.LatLonQuad(coordinates=footprint_to_str(overlay_info.footprint)),
     )
 
     placemark = overlay.PlacemarkType(
@@ -84,18 +84,18 @@ def translate_overlay_file(overlay_info: Overlay) -> overlay.Kml:
         ),
         extended_data=overlay.ExtendedDataType(
             data=[
-                overlay.DataType(overlay_info.product_name, "Product Name"),
-                overlay.DataType(overlay_info.product_type, "Product Type"),
-                overlay.DataType(datetime_to_str(overlay_info.product_start_time), "Start Date and Time"),
-                overlay.DataType(datetime_to_str(overlay_info.product_stop_time), "Stop Date and Time"),
-                overlay.DataType(str(int(product_duration.total_seconds())), "Duration [s]"),
-                overlay.DataType(overlay_info.mission_phase_id, "Mission Phase ID"),
-                overlay.DataType(overlay_info.global_coverage_id, "Global Coverage ID"),
-                overlay.DataType(overlay_info.major_cycle_id, "Major Cycle ID"),
-                overlay.DataType(overlay_info.repeat_cycle_id, "Repeat Cycle ID"),
-                overlay.DataType(overlay_info.track_number, "Track Number"),
-                overlay.DataType(overlay_info.frame_number, "Frame Number"),
-                overlay.DataType(overlay_info.baseline_id, "Baseline ID"),
+                overlay.DataType(value=overlay_info.product_name, name="Product Name"),
+                overlay.DataType(value=overlay_info.product_type, name="Product Type"),
+                overlay.DataType(value=datetime_to_str(overlay_info.product_start_time), name="Start Date and Time"),
+                overlay.DataType(value=datetime_to_str(overlay_info.product_stop_time), name="Stop Date and Time"),
+                overlay.DataType(value=str(int(product_duration.total_seconds())), name="Duration [s]"),
+                overlay.DataType(value=overlay_info.mission_phase_id, name="Mission Phase ID"),
+                overlay.DataType(value=overlay_info.global_coverage_id, name="Global Coverage ID"),
+                overlay.DataType(value=overlay_info.major_cycle_id, name="Major Cycle ID"),
+                overlay.DataType(value=overlay_info.repeat_cycle_id, name="Repeat Cycle ID"),
+                overlay.DataType(value=overlay_info.track_number, name="Track Number"),
+                overlay.DataType(value=overlay_info.frame_number, name="Frame Number"),
+                overlay.DataType(value=overlay_info.baseline_id, name="Baseline ID"),
             ]
         ),
         polygon=overlay.PolygonType(
@@ -103,18 +103,20 @@ def translate_overlay_file(overlay_info: Overlay) -> overlay.Kml:
             altitude_mode="clampToGround",
             outer_boundary_is=overlay.OuterBoundaryIsType(
                 linear_ring=overlay.LinearRingType(
-                    footprint_to_str([*overlay_info.footprint, overlay_info.footprint[0]], add_zero_height=True)
+                    coordinates=footprint_to_str(
+                        [*overlay_info.footprint, overlay_info.footprint[0]], add_zero_height=True
+                    )
                 )
             ),
         ),
     )
 
     return overlay.Kml(
-        overlay.DocumentType(
-            overlay_info.overlay_file_name,
-            overlay_info.document_description,
-            ground_overlay,
-            placemark,
+        document=overlay.DocumentType(
+            name=overlay_info.overlay_file_name,
+            description=overlay_info.document_description,
+            ground_overlay=ground_overlay,
+            placemark=placemark,
         )
     )
 

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0">
+	<xs:annotation>
+		<xs:documentation>This interface specifies how to retrieve product’s metadata from the Product Metadata file containing them.
+The Root element of the "Product Metadata Mapping" I/F is the ProductMetadataMapping xml element.</xs:documentation>
+	</xs:annotation>
+	<xs:element name="ProductMetadataMapping" type="ProductMetadataMapping_Type">
+		<xs:annotation>
+			<xs:documentation>Root element of the "Product Metadata Mapping" I/F XML document.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Processor_Type">
+		<xs:sequence>
+			<xs:element name="ProcessorName" type="xs:string" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Name of the processor that generates this specific product.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProcessorVersion"  minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Version of the processor generating this specific product.. Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”).</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{2}\.[0-9]{2}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FilenamePattern_Type">
+		<xs:sequence>
+		<xs:element name="fileNamePattern" type="xs:string" minOccurs="1">
+			<xs:annotation>
+				<xs:documentation>Name of the filename</xs:documentation>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="fileNameExample" type="xs:string" minOccurs="0" maxOccurs="10">
+			<xs:annotation>
+				<xs:documentation>Example of the filename</xs:documentation>
+			</xs:annotation>
+		</xs:element>
+	</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ProductMetadataMapping_Type">
+		<xs:sequence>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="Processor" type="Processor_Type" minOccurs="1" />
+					<xs:element name="FileName" type="FilenamePattern_Type" minOccurs="0" />
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="FileName" type="FilenamePattern_Type" minOccurs="1" />
+				</xs:sequence>
+			</xs:choice>
+			<xs:element name="Product" type="Product_Type">
+				<xs:annotation>
+					<xs:documentation>Product’s configuration.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="schemaName" type="xs:string" />
+		<xs:attribute name="schemaVersion" type="xs:string"/>
+		<xs:attribute name="schemaLocation" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<!--=====================================================================-->
+	<xs:complexType name="AdditionalParameterType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Parameter’s name.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="XPath" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>The value of this field is an XPath expression. The result of this expression is the metadata value to be assigned to the parameter.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Constant" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>This is a constant value to be assigned to the parameter if it is not possible to retrieve it via XPath (i.e. the parameter is not included in the metadata file).</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="Type" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parameter’s type. Allowed values are:
+•	“timestamp”: the parameter’s value is a timestamp (in the format YYYY-MM-DDThh:mm:ss[.d][zone]).
+•	“geometry”: the parameter’s value represents a geometric object (list of latitude longitude pairs, with last pair equal to the first pair).
+•	“converter:name”: if type of parameter’s value is not compliant to any of the known definitions above, this field allows to indicate the name of a converter plugin for the value transformation to an allowed format.
+If this field is not present, the value shall be considered as a string. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BaseParameterType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="XPath" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>The value of this field is an XPath expression. The result of this expression is the metadata value to be assigned to the parameter.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Constant" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>This is a constant value to be assigned to the parameter if it is not possible to retrieve it via XPath (i.e. the parameter is not included in the metadata file).</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parameter’s type. Allowed values are:
+•	“timestamp”: the parameter’s value is a timestamp (in the format YYYY-MM-DDThh:mm:ss[.d][zone]).
+•	“geometry”: the parameter’s value represents a geometric object (list of latitude longitude pairs, with last pair equal to the first pair).
+•	“converter:name”: if type of parameter’s value is not compliant to any of the known definitions above, this field allows to indicate the name of a converter plugin for the value transformation to an allowed format.
+If this field is not present, the value shall be considered as a string. </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="timestamp"/>
+						<xs:pattern value="geometry"/>
+						<xs:pattern value="converter:.+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContextParameters_Type">
+		<xs:sequence>
+			<xs:element name="FileName" type="BaseParameterType">
+				<xs:annotation>
+					<xs:documentation>Product file name.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FileClass" type="BaseParameterType">
+				<xs:annotation>
+					<xs:documentation>File class.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FileType" type="BaseParameterType">
+				<xs:annotation>
+					<xs:documentation>Product or auxiliary data file type. This extracted value shall match the FileType associated with this particular metadata mapping rule.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Baseline" type="BaseParameterType">
+				<xs:annotation>
+					<xs:documentation>File Baseline.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="fromProductName_Type">
+		<xs:sequence>
+			<xs:element name="setCase" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If present, the value can be:
+•	“lowercase”: the product’s name, used to determine the metadata file name, is converted to lowercase.
+•	“uppercase”: the product’s name, used to determine the metadata file name, is converted to uppercase.
+•	“unchanged”: no case modification (default in case this tag is not specified).
+If this parameter is not present, the product’s name is not changed when used to determine the metadata file name.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="lowercase"/>
+						<xs:enumeration value="uppercase"/>
+						<xs:enumeration value="unchanged"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FileExtension" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Metadata file extension. The product’s file extension shall be replaced by this value starting from the first “.” Character. In case the input name has no extension then this extension is added. In case this tag is not defined or empty then the extension is not modified.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetadataFile_Type">
+		<xs:sequence>
+			<xs:element name="MetadataFileName" type="MetadataFileName_Type">
+				<xs:annotation>
+					<xs:documentation>Information needed to determine the name of the Product Metadata file.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="isInsideProduct" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>This flag can be:
+•	“true”: The metadata file is contained in the product. This is the case for example of archive-based products (i.e. zip, tar, etc.) or directory-based products. In this case, the metadata file shall be located at the lower level (i.e. root) of the product’s structure.
+•	“false”: the metadata file is located in the same directory containing the product.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetadataFileName_Type">
+		<xs:choice>
+			<xs:element name="Static" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>In case the file containing the metadata has a predefined fixed name, this field contains the actual name of the file containing product metadata.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fromProductName" type="fromProductName_Type">
+				<xs:annotation>
+					<xs:documentation>In case the file containing the metadata does not have a fixed name, this field contains the parameters needed to determine the actual file name.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Product_Type">
+		<xs:sequence>
+			<xs:element name="FileType" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>File type of the product.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MetadataFile" type="MetadataFile_Type">
+				<xs:annotation>
+					<xs:documentation>Information on the name and location of the file containing Product Metadata.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContextParameters" type="ContextParameters_Type">
+				<xs:annotation>
+					<xs:documentation>List of parameters that shall always be present in the product’s metadata file.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TemporalParameters" type="TemporalParameters_Type">
+				<xs:annotation>
+					<xs:documentation>List of time-based parameters.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeospatialParameters">
+				<xs:annotation>
+					<xs:documentation>List of geospatial-based parameters.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Geometry" type="BaseParameterType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Geometry (e.g. footprint) of the product.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AdditionalParameters">
+				<xs:annotation>
+					<xs:documentation>List of additional parameters.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Parameter" type="AdditionalParameterType" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Mapping between a generic parameter’s name and the parameter configured in the metadata file.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TemporalParameters_Type">
+		<xs:sequence>
+			<xs:element name="ValidityStart" type="BaseParameterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Start of temporal validity of the product.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ValidityStop" type="BaseParameterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Stop of temporal validity of the product.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CreationDate" type="BaseParameterType">
+				<xs:annotation>
+					<xs:documentation>Product’s creation date.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--=====================================================================-->
+</xs:schema>

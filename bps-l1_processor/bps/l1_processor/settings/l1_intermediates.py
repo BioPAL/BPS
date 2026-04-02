@@ -38,7 +38,6 @@ def _delete(product: Path) -> None:
     if product.exists():
         try:
             open_product_folder(product).delete()
-        # pylint: disable-next=broad-exception-caught
         except Exception as exc:
             bps_logger.warning(
                 "An error occurred during removal of %s intermediate product: '%s: %s'",

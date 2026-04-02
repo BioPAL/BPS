@@ -1,0 +1,10 @@
+line-length = 120
+output-format = "concise"
+target-version = "py312"
+
+[format]
+docstring-code-format = true
+
+[lint.per-file-ignores]
+"models.py" = ["F401", "F811", "E741"]
+"__init__.py" = ["F401"]

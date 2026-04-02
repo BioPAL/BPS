@@ -173,8 +173,6 @@ def translate_float_with_polarisation(
     float_with_polarisation: common_types.FloatWithPolarisation,
 ) -> common.FloatWithPolarisation:
     """Translate float with polarisation"""
-    assert float_with_polarisation.value is not None
-    assert float_with_polarisation.polarisation is not None
     return float_with_polarisation.value, translate_polarisation_type(float_with_polarisation.polarisation)
 
 
@@ -200,24 +198,6 @@ def translate_ionosphere_height_estimation_method_type_to_model(
 ) -> common_types.IonosphereHeightEstimationMethodType:
     """Translate height estimation method"""
     return common_types.IonosphereHeightEstimationMethodType[method.name]
-
-
-def translate_ionosphere_type(
-    ionosphere_type: common_types.IonosphereTypeType,
-) -> common.IonosphereType | None:
-    """Translate the ionosphere type"""
-    if ionosphere_type is common_types.IonosphereTypeType.NONE:
-        return None
-    return common.IonosphereType[ionosphere_type.name]
-
-
-def translate_ionosphere_type_to_model(
-    ionosphere_type: common.IonosphereType | None,
-) -> common_types.IonosphereTypeType:
-    """Translate the ionosphere type to mnodel"""
-    if ionosphere_type is None:
-        return common_types.IonosphereTypeType.NONE
-    return common_types.IonosphereTypeType[ionosphere_type.name]
 
 
 def translate_autofocus_method_type(
@@ -260,24 +240,22 @@ def translate_bool_to_model(flag: bool) -> str:
 
 def translate_double_with_unit(num: common_types.DoubleWithUnit) -> float:
     """Translate double with unit"""
-    assert num.value is not None
     return num.value
 
 
 def translate_double_with_unit_to_model(num: float, units: common.UomType) -> common_types.DoubleWithUnit:
     """Translate double with unit"""
-    return common_types.DoubleWithUnit(float(num), units=translate_uom_type_to_model(units))
+    return common_types.DoubleWithUnit(value=float(num), units=translate_uom_type_to_model(units))
 
 
 def translate_float_with_unit(num: common_types.FloatWithUnit) -> float:
     """Translate float with unit"""
-    assert num.value is not None
     return num.value
 
 
 def translate_float_with_unit_to_model(num: float, units: common.UomType) -> common_types.FloatWithUnit:
     """Translate float"""
-    return common_types.FloatWithUnit(float(num), units=translate_uom_type_to_model(units))
+    return common_types.FloatWithUnit(value=float(num), units=translate_uom_type_to_model(units))
 
 
 def translate_uom_type(
@@ -388,8 +366,6 @@ def translate_double_array_with_units_to_model(
 
 def translate_complex(number: common_types.Complex) -> complex:
     """Translate complex number"""
-    assert number.im is not None
-    assert number.re is not None
     return complex(real=number.re, imag=number.im)
 
 
@@ -465,8 +441,6 @@ def translate_geodetic_reference_frame_type_to_model(
 
 def translate_datum(datum: common_types.DatumType) -> common.DatumType:
     """Translate datum"""
-    assert datum.coordinate_reference_system is not None
-    assert datum.geodetic_reference_frame is not None
     return common.DatumType(
         coordinate_reference_system=datum.coordinate_reference_system,
         geodetic_reference_frame=translate_geodetic_reference_frame_type(datum.geodetic_reference_frame),
@@ -653,8 +627,6 @@ def translate_state_type(
     state: common_types.StateType,
 ) -> tuple[PreciseDateTime, float]:
     """Translate state type"""
-    assert state.azimuth_time is not None
-    assert state.value is not None
     return translate_datetime(state.azimuth_time), translate_float_with_unit(state.value)
 
 
@@ -685,8 +657,6 @@ def translate_time_with_pol(
     pair: common_types.TimeTypeWithPolarisation,
 ) -> tuple[common.PolarisationType, PreciseDateTime]:
     """Translate time with pol"""
-    assert pair.polarisation is not None
-    assert pair.value is not None
     return translate_polarisation_type(pair.polarisation), translate_datetime(pair.value)
 
 
@@ -705,8 +675,6 @@ def translate_float_with_pol(
     pair: common_types.FloatWithPolarisation,
 ) -> tuple[common.PolarisationType, float]:
     """Translate float with pol"""
-    assert pair.polarisation is not None
-    assert pair.value is not None
     return translate_polarisation_type(pair.polarisation), pair.value
 
 
@@ -725,9 +693,6 @@ def translate_slant_range_polynomial(
     poly: common_types.SlantRangePolynomialType,
 ) -> common.SlantRangePolynomialType:
     """Translate slant-range polynomial"""
-    assert poly.azimuth_time is not None
-    assert poly.t0 is not None
-    assert poly.polynomial is not None
     return common.SlantRangePolynomialType(
         azimuth_time=translate_datetime(poly.azimuth_time),
         t0=translate_double_with_unit(poly.t0),
@@ -778,8 +743,6 @@ def translate_height_model(
     height_model: common_types.HeightModelType,
 ) -> common.HeightModelType:
     """Translate height model"""
-    assert height_model.value is not None
-    assert height_model.version is not None
     return common.HeightModelType(
         value=translate_height_model_base(height_model.value),
         version=height_model.version,
@@ -893,11 +856,6 @@ def translate_cross_talk_list(
     cross_talk_list: common_types.CrossTalkList,
 ) -> common.CrossTalkList:
     """Translate cross talk list"""
-    assert cross_talk_list.cross_talk_hvrx is not None
-    assert cross_talk_list.cross_talk_vhrx is not None
-    assert cross_talk_list.cross_talk_vhtx is not None
-    assert cross_talk_list.cross_talk_hvtx is not None
-
     return common.CrossTalkList(
         hv_rx=translate_complex(cross_talk_list.cross_talk_hvrx),
         vh_rx=translate_complex(cross_talk_list.cross_talk_vhrx),
@@ -923,9 +881,6 @@ def translate_channel_imbalance_list(
     channel_imbalance_list: common_types.ChannelImbalanceList,
 ) -> common.ChannelImbalanceList:
     """Translate channel imbalance list"""
-    assert channel_imbalance_list.channel_imbal_hvrx is not None
-    assert channel_imbalance_list.channel_imbal_hvtx is not None
-
     return common.ChannelImbalanceList(
         hv_rx=translate_complex(channel_imbalance_list.channel_imbal_hvrx),
         hv_tx=translate_complex(channel_imbalance_list.channel_imbal_hvtx),

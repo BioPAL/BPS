@@ -24,7 +24,6 @@ def main() -> int:
     """Calls command line interface and intercepts the error code"""
 
     try:
-        # pylint: disable-next=no-value-for-parameter
         run()
     except SystemExit as exit_exc:
         if exit_exc.code == 0:
@@ -34,7 +33,6 @@ def main() -> int:
         bps_logger.error("Unexpected termination")
     except AssertionError:
         bps_logger.stack_trace(loglevel=bps_logger.logging.ERROR, limit=-1)
-        # pylint: disable-next=broad-exception-caught
     except Exception as exc:
         bps_logger.stack_trace(loglevel=bps_logger.logging.DEBUG, limit=-1)
         bps_logger.error("%s: %s", type(exc).__name__, exc)

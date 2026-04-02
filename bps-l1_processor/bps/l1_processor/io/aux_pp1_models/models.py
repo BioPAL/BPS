@@ -10,9 +10,10 @@ XSD PP1 models
 --------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AutofocusMethodType,
@@ -73,7 +74,7 @@ class AzimuthCompressionTypeFilterType(Enum):
     SINC = "SINC"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L0ProductImportType:
     """
     Parameters
@@ -102,69 +103,51 @@ class L0ProductImportType:
     class Meta:
         name = "l0ProductImportType"
 
-    block_size: Optional[int] = field(
-        default=None,
+    block_size: int = field(
         metadata={
             "name": "blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max_ispgap: Optional[int] = field(
-        default=None,
+    max_ispgap: int = field(
         metadata={
             "name": "maxISPGap",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_mean_expected: Optional[float] = field(
-        default=None,
+    raw_mean_expected: float = field(
         metadata={
             "name": "rawMeanExpected",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_mean_threshold: Optional[float] = field(
-        default=None,
+    raw_mean_threshold: float = field(
         metadata={
             "name": "rawMeanThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_std_expected: Optional[float] = field(
-        default=None,
-        metadata={"name": "rawStdExpected", "type": "Element", "namespace": "", "required": True, "min_inclusive": 0.0},
+    raw_std_expected: float = field(
+        metadata={"name": "rawStdExpected", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    raw_std_threshold: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "rawStdThreshold",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    raw_std_threshold: float = field(
+        metadata={"name": "rawStdThreshold", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    internal_calibration_estimation_flag: Optional[str] = field(
-        default=None,
+    internal_calibration_estimation_flag: str = field(
         metadata={
             "name": "internalCalibrationEstimationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ParcProcessingType:
     """
     Parameters
@@ -180,27 +163,23 @@ class ParcProcessingType:
     class Meta:
         name = "parcProcessingType"
 
-    parc_roisamples: Optional[int] = field(
-        default=None,
+    parc_roisamples: int = field(
         metadata={
             "name": "parcROISamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    parc_roilines: Optional[int] = field(
-        default=None,
+    parc_roilines: int = field(
         metadata={
             "name": "parcROILines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RawDataCorrectionType:
     """
     Parameters
@@ -218,45 +197,27 @@ class RawDataCorrectionType:
     class Meta:
         name = "rawDataCorrectionType"
 
-    raw_data_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "rawDataCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    raw_data_correction_flag: str = field(
+        metadata={"name": "rawDataCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    bias_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "biasCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    bias_correction_flag: str = field(
+        metadata={"name": "biasCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    gain_imbalance_correction_flag: Optional[str] = field(
-        default=None,
+    gain_imbalance_correction_flag: str = field(
         metadata={
             "name": "gainImbalanceCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    non_orthogonality_correction_flag: Optional[str] = field(
-        default=None,
+    non_orthogonality_correction_flag: str = field(
         metadata={
             "name": "nonOrthogonalityCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
 
 
@@ -266,7 +227,7 @@ class RfiMitigationTypeRfiMitigationMode(Enum):
     MASK_BASED = "MaskBased"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RfiTmprocessingParametersType:
     """
     Parameters
@@ -298,103 +259,83 @@ class RfiTmprocessingParametersType:
     class Meta:
         name = "rfiTMProcessingParametersType"
 
-    block_lines: Optional[int] = field(
-        default=None,
+    block_lines: int = field(
         metadata={
             "name": "blockLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    median_filter_length: Optional[int] = field(
-        default=None,
+    median_filter_length: int = field(
         metadata={
             "name": "medianFilterLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    box_samples: Optional[int] = field(
-        default=None,
+    box_samples: int = field(
         metadata={
             "name": "boxSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    box_lines: Optional[int] = field(
-        default=None,
+    box_lines: int = field(
         metadata={
             "name": "boxLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    percentile_threshold: Optional[float] = field(
-        default=None,
+    percentile_threshold: float = field(
         metadata={
             "name": "percentileThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    morphological_open_operator_samples: Optional[int] = field(
-        default=None,
+    morphological_open_operator_samples: int = field(
         metadata={
             "name": "morphologicalOpenOperatorSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    morphological_open_operator_lines: Optional[int] = field(
-        default=None,
+    morphological_open_operator_lines: int = field(
         metadata={
             "name": "morphologicalOpenOperatorLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    morphological_close_operator_samples: Optional[int] = field(
-        default=None,
+    morphological_close_operator_samples: int = field(
         metadata={
             "name": "morphologicalCloseOperatorSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    morphological_close_operator_lines: Optional[int] = field(
-        default=None,
+    morphological_close_operator_lines: int = field(
         metadata={
             "name": "morphologicalCloseOperatorLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max_rfitmpercentage: Optional[float] = field(
-        default=None,
+    max_rfitmpercentage: float = field(
         metadata={
             "name": "maxRFITMPercentage",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AutofocusType:
     """
     Parameters
@@ -425,88 +366,66 @@ class AutofocusType:
     class Meta:
         name = "autofocusType"
 
-    autofocus_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "autofocusFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    autofocus_flag: str = field(
+        metadata={"name": "autofocusFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    autofocus_method: Optional[AutofocusMethodType] = field(
-        default=None,
+    autofocus_method: AutofocusMethodType = field(
         metadata={
             "name": "autofocusMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    map_drift_azimuth_sub_bands: Optional[int] = field(
-        default=None,
+    map_drift_azimuth_sub_bands: int = field(
         metadata={
             "name": "mapDriftAzimuthSubBands",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    map_drift_correlation_window_width: Optional[int] = field(
-        default=None,
+    map_drift_correlation_window_width: int = field(
         metadata={
             "name": "mapDriftCorrelationWindowWidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    map_drift_correlation_window_height: Optional[int] = field(
-        default=None,
+    map_drift_correlation_window_height: int = field(
         metadata={
             "name": "mapDriftCorrelationWindowHeight",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    map_drift_range_correlation_windows: Optional[int] = field(
-        default=None,
+    map_drift_range_correlation_windows: int = field(
         metadata={
             "name": "mapDriftRangeCorrelationWindows",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    map_drift_azimuth_correlation_windows: Optional[int] = field(
-        default=None,
+    map_drift_azimuth_correlation_windows: int = field(
         metadata={
             "name": "mapDriftAzimuthCorrelationWindows",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max_valid_shift: Optional[float] = field(
-        default=None,
-        metadata={"name": "maxValidShift", "type": "Element", "namespace": "", "required": True, "min_inclusive": 0.0},
+    max_valid_shift: float = field(
+        metadata={"name": "maxValidShift", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    valid_blocks_percentage: Optional[float] = field(
-        default=None,
+    valid_blocks_percentage: float = field(
         metadata={
             "name": "validBlocksPercentage",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RfiFmprocessingParametersType:
     """
     Parameters
@@ -540,113 +459,76 @@ class RfiFmprocessingParametersType:
     class Meta:
         name = "rfiFMProcessingParametersType"
 
-    block_lines: Optional[int] = field(
-        default=None,
+    block_lines: int = field(
         metadata={
             "name": "blockLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_overlap: Optional[int] = field(
-        default=None,
+    block_overlap: int = field(
         metadata={
             "name": "blockOverlap",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    persistent_rfithreshold: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "persistentRFIThreshold",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    persistent_rfithreshold: float = field(
+        metadata={"name": "persistentRFIThreshold", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    isolated_rfithreshold: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "isolatedRFIThreshold",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    isolated_rfithreshold: float = field(
+        metadata={"name": "isolatedRFIThreshold", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    isolated_rfipsdstd_threshold: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "isolatedRFIPSDStdThreshold",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    isolated_rfipsdstd_threshold: float = field(
+        metadata={"name": "isolatedRFIPSDStdThreshold", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    max_rfifmpercentage: Optional[float] = field(
-        default=None,
+    max_rfifmpercentage: float = field(
         metadata={
             "name": "maxRFIFMPercentage",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    periodgram_size: Optional[int] = field(
-        default=None,
+    periodgram_size: int = field(
         metadata={
             "name": "periodgramSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    enable_power_loss_compensation: Optional[bool] = field(
-        default=None,
+    enable_power_loss_compensation: bool = field(
         metadata={
             "name": "enablePowerLossCompensation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    power_loss_threshold: Optional[float] = field(
-        default=None,
+    power_loss_threshold: float = field(
         metadata={
             "name": "powerLossThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    chirp_source: Optional[RangeReferenceFunctionType] = field(
-        default=None,
+    chirp_source: RangeReferenceFunctionType = field(
         metadata={
             "name": "chirpSource",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mitigation_method: Optional[RfiFmmitigationMethodType] = field(
-        default=None,
+    mitigation_method: RfiFmmitigationMethodType = field(
         metadata={
             "name": "mitigationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AntennaPatternCorrectionType:
     """
     Parameters
@@ -672,57 +554,47 @@ class AntennaPatternCorrectionType:
     class Meta:
         name = "antennaPatternCorrectionType"
 
-    antenna_pattern_correction1_flag: Optional[str] = field(
-        default=None,
+    antenna_pattern_correction1_flag: str = field(
         metadata={
             "name": "antennaPatternCorrection1Flag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    antenna_pattern_correction2_flag: Optional[str] = field(
-        default=None,
+    antenna_pattern_correction2_flag: str = field(
         metadata={
             "name": "antennaPatternCorrection2Flag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    antenna_cross_talk_correction_flag: Optional[str] = field(
-        default=None,
+    antenna_cross_talk_correction_flag: str = field(
         metadata={
             "name": "antennaCrossTalkCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    elevation_mispointing_bias: Optional[FloatWithUnit] = field(
-        default=None,
+    elevation_mispointing_bias: FloatWithUnit = field(
         metadata={
             "name": "elevationMispointingBias",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_mispointing_bias: Optional[FloatWithUnit] = field(
-        default=None,
+    azimuth_mispointing_bias: FloatWithUnit = field(
         metadata={
             "name": "azimuthMispointingBias",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CalibrationConstantListType:
     """
     Parameters
@@ -746,16 +618,14 @@ class CalibrationConstantListType:
             "max_occurs": 4,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DopplerEstimationType:
     """
     Parameters
@@ -783,63 +653,51 @@ class DopplerEstimationType:
     class Meta:
         name = "dopplerEstimationType"
 
-    dc_method: Optional[DcMethodType] = field(
-        default=None,
+    dc_method: DcMethodType = field(
         metadata={
             "name": "dcMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    dc_value: Optional[DoubleWithUnit] = field(
-        default=None,
+    dc_value: DoubleWithUnit = field(
         metadata={
             "name": "dcValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_samples: Optional[int] = field(
-        default=None,
+    block_samples: int = field(
         metadata={
             "name": "blockSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_lines: Optional[int] = field(
-        default=None,
+    block_lines: int = field(
         metadata={
             "name": "blockLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polynomial_update_rate: Optional[FloatWithUnit] = field(
-        default=None,
+    polynomial_update_rate: FloatWithUnit = field(
         metadata={
             "name": "polynomialUpdateRate",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    dc_rmserror_threshold: Optional[FloatWithUnit] = field(
-        default=None,
+    dc_rmserror_threshold: FloatWithUnit = field(
         metadata={
             "name": "dcRMSErrorThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GeneralType:
     """
     Parameters
@@ -861,56 +719,41 @@ class GeneralType:
     class Meta:
         name = "generalType"
 
-    height_model: Optional[HeightModelType] = field(
-        default=None,
+    height_model: HeightModelType = field(
         metadata={
             "name": "heightModel",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    height_model_fallback_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "heightModelFallbackFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    height_model_fallback_flag: str = field(
+        metadata={"name": "heightModelFallbackFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    height_model_margin: Optional[FloatWithUnit] = field(
-        default=None,
+    height_model_margin: FloatWithUnit = field(
         metadata={
             "name": "heightModelMargin",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    parc_processing: Optional[ParcProcessingType] = field(
-        default=None,
+    parc_processing: ParcProcessingType = field(
         metadata={
             "name": "parcProcessing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    dual_polarisation_processing_flag: Optional[str] = field(
-        default=None,
+    dual_polarisation_processing_flag: str = field(
         metadata={
             "name": "dualPolarisationProcessingFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GroundProjectionType:
     """
     Parameters
@@ -932,54 +775,39 @@ class GroundProjectionType:
     class Meta:
         name = "groundProjectionType"
 
-    ground_projection_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "groundProjectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    ground_projection_flag: str = field(
+        metadata={"name": "groundProjectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    range_pixel_spacing: Optional[FloatWithUnit] = field(
-        default=None,
+    range_pixel_spacing: FloatWithUnit = field(
         metadata={
             "name": "rangePixelSpacing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filter_type: Optional[str] = field(
-        default=None,
+    filter_type: str = field(
         metadata={
             "name": "filterType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filter_bandwidth: Optional[FloatWithUnit] = field(
-        default=None,
+    filter_bandwidth: FloatWithUnit = field(
         metadata={
             "name": "filterBandwidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filter_length: Optional[int] = field(
-        default=None,
-        metadata={"name": "filterLength", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
+    filter_length: int = field(
+        metadata={"name": "filterLength", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    number_of_filters: Optional[int] = field(
-        default=None,
-        metadata={"name": "numberOfFilters", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
+    number_of_filters: int = field(
+        metadata={"name": "numberOfFilters", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InternalCalibrationCorrectionType:
     """
     Parameters
@@ -1021,108 +849,63 @@ class InternalCalibrationCorrectionType:
     class Meta:
         name = "internalCalibrationCorrectionType"
 
-    internal_calibration_correction_flag: Optional[str] = field(
-        default=None,
+    internal_calibration_correction_flag: str = field(
         metadata={
             "name": "internalCalibrationCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    drift_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "driftCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    drift_correction_flag: str = field(
+        metadata={"name": "driftCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    delay_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "delayCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    delay_correction_flag: str = field(
+        metadata={"name": "delayCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    channel_imbalance_correction_flag: Optional[str] = field(
-        default=None,
+    channel_imbalance_correction_flag: str = field(
         metadata={
             "name": "channelImbalanceCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    internal_calibration_source: Optional[InternalCalibrationSourceType] = field(
-        default=None,
+    internal_calibration_source: InternalCalibrationSourceType = field(
         metadata={
             "name": "internalCalibrationSource",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max_drift_amplitude_std_fraction: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "maxDriftAmplitudeStdFraction",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    max_drift_amplitude_std_fraction: float = field(
+        metadata={"name": "maxDriftAmplitudeStdFraction", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    max_drift_phase_std_fraction: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "maxDriftPhaseStdFraction",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    max_drift_phase_std_fraction: float = field(
+        metadata={"name": "maxDriftPhaseStdFraction", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    max_drift_amplitude_error: Optional[float] = field(
-        default=None,
-        metadata={
-            "name": "maxDriftAmplitudeError",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 0.0,
-        },
+    max_drift_amplitude_error: float = field(
+        metadata={"name": "maxDriftAmplitudeError", "type": "Element", "namespace": "", "min_inclusive": 0.0}
     )
-    max_drift_phase_error: Optional[FloatWithUnit] = field(
-        default=None,
+    max_drift_phase_error: FloatWithUnit = field(
         metadata={
             "name": "maxDriftPhaseError",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max_invalid_drift_fraction: Optional[float] = field(
-        default=None,
+    max_invalid_drift_fraction: float = field(
         metadata={
             "name": "maxInvalidDriftFraction",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IonosphereCalibrationType:
     """
     Parameters
@@ -1174,184 +957,141 @@ class IonosphereCalibrationType:
     class Meta:
         name = "ionosphereCalibrationType"
 
-    ionosphere_height_defocusing_flag: Optional[str] = field(
-        default=None,
+    ionosphere_height_defocusing_flag: str = field(
         metadata={
             "name": "ionosphereHeightDefocusingFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    ionosphere_height_estimation_method: Optional[IonosphereHeightEstimationMethodType] = field(
-        default=None,
+    ionosphere_height_estimation_method: IonosphereHeightEstimationMethodType = field(
         metadata={
             "name": "ionosphereHeightEstimationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_height_value: Optional[FloatWithUnit] = field(
-        default=None,
+    ionosphere_height_value: FloatWithUnit = field(
         metadata={
             "name": "ionosphereHeightValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_height_estimation_method_latitude_threshold: Optional[FloatWithUnit] = field(
-        default=None,
+    ionosphere_height_estimation_method_latitude_threshold: FloatWithUnit = field(
         metadata={
             "name": "ionosphereHeightEstimationMethodLatitudeThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_height_minimum_value: Optional[FloatWithUnit] = field(
-        default=None,
+    ionosphere_height_minimum_value: FloatWithUnit = field(
         metadata={
             "name": "ionosphereHeightMinimumValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_height_maximum_value: Optional[FloatWithUnit] = field(
-        default=None,
+    ionosphere_height_maximum_value: FloatWithUnit = field(
         metadata={
             "name": "ionosphereHeightMaximumValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    squint_sensitivity_number_of_looks: Optional[int] = field(
-        default=None,
+    squint_sensitivity_number_of_looks: int = field(
         metadata={
             "name": "squintSensitivityNumberOfLooks",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    squint_sensitivity_number_of_ticks: Optional[int] = field(
-        default=None,
+    squint_sensitivity_number_of_ticks: int = field(
         metadata={
             "name": "squintSensitivityNumberOfTicks",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    squint_sensitivity_fitting_error: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    squint_sensitivity_fitting_error: FloatArrayWithUnits = field(
         metadata={
             "name": "squintSensitivityFittingError",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gaussian_filter_maximum_major_axis_length: Optional[int] = field(
-        default=None,
+    gaussian_filter_maximum_major_axis_length: int = field(
         metadata={
             "name": "gaussianFilterMaximumMajorAxisLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gaussian_filter_maximum_minor_axis_length: Optional[int] = field(
-        default=None,
+    gaussian_filter_maximum_minor_axis_length: int = field(
         metadata={
             "name": "gaussianFilterMaximumMinorAxisLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gaussian_filter_major_axis_length: Optional[int] = field(
-        default=None,
+    gaussian_filter_major_axis_length: int = field(
         metadata={
             "name": "gaussianFilterMajorAxisLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gaussian_filter_minor_axis_length: Optional[int] = field(
-        default=None,
+    gaussian_filter_minor_axis_length: int = field(
         metadata={
             "name": "gaussianFilterMinorAxisLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gaussian_filter_slope: Optional[float] = field(
-        default=None,
+    gaussian_filter_slope: float = field(
         metadata={
             "name": "gaussianFilterSlope",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    faraday_rotation_correction_flag: Optional[str] = field(
-        default=None,
+    faraday_rotation_correction_flag: str = field(
         metadata={
             "name": "faradayRotationCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    ionospheric_phase_screen_correction_flag: Optional[str] = field(
-        default=None,
+    ionospheric_phase_screen_correction_flag: str = field(
         metadata={
             "name": "ionosphericPhaseScreenCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    group_delay_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "groupDelayCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    group_delay_correction_flag: str = field(
+        metadata={"name": "groupDelayCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    block_lines: Optional[int] = field(
-        default=None,
+    block_lines: int = field(
         metadata={
             "name": "blockLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_overlap_lines: Optional[int] = field(
-        default=None,
+    block_overlap_lines: int = field(
         metadata={
             "name": "blockOverlapLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1AProcessingParametersType:
     """
     Parameters
@@ -1371,55 +1111,45 @@ class L1AProcessingParametersType:
     class Meta:
         name = "l1aProcessingParametersType"
 
-    swath: Optional[SwathType] = field(
-        default=None,
+    swath: SwathType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    time_bias: Optional[DoubleWithUnit] = field(
-        default=None,
+    time_bias: DoubleWithUnit = field(
         metadata={
             "name": "timeBias",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    window_type: Optional[WeightingWindowType] = field(
-        default=None,
+    window_type: WeightingWindowType = field(
         metadata={
             "name": "windowType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    window_coefficient: Optional[float] = field(
-        default=None,
+    window_coefficient: float = field(
         metadata={
             "name": "windowCoefficient",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    processing_bandwidth: Optional[FloatWithUnit] = field(
-        default=None,
+    processing_bandwidth: FloatWithUnit = field(
         metadata={
             "name": "processingBandwidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1BProcessingParametersType:
     """
     Parameters
@@ -1445,73 +1175,54 @@ class L1BProcessingParametersType:
     class Meta:
         name = "l1bProcessingParametersType"
 
-    swath: Optional[SwathType] = field(
-        default=None,
+    swath: SwathType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    window_type: Optional[WeightingWindowType] = field(
-        default=None,
+    window_type: WeightingWindowType = field(
         metadata={
             "name": "windowType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    window_coefficient: Optional[float] = field(
-        default=None,
+    window_coefficient: float = field(
         metadata={
             "name": "windowCoefficient",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    look_bandwidth: Optional[FloatWithUnit] = field(
-        default=None,
+    look_bandwidth: FloatWithUnit = field(
         metadata={
             "name": "lookBandwidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    number_of_looks: Optional[int] = field(
-        default=None,
-        metadata={"name": "numberOfLooks", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
+    number_of_looks: int = field(
+        metadata={"name": "numberOfLooks", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    look_central_frequencies: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    look_central_frequencies: FloatArrayWithUnits = field(
         metadata={
             "name": "lookCentralFrequencies",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    upsampling_factor: Optional[int] = field(
-        default=None,
-        metadata={"name": "upsamplingFactor", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
+    upsampling_factor: int = field(
+        metadata={"name": "upsamplingFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    downsampling_factor: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "downsamplingFactor",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 1,
-        },
+    downsampling_factor: int = field(
+        metadata={"name": "downsamplingFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LutDecimationFactorListType:
     """
     Parameters
@@ -1528,16 +1239,14 @@ class LutDecimationFactorListType:
         default_factory=list,
         metadata={"name": "lutDecimationFactor", "type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class NoiseGainListType:
     """
     Parameters
@@ -1555,16 +1264,14 @@ class NoiseGainListType:
         default_factory=list,
         metadata={"name": "noiseGain", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolarimetricCalibrationType:
     """
     Parameters
@@ -1588,77 +1295,58 @@ class PolarimetricCalibrationType:
     class Meta:
         name = "polarimetricCalibrationType"
 
-    polarimetric_correction_flag: Optional[str] = field(
-        default=None,
+    polarimetric_correction_flag: str = field(
         metadata={
             "name": "polarimetricCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    tx_distortion_matrix_correction_flag: Optional[str] = field(
-        default=None,
+    tx_distortion_matrix_correction_flag: str = field(
         metadata={
             "name": "txDistortionMatrixCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    rx_distortion_matrix_correction_flag: Optional[str] = field(
-        default=None,
+    rx_distortion_matrix_correction_flag: str = field(
         metadata={
             "name": "rxDistortionMatrixCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    cross_talk_correction_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "crossTalkCorrectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    cross_talk_correction_flag: str = field(
+        metadata={"name": "crossTalkCorrectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    cross_talk_list: Optional[CrossTalkList] = field(
-        default=None,
+    cross_talk_list: CrossTalkList = field(
         metadata={
             "name": "crossTalkList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    channel_imbalance_correction_flag: Optional[str] = field(
-        default=None,
+    channel_imbalance_correction_flag: str = field(
         metadata={
             "name": "channelImbalanceCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    channel_imbalance_list: Optional[ChannelImbalanceList] = field(
-        default=None,
+    channel_imbalance_list: ChannelImbalanceList = field(
         metadata={
             "name": "channelImbalanceList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessingGainListType:
     """
     Parameters
@@ -1675,16 +1363,14 @@ class ProcessingGainListType:
         default_factory=list,
         metadata={"name": "processingGain", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class QlAbsoluteScalingFactorListType:
     """
     Parameters
@@ -1707,16 +1393,14 @@ class QlAbsoluteScalingFactorListType:
             "max_occurs": 3,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RfiMitigationType:
     """
     Parameters
@@ -1746,84 +1430,63 @@ class RfiMitigationType:
     class Meta:
         name = "rfiMitigationType"
 
-    rfi_detection_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "rfiDetectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    rfi_detection_flag: str = field(
+        metadata={"name": "rfiDetectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    rfi_mitigation_mode: Optional[RfiMitigationTypeRfiMitigationMode] = field(
-        default=None,
+    rfi_mitigation_mode: RfiMitigationTypeRfiMitigationMode = field(
         metadata={
             "name": "rfiMitigationMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_activation_mask_threshold: Optional[float] = field(
-        default=None,
+    rfi_activation_mask_threshold: float = field(
         metadata={
             "name": "rfiActivationMaskThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    rfi_mitigation_method: Optional[RfiMitigationMethodType] = field(
-        default=None,
+    rfi_mitigation_method: RfiMitigationMethodType = field(
         metadata={
             "name": "rfiMitigationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_mask: Optional[RfiMaskType] = field(
-        default=None,
+    rfi_mask: RfiMaskType = field(
         metadata={
             "name": "rfiMask",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_mask_generation_method: Optional[RfiMaskGenerationMethodType] = field(
-        default=None,
+    rfi_mask_generation_method: RfiMaskGenerationMethodType = field(
         metadata={
             "name": "rfiMaskGenerationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_tmprocessing_parameters: Optional[RfiTmprocessingParametersType] = field(
-        default=None,
+    rfi_tmprocessing_parameters: RfiTmprocessingParametersType = field(
         metadata={
             "name": "rfiTMProcessingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_fmprocessing_parameters: Optional[RfiFmprocessingParametersType] = field(
-        default=None,
+    rfi_fmprocessing_parameters: RfiFmprocessingParametersType = field(
         metadata={
             "name": "rfiFMProcessingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1ProductExportType:
     """
     Parameters
@@ -1886,210 +1549,140 @@ class L1ProductExportType:
     class Meta:
         name = "l1ProductExportType"
 
-    l1a_product_doi: Optional[str] = field(
-        default=None,
+    l1a_product_doi: str = field(
         metadata={
             "name": "l1aProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    l1b_product_doi: Optional[str] = field(
-        default=None,
+    l1b_product_doi: str = field(
         metadata={
             "name": "l1bProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pixel_representation: Optional[PixelRepresentationType] = field(
-        default=None,
+    pixel_representation: PixelRepresentationType = field(
         metadata={
             "name": "pixelRepresentation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pixel_quantity: Optional[PixelQuantityType] = field(
-        default=None,
+    pixel_quantity: PixelQuantityType = field(
         metadata={
             "name": "pixelQuantity",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    abs_compression_method: Optional[CompressionMethodType] = field(
-        default=None,
+    abs_compression_method: CompressionMethodType = field(
         metadata={
             "name": "absCompressionMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    abs_max_zerror: Optional[float] = field(
-        default=None,
-        metadata={"name": "absMaxZError", "type": "Element", "namespace": "", "required": True, "min_inclusive": -1.0},
+    abs_max_zerror: float = field(
+        metadata={"name": "absMaxZError", "type": "Element", "namespace": "", "min_inclusive": -1.0}
     )
-    abs_max_zerror_percentile: Optional[float] = field(
-        default=None,
+    abs_max_zerror_percentile: float = field(
         metadata={
             "name": "absMaxZErrorPercentile",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    phase_compression_method: Optional[CompressionMethodType] = field(
-        default=None,
+    phase_compression_method: CompressionMethodType = field(
         metadata={
             "name": "phaseCompressionMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    phase_max_zerror: Optional[FloatWithUnit] = field(
-        default=None,
+    phase_max_zerror: FloatWithUnit = field(
         metadata={
             "name": "phaseMaxZError",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    phase_max_zerror_percentile: Optional[float] = field(
-        default=None,
+    phase_max_zerror_percentile: float = field(
         metadata={
             "name": "phaseMaxZErrorPercentile",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "min_inclusive": 0.0,
             "max_inclusive": 1.0,
-        },
+        }
     )
-    no_pixel_value: Optional[float] = field(
-        default=None,
+    no_pixel_value: float = field(
         metadata={
             "name": "noPixelValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_size: Optional[int] = field(
-        default=None,
-        metadata={"name": "blockSize", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
-    )
-    lut_range_decimation_factor_list: Optional[LutDecimationFactorListType] = field(
-        default=None,
+    block_size: int = field(metadata={"name": "blockSize", "type": "Element", "namespace": "", "min_inclusive": 1})
+    lut_range_decimation_factor_list: LutDecimationFactorListType = field(
         metadata={
             "name": "lutRangeDecimationFactorList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lut_azimuth_decimation_factor_list: Optional[LutDecimationFactorListType] = field(
-        default=None,
+    lut_azimuth_decimation_factor_list: LutDecimationFactorListType = field(
         metadata={
             "name": "lutAzimuthDecimationFactorList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lut_block_size: Optional[int] = field(
-        default=None,
-        metadata={"name": "lutBlockSize", "type": "Element", "namespace": "", "required": True, "min_inclusive": 1},
+    lut_block_size: int = field(
+        metadata={"name": "lutBlockSize", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    lut_layers_completeness_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "lutLayersCompletenessFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    lut_layers_completeness_flag: str = field(
+        metadata={"name": "lutLayersCompletenessFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    l1a_ql_colour_coding_method: Optional[L1AcQlColourCodingMethodType] = field(
-        default=None,
+    l1a_ql_colour_coding_method: L1AcQlColourCodingMethodType = field(
         metadata={
             "name": "l1aQlColourCodingMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    l1b_ql_colour_coding_method: Optional[L1BQlColourCodingMethodType] = field(
-        default=None,
+    l1b_ql_colour_coding_method: L1BQlColourCodingMethodType = field(
         metadata={
             "name": "l1bQlColourCodingMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ql_range_decimation_factor: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "qlRangeDecimationFactor",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 1,
-        },
+    ql_range_decimation_factor: int = field(
+        metadata={"name": "qlRangeDecimationFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    ql_range_averaging_factor: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "qlRangeAveragingFactor",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 1,
-        },
+    ql_range_averaging_factor: int = field(
+        metadata={"name": "qlRangeAveragingFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    ql_azimuth_decimation_factor: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "qlAzimuthDecimationFactor",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 1,
-        },
+    ql_azimuth_decimation_factor: int = field(
+        metadata={"name": "qlAzimuthDecimationFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    ql_azimuth_averaging_factor: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "qlAzimuthAveragingFactor",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": 1,
-        },
+    ql_azimuth_averaging_factor: int = field(
+        metadata={"name": "qlAzimuthAveragingFactor", "type": "Element", "namespace": "", "min_inclusive": 1}
     )
-    ql_absolute_scaling_factor_list: Optional[QlAbsoluteScalingFactorListType] = field(
-        default=None,
+    ql_absolute_scaling_factor_list: QlAbsoluteScalingFactorListType = field(
         metadata={
             "name": "qlAbsoluteScalingFactorList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1AProcessingParametersListType:
     """
     Parameters
@@ -2106,16 +1699,14 @@ class L1AProcessingParametersListType:
         default_factory=list,
         metadata={"name": "processingParameters", "type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1BProcessingParametersListType:
     """
     Parameters
@@ -2132,16 +1723,14 @@ class L1BProcessingParametersListType:
         default_factory=list,
         metadata={"name": "processingParameters", "type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RadiometricCalibrationType:
     """
     Parameters
@@ -2161,46 +1750,38 @@ class RadiometricCalibrationType:
     class Meta:
         name = "radiometricCalibrationType"
 
-    range_spreading_loss_compensation_flag: Optional[str] = field(
-        default=None,
+    range_spreading_loss_compensation_flag: str = field(
         metadata={
             "name": "rangeSpreadingLossCompensationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    reference_range: Optional[FloatWithUnit] = field(
-        default=None,
+    reference_range: FloatWithUnit = field(
         metadata={
             "name": "referenceRange",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    processing_gain_list: Optional[ProcessingGainListType] = field(
-        default=None,
+    processing_gain_list: ProcessingGainListType = field(
         metadata={
             "name": "processingGainList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    absolute_calibration_constant_list: Optional[CalibrationConstantListType] = field(
-        default=None,
+    absolute_calibration_constant_list: CalibrationConstantListType = field(
         metadata={
             "name": "absoluteCalibrationConstantList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ThermalDenoisingType:
     """
     Parameters
@@ -2221,47 +1802,29 @@ class ThermalDenoisingType:
     class Meta:
         name = "thermalDenoisingType"
 
-    thermal_denoising_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "thermalDenoisingFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    thermal_denoising_flag: str = field(
+        metadata={"name": "thermalDenoisingFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    noise_parameters_source: Optional[InternalCalibrationSourceType] = field(
-        default=None,
+    noise_parameters_source: InternalCalibrationSourceType = field(
         metadata={
             "name": "noiseParametersSource",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    noise_equivalent_echoes_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "noiseEquivalentEchoesFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    noise_equivalent_echoes_flag: str = field(
+        metadata={"name": "noiseEquivalentEchoesFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    noise_gain_list: Optional[NoiseGainListType] = field(
-        default=None,
+    noise_gain_list: NoiseGainListType = field(
         metadata={
             "name": "noiseGainList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AzimuthCompressionType:
     """
     Parameters
@@ -2304,148 +1867,108 @@ class AzimuthCompressionType:
     class Meta:
         name = "azimuthCompressionType"
 
-    block_samples: Optional[int] = field(
-        default=None,
+    block_samples: int = field(
         metadata={
             "name": "blockSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_lines: Optional[int] = field(
-        default=None,
+    block_lines: int = field(
         metadata={
             "name": "blockLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_overlap_samples: Optional[int] = field(
-        default=None,
+    block_overlap_samples: int = field(
         metadata={
             "name": "blockOverlapSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    block_overlap_lines: Optional[int] = field(
-        default=None,
+    block_overlap_lines: int = field(
         metadata={
             "name": "blockOverlapLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_processing_parameters_list: Optional[L1AProcessingParametersListType] = field(
-        default=None,
+    azimuth_processing_parameters_list: L1AProcessingParametersListType = field(
         metadata={
             "name": "azimuthProcessingParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    bistatic_delay_correction_flag: Optional[str] = field(
-        default=None,
+    bistatic_delay_correction_flag: str = field(
         metadata={
             "name": "bistaticDelayCorrectionFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    bistatic_delay_correction_method: Optional[BistaticDelayCorrectionMethodType] = field(
-        default=None,
+    bistatic_delay_correction_method: BistaticDelayCorrectionMethodType = field(
         metadata={
             "name": "bistaticDelayCorrectionMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_resampling_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "azimuthResamplingFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    azimuth_resampling_flag: str = field(
+        metadata={"name": "azimuthResamplingFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    azimuth_resampling_frequency: Optional[FloatWithUnit] = field(
-        default=None,
+    azimuth_resampling_frequency: FloatWithUnit = field(
         metadata={
             "name": "azimuthResamplingFrequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_focusing_margins_removal_flag: Optional[str] = field(
-        default=None,
+    azimuth_focusing_margins_removal_flag: str = field(
         metadata={
             "name": "azimuthFocusingMarginsRemovalFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    azimuth_coregistration_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "azimuthCoregistrationFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    azimuth_coregistration_flag: str = field(
+        metadata={"name": "azimuthCoregistrationFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    filter_type: Optional[AzimuthCompressionTypeFilterType] = field(
-        default=None,
+    filter_type: AzimuthCompressionTypeFilterType = field(
         metadata={
             "name": "filterType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filter_bandwidth: Optional[FloatWithUnit] = field(
-        default=None,
+    filter_bandwidth: FloatWithUnit = field(
         metadata={
             "name": "filterBandwidth",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filter_length: Optional[int] = field(
-        default=None,
+    filter_length: int = field(
         metadata={
             "name": "filterLength",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    number_of_filters: Optional[int] = field(
-        default=None,
+    number_of_filters: int = field(
         metadata={
             "name": "numberOfFilters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MultilookType:
     """
     Parameters
@@ -2461,37 +1984,26 @@ class MultilookType:
     class Meta:
         name = "multilookType"
 
-    range_processing_parameters_list: Optional[L1BProcessingParametersListType] = field(
-        default=None,
+    range_processing_parameters_list: L1BProcessingParametersListType = field(
         metadata={
             "name": "rangeProcessingParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_processing_parameters_list: Optional[L1BProcessingParametersListType] = field(
-        default=None,
+    azimuth_processing_parameters_list: L1BProcessingParametersListType = field(
         metadata={
             "name": "azimuthProcessingParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    detection_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "detectionFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    detection_flag: str = field(
+        metadata={"name": "detectionFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RangeCompressionType:
     """
     Parameters
@@ -2511,46 +2023,38 @@ class RangeCompressionType:
     class Meta:
         name = "rangeCompressionType"
 
-    range_reference_function_source: Optional[RangeReferenceFunctionType] = field(
-        default=None,
+    range_reference_function_source: RangeReferenceFunctionType = field(
         metadata={
             "name": "rangeReferenceFunctionSource",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    range_compression_method: Optional[RangeCompressionMethodType] = field(
-        default=None,
+    range_compression_method: RangeCompressionMethodType = field(
         metadata={
             "name": "rangeCompressionMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    extended_swath_processing_flag: Optional[str] = field(
-        default=None,
+    extended_swath_processing_flag: str = field(
         metadata={
             "name": "extendedSwathProcessingFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    range_processing_parameters_list: Optional[L1AProcessingParametersListType] = field(
-        default=None,
+    range_processing_parameters_list: L1AProcessingParametersListType = field(
         metadata={
             "name": "rangeProcessingParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1ProductType:
     """
     Parameters
@@ -2596,168 +2100,132 @@ class L1ProductType:
     class Meta:
         name = "l1ProductType"
 
-    product_id: Optional[str] = field(
-        default=None,
+    product_id: str = field(
         metadata={
             "name": "productID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    general: Optional[GeneralType] = field(
-        default=None,
+    general: GeneralType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    l0_product_import: Optional[L0ProductImportType] = field(
-        default=None,
+    l0_product_import: L0ProductImportType = field(
         metadata={
             "name": "l0ProductImport",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_data_correction: Optional[RawDataCorrectionType] = field(
-        default=None,
+    raw_data_correction: RawDataCorrectionType = field(
         metadata={
             "name": "rawDataCorrection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_mitigation: Optional[RfiMitigationType] = field(
-        default=None,
+    rfi_mitigation: RfiMitigationType = field(
         metadata={
             "name": "rfiMitigation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    internal_calibration_correction: Optional[InternalCalibrationCorrectionType] = field(
-        default=None,
+    internal_calibration_correction: InternalCalibrationCorrectionType = field(
         metadata={
             "name": "internalCalibrationCorrection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    range_compression: Optional[RangeCompressionType] = field(
-        default=None,
+    range_compression: RangeCompressionType = field(
         metadata={
             "name": "rangeCompression",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    doppler_estimation: Optional[DopplerEstimationType] = field(
-        default=None,
+    doppler_estimation: DopplerEstimationType = field(
         metadata={
             "name": "dopplerEstimation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    antenna_pattern_correction: Optional[AntennaPatternCorrectionType] = field(
-        default=None,
+    antenna_pattern_correction: AntennaPatternCorrectionType = field(
         metadata={
             "name": "antennaPatternCorrection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    azimuth_compression: Optional[AzimuthCompressionType] = field(
-        default=None,
+    azimuth_compression: AzimuthCompressionType = field(
         metadata={
             "name": "azimuthCompression",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    radiometric_calibration: Optional[RadiometricCalibrationType] = field(
-        default=None,
+    radiometric_calibration: RadiometricCalibrationType = field(
         metadata={
             "name": "radiometricCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarimetric_calibration: Optional[PolarimetricCalibrationType] = field(
-        default=None,
+    polarimetric_calibration: PolarimetricCalibrationType = field(
         metadata={
             "name": "polarimetricCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ionosphere_calibration: Optional[IonosphereCalibrationType] = field(
-        default=None,
+    ionosphere_calibration: IonosphereCalibrationType = field(
         metadata={
             "name": "ionosphereCalibration",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    autofocus: Optional[AutofocusType] = field(
-        default=None,
+    autofocus: AutofocusType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    multilook: Optional[MultilookType] = field(
-        default=None,
+    multilook: MultilookType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermal_denoising: Optional[ThermalDenoisingType] = field(
-        default=None,
+    thermal_denoising: ThermalDenoisingType = field(
         metadata={
             "name": "thermalDenoising",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ground_projection: Optional[GroundProjectionType] = field(
-        default=None,
+    ground_projection: GroundProjectionType = field(
         metadata={
             "name": "groundProjection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    l1_product_export: Optional[L1ProductExportType] = field(
-        default=None,
+    l1_product_export: L1ProductExportType = field(
         metadata={
             "name": "l1ProductExport",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1ProductListType:
     """
     Parameters
@@ -2770,25 +2238,21 @@ class L1ProductListType:
     class Meta:
         name = "l1ProductListType"
 
-    l1_product: Optional[L1ProductType] = field(
-        default=None,
+    l1_product: L1ProductType = field(
         metadata={
             "name": "l1Product",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL1ProcessingParametersType:
     """
     Parameters
@@ -2801,18 +2265,16 @@ class AuxiliaryL1ProcessingParametersType:
     class Meta:
         name = "auxiliaryL1ProcessingParametersType"
 
-    l1_product_list: Optional[L1ProductListType] = field(
-        default=None,
+    l1_product_list: L1ProductListType = field(
         metadata={
             "name": "l1ProductList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL1ProcessingParameters(AuxiliaryL1ProcessingParametersType):
     """
     BIOMASS auxiliary L1 processing parameters element.

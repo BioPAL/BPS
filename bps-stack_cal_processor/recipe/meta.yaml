@@ -1,5 +1,5 @@
 {% set name = "bps-stack_cal_processor" %}
-{% set version = "4.4.0" %}
+{% set version = "4.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -16,16 +16,15 @@ build:
 requirements:
   host:
     - python >=3.12
-    - setuptools
-    - wheel
+    - hatchling
     - pip
   run:
     - python >=3.12
     - numpy
-    - arepytools >=1.7.6
+    - arepytools >=1.8.1
     - bps-common =={{ version }}
     - numba >=0.57.0
-    - py-opencv <4.13=*headless*
+    - py-opencv <4.14=*headless*
     - scipy
     - scikit-image
     - scikit-learn

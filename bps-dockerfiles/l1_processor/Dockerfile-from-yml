@@ -1,0 +1,18 @@
+FROM bps-prereq:latest
+
+COPY pkgs /tmp/python-packages
+COPY environment.yml /tmp/environment.yml
+
+USER root
+RUN bash -c "conda index --verbose /tmp/python-packages && \
+    conda env update --file /tmp/environment.yml && \
+    conda clean -afy" && \
+    rm -fr /tmp/python-packages && \
+    rm -fr /tmp/environment.yml && \
+    ln -s /opt/conda_folder/envs/env/bin/bps_l1_processor /usr/local/bin/ && \
+    ln -s /opt/conda_folder/envs/env/bin/BiomassL0ImportPreProc /usr/local/bin/ && \
+    ln -s /opt/conda_folder/envs/env/bin/BPSL1CoreProcessor /usr/local/bin/ && \
+    ln -s /opt/conda_folder/envs/env/bin/IonosphericHeightIRI20Estimator /usr/local/bin/
+
+USER nobody
+CMD /bin/bash

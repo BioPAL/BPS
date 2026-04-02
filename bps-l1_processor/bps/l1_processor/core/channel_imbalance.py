@@ -30,10 +30,6 @@ class ChannelImbalanceProcessingParametersL1:
 
 def translate_f_complex_type_to_complex(number: models.FcomplexNumberType) -> complex:
     """Translate FcomplexNumberType to complex data type"""
-
-    assert number.real is not None
-    assert number.imag is not None
-
     return complex(real=number.real, imag=number.real)
 
 
@@ -41,10 +37,6 @@ def translate_model_to_channel_imbalance_processing_parameters(
     model: models.ChannelImbalance,
 ) -> ChannelImbalanceProcessingParametersL1:
     """Translate channel imbalance to the corresponding structure"""
-
-    assert model.tx is not None
-    assert model.rx is not None
-
     tx = translate_f_complex_type_to_complex(model.tx)
     rx = translate_f_complex_type_to_complex(model.rx)
 

@@ -23,7 +23,7 @@ def main() -> int:
     """Calls command line interface and intercepts the error code"""
 
     try:
-        cli()  # pylint: disable=no-value-for-parameter
+        cli()
     except SystemExit as exit_exc:
         if exit_exc.code != 0:
             exit_exc.code = FAILURE_CODE

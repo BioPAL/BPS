@@ -472,8 +472,8 @@ class GN:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
             gn=common_types.PixelRepresentationType.GROUND_CANCELLED_BACKSCATTER
@@ -539,13 +539,13 @@ class GN:
                 )
 
             sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters_list,
-                len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
+                sta_quality_parameters=sta_quality_parameters_list,
+                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
             )
 
             sta_quality = common_annotation_models_l2.StaQualityType(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index,
-                sta_quality_parameters_list,
+                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+                sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
@@ -567,11 +567,11 @@ class GN:
 
         # Compute height of ambiguity from the average wavenumbers
         vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(
+            min=common_annotation_models_l2.FloatWithUnit(
                 value=float(min(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
-            common_annotation_models_l2.FloatWithUnit(
+            max=common_annotation_models_l2.FloatWithUnit(
                 value=float(max(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
@@ -581,8 +581,8 @@ class GN:
         hoa_min = 2 * np.pi / min(wavenumber_spacings)
         hoa_max = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
+            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
         )
 
         main_ads_input_information = BIOMASSL2aMainADSInputInformation(
@@ -602,11 +602,13 @@ class GN:
 
         # main_ads_processing_parameters
         general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            self.aux_pp2_2a.general.apply_calibration_screen.value,
-            self.aux_pp2_2a.general.forest_coverage_threshold,
-            self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
-            translate_common.translate_polarisation_combination_method_to_model(
+            apply_calibration_screen=self.aux_pp2_2a.general.apply_calibration_screen.value,
+            forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
+            forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
+            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
+                self.aux_pp2_2a.general.subsetting_rule.value
+            ),
+            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
                 self.aux_pp2_2a.general.polarisation_combination_method
             ),
         )
@@ -614,23 +616,23 @@ class GN:
         least_significant_digit = self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.least_significant_digit
 
         compression_options_gn = main_annotation_models_l2a_gn.CompressionOptionsL2A(
-            main_annotation_models_l2a_gn.CompressionOptionsL2A.Mds(
-                main_annotation_models_l2a_gn.CompressionOptionsL2A.Mds.Gn(
-                    self.aux_pp2_2a.agb.compression_options.mds.gn.compression_factor,
-                    self.aux_pp2_2a.agb.compression_options.mds.gn.max_z_error,
+            mds=main_annotation_models_l2a_gn.CompressionOptionsL2A.Mds(
+                gn=main_annotation_models_l2a_gn.CompressionOptionsL2A.Mds.Gn(
+                    compression_factor=self.aux_pp2_2a.agb.compression_options.mds.gn.compression_factor,
+                    max_z_error=self.aux_pp2_2a.agb.compression_options.mds.gn.max_z_error,
                 ),
             ),
-            main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads(
-                main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.Fnf(
-                    self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
+            ads=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads(
+                fnf=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.Fnf(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
                 ),
-                main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.LocalIncidenceAngle(
-                    self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.compression_factor,
-                    least_significant_digit,
+                local_incidence_angle=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.LocalIncidenceAngle(
+                    compression_factor=self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.compression_factor,
+                    least_significant_digit=least_significant_digit,
                 ),
             ),
-            self.aux_pp2_2a.agb.compression_options.mds_block_size,
-            self.aux_pp2_2a.agb.compression_options.ads_block_size,
+            mds_block_size=self.aux_pp2_2a.agb.compression_options.mds_block_size,
+            ads_block_size=self.aux_pp2_2a.agb.compression_options.ads_block_size,
         )
 
         images_pair_selection = None
@@ -800,9 +802,6 @@ def sigma_naught_normalisation(
         np.nanmean(incidence_angle_rad),
     )
 
-    resolution_rg = LIGHTSPEED / (2 * b_rg)
-    resolution_az = average_az_velocity / b_az
-
     decimation_factor_rg = np.ceil(averaging_window_size_rg / upsampling_factor).astype(np.uint8)
     decimation_factor_az = np.ceil(averaging_window_size_az / upsampling_factor).astype(np.uint8)
     bps_logger.info(f"    decimation factor used in range direction: {decimation_factor_rg}")
@@ -866,7 +865,7 @@ def sigma_naught_normalisation(
         num_az_subsampled,
         fr_normalized_transposed,
         num_rg_subsampled,
-    ).astype(np.float64) * (1 / (resolution_az * resolution_rg))
+    ).astype(np.float64)
 
     bps_logger.info(
         f"    data shape after decimation: Azimuth {ground_canc_norm_multilook.shape[1]} samples, Slant-range {ground_canc_norm_multilook.shape[2]} samples"

@@ -19,21 +19,6 @@ def translate_main_annotation_l1ab(
     annotation: main_annotation_models_l1ab.MainAnnotation,
 ) -> main_annotation_l1ab.MainAnnotationL1ab:
     """Translate L1ab main annotation file"""
-    assert annotation.acquisition_information is not None
-    assert annotation.sar_image is not None
-    assert annotation.instrument_parameters is not None
-    assert annotation.raw_data_analysis is not None
-    assert annotation.processing_parameters is not None
-    assert annotation.internal_calibration is not None
-    assert annotation.rfi_mitigation is not None
-    assert annotation.doppler_parameters is not None
-    assert annotation.radiometric_calibration is not None
-    assert annotation.polarimetric_distortion is not None
-    assert annotation.ionosphere_correction is not None
-    assert annotation.geometry is not None
-    assert annotation.quality is not None
-    assert annotation.annotation_lut is not None
-
     return main_annotation_l1ab.MainAnnotationL1ab(
         acquisition_information=translate_common_annotation_l1.translate_acquisition_information(
             annotation.acquisition_information
@@ -70,7 +55,6 @@ def translate_main_annotation_l1ab_to_model(
     annotation: main_annotation_l1ab.MainAnnotationL1ab,
 ) -> main_annotation_models_l1ab.MainAnnotation:
     """Translate L1ab main annotation file"""
-
     return main_annotation_models_l1ab.MainAnnotation(
         acquisition_information=translate_common_annotation_l1.translate_acquisition_information_to_model(
             annotation.acquisition_information

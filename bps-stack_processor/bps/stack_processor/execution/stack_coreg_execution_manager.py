@@ -292,8 +292,8 @@ class StackCoregProcessorExecutionManager:
         # lut_rng_indices are wrt the full axes.
         *lut_primary_axes, lut_azm_indices, lut_rng_indices = coreg_primary_lut_axes(
             primary_raster_info,
-            target_azimuth_step=float(np.diff(l1a_primary_geo_lut_axes[0][:2])),
-            target_range_step=float(np.diff(l1a_primary_geo_lut_axes[1][:2])),
+            target_azimuth_step=float(np.squeeze(np.diff(l1a_primary_geo_lut_axes[0][:2]))),
+            target_range_step=float(np.squeeze(np.diff(l1a_primary_geo_lut_axes[1][:2]))),
             roi=stack_pre_proc_exec_products["stack_roi"],
         )
 
@@ -529,6 +529,11 @@ class StackCoregProcessorExecutionManager:
 
             lut_data["coregistrationShiftsQuality"] = coreg_shifts_quality
 
+            # In case we cross the antimeridian, we need to make sure that we
+            # need to unwrap the longitudes.
+            if np.ptp(lut_data["longitude"]) > 180.0:
+                lut_data["longitude"] = lut_data["longitude"] % 360.0
+
             for lut_name in list(lut_data.keys()):
                 # If we had to upsample LUTs, we took care of those already. If
                 # no, we will only shift them downsampled.
@@ -568,6 +573,10 @@ class StackCoregProcessorExecutionManager:
                     stack_coreg_exec_products=coreg_product,
                     expected_lut_brk_products=cached_lut_products,
                 )
+
+            # We normalize the angles the shifting around the antimeridian
+            # resulted in longitudes not in [-180, 180].
+            lut_data["longitude"] = _normalize_longitude(lut_data["longitude"])
 
         # From now on, all LUTs are defined on the grid of the primary, so no
         # more dictionaries etc. Same axes for all data.
@@ -1023,7 +1032,7 @@ class StackCoregProcessorExecutionManager:
                     stack_pre_proc_output_products[coreg_primary_image_index],
                     stack_coreg_proc_output_products[coreg_primary_image_index],
                 )
-                # pylint: disable-next=broad-exception-caught
+
             except Exception as err:
                 raise StackCoregProcessorRuntimeError(err) from err
 
@@ -1259,7 +1268,7 @@ def _select_elements(elements: Iterable, keep: Iterable) -> tuple:
 
 def _raster_info_equal(raster_p: RasterInfo, raster_s: RasterInfo) -> bool:
     """Check that 2 raster info are the same."""
-    eps = np.power(10.0, -np.finfo(np.float64).precision)  # pylint: disable=no-member
+    eps = np.power(10.0, -np.finfo(np.float64).precision)
     return (
         raster_p.lines == raster_s.lines
         and raster_p.samples == raster_s.samples
@@ -1268,3 +1277,8 @@ def _raster_info_equal(raster_p: RasterInfo, raster_s: RasterInfo) -> bool:
         and np.isclose(raster_p.lines_step, raster_s.lines_step, atol=eps)
         and np.isclose(raster_s.samples_step, raster_s.samples_step, atol=eps)
     )
+
+
+def _normalize_longitude(longitudes: np.ndarray) -> np.ndarray:
+    """Normalize angle between -180 and 180 degrees."""
+    return (longitudes + 180.0) % 360.0 - 180.0

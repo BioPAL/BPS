@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-common-types.xsd"/>
+	<xsd:complexType name="auxiliaryL2bFHProcessingParametersType">
+		<xsd:sequence>
+			<xsd:element name="l2bFHProductDOI" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Digital Object Identifier (DOI) to be written in output products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="minimumL2aCoverage" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Minimum configurable percentage of the output tile to be processed, which the inputs provided to L2b processor shall coverage.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="forestMaskingFlag" type="bool">
+				<xsd:annotation>
+					<xsd:documentation>True if forest/non-forest map masking should be performed during L2a products merging, false otherwise.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rollOffFactorAzimuth" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Feathering roll-off factor. Values: 0.0 - 1.0. Default: TBD.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rollOffFactorRange" type="xsd:float">
+				<xsd:annotation>
+					<xsd:documentation>Feathering roll-off factor. Values: 0.0 - 1.0. Default: TBD.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="compressionOptions" type="compressionOptionsL2bFH">
+				<xsd:annotation>
+					<xsd:documentation>Configurable compression options for all the FH L2B MDS variables.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="compressionOptionsL2bFH">
+		<xsd:sequence>
+			<xsd:element name="MDS">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="FH">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="Quality">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="BPS_FNF">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the BPS FNF image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="HeatMap">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the Heat Map image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MAX_Z_ERROR" type="xsd:float">
+										<xsd:annotation>
+											<xsd:documentation>For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="acquisitionIdImage">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZSTD algorithm compression factor for the acquisitionIdImage image MDS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="MDS_blockSize" type="xsd:unsignedInt">
+				<xsd:annotation>
+					<xsd:documentation>Blocking size of all MDS.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="auxiliaryL2bFHProcessingParameters" type="auxiliaryL2bFHProcessingParametersType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS configuration parameters for the L2b FH Processor</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

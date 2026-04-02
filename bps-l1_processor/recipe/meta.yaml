@@ -1,5 +1,5 @@
 {% set name = "bps-l1_processor" %}
-{% set version = "4.4.0" %}
+{% set version = "4.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -9,6 +9,7 @@ source:
   url: file://{{ RECIPE_DIR }}/../dist/bps_l1_processor-{{ version }}.tar.gz
 
 build:
+  noarch: python
   entry_points:
     - bps_l1_processor = bps.l1_processor.__main__:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -16,14 +17,13 @@ build:
 
 requirements:
   host:
-    - python {{ python }}
-    - setuptools
-    - wheel
+    - python >=3.12
+    - hatchling
     - pip
   run:
-    - python {{ python }}
+    - python >=3.12
     - numpy
-    - arepytools >=1.7.6
+    - arepytools >=1.8.1
     - click
     - xsdata
     - arepyextras-runner
@@ -33,6 +33,7 @@ requirements:
     - pyproj
     - netcdf4
     - bps-common =={{ version }}
+    - bps-l1_binaries =={{ version }}
     - bps-l1_pre_processor =={{ version }}
     - bps-l1_core_processor =={{ version }}
     - bps-transcoder =={{ version }}

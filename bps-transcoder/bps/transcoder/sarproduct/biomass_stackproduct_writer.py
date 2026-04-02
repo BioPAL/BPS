@@ -27,7 +27,7 @@ from bps.common.io.common import UomType
 from bps.common.io.parsing import parse, serialize
 from bps.common.io.translate_common import translate_float_array_with_units_to_model
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io import main_annotation_models_l1c
+from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c
 from bps.transcoder.sarproduct.biomass_stackproduct import (
     LUT_LAYERS,
     BIOMASSStackProduct,
@@ -105,6 +105,9 @@ STACK_LUT_LAYER_MAP = {
     "coregistrationShiftsQuality": main_annotation_models.LayerType.COREGISTRATION_SHIFTS_QUALITY,
     "waveNumbers": main_annotation_models.LayerType.WAVENUMBERS_RAD_M,
     "flatteningPhaseScreen": main_annotation_models.LayerType.FLATTENING_PHASE_SCREEN_RAD,
+    # Inteferometric LUTs.
+    "coherence": main_annotation_models.LayerType.COHERENCE,
+    "interferogram": main_annotation_models.LayerType.INTERFEROGRAM_RAD,
     # MSC LUTS.
     "ionospherePhaseScreens": main_annotation_models.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
     # SKP LUTs.
@@ -767,18 +770,18 @@ class BIOMASSStackProductWriter:
         main_annotation1_path = Path(
             self.source_product1_path.joinpath(self.source_product1_content.main_annotation),
         )
-        main_annotation1_model: main_annotation_models_l1c.MainAnnotation = parse(
+        main_annotation1_model: main_annotation_models_l1ab.MainAnnotation = parse(
             main_annotation1_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1c.MainAnnotation,
+            main_annotation_models_l1ab.MainAnnotation,
         )
 
         # Read main annotation file from secondary image.
         main_annotation2_path = Path(
             self.source_product2_path.joinpath(self.source_product2_content.main_annotation),
         )
-        main_annotation2_model: main_annotation_models_l1c.MainAnnotation = parse(
+        main_annotation2_model: main_annotation_models_l1ab.MainAnnotation = parse(
             main_annotation2_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1c.MainAnnotation,
+            main_annotation_models_l1ab.MainAnnotation,
         )
 
         # Fill coregistered image main annotation model.
@@ -844,7 +847,7 @@ class BIOMASSStackProductWriter:
             for lut_layer, annot_lut_layer in STACK_LUT_LAYER_MAP.items()
             if lut_layer in self.product_lut
         ]
-        annotation_lut = main_annotation_models.LayerListType(layers, count=len(layers))
+        annotation_lut = main_annotation_models.LayerListType(layer=layers, count=len(layers))
 
         stack_main_annotation_model = main_annotation_models_l1c.MainAnnotation(
             acquisition_information=acquisition_information,
@@ -1055,6 +1058,29 @@ class BIOMASSStackProductWriter:
             warn_on_missing=True,
             warning_msg="data is missing due to coregistration failure",
         )
+
+        if "coherence" in self.product_lut:
+            lut_inteferometry_group = ncfile.createGroup("interferometry")
+            self.__populate_lut(
+                root=lut_inteferometry_group,
+                lut_name="coherence",
+                lut_type=np.float32,
+                lut_axes=("relativeAzimuthTime", "slantRangeTime"),
+                lut_description="Interferometric coherence",
+                lut_unit=None,
+                expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
+                warn_on_missing=True,
+            )
+            self.__populate_lut(
+                root=lut_inteferometry_group,
+                lut_name="interferogram",
+                lut_type=np.float32,
+                lut_axes=("relativeAzimuthTime", "slantRangeTime"),
+                lut_description="Interferogram",
+                lut_unit="rad",
+                expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
+                warn_on_missing=True,
+            )
 
         if "ionospherePhaseScreens" in self.product_lut:
             if self.ionosphere_axes is None:

@@ -59,12 +59,7 @@ def _retrieve_validity_interval_from_fixed_header(
 ) -> tuple[PreciseDateTime, PreciseDateTime]:
     """Retrieve validity interval from orbit or attitude"""
 
-    assert orbit_or_attitude.earth_observation_header is not None
-    assert orbit_or_attitude.earth_observation_header.fixed_header is not None
     validity_period = orbit_or_attitude.earth_observation_header.fixed_header.validity_period
-    assert validity_period is not None
-    assert validity_period.validity_start is not None
-    assert validity_period.validity_stop is not None
     start = _utc_to_pdt(validity_period.validity_start)
     stop = _utc_to_pdt(validity_period.validity_stop)
     return start, stop
@@ -74,11 +69,8 @@ def _retrieve_validity_interval_orbit(
     orbit: aux_orb_models.EarthObservationFile,
 ) -> tuple[PreciseDateTime, PreciseDateTime]:
     """Retrieve validity interval from orbit or attitude"""
-    assert orbit.data_block is not None
-    assert orbit.data_block.list_of_osvs is not None
     start_utc = orbit.data_block.list_of_osvs.osv[0].utc
     stop_utc = orbit.data_block.list_of_osvs.osv[-1].utc
-    assert start_utc is not None and stop_utc is not None
     return _utc_to_pdt(start_utc), _utc_to_pdt(stop_utc)
 
 
@@ -86,11 +78,8 @@ def _retrieve_validity_interval_attitude(
     attitude: aux_att_models.EarthObservationFile,
 ) -> tuple[PreciseDateTime, PreciseDateTime]:
     """Retrieve validity interval from attitude"""
-    assert attitude.data_block is not None
     assert attitude.data_block.quaternion_data is not None
-    assert attitude.data_block.quaternion_data.list_of_quaternions is not None
     quat = attitude.data_block.quaternion_data.list_of_quaternions.quaternions
-    assert quat[0].time is not None and quat[-1].time is not None
     start_utc = quat[0].time.value
     stop_utc = quat[-1].time.value
     return _utc_to_pdt(start_utc), _utc_to_pdt(stop_utc)

@@ -49,35 +49,28 @@ def retrieve_configuration_params(
     InvalidJobOrder
         in case of unexpected tags content
     """
-    assert configuration.file_class
     file_class = configuration.file_class
 
-    assert configuration.processor_name
     if configuration.processor_name.value != expected_processor_name:
         raise InvalidJobOrder(
             f"Invalid processor name: {configuration.processor_name.value} != {expected_processor_name}"
         )
 
-    assert configuration.processor_version
     if configuration.processor_version.value != expected_processor_version:
         raise InvalidJobOrder(
             f"Invalid processor version: {configuration.processor_version.value} != {expected_processor_version}"
         )
 
-    assert configuration.list_of_stdout_log_levels
     if len(configuration.list_of_stdout_log_levels.stdout_log_level) != 1:
         raise InvalidJobOrder("Unexpected number of stdout log level")
     stdout_log_level = configuration.list_of_stdout_log_levels.stdout_log_level[0]
 
-    assert configuration.list_of_stderr_log_levels
     if len(configuration.list_of_stderr_log_levels.stderr_log_level) != 1:
         raise InvalidJobOrder("Unexpected number of stderr log level")
     stderr_log_level = configuration.list_of_stderr_log_levels.stderr_log_level[0]
 
-    assert configuration.intermediate_output_enable is not None
     intermediate_output_enabled = configuration.intermediate_output_enable
 
-    assert configuration.request
     azimuth_interval = None
     if configuration.request.toi:
         toi_start = str(configuration.request.toi.start)
@@ -91,10 +84,6 @@ def retrieve_configuration_params(
             raise InvalidJobOrder(
                 "Invalid metadata parameter request section:" + " TOI start and stop times must be specified together"
             )
-
-    # Ignored tags
-    assert configuration.processing_node is not None
-    assert configuration.processing_station is not None
 
     return ProcessorConfiguration(
         file_class=file_class.value,
@@ -131,35 +120,28 @@ def retrieve_configuration_params_l2(
     InvalidJobOrder
         in case of unexpected tags content
     """
-    assert configuration.file_class
     file_class = configuration.file_class
 
-    assert configuration.processor_name
     if configuration.processor_name.value not in expected_processor_names:
         raise InvalidJobOrder(
             f"Invalid processor name: {configuration.processor_name.value} not in {expected_processor_names}"
         )
 
-    assert configuration.processor_version
     if configuration.processor_version.value != expected_processor_version:
         raise InvalidJobOrder(
             f"Invalid processor version: {configuration.processor_version.value} != {expected_processor_version}"
         )
 
-    assert configuration.list_of_stdout_log_levels
     if len(configuration.list_of_stdout_log_levels.stdout_log_level) != 1:
         raise InvalidJobOrder("Unexpected number of stdout log level")
     stdout_log_level = configuration.list_of_stdout_log_levels.stdout_log_level[0]
 
-    assert configuration.list_of_stderr_log_levels
     if len(configuration.list_of_stderr_log_levels.stderr_log_level) != 1:
         raise InvalidJobOrder("Unexpected number of stderr log level")
     stderr_log_level = configuration.list_of_stderr_log_levels.stderr_log_level[0]
 
-    assert configuration.intermediate_output_enable is not None
     intermediate_output_enabled = configuration.intermediate_output_enable
 
-    assert configuration.request
     azimuth_interval = None
     if configuration.request.toi:
         toi_start = str(configuration.request.toi.start)
@@ -173,10 +155,6 @@ def retrieve_configuration_params_l2(
             raise InvalidJobOrder(
                 "Invalid metadata parameter request section:" + " TOI start and stop times must be specified together"
             )
-
-    # Ignored tags
-    assert configuration.processing_node is not None
-    assert configuration.processing_station is not None
 
     return ProcessorConfiguration(
         file_class=file_class.value,
@@ -213,17 +191,14 @@ def retrieve_task(
     InvalidJobOrder
         In case of unexpected joborder content
     """
-    assert job_order.list_of_tasks is not None
     if len(job_order.list_of_tasks.task) != 1:
         raise InvalidJobOrder("Unexpected number of tasks")
 
     task = job_order.list_of_tasks.task[0]
 
-    assert task.task_name is not None
     if task.task_name.value != expected_task_name:
         raise InvalidJobOrder(f"Invalid task name: {task.task_name.value} != {expected_task_name}")
 
-    assert task.task_version is not None
     if task.task_version.value != expected_task_version:
         raise InvalidJobOrder(f"Invalid task version: {task.task_version.value} != {expected_task_version}")
     return task
@@ -242,8 +217,6 @@ def retrieve_device_resources(task: joborder_models.JoTaskType) -> DeviceResourc
     DeviceResources
         host available resources
     """
-    assert task.number_of_cpu_cores is not None and task.amount_of_ram is not None and task.disk_space is not None
-
     ramdisk_amount = None
     ramdisk_mount_point = None
     if task.list_of_ramdisks is not None:
@@ -252,12 +225,9 @@ def retrieve_device_resources(task: joborder_models.JoTaskType) -> DeviceResourc
 
         if len(task.list_of_ramdisks.ramdisk) == 1:
             ramdisk = task.list_of_ramdisks.ramdisk[0]
-            assert ramdisk.amount is not None
-            assert ramdisk.mount_path is not None
             ramdisk_amount = ramdisk.amount
             ramdisk_mount_point = Path(ramdisk.mount_path)
 
-    assert task.disk_space.value is not None
     return DeviceResources(
         num_threads=int(task.number_of_cpu_cores),
         available_ram=task.amount_of_ram,
@@ -323,8 +293,6 @@ def flatten_processing_params(
     """
     parameters: dict[str, str] = {}
     for parameter in metadata_parameters:
-        assert parameter.name is not None
-        assert parameter.value is not None
         if parameter.name in parameters:
             raise InvalidJobOrder(f"Duplicated {parameter.name} parameter entry")
 
@@ -355,8 +323,6 @@ def flatten_configuration_file(
     """
     files: dict[str, str] = {}
     for file in configuration_files:
-        assert file.cfg_id is not None
-        assert file.cfg_file_name is not None
         if file.cfg_id.value in files:
             raise InvalidJobOrder(f"Duplicated {file.cfg_id} configuration file entry")
         files[file.cfg_id.value] = file.cfg_file_name
@@ -428,13 +394,10 @@ def _flatten_input_products_core(
 ) -> dict[str, list[str]]:
     inputs: dict[str, list[str]] = {}
     for input_product in input_products:
-        assert input_product.list_of_selected_inputs is not None
         assert len(input_product.list_of_selected_inputs.selected_input) == 1
         selected_input = input_product.list_of_selected_inputs.selected_input[0]
 
-        assert selected_input.list_of_file_names is not None
         assert len(selected_input.list_of_file_names.file_name) >= 1
-        assert selected_input.file_type is not None
         if selected_input.file_type.value in inputs:
             raise InvalidJobOrder(f"Duplicated {selected_input.file_type} input file entry")
 
@@ -467,7 +430,6 @@ def flatten_output_products(
     output_directory = None
     output_baseline = None
     for output_product in output_products:
-        assert output_product.file_type is not None
         assert output_product.file_dir is not None
         if output_product.file_type in outputs:
             raise InvalidJobOrder(f"Duplicated {output_product.file_type} output file entry")
@@ -478,7 +440,6 @@ def flatten_output_products(
         else:
             output_directory = output_product.file_dir.value
 
-        assert output_product.baseline is not None
         baseline = int(output_product.baseline.value)
         if output_baseline:
             if baseline != output_baseline:
@@ -487,9 +448,6 @@ def flatten_output_products(
             output_baseline = baseline
 
         outputs.append(output_product.file_type.value)
-
-        # unused
-        assert output_product.file_name_pattern is not None
 
     assert output_directory is not None
     assert output_baseline is not None
@@ -518,8 +476,6 @@ def flatten_intermediate_outputs(
     """
     files: dict[str, str] = {}
     for file in intermediate_files:
-        assert file.intermediate_output_id is not None
-        assert file.intermediate_output_file is not None
         if file.intermediate_output_id.value in files:
             raise InvalidJobOrder(f"Duplicated {file.intermediate_output_id} intermediate file entry")
 

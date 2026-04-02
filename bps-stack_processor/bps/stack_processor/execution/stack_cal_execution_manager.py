@@ -11,6 +11,7 @@ Stack Calibration Execution Manager
 """
 
 import json
+import shutil
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -20,7 +21,6 @@ from arepytools.io import open_product_folder
 from arepytools.io.metadata import EPolarization
 from bps.common import bps_logger
 from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
-from bps.common.fnf_utils import read_fnf_mask
 from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest
 from bps.common.runner_helper import run_application
@@ -45,6 +45,7 @@ from bps.stack_cal_processor.input_manager import (
 from bps.stack_coreg_processor.input_file import BPSCoregProcessorInputFile, CoregProcessorInputFile
 from bps.stack_coreg_processor.interface import write_coreg_configuration_file, write_coreg_input_file
 from bps.stack_processor import __version__ as VERSION
+from bps.stack_processor.execution.fnf import read_fnf_mask
 from bps.stack_processor.execution.utils import setup_coreg_processor_env
 from bps.stack_processor.interface.external.aux_pps import AuxiliaryStaprocessingParameters
 from bps.stack_processor.interface.external.joborder_stack import StackJobOrder
@@ -314,6 +315,7 @@ class StackCalExecutionManager:
                 stack=stack_images,
                 synth_phases=synth_phases,
                 vertical_wavenumbers=vertical_wavenumbers,
+                stack_polarizations=stack_pre_proc_exec_products["stack_polarizations"],
                 conf=stack_cal_conf.skp_conf,
                 stack_specs=stack_data_specs,
                 coreg_primary_image_index=coreg_primary_image_index,
@@ -454,6 +456,8 @@ class _StackWarpingManager:
             )
         else:
             bps_logger.info("Coregistering stack without azimuth residual shifts")
+
+            self._cleanup_output_pf(stack_pre_proc_output_products)
 
             # Run the coregisration process multithreaded.
             with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
@@ -597,11 +601,22 @@ class _StackWarpingManager:
         self,
         stack_pre_proc_secondary_output_products: StackPreProcessorOutputProducts,
     ) -> Path:
-        """The BPSStackProcessor bin append the suffix _Cor to the output PF."""
+        """The BPSStackProcessor bin appends the suffix _Cor to the output PF."""
         output_pf_name = stack_pre_proc_secondary_output_products.raw_data_product.name
         unique_id = stack_pre_proc_secondary_output_products.raw_data_product.parent.name
         output_pf_path = self.breakpoint_dir / unique_id / f"{output_pf_name}_Cor"
         return output_pf_path.resolve()
+
+    def _cleanup_output_pf(
+        self,
+        stack_pre_proc_output_products: list[StackPreProcessorOutputProducts],
+    ):
+        """Cleanup the breakpoint directory."""
+        # Cleanup the directories that store the output PFs, i.e. STA_P_01/.
+        for preproc_product in stack_pre_proc_output_products:
+            output_pf_path = self._bps_coreg_output_pf_path(preproc_product)
+            if output_pf_path.exists():
+                shutil.rmtree(output_pf_path)
 
 
 def _read_skp_fnf_mask(
@@ -620,15 +635,9 @@ def _read_skp_fnf_mask(
 
     return SkpFnFQualityMask(
         fnf_mask=read_fnf_mask(
-            fnf_path=fnf_mask_path,
-            latlon_roi=(
-                np.min(coreg_primary_lut_lat),
-                np.max(coreg_primary_lut_lat),
-                np.min(coreg_primary_lut_lon),
-                np.max(coreg_primary_lut_lon),
-            ),
-            units="rad",
-            print_info=False,
+            fnf_mask_path=fnf_mask_path,
+            latitudes=coreg_primary_lut_lat,
+            longitudes=coreg_primary_lut_lon,
         ),
         latitudes=coreg_primary_lut_lat,
         longitudes=coreg_primary_lut_lon,

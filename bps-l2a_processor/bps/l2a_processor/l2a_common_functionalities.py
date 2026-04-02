@@ -647,8 +647,7 @@ def mpmb_covariance_estimation(
         f"    data shape after decimation: Azimuth {mpmb_covariance.shape[2]} samples, Slant-range {mpmb_covariance.shape[3]} samples"
     )
 
-    # Invert phase sign to align with phase conventions observed during BIOMASS IOC
-    return np.conjugate(mpmb_covariance)
+    return mpmb_covariance
 
 
 def _build_filtering_matrix(

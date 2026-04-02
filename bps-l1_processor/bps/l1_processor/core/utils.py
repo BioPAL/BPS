@@ -75,12 +75,12 @@ def update_bps_l1_pre_processor_report_file_with_chirp_pars(report_file: Path, c
 
     report_model.chirp_replica_parameters = [
         models.L1PreProcessorAnnotations.ChirpReplicaParameters(
-            float(pars.bandwidth),
-            float(pars.pslr),
-            float(pars.islr),
-            float(pars.location_error),
-            pars.validity_flag,
-            models.PolarizationType(pars.polarization),
+            bandwidth=float(pars.bandwidth),
+            pslr=float(pars.pslr),
+            islr=float(pars.islr),
+            location_error=float(pars.location_error),
+            validity_flag=pars.validity_flag,
+            polarization=models.PolarizationType(pars.polarization),
         )
         for pars in chirp_parameters
     ]
@@ -104,7 +104,7 @@ def update_bps_l1_pre_processor_report_file_with_iobpr(report_file: Path, raw_pr
         models.L1PreProcessorAnnotations.InOutBandPowerRatioData(
             reference_time=key,
             power_ratios=models.L1PreProcessorAnnotations.InOutBandPowerRatioData.PowerRatios(
-                [
+                power_ratio=[
                     models.PowerRatioType(value=float(val[1]), polarization=models.PolarizationType(val[0]))
                     for val in value
                 ]

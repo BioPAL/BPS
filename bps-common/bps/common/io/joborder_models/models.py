@@ -10,14 +10,15 @@ XSD Job Order models
 --------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from xsdata.models.datatype import XmlDateTime
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AoiType:
     """
     Area of interest of the processing request.
@@ -34,38 +35,33 @@ class AoiType:
     class Meta:
         name = "AOI_Type"
 
-    geometry: Optional[str] = field(
-        default=None,
+    geometry: str = field(
         metadata={
             "name": "Geometry",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AlternativeId:
-    """Alternative identifier.
+    """
+    Alternative identifier.
 
-    This value shall be copied into the Alternative_ID field of the Job Order. The Task’s executable shall be
-    able to recognize it.
+    This value shall be copied into the Alternative_ID field of the Job Order. The Task’s executable shall be able
+    to recognize it.
     """
 
     class Meta:
         name = "Alternative_ID"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Baseline:
-    """Baseline ID (2 zero-padded digits) of the output product to be generated.
+    """
+    Baseline ID (2 zero-padded digits) of the output product to be generated.
 
     It is set by the PF and shall be used by the processor to assign the baseline of the output product.
     """
@@ -78,46 +74,37 @@ class Baseline:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CfgId:
-    """Identifier of the configuration file to be passed to the Task executable via
-    the Job Order.
+    """
+    Identifier of the configuration file to be passed to the Task executable via the Job Order.
 
-    This ID is a helper for a Task to identify configuration files of a given category (e.g. DEM, …)
+    This ID is a helper for a Task to identify configuration files of a given category (e.g. DEM, …).
     """
 
     class Meta:
         name = "Cfg_ID"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DiskSpace:
     """
-    Minimum amount of disk space, in megabytes, required on the processing node in
-    order to complete the processing.
+    Minimum amount of disk space, in megabytes, required on the processing node in order to complete the
+    processing.
     """
 
     class Meta:
         name = "Disk_Space"
 
-    value: Optional[int] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: int = field()
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FileType:
-    """File Class for this production request.
+    """
+    File Class for this production request.
 
     It is set by the PF and shall be used by the processor to assign the file class to the output products.
     """
@@ -125,18 +112,14 @@ class FileType:
     class Meta:
         name = "File_Class"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FileDir:
-    """Pathname of the directory where the output products shall be written by the
-    processor and from where the PF shall retrieve them.
+    """
+    Pathname of the directory where the output products shall be written by the processor and from where the PF
+    shall retrieve them.
 
     The path can be an absolute or a relative one. In case of a relative path it is considered relative to the
     working directory. If File_Dir is empty or not present, it is assumed that this directory corresponds to the
@@ -146,15 +129,10 @@ class FileDir:
     class Meta:
         name = "File_Dir"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FileName:
     """
     Absolute path of the input file.
@@ -163,18 +141,14 @@ class FileName:
     class Meta:
         name = "File_Name"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FileNamePattern:
-    """Expression that univocally identifies the output product (or products) among
-    the files available within the working directory.
+    """
+    Expression that univocally identifies the output product (or products) among the files available within the
+    working directory.
 
     This field is copied into the corresponding “File_Name_Pattern” field of the Job Order for information
     (Wildcards are allowed).
@@ -183,54 +157,40 @@ class FileNamePattern:
     class Meta:
         name = "File_Name_Pattern"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FileType:
     """
-    A valid product file type (see the products naming convention of the specific
-    mission).
+    A valid product file type (see the products naming convention of the specific mission).
     """
 
     class Meta:
         name = "File_Type"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InputId:
-    """Input identifier.
+    """
+    Input identifier.
 
-    The PF shall copy this value into the Input_ID filed of the Job Order. The Task’s executable shall be able
-    to recognize it.
+    The PF shall copy this value into the Input_ID filed of the Job Order. The Task’s executable shall be able to
+    recognize it.
     """
 
     class Meta:
         name = "Input_ID"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IntermediateOutputId:
-    """Identifier of the intermediate output.
+    """
+    Identifier of the intermediate output.
 
     The Task’s executable shall be able to recognize it.
     """
@@ -238,12 +198,7 @@ class IntermediateOutputId:
     class Meta:
         name = "Intermediate_Output_ID"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
 class ListOfStderrLogLevelsStderrLogLevel(Enum):
@@ -262,7 +217,7 @@ class ListOfStdoutLogLevelsStdoutLogLevel(Enum):
     ERROR = "ERROR"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MetadataParameterTypeToBeRemoved:
     """
     Parameters
@@ -276,25 +231,21 @@ class MetadataParameterTypeToBeRemoved:
     class Meta:
         name = "Metadata_Parameter_Type_TO-BE-REMOVED"
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "name": "Name",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    value: Optional[str] = field(
-        default=None,
+    value: str = field(
         metadata={
             "name": "Value",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ParameterType:
     """
     Parameters
@@ -308,25 +259,21 @@ class ParameterType:
     class Meta:
         name = "Parameter_Type"
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "name": "Name",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    value: Optional[str] = field(
-        default=None,
+    value: str = field(
         metadata={
             "name": "Value",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessorName:
     """
     Name of the processor to which this Task Table refers.
@@ -335,17 +282,13 @@ class ProcessorName:
     class Meta:
         name = "Processor_Name"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessorVersion:
-    """Version of the processor.
+    """
+    Version of the processor.
 
     Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”).
     """
@@ -361,7 +304,7 @@ class ProcessorVersion:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RamdiskType:
     """
     Parameters
@@ -379,25 +322,21 @@ class RamdiskType:
     class Meta:
         name = "RAMDISK_Type"
 
-    amount: Optional[int] = field(
-        default=None,
+    amount: int = field(
         metadata={
             "name": "Amount",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    mount_path: Optional[str] = field(
-        default=None,
+    mount_path: str = field(
         metadata={
             "name": "Mount_Path",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RamdiskTypeScalable:
     """
     Parameters
@@ -420,33 +359,27 @@ class RamdiskTypeScalable:
     class Meta:
         name = "RAMDISK_Type_Scalable"
 
-    amount: Optional[int] = field(
-        default=None,
+    amount: int = field(
         metadata={
             "name": "Amount",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    scalable: Optional[str] = field(
-        default=None,
+    scalable: str = field(
         metadata={
             "name": "Scalable",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    mount_path: Optional[str] = field(
-        default=None,
+    mount_path: str = field(
         metadata={
             "name": "Mount_Path",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ToiType:
     """
     Time of interest of the processing request.
@@ -462,27 +395,24 @@ class ToiType:
     class Meta:
         name = "TOI_Type"
 
-    start: Optional[XmlDateTime] = field(
-        default=None,
+    start: XmlDateTime = field(
         metadata={
             "name": "Start",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    stop: Optional[XmlDateTime] = field(
-        default=None,
+    stop: XmlDateTime = field(
         metadata={
             "name": "Stop",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TaskName:
-    """Name of the Task.
+    """
+    Name of the Task.
 
     Within a Task Table, Task_Name shall be unique. The name is copied by the PF into the Job Order and shall be
     used, by the Task executable, to identify its own section (i.e. the Task element having the same Task_Name)
@@ -492,20 +422,17 @@ class TaskName:
     class Meta:
         name = "Task_Name"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TaskVersion:
-    """Version of the Task.
+    """
+    Version of the Task.
 
-    Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”).
-    It may be used by a Task executable for consistency check (by ensuring that the Task’s hardcoded version corresponds to the one executed in the Job Order).
+    Format: 4 zero-padded digits for issue and revision separated by “.” (e.g. “01.02”). It may be used by a Task
+    executable for consistency check (by ensuring that the Task’s hardcoded version corresponds to the one executed
+    in the Job Order).
     """
 
     class Meta:
@@ -519,7 +446,7 @@ class TaskVersion:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CfgFileType:
     """
     Parameters
@@ -533,25 +460,21 @@ class CfgFileType:
     class Meta:
         name = "Cfg_File_Type"
 
-    cfg_id: Optional[CfgId] = field(
-        default=None,
+    cfg_id: CfgId = field(
         metadata={
             "name": "Cfg_ID",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    cfg_file_name: Optional[str] = field(
-        default=None,
+    cfg_file_name: str = field(
         metadata={
             "name": "Cfg_File_Name",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JoIntermediateOutputType:
     """
     Parameters
@@ -564,63 +487,53 @@ class JoIntermediateOutputType:
     class Meta:
         name = "JO_Intermediate_Output_Type"
 
-    intermediate_output_id: Optional[IntermediateOutputId] = field(
-        default=None,
+    intermediate_output_id: IntermediateOutputId = field(
         metadata={
             "name": "Intermediate_Output_ID",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    intermediate_output_file: Optional[str] = field(
-        default=None,
+    intermediate_output_file: str = field(
         metadata={
             "name": "Intermediate_Output_File",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JoOutputType:
     class Meta:
         name = "JO_Output_Type"
 
-    file_type: Optional[FileType] = field(
-        default=None,
+    file_type: FileType = field(
         metadata={
             "name": "File_Type",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    file_name_pattern: Optional[FileNamePattern] = field(
-        default=None,
+    file_name_pattern: FileNamePattern = field(
         metadata={
             "name": "File_Name_Pattern",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    file_dir: Optional[FileDir] = field(
+    file_dir: None | FileDir = field(
         default=None,
         metadata={
             "name": "File_Dir",
             "type": "Element",
         },
     )
-    baseline: Optional[Baseline] = field(
-        default=None,
+    baseline: Baseline = field(
         metadata={
             "name": "Baseline",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ListOfMetadataParametersType:
     """
     List of product metadata parameters defining the processing request.
@@ -643,7 +556,7 @@ class ListOfMetadataParametersType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RequestTypeToBeRemoved:
     """
     Parameters
@@ -659,21 +572,21 @@ class RequestTypeToBeRemoved:
     class Meta:
         name = "Request_Type_TO-BE-REMOVED"
 
-    toi: Optional[ToiType] = field(
+    toi: None | ToiType = field(
         default=None,
         metadata={
             "name": "TOI",
             "type": "Element",
         },
     )
-    aoi: Optional[AoiType] = field(
+    aoi: None | AoiType = field(
         default=None,
         metadata={
             "name": "AOI",
             "type": "Element",
         },
     )
-    list_of_metadata_parameters: Optional["RequestTypeToBeRemoved.ListOfMetadataParameters"] = field(
+    list_of_metadata_parameters: None | RequestTypeToBeRemoved.ListOfMetadataParameters = field(
         default=None,
         metadata={
             "name": "List_of_Metadata_Parameters",
@@ -681,7 +594,7 @@ class RequestTypeToBeRemoved:
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfMetadataParameters:
         """
         Parameters
@@ -699,7 +612,7 @@ class RequestTypeToBeRemoved:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SelectedInputType:
     """
     Parameters
@@ -712,24 +625,20 @@ class SelectedInputType:
     class Meta:
         name = "Selected_Input_Type"
 
-    file_type: Optional[FileType] = field(
-        default=None,
+    file_type: FileType = field(
         metadata={
             "name": "File_Type",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_file_names: Optional["SelectedInputType.ListOfFileNames"] = field(
-        default=None,
+    list_of_file_names: SelectedInputType.ListOfFileNames = field(
         metadata={
             "name": "List_of_File_Names",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfFileNames:
         file_name: list[FileName] = field(
             default_factory=list,
@@ -741,37 +650,31 @@ class SelectedInputType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JoInputType:
     class Meta:
         name = "JO_Input_Type"
 
-    input_id: Optional[InputId] = field(
-        default=None,
+    input_id: InputId = field(
         metadata={
             "name": "Input_ID",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    alternative_id: Optional[AlternativeId] = field(
-        default=None,
+    alternative_id: AlternativeId = field(
         metadata={
             "name": "Alternative_ID",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_selected_inputs: Optional["JoInputType.ListOfSelectedInputs"] = field(
-        default=None,
+    list_of_selected_inputs: JoInputType.ListOfSelectedInputs = field(
         metadata={
             "name": "List_of_Selected_Inputs",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfSelectedInputs:
         selected_input: list[SelectedInputType] = field(
             default_factory=list,
@@ -783,17 +686,16 @@ class JoInputType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RequestType:
     class Meta:
         name = "Request_Type"
 
-    toi: Optional[ToiType] = field(
+    toi: None | ToiType = field(
         default=None,
         metadata={
             "name": "TOI",
             "type": "Element",
-            "required": True,
         },
     )
     aoi: list[AoiType] = field(
@@ -809,12 +711,12 @@ class RequestType:
         metadata={
             "name": "List_of_Metadata_Parameters",
             "type": "Element",
-            "max_occurs": 3,
+            "max_occurs": 2,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JoTaskType:
     """
     Parameters
@@ -882,109 +784,89 @@ class JoTaskType:
     class Meta:
         name = "JO_Task_Type"
 
-    task_name: Optional[TaskName] = field(
-        default=None,
+    task_name: TaskName = field(
         metadata={
             "name": "Task_Name",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    task_version: Optional[TaskVersion] = field(
-        default=None,
+    task_version: TaskVersion = field(
         metadata={
             "name": "Task_Version",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    number_of_cpu_cores: Optional[float] = field(
-        default=None,
+    number_of_cpu_cores: float = field(
         metadata={
             "name": "Number_of_CPU_Cores",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    amount_of_ram: Optional[int] = field(
-        default=None,
+    amount_of_ram: int = field(
         metadata={
             "name": "Amount_of_RAM",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_ramdisks: Optional["JoTaskType.ListOfRamdisks"] = field(
+    list_of_ramdisks: None | JoTaskType.ListOfRamdisks = field(
         default=None,
         metadata={
             "name": "List_of_RAMDISKs",
             "type": "Element",
         },
     )
-    number_of_gpu_cores: Optional[int] = field(
+    number_of_gpu_cores: None | int = field(
         default=None,
         metadata={
             "name": "Number_of_GPU_Cores",
             "type": "Element",
         },
     )
-    amount_of_gpu_ram: Optional[int] = field(
+    amount_of_gpu_ram: None | int = field(
         default=None,
         metadata={
             "name": "Amount_of_GPU_RAM",
             "type": "Element",
         },
     )
-    disk_space: Optional[DiskSpace] = field(
-        default=None,
+    disk_space: DiskSpace = field(
         metadata={
             "name": "Disk_Space",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_proc_parameters: Optional["JoTaskType.ListOfProcParameters"] = field(
-        default=None,
+    list_of_proc_parameters: JoTaskType.ListOfProcParameters = field(
         metadata={
             "name": "List_of_Proc_Parameters",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_cfg_files: Optional["JoTaskType.ListOfCfgFiles"] = field(
-        default=None,
+    list_of_cfg_files: JoTaskType.ListOfCfgFiles = field(
         metadata={
             "name": "List_of_Cfg_Files",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_inputs: Optional["JoTaskType.ListOfInputs"] = field(
-        default=None,
+    list_of_inputs: JoTaskType.ListOfInputs = field(
         metadata={
             "name": "List_of_Inputs",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_outputs: Optional["JoTaskType.ListOfOutputs"] = field(
-        default=None,
+    list_of_outputs: JoTaskType.ListOfOutputs = field(
         metadata={
             "name": "List_of_Outputs",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_intermediate_outputs: Optional["JoTaskType.ListOfIntermediateOutputs"] = field(
-        default=None,
+    list_of_intermediate_outputs: JoTaskType.ListOfIntermediateOutputs = field(
         metadata={
             "name": "List_of_Intermediate_Outputs",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfRamdisks:
         """
         Parameters
@@ -1001,7 +883,7 @@ class JoTaskType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfProcParameters:
         """
         Parameters
@@ -1018,7 +900,7 @@ class JoTaskType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfCfgFiles:
         """
         Parameters
@@ -1035,7 +917,7 @@ class JoTaskType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfInputs:
         """
         Parameters
@@ -1053,7 +935,7 @@ class JoTaskType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfOutputs:
         """
         Parameters
@@ -1071,7 +953,7 @@ class JoTaskType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfIntermediateOutputs:
         """
         Parameters
@@ -1089,7 +971,7 @@ class JoTaskType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessorConfigurationType:
     """
     Parameters
@@ -1118,80 +1000,62 @@ class ProcessorConfigurationType:
     class Meta:
         name = "Processor_Configuration_Type"
 
-    file_class: Optional[FileType] = field(
-        default=None,
+    file_class: FileType = field(
         metadata={
             "name": "File_Class",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    processor_name: Optional[ProcessorName] = field(
-        default=None,
+    processor_name: ProcessorName = field(
         metadata={
             "name": "Processor_Name",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    processor_version: Optional[ProcessorVersion] = field(
-        default=None,
+    processor_version: ProcessorVersion = field(
         metadata={
             "name": "Processor_Version",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    processing_node: Optional[str] = field(
-        default=None,
+    processing_node: str = field(
         metadata={
             "name": "Processing_Node",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_stdout_log_levels: Optional["ProcessorConfigurationType.ListOfStdoutLogLevels"] = field(
-        default=None,
+    list_of_stdout_log_levels: ProcessorConfigurationType.ListOfStdoutLogLevels = field(
         metadata={
             "name": "List_of_Stdout_Log_Levels",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_stderr_log_levels: Optional["ProcessorConfigurationType.ListOfStderrLogLevels"] = field(
-        default=None,
+    list_of_stderr_log_levels: ProcessorConfigurationType.ListOfStderrLogLevels = field(
         metadata={
             "name": "List_of_Stderr_Log_Levels",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    intermediate_output_enable: Optional[bool] = field(
-        default=None,
+    intermediate_output_enable: bool = field(
         metadata={
             "name": "Intermediate_Output_Enable",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    processing_station: Optional[str] = field(
-        default=None,
+    processing_station: str = field(
         metadata={
             "name": "Processing_Station",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    request: Optional[RequestType] = field(
-        default=None,
+    request: RequestType = field(
         metadata={
             "name": "Request",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfStdoutLogLevels:
         """
         Parameters
@@ -1211,7 +1075,7 @@ class ProcessorConfigurationType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfStderrLogLevels:
         """
         Parameters
@@ -1232,7 +1096,7 @@ class ProcessorConfigurationType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JobOrderType:
     """
     Parameters
@@ -1249,37 +1113,33 @@ class JobOrderType:
     class Meta:
         name = "Job_Order_Type"
 
-    processor_configuration: Optional[ProcessorConfigurationType] = field(
-        default=None,
+    processor_configuration: ProcessorConfigurationType = field(
         metadata={
             "name": "Processor_Configuration",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    list_of_tasks: Optional["JobOrderType.ListOfTasks"] = field(
-        default=None,
+    list_of_tasks: JobOrderType.ListOfTasks = field(
         metadata={
             "name": "List_of_Tasks",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    schema_name: Optional[str] = field(
+    schema_name: None | str = field(
         default=None,
         metadata={
             "name": "schemaName",
             "type": "Attribute",
         },
     )
-    schema_version: Optional[str] = field(
+    schema_version: None | str = field(
         default=None,
         metadata={
             "name": "schemaVersion",
             "type": "Attribute",
         },
     )
-    schema_location: Optional[str] = field(
+    schema_location: None | str = field(
         default=None,
         metadata={
             "name": "schemaLocation",
@@ -1287,7 +1147,7 @@ class JobOrderType:
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ListOfTasks:
         """
         Parameters
@@ -1306,7 +1166,7 @@ class JobOrderType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JobOrder(JobOrderType):
     """
     Root element of the "Job Order" I/F XML document.

@@ -10,9 +10,10 @@ XSD PARC info models
 --------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -50,7 +51,7 @@ from bps.common.io.common_types import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DelayListType:
     """
     Parameters
@@ -68,45 +69,37 @@ class DelayListType:
     class Meta:
         name = "delayListType"
 
-    delay_gt1: Optional[FloatWithUnit] = field(
-        default=None,
+    delay_gt1: FloatWithUnit = field(
         metadata={
             "name": "delayGt1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    delay_gt2: Optional[FloatWithUnit] = field(
-        default=None,
+    delay_gt2: FloatWithUnit = field(
         metadata={
             "name": "delayGt2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    delay_x: Optional[FloatWithUnit] = field(
-        default=None,
+    delay_x: FloatWithUnit = field(
         metadata={
             "name": "delayX",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    delay_y: Optional[FloatWithUnit] = field(
-        default=None,
+    delay_y: FloatWithUnit = field(
         metadata={
             "name": "delayY",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RcsListType:
     """
     Parameters
@@ -124,45 +117,37 @@ class RcsListType:
     class Meta:
         name = "rcsListType"
 
-    rcs_gt1: Optional[FloatWithUnit] = field(
-        default=None,
+    rcs_gt1: FloatWithUnit = field(
         metadata={
             "name": "rcsGt1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rcs_gt2: Optional[FloatWithUnit] = field(
-        default=None,
+    rcs_gt2: FloatWithUnit = field(
         metadata={
             "name": "rcsGt2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rcs_x: Optional[FloatWithUnit] = field(
-        default=None,
+    rcs_x: FloatWithUnit = field(
         metadata={
             "name": "rcsX",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rcs_y: Optional[FloatWithUnit] = field(
-        default=None,
+    rcs_y: FloatWithUnit = field(
         metadata={
             "name": "rcsY",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ParcType:
     """
     Parameters
@@ -190,83 +175,67 @@ class ParcType:
     class Meta:
         name = "parcType"
 
-    parc_id: Optional[str] = field(
-        default=None,
+    parc_id: str = field(
         metadata={
             "name": "parcID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    validity_start: Optional[str] = field(
-        default=None,
+    validity_start: str = field(
         metadata={
             "name": "validityStart",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    validity_stop: Optional[str] = field(
-        default=None,
+    validity_stop: str = field(
         metadata={
             "name": "validityStop",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    position_x: Optional[float] = field(
-        default=None,
+    position_x: float = field(
         metadata={
             "name": "positionX",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    position_y: Optional[float] = field(
-        default=None,
+    position_y: float = field(
         metadata={
             "name": "positionY",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    position_z: Optional[float] = field(
-        default=None,
+    position_z: float = field(
         metadata={
             "name": "positionZ",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    delay_list: Optional[DelayListType] = field(
-        default=None,
+    delay_list: DelayListType = field(
         metadata={
             "name": "delayList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rcs_list: Optional[RcsListType] = field(
-        default=None,
+    rcs_list: RcsListType = field(
         metadata={
             "name": "rcsList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ParcListType:
     """
     Parameters
@@ -287,16 +256,14 @@ class ParcListType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryCalSiteInformationType:
     """
     Parameters
@@ -308,18 +275,16 @@ class AuxiliaryCalSiteInformationType:
     class Meta:
         name = "auxiliaryCalSiteInformationType"
 
-    parc_list: Optional[ParcListType] = field(
-        default=None,
+    parc_list: ParcListType = field(
         metadata={
             "name": "parcList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryCalSiteInformation(AuxiliaryCalSiteInformationType):
     """
     BIOMASS auxiliary calibration site information element.

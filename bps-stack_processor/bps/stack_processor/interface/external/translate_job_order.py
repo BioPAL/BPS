@@ -40,7 +40,7 @@ EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
 EXPECTED_PROCESSOR_NAME = "STA_P"
 """Processor name for Biomass Stack processor."""
 
-EXPECTED_PROCESSOR_VERSION = "04.40"
+EXPECTED_PROCESSOR_VERSION = "04.41"
 """Processor version for Biomass Stack processor."""
 
 EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
@@ -387,7 +387,6 @@ def translate_model_to_stack_job_order(
     if job_order.schema_name != EXPECTED_SCHEMA_NAME:
         raise InvalidStackJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
 
-    assert job_order.processor_configuration is not None
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAME,
@@ -398,13 +397,10 @@ def translate_model_to_stack_job_order(
 
     device_resources = retrieve_device_resources(task)
 
-    assert task.list_of_proc_parameters is not None
     stack_processing_parameters = retrieve_stack_processing_parameters(task.list_of_proc_parameters.proc_parameter)
 
-    assert task.list_of_cfg_files is not None
     external_products, stap_conf = retrieve_configuration_files(task.list_of_cfg_files.cfg_file)
 
-    assert task.list_of_inputs is not None
     input_products = flatten_input_products_allow_multiple_products(task.list_of_inputs.input)
 
     processing_swath = retrieve_swath_from_products_identifiers(
@@ -418,7 +414,6 @@ def translate_model_to_stack_job_order(
         task.list_of_inputs.input, processing_swath
     )
     assert len(stack_input_products) > 1
-    assert task.list_of_outputs is not None
 
     stack_output_products = retrieve_stack_output_products(task.list_of_outputs.output, processing_swath)
 

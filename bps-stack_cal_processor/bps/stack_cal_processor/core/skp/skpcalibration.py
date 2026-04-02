@@ -17,6 +17,7 @@ from timeit import default_timer
 import numba as nb
 import numpy as np
 import numpy.typing as npt
+from arepytools.io.metadata import EPolarization
 from bps.common import bps_logger
 from bps.stack_cal_processor.configuration import (
     SKP_NAME,
@@ -57,6 +58,7 @@ from bps.stack_cal_processor.core.skp.skpquality import (
 from bps.stack_cal_processor.core.skp.utils import (
     compute_skp_calibration_phases_statistics,
     estimation_subsampling_steps,
+    merge_cross_polarizations,
 )
 from bps.stack_cal_processor.core.utils import (
     compute_spatial_azimuth_shifts,
@@ -70,6 +72,7 @@ def skp_calibration(
     stack: tuple[tuple[npt.NDArray[complex], ...], ...],
     synth_phases: tuple[npt.NDArray[float], ...],
     vertical_wavenumbers: tuple[npt.NDArray[float], ...],
+    stack_polarizations: tuple[EPolarization, ...],
     conf: StackCalConf.SkpConf,
     stack_specs: StackDataSpecs,
     coreg_primary_image_index: int,
@@ -91,6 +94,9 @@ def skp_calibration(
 
     vertical_wavenumbers: tuple[np.NDArray[float], ...] [rad/m]
         The Nimg vertical wavenumbers of shape [Nazm x Nrng].
+
+    stack_polarizations: tuple[EPolarization, ...]
+        The polarizations associated to the stack.
 
     conf: StackCalConf.SkpConf
         Configuration of the SKP from the Aux PPS.
@@ -222,7 +228,11 @@ def skp_calibration(
     bps_logger.info("Removing the geometric phases")
 
     preproc_images = remove_synthetic_phase_multithreaded(
-        stack_images=stack,
+        stack_images=merge_cross_polarizations(
+            stack_images=stack,
+            stack_polarizations=stack_polarizations,
+            cross_pol_merging_flag=conf.cross_pol_merging_flag,
+        ),
         synth_phases=synth_phases,
         num_worker_threads=max_num_threads,
         dtypes=estimation_dtypes,
@@ -294,7 +304,7 @@ def skp_calibration(
         azimuth_estimation_indices=azimuth_estimation_indices,
         range_estimation_indices=range_estimation_indices,
         num_images=num_images,
-        num_polarizations=num_polarizations,
+        num_polarizations=len(preproc_images[0]),
         num_worker_threads=max_num_threads,
         dtypes=estimation_dtypes,
     )
@@ -366,6 +376,7 @@ def skp_calibration(
                 postprocessing_filter_window_size=conf.postprocessing_filter_window_size,
                 goldstein_filter_window_size=conf.goldstein_filter_window_size,
             ),
+            goldstein_filter_alpha=conf.goldstein_filter_alpha,
         )
 
     # The validity mask.
@@ -388,19 +399,18 @@ def skp_calibration(
             "DSI" if conf.only_flattening_phase_correction_flag else "DSI+SKP",
         )
 
+        skp_calibration_correction_phases = np.asarray(skp_calibration_phases)
         if conf.only_flattening_phase_correction_flag:
             skp_calibration_correction_phases = np.zeros_like(skp_calibration_phases)
-        else:
-            skp_calibration_correction_phases = np.asarray(skp_calibration_phases) * skp_calibration_quality_mask
         apply_skp_correction_multithreaded(
             stack=stack,
             skp_flattening_phases=skp_flattening_phases,
             skp_calibration_phases=skp_calibration_correction_phases,
+            skp_calibration_valid_mask=skp_calibration_quality_mask,
             azimuth_axis=azimuth_axis,
             range_axis=range_axis,
             azimuth_subsampling_indices=azimuth_output_indices,
             range_subsampling_indices=range_output_indices,
-            quality_threshold=conf.skp_calibration_phase_screen_quality_threshold,
             num_worker_threads=max_num_threads,
             dtypes=estimation_dtypes,
         )

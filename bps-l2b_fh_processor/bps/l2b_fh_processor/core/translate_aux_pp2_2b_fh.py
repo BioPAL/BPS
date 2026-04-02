@@ -40,23 +40,6 @@ def translate_model_to_comp_fh_conf(
     conf: aux_pp2_2b_fh_models.CompressionOptionsL2BFh,
 ) -> AuxProcessingParametersL2BFH.CompressionConf:
     """Translate FH Compression configuration section to the corresponding conf"""
-
-    assert conf.mds is not None
-    assert conf.mds.fh is not None
-    assert conf.mds.fh.compression_factor is not None
-    assert conf.mds.fh.max_z_error is not None
-    assert conf.mds.quality is not None
-    assert conf.mds.quality.compression_factor is not None
-    assert conf.mds.quality.max_z_error is not None
-    assert conf.mds.bps_fnf is not None
-    assert conf.mds.bps_fnf.compression_factor is not None
-    assert conf.mds.heat_map is not None
-    assert conf.mds.heat_map.compression_factor is not None
-    assert conf.mds.heat_map.max_z_error is not None
-    assert conf.mds.acquisition_id_image is not None
-    assert conf.mds.acquisition_id_image.compression_factor is not None
-    assert conf.mds_block_size is not None
-
     return AuxProcessingParametersL2BFH.CompressionConf(
         mds=AuxProcessingParametersL2BFH.CompressionConf.MDS(
             fh=MDSfloatCompressionType(
@@ -86,14 +69,6 @@ def translate_model_to_aux_processing_parameters_l2b_fh(
     model: aux_pp2_2b_fh_models.AuxiliaryL2BFhprocessingParameters,
 ) -> AuxProcessingParametersL2BFH:
     """Translate aux pp2 2b fh to the corresponding structure"""
-
-    assert model.l2b_fhproduct_doi is not None
-    assert model.compression_options is not None
-    assert model.minimum_l2a_coverage is not None
-    assert model.forest_masking_flag is not None
-    assert model.roll_off_factor_azimuth is not None
-    assert model.roll_off_factor_range is not None
-
     return AuxProcessingParametersL2BFH(
         model.l2b_fhproduct_doi,
         forest_masking_flag=str_to_bool(model.forest_masking_flag),

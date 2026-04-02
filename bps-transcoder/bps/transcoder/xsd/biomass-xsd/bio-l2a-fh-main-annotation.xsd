@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="./bio-l2l3-common-annotations.xsd"/>
+	<xsd:include schemaLocation="./bio-l2l3-fh-proc-annotations.xsd"/>
+	<xsd:complexType name="mainAnnotationType">
+		<xsd:sequence>
+			<xsd:element name="product" type="productL2aType">
+				<xsd:annotation>
+					<xsd:documentation>Product L2a DSR. This DSR contains the L2a product information.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rasterImage" type="rasterImageType">
+				<xsd:annotation>
+					<xsd:documentation>Raster image DSR. This DSR contains all the necessary information to exploit the raster image products.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="inputInformation" type="InputInformationL2aType">
+				<xsd:annotation>
+					<xsd:documentation>Input Information DSR. This DSR contains the necessary information to identify the input data set to the L2a processing, mainly the acquisitions configuration.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="processingParameters" type="processingParametersL2aType">
+				<xsd:annotation>
+					<xsd:documentation>Processing parameters DSR. This DSR contains the description of L2a processing parameters.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="annotationLUT" type="layerListType">
+				<xsd:annotation>
+					<xsd:documentation>Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="mainAnnotation" type="mainAnnotationType">
+		<xsd:annotation>
+			<xsd:documentation>BIOMASS L2a product main annotation element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

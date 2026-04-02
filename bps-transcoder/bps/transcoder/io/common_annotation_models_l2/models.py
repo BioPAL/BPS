@@ -10,9 +10,10 @@ XSD common annotation models L2
 -------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -66,7 +67,7 @@ class CalibrationScreenType(Enum):
     SKP = "skp"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IntegerListType:
     """
     Parameters
@@ -88,7 +89,7 @@ class IntegerListType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MinMaxNumType:
     """
     Enumeration of min max.
@@ -97,33 +98,27 @@ class MinMaxNumType:
     class Meta:
         name = "minMaxNumType"
 
-    min: Optional[float] = field(
-        default=None,
+    min: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    max: Optional[float] = field(
-        default=None,
+    max: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    num: Optional[int] = field(
-        default=None,
+    num: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class NoDataValueChoiceType:
     """
     Parameters
@@ -137,7 +132,7 @@ class NoDataValueChoiceType:
     class Meta:
         name = "noDataValueChoiceType"
 
-    float_no_data_value: Optional[float] = field(
+    float_no_data_value: None | float = field(
         default=None,
         metadata={
             "name": "floatNoDataValue",
@@ -145,7 +140,7 @@ class NoDataValueChoiceType:
             "namespace": "",
         },
     )
-    int_no_data_value: Optional[int] = field(
+    int_no_data_value: None | int = field(
         default=None,
         metadata={
             "name": "intNoDataValue",
@@ -155,7 +150,7 @@ class NoDataValueChoiceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PercentPixelsType:
     """
     Parameters
@@ -169,46 +164,35 @@ class PercentPixelsType:
     class Meta:
         name = "percentPixelsType"
 
-    percentage: Optional[float] = field(
-        default=None,
+    percentage: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pixels: Optional[int] = field(
-        default=None,
+    pixels: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SelectedReferenceImageType:
     class Meta:
         name = "selectedReferenceImageType"
 
-    value: Optional[int] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    acquisition_id: Optional[str] = field(
-        default=None,
+    value: int = field()
+    acquisition_id: str = field(
         metadata={
             "name": "acquisitionID",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StringListType:
     """
     Parameters
@@ -232,13 +216,16 @@ class StringListType:
 
 
 class SubsettingRuleType(Enum):
-    """Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase)."""
+    """
+    Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when
+    input is TOM phase).
+    """
 
     GEOMETRY = "geometry"
     MAINTAIN_ALL = "maintain all"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GnfilteredCoverageType:
     """
     Parameters
@@ -257,67 +244,55 @@ class GnfilteredCoverageType:
     class Meta:
         name = "GNfilteredCoverageType"
 
-    after_global_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_global_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterGlobalFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_sigma_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_sigma_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterSigmaFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_angle_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_angle_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterAngleFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BackscatterLimitsType:
     class Meta:
         name = "backscatterLimitsType"
 
-    hh: Optional[MinMaxType] = field(
-        default=None,
+    hh: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vh: Optional[MinMaxType] = field(
-        default=None,
+    vh: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vv: Optional[MinMaxType] = field(
-        default=None,
+    vv: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CalAbfilteredCoverageType:
     """
     Parameters
@@ -342,54 +317,44 @@ class CalAbfilteredCoverageType:
     class Meta:
         name = "calABfilteredCoverageType"
 
-    after_global_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_global_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterGlobalFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_agbvalue_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_agbvalue_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterAGBvalueFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_agbstd_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_agbstd_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterAGBstdFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_agbrelative_std_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_agbrelative_std_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterAGBrelativeStdFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    after_lcmclass_filtering: Optional[PercentPixelsType] = field(
-        default=None,
+    after_lcmclass_filtering: PercentPixelsType = field(
         metadata={
             "name": "afterLCMClassFiltering",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GeneralConfigurationParametersType:
     """
     Parameters
@@ -416,59 +381,49 @@ class GeneralConfigurationParametersType:
     class Meta:
         name = "generalConfigurationParametersType"
 
-    apply_calibration_screen: Optional[CalibrationScreenType] = field(
-        default=None,
+    apply_calibration_screen: CalibrationScreenType = field(
         metadata={
             "name": "applyCalibrationScreen",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_coverage_threshold: Optional[float] = field(
-        default=None,
+    forest_coverage_threshold: float = field(
         metadata={
             "name": "forestCoverageThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_mask_interpolation_threshold: Optional[float] = field(
-        default=None,
+    forest_mask_interpolation_threshold: float = field(
         metadata={
             "name": "forestMaskInterpolationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    subsetting_rule: Optional[SubsettingRuleType] = field(
-        default=None,
+    subsetting_rule: SubsettingRuleType = field(
         metadata={
             "name": "subsettingRule",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation_combination_method: Optional[PolarisationCombinationMethodType] = field(
-        default=None,
+    polarisation_combination_method: PolarisationCombinationMethodType = field(
         metadata={
             "name": "polarisationCombinationMethod",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PixelRepresentationChoiceType:
     class Meta:
         name = "pixelRepresentationChoiceType"
 
-    fd: Optional[PixelRepresentationType] = field(
+    fd: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "FD",
@@ -476,7 +431,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    cfm: Optional[PixelRepresentationType] = field(
+    cfm: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "CFM",
@@ -484,7 +439,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    probability_of_change: Optional[PixelRepresentationType] = field(
+    probability_of_change: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "probabilityOfChange",
@@ -492,7 +447,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    fd_heat_map: Optional[PixelRepresentationType] = field(
+    fd_heat_map: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "FD_heatMap",
@@ -500,7 +455,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    fh: Optional[PixelRepresentationType] = field(
+    fh: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "FH",
@@ -508,7 +463,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    quality: Optional[PixelRepresentationType] = field(
+    quality: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "Quality",
@@ -516,7 +471,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    fh_heat_map: Optional[PixelRepresentationType] = field(
+    fh_heat_map: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "FH_heatMap",
@@ -524,7 +479,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    gn: Optional[PixelRepresentationType] = field(
+    gn: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "GN",
@@ -532,7 +487,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    agb: Optional[PixelRepresentationType] = field(
+    agb: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "AGB",
@@ -540,7 +495,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    agb_standard_deviation: Optional[PixelRepresentationType] = field(
+    agb_standard_deviation: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "AGB_STANDARD_DEVIATION",
@@ -548,7 +503,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    agb_heat_map: Optional[PixelRepresentationType] = field(
+    agb_heat_map: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "AGB_heatMap",
@@ -556,7 +511,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    bps_fnf: Optional[PixelRepresentationType] = field(
+    bps_fnf: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "BPS_FNF",
@@ -564,7 +519,7 @@ class PixelRepresentationChoiceType:
             "namespace": "",
         },
     )
-    acquisition_id_image: Optional[PixelRepresentationType] = field(
+    acquisition_id_image: None | PixelRepresentationType = field(
         default=None,
         metadata={
             "name": "Acquisition_id_image",
@@ -574,7 +529,7 @@ class PixelRepresentationChoiceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PixelTypeChoiceType:
     """
     Parameters
@@ -588,7 +543,7 @@ class PixelTypeChoiceType:
     class Meta:
         name = "pixelTypeChoiceType"
 
-    float_pixel_type: Optional[PixelTypeType] = field(
+    float_pixel_type: None | PixelTypeType = field(
         default=None,
         metadata={
             "name": "floatPixelType",
@@ -596,7 +551,7 @@ class PixelTypeChoiceType:
             "namespace": "",
         },
     )
-    int_pixel_type: Optional[PixelTypeType] = field(
+    int_pixel_type: None | PixelTypeType = field(
         default=None,
         metadata={
             "name": "intPixelType",
@@ -606,7 +561,7 @@ class PixelTypeChoiceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolarisationListType:
     """
     Parameters
@@ -622,16 +577,14 @@ class PolarisationListType:
     polarisation: list[PolarisationType] = field(
         default_factory=list, metadata={"type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3}
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityParametersType:
     """
     Parameters
@@ -669,106 +622,84 @@ class StaQualityParametersType:
     class Meta:
         name = "staQualityParametersType"
 
-    invalid_l1a_data_samples: Optional[float] = field(
-        default=None,
+    invalid_l1a_data_samples: float = field(
         metadata={
             "name": "invalidL1aDataSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_decorrelation: Optional[float] = field(
-        default=None,
+    rfi_decorrelation: float = field(
         metadata={
             "name": "rfiDecorrelation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rfi_decorrelation_threshold: Optional[float] = field(
-        default=None,
+    rfi_decorrelation_threshold: float = field(
         metadata={
             "name": "rfiDecorrelationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    faraday_decorrelation: Optional[float] = field(
-        default=None,
+    faraday_decorrelation: float = field(
         metadata={
             "name": "faradayDecorrelation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    faraday_decorrelation_threshold: Optional[float] = field(
-        default=None,
+    faraday_decorrelation_threshold: float = field(
         metadata={
             "name": "faradayDecorrelationThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    invalid_residual_shifts_fraction: Optional[float] = field(
-        default=None,
+    invalid_residual_shifts_fraction: float = field(
         metadata={
             "name": "invalidResidualShiftsFraction",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    residual_shifts_quality_threshold: Optional[float] = field(
-        default=None,
+    residual_shifts_quality_threshold: float = field(
         metadata={
             "name": "residualShiftsQualityThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    invalid_ground_phases_screen_estimates_fraction: Optional[float] = field(
-        default=None,
+    invalid_ground_phases_screen_estimates_fraction: float = field(
         metadata={
             "name": "invalidGroundPhasesScreenEstimatesFraction",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ground_phases_screen_quality_threshold: Optional[float] = field(
-        default=None,
+    ground_phases_screen_quality_threshold: float = field(
         metadata={
             "name": "groundPhasesScreenQualityThreshold",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    skp_decomposition_index: Optional[int] = field(
-        default=None,
+    skp_decomposition_index: int = field(
         metadata={
             "name": "skpDecompositionIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    polarisation: Optional[PolarisationType] = field(
-        default=None,
+    polarisation: PolarisationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GncoverageType:
     """
     Parameters
@@ -784,35 +715,29 @@ class GncoverageType:
     class Meta:
         name = "GNcoverageType"
 
-    original_coverage: Optional[PercentPixelsType] = field(
-        default=None,
+    original_coverage: PercentPixelsType = field(
         metadata={
             "name": "originalCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filtered_coverage: Optional[GnfilteredCoverageType] = field(
-        default=None,
+    filtered_coverage: GnfilteredCoverageType = field(
         metadata={
             "name": "filteredCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    acquisition_id: Optional[str] = field(
-        default=None,
+    acquisition_id: str = field(
         metadata={
             "name": "acquisitionID",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CalAbcoverageType:
     """
     Parameters
@@ -828,35 +753,29 @@ class CalAbcoverageType:
     class Meta:
         name = "calABcoverageType"
 
-    original_coverage: Optional[PercentPixelsType] = field(
-        default=None,
+    original_coverage: PercentPixelsType = field(
         metadata={
             "name": "originalCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    filtered_coverage: Optional[CalAbfilteredCoverageType] = field(
-        default=None,
+    filtered_coverage: CalAbfilteredCoverageType = field(
         metadata={
             "name": "filteredCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    id: Optional[str] = field(
-        default=None,
+    id: str = field(
         metadata={
             "name": "ID",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProductL2AType:
     """
     Parameters
@@ -908,177 +827,139 @@ class ProductL2AType:
     class Meta:
         name = "productL2aType"
 
-    mission: Optional[MissionType] = field(
-        default=None,
+    mission: MissionType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tile_id: Optional[StringListType] = field(
-        default=None,
+    tile_id: StringListType = field(
         metadata={
             "name": "tileID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    basin_id: Optional[StringListType] = field(
-        default=None,
+    basin_id: StringListType = field(
         metadata={
             "name": "basinID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_type: Optional[ProductType] = field(
-        default=None,
+    product_type: ProductType = field(
         metadata={
             "name": "productType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    start_time: Optional[str] = field(
-        default=None,
+    start_time: str = field(
         metadata={
             "name": "startTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    stop_time: Optional[str] = field(
-        default=None,
+    stop_time: str = field(
         metadata={
             "name": "stopTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    radar_carrier_frequency: Optional[DoubleWithUnit] = field(
-        default=None,
+    radar_carrier_frequency: DoubleWithUnit = field(
         metadata={
             "name": "radarCarrierFrequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mission_phase_id: Optional[MissionPhaseIdtype] = field(
-        default=None,
+    mission_phase_id: MissionPhaseIdtype = field(
         metadata={
             "name": "missionPhaseID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sensor_mode: Optional[SensorModeType] = field(
-        default=None,
+    sensor_mode: SensorModeType = field(
         metadata={
             "name": "sensorMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    global_coverage_id: Optional[int] = field(
-        default=None,
+    global_coverage_id: int = field(
         metadata={
             "name": "globalCoverageID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    swath: Optional[SwathType] = field(
-        default=None,
+    swath: SwathType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    major_cycle_id: Optional[int] = field(
-        default=None,
+    major_cycle_id: int = field(
         metadata={
             "name": "majorCycleID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    absolute_orbit_number: Optional[IntegerListType] = field(
-        default=None,
+    absolute_orbit_number: IntegerListType = field(
         metadata={
             "name": "absoluteOrbitNumber",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    relative_orbit_number: Optional[int] = field(
-        default=None,
+    relative_orbit_number: int = field(
         metadata={
             "name": "relativeOrbitNumber",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    orbit_pass: Optional[OrbitPassType] = field(
-        default=None,
+    orbit_pass: OrbitPassType = field(
         metadata={
             "name": "orbitPass",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    data_take_id: Optional[IntegerListType] = field(
-        default=None,
+    data_take_id: IntegerListType = field(
         metadata={
             "name": "dataTakeID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    frame: Optional[int] = field(
-        default=None,
+    frame: int = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    platform_heading: Optional[DoubleWithUnit] = field(
-        default=None,
+    platform_heading: DoubleWithUnit = field(
         metadata={
             "name": "platformHeading",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_coverage_percentage: Optional[float] = field(
-        default=None,
+    forest_coverage_percentage: float = field(
         metadata={
             "name": "forestCoveragePercentage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    selected_reference_image: Optional[SelectedReferenceImageType] = field(
+    selected_reference_image: None | SelectedReferenceImageType = field(
         default=None,
         metadata={
             "name": "selectedReferenceImage",
@@ -1088,7 +969,7 @@ class ProductL2AType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RasterImageType:
     """
     Parameters
@@ -1122,114 +1003,90 @@ class RasterImageType:
     class Meta:
         name = "rasterImageType"
 
-    footprint: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    footprint: FloatArrayWithUnits = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    first_latitude_value: Optional[FloatWithUnit] = field(
-        default=None,
+    first_latitude_value: FloatWithUnit = field(
         metadata={
             "name": "firstLatitudeValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    first_longitude_value: Optional[FloatWithUnit] = field(
-        default=None,
+    first_longitude_value: FloatWithUnit = field(
         metadata={
             "name": "firstLongitudeValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    latitude_spacing: Optional[FloatWithUnit] = field(
-        default=None,
+    latitude_spacing: FloatWithUnit = field(
         metadata={
             "name": "latitudeSpacing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    longitude_spacing: Optional[FloatWithUnit] = field(
-        default=None,
+    longitude_spacing: FloatWithUnit = field(
         metadata={
             "name": "longitudeSpacing",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    number_of_samples: Optional[int] = field(
-        default=None,
+    number_of_samples: int = field(
         metadata={
             "name": "numberOfSamples",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    number_of_lines: Optional[int] = field(
-        default=None,
+    number_of_lines: int = field(
         metadata={
             "name": "numberOfLines",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    projection: Optional[ProjectionType] = field(
-        default=None,
+    projection: ProjectionType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    datum: Optional[DatumType] = field(
-        default=None,
+    datum: DatumType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pixel_representation: Optional[PixelRepresentationChoiceType] = field(
-        default=None,
+    pixel_representation: PixelRepresentationChoiceType = field(
         metadata={
             "name": "pixelRepresentation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pixel_type: Optional[PixelTypeChoiceType] = field(
-        default=None,
+    pixel_type: PixelTypeChoiceType = field(
         metadata={
             "name": "pixelType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    no_data_value: Optional[NoDataValueChoiceType] = field(
-        default=None,
+    no_data_value: NoDataValueChoiceType = field(
         metadata={
             "name": "noDataValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityParametersListType:
     """
     Parameters
@@ -1246,16 +1103,14 @@ class StaQualityParametersListType:
         default_factory=list,
         metadata={"name": "staQualityParameters", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 4},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GncoverageListType:
     """
     Parameters
@@ -1277,17 +1132,15 @@ class GncoverageListType:
             "min_occurs": 1,
         },
     )
-    id: Optional[str] = field(
-        default=None,
+    id: str = field(
         metadata={
             "name": "ID",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CalAbcoverageTilesListType:
     """
     Parameters
@@ -1309,7 +1162,7 @@ class CalAbcoverageTilesListType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StaQualityType:
     """
     Parameters
@@ -1324,27 +1177,23 @@ class StaQualityType:
     class Meta:
         name = "staQualityType"
 
-    overall_product_quality_index: Optional[int] = field(
-        default=None,
+    overall_product_quality_index: int = field(
         metadata={
             "name": "overallProductQualityIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_quality_parameters_list: Optional[StaQualityParametersListType] = field(
-        default=None,
+    sta_quality_parameters_list: StaQualityParametersListType = field(
         metadata={
             "name": "staQualityParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GncoverageTilesListType:
     """
     Parameters
@@ -1366,7 +1215,7 @@ class GncoverageTilesListType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AcquisitionType:
     """
     Parameters
@@ -1381,29 +1230,22 @@ class AcquisitionType:
     class Meta:
         name = "acquisitionType"
 
-    folder_name: Optional[str] = field(
-        default=None,
+    folder_name: str = field(
         metadata={
             "name": "FolderName",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sta_quality: Optional[StaQualityType] = field(
-        default=None,
+    sta_quality: StaQualityType = field(
         metadata={
             "name": "staQuality",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_image: Optional[str] = field(
-        default=None,
-        metadata={"name": "referenceImage", "type": "Attribute", "required": True, "pattern": r"(false)|(true)"},
-    )
-    average_wavenumber: Optional[float] = field(
+    reference_image: str = field(metadata={"name": "referenceImage", "type": "Attribute", "pattern": r"(false)|(true)"})
+    average_wavenumber: None | float = field(
         default=None,
         metadata={
             "name": "averageWavenumber",
@@ -1412,7 +1254,7 @@ class AcquisitionType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AcquisitionListType:
     """
     Parameters
@@ -1428,16 +1270,14 @@ class AcquisitionListType:
     acquisition: list[AcquisitionType] = field(
         default_factory=list, metadata={"type": "Element", "namespace": "", "min_occurs": 2, "max_occurs": 8}
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProductL2BL3Type:
     """
     Parameters
@@ -1475,98 +1315,78 @@ class ProductL2BL3Type:
     class Meta:
         name = "productL2bL3Type"
 
-    mission: Optional[MissionType] = field(
-        default=None,
+    mission: MissionType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tile_id: Optional[str] = field(
-        default=None,
+    tile_id: str = field(
         metadata={
             "name": "tileID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    basin_id: Optional[StringListType] = field(
-        default=None,
+    basin_id: StringListType = field(
         metadata={
             "name": "basinID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_type: Optional[ProductType] = field(
-        default=None,
+    product_type: ProductType = field(
         metadata={
             "name": "productType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    start_time: Optional[str] = field(
-        default=None,
+    start_time: str = field(
         metadata={
             "name": "startTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    stop_time: Optional[str] = field(
-        default=None,
+    stop_time: str = field(
         metadata={
             "name": "stopTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    radar_carrier_frequency: Optional[DoubleWithUnit] = field(
-        default=None,
+    radar_carrier_frequency: DoubleWithUnit = field(
         metadata={
             "name": "radarCarrierFrequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mission_phase_id: Optional[MissionPhaseIdtype] = field(
-        default=None,
+    mission_phase_id: MissionPhaseIdtype = field(
         metadata={
             "name": "missionPhaseID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    sensor_mode: Optional[SensorModeType] = field(
-        default=None,
+    sensor_mode: SensorModeType = field(
         metadata={
             "name": "sensorMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    global_coverage_id: Optional[int] = field(
-        default=None,
+    global_coverage_id: int = field(
         metadata={
             "name": "globalCoverageID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    contributing_tiles: Optional[StringListType] = field(
+    contributing_tiles: None | StringListType = field(
         default=None,
         metadata={
             "name": "contributingTiles",
@@ -1574,7 +1394,7 @@ class ProductL2BL3Type:
             "namespace": "",
         },
     )
-    cal_abcoverage_per_tile: Optional[CalAbcoverageTilesListType] = field(
+    cal_abcoverage_per_tile: None | CalAbcoverageTilesListType = field(
         default=None,
         metadata={
             "name": "calABcoveragePerTile",
@@ -1582,7 +1402,7 @@ class ProductL2BL3Type:
             "namespace": "",
         },
     )
-    gncoverage_per_tile: Optional[GncoverageTilesListType] = field(
+    gncoverage_per_tile: None | GncoverageTilesListType = field(
         default=None,
         metadata={
             "name": "GNcoveragePerTile",
@@ -1592,7 +1412,7 @@ class ProductL2BL3Type:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InputInformationL2AType:
     """
     Parameters
@@ -1624,90 +1444,70 @@ class InputInformationL2AType:
     class Meta:
         name = "InputInformationL2aType"
 
-    product_type: Optional[ProductType] = field(
-        default=None,
+    product_type: ProductType = field(
         metadata={
             "name": "productType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    overall_products_quality_index: Optional[int] = field(
-        default=None,
+    overall_products_quality_index: int = field(
         metadata={
             "name": "overallProductsQualityIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    nominal_stack: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "nominalStack",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    nominal_stack: str = field(
+        metadata={"name": "nominalStack", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    polarisation_list: Optional[PolarisationListType] = field(
-        default=None,
+    polarisation_list: PolarisationListType = field(
         metadata={
             "name": "polarisationList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    projection: Optional[ProjectionType] = field(
-        default=None,
+    projection: ProjectionType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    footprint: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    footprint: FloatArrayWithUnits = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vertical_wavenumbers: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    vertical_wavenumbers: MinMaxTypeWithUnit = field(
         metadata={
             "name": "verticalWavenumbers",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    height_of_ambiguity: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    height_of_ambiguity: MinMaxTypeWithUnit = field(
         metadata={
             "name": "heightOfAmbiguity",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    acquisition_list: Optional[AcquisitionListType] = field(
-        default=None,
+    acquisition_list: AcquisitionListType = field(
         metadata={
             "name": "acquisitionList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
 class OperationalModeType(Enum):
-    """Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase)."""
+    """
+    Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when
+    input is TOM phase).
+    """
 
     SINGLE_REFERENCE = "single reference"
     MULTI_REFERENCE = "multi reference"
@@ -1715,7 +1515,9 @@ class OperationalModeType(Enum):
 
 
 class BpsFnfType(Enum):
-    """Enumeration of Forest Mask: CFM from FD processor or FNF."""
+    """
+    Enumeration of Forest Mask: CFM from FD processor or FNF.
+    """
 
     FNF = "FNF"
     CFM = "CFM"
@@ -1736,12 +1538,12 @@ class AgbIndexingType(Enum):
     PJK = "pjk"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InputInformationL2BL3ListType:
     class Meta:
         name = "InputInformationL2bL3ListType"
 
-    l2a_inputs: list["InputInformationL2BL3ListType.L2AInputs"] = field(
+    l2a_inputs: list[InputInformationL2BL3ListType.L2AInputs] = field(
         default_factory=list,
         metadata={
             "name": "L2aInputs",
@@ -1750,15 +1552,13 @@ class InputInformationL2BL3ListType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class L2AInputs:
         """
         Parameters
@@ -1771,34 +1571,28 @@ class InputInformationL2BL3ListType:
         significance_level
         """
 
-        l2a_product_folder_name: Optional[str] = field(
-            default=None,
+        l2a_product_folder_name: str = field(
             metadata={
                 "name": "L2aProductFolderName",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        l2a_product_date: Optional[str] = field(
-            default=None,
+        l2a_product_date: str = field(
             metadata={
                 "name": "L2aProductDate",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        l1_inputs: Optional[InputInformationL2AType] = field(
-            default=None,
+        l1_inputs: InputInformationL2AType = field(
             metadata={
                 "name": "L1Inputs",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        significance_level: Optional[float] = field(
+        significance_level: None | float = field(
             default=None,
             metadata={
                 "name": "significanceLevel",

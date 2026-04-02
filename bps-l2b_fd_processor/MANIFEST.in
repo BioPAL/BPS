@@ -1,5 +1,0 @@
-include bps/l2b_fd_processor/xsd/*/*.xsd 
-global-exclude __pycache__
-global-exclude *.py[co]
-prune test/
-exclude MANIFEST.in

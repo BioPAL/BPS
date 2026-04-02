@@ -524,8 +524,8 @@ class FH:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_dict = {
             "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
@@ -597,13 +597,13 @@ class FH:
                 )
 
             sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters_list,
-                len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
+                sta_quality_parameters=sta_quality_parameters_list,
+                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
             )
 
             sta_quality = common_annotation_models_l2.StaQualityType(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index,
-                sta_quality_parameters_list,
+                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+                sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
@@ -628,11 +628,11 @@ class FH:
         average_wavenumbers = [np.nanmean(vw) for vw in vertical_wavenumbers]
 
         vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(
+            min=common_annotation_models_l2.FloatWithUnit(
                 value=float(min(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
-            common_annotation_models_l2.FloatWithUnit(
+            max=common_annotation_models_l2.FloatWithUnit(
                 value=float(max(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
@@ -642,8 +642,8 @@ class FH:
         hoa_min = 2 * np.pi / min(wavenumber_spacings)
         hoa_max = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
+            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
         )
 
         main_ads_input_information = BIOMASSL2aMainADSInputInformation(
@@ -663,33 +663,35 @@ class FH:
 
         # main_ads_processing_parameters
         general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            self.aux_pp2_2a.general.apply_calibration_screen.value,
-            self.aux_pp2_2a.general.forest_coverage_threshold,
-            self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
-            translate_common.translate_polarisation_combination_method_to_model(
+            apply_calibration_screen=self.aux_pp2_2a.general.apply_calibration_screen.value,
+            forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
+            forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
+            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
+                self.aux_pp2_2a.general.subsetting_rule.value
+            ),
+            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
                 self.aux_pp2_2a.general.polarisation_combination_method
             ),
         )
 
         compression_options_fh = main_annotation_models_l2a_fh.CompressionOptionsL2A(
-            main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds(
-                main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Fh(
-                    self.aux_pp2_2a.fh.compression_options.mds.fh.compression_factor,
-                    self.aux_pp2_2a.fh.compression_options.mds.fh.max_z_error,
+            mds=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds(
+                fh=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Fh(
+                    compression_factor=self.aux_pp2_2a.fh.compression_options.mds.fh.compression_factor,
+                    max_z_error=self.aux_pp2_2a.fh.compression_options.mds.fh.max_z_error,
                 ),
-                main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Quality(
-                    self.aux_pp2_2a.fh.compression_options.mds.quality.compression_factor,
-                    self.aux_pp2_2a.fh.compression_options.mds.quality.max_z_error,
-                ),
-            ),
-            main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads(
-                main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.Fnf(
-                    self.aux_pp2_2a.fh.compression_options.ads.fnf.compression_factor
+                quality=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Quality(
+                    compression_factor=self.aux_pp2_2a.fh.compression_options.mds.quality.compression_factor,
+                    max_z_error=self.aux_pp2_2a.fh.compression_options.mds.quality.max_z_error,
                 ),
             ),
-            self.aux_pp2_2a.fh.compression_options.mds_block_size,
-            self.aux_pp2_2a.fh.compression_options.ads_block_size,
+            ads=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads(
+                fnf=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.Fnf(
+                    compression_factor=self.aux_pp2_2a.fh.compression_options.ads.fnf.compression_factor
+                ),
+            ),
+            mds_block_size=self.aux_pp2_2a.fh.compression_options.mds_block_size,
+            ads_block_size=self.aux_pp2_2a.fh.compression_options.ads_block_size,
         )
 
         normalised_height_estimation_range = main_annotation_models_l2a_fh.MinMaxType(

@@ -865,8 +865,8 @@ class BIOMASSL2bFHProductWriter:
 
         # - product
         mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id = common_annotation_models_l2.StringListType(self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(self.product.main_ads_product.basin_id_list)
+        tile_id = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
+        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
         product_type = common_annotation_models_l2.ProductType.FH_L2_B
 
         start_time = self.start_time_l2a.isoformat(timespec="microseconds")[:-1]
@@ -883,16 +883,16 @@ class BIOMASSL2bFHProductWriter:
         sensor_mode = common_annotation_models_l2.SensorModeType(self.product.main_ads_product.sensor_mode)
         global_coverage_id = translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
         product = main_annotation_models_l2b_fh.ProductL2BL3Type(
-            mission,
-            tile_id.id[0],
-            basin_id_list,
-            product_type,
-            start_time,
-            stop_time,
-            radar_carrier_frequency,
-            mission_phase_id,
-            sensor_mode,
-            global_coverage_id,
+            mission=mission,
+            tile_id=tile_id.id[0],
+            basin_id=basin_id_list,
+            product_type=product_type,
+            start_time=start_time,
+            stop_time=stop_time,
+            radar_carrier_frequency=radar_carrier_frequency,
+            mission_phase_id=mission_phase_id,
+            sensor_mode=sensor_mode,
+            global_coverage_id=global_coverage_id,
         )
 
         dgg_tile_footprint = ""
@@ -929,23 +929,23 @@ class BIOMASSL2bFHProductWriter:
         pixel_type = self.product.main_ads_raster_image.pixel_type
         no_data_value = self.product.main_ads_raster_image.no_data_value
         raster_image = common_annotation_models_l2.RasterImageType(
-            dgg_tile_footprint,
-            first_latitude_value,
-            first_longitude_value,
-            latitude_spacing,
-            longitude_spacing,
-            number_of_samples,
-            number_of_lines,
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+            footprint=dgg_tile_footprint,
+            first_latitude_value=first_latitude_value,
+            first_longitude_value=first_longitude_value,
+            latitude_spacing=latitude_spacing,
+            longitude_spacing=longitude_spacing,
+            number_of_samples=number_of_samples,
+            number_of_lines=number_of_lines,
+            projection=projection,
+            datum=datum,
+            pixel_representation=pixel_representation,
+            pixel_type=pixel_type,
+            no_data_value=no_data_value,
         )
 
         # # - inputInformation
         input_information_l2b = common_annotation_models_l2.InputInformationL2BL3ListType(
-            self.product.main_ads_input_information.input_information.l2a_inputs,
+            l2a_inputs=self.product.main_ads_input_information.input_information.l2a_inputs,
             count=len(self.product.main_ads_input_information.input_information.l2a_inputs),
         )
         # # - processing parameters
@@ -967,21 +967,21 @@ class BIOMASSL2bFHProductWriter:
         roll_off_factor_range = self.product.main_ads_processing_parameters.roll_off_factor_range
 
         processing_parameters = main_annotation_models_l2b_fh.ProcessingParametersL2BType(
-            processor_version,
-            PRODUCT_GENERATION_TIME_MS,
-            minimum_l2acoverage,
-            forest_masking_flag,
-            bps_fnf_type,
-            roll_off_factor_azimuth,
-            roll_off_factor_range,
-            compression_options_fh,
+            processor_version=processor_version,
+            product_generation_time=PRODUCT_GENERATION_TIME_MS,
+            minimum_l2a_coverage=minimum_l2acoverage,
+            forest_masking_flag=forest_masking_flag,
+            bps_fnf=bps_fnf_type,
+            roll_off_factor_azimuth=roll_off_factor_azimuth,
+            roll_off_factor_range=roll_off_factor_range,
+            compression_options=compression_options_fh,
         )
 
         main_annotation_model = main_annotation_models_l2b_fh.MainAnnotation(
-            product,
-            raster_image,
-            input_information_l2b,
-            processing_parameters,
+            product=product,
+            raster_image=raster_image,
+            input_information=input_information_l2b,
+            processing_parameters=processing_parameters,
         )
 
         # Write main annotation file

@@ -1,0 +1,34 @@
+# Byte-compiled / optimized
+__pycache__
+*.py[co]
+
+# Distribution / packaging
+build/
+_build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+.nox
+bps-l2b_fh_processor
+conda_build_dir
+
+# Pyenv
+.python-version
+
+# VS Code project settings
+.vscode
+
+# PyCharm project settings
+.idea
+
+# Spyder project settings
+.spyproject
+
+# Environments
+venv*
+
+# Other
+*.bak
+.coverage
+htmlcov
+*.svg

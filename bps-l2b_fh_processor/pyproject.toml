@@ -1,13 +1,48 @@
+[project]
+name = "bps-l2b_fh_processor"
+description = "Biomass L2b FH Processor."
+authors = [{ name = "Aresys S.R.L.", email = "info@aresys.it" }]
+requires-python = ">=3.12"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+dependencies = [
+    "arepytools",
+    "click",
+    "numba >= 0.57",
+    "numpy",
+    "scipy",
+    "bps-common==4.4.1",
+    "bps-transcoder==4.4.1",
+]
+dynamic = ["version"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+
+]
+
+[project.scripts]
+bps_l2b_fh_processor = "bps.l2b_fh_processor.__main__:main"
+
+[project.optional-dependencies]
+dev = ["nox", "ruff==0.15.7"]
+test = ["unittest-xml-reporting", "coverage"]
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.pylint.MASTER]
-fail-under = 8.0
-ignore = "models.py"
+[tool.hatch.version]
+path = "bps/l2b_fh_processor/__init__.py"
 
-[tool.pylint."MESSAGES CONTROL"]
-disable = ["import-error", "logging-fstring-interpolation", "logging-not-lazy"]
+[tool.hatch.build.targets.sdist]
+only-include = ["bps"]
 
-[tool.pylint.FORMAT]
-max-line-length = 120
+[tool.hatch.build.targets.wheel]
+only-include = ["bps"]

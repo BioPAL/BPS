@@ -267,10 +267,10 @@ class StackPreProcessorExecutionManager:
 
         # Execute the X-pol merging.
         if self.aux_pps.general.polarization_combination_method is None:
-            bps_logger.warning("No cross-pol merging. The output L1c products will not be usable by L2")
+            bps_logger.info("No cross-polarization combination")
         else:
             bps_logger.info(
-                "Cross-pol merging: %s",
+                "Cross-polarization combination method: %s",
                 self.aux_pps.general.polarization_combination_method.value,
             )
         for l1a_data, lut_data in zip(l1a_product_data, l1a_product_luts):
@@ -753,7 +753,7 @@ def _export_intermediate_product(
             product_path=stack_pre_proc_output_products.raw_data_product,
             use_eff_dc_vectors=True,
         )
-        # pylint: disable-next=broad-exception-caught
+
     except Exception as err:
         bps_logger.error(
             "Cannot write export coreg inputs to %s",
@@ -778,7 +778,7 @@ def _export_intermediate_product(
                 raster_info_list=l1a_product_data.raster_info_list,
                 output_path=stack_pre_proc_output_products.xyz_product,
             )
-            # pylint: disable-next=broad-exception-caught
+
         except Exception as err:
             bps_logger.error(
                 "Cannot write DEM product to %s",
@@ -958,7 +958,7 @@ def _invalid_data(data: npt.NDArray[complex]) -> npt.NDArray[bool]:
 
 def _inconsistent_annotation(l1a_product: BIOMASSL1Product) -> bool:
     """Check that the internal time annotations are consistent."""
-    eps = np.power(10.0, -np.finfo(np.float64).precision)  # pylint: disable=no-member
+    eps = np.power(10.0, -np.finfo(np.float64).precision)
     for raster in l1a_product.raster_info_list:
         if not (
             raster.lines != l1a_product.number_of_lines
@@ -978,7 +978,7 @@ def _write_stop_and_resume_file(output_path: Path):
             f.write("succeeded")
         if not output_path.exists():
             bps_logger.warning("Could not export stack's state file. Resuming STA_P will not be possible")
-        # pylint: disable-next=broad-exception-caught
+
     except Exception as err:
         bps_logger.error(
             "Error occurred while writing stack's pre-proc state file %s to working directory",

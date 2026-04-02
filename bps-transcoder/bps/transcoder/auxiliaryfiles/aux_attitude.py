@@ -60,12 +60,6 @@ def translate_attitude_record_from_quaternion_model(
     record: aux_att_models.QuaternionType,
 ) -> AttitudeRecord:
     """Convert quaternion model to attitude record"""
-    assert record.time is not None
-    assert record.q1 is not None and record.q1.value is not None
-    assert record.q2 is not None and record.q2.value is not None
-    assert record.q3 is not None and record.q3.value is not None
-    assert record.q4 is not None and record.q4.value is not None
-
     return AttitudeRecord(
         time=translate_precise_date_time_from_angle_time_model(record.time),
         quaternion=np.array(
@@ -83,7 +77,7 @@ def float_to_quaternion_component_type(
     value: float,
 ) -> aux_att_models.QuaternionComponentType:
     """Convert float to proper quaternion type"""
-    return aux_att_models.QuaternionComponentType(Decimal(value=f"{value:.9f}"))
+    return aux_att_models.QuaternionComponentType(value=Decimal(value=f"{value:.9f}"))
 
 
 def translate_attitude_record_to_quaternion_model(
@@ -104,11 +98,7 @@ def fill_attitude_from_model(
     attitude_model: aux_att_models.EarthObservationFile,
 ) -> Attitude:
     """Retrieve some information from attitude file"""
-    assert attitude_model.data_block is not None
-    assert attitude_model.data_block.max_gap is not None
-    assert attitude_model.data_block.max_gap.value is not None
     assert attitude_model.data_block.quaternion_data is not None
-    assert attitude_model.data_block.quaternion_data.list_of_quaternions is not None
 
     max_gap = float(attitude_model.data_block.max_gap.value)
 
@@ -143,10 +133,7 @@ def update_model_with_additional_attitude_records(
         for time, quaternion in zip(additional_times, additional_quaternions)
     ]
 
-    assert attitude_model.data_block is not None
     assert attitude_model.data_block.quaternion_data is not None
-    assert attitude_model.data_block.quaternion_data.list_of_quaternions is not None
-    assert attitude_model.data_block.quaternion_data.list_of_quaternions.count is not None
     attitude_model.data_block.quaternion_data.list_of_quaternions.count += additional_times.size
     attitude_model.data_block.quaternion_data.list_of_quaternions.quaternions.extend(missing_quaternions_models)
     attitude_model.data_block.quaternion_data.list_of_quaternions.quaternions.sort(
@@ -168,10 +155,6 @@ def write_attitude_file(
     update_file_name: bool = True,
 ):
     """Write attitude file"""
-    assert attitude_model.earth_observation_header is not None
-    assert attitude_model.earth_observation_header.fixed_header is not None
-
-    # update file name
     if update_file_name:
         attitude_model.earth_observation_header.fixed_header.file_name = file.stem
 

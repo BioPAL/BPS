@@ -10,9 +10,10 @@ XSD BPS l1 preprocesso annotation xml file models
 -------------------------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class CompressionLevelType(Enum):
@@ -22,31 +23,25 @@ class CompressionLevelType(Enum):
     BYPASS = "Bypass"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class NoiseSequenceType:
-    reference_time: Optional[str] = field(
-        default=None,
+    reference_time: str = field(
         metadata={
             "name": "ReferenceTime",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    average_noise: Optional[float] = field(
-        default=None,
+    average_noise: float = field(
         metadata={
             "name": "AverageNoise",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    num_lines: Optional[int] = field(
-        default=None,
+    num_lines: int = field(
         metadata={
             "name": "NumLines",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
@@ -65,29 +60,25 @@ class PowerTrackingTypeRole(Enum):
     RX = "RX"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FcomplexNumberType:
     class Meta:
         name = "FComplexNumberType"
         target_namespace = "biomass_common"
 
-    real: Optional[float] = field(
-        default=None,
+    real: float = field(
         metadata={
             "name": "Real",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
-    imag: Optional[float] = field(
-        default=None,
+    imag: float = field(
         metadata={
             "name": "Imag",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
 
 
@@ -109,100 +100,75 @@ class UnitType(Enum):
     UTC = "Utc"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DriftType:
-    real: Optional[float] = field(
-        default=None,
+    real: float = field(
         metadata={
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    imag: Optional[float] = field(
-        default=None,
+    imag: float = field(
         metadata={
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    polarization: Optional[PolarizationType] = field(
-        default=None,
+    polarization: PolarizationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PowerRatioType:
-    value: Optional[float] = field(
-        default=None,
+    value: float = field(
         metadata={
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    polarization: Optional[PolarizationType] = field(
-        default=None,
+    polarization: PolarizationType = field(
         metadata={
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PowerTrackingType(FcomplexNumberType):
-    role: Optional[PowerTrackingTypeRole] = field(
-        default=None,
+    role: PowerTrackingTypeRole = field(
         metadata={
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
-    doublet: Optional[PowerTrackingTypeDoublet] = field(
-        default=None,
+    doublet: PowerTrackingTypeDoublet = field(
         metadata={
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
-    polarization: Optional[PowerTrackingTypePolarization] = field(
-        default=None,
+    polarization: PowerTrackingTypePolarization = field(
         metadata={
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelDelayType:
     class Meta:
         target_namespace = "biomass_common"
 
-    value: Optional[float] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
-    swath: Optional[SwathType] = field(
-        default=None,
+    value: float = field()
+    swath: SwathType = field(
         metadata={
             "name": "Swath",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
-    polarization: Optional[PolarizationType] = field(
-        default=None,
+    polarization: PolarizationType = field(
         metadata={
             "name": "Polarization",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
     uo_m: UnitType = field(
         init=False,
@@ -215,32 +181,28 @@ class ChannelDelayType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelImbalanceType:
     class Meta:
         target_namespace = "biomass_common"
 
-    tx: Optional[FcomplexNumberType] = field(
-        default=None,
+    tx: FcomplexNumberType = field(
         metadata={
             "name": "TX",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
-    rx: Optional[FcomplexNumberType] = field(
-        default=None,
+    rx: FcomplexNumberType = field(
         metadata={
             "name": "RX",
             "type": "Element",
             "namespace": "",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChannelDelaysType:
     class Meta:
         target_namespace = "biomass_common"
@@ -255,25 +217,21 @@ class ChannelDelaysType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L1PreProcessorAnnotations:
-    ispformat: Optional["L1PreProcessorAnnotations.Ispformat"] = field(
-        default=None,
+    ispformat: L1PreProcessorAnnotations.Ispformat = field(
         metadata={
             "name": "ISPFormat",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    isperrors: Optional["L1PreProcessorAnnotations.Isperrors"] = field(
-        default=None,
+    isperrors: L1PreProcessorAnnotations.Isperrors = field(
         metadata={
             "name": "ISPErrors",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    raw_data_statistics: list["L1PreProcessorAnnotations.RawDataStatistics"] = field(
+    raw_data_statistics: list[L1PreProcessorAnnotations.RawDataStatistics] = field(
         default_factory=list,
         metadata={
             "name": "RawDataStatistics",
@@ -281,47 +239,37 @@ class L1PreProcessorAnnotations:
             "max_occurs": 4,
         },
     )
-    gain_param_code_h: Optional[int] = field(
-        default=None,
+    gain_param_code_h: int = field(
         metadata={
             "name": "GainParamCodeH",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    gain_param_code_v: Optional[int] = field(
-        default=None,
+    gain_param_code_v: int = field(
         metadata={
             "name": "GainParamCodeV",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    noise_data: Optional["L1PreProcessorAnnotations.NoiseData"] = field(
-        default=None,
+    noise_data: L1PreProcessorAnnotations.NoiseData = field(
         metadata={
             "name": "NoiseData",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    channel_delays: Optional[ChannelDelaysType] = field(
-        default=None,
+    channel_delays: ChannelDelaysType = field(
         metadata={
             "name": "ChannelDelays",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    channel_imbalance: Optional[ChannelImbalanceType] = field(
-        default=None,
+    channel_imbalance: ChannelImbalanceType = field(
         metadata={
             "name": "ChannelImbalance",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    chirp_replica_parameters: list["L1PreProcessorAnnotations.ChirpReplicaParameters"] = field(
+    chirp_replica_parameters: list[L1PreProcessorAnnotations.ChirpReplicaParameters] = field(
         default_factory=list,
         metadata={
             "name": "ChirpReplicaParameters",
@@ -329,7 +277,7 @@ class L1PreProcessorAnnotations:
             "max_occurs": 4,
         },
     )
-    internal_calibration_data: list["L1PreProcessorAnnotations.InternalCalibrationData"] = field(
+    internal_calibration_data: list[L1PreProcessorAnnotations.InternalCalibrationData] = field(
         default_factory=list,
         metadata={
             "name": "InternalCalibrationData",
@@ -337,39 +285,31 @@ class L1PreProcessorAnnotations:
             "min_occurs": 1,
         },
     )
-    noise_preamble_h: Optional[NoiseSequenceType] = field(
-        default=None,
+    noise_preamble_h: NoiseSequenceType = field(
         metadata={
             "name": "NoisePreambleH",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    noise_postamble_h: Optional[NoiseSequenceType] = field(
-        default=None,
+    noise_postamble_h: NoiseSequenceType = field(
         metadata={
             "name": "NoisePostambleH",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    noise_preamble_v: Optional[NoiseSequenceType] = field(
-        default=None,
+    noise_preamble_v: NoiseSequenceType = field(
         metadata={
             "name": "NoisePreambleV",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    noise_postamble_v: Optional[NoiseSequenceType] = field(
-        default=None,
+    noise_postamble_v: NoiseSequenceType = field(
         metadata={
             "name": "NoisePostambleV",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    in_out_band_power_ratio_data: list["L1PreProcessorAnnotations.InOutBandPowerRatioData"] = field(
+    in_out_band_power_ratio_data: list[L1PreProcessorAnnotations.InOutBandPowerRatioData] = field(
         default_factory=list,
         metadata={
             "name": "InOutBandPowerRatioData",
@@ -377,211 +317,163 @@ class L1PreProcessorAnnotations:
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ispformat:
-        echo: Optional[CompressionLevelType] = field(
-            default=None,
+        echo: CompressionLevelType = field(
             metadata={
                 "name": "Echo",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        calibration: Optional[CompressionLevelType] = field(
-            default=None,
+        calibration: CompressionLevelType = field(
             metadata={
                 "name": "Calibration",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        noise: Optional[CompressionLevelType] = field(
-            default=None,
+        noise: CompressionLevelType = field(
             metadata={
                 "name": "Noise",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        mean_bit_rate: Optional[float] = field(
-            default=None,
+        mean_bit_rate: float = field(
             metadata={
                 "name": "MeanBitRate",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Isperrors:
-        num_missing_packets: Optional[int] = field(
-            default=None,
+        num_missing_packets: int = field(
             metadata={
                 "name": "NumMissingPackets",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        num_corrupted_packets: Optional[int] = field(
-            default=None,
+        num_corrupted_packets: int = field(
             metadata={
                 "name": "NumCorruptedPackets",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class RawDataStatistics:
-        mean_i: Optional[float] = field(
-            default=None,
+        mean_i: float = field(
             metadata={
                 "name": "Mean_i",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        mean_q: Optional[float] = field(
-            default=None,
+        mean_q: float = field(
             metadata={
                 "name": "Mean_q",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        std_dev_i: Optional[float] = field(
-            default=None,
+        std_dev_i: float = field(
             metadata={
                 "name": "StdDev_i",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        std_dev_q: Optional[float] = field(
-            default=None,
+        std_dev_q: float = field(
             metadata={
                 "name": "StdDev_q",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        quadrature_departure: Optional[float] = field(
-            default=None,
+        quadrature_departure: float = field(
             metadata={
                 "name": "QuadratureDeparture",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        polarization: Optional[PolarizationType] = field(
-            default=None,
+        polarization: PolarizationType = field(
             metadata={
                 "name": "Polarization",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class NoiseData:
-        preamble_present: Optional[bool] = field(
-            default=None,
+        preamble_present: bool = field(
             metadata={
                 "name": "PreamblePresent",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        postamble_present: Optional[bool] = field(
-            default=None,
+        postamble_present: bool = field(
             metadata={
                 "name": "PostamblePresent",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class ChirpReplicaParameters:
-        bandwidth: Optional[float] = field(
-            default=None,
+        bandwidth: float = field(
             metadata={
                 "name": "Bandwidth",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        pslr: Optional[float] = field(
-            default=None,
+        pslr: float = field(
             metadata={
                 "name": "PSLR",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        islr: Optional[float] = field(
-            default=None,
+        islr: float = field(
             metadata={
                 "name": "ISLR",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        location_error: Optional[float] = field(
-            default=None,
+        location_error: float = field(
             metadata={
                 "name": "LocationError",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        validity_flag: Optional[bool] = field(
-            default=None,
+        validity_flag: bool = field(
             metadata={
                 "name": "ValidityFlag",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        polarization: Optional[PolarizationType] = field(
-            default=None,
+        polarization: PolarizationType = field(
             metadata={
                 "name": "Polarization",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class InternalCalibrationData:
-        reference_time: Optional[str] = field(
-            default=None,
+        reference_time: str = field(
             metadata={
                 "name": "ReferenceTime",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        excitation_coefficients: Optional[
-            "L1PreProcessorAnnotations.InternalCalibrationData.ExcitationCoefficients"
-        ] = field(
-            default=None,
+        excitation_coefficients: L1PreProcessorAnnotations.InternalCalibrationData.ExcitationCoefficients = field(
             metadata={
                 "name": "ExcitationCoefficients",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        drifts: Optional["L1PreProcessorAnnotations.InternalCalibrationData.Drifts"] = field(
-            default=None,
+        drifts: L1PreProcessorAnnotations.InternalCalibrationData.Drifts = field(
             metadata={
                 "name": "Drifts",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class ExcitationCoefficients:
             power_tracking: list[PowerTrackingType] = field(
                 default_factory=list,
@@ -592,7 +484,7 @@ class L1PreProcessorAnnotations:
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Drifts:
             drift: list[DriftType] = field(
                 default_factory=list,
@@ -603,26 +495,22 @@ class L1PreProcessorAnnotations:
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class InOutBandPowerRatioData:
-        reference_time: Optional[str] = field(
-            default=None,
+        reference_time: str = field(
             metadata={
                 "name": "ReferenceTime",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
-        power_ratios: Optional["L1PreProcessorAnnotations.InOutBandPowerRatioData.PowerRatios"] = field(
-            default=None,
+        power_ratios: L1PreProcessorAnnotations.InOutBandPowerRatioData.PowerRatios = field(
             metadata={
                 "name": "PowerRatios",
                 "type": "Element",
-                "required": True,
-            },
+            }
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class PowerRatios:
             power_ratio: list[PowerRatioType] = field(
                 default_factory=list,

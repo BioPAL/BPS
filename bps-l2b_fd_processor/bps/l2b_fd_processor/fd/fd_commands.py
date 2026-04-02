@@ -382,8 +382,8 @@ class FDL2B:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_d = {
             "fd": common_types.PixelRepresentationType.FOREST_DISTURBANCE,
@@ -424,25 +424,25 @@ class FDL2B:
 
         # main_ads_processing_parameters
         compression_options_fd = main_annotation_models_l2b_fd.CompressionOptionsL2B(
-            main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds(
-                main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Fd(
-                    self.aux_pp2_fd.compression_options.mds.fd.compression_factor
+            mds=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds(
+                fd=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Fd(
+                    compression_factor=self.aux_pp2_fd.compression_options.mds.fd.compression_factor
                 ),
-                main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.ProbabilityOfChange(
-                    self.aux_pp2_fd.compression_options.mds.probability_of_change.compression_factor,
-                    self.aux_pp2_fd.compression_options.mds.probability_of_change.max_z_error,
+                probability_of_change=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.ProbabilityOfChange(
+                    compression_factor=self.aux_pp2_fd.compression_options.mds.probability_of_change.compression_factor,
+                    max_z_error=self.aux_pp2_fd.compression_options.mds.probability_of_change.max_z_error,
                 ),
-                main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Cfm(
-                    self.aux_pp2_fd.compression_options.mds.cfm.compression_factor
+                cfm=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Cfm(
+                    compression_factor=self.aux_pp2_fd.compression_options.mds.cfm.compression_factor
                 ),
-                main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.HeatMap(
-                    self.aux_pp2_fd.compression_options.mds.heatmap.compression_factor
+                heat_map=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.HeatMap(
+                    compression_factor=self.aux_pp2_fd.compression_options.mds.heatmap.compression_factor
                 ),
-                main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.AcquisitionIdImage(
-                    self.aux_pp2_fd.compression_options.mds.acquisition_id_image.compression_factor
+                acquisition_id_image=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                    compression_factor=self.aux_pp2_fd.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
-            self.aux_pp2_fd.compression_options.mds_block_size,
+            mds_block_size=self.aux_pp2_fd.compression_options.mds_block_size,
         )
 
         main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFD(

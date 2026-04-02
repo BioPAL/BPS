@@ -244,7 +244,7 @@ def compute_satellite_ground_speed(
         azimuth_central_time + 1, range_central_time, dataset_info.side_looking.value
     )
 
-    return float((sat_forward_ecef - sat_proj_ecef).T @ sat_unit_vel)
+    return float(np.squeeze((sat_forward_ecef - sat_proj_ecef).T @ sat_unit_vel))
 
 
 def compute_satellite_state(
@@ -299,7 +299,7 @@ def compute_satellite_state(
 
 def compute_satellite_altitude(sat_position: npt.NDArray[float]) -> float:
     """Return the altitude of the satellite wrt the WGS84 geoid in [m]."""
-    return float(xyz2llh(sat_position)[2])
+    return float(np.squeeze(xyz2llh(sat_position)[2]))
 
 
 def compute_target_ground_speed(
@@ -311,10 +311,12 @@ def compute_target_ground_speed(
     earth_radius = compute_earth_radius(sat_position)
     cos_gamma = (tgt_position.T @ sat_position) / (np.linalg.norm(tgt_position) * np.linalg.norm(sat_position))
     return float(
-        np.linalg.norm(sat_velocity)
-        * earth_radius
-        * cos_gamma
-        / (earth_radius + compute_satellite_altitude(sat_position))
+        np.squeeze(
+            np.linalg.norm(sat_velocity)
+            * earth_radius
+            * cos_gamma
+            / (earth_radius + compute_satellite_altitude(sat_position))
+        )
     )
 
 
@@ -678,9 +680,9 @@ def interpolate_on_grid_nn(
     # way faster then NN saerches (as in sp.interpolate.NearestNDInterpolator).
     indices_out = tuple(
         _interp1d_nn(
-            ax_in.astype(np.float64),
+            np.squeeze(ax_in).astype(np.float64),
             np.arange(ax_in.size, dtype=np.float64),
-            ax_out.astype(np.float64),
+            np.squeeze(ax_out).astype(np.float64),
         ).astype(np.int32)
         for ax_in, ax_out in zip(axes_in, axes_out)
     )
@@ -787,7 +789,6 @@ def query_grid_mask(
     dy = y_axis[1] - y0
 
     output = np.empty(xs.size, mask.dtype)
-    # pylint: disable-next=not-an-iterable
     for k in nb.prange(xs.size):
         output[k] = mask[
             np.int32(np.round((xs_packed[k] - x0) / dx)),

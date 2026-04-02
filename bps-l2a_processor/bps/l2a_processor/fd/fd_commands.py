@@ -524,8 +524,8 @@ class FD:
         coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
         geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
         datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system,
-            common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+            coordinate_reference_system=coordinate_reference_system,
+            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
         )
         pixel_representation_dict = {
             "fd": common_types.PixelRepresentationType.FOREST_DISTURBANCE,
@@ -603,13 +603,13 @@ class FD:
                 )
 
             sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters_list,
-                len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
+                sta_quality_parameters=sta_quality_parameters_list,
+                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
             )
 
             sta_quality = common_annotation_models_l2.StaQualityType(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index,
-                sta_quality_parameters_list,
+                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+                sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
@@ -632,11 +632,11 @@ class FD:
 
         # Compute height of ambiguity from the average wavenumbers
         vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(
+            min=common_annotation_models_l2.FloatWithUnit(
                 value=float(min(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
-            common_annotation_models_l2.FloatWithUnit(
+            max=common_annotation_models_l2.FloatWithUnit(
                 value=float(max(average_wavenumbers)),
                 units=common_types.UomType.RAD_M,
             ),
@@ -646,8 +646,8 @@ class FD:
         hoa_min = 2 * np.pi / min(wavenumber_spacings)
         hoa_max = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
+            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
         )
 
         main_ads_input_information = BIOMASSL2aMainADSInputInformation(
@@ -667,11 +667,15 @@ class FD:
 
         # main_ads_processing_parameters
         general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            self.aux_pp2_2a.general.apply_calibration_screen.value,
-            self.aux_pp2_2a.general.forest_coverage_threshold,
-            self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
-            translate_common.translate_polarisation_combination_method_to_model(
+            apply_calibration_screen=common_annotation_models_l2.CalibrationScreenType(
+                self.aux_pp2_2a.general.apply_calibration_screen.value
+            ),
+            forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
+            forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
+            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
+                self.aux_pp2_2a.general.subsetting_rule.value
+            ),
+            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
                 self.aux_pp2_2a.general.polarisation_combination_method
             ),
         )
@@ -679,32 +683,32 @@ class FD:
         least_significant_digit_acm = self.aux_pp2_2a.fd.compression_options.ads.acm.least_significant_digit
 
         compression_options_fd = main_annotation_models_l2a_fd.CompressionOptionsL2A(
-            main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds(
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Fd(
-                    self.aux_pp2_2a.fd.compression_options.mds.fd.compression_factor
+            mds=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds(
+                fd=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Fd(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.mds.fd.compression_factor
                 ),
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.ProbabilityOfchange(
-                    self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.compression_factor,
-                    self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.max_z_error,
+                probability_ofchange=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.ProbabilityOfchange(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.compression_factor,
+                    max_z_error=self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.max_z_error,
                 ),
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Cfm(
-                    self.aux_pp2_2a.fd.compression_options.mds.cfm.compression_factor
-                ),
-            ),
-            main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads(
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Fnf(
-                    self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
-                ),
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Acm(
-                    self.aux_pp2_2a.fd.compression_options.ads.acm.compression_factor,
-                    least_significant_digit_acm,
-                ),
-                main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.NumberOfAverages(
-                    self.aux_pp2_2a.fd.compression_options.ads.number_of_averages.compression_factor
+                cfm=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Cfm(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.mds.cfm.compression_factor
                 ),
             ),
-            self.aux_pp2_2a.fd.compression_options.mds_block_size,
-            self.aux_pp2_2a.fd.compression_options.ads_block_size,
+            ads=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads(
+                fnf=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Fnf(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
+                ),
+                acm=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Acm(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.acm.compression_factor,
+                    least_significant_digit=least_significant_digit_acm,
+                ),
+                number_of_averages=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.NumberOfAverages(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.number_of_averages.compression_factor
+                ),
+            ),
+            mds_block_size=self.aux_pp2_2a.fd.compression_options.mds_block_size,
+            ads_block_size=self.aux_pp2_2a.fd.compression_options.ads_block_size,
         )
 
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFD(

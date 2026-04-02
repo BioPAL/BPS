@@ -1,5 +1,0 @@
-include bps/transcoder/xsd/*/*.xsd 
-global-exclude __pycache__
-global-exclude *.py[co]
-prune test/
-exclude MANIFEST.in

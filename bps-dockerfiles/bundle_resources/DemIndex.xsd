@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="DemIndex" type="DemIndexType" />
+    <xs:complexType name="DemIndexType" mixed="false">
+        <xs:choice>
+            <xs:element name="TileList" minOccurs="1" maxOccurs="1">
+                <xs:complexType mixed="false">
+                    <xs:sequence>
+                        <xs:element name="Tile" type="TileType" minOccurs="1" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="TileType" mixed="false">
+        <xs:sequence>
+            <xs:element name="TileLocation" type="TileLocationType" />
+            <xs:element name="TileExtent" type="TileExtentType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TileLocationType" mixed="false">
+        <xs:sequence>
+            <xs:element name="Filename" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Archive" minOccurs="0" maxOccurs="1">
+                <xs:complexType mixed="false">
+                    <xs:sequence>
+                        <xs:element name="Filename" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="ArchiveType" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="GZIP" />
+                                    <xs:enumeration value="TAR" />
+                                    <xs:enumeration value="ZIP" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TileExtentType" mixed="false">
+        <xs:sequence>
+            <xs:element name="LatitudeExtent" minOccurs="1" maxOccurs="1">
+                <xs:complexType mixed="false">
+                    <xs:sequence>
+                        <xs:element name="LatitudeLower" minOccurs="1" maxOccurs="1" type="AngleValueType" />
+                        <xs:element name="LatitudeUpper" minOccurs="1" maxOccurs="1" type="AngleValueType" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LongitudeExtent" minOccurs="1" maxOccurs="1">
+                <xs:complexType mixed="false">
+                    <xs:sequence>
+                        <xs:element name="LongitudeLower" minOccurs="1" maxOccurs="1" type="AngleValueType" />
+                        <xs:element name="LongitudeUpper" minOccurs="1" maxOccurs="1" type="AngleValueType" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AngleValueType">
+        <xs:simpleContent>
+            <xs:extension base="xs:double">
+                <xs:attribute name="unit" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="rad" />
+                            <xs:enumeration value="deg" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

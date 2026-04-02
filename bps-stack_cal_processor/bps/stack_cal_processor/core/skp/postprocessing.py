@@ -54,7 +54,7 @@ def compute_postprocessing_filter_window_size(
         and "Median".
 
     goldstein_filter_window_size: int  [px]
-        The filter window size to be used for the Goldstein filter. Used only
+        The filter window size to be used for the Goldstein filter's weights. Used only
         if `filter_type` is "Goldstein".
 
     Return
@@ -87,6 +87,7 @@ def apply_postprocessing_filter(
     *,
     filter_type: SkpPostprocessingFilterType,
     filter_window: tuple[int, int],
+    goldstein_filter_alpha: float | None = None,
 ) -> npt.NDArray[float]:
     """
     Apply the selected post-processing filter.
@@ -102,6 +103,10 @@ def apply_postprocessing_filter(
     filter_window: tuple[int, int]  [px]
         Size of the filtering window in pixels. For "Goldstein" this
         is in frequency domain.
+
+    goldstein_filter_alpha: float | None = None  [0-1]
+        The alpha parameter of the Goldstein filter. Used only if `filter_type`
+        is "Goldstein".
 
     Return
     ------
@@ -123,6 +128,7 @@ def apply_postprocessing_filter(
         return _apply_goldstein_filter(
             skp_calibration_phases,
             filter_window=filter_window,
+            alpha=goldstein_filter_alpha,
         )
 
     if filter_type is SkpPostprocessingFilterType.BOXCAR:

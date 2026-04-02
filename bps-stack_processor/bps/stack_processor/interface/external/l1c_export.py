@@ -161,7 +161,7 @@ def export_l1c_product(
     primary_product = stack_pre_proc_exec_products["l1a_product_data"][coreg_primary_image_index]
     secondary_product = stack_pre_proc_exec_products["l1a_product_data"][image_index]
 
-    # Compute the coherence for visualization.
+    # Compute the coherence for LUTs and stats, and possibly visualization.
     flattening_phases = stack_cal_proc_exec_products["flattening_phases"]
     if aux_pps.skp_phase_calibration.skp_phase_estimation_flag and aux_pps.skp_phase_calibration.phase_correction_flag:
         flattening_phases = np.zeros_like(flattening_phases)
@@ -173,6 +173,11 @@ def export_l1c_product(
         image_index=image_index,
         num_threads=num_threads,
     )
+
+    coh_index = 0
+    if EPolarization.hh in stack_pre_proc_exec_products["stack_polarizations"]:
+        coh_index = stack_pre_proc_exec_products["stack_polarizations"].index(EPolarization.hh)
+    ref_coherence = coherences[coh_index]
 
     # The LUT for the current data.
     lut_data = lut_shift_exec_products["lut_data"][image_index]
@@ -202,6 +207,7 @@ def export_l1c_product(
         primary_coreg_azimuth_shifts=primary_coreg_azimuth_shifts,
         primary_coreg_range_shifts=primary_coreg_range_shifts,
         image_index=image_index,
+        coherence=ref_coherence,
     )
     lut_data.update(stack_lut_data)
 
@@ -280,7 +286,6 @@ def export_l1c_product(
         # The product format is FNF_product/data/FNF_file.tiff
         file_name_fnf = fnf_mask_file.parent.parent.name
 
-    # Export the image.
     _export_to_l1c_format(
         input_product=secondary_product,
         product_primary=primary_product,
@@ -289,7 +294,7 @@ def export_l1c_product(
         path_primary_l1a=job_order.input_stack[coreg_primary_image_index],
         path_secondary_l1a=job_order.input_stack[image_index],
         l1c_export_conf=aux_pps.l1c_product_export,
-        coherence=coherences[0],  # We just export the QL of 1 polarization.
+        coherence=ref_coherence,
         lut_dict=lut_data,
         lut_axes_primary=lut_axes_primary,
         ionosphere_axes=ionosphere_axes,
@@ -617,6 +622,7 @@ def _fill_stack_luts(
     primary_coreg_azimuth_shifts: npt.NDArray[float],
     primary_coreg_range_shifts: npt.NDArray[float],
     image_index: int,
+    coherence: npt.NDArray[complex] | None,
 ) -> tuple[
     dict,
     tuple[npt.NDArray[float], npt.NDArray[float]],
@@ -628,6 +634,12 @@ def _fill_stack_luts(
 
     # The STA_P LUTs.
     stack_lut = {}
+
+    # Possibly, add coherence and inteferogram.
+    if coherence is not None:
+        coherence = coherence[lut_azm_i, :][:, lut_rng_j]
+        stack_lut["coherence"] = np.abs(coherence) * lut_nodata_mask
+        stack_lut["interferogram"] = np.angle(coherence) * lut_nodata_mask
 
     # The spatial coregistration shifts [m].
     stack_lut["azimuthCoregistrationShifts"] = (

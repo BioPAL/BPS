@@ -425,7 +425,7 @@ def compute_interferogram_quicklook(
 
     Parameters
     ----------
-    coherence: npt.NDArray[float]  [rad]
+    interferogram: npt.NDArray[float]  [rad]
         The [Naz x Nrg] inteferogram normalized between -pi / +pi.
 
     nodata_mask: npt.NDArray[bool]
@@ -437,14 +437,15 @@ def compute_interferogram_quicklook(
     Return
     ------
     npt.NDArray[np.uint8]
-        The [Naz x Nrg] grayscale image, possibly downsampled.
+        The [Naz x Nrg] BGR image.
 
     """
     conf = conf if conf is not None else QuickLookConf()
     interferogram = interferogram[:: conf.azimuth_decimation_factor, :: conf.range_decimation_factor]
     return (
         cv2.applyColorMap(
-            np.round((interferogram - np.pi) / (2 * np.pi) * 255).astype(np.uint8),
+            # Remap (-pi, pi) to (0, 1).
+            np.round((interferogram + np.pi) / (2 * np.pi) * 255).astype(np.uint8),
             cv2.COLORMAP_JET,
         )
         * nodata_mask[:: conf.azimuth_decimation_factor, :: conf.range_decimation_factor, np.newaxis]
@@ -465,8 +466,8 @@ def write_coherence_quicklook_to_file(gray: np.ndarray, file: Path):
     cv2.imwrite(str(file), gray)
 
 
-def write_interferogram_quicklook_to_file(rgb: np.ndarray, file: Path):
+def write_interferogram_quicklook_to_file(bgr: np.ndarray, file: Path):
     """Write the interferogram quick-look to disk using JET color scheme"""
     bps_logger.debug(f"Writing interferogram quicklook to {file}")
     file.parent.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(file), rgb)
+    cv2.imwrite(str(file), bgr)

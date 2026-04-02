@@ -41,22 +41,6 @@ def translate_model_to_comp_agb_conf(
     conf: aux_pp2_2b_agb_models.CompressionOptionsL2BAb,
 ) -> AuxProcessingParametersL2BAGB.CompressionConf:
     """Translate AGB Compression configuration section to the corresponding conf"""
-
-    assert conf.mds is not None
-    assert conf.mds.agb is not None
-    assert conf.mds.agb.compression_factor is not None
-    assert conf.mds.agb.max_z_error is not None
-    assert conf.mds.agbstandard_deviation is not None
-    assert conf.mds.agbstandard_deviation.compression_factor is not None
-    assert conf.mds.agbstandard_deviation.max_z_error is not None
-    assert conf.mds.bps_fnf is not None
-    assert conf.mds.bps_fnf.compression_factor is not None
-    assert conf.mds.heat_map is not None
-    assert conf.mds.heat_map.compression_factor is not None
-    assert conf.mds.acquisition_id_image is not None
-    assert conf.mds.acquisition_id_image.compression_factor is not None
-    assert conf.mds_block_size is not None
-
     return AuxProcessingParametersL2BAGB.CompressionConf(
         mds=AuxProcessingParametersL2BAGB.CompressionConf.MDS(
             AGB=MDSfloatCompressionType(
@@ -83,52 +67,21 @@ def translate_model_to_aux_processing_parameters_l2b_agb(
     model: aux_pp2_2b_agb_models.AuxiliaryL2BAbprocessingParameters,
 ) -> AuxProcessingParametersL2BAGB:
     """Translate aux pp2 2b fd to the corresponding structure"""
-
-    assert model.l2b_agbproduct_doi is not None
-    assert model.minimum_l2a_coverage is not None
-    assert model.forest_masking_flag is not None
-    assert model.rejected_landcover_classes is not None
-    assert model.backscatter_limits is not None
-    assert model.backscatter_limits.hh is not None
-    assert model.backscatter_limits.hh.min is not None
-    assert model.backscatter_limits.hh.max is not None
-    assert model.backscatter_limits.vh is not None
-    assert model.backscatter_limits.vh.min is not None
-    assert model.backscatter_limits.vh.max is not None
-    assert model.backscatter_limits.vv is not None
-    assert model.backscatter_limits.vv.min is not None
-    assert model.backscatter_limits.vv.max is not None
-    assert model.angle_limits is not None
-    assert model.angle_limits.min is not None
-    assert model.angle_limits.max is not None
-    assert model.mean_agblimits is not None
-    assert model.mean_agblimits.min is not None
-    assert model.mean_agblimits.max is not None
-    assert model.std_agblimits is not None
-    assert model.std_agblimits.min is not None
-    assert model.std_agblimits.max is not None
-    assert model.relative_agblimits is not None
-    assert model.relative_agblimits.min is not None
-    assert model.relative_agblimits.max is not None
-    assert model.reference_selection is not None
-    assert model.indexing_l is not None
-    assert model.indexing_a is not None
-    assert model.indexing_n is not None
-    assert model.use_constant_n is not None
-    assert model.values_constant_n is not None
-    assert model.regression_solver is not None
-    assert model.minimum_percentage_of_fillable_voids is not None
-    assert model.compression_options is not None
-
     return AuxProcessingParametersL2BAGB(
         model.l2b_agbproduct_doi,
         forest_masking_flag=str_to_bool(model.forest_masking_flag),
         minimumL2acoverage=model.minimum_l2a_coverage,
         rejected_landcover_classes=[int(value) for value in model.rejected_landcover_classes.value.split()],
         backscatterLimits={
-            PolarisationType.HH.value: MinMaxType(model.backscatter_limits.hh.min, model.backscatter_limits.hh.max),
-            PolarisationType.HV.value: MinMaxType(model.backscatter_limits.vh.min, model.backscatter_limits.vh.max),
-            PolarisationType.VV.value: MinMaxType(model.backscatter_limits.vv.min, model.backscatter_limits.vv.max),
+            PolarisationType.HH.value: MinMaxType(
+                min=model.backscatter_limits.hh.min, max=model.backscatter_limits.hh.max
+            ),
+            PolarisationType.HV.value: MinMaxType(
+                min=model.backscatter_limits.vh.min, max=model.backscatter_limits.vh.max
+            ),
+            PolarisationType.VV.value: MinMaxType(
+                min=model.backscatter_limits.vv.min, max=model.backscatter_limits.vv.max
+            ),
         },
         angleLimits=model.angle_limits,
         meanAGBLimits=model.mean_agblimits,

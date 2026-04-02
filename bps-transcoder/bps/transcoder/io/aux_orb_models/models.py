@@ -10,10 +10,11 @@ XSD Orbit models
 ----------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
-from typing import Optional
 
 
 class OrbitFileVariableHeaderRefFrame(Enum):
@@ -35,17 +36,12 @@ class OrbitFileVariableHeaderTimeReference(Enum):
     UT1 = "UT1"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PositionComponentType:
     class Meta:
         name = "Position_Component_Type"
 
-    value: Optional[Decimal] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: Decimal = field()
     unit: str = field(
         init=False,
         default="m",
@@ -56,67 +52,53 @@ class PositionComponentType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourceType:
     class Meta:
         name = "Source_Type"
 
-    system: Optional[str] = field(
-        default=None,
+    system: str = field(
         metadata={
             "name": "System",
             "type": "Element",
-            "required": True,
         },
     )
-    creator: Optional[str] = field(
-        default=None,
+    creator: str = field(
         metadata={
             "name": "Creator",
             "type": "Element",
-            "required": True,
         },
     )
-    creator_version: Optional[str] = field(
-        default=None,
+    creator_version: str = field(
         metadata={
             "name": "Creator_Version",
             "type": "Element",
-            "required": True,
         },
     )
-    creation_date: Optional[str] = field(
-        default=None,
-        metadata={"name": "Creation_Date", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    creation_date: str = field(
+        metadata={"name": "Creation_Date", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ValidityPeriodType:
     class Meta:
         name = "Validity_Period_Type"
 
-    validity_start: Optional[str] = field(
-        default=None,
-        metadata={"name": "Validity_Start", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    validity_start: str = field(
+        metadata={"name": "Validity_Start", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
-    validity_stop: Optional[str] = field(
-        default=None,
-        metadata={"name": "Validity_Stop", "type": "Element", "required": True, "length": 23, "pattern": r"UTC=.*"},
+    validity_stop: str = field(
+        metadata={"name": "Validity_Stop", "type": "Element", "length": 23, "pattern": r"UTC=.*"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class VelocityComponentType:
     class Meta:
         name = "Velocity_Component_Type"
 
-    value: Optional[Decimal] = field(
-        default=None,
-        metadata={
-            "required": True,
-        },
-    )
+    value: Decimal = field()
     unit: str = field(
         init=False,
         default="m/s",
@@ -127,178 +109,128 @@ class VelocityComponentType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FixedHeaderType:
     class Meta:
         name = "Fixed_Header_Type"
 
-    file_name: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "File_Name",
-            "type": "Element",
-            "required": True,
-            "pattern": r"(bio_aux_orb____.+)|(bio_.+_orb)",
-        },
+    file_name: str = field(
+        metadata={"name": "File_Name", "type": "Element", "pattern": r"(bio_aux_orb____.+)|(bio_.+_orb)"}
     )
-    file_description: Optional[str] = field(
-        default=None,
+    file_description: str = field(
         metadata={
             "name": "File_Description",
             "type": "Element",
-            "required": True,
         },
     )
-    notes: Optional[str] = field(
-        default=None,
+    notes: str = field(
         metadata={
             "name": "Notes",
             "type": "Element",
-            "required": True,
         },
     )
-    mission: Optional[str] = field(
-        default=None, metadata={"name": "Mission", "type": "Element", "required": True, "pattern": r"BIOMASS"}
-    )
-    file_class: Optional[str] = field(
-        default=None, metadata={"name": "File_Class", "type": "Element", "required": True, "pattern": r"OPER"}
-    )
-    file_type: Optional[str] = field(
-        default=None, metadata={"name": "File_Type", "type": "Element", "required": True, "pattern": r"AUX_ORB___"}
-    )
-    validity_period: Optional[ValidityPeriodType] = field(
-        default=None,
+    mission: str = field(metadata={"name": "Mission", "type": "Element", "pattern": r"BIOMASS"})
+    file_class: str = field(metadata={"name": "File_Class", "type": "Element", "pattern": r"OPER"})
+    file_type: str = field(metadata={"name": "File_Type", "type": "Element", "pattern": r"AUX_ORB___"})
+    validity_period: ValidityPeriodType = field(
         metadata={
             "name": "Validity_Period",
             "type": "Element",
-            "required": True,
         },
     )
-    file_version: Optional[str] = field(
-        default=None, metadata={"name": "File_Version", "type": "Element", "required": True, "pattern": r"[0-9]{4}"}
-    )
-    eoffs_version: Optional[str] = field(
-        default=None,
+    file_version: str = field(metadata={"name": "File_Version", "type": "Element", "pattern": r"[0-9]{4}"})
+    eoffs_version: str = field(
         metadata={
             "name": "EOFFS_Version",
             "type": "Element",
-            "required": True,
         },
     )
-    source: Optional[SourceType] = field(
-        default=None,
+    source: SourceType = field(
         metadata={
             "name": "Source",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OsvType:
     class Meta:
         name = "OSV_Type"
 
-    tai: Optional[str] = field(
-        default=None, metadata={"name": "TAI", "type": "Element", "required": True, "pattern": r"TAI=.*"}
-    )
-    utc: Optional[str] = field(
-        default=None, metadata={"name": "UTC", "type": "Element", "required": True, "pattern": r"UTC=.*"}
-    )
-    ut1: Optional[str] = field(
-        default=None, metadata={"name": "UT1", "type": "Element", "required": True, "pattern": r"UT1=.*"}
-    )
-    absolute_orbit: Optional[int] = field(
-        default=None,
+    tai: str = field(metadata={"name": "TAI", "type": "Element", "pattern": r"TAI=.*"})
+    utc: str = field(metadata={"name": "UTC", "type": "Element", "pattern": r"UTC=.*"})
+    ut1: str = field(metadata={"name": "UT1", "type": "Element", "pattern": r"UT1=.*"})
+    absolute_orbit: int = field(
         metadata={
             "name": "Absolute_Orbit",
             "type": "Element",
-            "required": True,
         },
     )
-    x: Optional[PositionComponentType] = field(
-        default=None,
+    x: PositionComponentType = field(
         metadata={
             "name": "X",
             "type": "Element",
-            "required": True,
         },
     )
-    y: Optional[PositionComponentType] = field(
-        default=None,
+    y: PositionComponentType = field(
         metadata={
             "name": "Y",
             "type": "Element",
-            "required": True,
         },
     )
-    z: Optional[PositionComponentType] = field(
-        default=None,
+    z: PositionComponentType = field(
         metadata={
             "name": "Z",
             "type": "Element",
-            "required": True,
         },
     )
-    vx: Optional[VelocityComponentType] = field(
-        default=None,
+    vx: VelocityComponentType = field(
         metadata={
             "name": "VX",
             "type": "Element",
-            "required": True,
         },
     )
-    vy: Optional[VelocityComponentType] = field(
-        default=None,
+    vy: VelocityComponentType = field(
         metadata={
             "name": "VY",
             "type": "Element",
-            "required": True,
         },
     )
-    vz: Optional[VelocityComponentType] = field(
-        default=None,
+    vz: VelocityComponentType = field(
         metadata={
             "name": "VZ",
             "type": "Element",
-            "required": True,
         },
     )
-    quality: Optional[str] = field(
-        default=None,
+    quality: str = field(
         metadata={
             "name": "Quality",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OrbitFileVariableHeader:
     class Meta:
         name = "Orbit_File_Variable_Header"
 
-    ref_frame: Optional[OrbitFileVariableHeaderRefFrame] = field(
-        default=None,
+    ref_frame: OrbitFileVariableHeaderRefFrame = field(
         metadata={
             "name": "Ref_Frame",
             "type": "Element",
-            "required": True,
         },
     )
-    time_reference: Optional[OrbitFileVariableHeaderTimeReference] = field(
-        default=None,
+    time_reference: OrbitFileVariableHeaderTimeReference = field(
         metadata={
             "name": "Time_Reference",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ListOfOsvsType:
     class Meta:
         name = "List_of_OSVs_Type"
@@ -311,37 +243,31 @@ class ListOfOsvsType:
             "min_occurs": 1,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RestitutedOrbitHeaderType:
     class Meta:
         name = "Restituted_Orbit_Header_Type"
 
-    fixed_header: Optional[FixedHeaderType] = field(
-        default=None,
+    fixed_header: FixedHeaderType = field(
         metadata={
             "name": "Fixed_Header",
             "type": "Element",
-            "required": True,
         },
     )
-    variable_header: Optional[OrbitFileVariableHeader] = field(
-        default=None,
+    variable_header: OrbitFileVariableHeader = field(
         metadata={
             "name": "Variable_Header",
             "type": "Element",
-            "required": True,
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -350,17 +276,15 @@ class RestitutedOrbitHeaderType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RestitutedOrbitDataBlockType:
     class Meta:
         name = "Restituted_Orbit_Data_Block_Type"
 
-    list_of_osvs: Optional[ListOfOsvsType] = field(
-        default=None,
+    list_of_osvs: ListOfOsvsType = field(
         metadata={
             "name": "List_of_OSVs",
             "type": "Element",
-            "required": True,
         },
     )
     type_value: str = field(
@@ -372,7 +296,7 @@ class RestitutedOrbitDataBlockType:
             "required": True,
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -381,28 +305,24 @@ class RestitutedOrbitDataBlockType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RestitutedOrbitFileType:
     class Meta:
         name = "Restituted_Orbit_File_Type"
 
-    earth_observation_header: Optional[RestitutedOrbitHeaderType] = field(
-        default=None,
+    earth_observation_header: RestitutedOrbitHeaderType = field(
         metadata={
             "name": "Earth_Observation_Header",
             "type": "Element",
-            "required": True,
         },
     )
-    data_block: Optional[RestitutedOrbitDataBlockType] = field(
-        default=None,
+    data_block: RestitutedOrbitDataBlockType = field(
         metadata={
             "name": "Data_Block",
             "type": "Element",
-            "required": True,
         },
     )
-    schema_version: Optional[Decimal] = field(
+    schema_version: None | Decimal = field(
         default=None,
         metadata={
             "name": "schemaVersion",
@@ -411,7 +331,7 @@ class RestitutedOrbitFileType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EarthObservationFile(RestitutedOrbitFileType):
     class Meta:
         name = "Earth_Observation_File"

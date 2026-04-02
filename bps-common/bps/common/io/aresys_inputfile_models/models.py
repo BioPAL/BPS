@@ -10,9 +10,10 @@ XSD BPS Input file models
 -------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class DemXyzproductChannelsType(Enum):
@@ -20,70 +21,56 @@ class DemXyzproductChannelsType(Enum):
     XYZ_ONLY = "XYZ_ONLY"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InputBiomassAntennaPattern2Dtype:
     class Meta:
         name = "InputBiomassAntennaPattern2DType"
 
-    input_antenna_pattern_d1_hproduct: Optional[str] = field(
-        default=None,
+    input_antenna_pattern_d1_hproduct: str = field(
         metadata={
             "name": "InputAntennaPatternD1HProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_antenna_pattern_d2_hproduct: Optional[str] = field(
-        default=None,
+    input_antenna_pattern_d2_hproduct: str = field(
         metadata={
             "name": "InputAntennaPatternD2HProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_antenna_pattern_d1_vproduct: Optional[str] = field(
-        default=None,
+    input_antenna_pattern_d1_vproduct: str = field(
         metadata={
             "name": "InputAntennaPatternD1VProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_antenna_pattern_d2_vproduct: Optional[str] = field(
-        default=None,
+    input_antenna_pattern_d2_vproduct: str = field(
         metadata={
             "name": "InputAntennaPatternD2VProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_txpower_tracking_product: Optional[str] = field(
-        default=None,
+    input_txpower_tracking_product: str = field(
         metadata={
             "name": "InputTXPowerTrackingProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OneWayAntennaPatternType:
-    tx: Optional[str] = field(
-        default=None,
+    tx: str = field(
         metadata={
             "name": "TX",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    rx: Optional[str] = field(
-        default=None,
+    rx: str = field(
         metadata={
             "name": "RX",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
@@ -91,7 +78,7 @@ class OutputSspheadersFileTypeFormat(Enum):
     CSV = "CSV"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorAzimuthTimeIntervalType:
     """
     Parameters
@@ -105,25 +92,21 @@ class PfselectorAzimuthTimeIntervalType:
     class Meta:
         name = "PFSelectorAzimuthTimeIntervalType"
 
-    absolute_start_time: Optional[str] = field(
-        default=None,
+    absolute_start_time: str = field(
         metadata={
             "name": "AbsoluteStartTime",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    duration: Optional[float] = field(
-        default=None,
+    duration: float = field(
         metadata={
             "name": "Duration",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorIndexIntervalType:
     """
     Parameters
@@ -137,25 +120,21 @@ class PfselectorIndexIntervalType:
     class Meta:
         name = "PFSelectorIndexIntervalType"
 
-    start_index: Optional[int] = field(
-        default=None,
+    start_index: int = field(
         metadata={
             "name": "StartIndex",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    length: Optional[int] = field(
-        default=None,
+    length: int = field(
         metadata={
             "name": "Length",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorRangeTimeIntervalType:
     """
     Parameters
@@ -169,36 +148,30 @@ class PfselectorRangeTimeIntervalType:
     class Meta:
         name = "PFSelectorRangeTimeIntervalType"
 
-    absolute_start_time: Optional[float] = field(
-        default=None,
+    absolute_start_time: float = field(
         metadata={
             "name": "AbsoluteStartTime",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    duration: Optional[float] = field(
-        default=None,
+    duration: float = field(
         metadata={
             "name": "Duration",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorSwathNameType:
     class Meta:
         name = "PFSelectorSwathNameType"
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "name": "Name",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
 
 
@@ -209,17 +182,16 @@ class PolarizationBaseType(Enum):
     VV = "VV"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SarfoctwoWayPatternsType:
     class Meta:
         name = "SARFOCTwoWayPatternsType"
 
-    azimuth_antenna_product: Optional[str] = field(
+    azimuth_antenna_product: None | str = field(
         default=None,
         metadata={
             "name": "AzimuthAntennaProduct",
             "type": "Element",
-            "required": True,
         },
     )
     azimuth_elementary_antenna_product: list[str] = field(
@@ -235,12 +207,12 @@ class SarfoctwoWayPatternsType:
         metadata={
             "name": "ElevationAntennaProduct",
             "type": "Element",
-            "max_occurs": 3,
+            "max_occurs": 2,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TiePointType:
     """
     Parameters
@@ -256,7 +228,6 @@ class TiePointType:
         metadata={
             "name": "Longitude",
             "type": "Element",
-            "required": True,
         },
     )
     latitude: float = field(
@@ -264,38 +235,28 @@ class TiePointType:
         metadata={
             "name": "Latitude",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TimeOfInterestType:
-    start: Optional["TimeOfInterestType.Start"] = field(
-        default=None,
+    start: TimeOfInterestType.Start = field(
         metadata={
             "name": "Start",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    stop: Optional["TimeOfInterestType.Stop"] = field(
-        default=None,
+    stop: TimeOfInterestType.Stop = field(
         metadata={
             "name": "Stop",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Start:
-        value: str = field(
-            default="",
-            metadata={
-                "required": True,
-            },
-        )
+        value: str = field(default="")
         unit: str = field(
             init=False,
             default="Utc",
@@ -306,14 +267,9 @@ class TimeOfInterestType:
             },
         )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Stop:
-        value: str = field(
-            default="",
-            metadata={
-                "required": True,
-            },
-        )
+        value: str = field(default="")
         unit: str = field(
             init=False,
             default="Utc",
@@ -325,60 +281,56 @@ class TimeOfInterestType:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GenericCoregistratorInputType:
-    master_level1_product: Optional[str] = field(
-        default=None,
+    master_level1_product: str = field(
         metadata={
             "name": "MasterLevel1Product",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    slave_level1_product: Optional[str] = field(
-        default=None,
+    slave_level1_product: str = field(
         metadata={
             "name": "SlaveLevel1Product",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    dem_xyzproduct: Optional[str] = field(
+    dem_xyzproduct: None | str = field(
         default=None,
         metadata={
             "name": "DemXYZProduct",
             "type": "Element",
         },
     )
-    config_file_name: Optional[str] = field(
+    config_file_name: None | str = field(
         default=None,
         metadata={
             "name": "ConfigFileName",
             "type": "Element",
         },
     )
-    output_path: Optional[str] = field(
+    output_path: None | str = field(
         default=None,
         metadata={
             "name": "OutputPath",
             "type": "Element",
         },
     )
-    dem_xyzproduct_channels: Optional[DemXyzproductChannelsType] = field(
+    dem_xyzproduct_channels: None | DemXyzproductChannelsType = field(
         default=None,
         metadata={
             "name": "DemXYZProductChannels",
             "type": "Element",
         },
     )
-    external_shifts_az: Optional[str] = field(
+    external_shifts_az: None | str = field(
         default=None,
         metadata={
             "name": "ExternalShiftsAz",
             "type": "Element",
         },
     )
-    external_shifts_rg: Optional[str] = field(
+    external_shifts_rg: None | str = field(
         default=None,
         metadata={
             "name": "ExternalShiftsRg",
@@ -387,28 +339,21 @@ class GenericCoregistratorInputType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OutputSspheadersFileType:
     class Meta:
         name = "OutputSSPHeadersFileType"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    format: Optional[OutputSspheadersFileTypeFormat] = field(
-        default=None,
+    value: str = field(default="")
+    format: OutputSspheadersFileTypeFormat = field(
         metadata={
             "name": "Format",
             "type": "Attribute",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorPolarizationsType:
     class Meta:
         name = "PFSelectorPolarizationsType"
@@ -424,7 +369,7 @@ class PfselectorPolarizationsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorRasterCoordinatesSwathType(PfselectorSwathNameType):
     """
     Parameters
@@ -438,27 +383,23 @@ class PfselectorRasterCoordinatesSwathType(PfselectorSwathNameType):
     class Meta:
         name = "PFSelectorRasterCoordinatesSwathType"
 
-    line_interval: Optional[PfselectorIndexIntervalType] = field(
+    line_interval: None | PfselectorIndexIntervalType = field(
         default=None,
         metadata={
             "name": "LineInterval",
             "type": "Element",
-            "required": True,
         },
     )
-    sample_interval: list[PfselectorIndexIntervalType] = field(
-        default_factory=list,
+    sample_interval: None | PfselectorIndexIntervalType = field(
+        default=None,
         metadata={
             "name": "SampleInterval",
             "type": "Element",
-            "min_occurs": 1,
-            "max_occurs": 2,
-            "sequence": 1,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorSwathNamesType:
     class Meta:
         name = "PFSelectorSwathNamesType"
@@ -473,7 +414,7 @@ class PfselectorSwathNamesType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorSwathsBurstsSwathType(PfselectorSwathNameType):
     """
     Parameters
@@ -485,7 +426,7 @@ class PfselectorSwathsBurstsSwathType(PfselectorSwathNameType):
     class Meta:
         name = "PFSelectorSwathsBurstsSwathType"
 
-    burst_interval: Optional[PfselectorIndexIntervalType] = field(
+    burst_interval: None | PfselectorIndexIntervalType = field(
         default=None,
         metadata={
             "name": "BurstInterval",
@@ -494,17 +435,16 @@ class PfselectorSwathsBurstsSwathType(PfselectorSwathNameType):
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SarfoconeWayPatternsType:
     class Meta:
         name = "SARFOCOneWayPatternsType"
 
-    azimuth_antenna_product: Optional[OneWayAntennaPatternType] = field(
+    azimuth_antenna_product: None | OneWayAntennaPatternType = field(
         default=None,
         metadata={
             "name": "AzimuthAntennaProduct",
             "type": "Element",
-            "required": True,
         },
     )
     azimuth_elementary_antenna_product: list[OneWayAntennaPatternType] = field(
@@ -520,200 +460,178 @@ class SarfoconeWayPatternsType:
         metadata={
             "name": "ElevationAntennaProduct",
             "type": "Element",
-            "max_occurs": 3,
+            "max_occurs": 2,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BpsstackProcessorInputType:
     class Meta:
         name = "BPSStackProcessorInputType"
 
-    coregistration: Optional[GenericCoregistratorInputType] = field(
-        default=None,
+    coregistration: GenericCoregistratorInputType = field(
         metadata={
             "name": "Coregistration",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    bpsconfiguration_file: Optional[str] = field(
-        default=None,
+    bpsconfiguration_file: str = field(
         metadata={
             "name": "BPSConfigurationFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    bpslog_file: Optional[str] = field(
-        default=None,
+    bpslog_file: str = field(
         metadata={
             "name": "BPSLogFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiomassL0ImportPreProcType:
-    input_l0_sproduct: Optional[str] = field(
-        default=None,
+    input_l0_sproduct: str = field(
         metadata={
             "name": "InputL0SProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_l0_mproduct: Optional[str] = field(
+    input_l0_mproduct: None | str = field(
         default=None,
         metadata={
             "name": "InputL0MProduct",
             "type": "Element",
         },
     )
-    input_aux_orb_file: Optional[str] = field(
-        default=None,
+    input_aux_orb_file: str = field(
         metadata={
             "name": "InputAuxOrbFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_aux_att_file: Optional[str] = field(
-        default=None,
+    input_aux_att_file: str = field(
         metadata={
             "name": "InputAuxAttFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_aux_ins_file: Optional[str] = field(
-        default=None,
+    input_aux_ins_file: str = field(
         metadata={
             "name": "InputAuxInsFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_iersbullettin_file: Optional[str] = field(
+    input_iersbullettin_file: None | str = field(
         default=None,
         metadata={
             "name": "InputIERSBullettinFile",
             "type": "Element",
         },
     )
-    time_of_interest: Optional[TimeOfInterestType] = field(
+    time_of_interest: None | TimeOfInterestType = field(
         default=None,
         metadata={
             "name": "TimeOfInterest",
             "type": "Element",
         },
     )
-    configuration_file: Optional[str] = field(
-        default=None,
+    configuration_file: str = field(
         metadata={
             "name": "ConfigurationFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    bpsconfiguration_file: Optional[str] = field(
-        default=None,
+    bpsconfiguration_file: str = field(
         metadata={
             "name": "BPSConfigurationFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    bpslog_file: Optional[str] = field(
-        default=None,
+    bpslog_file: str = field(
         metadata={
             "name": "BPSLogFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    intermediate_dyn_cal_product: Optional[str] = field(
+    intermediate_dyn_cal_product: None | str = field(
         default=None,
         metadata={
             "name": "IntermediateDynCalProduct",
             "type": "Element",
         },
     )
-    intermediate_pgpproduct: Optional[str] = field(
+    intermediate_pgpproduct: None | str = field(
         default=None,
         metadata={
             "name": "IntermediatePGPProduct",
             "type": "Element",
         },
     )
-    intermediate_channel_delays_file: Optional[str] = field(
+    intermediate_channel_delays_file: None | str = field(
         default=None,
         metadata={
             "name": "IntermediateChannelDelaysFile",
             "type": "Element",
         },
     )
-    output_channel_delays_file: Optional[str] = field(
+    output_channel_delays_file: None | str = field(
         default=None,
         metadata={
             "name": "OutputChannelDelaysFile",
             "type": "Element",
         },
     )
-    output_raw_data_product: Optional[str] = field(
-        default=None,
+    output_raw_data_product: str = field(
         metadata={
             "name": "OutputRawDataProduct",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    output_tx_power_tracking_product: Optional[str] = field(
+    output_tx_power_tracking_product: None | str = field(
         default=None,
         metadata={
             "name": "OutputTxPowerTrackingProduct",
             "type": "Element",
         },
     )
-    output_chirp_replica_product: Optional[str] = field(
+    output_chirp_replica_product: None | str = field(
         default=None,
         metadata={
             "name": "OutputChirpReplicaProduct",
             "type": "Element",
         },
     )
-    output_per_line_correction_factors_product: Optional[str] = field(
+    output_per_line_correction_factors_product: None | str = field(
         default=None,
         metadata={
             "name": "OutputPerLineCorrectionFactorsProduct",
             "type": "Element",
         },
     )
-    output_est_noise_product: Optional[str] = field(
+    output_est_noise_product: None | str = field(
         default=None,
         metadata={
             "name": "OutputEstNoiseProduct",
             "type": "Element",
         },
     )
-    output_channel_imbalance_file: Optional[str] = field(
+    output_channel_imbalance_file: None | str = field(
         default=None,
         metadata={
             "name": "OutputChannelImbalanceFile",
             "type": "Element",
         },
     )
-    output_sspheaders_file: Optional[OutputSspheadersFileType] = field(
+    output_sspheaders_file: None | OutputSspheadersFileType = field(
         default=None,
         metadata={
             "name": "OutputSSPHeadersFile",
             "type": "Element",
         },
     )
-    output_report_file: Optional[str] = field(
+    output_report_file: None | str = field(
         default=None,
         metadata={
             "name": "OutputReportFile",
@@ -722,7 +640,7 @@ class BiomassL0ImportPreProcType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorGeographicCoordinatesType:
     """
     Parameters
@@ -735,7 +653,7 @@ class PfselectorGeographicCoordinatesType:
     class Meta:
         name = "PFSelectorGeographicCoordinatesType"
 
-    swaths: Optional[PfselectorSwathNamesType] = field(
+    swaths: None | PfselectorSwathNamesType = field(
         default=None,
         metadata={
             "name": "Swaths",
@@ -752,7 +670,7 @@ class PfselectorGeographicCoordinatesType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorRasterCoordinatesType:
     class Meta:
         name = "PFSelectorRasterCoordinatesType"
@@ -767,7 +685,7 @@ class PfselectorRasterCoordinatesType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorSwathsBurstsType:
     class Meta:
         name = "PFSelectorSwathsBurstsType"
@@ -782,7 +700,7 @@ class PfselectorSwathsBurstsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorTimeCoordinatesType:
     """
     Parameters
@@ -798,46 +716,42 @@ class PfselectorTimeCoordinatesType:
     class Meta:
         name = "PFSelectorTimeCoordinatesType"
 
-    swaths: Optional[PfselectorSwathNamesType] = field(
+    swaths: None | PfselectorSwathNamesType = field(
         default=None,
         metadata={
             "name": "Swaths",
             "type": "Element",
         },
     )
-    azimuth_time_interval: Optional[PfselectorAzimuthTimeIntervalType] = field(
+    azimuth_time_interval: None | PfselectorAzimuthTimeIntervalType = field(
         default=None,
         metadata={
             "name": "AzimuthTimeInterval",
             "type": "Element",
-            "required": True,
         },
     )
-    range_time_interval: list[PfselectorRangeTimeIntervalType] = field(
-        default_factory=list,
+    range_time_interval: None | PfselectorRangeTimeIntervalType = field(
+        default=None,
         metadata={
             "name": "RangeTimeInterval",
             "type": "Element",
-            "min_occurs": 1,
-            "max_occurs": 2,
-            "sequence": 1,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SarfocinputPatternsType:
     class Meta:
         name = "SARFOCInputPatternsType"
 
-    two_way: Optional[SarfoctwoWayPatternsType] = field(
+    two_way: None | SarfoctwoWayPatternsType = field(
         default=None,
         metadata={
             "name": "TwoWay",
             "type": "Element",
         },
     )
-    one_way: Optional[SarfoconeWayPatternsType] = field(
+    one_way: None | SarfoconeWayPatternsType = field(
         default=None,
         metadata={
             "name": "OneWay",
@@ -846,7 +760,7 @@ class SarfocinputPatternsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PfselectorAreaType:
     """
     Parameters
@@ -864,28 +778,28 @@ class PfselectorAreaType:
     class Meta:
         name = "PFSelectorAreaType"
 
-    swaths_bursts: Optional[PfselectorSwathsBurstsType] = field(
+    swaths_bursts: None | PfselectorSwathsBurstsType = field(
         default=None,
         metadata={
             "name": "SwathsBursts",
             "type": "Element",
         },
     )
-    raster_coordinates: Optional[PfselectorRasterCoordinatesType] = field(
+    raster_coordinates: None | PfselectorRasterCoordinatesType = field(
         default=None,
         metadata={
             "name": "RasterCoordinates",
             "type": "Element",
         },
     )
-    geographic_coordinates: Optional[PfselectorGeographicCoordinatesType] = field(
+    geographic_coordinates: None | PfselectorGeographicCoordinatesType = field(
         default=None,
         metadata={
             "name": "GeographicCoordinates",
             "type": "Element",
         },
     )
-    time_coordinates: Optional[PfselectorTimeCoordinatesType] = field(
+    time_coordinates: None | PfselectorTimeCoordinatesType = field(
         default=None,
         metadata={
             "name": "TimeCoordinates",
@@ -894,102 +808,94 @@ class PfselectorAreaType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Sarfocinput:
     class Meta:
         name = "SARFOCInput"
 
-    input_level0_product: Optional[str] = field(
-        default=None,
+    input_level0_product: str = field(
         metadata={
             "name": "InputLevel0Product",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_antenna_patterns: Optional[SarfocinputPatternsType] = field(
+    input_antenna_patterns: None | SarfocinputPatternsType = field(
         default=None,
         metadata={
             "name": "InputAntennaPatterns",
             "type": "Element",
         },
     )
-    input_chirp_replica_product: Optional[str] = field(
+    input_chirp_replica_product: None | str = field(
         default=None,
         metadata={
             "name": "InputChirpReplicaProduct",
             "type": "Element",
         },
     )
-    input_per_line_dechirping_reference_times_product: Optional[str] = field(
+    input_per_line_dechirping_reference_times_product: None | str = field(
         default=None,
         metadata={
             "name": "InputPerLineDechirpingReferenceTimesProduct",
             "type": "Element",
         },
     )
-    input_per_line_correction_factors_product: Optional[str] = field(
+    input_per_line_correction_factors_product: None | str = field(
         default=None,
         metadata={
             "name": "InputPerLineCorrectionFactorsProduct",
             "type": "Element",
         },
     )
-    input_noise_product: Optional[str] = field(
+    input_noise_product: None | str = field(
         default=None,
         metadata={
             "name": "InputNoiseProduct",
             "type": "Element",
         },
     )
-    input_processing_dcpoly_file_name: Optional[str] = field(
+    input_processing_dcpoly_file_name: None | str = field(
         default=None,
         metadata={
             "name": "InputProcessingDCPolyFileName",
             "type": "Element",
         },
     )
-    processing_options_file: Optional[str] = field(
-        default=None,
+    processing_options_file: str = field(
         metadata={
             "name": "ProcessingOptionsFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    processing_parameters_file: Optional[str] = field(
-        default=None,
+    processing_parameters_file: str = field(
         metadata={
             "name": "ProcessingParametersFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    polarization_to_process: Optional[PfselectorPolarizationsType] = field(
+    polarization_to_process: None | PfselectorPolarizationsType = field(
         default=None,
         metadata={
             "name": "PolarizationToProcess",
             "type": "Element",
         },
     )
-    area_to_process: Optional[PfselectorAreaType] = field(
+    area_to_process: None | PfselectorAreaType = field(
         default=None,
         metadata={
             "name": "AreaToProcess",
             "type": "Element",
         },
     )
-    output_path: Optional[str] = field(
-        default=None,
+    output_path: str = field(
         metadata={
             "name": "OutputPath",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Bpsl1CoreProcessorInputType:
     """
     Parameters
@@ -1010,77 +916,71 @@ class Bpsl1CoreProcessorInputType:
     class Meta:
         name = "BPSL1CoreProcessorInputType"
 
-    core_processor: Optional[Sarfocinput] = field(
-        default=None,
+    core_processor: Sarfocinput = field(
         metadata={
             "name": "CoreProcessor",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    input_biomass_antenna_pattern2_d: Optional[InputBiomassAntennaPattern2Dtype] = field(
+    input_biomass_antenna_pattern2_d: None | InputBiomassAntennaPattern2Dtype = field(
         default=None,
         metadata={
             "name": "InputBiomassAntennaPattern2D",
             "type": "Element",
         },
     )
-    input_geomagnetic_field_model_product: Optional[str] = field(
+    input_geomagnetic_field_model_product: None | str = field(
         default=None,
         metadata={
             "name": "InputGeomagneticFieldModelProduct",
             "type": "Element",
         },
     )
-    input_tec_map_product: Optional[str] = field(
+    input_tec_map_product: None | str = field(
         default=None,
         metadata={
             "name": "InputTecMapProduct",
             "type": "Element",
         },
     )
-    input_climatological_model_file: Optional[str] = field(
+    input_climatological_model_file: None | str = field(
         default=None,
         metadata={
             "name": "InputClimatologicalModelFile",
             "type": "Element",
         },
     )
-    input_faraday_rotation_product: Optional[str] = field(
+    input_faraday_rotation_product: None | str = field(
         default=None,
         metadata={
             "name": "InputFaradayRotationProduct",
             "type": "Element",
         },
     )
-    input_phase_screen_product: Optional[str] = field(
+    input_phase_screen_product: None | str = field(
         default=None,
         metadata={
             "name": "InputPhaseScreenProduct",
             "type": "Element",
         },
     )
-    bpsconfiguration_file: Optional[str] = field(
-        default=None,
+    bpsconfiguration_file: str = field(
         metadata={
             "name": "BPSConfigurationFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
-    bpslog_file: Optional[str] = field(
-        default=None,
+    bpslog_file: str = field(
         metadata={
             "name": "BPSLogFile",
             "type": "Element",
-            "required": True,
-        },
+        }
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AresysXmlInputType:
-    step: list["AresysXmlInputType.Step"] = field(
+    step: list[AresysXmlInputType.Step] = field(
         default_factory=list,
         metadata={
             "name": "Step",
@@ -1088,61 +988,57 @@ class AresysXmlInputType:
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Step:
-        sarfoc: Optional[Sarfocinput] = field(
+        sarfoc: None | Sarfocinput = field(
             default=None,
             metadata={
                 "name": "SARFOC",
                 "type": "Element",
             },
         )
-        bpsl1_core_processor: Optional[Bpsl1CoreProcessorInputType] = field(
+        bpsl1_core_processor: None | Bpsl1CoreProcessorInputType = field(
             default=None,
             metadata={
                 "name": "BPSL1CoreProcessor",
                 "type": "Element",
             },
         )
-        bpsstack_processor: Optional[BpsstackProcessorInputType] = field(
+        bpsstack_processor: None | BpsstackProcessorInputType = field(
             default=None,
             metadata={
                 "name": "BPSStackProcessor",
                 "type": "Element",
             },
         )
-        generic_coregistrator_input: Optional[GenericCoregistratorInputType] = field(
+        generic_coregistrator_input: None | GenericCoregistratorInputType = field(
             default=None,
             metadata={
                 "name": "GenericCoregistratorInput",
                 "type": "Element",
             },
         )
-        biomass_l0_import_pre_proc: Optional[BiomassL0ImportPreProcType] = field(
+        biomass_l0_import_pre_proc: None | BiomassL0ImportPreProcType = field(
             default=None,
             metadata={
                 "name": "BiomassL0ImportPreProc",
                 "type": "Element",
             },
         )
-        number: Optional[int] = field(
-            default=None,
+        number: int = field(
             metadata={
                 "name": "Number",
                 "type": "Attribute",
-                "required": True,
-            },
+            }
         )
-        total: Optional[int] = field(
-            default=None,
+        total: int = field(
             metadata={
                 "name": "Total",
                 "type": "Attribute",
-                "required": True,
-            },
+            }
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AresysXmlInput(AresysXmlInputType):
     pass

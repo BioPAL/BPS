@@ -388,7 +388,7 @@ def run_stack_processor(
     )
 
     # Removing the pre-processor intermediates output, unless requested by user.
-    if not keep_intermediates:
+    if not (aux_pps.multi_squint_calibration.multi_squint_calibration_flag or keep_intermediates):
         bps_logger.info("Removing pre-processor's intermediate outputs")
         remove_intermediate_outputs(stack_pre_proc_brk_dir=stack_pre_proc_brk_folder)
 

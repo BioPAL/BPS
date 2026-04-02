@@ -282,14 +282,13 @@ def build_sparse_uniform_filter_matrix(
     if indices.size == 1:
         indices = np.arange(0, input_size, subsampling_step)
 
-    half_window_size = floor(uniform_filter_window_size / 2)
+    half_window_size = floor(np.squeeze(uniform_filter_window_size / 2))
 
     # Just a quick lambda to retrieve the normalization value, in order to avoid
     # checking cases all the times, we define them with the same signature.
     if border_type == ConvolutionBorderType.CONSTANT:
 
         def normalization(*args):
-            # pylint: disable=unused-argument
             return 1 / uniform_filter_window_size
 
     elif border_type == ConvolutionBorderType.ISOLATED:

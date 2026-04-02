@@ -10,9 +10,10 @@ XSD PP2 2B AGB models
 ---------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -65,7 +66,7 @@ class AgbIndexingType(Enum):
     PJK = "pjk"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2BAb:
     """
     Parameters
@@ -78,74 +79,60 @@ class CompressionOptionsL2BAb:
     class Meta:
         name = "compressionOptionsL2bAB"
 
-    mds: Optional["CompressionOptionsL2BAb.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2BAb.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        agb: Optional["CompressionOptionsL2BAb.Mds.Agb"] = field(
-            default=None,
+        agb: CompressionOptionsL2BAb.Mds.Agb = field(
             metadata={
                 "name": "AGB",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        agbstandard_deviation: Optional["CompressionOptionsL2BAb.Mds.AgbstandardDeviation"] = field(
-            default=None,
+        agbstandard_deviation: CompressionOptionsL2BAb.Mds.AgbstandardDeviation = field(
             metadata={
                 "name": "AGBstandardDeviation",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        bps_fnf: Optional["CompressionOptionsL2BAb.Mds.BpsFnf"] = field(
-            default=None,
+        bps_fnf: CompressionOptionsL2BAb.Mds.BpsFnf = field(
             metadata={
                 "name": "BPS_FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        heat_map: Optional["CompressionOptionsL2BAb.Mds.HeatMap"] = field(
-            default=None,
+        heat_map: CompressionOptionsL2BAb.Mds.HeatMap = field(
             metadata={
                 "name": "HeatMap",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        acquisition_id_image: Optional["CompressionOptionsL2BAb.Mds.AcquisitionIdImage"] = field(
-            default=None,
+        acquisition_id_image: CompressionOptionsL2BAb.Mds.AcquisitionIdImage = field(
             metadata={
                 "name": "acquisitionIdImage",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Agb:
             """
             Parameters
@@ -157,26 +144,22 @@ class CompressionOptionsL2BAb:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class AgbstandardDeviation:
             """
             Parameters
@@ -188,26 +171,22 @@ class CompressionOptionsL2BAb:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class BpsFnf:
             """
             Parameters
@@ -216,17 +195,15 @@ class CompressionOptionsL2BAb:
                 ZSTD algorithm compression factor for the BPS FNF image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class HeatMap:
             """
             Parameters
@@ -238,26 +215,22 @@ class CompressionOptionsL2BAb:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class AcquisitionIdImage:
             """
             Parameters
@@ -266,13 +239,11 @@ class CompressionOptionsL2BAb:
                 ZSTD algorithm compression factor. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
@@ -283,38 +254,32 @@ class ReferenceSelectionType(Enum):
     WEIGHTED_MEAN = "weightedMean"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BackscatterLimitsType:
     class Meta:
         name = "backscatterLimitsType"
 
-    hh: Optional[MinMaxType] = field(
-        default=None,
+    hh: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vh: Optional[MinMaxType] = field(
-        default=None,
+    vh: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    vv: Optional[MinMaxType] = field(
-        default=None,
+    vv: MinMaxType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2BAbprocessingParametersType:
     """
     Parameters
@@ -363,173 +328,127 @@ class AuxiliaryL2BAbprocessingParametersType:
     class Meta:
         name = "auxiliaryL2bABProcessingParametersType"
 
-    l2b_agbproduct_doi: Optional[str] = field(
-        default=None,
+    l2b_agbproduct_doi: str = field(
         metadata={
             "name": "l2bAGBProductDOI",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    minimum_l2a_coverage: Optional[float] = field(
-        default=None,
+    minimum_l2a_coverage: float = field(
         metadata={
             "name": "minimumL2aCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    forest_masking_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "forestMaskingFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    forest_masking_flag: str = field(
+        metadata={"name": "forestMaskingFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    rejected_landcover_classes: Optional[IntArray] = field(
-        default=None,
+    rejected_landcover_classes: IntArray = field(
         metadata={
             "name": "rejectedLandcoverClasses",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    backscatter_limits: Optional[BackscatterLimitsType] = field(
-        default=None,
+    backscatter_limits: BackscatterLimitsType = field(
         metadata={
             "name": "backscatterLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    angle_limits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    angle_limits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "angleLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mean_agblimits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    mean_agblimits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "meanAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    std_agblimits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    std_agblimits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "stdAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    relative_agblimits: Optional[MinMaxType] = field(
-        default=None,
+    relative_agblimits: MinMaxType = field(
         metadata={
             "name": "relativeAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_selection: Optional[ReferenceSelectionType] = field(
-        default=None,
+    reference_selection: ReferenceSelectionType = field(
         metadata={
             "name": "referenceSelection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_l: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_l: AgbIndexingType = field(
         metadata={
             "name": "indexingL",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_a: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_a: AgbIndexingType = field(
         metadata={
             "name": "indexingA",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_n: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_n: AgbIndexingType = field(
         metadata={
             "name": "indexingN",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    use_constant_n: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "useConstantN",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    use_constant_n: str = field(
+        metadata={"name": "useConstantN", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    values_constant_n: Optional[FloatArray] = field(
-        default=None,
+    values_constant_n: FloatArray = field(
         metadata={
             "name": "valuesConstantN",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    regression_solver: Optional[str] = field(
-        default=None,
+    regression_solver: str = field(
         metadata={
             "name": "regressionSolver",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    minimum_percentage_of_fillable_voids: Optional[float] = field(
-        default=None,
+    minimum_percentage_of_fillable_voids: float = field(
         metadata={
             "name": "minimumPercentageOfFillableVoids",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2BAb] = field(
-        default=None,
+    compression_options: CompressionOptionsL2BAb = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryL2BAbprocessingParameters(AuxiliaryL2BAbprocessingParametersType):
     """
     BIOMASS configuration parameters for the L2b AGB Processor.

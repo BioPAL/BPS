@@ -10,9 +10,10 @@ XSD processing parameters annotation models L2 AGB
 --------------------------------------------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AzimuthPolynomialType,
@@ -94,7 +95,7 @@ from bps.transcoder.io.common_annotation_models_l2 import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2A:
     """
     Parameters
@@ -110,56 +111,46 @@ class CompressionOptionsL2A:
     class Meta:
         name = "compressionOptionsL2a"
 
-    mds: Optional["CompressionOptionsL2A.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2A.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads: Optional["CompressionOptionsL2A.Ads"] = field(
-        default=None,
+    ads: CompressionOptionsL2A.Ads = field(
         metadata={
             "name": "ADS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    ads_block_size: Optional[int] = field(
-        default=None,
+    ads_block_size: int = field(
         metadata={
             "name": "ADS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        gn: Optional["CompressionOptionsL2A.Mds.Gn"] = field(
-            default=None,
+        gn: CompressionOptionsL2A.Mds.Gn = field(
             metadata={
                 "name": "GN",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Gn:
             """
             Parameters
@@ -171,47 +162,39 @@ class CompressionOptionsL2A:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Ads:
-        fnf: Optional["CompressionOptionsL2A.Ads.Fnf"] = field(
-            default=None,
+        fnf: CompressionOptionsL2A.Ads.Fnf = field(
             metadata={
                 "name": "FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        local_incidence_angle: Optional["CompressionOptionsL2A.Ads.LocalIncidenceAngle"] = field(
-            default=None,
+        local_incidence_angle: CompressionOptionsL2A.Ads.LocalIncidenceAngle = field(
             metadata={
                 "name": "localIncidenceAngle",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Fnf:
             """
             Parameters
@@ -220,17 +203,15 @@ class CompressionOptionsL2A:
                 ZLIB algorithm compression factor. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class LocalIncidenceAngle:
             """
             Parameters
@@ -243,26 +224,22 @@ class CompressionOptionsL2A:
                 compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            least_significant_digit: Optional[int] = field(
-                default=None,
+            least_significant_digit: int = field(
                 metadata={
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CompressionOptionsL2B:
     """
     Parameters
@@ -275,74 +252,60 @@ class CompressionOptionsL2B:
     class Meta:
         name = "compressionOptionsL2b"
 
-    mds: Optional["CompressionOptionsL2B.Mds"] = field(
-        default=None,
+    mds: CompressionOptionsL2B.Mds = field(
         metadata={
             "name": "MDS",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mds_block_size: Optional[int] = field(
-        default=None,
+    mds_block_size: int = field(
         metadata={
             "name": "MDS_blockSize",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Mds:
-        agb: Optional["CompressionOptionsL2B.Mds.Agb"] = field(
-            default=None,
+        agb: CompressionOptionsL2B.Mds.Agb = field(
             metadata={
                 "name": "AGB",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        agbstandard_deviation: Optional["CompressionOptionsL2B.Mds.AgbstandardDeviation"] = field(
-            default=None,
+        agbstandard_deviation: CompressionOptionsL2B.Mds.AgbstandardDeviation = field(
             metadata={
                 "name": "AGBstandardDeviation",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        bps_fnf: Optional["CompressionOptionsL2B.Mds.BpsFnf"] = field(
-            default=None,
+        bps_fnf: CompressionOptionsL2B.Mds.BpsFnf = field(
             metadata={
                 "name": "BPS_FNF",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        heat_map: Optional["CompressionOptionsL2B.Mds.HeatMap"] = field(
-            default=None,
+        heat_map: CompressionOptionsL2B.Mds.HeatMap = field(
             metadata={
                 "name": "HeatMap",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
-        acquisition_id_image: Optional["CompressionOptionsL2B.Mds.AcquisitionIdImage"] = field(
-            default=None,
+        acquisition_id_image: CompressionOptionsL2B.Mds.AcquisitionIdImage = field(
             metadata={
                 "name": "acquisitionIdImage",
                 "type": "Element",
                 "namespace": "",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Agb:
             """
             Parameters
@@ -354,26 +317,22 @@ class CompressionOptionsL2B:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class AgbstandardDeviation:
             """
             Parameters
@@ -385,26 +344,22 @@ class CompressionOptionsL2B:
                 maximum error admitted. Zero means loss-less compression.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            max_z_error: Optional[float] = field(
-                default=None,
+            max_z_error: float = field(
                 metadata={
                     "name": "MAX_Z_ERROR",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class BpsFnf:
             """
             Parameters
@@ -413,17 +368,15 @@ class CompressionOptionsL2B:
                 ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class HeatMap:
             """
             Parameters
@@ -432,17 +385,15 @@ class CompressionOptionsL2B:
                 ZSTD algorithm compression factor for the images MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class AcquisitionIdImage:
             """
             Parameters
@@ -451,13 +402,11 @@ class CompressionOptionsL2B:
                 ZSTD algorithm compression factor for the image MDS. From 1 to 9.
             """
 
-            compression_factor: Optional[int] = field(
-                default=None,
+            compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
 
@@ -475,12 +424,12 @@ class ReferenceSelectionType(Enum):
     WEIGHTED_MEAN = "weightedMean"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EstimatedParametersPolarisationType:
     class Meta:
         name = "estimatedParametersPolarisationType"
 
-    lcm: list["EstimatedParametersPolarisationType.Lcm"] = field(
+    lcm: list[EstimatedParametersPolarisationType.Lcm] = field(
         default_factory=list,
         metadata={
             "name": "LCM",
@@ -489,17 +438,15 @@ class EstimatedParametersPolarisationType:
             "min_occurs": 1,
         },
     )
-    polarisations: Optional[EstimatedParametersPolarisationTypePolarisations] = field(
-        default=None,
+    polarisations: EstimatedParametersPolarisationTypePolarisations = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class Lcm:
-        date: list["EstimatedParametersPolarisationType.Lcm.Date"] = field(
+        date: list[EstimatedParametersPolarisationType.Lcm.Date] = field(
             default_factory=list,
             metadata={
                 "type": "Element",
@@ -507,110 +454,88 @@ class EstimatedParametersPolarisationType:
                 "min_occurs": 1,
             },
         )
-        classes: Optional[str] = field(
-            default=None,
+        classes: str = field(
             metadata={
                 "type": "Attribute",
-                "required": True,
             },
         )
 
-        @dataclass
+        @dataclass(kw_only=True)
         class Date:
-            n: Optional["EstimatedParametersPolarisationType.Lcm.Date.N"] = field(
-                default=None,
+            n: EstimatedParametersPolarisationType.Lcm.Date.N = field(
                 metadata={
                     "name": "N",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            a: Optional["EstimatedParametersPolarisationType.Lcm.Date.A"] = field(
-                default=None,
+            a: EstimatedParametersPolarisationType.Lcm.Date.A = field(
                 metadata={
                     "name": "A",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            l: Optional["EstimatedParametersPolarisationType.Lcm.Date.L"] = field(
-                default=None,
+            l: EstimatedParametersPolarisationType.Lcm.Date.L = field(
                 metadata={
                     "name": "L",
                     "type": "Element",
                     "namespace": "",
-                    "required": True,
                 },
             )
-            dates: Optional[str] = field(
-                default=None,
+            dates: str = field(
                 metadata={
                     "type": "Attribute",
-                    "required": True,
                 },
             )
 
-            @dataclass
+            @dataclass(kw_only=True)
             class N:
-                mean: Optional[float] = field(
-                    default=None,
+                mean: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
-                std: Optional[float] = field(
-                    default=None,
+                std: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
 
-            @dataclass
+            @dataclass(kw_only=True)
             class A:
-                mean: Optional[float] = field(
-                    default=None,
+                mean: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
-                std: Optional[float] = field(
-                    default=None,
+                std: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
 
-            @dataclass
+            @dataclass(kw_only=True)
             class L:
-                mean: Optional[float] = field(
-                    default=None,
+                mean: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
-                std: Optional[float] = field(
-                    default=None,
+                std: float = field(
                     metadata={
                         "type": "Element",
                         "namespace": "",
-                        "required": True,
                     },
                 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EstimatedParametersL2BAgb:
     """
     Parameters
@@ -625,12 +550,10 @@ class EstimatedParametersL2BAgb:
     class Meta:
         name = "estimatedParametersL2bAGB"
 
-    rho: Optional[float] = field(
-        default=None,
+    rho: float = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
     polarisation: list[EstimatedParametersPolarisationType] = field(
@@ -639,7 +562,7 @@ class EstimatedParametersL2BAgb:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessingParametersL2BType:
     """
     Parameters
@@ -693,201 +616,149 @@ class ProcessingParametersL2BType:
     class Meta:
         name = "processingParametersL2bType"
 
-    processor_version: Optional[str] = field(
-        default=None,
+    processor_version: str = field(
         metadata={
             "name": "processorVersion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_generation_time: Optional[str] = field(
-        default=None,
+    product_generation_time: str = field(
         metadata={
             "name": "productGenerationTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    forest_masking_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "forestMaskingFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    forest_masking_flag: str = field(
+        metadata={"name": "forestMaskingFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    minimum_l2a_coverage: Optional[float] = field(
-        default=None,
+    minimum_l2a_coverage: float = field(
         metadata={
             "name": "minimumL2aCoverage",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rejected_landcover_classes: Optional[IntArray] = field(
-        default=None,
+    rejected_landcover_classes: IntArray = field(
         metadata={
             "name": "rejectedLandcoverClasses",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    backscatter_limits: Optional[BackscatterLimitsType] = field(
-        default=None,
+    backscatter_limits: BackscatterLimitsType = field(
         metadata={
             "name": "backscatterLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    angle_limits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    angle_limits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "angleLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    mean_agblimits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    mean_agblimits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "meanAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    std_agblimits: Optional[MinMaxTypeWithUnit] = field(
-        default=None,
+    std_agblimits: MinMaxTypeWithUnit = field(
         metadata={
             "name": "stdAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    relative_agblimits: Optional[MinMaxType] = field(
-        default=None,
+    relative_agblimits: MinMaxType = field(
         metadata={
             "name": "relativeAGBLimits",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_selection: Optional[ReferenceSelectionType] = field(
-        default=None,
+    reference_selection: ReferenceSelectionType = field(
         metadata={
             "name": "referenceSelection",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_l: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_l: AgbIndexingType = field(
         metadata={
             "name": "indexingL",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_a: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_a: AgbIndexingType = field(
         metadata={
             "name": "indexingA",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    indexing_n: Optional[AgbIndexingType] = field(
-        default=None,
+    indexing_n: AgbIndexingType = field(
         metadata={
             "name": "indexingN",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    use_constant_n: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "useConstantN",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    use_constant_n: str = field(
+        metadata={"name": "useConstantN", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    values_constant_n: Optional[FloatArray] = field(
-        default=None,
+    values_constant_n: FloatArray = field(
         metadata={
             "name": "valuesConstantN",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    regression_solver: Optional[str] = field(
-        default=None,
+    regression_solver: str = field(
         metadata={
             "name": "regressionSolver",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    regression_matrix_subsampling_factor: Optional[int] = field(
-        default=None,
+    regression_matrix_subsampling_factor: int = field(
         metadata={
             "name": "regressionMatrixSubsamplingFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    minimum_percentage_of_fillable_voids: Optional[float] = field(
-        default=None,
+    minimum_percentage_of_fillable_voids: float = field(
         metadata={
             "name": "minimumPercentageOfFillableVoids",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    estimated_parameters: Optional[EstimatedParametersL2BAgb] = field(
-        default=None,
+    estimated_parameters: EstimatedParametersL2BAgb = field(
         metadata={
             "name": "estimatedParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2B] = field(
-        default=None,
+    compression_options: CompressionOptionsL2B = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProcessingParametersL2AType:
     """
     Parameters
@@ -929,73 +800,54 @@ class ProcessingParametersL2AType:
     class Meta:
         name = "processingParametersL2aType"
 
-    processor_version: Optional[str] = field(
-        default=None,
+    processor_version: str = field(
         metadata={
             "name": "processorVersion",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    product_generation_time: Optional[str] = field(
-        default=None,
+    product_generation_time: str = field(
         metadata={
             "name": "productGenerationTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
-        },
+        }
     )
-    general_configuration_parameters: Optional[GeneralConfigurationParametersType] = field(
-        default=None,
+    general_configuration_parameters: GeneralConfigurationParametersType = field(
         metadata={
             "name": "generalConfigurationParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    emphasized_forest_height: Optional[FloatWithUnit] = field(
-        default=None,
+    emphasized_forest_height: FloatWithUnit = field(
         metadata={
             "name": "emphasizedForestHeight",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    operational_mode: Optional[OperationalModeType] = field(
-        default=None,
+    operational_mode: OperationalModeType = field(
         metadata={
             "name": "operationalMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compute_gnpower_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "computeGNPowerFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    compute_gnpower_flag: str = field(
+        metadata={"name": "computeGNPowerFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    radiometric_calibration_flag: Optional[str] = field(
-        default=None,
+    radiometric_calibration_flag: str = field(
         metadata={
             "name": "radiometricCalibrationFlag",
             "type": "Element",
             "namespace": "",
-            "required": True,
             "pattern": r"(false)|(true)",
-        },
+        }
     )
-    images_pair_selection: Optional[AcquisitionListType] = field(
+    images_pair_selection: None | AcquisitionListType = field(
         default=None,
         metadata={
             "name": "imagesPairSelection",
@@ -1003,7 +855,7 @@ class ProcessingParametersL2AType:
             "namespace": "",
         },
     )
-    disable_ground_cancellation_flag: Optional[str] = field(
+    disable_ground_cancellation_flag: None | str = field(
         default=None,
         metadata={
             "name": "disableGroundCancellationFlag",
@@ -1012,30 +864,24 @@ class ProcessingParametersL2AType:
             "pattern": r"(false)|(true)",
         },
     )
-    product_resolution: Optional[FloatWithUnit] = field(
-        default=None,
+    product_resolution: FloatWithUnit = field(
         metadata={
             "name": "productResolution",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    upsampling_factor: Optional[int] = field(
-        default=None,
+    upsampling_factor: int = field(
         metadata={
             "name": "upsamplingFactor",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    compression_options: Optional[CompressionOptionsL2A] = field(
-        default=None,
+    compression_options: CompressionOptionsL2A = field(
         metadata={
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )

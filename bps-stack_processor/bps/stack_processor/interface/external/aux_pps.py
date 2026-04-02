@@ -226,7 +226,9 @@ class SkpPhaseCalibrationConf:
     calibration_phase_postprocessing: str
     postprocessing_filter_window_size: float  # [m].
     goldstein_filter_window_size: int  # [px].
+    goldstein_filter_alpha: float  # [0-1].
     exclude_mpmb_polarization_cross_covariance_flag: bool
+    cross_pol_merging_flag: bool
     use_32bit_flag: bool
 
 

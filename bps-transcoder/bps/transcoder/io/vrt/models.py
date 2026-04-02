@@ -10,26 +10,25 @@ XSD VRT models
 --------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Union
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AlgorithmOptionsType:
     any_element: list[object] = field(
         default_factory=list, metadata={"type": "Wildcard", "namespace": "##any", "process_contents": "skip"}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttributeType:
-    data_type: Optional[str] = field(
-        default=None,
+    data_type: str = field(
         metadata={
             "name": "DataType",
             "type": "Element",
-            "required": True,
         },
     )
     value: list[str] = field(
@@ -39,16 +38,14 @@ class AttributeType:
             "type": "Element",
         },
     )
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CategoryNamesType:
     category: list[str] = field(
         default_factory=list,
@@ -79,30 +76,24 @@ class ColorInterpType(Enum):
     UNDEFINED = "Undefined"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ColorTableEntryType:
-    c1: Optional[int] = field(
-        default=None,
+    c1: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    c2: Optional[int] = field(
-        default=None,
+    c2: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    c3: Optional[int] = field(
-        default=None,
+    c3: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    c4: Optional[int] = field(
+    c4: None | int = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -110,21 +101,16 @@ class ColorTableEntryType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ConstantValueType:
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    offset: Optional[str] = field(
+    value: str = field(default="")
+    offset: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    count: Optional[str] = field(
+    count: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -148,9 +134,9 @@ class DataTypeType(Enum):
     CFLOAT64 = "CFloat64"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DestSlabType:
-    offset: Optional[str] = field(
+    offset: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -158,47 +144,41 @@ class DestSlabType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DimensionRefType:
-    ref: Optional[str] = field(
-        default=None,
+    ref: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DimensionType:
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    type_value: Optional[str] = field(
+    type_value: None | str = field(
         default=None,
         metadata={
             "name": "type",
             "type": "Attribute",
         },
     )
-    direction: Optional[str] = field(
+    direction: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    size: Optional[int] = field(
-        default=None,
+    size: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    indexing_variable: Optional[str] = field(
+    indexing_variable: None | str = field(
         default=None,
         metadata={
             "name": "indexingVariable",
@@ -207,100 +187,84 @@ class DimensionType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FieldDefnType:
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "name": "Name",
             "type": "Element",
-            "required": True,
         },
     )
-    type_value: Optional[int] = field(
-        default=None,
+    type_value: int = field(
         metadata={
             "name": "Type",
             "type": "Element",
-            "required": True,
         },
     )
-    usage: Optional[int] = field(
-        default=None,
+    usage: int = field(
         metadata={
             "name": "Usage",
             "type": "Element",
-            "required": True,
         },
     )
-    index: Optional[int] = field(
-        default=None,
+    index: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Gcptype:
     class Meta:
         name = "GCPType"
 
-    id: Optional[str] = field(
+    id: None | str = field(
         default=None,
         metadata={
             "name": "Id",
             "type": "Attribute",
         },
     )
-    info: Optional[str] = field(
+    info: None | str = field(
         default=None,
         metadata={
             "name": "Info",
             "type": "Attribute",
         },
     )
-    pixel: Optional[float] = field(
-        default=None,
+    pixel: float = field(
         metadata={
             "name": "Pixel",
             "type": "Attribute",
-            "required": True,
         },
     )
-    line: Optional[float] = field(
-        default=None,
+    line: float = field(
         metadata={
             "name": "Line",
             "type": "Attribute",
-            "required": True,
         },
     )
-    x: Optional[float] = field(
-        default=None,
+    x: float = field(
         metadata={
             "name": "X",
             "type": "Attribute",
-            "required": True,
         },
     )
-    y: Optional[float] = field(
-        default=None,
+    y: float = field(
         metadata={
             "name": "Y",
             "type": "Attribute",
-            "required": True,
         },
     )
-    z: Optional[float] = field(
+    z: None | float = field(
         default=None,
         metadata={
             "name": "Z",
             "type": "Attribute",
         },
     )
-    gcpz: Optional[float] = field(
+    gcpz: None | float = field(
         default=None,
         metadata={
             "name": "GCPZ",
@@ -309,7 +273,7 @@ class Gcptype:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GdalwarpOptionsType:
     class Meta:
         name = "GDALWarpOptionsType"
@@ -319,21 +283,16 @@ class GdalwarpOptionsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InlineValuesType:
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    offset: Optional[str] = field(
+    value: str = field(default="")
+    offset: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    count: Optional[str] = field(
+    count: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -341,7 +300,7 @@ class InlineValuesType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InlineValuesWithValueElementType:
     value: list[str] = field(
         default_factory=list,
@@ -351,13 +310,13 @@ class InlineValuesWithValueElementType:
             "min_occurs": 1,
         },
     )
-    offset: Optional[str] = field(
+    offset: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    count: Optional[str] = field(
+    count: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -365,38 +324,31 @@ class InlineValuesWithValueElementType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Mditype:
     class Meta:
         name = "MDIType"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    key: Optional[str] = field(
-        default=None,
+    value: str = field(default="")
+    key: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MetadataType:
     any_element: list[object] = field(
         default_factory=list, metadata={"type": "Wildcard", "namespace": "##any", "process_contents": "skip"}
     )
-    domain: Optional[str] = field(
+    domain: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    format: Optional[str] = field(
+    format: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -428,30 +380,23 @@ class OgrbooleanType(Enum):
     FALSE_2 = "False"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Ooitype:
     class Meta:
         name = "OOIType"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    key: Optional[str] = field(
-        default=None,
+    value: str = field(default="")
+    key: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OverviewListType:
     value: list[int] = field(default_factory=list, metadata={"tokens": True})
-    resampling: Optional[str] = field(
+    resampling: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -459,45 +404,41 @@ class OverviewListType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RectType:
-    x_off: Optional[float] = field(
+    x_off: None | float = field(
         default=None,
         metadata={
             "name": "xOff",
             "type": "Attribute",
         },
     )
-    y_off: Optional[float] = field(
+    y_off: None | float = field(
         default=None,
         metadata={
             "name": "yOff",
             "type": "Attribute",
         },
     )
-    x_size: Optional[float] = field(default=None, metadata={"name": "xSize", "type": "Attribute", "min_exclusive": 0.0})
-    y_size: Optional[float] = field(default=None, metadata={"name": "ySize", "type": "Attribute", "min_exclusive": 0.0})
+    x_size: None | float = field(default=None, metadata={"name": "xSize", "type": "Attribute", "min_exclusive": 0.0})
+    y_size: None | float = field(default=None, metadata={"name": "ySize", "type": "Attribute", "min_exclusive": 0.0})
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RegularlySpacedValuesType:
-    start: Optional[float] = field(
-        default=None,
+    start: float = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
-    increment: Optional[float] = field(
-        default=None,
+    increment: float = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RowType:
     f: list[object] = field(
         default_factory=list,
@@ -506,34 +447,27 @@ class RowType:
             "type": "Element",
         },
     )
-    index: Optional[int] = field(
-        default=None,
+    index: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Srstype:
     class Meta:
         name = "SRSType"
 
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    data_axis_to_srsaxis_mapping: Optional[str] = field(
+    value: str = field(default="")
+    data_axis_to_srsaxis_mapping: None | str = field(
         default=None,
         metadata={
             "name": "dataAxisToSRSAxisMapping",
             "type": "Attribute",
         },
     )
-    coordinate_epoch: Optional[float] = field(
+    coordinate_epoch: None | float = field(
         default=None,
         metadata={
             "name": "coordinateEpoch",
@@ -542,21 +476,21 @@ class Srstype:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourceSlabType:
-    offset: Optional[str] = field(
+    offset: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    count: Optional[str] = field(
+    count: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    step: Optional[str] = field(
+    step: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -576,7 +510,7 @@ class ZeroOrOne(Enum):
     VALUE_1 = 1
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ColorTableType:
     entry: list[ColorTableEntryType] = field(
         default_factory=list,
@@ -587,7 +521,7 @@ class ColorTableType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GcplistType:
     class Meta:
         name = "GCPListType"
@@ -599,14 +533,14 @@ class GcplistType:
             "type": "Element",
         },
     )
-    projection: Optional[str] = field(
+    projection: None | str = field(
         default=None,
         metadata={
             "name": "Projection",
             "type": "Attribute",
         },
     )
-    data_axis_to_srsaxis_mapping: Optional[str] = field(
+    data_axis_to_srsaxis_mapping: None | str = field(
         default=None,
         metadata={
             "name": "dataAxisToSRSAxisMapping",
@@ -615,7 +549,7 @@ class GcplistType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GdalrasterAttributeTableType:
     class Meta:
         name = "GDALRasterAttributeTableType"
@@ -636,7 +570,7 @@ class GdalrasterAttributeTableType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class HistItemType:
     hist_min: list[float] = field(
         default_factory=list,
@@ -682,25 +616,21 @@ class HistItemType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KernelType:
-    size: Optional[int] = field(
-        default=None,
+    size: int = field(
         metadata={
             "name": "Size",
             "type": "Element",
-            "required": True,
         },
     )
-    coefs: Optional[str] = field(
-        default=None,
+    coefs: str = field(
         metadata={
             "name": "Coefs",
             "type": "Element",
-            "required": True,
         },
     )
-    normalized: Optional[ZeroOrOne] = field(
+    normalized: None | ZeroOrOne = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -708,7 +638,7 @@ class KernelType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OpenOptionsType:
     ooi: list[Ooitype] = field(
         default_factory=list,
@@ -719,29 +649,24 @@ class OpenOptionsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourceFilenameType:
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
-    relative_to_vrt: Optional[ZeroOrOne] = field(
+    value: str = field(default="")
+    relative_to_vrt: None | ZeroOrOne = field(
         default=None,
         metadata={
             "name": "relativeToVRT",
             "type": "Attribute",
         },
     )
-    relativeto_vrt_attribute: Optional[ZeroOrOne] = field(
+    relativeto_vrt_attribute: None | ZeroOrOne = field(
         default=None,
         metadata={
             "name": "relativetoVRT",
             "type": "Attribute",
         },
     )
-    shared: Optional[OgrbooleanType] = field(
+    shared: None | OgrbooleanType = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -749,30 +674,30 @@ class SourceFilenameType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourcePropertiesType:
-    raster_xsize: Optional[int] = field(
+    raster_xsize: None | int = field(
         default=None, metadata={"name": "RasterXSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    raster_ysize: Optional[int] = field(
+    raster_ysize: None | int = field(
         default=None, metadata={"name": "RasterYSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    data_type: Optional[DataTypeType] = field(
+    data_type: None | DataTypeType = field(
         default=None,
         metadata={
             "name": "DataType",
             "type": "Attribute",
         },
     )
-    block_xsize: Optional[int] = field(
+    block_xsize: None | int = field(
         default=None, metadata={"name": "BlockXSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    block_ysize: Optional[int] = field(
+    block_ysize: None | int = field(
         default=None, metadata={"name": "BlockYSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ComplexSourceType:
     source_filename: list[SourceFilenameType] = field(
         default_factory=list,
@@ -872,7 +797,7 @@ class ComplexSourceType:
             "type": "Element",
         },
     )
-    nodata: list[Union[float, Nantype]] = field(
+    nodata: list[float | Nantype] = field(
         default_factory=list,
         metadata={
             "name": "NODATA",
@@ -893,7 +818,7 @@ class ComplexSourceType:
             "type": "Element",
         },
     )
-    resampling: Optional[str] = field(
+    resampling: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -901,7 +826,7 @@ class ComplexSourceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class HistogramsType:
     hist_item: list[HistItemType] = field(
         default_factory=list,
@@ -912,7 +837,7 @@ class HistogramsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KernelFilteredSourceType:
     source_filename: list[SourceFilenameType] = field(
         default_factory=list,
@@ -1012,7 +937,7 @@ class KernelFilteredSourceType:
             "type": "Element",
         },
     )
-    nodata: list[Union[float, Nantype]] = field(
+    nodata: list[float | Nantype] = field(
         default_factory=list,
         metadata={
             "name": "NODATA",
@@ -1040,7 +965,7 @@ class KernelFilteredSourceType:
             "type": "Element",
         },
     )
-    resampling: Optional[str] = field(
+    resampling: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -1048,7 +973,7 @@ class KernelFilteredSourceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OverviewType:
     source_filename: list[SourceFilenameType] = field(
         default_factory=list,
@@ -1066,27 +991,23 @@ class OverviewType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PanchroBandType:
-    source_filename: Optional[SourceFilenameType] = field(
-        default=None,
+    source_filename: SourceFilenameType = field(
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-            "required": True,
         },
     )
-    source_band: Optional[str] = field(
-        default=None,
+    source_band: str = field(
         metadata={
             "name": "SourceBand",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SimpleSourceType:
     source_filename: list[SourceFilenameType] = field(
         default_factory=list,
@@ -1130,7 +1051,7 @@ class SimpleSourceType:
             "type": "Element",
         },
     )
-    resampling: Optional[str] = field(
+    resampling: None | str = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -1138,52 +1059,50 @@ class SimpleSourceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SourceType:
-    source_filename: Optional[SourceFilenameType] = field(
-        default=None,
+    source_filename: SourceFilenameType = field(
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-            "required": True,
         },
     )
-    source_array: Optional[str] = field(
+    source_array: None | str = field(
         default=None,
         metadata={
             "name": "SourceArray",
             "type": "Element",
         },
     )
-    source_band: Optional[str] = field(
+    source_band: None | str = field(
         default=None,
         metadata={
             "name": "SourceBand",
             "type": "Element",
         },
     )
-    source_transpose: Optional[str] = field(
+    source_transpose: None | str = field(
         default=None,
         metadata={
             "name": "SourceTranspose",
             "type": "Element",
         },
     )
-    source_view: Optional[str] = field(
+    source_view: None | str = field(
         default=None,
         metadata={
             "name": "SourceView",
             "type": "Element",
         },
     )
-    source_slab: Optional[SourceSlabType] = field(
+    source_slab: None | SourceSlabType = field(
         default=None,
         metadata={
             "name": "SourceSlab",
             "type": "Element",
         },
     )
-    dest_slab: Optional[DestSlabType] = field(
+    dest_slab: None | DestSlabType = field(
         default=None,
         metadata={
             "name": "DestSlab",
@@ -1192,25 +1111,21 @@ class SourceType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SpectralBandType:
-    source_filename: Optional[SourceFilenameType] = field(
-        default=None,
+    source_filename: SourceFilenameType = field(
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-            "required": True,
         },
     )
-    source_band: Optional[str] = field(
-        default=None,
+    source_band: str = field(
         metadata={
             "name": "SourceBand",
             "type": "Element",
-            "required": True,
         },
     )
-    dst_band: Optional[int] = field(
+    dst_band: None | int = field(
         default=None,
         metadata={
             "name": "dstBand",
@@ -1219,14 +1134,12 @@ class SpectralBandType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ArrayType:
-    data_type: Optional[str] = field(
-        default=None,
+    data_type: str = field(
         metadata={
             "name": "DataType",
             "type": "Element",
-            "required": True,
         },
     )
     dimension: list[DimensionType] = field(
@@ -1243,42 +1156,42 @@ class ArrayType:
             "type": "Element",
         },
     )
-    srs: Optional[Srstype] = field(
+    srs: None | Srstype = field(
         default=None,
         metadata={
             "name": "SRS",
             "type": "Element",
         },
     )
-    unit: Optional[str] = field(
+    unit: None | str = field(
         default=None,
         metadata={
             "name": "Unit",
             "type": "Element",
         },
     )
-    no_data_value: Optional[Union[float, Nantype]] = field(
+    no_data_value: None | float | Nantype = field(
         default=None,
         metadata={
             "name": "NoDataValue",
             "type": "Element",
         },
     )
-    offset: Optional[float] = field(
+    offset: None | float = field(
         default=None,
         metadata={
             "name": "Offset",
             "type": "Element",
         },
     )
-    scale: Optional[float] = field(
+    scale: None | float = field(
         default=None,
         metadata={
             "name": "Scale",
             "type": "Element",
         },
     )
-    regularly_spaced_values: Optional[RegularlySpacedValuesType] = field(
+    regularly_spaced_values: None | RegularlySpacedValuesType = field(
         default=None,
         metadata={
             "name": "RegularlySpacedValues",
@@ -1320,72 +1233,68 @@ class ArrayType:
             "type": "Element",
         },
     )
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PansharpeningOptionsType:
-    algorithm: Optional[str] = field(
+    algorithm: None | str = field(
         default=None,
         metadata={
             "name": "Algorithm",
             "type": "Element",
         },
     )
-    algorithm_options: Optional[AlgorithmOptionsType] = field(
+    algorithm_options: None | AlgorithmOptionsType = field(
         default=None,
         metadata={
             "name": "AlgorithmOptions",
             "type": "Element",
         },
     )
-    resampling: Optional[str] = field(
+    resampling: None | str = field(
         default=None,
         metadata={
             "name": "Resampling",
             "type": "Element",
         },
     )
-    num_threads: Optional[str] = field(
+    num_threads: None | str = field(
         default=None,
         metadata={
             "name": "NumThreads",
             "type": "Element",
         },
     )
-    bit_depth: Optional[str] = field(
+    bit_depth: None | str = field(
         default=None,
         metadata={
             "name": "BitDepth",
             "type": "Element",
         },
     )
-    no_data: Optional[Union[float, str]] = field(
+    no_data: None | float | str = field(
         default=None,
         metadata={
             "name": "NoData",
             "type": "Element",
         },
     )
-    spatial_extent_adjustment: Optional[str] = field(
+    spatial_extent_adjustment: None | str = field(
         default=None,
         metadata={
             "name": "SpatialExtentAdjustment",
             "type": "Element",
         },
     )
-    panchro_band: Optional[PanchroBandType] = field(
-        default=None,
+    panchro_band: PanchroBandType = field(
         metadata={
             "name": "PanchroBand",
             "type": "Element",
-            "required": True,
         },
     )
     spectral_band: list[SpectralBandType] = field(
@@ -1398,7 +1307,7 @@ class PansharpeningOptionsType:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class VrtrasterBandType:
     class Meta:
         name = "VRTRasterBandType"
@@ -1452,7 +1361,7 @@ class VrtrasterBandType:
             "type": "Element",
         },
     )
-    no_data_value_element: list[Union[float, Nantype]] = field(
+    no_data_value_element: list[float | Nantype] = field(
         default_factory=list,
         metadata={
             "name": "NoDataValue",
@@ -1494,7 +1403,7 @@ class VrtrasterBandType:
             "type": "Element",
         },
     )
-    mask_band: list["MaskBandType"] = field(
+    mask_band: list[MaskBandType] = field(
         default_factory=list,
         metadata={
             "name": "MaskBand",
@@ -1564,7 +1473,7 @@ class VrtrasterBandType:
             "type": "Element",
         },
     )
-    pixel_function_arguments: list["VrtrasterBandType.PixelFunctionArguments"] = field(
+    pixel_function_arguments: list[VrtrasterBandType.PixelFunctionArguments] = field(
         default_factory=list,
         metadata={
             "name": "PixelFunctionArguments",
@@ -1613,26 +1522,26 @@ class VrtrasterBandType:
             "type": "Element",
         },
     )
-    data_type: Optional[DataTypeType] = field(
+    data_type: None | DataTypeType = field(
         default=None,
         metadata={
             "name": "dataType",
             "type": "Attribute",
         },
     )
-    band: Optional[int] = field(
+    band: None | int = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-    block_xsize: Optional[int] = field(
+    block_xsize: None | int = field(
         default=None, metadata={"name": "blockXSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    block_ysize: Optional[int] = field(
+    block_ysize: None | int = field(
         default=None, metadata={"name": "blockYSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    sub_class: Optional[VrtrasterBandSubTypeType] = field(
+    sub_class: None | VrtrasterBandSubTypeType = field(
         default=None,
         metadata={
             "name": "subClass",
@@ -1640,14 +1549,14 @@ class VrtrasterBandType:
         },
     )
 
-    @dataclass
+    @dataclass(kw_only=True)
     class PixelFunctionArguments:
         any_attributes: dict[str, str] = field(
             default_factory=dict, metadata={"type": "Attributes", "namespace": "##any"}
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GroupType:
     dimension: list[DimensionType] = field(
         default_factory=list,
@@ -1670,35 +1579,31 @@ class GroupType:
             "type": "Element",
         },
     )
-    group: list["GroupType"] = field(
+    group: list[GroupType] = field(
         default_factory=list,
         metadata={
             "name": "Group",
             "type": "Element",
         },
     )
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MaskBandType:
-    vrtraster_band: Optional[VrtrasterBandType] = field(
-        default=None,
+    vrtraster_band: VrtrasterBandType = field(
         metadata={
             "name": "VRTRasterBand",
             "type": "Element",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vrtdataset:
     class Meta:
         name = "VRTDataset"
@@ -1779,16 +1684,16 @@ class Vrtdataset:
             "type": "Element",
         },
     )
-    sub_class: Optional[str] = field(
+    sub_class: None | str = field(
         default=None,
         metadata={
             "name": "subClass",
             "type": "Attribute",
         },
     )
-    raster_xsize: Optional[int] = field(
+    raster_xsize: None | int = field(
         default=None, metadata={"name": "rasterXSize", "type": "Attribute", "max_inclusive": 2147483647}
     )
-    raster_ysize: Optional[int] = field(
+    raster_ysize: None | int = field(
         default=None, metadata={"name": "rasterYSize", "type": "Attribute", "max_inclusive": 2147483647}
     )

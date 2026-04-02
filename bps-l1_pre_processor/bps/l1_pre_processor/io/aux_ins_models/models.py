@@ -10,9 +10,10 @@ XSD INS models
 --------------
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from bps.common.io.common_types import (
     AcquisitionModeIdtype,
@@ -54,7 +55,7 @@ from bps.common.io.common_types import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttenuatorSettingType:
     """
     Parameters
@@ -66,18 +67,16 @@ class AttenuatorSettingType:
     class Meta:
         name = "Attenuator_Setting_Type"
 
-    digital: Optional[FloatArray] = field(
-        default=None,
+    digital: FloatArray = field(
         metadata={
             "name": "Digital",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IdType:
     """
     Parameters
@@ -92,49 +91,41 @@ class IdType:
     class Meta:
         name = "ID_Type"
 
-    param_id: Optional[FloatArray] = field(
-        default=None,
+    param_id: FloatArray = field(
         metadata={
             "name": "ParamID",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    weight: Optional[FloatArray] = field(
-        default=None,
+    weight: FloatArray = field(
         metadata={
             "name": "Weight",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolyType(FloatArray):
     class Meta:
         name = "Poly_Type"
 
-    value_attribute: Optional[str] = field(
-        default=None,
+    value_attribute: str = field(
         metadata={
             "name": "value",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SttSettingType:
     """
     Parameters
@@ -151,44 +142,36 @@ class SttSettingType:
     class Meta:
         name = "STT_Setting_Type"
 
-    cdn_att1: Optional[FloatArray] = field(
-        default=None,
+    cdn_att1: FloatArray = field(
         metadata={
             "name": "CDN_Att1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    cdn_att2: Optional[FloatArray] = field(
-        default=None,
+    cdn_att2: FloatArray = field(
         metadata={
             "name": "CDN_Att2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    cdn_att3: Optional[FloatArray] = field(
-        default=None,
+    cdn_att3: FloatArray = field(
         metadata={
             "name": "CDN_Att3",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    id: Optional[str] = field(
-        default=None,
+    id: str = field(
         metadata={
             "name": "ID",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IspType:
     """
     Parameters
@@ -208,46 +191,33 @@ class IspType:
     class Meta:
         name = "ispType"
 
-    signal_type: Optional[SignalType] = field(
-        default=None,
+    signal_type: SignalType = field(
         metadata={
             "name": "signalType",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pri_number: Optional[int] = field(
-        default=None,
+    pri_number: int = field(
         metadata={
             "name": "priNumber",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    repetition_number: Optional[int] = field(
-        default=None,
-        metadata={
-            "name": "repetitionNumber",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "min_inclusive": -1,
-        },
+    repetition_number: int = field(
+        metadata={"name": "repetitionNumber", "type": "Element", "namespace": "", "min_inclusive": -1}
     )
-    return_address_offset: Optional[int] = field(
-        default=None,
+    return_address_offset: int = field(
         metadata={
             "name": "returnAddressOffset",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class UnBaqluttype:
     """
     Parameters
@@ -263,36 +233,30 @@ class UnBaqluttype:
     class Meta:
         name = "unBAQLUTType"
 
-    baq_code: Optional[DataFormatModeType] = field(
-        default=None,
+    baq_code: DataFormatModeType = field(
         metadata={
             "name": "baqCode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    magnitude_code: Optional[IntArray] = field(
-        default=None,
+    magnitude_code: IntArray = field(
         metadata={
             "name": "magnitudeCode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    normalized_iq: Optional[FloatArray] = field(
-        default=None,
+    normalized_iq: FloatArray = field(
         metadata={
             "name": "normalizedIQ",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class UnBaqsmallAsmluttype:
     """
     Parameters
@@ -308,36 +272,30 @@ class UnBaqsmallAsmluttype:
     class Meta:
         name = "unBAQSmallASMLUTType"
 
-    baq_code: Optional[DataFormatModeType] = field(
-        default=None,
+    baq_code: DataFormatModeType = field(
         metadata={
             "name": "baqCode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    asm_value: Optional[IntArray] = field(
-        default=None,
+    asm_value: IntArray = field(
         metadata={
             "name": "asmValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    uncompressed_iq: Optional[FloatArray] = field(
-        default=None,
+    uncompressed_iq: FloatArray = field(
         metadata={
             "name": "uncompressedIQ",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FreqVariation2Type:
     """
     Parameters
@@ -383,43 +341,35 @@ class FreqVariation2Type:
     class Meta:
         name = "Freq_Variation_2_Type"
 
-    ref_temperature: Optional[FloatWithUnit] = field(
-        default=None,
+    ref_temperature: FloatWithUnit = field(
         metadata={
             "name": "Ref_Temperature",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    date: Optional[str] = field(
-        default=None,
+    date: str = field(
         metadata={
             "name": "Date",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_1: Optional[str] = field(
-        default=None,
+    reference_1: str = field(
         metadata={
             "name": "Reference_1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_2: Optional[str] = field(
-        default=None,
+    reference_2: str = field(
         metadata={
             "name": "Reference_2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    id1: Optional[IdType] = field(
+    id1: None | IdType = field(
         default=None,
         metadata={
             "name": "ID1",
@@ -427,7 +377,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id2: Optional[IdType] = field(
+    id2: None | IdType = field(
         default=None,
         metadata={
             "name": "ID2",
@@ -435,7 +385,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id3: Optional[IdType] = field(
+    id3: None | IdType = field(
         default=None,
         metadata={
             "name": "ID3",
@@ -443,7 +393,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id4: Optional[IdType] = field(
+    id4: None | IdType = field(
         default=None,
         metadata={
             "name": "ID4",
@@ -451,7 +401,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id5: Optional[IdType] = field(
+    id5: None | IdType = field(
         default=None,
         metadata={
             "name": "ID5",
@@ -459,7 +409,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id6: Optional[IdType] = field(
+    id6: None | IdType = field(
         default=None,
         metadata={
             "name": "ID6",
@@ -467,7 +417,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id7: Optional[IdType] = field(
+    id7: None | IdType = field(
         default=None,
         metadata={
             "name": "ID7",
@@ -475,7 +425,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id8: Optional[IdType] = field(
+    id8: None | IdType = field(
         default=None,
         metadata={
             "name": "ID8",
@@ -483,7 +433,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id9: Optional[IdType] = field(
+    id9: None | IdType = field(
         default=None,
         metadata={
             "name": "ID9",
@@ -491,7 +441,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id10: Optional[IdType] = field(
+    id10: None | IdType = field(
         default=None,
         metadata={
             "name": "ID10",
@@ -499,7 +449,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id11: Optional[IdType] = field(
+    id11: None | IdType = field(
         default=None,
         metadata={
             "name": "ID11",
@@ -507,7 +457,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id12: Optional[IdType] = field(
+    id12: None | IdType = field(
         default=None,
         metadata={
             "name": "ID12",
@@ -515,7 +465,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id13: Optional[IdType] = field(
+    id13: None | IdType = field(
         default=None,
         metadata={
             "name": "ID13",
@@ -523,7 +473,7 @@ class FreqVariation2Type:
             "namespace": "",
         },
     )
-    id14: Optional[IdType] = field(
+    id14: None | IdType = field(
         default=None,
         metadata={
             "name": "ID14",
@@ -533,7 +483,7 @@ class FreqVariation2Type:
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PolyListType:
     """
     Parameters
@@ -550,16 +500,14 @@ class PolyListType:
         default_factory=list,
         metadata={"name": "Polarisation", "type": "Element", "namespace": "", "min_occurs": 2, "max_occurs": 2},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AttenuatorsSettingsType:
     """
     Parameters
@@ -576,16 +524,14 @@ class AttenuatorsSettingsType:
         default_factory=list,
         metadata={"name": "STT_Setting", "type": "Element", "namespace": "", "min_occurs": 18, "max_occurs": 18},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IspListType:
     """
     Parameters
@@ -602,16 +548,14 @@ class IspListType:
     isp: list[IspType] = field(
         default_factory=list, metadata={"type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 100}
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ModelDriftType:
     """
     Parameters
@@ -628,27 +572,23 @@ class ModelDriftType:
     class Meta:
         name = "modelDriftType"
 
-    model_interval: Optional[FloatWithUnit] = field(
-        default=None,
+    model_interval: FloatWithUnit = field(
         metadata={
             "name": "modelInterval",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    model_values: Optional[ComplexArray] = field(
-        default=None,
+    model_values: ComplexArray = field(
         metadata={
             "name": "modelValues",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TemperatureLuttype:
     """
     Parameters
@@ -662,27 +602,23 @@ class TemperatureLuttype:
     class Meta:
         name = "temperatureLUTType"
 
-    temperature_code: Optional[IntArray] = field(
-        default=None,
+    temperature_code: IntArray = field(
         metadata={
             "name": "temperatureCode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    temperature_value: Optional[FloatArrayWithUnits] = field(
-        default=None,
+    temperature_value: FloatArrayWithUnits = field(
         metadata={
             "name": "temperatureValue",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class UnBaqlutlistType:
     """
     Parameters
@@ -699,16 +635,14 @@ class UnBaqlutlistType:
         default_factory=list,
         metadata={"name": "unBAQLUT", "type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class UnBaqsmallAsmlutlistType:
     """
     Parameters
@@ -725,16 +659,14 @@ class UnBaqsmallAsmlutlistType:
         default_factory=list,
         metadata={"name": "unBAQSmallASMLUT", "type": "Element", "namespace": "", "min_occurs": 3, "max_occurs": 3},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FreqVariationType:
     """
     Parameters
@@ -756,63 +688,51 @@ class FreqVariationType:
     class Meta:
         name = "Freq_Variation_Type"
 
-    ref_temperature: Optional[FloatWithUnit] = field(
-        default=None,
+    ref_temperature: FloatWithUnit = field(
         metadata={
             "name": "Ref_Temperature",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    date: Optional[str] = field(
-        default=None,
+    date: str = field(
         metadata={
             "name": "Date",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_1: Optional[str] = field(
-        default=None,
+    reference_1: str = field(
         metadata={
             "name": "Reference_1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_2: Optional[str] = field(
-        default=None,
+    reference_2: str = field(
         metadata={
             "name": "Reference_2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    amplitude: Optional[PolyListType] = field(
-        default=None,
+    amplitude: PolyListType = field(
         metadata={
             "name": "Amplitude",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    phase: Optional[PolyListType] = field(
-        default=None,
+    phase: PolyListType = field(
         metadata={
             "name": "Phase",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TempFreqVariation2Type:
     """
     Parameters
@@ -824,18 +744,16 @@ class TempFreqVariation2Type:
     class Meta:
         name = "Temp_Freq_Variation_2_Type"
 
-    freq_variation: Optional[FreqVariation2Type] = field(
-        default=None,
+    freq_variation: FreqVariation2Type = field(
         metadata={
             "name": "Freq_Variation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TempVariationType:
     """
     Parameters
@@ -857,63 +775,51 @@ class TempVariationType:
     class Meta:
         name = "Temp_Variation_Type"
 
-    ref_frequency: Optional[FloatWithUnit] = field(
-        default=None,
+    ref_frequency: FloatWithUnit = field(
         metadata={
             "name": "Ref_Frequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    date: Optional[str] = field(
-        default=None,
+    date: str = field(
         metadata={
             "name": "Date",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_1: Optional[str] = field(
-        default=None,
+    reference_1: str = field(
         metadata={
             "name": "Reference_1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_2: Optional[str] = field(
-        default=None,
+    reference_2: str = field(
         metadata={
             "name": "Reference_2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    amplitude: Optional[PolyListType] = field(
-        default=None,
+    amplitude: PolyListType = field(
         metadata={
             "name": "Amplitude",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    phase: Optional[PolyListType] = field(
-        default=None,
+    phase: PolyListType = field(
         metadata={
             "name": "Phase",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IntCalParametersType:
     """
     Parameters
@@ -945,80 +851,64 @@ class IntCalParametersType:
     class Meta:
         name = "intCalParametersType"
 
-    polarisation: Optional[PolarisationType] = field(
-        default=None,
+    polarisation: PolarisationType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    model_drift: Optional[ModelDriftType] = field(
-        default=None,
+    model_drift: ModelDriftType = field(
         metadata={
             "name": "modelDrift",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    reference_drift: Optional[Complex] = field(
-        default=None,
+    reference_drift: Complex = field(
         metadata={
             "name": "referenceDrift",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    internal_delay: Optional[FloatWithUnit] = field(
-        default=None,
+    internal_delay: FloatWithUnit = field(
         metadata={
             "name": "internalDelay",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tx_channel_imbalance: Optional[Complex] = field(
-        default=None,
+    tx_channel_imbalance: Complex = field(
         metadata={
             "name": "txChannelImbalance",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    rx_channel_imbalance: Optional[Complex] = field(
-        default=None,
+    rx_channel_imbalance: Complex = field(
         metadata={
             "name": "rxChannelImbalance",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tx_power_tracking: Optional[Complex] = field(
-        default=None,
+    tx_power_tracking: Complex = field(
         metadata={
             "name": "txPowerTracking",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    noise_power: Optional[FloatWithUnit] = field(
-        default=None,
+    noise_power: FloatWithUnit = field(
         metadata={
             "name": "noisePower",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RawDataDecodingParametersType:
     """
     Parameters
@@ -1035,36 +925,30 @@ class RawDataDecodingParametersType:
     class Meta:
         name = "rawDataDecodingParametersType"
 
-    un_baqlutlist: Optional[UnBaqlutlistType] = field(
-        default=None,
+    un_baqlutlist: UnBaqlutlistType = field(
         metadata={
             "name": "unBAQLUTList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    un_baqsmall_asmlutlist: Optional[UnBaqsmallAsmlutlistType] = field(
-        default=None,
+    un_baqsmall_asmlutlist: UnBaqsmallAsmlutlistType = field(
         metadata={
             "name": "unBAQSmallASMLUTList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    temperature_lut: Optional[TemperatureLuttype] = field(
-        default=None,
+    temperature_lut: TemperatureLuttype = field(
         metadata={
             "name": "temperatureLUT",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SectionType:
     """
     Parameters
@@ -1080,36 +964,25 @@ class SectionType:
     class Meta:
         name = "sectionType"
 
-    name: Optional[str] = field(
-        default=None,
+    name: str = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    repeat_flag: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "repeatFlag",
-            "type": "Element",
-            "namespace": "",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
+    repeat_flag: str = field(
+        metadata={"name": "repeatFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
-    isp_list: Optional[IspListType] = field(
-        default=None,
+    isp_list: IspListType = field(
         metadata={
             "name": "ispList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TempFreqVariationType:
     """
     Parameters
@@ -1123,27 +996,23 @@ class TempFreqVariationType:
     class Meta:
         name = "Temp_Freq_Variation_Type"
 
-    temp_variation: Optional[TempVariationType] = field(
-        default=None,
+    temp_variation: TempVariationType = field(
         metadata={
             "name": "Temp_Variation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    freq_variation: Optional[FreqVariationType] = field(
-        default=None,
+    freq_variation: FreqVariationType = field(
         metadata={
             "name": "Freq_Variation",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IntCalParametersListType:
     """
     Parameters
@@ -1160,16 +1029,14 @@ class IntCalParametersListType:
         default_factory=list,
         metadata={"name": "intCalParameters", "type": "Element", "namespace": "", "min_occurs": 4, "max_occurs": 4},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TimelineParametersType:
     """
     Parameters
@@ -1193,16 +1060,14 @@ class TimelineParametersType:
             "max_occurs": 5,
         },
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CdnRxcalType:
     """
     Parameters
@@ -1225,78 +1090,62 @@ class CdnRxcalType:
     class Meta:
         name = "CDN_RXCal_Type"
 
-    lcdn_rxcal_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_rxcal_nom: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_RXCal_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lcdn_rxcal_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_rxcal_red: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_RXCal_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    attenuator_setting: Optional[AttenuatorSettingType] = field(
-        default=None,
+    attenuator_setting: AttenuatorSettingType = field(
         metadata={
             "name": "Attenuator_Setting",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    a1: Optional[int] = field(
-        default=None,
+    a1: int = field(
         metadata={
             "name": "A1",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a2: Optional[int] = field(
-        default=None,
+    a2: int = field(
         metadata={
             "name": "A2",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a3: Optional[int] = field(
-        default=None,
+    a3: int = field(
         metadata={
             "name": "A3",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CdnShCalType:
     """
     Parameters
@@ -1319,78 +1168,62 @@ class CdnShCalType:
     class Meta:
         name = "CDN_ShCal_Type"
 
-    lcdn_sh_cal_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_sh_cal_nom: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_ShCal_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lcdn_sh_cal_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_sh_cal_red: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_ShCal_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    attenuator_setting: Optional[AttenuatorSettingType] = field(
-        default=None,
+    attenuator_setting: AttenuatorSettingType = field(
         metadata={
             "name": "Attenuator_Setting",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    a1: Optional[int] = field(
-        default=None,
+    a1: int = field(
         metadata={
             "name": "A1",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a2: Optional[int] = field(
-        default=None,
+    a2: int = field(
         metadata={
             "name": "A2",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a3: Optional[int] = field(
-        default=None,
+    a3: int = field(
         metadata={
             "name": "A3",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CdnTxcalType:
     """
     Parameters
@@ -1413,78 +1246,62 @@ class CdnTxcalType:
     class Meta:
         name = "CDN_TXCal_Type"
 
-    lcdn_txcal_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_txcal_nom: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_TXCal_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lcdn_txcal_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lcdn_txcal_red: TempFreqVariationType = field(
         metadata={
             "name": "LCDN_TXCal_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_cdn_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_cdn_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_CDN_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    attenuator_setting: Optional[AttenuatorSettingType] = field(
-        default=None,
+    attenuator_setting: AttenuatorSettingType = field(
         metadata={
             "name": "Attenuator_Setting",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    a1: Optional[int] = field(
-        default=None,
+    a1: int = field(
         metadata={
             "name": "A1",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a2: Optional[int] = field(
-        default=None,
+    a2: int = field(
         metadata={
             "name": "A2",
             "type": "Attribute",
-            "required": True,
         },
     )
-    a3: Optional[int] = field(
-        default=None,
+    a3: int = field(
         metadata={
             "name": "A3",
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasCdnCalibrationCableType:
     """
     Parameters
@@ -1502,45 +1319,37 @@ class PasCdnCalibrationCableType:
     class Meta:
         name = "PAS-CDN_Calibration_Cable_Type"
 
-    lpas_cdn_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_cdn_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_CDN_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_cdn_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_cdn_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_CDN_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasFaCablesType:
     """
     Parameters
@@ -1558,45 +1367,37 @@ class PasFaCablesType:
     class Meta:
         name = "PAS-FA_Cables_Type"
 
-    lpas_fa1: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_fa1: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_FA1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_fa2: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_fa2: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_FA2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasRxCalPathType:
     """
     Parameters
@@ -1614,45 +1415,37 @@ class PasRxCalPathType:
     class Meta:
         name = "PAS_RX_Cal_Path_Type"
 
-    lpas_rxcal_path_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rxcal_path_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RXCalPath_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_rxcal_path_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rxcal_path_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RXCalPath_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasRxCalType:
     """
     Parameters
@@ -1670,45 +1463,37 @@ class PasRxCalType:
     class Meta:
         name = "PAS_RX_Cal_Type"
 
-    lpas_rxcal_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rxcal_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RXCal_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_rxcal_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rxcal_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RXCal_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasRxPathType:
     """
     Parameters
@@ -1726,45 +1511,37 @@ class PasRxPathType:
     class Meta:
         name = "PAS_RX_Path_Type"
 
-    lpas_rx1: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rx1: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RX1",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_rx2: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_rx2: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_RX2",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PasTxCalType:
     """
     Parameters
@@ -1790,81 +1567,65 @@ class PasTxCalType:
     class Meta:
         name = "PAS_TX_Cal_Type"
 
-    lpas_txcal1_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal1_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal1_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_txcal2_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal2_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal2_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_txcal_nom: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal_nom: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal_Nom",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_txcal1_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal1_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal1_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_txcal2_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal2_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal2_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    lpas_txcal_red: Optional[TempFreqVariationType] = field(
-        default=None,
+    lpas_txcal_red: TempFreqVariationType = field(
         metadata={
             "name": "LPAS_TXCal_Red",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_a: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_a: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_A",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    thermistor_dcu_b: Optional[TempFreqVariation2Type] = field(
-        default=None,
+    thermistor_dcu_b: TempFreqVariation2Type = field(
         metadata={
             "name": "Thermistor_DCU_B",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AcquisitionModeType:
     """
     Parameters
@@ -1886,62 +1647,50 @@ class AcquisitionModeType:
     class Meta:
         name = "acquisitionModeType"
 
-    acquisition_mode: Optional[AcquisitionModeIdtype] = field(
-        default=None,
+    acquisition_mode: AcquisitionModeIdtype = field(
         metadata={
             "name": "acquisitionMode",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    gstl_index: Optional[int] = field(
-        default=None,
+    gstl_index: int = field(
         metadata={
             "name": "gstlIndex",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    swath: Optional[SwathType] = field(
-        default=None,
+    swath: SwathType = field(
         metadata={
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    int_cal_parameters_list: Optional[IntCalParametersListType] = field(
-        default=None,
+    int_cal_parameters_list: IntCalParametersListType = field(
         metadata={
             "name": "intCalParametersList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    timeline_parameters_odd_rank: Optional[TimelineParametersType] = field(
-        default=None,
+    timeline_parameters_odd_rank: TimelineParametersType = field(
         metadata={
             "name": "timelineParametersOddRank",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    timeline_parameters_even_rank: Optional[TimelineParametersType] = field(
-        default=None,
+    timeline_parameters_even_rank: TimelineParametersType = field(
         metadata={
             "name": "timelineParametersEvenRank",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AcquisitionModeListType:
     """
     Parameters
@@ -1959,16 +1708,14 @@ class AcquisitionModeListType:
         default_factory=list,
         metadata={"name": "acquisitionMode", "type": "Element", "namespace": "", "min_occurs": 1, "max_occurs": 48},
     )
-    count: Optional[int] = field(
-        default=None,
+    count: int = field(
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CharacterisationDataType:
     """
     Parameters
@@ -1996,40 +1743,32 @@ class CharacterisationDataType:
     class Meta:
         name = "characterisationDataType"
 
-    pas_tx_cal: Optional[PasTxCalType] = field(
-        default=None,
+    pas_tx_cal: PasTxCalType = field(
         metadata={
             "name": "PAS_TX_Cal",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pas_rx_cal: Optional[PasRxCalType] = field(
-        default=None,
+    pas_rx_cal: PasRxCalType = field(
         metadata={
             "name": "PAS_RX_Cal",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pas_rx_path: Optional[PasRxPathType] = field(
-        default=None,
+    pas_rx_path: PasRxPathType = field(
         metadata={
             "name": "PAS_RX_Path",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pas_rx_cal_path: Optional[PasRxCalPathType] = field(
-        default=None,
+    pas_rx_cal_path: PasRxCalPathType = field(
         metadata={
             "name": "PAS_RX_Cal_Path",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
     cdn_txcal: list[CdnTxcalType] = field(
@@ -2059,27 +1798,23 @@ class CharacterisationDataType:
             "min_occurs": 1,
         },
     )
-    pas_cdn_calibration_cable: Optional[PasCdnCalibrationCableType] = field(
-        default=None,
+    pas_cdn_calibration_cable: PasCdnCalibrationCableType = field(
         metadata={
             "name": "PAS-CDN_Calibration_Cable",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    pas_fa_cables: Optional[PasFaCablesType] = field(
-        default=None,
+    pas_fa_cables: PasFaCablesType = field(
         metadata={
             "name": "PAS-FA_Cables",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryInstrumentParametersType:
     """
     Parameters
@@ -2106,81 +1841,65 @@ class AuxiliaryInstrumentParametersType:
     class Meta:
         name = "auxiliaryInstrumentParametersType"
 
-    radar_frequency: Optional[FloatWithUnit] = field(
-        default=None,
+    radar_frequency: FloatWithUnit = field(
         metadata={
             "name": "radarFrequency",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    roll_bias: Optional[FloatWithUnit] = field(
-        default=None,
+    roll_bias: FloatWithUnit = field(
         metadata={
             "name": "rollBias",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    tx_start_time: Optional[FloatWithUnit] = field(
-        default=None,
+    tx_start_time: FloatWithUnit = field(
         metadata={
             "name": "txStartTime",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    calibration_signals_swp: Optional[FloatWithUnit] = field(
-        default=None,
+    calibration_signals_swp: FloatWithUnit = field(
         metadata={
             "name": "calibrationSignalsSWP",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    acquisition_mode_list: Optional[AcquisitionModeListType] = field(
-        default=None,
+    acquisition_mode_list: AcquisitionModeListType = field(
         metadata={
             "name": "acquisitionModeList",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    raw_data_decoding_parameters: Optional[RawDataDecodingParametersType] = field(
-        default=None,
+    raw_data_decoding_parameters: RawDataDecodingParametersType = field(
         metadata={
             "name": "rawDataDecodingParameters",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    characterisation_data: Optional[CharacterisationDataType] = field(
-        default=None,
+    characterisation_data: CharacterisationDataType = field(
         metadata={
             "name": "characterisationData",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
-    attenuators_settings: Optional[AttenuatorsSettingsType] = field(
-        default=None,
+    attenuators_settings: AttenuatorsSettingsType = field(
         metadata={
             "name": "attenuatorsSettings",
             "type": "Element",
             "namespace": "",
-            "required": True,
         },
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AuxiliaryInstrumentParameters(AuxiliaryInstrumentParametersType):
     """
     BIOMASS auxiliary instrument parameters element.

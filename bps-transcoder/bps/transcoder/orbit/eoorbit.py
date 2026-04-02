@@ -53,7 +53,6 @@ class StateVectors:
 def _get_time_from_state_vector(
     state_vector: aux_orb_models.OsvType,
 ) -> PreciseDateTime:
-    assert state_vector.utc is not None
     return PreciseDateTime().set_from_utc_string(state_vector.utc[4:])
 
 
@@ -61,20 +60,6 @@ def _translate_state_vector(
     state_vector: aux_orb_models.OsvType,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Translate state vector"""
-
-    assert state_vector.x is not None
-    assert state_vector.y is not None
-    assert state_vector.z is not None
-    assert state_vector.vx is not None
-    assert state_vector.vy is not None
-    assert state_vector.vz is not None
-    assert state_vector.x.value is not None
-    assert state_vector.y.value is not None
-    assert state_vector.z.value is not None
-    assert state_vector.vx.value is not None
-    assert state_vector.vy.value is not None
-    assert state_vector.vz.value is not None
-
     position = np.array(
         [
             float(state_vector.x.value),
@@ -136,16 +121,9 @@ class EOOrbit(Orbit):
         )
 
         # - Set orbit metadata
-        assert orbit_model.earth_observation_header is not None
-        assert orbit_model.earth_observation_header.fixed_header is not None
         fixed_header = orbit_model.earth_observation_header.fixed_header
 
         self.mission = fixed_header.mission
-
-        assert fixed_header.file_type is not None
-        assert fixed_header.validity_period is not None
-        assert fixed_header.validity_period.validity_start is not None
-        assert fixed_header.validity_period.validity_stop is not None
 
         self.type = self.orbit_type_dict.get(fixed_header.file_type, EOrbitType.UNKNOWN.value)
 
@@ -157,8 +135,6 @@ class EOOrbit(Orbit):
         )
 
         # - Set orbit data
-        assert orbit_model.data_block is not None
-        assert orbit_model.data_block.list_of_osvs is not None
         state_vectors = StateVectors.translate_state_vectors(orbit_model.data_block.list_of_osvs.osv)
 
         self.position_sv = state_vectors.positions

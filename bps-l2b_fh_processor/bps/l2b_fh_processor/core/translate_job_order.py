@@ -53,7 +53,7 @@ EXPECTED_PROCESSOR_NAMES_LIST = [
 ]
 """All possible alias for Biomass L2b FH processors"""
 
-EXPECTED_PROCESSOR_VERSION = "04.40"
+EXPECTED_PROCESSOR_VERSION = "04.41"
 """Processor version for Biomass L2b FH processor"""
 
 EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
@@ -281,7 +281,6 @@ def translate_model_to_l2b_fh_job_order(
     if job_order.schema_name != EXPECTED_SCHEMA_NAME:
         raise InvalidL2bFHJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
 
-    assert job_order.processor_configuration is not None
     processor_configuration = retrieve_configuration_params_l2(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAMES_LIST,
@@ -290,15 +289,11 @@ def translate_model_to_l2b_fh_job_order(
 
     task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
 
-    assert job_order.list_of_tasks is not None
-    assert job_order.list_of_tasks.task[0].list_of_inputs is not None
     found_optional_l2a_fd = False
     for input_product in job_order.list_of_tasks.task[0].list_of_inputs.input:
-        assert input_product.input_id is not None
         if input_product.input_id.value == L2B_OUTPUT_PRODUCT_FD:
             found_optional_l2a_fd = True
 
-    assert job_order.processor_configuration.processor_name is not None
     if (
         found_optional_l2a_fd
         and job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_NO_FD
@@ -317,20 +312,16 @@ def translate_model_to_l2b_fh_job_order(
 
     device_resources = retrieve_device_resources(task)
 
-    assert task.list_of_proc_parameters is not None
     l2b_fh_processing_parameters = retrieve_l2b_fh_processing_parameters(task.list_of_proc_parameters.proc_parameter)
 
-    assert task.list_of_cfg_files is not None
     l2b_fh_p_conf = retrieve_configuration_files(task.list_of_cfg_files.cfg_file)
 
-    assert task.list_of_inputs is not None
     (
         input_l2a_products,
         aux_pp2_fh_path,
         input_l2b_fd_product,
     ) = translate_l2b_fh_list_of_inputs(task.list_of_inputs.input)
 
-    assert task.list_of_outputs is not None
     (
         output_directory,
         output_product,

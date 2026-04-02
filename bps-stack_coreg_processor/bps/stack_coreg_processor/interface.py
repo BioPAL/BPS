@@ -170,7 +170,6 @@ def write_stop_and_resume_file(
             )
         if not output_path.exists():
             bps_logger.warning("Could not export stack's state file. Resuming STA_P will not be possible")
-        # pylint: disable-next=broad-exception-caught
     except Exception as err:
         bps_logger.error(
             "Error occurred while writing stack's coreg state file %s to working directory",
@@ -218,7 +217,6 @@ def load_stop_and_resume_file(
             stop_and_resume_path,
         )
         raise StackCoregProcessorRuntimeError(err) from err
-        # pylint: disable-next=broad-exception-caught
     except Exception as err:
         bps_logger.error(
             "Error occurred while loading stack's pre-proc state file %s from working directory",
