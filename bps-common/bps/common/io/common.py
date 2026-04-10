@@ -359,6 +359,7 @@ class LayerType(Enum):
     HEIGHT_M = "Height [m]"
     INCIDENCE_ANGLE_DEG = "Incidence angle [deg]"
     ELEVATION_ANGLE_DEG = "Elevation angle [deg]"
+    TERRAIN_SLOPE = "Terrain slope [deg]"
     RANGE_TERRAIN_SLOPE_DEG = "Range terrain slope [deg]"
     AZIMUTH_TERRAIN_SLOPE_DEG = "Azimuth terrain slope [deg]"
     FNF = "FNF"
