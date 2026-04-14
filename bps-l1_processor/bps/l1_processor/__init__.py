@@ -10,5 +10,5 @@ Biomass L1 Processor
 --------------------
 """
 
-__version__ = "4.3.0"
+__version__ = "4.3.1"
 BPS_L1_PROCESSOR_NAME = "Biomass L1 Processor"
