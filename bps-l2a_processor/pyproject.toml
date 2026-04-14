@@ -15,8 +15,8 @@ dependencies = [
     "netCDF4",
     "scipy",
     "opencv-python-headless<4.14",
-    "bps-common==4.4.1",
-    "bps-transcoder==4.4.1",
+    "bps-common==4.4.2",
+    "bps-transcoder==4.4.2",
 ]
 dynamic = ["version"]
 classifiers = [

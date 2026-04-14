@@ -10,4 +10,4 @@ Biomass Stack Coregistration Processor
 --------------------------------------
 """
 
-__version__ = "4.4.1"
+__version__ = "4.4.2"

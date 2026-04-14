@@ -61,7 +61,7 @@ EXPECTED_PROCESSOR_NAMES_LIST = [
 ]
 """All possible alias for Biomass L2b FH processors"""
 
-EXPECTED_PROCESSOR_VERSION = "04.41"
+EXPECTED_PROCESSOR_VERSION = "04.42"
 """Processor version for Biomass L2b AGB processor"""
 
 EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME

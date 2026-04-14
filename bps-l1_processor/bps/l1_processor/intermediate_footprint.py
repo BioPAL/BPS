@@ -55,9 +55,9 @@ class FootprintPoints:
         def from_point(cls, point: np.ndarray) -> FootprintPoints.GeographicPoint:
             """From point"""
             return FootprintPoints.GeographicPoint(
-                latitude_degree=float(np.rad2deg(point[0])),
-                longitude_degree=float(np.rad2deg(point[1])),
-                height=float(point[2]),
+                latitude_degree=float(np.rad2deg(point[0]).squeeze()),
+                longitude_degree=float(np.rad2deg(point[1]).squeeze()),
+                height=float(point[2].squeeze()),
             )
 
         def to_metadata(self) -> metadata.GeoPoint:

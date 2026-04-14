@@ -14,7 +14,7 @@ dependencies = [
     "pystac",
     "scipy>=1.10",
     "pyproj",
-    "bps-common==4.4.1",
+    "bps-common==4.4.2",
 ]
 dynamic = ["version"]
 classifiers = [

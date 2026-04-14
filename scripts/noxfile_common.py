@@ -118,8 +118,6 @@ def run_unittest(session: nox.Session):
     package_module = package_name.replace("-", ".")
 
     Path("_build").mkdir(exist_ok=True)
-    if WIN32:
-        session.install("opencv-python-headless<4.7", "numpy<2.0")
     session.install("-e", ".")
 
     session.install("unittest-xml-reporting", "coverage")
