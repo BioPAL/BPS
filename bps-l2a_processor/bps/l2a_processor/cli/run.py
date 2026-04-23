@@ -10,8 +10,10 @@ Command line interface - main
 -----------------------------
 """
 
+import contextlib
+
 import click
-from bps.common.processor_init import processor_setup, working_directory
+from bps.common.processor_init import processor_setup
 from bps.l2a_processor import BPS_L2A_PROCESSOR_NAME, commands
 from bps.l2a_processor import __version__ as VERSION
 
@@ -39,5 +41,5 @@ def cli(
         job_order_file, working_dir, BPS_L2A_PROCESSOR_NAME, "L2A_P", VERSION
     )
 
-    with working_directory(working_dir_path):
+    with contextlib.chdir(working_dir_path):
         commands.run_l2a_processing(job_order_path, working_dir_path)

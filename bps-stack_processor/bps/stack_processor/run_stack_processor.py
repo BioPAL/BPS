@@ -12,6 +12,7 @@ Stack Processor Runner
 
 from __future__ import annotations
 
+import contextlib
 from datetime import timedelta
 from pathlib import Path
 from timeit import default_timer
@@ -19,7 +20,7 @@ from timeit import default_timer
 from bps.common import bps_logger
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.common.fnf_utils import retrieve_fnf_content
-from bps.common.processor_init import get_intermediate_data_dir_name, working_directory
+from bps.common.processor_init import get_intermediate_data_dir_name
 from bps.stack_processor import BPS_STACK_PROCESSOR_NAME
 from bps.stack_processor import __version__ as VERSION
 from bps.stack_processor.execution.stack_cal_execution_manager import (
@@ -94,7 +95,7 @@ def stack_processor_main(
         raise RuntimeError(f"Invalid working directory {working_dir_path}")
 
     # Kick off the processor.
-    with working_directory(working_dir_path):
+    with contextlib.chdir(working_dir_path):
         run_stack_processor(working_dir_path, keep_intermediates, job_order_path, job_order)
 
 

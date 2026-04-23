@@ -10,8 +10,10 @@ Command line interface - main
 -----------------------------
 """
 
+import contextlib
+
 import click
-from bps.common.processor_init import processor_setup, working_directory
+from bps.common.processor_init import processor_setup
 from bps.l1_framing_processor import (
     BPS_L1_FRAMING_PROCESSOR_ID,
     BPS_L1_FRAMING_PROCESSOR_NAME,
@@ -45,7 +47,7 @@ def cli(job_order_file: str, working_dir: str | None):
         VERSION,
     )
 
-    with working_directory(working_dir_path):
+    with contextlib.chdir(working_dir_path):
         from bps.l1_framing_processor import commands
 
         commands.run_l1_framing_processing(job_order_path, working_dir_path)

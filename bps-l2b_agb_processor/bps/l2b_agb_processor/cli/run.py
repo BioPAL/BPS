@@ -10,32 +10,14 @@ Command line interface - main
 -----------------------------
 """
 
-import os
+import contextlib
 import tempfile
-from contextlib import contextmanager
 from pathlib import Path
 
 import click
 from bps.common import bps_logger
 from bps.l2b_agb_processor import BPS_L2B_AGB_PROCESSOR_NAME, commands
 from bps.l2b_agb_processor import __version__ as VERSION
-
-
-@contextmanager
-def working_directory(path: Path):
-    """Run code in path, restore previous dir on exit
-
-    Parameters
-    ----------
-    path : Path
-        working directory
-    """
-    prev_cwd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(prev_cwd)
 
 
 @click.command()
@@ -73,5 +55,5 @@ def cli(
     bps_logger.info("Working directory: %s", working_dir_path)
     bps_logger.info("Job order file: %s", job_order_path)
 
-    with working_directory(working_dir_path):
+    with contextlib.chdir(working_dir_path):
         commands.run_l2b_agb_processing(job_order_path, working_dir_path)

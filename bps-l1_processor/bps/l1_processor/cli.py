@@ -10,6 +10,7 @@ Command line interface - main
 -----------------------------
 """
 
+import contextlib
 import importlib.resources
 from enum import Enum, auto
 from pathlib import Path
@@ -17,7 +18,7 @@ from pathlib import Path
 import bps.l1_processor
 import click
 from bps.common import bps_logger
-from bps.common.processor_init import get_intermediate_data_dir_name, working_directory
+from bps.common.processor_init import get_intermediate_data_dir_name
 from bps.common.translate_job_order import get_bps_logger_level
 from bps.l1_processor import BPS_L1_PROCESSOR_NAME, main_app
 from bps.l1_processor import __version__ as VERSION
@@ -146,5 +147,5 @@ def run(job_order_file: str, working_dir: str | None):
     iers_bulletin = get_bulletin_path()
     assert iers_bulletin.exists()
 
-    with working_directory(working_dir_path):
+    with contextlib.chdir(working_dir_path):
         main_app.run_l1_processing(job_order, working_dir_path, iers_bulletin)
