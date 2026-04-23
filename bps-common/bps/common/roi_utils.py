@@ -28,10 +28,8 @@ Example
 
 """
 
-import numpy.typing as npt
 from arepytools.io.metadata import RasterInfo
 
-# Just a shortcut.
 RegionOfInterest = tuple[int, int, int, int]
 
 
@@ -67,42 +65,3 @@ def raise_if_roi_is_invalid(raster_info: RasterInfo, roi: RegionOfInterest):
         or (roi[1] + roi[3] > raster_info.samples)
     ):
         raise InvalidRegionOfInterestError(f"{roi} is not a valid ROI")
-
-
-def crop_to_roi(
-    image: npt.NDArray | None,
-    roi: RegionOfInterest | None,
-    *,
-    subsampling_steps: tuple[int, int] = (1, 1),
-) -> npt.NDArray | None:
-    """
-    Crop an image to a region of interest (ROI). This assumes that
-    the provided ROI is a valid one.
-
-    Parameters
-    ----------
-    image: Optional[npt.NDArray]
-        Optionally, an [N x M] input data.
-
-    roi: tuple[int, ...]
-        The target ROI. No cropping is performed if None.
-
-    subsampling_steps: tuple[int, int] = (1, 1)
-        The subsampling steps. Defaults to no subsampling.
-
-    Return
-    ------
-    Optional[npt.NDArray]
-        The cropped image, if provided. None otherwise.
-
-    """
-    if image is None:
-        return None
-
-    if roi is None:
-        roi = (0, 0, *image.shape)
-
-    return image[
-        roi[0] : roi[0] + roi[2] : subsampling_steps[0],
-        roi[1] : roi[1] + roi[3] : subsampling_steps[1],
-    ]
