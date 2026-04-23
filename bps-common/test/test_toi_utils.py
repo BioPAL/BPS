@@ -17,6 +17,7 @@ from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.toi_utils import (
     InvalidTimeOfInterestError,
     TimeOfInterest,
+    raise_if_invalid_toi,
     toi_to_axis_slice,
 )
 
@@ -117,6 +118,28 @@ class TestToiToAxisSlice(unittest.TestCase):
                 ),
                 time_axis=self._time_axis,
             )
+
+
+class TestRaiseIfInvalidToi(unittest.TestCase):
+    def test_valid_toi_does_not_raise(self):
+        raise_if_invalid_toi(TimeOfInterest(time_begin=START_TIME, time_end=START_TIME + 1.0))
+
+    def test_both_none_does_not_raise(self):
+        raise_if_invalid_toi(TimeOfInterest())
+
+    def test_only_begin_does_not_raise(self):
+        raise_if_invalid_toi(TimeOfInterest(time_begin=START_TIME))
+
+    def test_only_end_does_not_raise(self):
+        raise_if_invalid_toi(TimeOfInterest(time_end=START_TIME))
+
+    def test_begin_equal_end_raises(self):
+        with self.assertRaises(InvalidTimeOfInterestError):
+            raise_if_invalid_toi(TimeOfInterest(time_begin=START_TIME, time_end=START_TIME))
+
+    def test_begin_after_end_raises(self):
+        with self.assertRaises(InvalidTimeOfInterestError):
+            raise_if_invalid_toi(TimeOfInterest(time_begin=START_TIME + 1.0, time_end=START_TIME))
 
 
 if __name__ == "__main__":

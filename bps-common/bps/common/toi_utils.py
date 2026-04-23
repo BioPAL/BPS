@@ -25,16 +25,16 @@ class InvalidTimeOfInterestError(ValueError):
 class TimeOfInterest:
     """An absolute time slice in azimuth, aka a TOI."""
 
-    time_begin: PreciseDateTime | None = None  # [UTC].
+    time_begin: PreciseDateTime | None = None
     """The start time in UTC. It defaults to no start time."""
 
-    time_end: PreciseDateTime | None = None  # [UTC].
+    time_end: PreciseDateTime | None = None
     """The end time in UTC. It defaults to no end time."""
 
 
 def toi_to_axis_slice(
     toi: TimeOfInterest,
-    time_axis: npt.NDArray[PreciseDateTime],
+    time_axis: npt.NDArray[PreciseDateTime],  # type: ignore
 ) -> tuple[int, int]:
     """
     Find the slice on a reference time axis that is associated to
