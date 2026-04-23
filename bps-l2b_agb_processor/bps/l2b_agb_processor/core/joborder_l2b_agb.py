@@ -28,10 +28,10 @@ class L2BAGBProcessingParameters:
 class L2bAGBJobOrder:
     """Job order data for L2B AGB processing."""
 
-    input_l2a_products: tuple[Path, ...]
+    input_l2a_products: list[Path]
     """Paths of L2a GN input products"""
 
-    input_l2a_mph_files: tuple[Path, ...]
+    input_l2a_mph_files: list[Path]
     """Paths of each l2a MPH main annotation file"""
 
     output_directory: Path
@@ -58,10 +58,10 @@ class L2bAGBJobOrder:
     processing_parameters: L2BAGBProcessingParameters
     """High level processing parameters"""
 
-    input_l2b_fd_products: tuple[Path, ...] | None = None
+    input_l2b_fd_products: list[Path] | None = None
     """L2b FD Products optional input, only INT phase (over green + blue area)"""
 
-    input_l2b_agb_products: tuple[Path, ...] | None = None
+    input_l2b_agb_products: list[Path] | None = None
     """L2b AGB Producst optional input (over green area)"""
 
     l2b_agb_p_conf: Path | None = None

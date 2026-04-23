@@ -12,8 +12,8 @@ Translation
 
 from pathlib import Path
 
-import numpy as np
 from bps.common.io import joborder_models
+from bps.common.io.mph import get_mph_path
 from bps.common.l2_joborder_tags import L2B_OUTPUT_PRODUCT_AGB, L2B_OUTPUT_PRODUCT_FD
 from bps.common.translate_job_order import (
     flatten_configuration_file,
@@ -99,6 +99,14 @@ PROCESSING_PARAMS_TILE_ID = "central_tile_id"
 
 PROCESSING_PARAMS_ID_LIST = [PROCESSING_PARAMS_TILE_ID]
 
+ALIAS_EXPECTED_INPUTS: dict[str, tuple[bool, bool]] = {
+    EXPECTED_PROCESSOR_ALIAS_YES_FD_YES_AGB: (True, True),
+    EXPECTED_PROCESSOR_ALIAS_NO_FD_NO_AGB: (False, False),
+    EXPECTED_PROCESSOR_ALIAS_NO_FD_YES_AGB: (False, True),
+    EXPECTED_PROCESSOR_ALIAS_YES_FD_NO_AGB: (True, False),
+}
+"""Maps each processor alias to its expected (fd_present, agb_present) inputs."""
+
 
 class InvalidL2bAGBJobOrder(ValueError):
     """Raised when failing to translate a joborder meant for the L2b AGB Processor"""
@@ -106,7 +114,7 @@ class InvalidL2bAGBJobOrder(ValueError):
 
 def translate_l2b_agb_list_of_inputs(
     input_products_list: list[joborder_models.JoInputType],
-) -> tuple[tuple[Path, ...], Path, Path, Path, Path, Path]:
+) -> tuple[list[Path], list[Path], Path, list[Path] | None, list[Path] | None]:
     """Retrieve, from the input products section, paths of L1c stack acquisitions,
     aux_pp2_agb file and optionally the AGB L2a product.
 
@@ -136,36 +144,30 @@ def translate_l2b_agb_list_of_inputs(
         if file_id not in L2B_AGB_INPUT_ID_LIST:
             raise InvalidL2bAGBJobOrder(f"Unexpected input identifier: {file_id}")
 
-    input_l2a_products = input_products.pop(L2A_PRODUCT_GN)
-    input_l2a_products = tuple(Path(input_l2a_path) for input_l2a_path in input_l2a_products)
+    if L2A_PRODUCT_GN not in input_products:
+        raise InvalidL2bAGBJobOrder(f"Missing required input: {L2A_PRODUCT_GN}")
+    if AUX_PP_INPUT not in input_products:
+        raise InvalidL2bAGBJobOrder(f"Missing required input: {AUX_PP_INPUT}")
 
-    input_l2a_mph_files = []
-    for input_acquisition in input_l2a_products:
-        name = Path(str(input_acquisition.name).lower() + ".xml")
-        input_l2a_mph_files.append(input_acquisition.joinpath(name))
-    input_l2a_mph_files = tuple(input_l2a_mph_files)
+    input_l2a_products = [Path(input_l2a_path) for input_l2a_path in input_products.pop(L2A_PRODUCT_GN)]
+
+    input_l2a_mph_files = [get_mph_path(acquisition) for acquisition in input_l2a_products]
 
     aux_pp2_agb_path = Path(input_products.pop(AUX_PP_INPUT)[0])
 
+    # input_l2b_fd_products is optional
+    input_l2b_fd_products = None
     if len(input_products) > 0 and L2B_PRODUCT_FD in input_products:
-        # input_l2b_fd_products is optional
         paths_string = input_products.pop(L2B_PRODUCT_FD)
-
         input_l2b_fd_products = [Path(pp) for pp in paths_string]
-    else:
-        input_l2b_fd_products = None
 
+    # input_l2b_agb_products is optional
+    input_l2b_agb_products = None
     if len(input_products) > 0 and L2B_PRODUCT_AGB in input_products:
-        # input_l2b_agb_products is optional
         paths_string = input_products.pop(L2B_PRODUCT_AGB)
-
         input_l2b_agb_products = [Path(pp) for pp in paths_string]
 
-    else:
-        input_l2b_agb_products = None
-
-    if len(input_products) > 0:
-        raise InvalidL2bAGBJobOrder(f"Unexpected input products: {input_products}")
+    assert len(input_products) == 0
 
     return (
         input_l2a_products,
@@ -178,7 +180,7 @@ def translate_l2b_agb_list_of_inputs(
 
 def retrieve_configuration_files(
     configuration_files_list: list[joborder_models.CfgFileType],
-) -> tuple[Path | None, Path | None, Path | None]:
+) -> tuple[Path, Path, Path | None]:
     """Retrieve configuration files from the section
 
     Parameters
@@ -188,13 +190,13 @@ def retrieve_configuration_files(
 
     Returns
     -------
-    Path
-        dem directory, l2b agb configuration file
+    tuple[Path, Path, Path | None]
+        lcm directory, cal_ab directory, l2b agb configuration file (optional)
 
     Raises
     ------
     InvalidL2bAGBJobOrder
-        unexpected configuration files id
+        unexpected or missing required configuration file identifier
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
@@ -202,20 +204,20 @@ def retrieve_configuration_files(
         if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
             raise InvalidL2bAGBJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
 
-    l2b_p_conf = configuration_files.pop(CONFIGURATION_FILES_L2BAGBPCONF, None)
-    if l2b_p_conf is not None:
-        l2b_p_conf = Path(l2b_p_conf)
+    l2b_p_conf_raw = configuration_files.pop(CONFIGURATION_FILES_L2BAGBPCONF, None)
+    l2b_p_conf = Path(l2b_p_conf_raw) if l2b_p_conf_raw is not None else None
 
-    lcm_dir = configuration_files.pop(CONFIGURATION_FILES_LCM_DIR, None)
-    if lcm_dir is not None:
-        lcm_dir = Path(lcm_dir)
+    lcm_dir_raw = configuration_files.pop(CONFIGURATION_FILES_LCM_DIR, None)
+    if lcm_dir_raw is None:
+        raise InvalidL2bAGBJobOrder(f"Missing required configuration file: {CONFIGURATION_FILES_LCM_DIR}")
+    lcm_dir = Path(lcm_dir_raw)
 
-    cal_ab_dir = configuration_files.pop(CONFIGURATION_FILES_CAL_AB_DIR, None)
-    if cal_ab_dir is not None:
-        cal_ab_dir = Path(cal_ab_dir)
+    cal_ab_dir_raw = configuration_files.pop(CONFIGURATION_FILES_CAL_AB_DIR, None)
+    if cal_ab_dir_raw is None:
+        raise InvalidL2bAGBJobOrder(f"Missing required configuration file: {CONFIGURATION_FILES_CAL_AB_DIR}")
+    cal_ab_dir = Path(cal_ab_dir_raw)
 
-    if len(configuration_files) > 0:
-        raise InvalidL2bAGBJobOrder(f"Unexpected configuration files: {configuration_files}")
+    assert len(configuration_files) == 0
 
     return lcm_dir, cal_ab_dir, l2b_p_conf
 
@@ -252,8 +254,7 @@ def retrieve_l2b_agb_processing_parameters(
     if tile_id:
         l2b_agb_processing_parameters.tile_id = tile_id
 
-    if len(parameters) > 0:
-        raise InvalidL2bAGBJobOrder(f"Unexpected processing parameters: {parameters}")
+    assert len(parameters) == 0
 
     return l2b_agb_processing_parameters
 
@@ -279,23 +280,17 @@ def retrieve_l2b_agb_output_directory(
         in case of unexpected output products identifiers, missing required output products or mismatches in the swath
     """
 
-    output_products, output_directory, output_baselines = flatten_output_products(output_products_list)
-    output_baselines = list(np.ones(len(output_products)).astype(int) * int(output_baselines))
+    output_products, output_directory, output_baseline = flatten_output_products(output_products_list)
 
+    if len(output_products) == 0:
+        raise InvalidL2bAGBJobOrder("No output products specified: exactly one is required.")
     if len(output_products) > 1:
         raise InvalidL2bAGBJobOrder("Too many output products specified: just one is requested.")
 
-    output_baseline = output_baselines[0]
-
-    file_id = output_products[0]
-    if file_id not in L2B_OUTPUT_PRODUCT_AGB:
-        raise InvalidL2bAGBJobOrder(f"Unexpected output product identifier: {file_id}")
-
-    if L2B_OUTPUT_PRODUCT_AGB not in output_products[0]:
-        raise InvalidL2bAGBJobOrder("Required output product is not an L2B AGB")
-
-    output_products, _, _ = flatten_output_products(output_products_list)
     output_product = output_products[0]
+
+    if output_product != L2B_OUTPUT_PRODUCT_AGB:
+        raise InvalidL2bAGBJobOrder(f"Unexpected output product identifier: {output_product}")
 
     return Path(output_directory), output_product, output_baseline
 
@@ -332,40 +327,19 @@ def translate_model_to_l2b_agb_job_order(
 
     task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
 
-    found_optional_l2b_fd = False
-    found_optional_l2b_agb = False
-    optional_l2b_fd_string = "ABSENT"
-    optional_l2b_agb_string = "ABSENT"
-    for input_product in job_order.list_of_tasks.task[0].list_of_inputs.input:
-        if input_product.input_id.value == L2B_OUTPUT_PRODUCT_FD:
-            found_optional_l2b_fd = True
-            optional_l2b_fd_string = "PRESENT"
-        if input_product.input_id.value == L2B_OUTPUT_PRODUCT_AGB:
-            found_optional_l2b_agb = True
-            optional_l2b_agb_string = "PRESENT"
+    input_ids = [p.input_id.value for p in task.list_of_inputs.input]
+    found_optional_l2b_fd = L2B_OUTPUT_PRODUCT_FD in input_ids
+    found_optional_l2b_agb = L2B_OUTPUT_PRODUCT_AGB in input_ids
 
-    if job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_YES_FD_YES_AGB:
-        if not found_optional_l2b_fd or not found_optional_l2b_agb:
-            raise InvalidJobOrder(
-                f"Invalid processor name: {job_order.processor_configuration.processor_name.value} when optional L2B FD is '{optional_l2b_fd_string}' and optional L2B AGB is '{optional_l2b_agb_string}'"
-            )
+    proc_name = job_order.processor_configuration.processor_name.value
 
-    if job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_NO_FD_NO_AGB:
-        if found_optional_l2b_fd or found_optional_l2b_agb:
+    if proc_name in ALIAS_EXPECTED_INPUTS:
+        expected_fd, expected_agb = ALIAS_EXPECTED_INPUTS[proc_name]
+        if found_optional_l2b_fd != expected_fd or found_optional_l2b_agb != expected_agb:
+            fd_status = "PRESENT" if found_optional_l2b_fd else "ABSENT"
+            agb_status = "PRESENT" if found_optional_l2b_agb else "ABSENT"
             raise InvalidJobOrder(
-                f"Invalid processor name: {job_order.processor_configuration.processor_name.value} when optional L2B FD is '{optional_l2b_fd_string}' and optional L2B AGB is '{optional_l2b_agb_string}'"
-            )
-
-    if job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_NO_FD_YES_AGB:
-        if found_optional_l2b_fd or not found_optional_l2b_agb:
-            raise InvalidJobOrder(
-                f"Invalid processor name: {job_order.processor_configuration.processor_name.value} when optional L2B FD is '{optional_l2b_fd_string}' and optional L2B AGB is '{optional_l2b_agb_string}'"
-            )
-
-    if job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_YES_FD_NO_AGB:
-        if not found_optional_l2b_fd or found_optional_l2b_agb:
-            raise InvalidJobOrder(
-                f"Invalid processor name: {job_order.processor_configuration.processor_name.value} when optional L2B FD is '{optional_l2b_fd_string}' and optional L2B AGB is '{optional_l2b_agb_string}'"
+                f"Invalid processor name: {proc_name} when optional L2B FD is '{fd_status}' and optional L2B AGB is '{agb_status}'"
             )
 
     device_resources = retrieve_device_resources(task)
@@ -399,8 +373,8 @@ def translate_model_to_l2b_agb_job_order(
         device_resources,
         processor_configuration,
         l2b_agb_processing_parameters,
-        input_l2b_fd_products=input_l2b_fd_products if input_l2b_fd_products else None,
-        input_l2b_agb_products=(input_l2b_agb_products if input_l2b_agb_products else None),
-        l2b_agb_p_conf=l2b_agb_p_conf if l2b_agb_p_conf else None,
+        input_l2b_fd_products=input_l2b_fd_products,
+        input_l2b_agb_products=input_l2b_agb_products,
+        l2b_agb_p_conf=l2b_agb_p_conf,
         output_baseline=output_baseline,
     )

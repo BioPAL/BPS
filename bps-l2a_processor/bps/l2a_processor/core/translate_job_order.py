@@ -12,9 +12,9 @@ Translation
 
 from pathlib import Path
 
-import numpy as np
 from bps.common import Swath
 from bps.common.io import joborder_models
+from bps.common.io.mph import get_mph_path
 from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_FD,
     L2A_OUTPUT_PRODUCT_FH,
@@ -99,6 +99,14 @@ CONFIGURATION_FILES_ID_LIST = [
     CONFIGURATION_FILES_FNF_DIR,
 ]
 
+ALIAS_EXPECTED_OUTPUT: dict[str, str] = {
+    EXPECTED_PROCESSOR_ALIAS_FD: L2A_OUTPUT_PRODUCT_FD,
+    EXPECTED_PROCESSOR_ALIAS_FH: L2A_OUTPUT_PRODUCT_FH,
+    EXPECTED_PROCESSOR_ALIAS_GN: L2A_OUTPUT_PRODUCT_GN,
+    EXPECTED_PROCESSOR_ALIAS_TOMO_FH: L2A_OUTPUT_PRODUCT_TFH,
+}
+"""Maps each single-output processor alias to its expected output product."""
+
 
 class InvalidL2aJobOrder(ValueError):
     """Raised when failing to translate a joborder meant for the L2a Processor"""
@@ -107,7 +115,7 @@ class InvalidL2aJobOrder(ValueError):
 def translate_l2a_list_of_inputs(
     input_products_list: list[joborder_models.JoInputType],
     processing_swath: Swath,
-) -> tuple[tuple[Path], tuple[Path], Path, Path | None]:
+) -> tuple[list[Path], list[Path], Path, Path | None]:
     """Retrieve, from the input products section, paths of L1c stack acquisitions,
     aux_pp2_2a file and optionally the FD L2a product.
 
@@ -137,17 +145,12 @@ def translate_l2a_list_of_inputs(
         if file_id not in L2a_INPUT_ID_LIST:
             raise InvalidL2aJobOrder(f"Unexpected input identifier: {file_id}")
 
-    input_stack = input_products.pop(STA_PRODUCT_MAP[processing_swath])
-    input_stack = tuple(Path(input_lic_path) for input_lic_path in input_stack)
+    input_stack = [Path(input_lic_path) for input_lic_path in input_products.pop(STA_PRODUCT_MAP[processing_swath])]
 
     if len(input_stack) < 2 or len(input_stack) > 8:
         raise InvalidL2aJobOrder("Wrong number of input Sx_STA__1S file names: should be >2 and <8")
 
-    input_stack_mph_files = []
-    for input_acquisition in input_stack:
-        name = Path(str(input_acquisition.name).lower() + ".xml")
-        input_stack_mph_files.append(input_acquisition.joinpath(name))
-    input_stack_mph_files = tuple(input_stack_mph_files)
+    input_stack_mph_files = [get_mph_path(acquisition) for acquisition in input_stack]
 
     aux_pp2_2a_path = Path(input_products.pop(AUX_PP_INPUT)[0])
 
@@ -204,7 +207,7 @@ def retrieve_configuration_files(
 def retrieve_l2a_output_directory(
     output_products_list: list[joborder_models.JoOutputType],
     processor_name: str,
-) -> tuple[Path, list[str], int | list[int]]:
+) -> tuple[Path, list[str], list[int]]:
     """Retrieve output products directory from the output products section
 
     Parameters
@@ -216,8 +219,8 @@ def retrieve_l2a_output_directory(
 
     Returns
     -------
-    Tuple[Path, List[str]]
-        Output products common directory and list of enabled output products.
+    Tuple[Path, List[str], List[int]]
+        Output products common directory, list of enabled output products, and list of output baselines.
 
     Raises
     ------
@@ -227,48 +230,24 @@ def retrieve_l2a_output_directory(
 
     output_products, output_directory, output_baselines = flatten_output_products(output_products_list)
 
-    if processor_name == EXPECTED_PROCESSOR_NAME:
-        valid_output_products = L2A_OUTPUT_PRODUCTS_ID_LIST
-    elif processor_name == EXPECTED_PROCESSOR_ALIAS_FD:
-        valid_output_products = L2A_OUTPUT_PRODUCT_FD
-    elif processor_name == EXPECTED_PROCESSOR_ALIAS_FH:
-        valid_output_products = L2A_OUTPUT_PRODUCT_FH
-    elif processor_name == EXPECTED_PROCESSOR_ALIAS_GN:
-        valid_output_products = L2A_OUTPUT_PRODUCT_GN
-    elif processor_name == EXPECTED_PROCESSOR_ALIAS_TOMO_FH:
-        valid_output_products = L2A_OUTPUT_PRODUCT_TFH
-    if (
-        processor_name
-        in [
-            EXPECTED_PROCESSOR_ALIAS_FD,
-            EXPECTED_PROCESSOR_ALIAS_FH,
-            EXPECTED_PROCESSOR_ALIAS_GN,
-        ]
-        and len(output_products) != 1
-        or output_products[0] not in valid_output_products
-    ):
-        raise InvalidL2aJobOrder(
-            f"when processor name is {processor_name}, the only admitted output is {valid_output_products}; found instead {output_products[0] if len(output_products) == 1 else output_products}"
-        )
+    if processor_name in ALIAS_EXPECTED_OUTPUT:
+        expected_output = ALIAS_EXPECTED_OUTPUT[processor_name]
+        if len(output_products) != 1 or output_products[0] != expected_output:
+            raise InvalidL2aJobOrder(
+                f"when processor name is {processor_name}, the only admitted output is {expected_output}; "
+                f"found instead {output_products[0] if len(output_products) == 1 else output_products}"
+            )
 
-    output_baselines = list(np.ones(len(output_products)).astype(int) * int(output_baselines))
+    output_baselines = [int(output_baselines)] * len(output_products)
 
     for file_id in output_products:
         if file_id not in L2A_OUTPUT_PRODUCTS_ID_LIST:
             raise InvalidL2aJobOrder(f"Unexpected output product identifier: {file_id}")
 
-    if not any([prod_string in output_products for prod_string in L2A_OUTPUT_PRODUCTS_ID_LIST]):
+    if not any(prod_string in output_products for prod_string in L2A_OUTPUT_PRODUCTS_ID_LIST):
         raise InvalidL2aJobOrder(
             f"Missing required output product (at least one of three is necessary): {L2A_OUTPUT_PRODUCTS_ID_LIST}"
         )
-    for prod in L2A_OUTPUT_PRODUCTS_ID_LIST:
-        if prod in output_products:
-            output_products.remove(prod)
-
-    if len(output_products) > 0:
-        raise InvalidL2aJobOrder(f"Unexpected output products: {output_products}")
-
-    output_products, _, _ = flatten_output_products(output_products_list)
 
     return Path(output_directory), output_products, output_baselines
 
@@ -344,7 +323,7 @@ def translate_model_to_l2a_job_order(
         fnf_dir,
         device_resources,
         processor_configuration,
-        input_l2a_fd_product=input_l2a_fd_product if input_l2a_fd_product else None,
-        l2a_p_conf=l2a_p_conf if l2a_p_conf else None,
+        input_l2a_fd_product=input_l2a_fd_product,
+        l2a_p_conf=l2a_p_conf,
         output_baselines=output_baselines,
     )
