@@ -56,7 +56,6 @@ from bps.common.translate_job_order import (
     flatten_processing_params,
     get_bps_logger_level,
     retrieve_configuration_params,
-    retrieve_configuration_params_l2,
     retrieve_device_resources,
     retrieve_single_input_products,
     retrieve_swath_from_products_identifiers,
@@ -212,64 +211,20 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
         with self.assertRaises(InvalidJobOrder):
             retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
 
-
-class TestRetrieveConfigurationParamsL2(unittest.TestCase):
-    _names = [_PROC_NAME, "ALT_PROC"]
-
-    def test_happy_path_first_name(self):
+    def test_list_of_names_first_match(self):
         cfg = _make_proc_config()
-        result = retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
         self.assertIsInstance(result, ProcessorConfiguration)
 
-    def test_happy_path_alt_name(self):
+    def test_list_of_names_second_match(self):
         cfg = _make_proc_config(processor_name="ALT_PROC")
-        result = retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
         self.assertIsInstance(result, ProcessorConfiguration)
 
-    def test_with_toi(self):
-        toi = ToiType(
-            start=XmlDateTime(2020, 1, 1, 0, 0, 0),
-            stop=XmlDateTime(2020, 12, 31, 23, 59, 59),
-        )
-        cfg = _make_proc_config(toi=toi)
-        result = retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
-        self.assertIsNotNone(result.azimuth_interval)
-
-    def test_toi_partial_raises(self):
-        toi = ToiType(start="2020-01-01T00:00:00", stop="")  # type: ignore[arg-type]
-        cfg = _make_proc_config(toi=toi)
-        with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
-
-    def test_wrong_processor_name_raises(self):
+    def test_list_of_names_no_match_raises(self):
         cfg = _make_proc_config(processor_name="UNKNOWN")
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
-
-    def test_wrong_processor_version_raises(self):
-        cfg = _make_proc_config(processor_version="02.00")
-        with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
-
-    def test_multiple_stdout_levels_raises(self):
-        cfg = _make_proc_config(
-            stdout_levels=[
-                ListOfStdoutLogLevelsStdoutLogLevel.INFO,
-                ListOfStdoutLogLevelsStdoutLogLevel.DEBUG,
-            ]
-        )
-        with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
-
-    def test_multiple_stderr_levels_raises(self):
-        cfg = _make_proc_config(
-            stderr_levels=[
-                ListOfStderrLogLevelsStderrLogLevel.ERROR,
-                ListOfStderrLogLevelsStderrLogLevel.WARNING,
-            ]
-        )
-        with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params_l2(cfg, self._names, _PROC_VERSION)
+            retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
 
 
 class TestRetrieveTask(unittest.TestCase):

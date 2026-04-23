@@ -25,7 +25,7 @@ from bps.common.translate_job_order import (
     flatten_configuration_file,
     flatten_input_products_allow_multiple_products,
     flatten_output_products,
-    retrieve_configuration_params_l2,
+    retrieve_configuration_params,
     retrieve_device_resources,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
@@ -298,7 +298,7 @@ def translate_model_to_l2a_job_order(
         raise InvalidL2aJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
 
     assert job_order.processor_configuration is not None
-    processor_configuration = retrieve_configuration_params_l2(
+    processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAMES_LIST,
         EXPECTED_PROCESSOR_VERSION,
