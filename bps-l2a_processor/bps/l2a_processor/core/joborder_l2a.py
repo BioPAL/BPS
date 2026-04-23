@@ -20,10 +20,10 @@ from bps.common.joborder import DeviceResources, ProcessorConfiguration
 class L2aJobOrder:
     """Job order data for L2A processing."""
 
-    input_stack_acquisitions: tuple[Path, ...]
+    input_stack_acquisitions: list[Path]
     """Stack of L1c input products"""
 
-    input_stack_mph_files: tuple[Path, ...]
+    input_stack_mph_files: list[Path]
     """Paths of each stack acquisition MPH main annotation file"""
 
     output_directory: Path

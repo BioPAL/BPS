@@ -12,7 +12,6 @@ Translation
 
 from pathlib import Path
 
-import numpy as np
 from bps.common.io import joborder_models
 from bps.common.l2_joborder_tags import L2B_OUTPUT_PRODUCT_FD
 from bps.common.translate_job_order import (
@@ -87,6 +86,12 @@ PROCESSING_PARAMS_TILE_ID = "tile_id"
 
 PROCESSING_PARAMS_ID_LIST = [PROCESSING_PARAMS_TILE_ID]
 
+ALIAS_EXPECTED_FD_INPUT: dict[str, bool] = {
+    EXPECTED_PROCESSOR_ALIAS_NO_FD: False,
+    EXPECTED_PROCESSOR_ALIAS_YES_FD: True,
+}
+"""Maps each processor alias to whether an optional L2B FD input is expected."""
+
 
 class InvalidL2bFHJobOrder(ValueError):
     """Raised when failing to translate a joborder meant for the L2b FH Processor"""
@@ -94,7 +99,7 @@ class InvalidL2bFHJobOrder(ValueError):
 
 def translate_l2b_fh_list_of_inputs(
     input_products_list: list[joborder_models.JoInputType],
-) -> tuple[tuple[Path, ...], Path, Path | None]:
+) -> tuple[list[Path], Path, Path | None]:
     """Retrieve, from the input products section, paths of L1c stack acquisitions,
     aux_pp2_fh file and optionally the FH L2a product.
 
@@ -122,21 +127,28 @@ def translate_l2b_fh_list_of_inputs(
         if file_id not in L2B_FH_INPUT_ID_LIST:
             raise InvalidL2bFHJobOrder(f"Unexpected input identifier: {file_id}")
 
-    input_l2a_products = (
-        input_products.pop(L2A_PRODUCT_FH) if L2A_PRODUCT_FH in input_products else input_products.pop(L2A_PRODUCT_TFH)
-    )
-    input_l2a_products = tuple(Path(input_l2a_path) for input_l2a_path in input_l2a_products)
+    if AUX_PP_INPUT not in input_products:
+        raise InvalidL2bFHJobOrder(f"Missing required input: {AUX_PP_INPUT}")
+    if L2A_PRODUCT_FH not in input_products and L2A_PRODUCT_TFH not in input_products:
+        raise InvalidL2bFHJobOrder(f"Missing required input: one of {L2A_PRODUCT_FH} or {L2A_PRODUCT_TFH}")
+
+    input_l2a_products = [
+        Path(p)
+        for p in (
+            input_products.pop(L2A_PRODUCT_FH)
+            if L2A_PRODUCT_FH in input_products
+            else input_products.pop(L2A_PRODUCT_TFH)
+        )
+    ]
 
     aux_pp2_fh_path = Path(input_products.pop(AUX_PP_INPUT)[0])
 
-    if len(input_products) > 0:
-        # input_l2b_fd_product is optional
+    # input_l2b_fd_product is optional
+    input_l2b_fd_product = None
+    if len(input_products) > 0 and L2B_PRODUCT_FD in input_products:
         input_l2b_fd_product = Path(input_products.pop(L2B_PRODUCT_FD)[0])
-    else:
-        input_l2b_fd_product = None
 
-    if len(input_products) > 0:
-        raise InvalidL2bFHJobOrder(f"Unexpected input products: {input_products}")
+    assert len(input_products) == 0
 
     return input_l2a_products, aux_pp2_fh_path, input_l2b_fd_product
 
@@ -167,12 +179,10 @@ def retrieve_configuration_files(
         if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
             raise InvalidL2bFHJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
 
-    l2b_p_conf = configuration_files.pop(CONFIGURATION_FILES_L2BFHPCONF, None)
-    if l2b_p_conf is not None:
-        l2b_p_conf = Path(l2b_p_conf)
+    l2b_p_conf_raw = configuration_files.pop(CONFIGURATION_FILES_L2BFHPCONF, None)
+    l2b_p_conf = Path(l2b_p_conf_raw) if l2b_p_conf_raw is not None else None
 
-    if len(configuration_files) > 0:
-        raise InvalidL2bFHJobOrder(f"Unexpected configuration files: {configuration_files}")
+    assert len(configuration_files) == 0
 
     return l2b_p_conf
 
@@ -209,8 +219,7 @@ def retrieve_l2b_fh_processing_parameters(
     if tile_id:
         l2b_fh_processing_parameters.tile_id = tile_id
 
-    if len(parameters) > 0:
-        raise InvalidL2bFHJobOrder(f"Unexpected processing parameters: {parameters}")
+    assert len(parameters) == 0
 
     return l2b_fh_processing_parameters
 
@@ -236,25 +245,18 @@ def retrieve_l2b_fh_output_directory(
         in case of unexpected output products identifiers, missing required output products or mismatches in the swath
     """
 
-    output_products, output_directory, output_baselines = flatten_output_products(output_products_list)
-    output_baselines = list(np.ones(len(output_products)).astype(int) * int(output_baselines))
+    output_products, output_directory, output_baseline = flatten_output_products(output_products_list)
 
+    if len(output_products) == 0:
+        raise InvalidL2bFHJobOrder("No output products specified: exactly one is required.")
     if len(output_products) > 1:
         raise InvalidL2bFHJobOrder("Too many output products specified: just one is requested.")
 
-    output_baseline = output_baselines[0]
-
-    file_id = output_products[0]
-    if file_id not in [L2B_OUTPUT_PRODUCT_FH, L2B_OUTPUT_PRODUCT_TFH]:
-        raise InvalidL2bFHJobOrder(f"Unexpected output product identifier: {file_id}")
-
-    if L2B_OUTPUT_PRODUCT_FH not in output_products[0] and L2B_OUTPUT_PRODUCT_TFH not in output_products[0]:
-        raise InvalidL2bFHJobOrder("Required output product is not an L2B FH")
-
-    output_products, _, _ = flatten_output_products(output_products_list)
     output_product = output_products[0]
+    if output_product not in [L2B_OUTPUT_PRODUCT_FH, L2B_OUTPUT_PRODUCT_TFH]:
+        raise InvalidL2bFHJobOrder(f"Unexpected output product identifier: {output_product}")
 
-    return Path(output_directory), output_product, output_baseline
+    return Path(output_directory), output_product, int(output_baseline)
 
 
 def translate_model_to_l2b_fh_job_order(
@@ -289,26 +291,16 @@ def translate_model_to_l2b_fh_job_order(
 
     task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
 
-    found_optional_l2a_fd = False
-    for input_product in job_order.list_of_tasks.task[0].list_of_inputs.input:
-        if input_product.input_id.value == L2B_OUTPUT_PRODUCT_FD:
-            found_optional_l2a_fd = True
+    input_ids = [p.input_id.value for p in task.list_of_inputs.input]
+    found_optional_l2b_fd = L2B_OUTPUT_PRODUCT_FD in input_ids
 
-    if (
-        found_optional_l2a_fd
-        and job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_NO_FD
-    ):
-        raise InvalidJobOrder(
-            f"Invalid processor name: {job_order.processor_configuration.processor_name.value}; when optional L2b FD is provided, processor name should be {EXPECTED_PROCESSOR_ALIAS_YES_FD}"
-        )
+    proc_name = job_order.processor_configuration.processor_name.value
 
-    if (
-        not found_optional_l2a_fd
-        and job_order.processor_configuration.processor_name.value == EXPECTED_PROCESSOR_ALIAS_YES_FD
-    ):
-        raise InvalidJobOrder(
-            f"Invalid processor name: {job_order.processor_configuration.processor_name.value}; when optional L2b FD is not provided, processor name should be {EXPECTED_PROCESSOR_ALIAS_NO_FD}"
-        )
+    if proc_name in ALIAS_EXPECTED_FD_INPUT:
+        expected_fd = ALIAS_EXPECTED_FD_INPUT[proc_name]
+        if found_optional_l2b_fd != expected_fd:
+            fd_status = "PRESENT" if found_optional_l2b_fd else "ABSENT"
+            raise InvalidJobOrder(f"Invalid processor name: {proc_name} when optional L2B FD is '{fd_status}'")
 
     device_resources = retrieve_device_resources(task)
 
@@ -336,7 +328,7 @@ def translate_model_to_l2b_fh_job_order(
         device_resources,
         processor_configuration,
         l2b_fh_processing_parameters,
-        input_l2b_fd_product=input_l2b_fd_product if input_l2b_fd_product else None,
-        l2b_fh_p_conf=l2b_fh_p_conf if l2b_fh_p_conf else None,
+        input_l2b_fd_product=input_l2b_fd_product,
+        l2b_fh_p_conf=l2b_fh_p_conf,
         output_baseline=output_baseline,
     )

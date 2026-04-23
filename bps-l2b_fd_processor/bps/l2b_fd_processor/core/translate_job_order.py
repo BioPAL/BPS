@@ -12,7 +12,6 @@ Translation
 
 from pathlib import Path
 
-import numpy as np
 from bps.common.io import joborder_models
 from bps.common.translate_job_order import (
     flatten_configuration_file,
@@ -69,7 +68,7 @@ class InvalidL2bFDJobOrder(ValueError):
 
 def translate_l2b_fd_list_of_inputs(
     input_products_list: list[joborder_models.JoInputType],
-) -> tuple[tuple[Path], Path]:
+) -> tuple[list[Path], Path]:
     """Retrieve, from the input products section, paths of L1c stack acquisitions,
     aux_pp2_fd file and optionally the FD L2a product.
 
@@ -97,13 +96,16 @@ def translate_l2b_fd_list_of_inputs(
         if file_id not in L2B_FD_INPUT_ID_LIST:
             raise InvalidL2bFDJobOrder(f"Unexpected input identifier: {file_id}")
 
-    input_l2a_products = input_products.pop(L2A_PRODUCT_FD)
-    input_l2a_products = tuple(Path(input_l2a_path) for input_l2a_path in input_l2a_products)
+    if L2A_PRODUCT_FD not in input_products:
+        raise InvalidL2bFDJobOrder(f"Missing required input: {L2A_PRODUCT_FD}")
+    if AUX_PP_INPUT not in input_products:
+        raise InvalidL2bFDJobOrder(f"Missing required input: {AUX_PP_INPUT}")
+
+    input_l2a_products = [Path(input_l2a_path) for input_l2a_path in input_products.pop(L2A_PRODUCT_FD)]
 
     aux_pp2_fd_path = Path(input_products.pop(AUX_PP_INPUT)[0])
 
-    if len(input_products) > 0:
-        raise InvalidL2bFDJobOrder(f"Unexpected input products: {input_products}")
+    assert len(input_products) == 0
 
     return input_l2a_products, aux_pp2_fd_path
 
@@ -134,12 +136,10 @@ def retrieve_configuration_files(
         if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
             raise InvalidL2bFDJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
 
-    l2b_p_conf = configuration_files.pop(CONFIGURATION_FILES_L2BFDPCONF, None)
-    if l2b_p_conf is not None:
-        l2b_p_conf = Path(l2b_p_conf)
+    l2b_p_conf_raw = configuration_files.pop(CONFIGURATION_FILES_L2BFDPCONF, None)
+    l2b_p_conf = Path(l2b_p_conf_raw) if l2b_p_conf_raw is not None else None
 
-    if len(configuration_files) > 0:
-        raise InvalidL2bFDJobOrder(f"Unexpected configuration files: {configuration_files}")
+    assert len(configuration_files) == 0
 
     return l2b_p_conf
 
@@ -176,8 +176,7 @@ def retrieve_l2b_fd_processing_parameters(
     if tile_id:
         l2b_fd_processing_parameters.tile_id = tile_id
 
-    if len(parameters) > 0:
-        raise InvalidL2bFDJobOrder(f"Unexpected processing parameters: {parameters}")
+    assert len(parameters) == 0
 
     return l2b_fd_processing_parameters
 
@@ -203,25 +202,18 @@ def retrieve_l2b_fd_output_directory(
         in case of unexpected output products identifiers, missing required output products or mismatches in the swath
     """
 
-    output_products, output_directory, output_baselines = flatten_output_products(output_products_list)
-    output_baselines = list(np.ones(len(output_products)).astype(int) * int(output_baselines))
+    output_products, output_directory, output_baseline = flatten_output_products(output_products_list)
 
+    if len(output_products) == 0:
+        raise InvalidL2bFDJobOrder("No output products specified: exactly one is required.")
     if len(output_products) > 1:
         raise InvalidL2bFDJobOrder("Too many output products specified: just one is requested.")
 
-    output_baseline = output_baselines[0]
-
-    file_id = output_products[0]
-    if file_id not in L2B_OUTPUT_PRODUCT_FD:
-        raise InvalidL2bFDJobOrder(f"Unexpected output product identifier: {file_id}")
-
-    if L2B_OUTPUT_PRODUCT_FD not in output_products[0]:
-        raise InvalidL2bFDJobOrder("Required output product is not an L2B FD")
-
-    output_products, _, _ = flatten_output_products(output_products_list)
     output_product = output_products[0]
+    if output_product != L2B_OUTPUT_PRODUCT_FD:
+        raise InvalidL2bFDJobOrder(f"Unexpected output product identifier: {output_product}")
 
-    return Path(output_directory), output_product, output_baseline
+    return Path(output_directory), output_product, int(output_baseline)
 
 
 def translate_model_to_l2b_fd_job_order(
@@ -281,6 +273,6 @@ def translate_model_to_l2b_fd_job_order(
         device_resources,
         processor_configuration,
         l2b_fh_processing_parameters,
-        l2b_fd_p_conf=l2b_fd_p_conf if l2b_fd_p_conf else None,
+        l2b_fd_p_conf=l2b_fd_p_conf,
         output_baseline=output_baseline,
     )

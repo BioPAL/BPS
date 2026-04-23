@@ -28,7 +28,7 @@ class L2BFDProcessingParameters:
 class L2bFDJobOrder:
     """Job order data for L2B FH processing."""
 
-    input_l2a_products: tuple[Path, ...]
+    input_l2a_products: list[Path]
     """Paths of L2a input products"""
 
     output_directory: Path
