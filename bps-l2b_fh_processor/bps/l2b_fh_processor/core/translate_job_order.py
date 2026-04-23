@@ -20,7 +20,7 @@ from bps.common.translate_job_order import (
     flatten_input_products_allow_multiple_products,
     flatten_output_products,
     flatten_processing_params,
-    retrieve_configuration_params_l2,
+    retrieve_configuration_params,
     retrieve_device_resources,
     retrieve_task,
 )
@@ -281,7 +281,7 @@ def translate_model_to_l2b_fh_job_order(
     if job_order.schema_name != EXPECTED_SCHEMA_NAME:
         raise InvalidL2bFHJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
 
-    processor_configuration = retrieve_configuration_params_l2(
+    processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAMES_LIST,
         EXPECTED_PROCESSOR_VERSION,

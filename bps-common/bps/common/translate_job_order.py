@@ -25,7 +25,7 @@ class InvalidJobOrder(ValueError):
 
 def retrieve_configuration_params(
     configuration: joborder_models.ProcessorConfigurationType,
-    expected_processor_name: str,
+    expected_processor_name: str | list[str],
     expected_processor_version: str,
 ) -> ProcessorConfiguration:
     """Retrieve configuration parameters from the processor configuration section
@@ -34,8 +34,8 @@ def retrieve_configuration_params(
     ----------
     configuration : joborder_models.ProcessorConfigurationType
         processor configuration section
-    expected_processor_name : str
-        expected name of processor
+    expected_processor_name : str | list[str]
+        expected processor name, or list of accepted names
     expected_processor_version : str
         expected version of processor
 
@@ -51,81 +51,9 @@ def retrieve_configuration_params(
     """
     file_class = configuration.file_class
 
-    if configuration.processor_name.value != expected_processor_name:
-        raise InvalidJobOrder(
-            f"Invalid processor name: {configuration.processor_name.value} != {expected_processor_name}"
-        )
-
-    if configuration.processor_version.value != expected_processor_version:
-        raise InvalidJobOrder(
-            f"Invalid processor version: {configuration.processor_version.value} != {expected_processor_version}"
-        )
-
-    if len(configuration.list_of_stdout_log_levels.stdout_log_level) != 1:
-        raise InvalidJobOrder("Unexpected number of stdout log level")
-    stdout_log_level = configuration.list_of_stdout_log_levels.stdout_log_level[0]
-
-    if len(configuration.list_of_stderr_log_levels.stderr_log_level) != 1:
-        raise InvalidJobOrder("Unexpected number of stderr log level")
-    stderr_log_level = configuration.list_of_stderr_log_levels.stderr_log_level[0]
-
-    intermediate_output_enabled = configuration.intermediate_output_enable
-
-    azimuth_interval = None
-    if configuration.request.toi:
-        toi_start = str(configuration.request.toi.start)
-        toi_stop = str(configuration.request.toi.stop)
-        if toi_start and toi_stop:
-            azimuth_interval = (
-                PreciseDateTime.fromisoformat(toi_start),
-                PreciseDateTime.fromisoformat(toi_stop),
-            )
-        elif toi_start or toi_stop:
-            raise InvalidJobOrder(
-                "Invalid metadata parameter request section:" + " TOI start and stop times must be specified together"
-            )
-
-    return ProcessorConfiguration(
-        file_class=file_class.value,
-        stdout_log_level=ProcessorConfiguration.LogLevel(stdout_log_level.value),
-        stderr_log_level=ProcessorConfiguration.LogLevel(stderr_log_level.value),
-        keep_intermediate=intermediate_output_enabled,
-        azimuth_interval=azimuth_interval,
-    )
-
-
-def retrieve_configuration_params_l2(
-    configuration: joborder_models.ProcessorConfigurationType,
-    expected_processor_names: list[str],
-    expected_processor_version: str,
-) -> ProcessorConfiguration:
-    """Retrieve configuration parameters from the processor configuration section, l2a only
-
-    Parameters
-    ----------
-    configuration : joborder_models.JobOrder.ProcessorConfiguration
-        processor configuration section
-    expected_processor_names : List[str]
-        list of all possible expected names of L2a processors
-    expected_processor_version : str
-        expected version of processor
-
-    Returns
-    -------
-    ProcessorConfiguration
-        processor configuration
-
-    Raises
-    ------
-    InvalidJobOrder
-        in case of unexpected tags content
-    """
-    file_class = configuration.file_class
-
-    if configuration.processor_name.value not in expected_processor_names:
-        raise InvalidJobOrder(
-            f"Invalid processor name: {configuration.processor_name.value} not in {expected_processor_names}"
-        )
+    accepted_names = [expected_processor_name] if isinstance(expected_processor_name, str) else expected_processor_name
+    if configuration.processor_name.value not in accepted_names:
+        raise InvalidJobOrder(f"Invalid processor name: {configuration.processor_name.value} not in {accepted_names}")
 
     if configuration.processor_version.value != expected_processor_version:
         raise InvalidJobOrder(
