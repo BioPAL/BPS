@@ -89,11 +89,6 @@ def retrieve_aux_product_data_content(product: Path) -> set[Path]:
     -------
     Set[Path]
         path to the content file
-
-    Raises
-    ------
-    InvalidAuxProduct
-        in case multiple files are found in the 'data/' folder
     """
     return set(retrieve_aux_product_data_dir(product).iterdir())
 
