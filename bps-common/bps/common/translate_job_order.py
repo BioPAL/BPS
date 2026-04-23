@@ -431,8 +431,8 @@ def flatten_output_products(
     output_baseline = None
     for output_product in output_products:
         assert output_product.file_dir is not None
-        if output_product.file_type in outputs:
-            raise InvalidJobOrder(f"Duplicated {output_product.file_type} output file entry")
+        if output_product.file_type.value in outputs:
+            raise InvalidJobOrder(f"Duplicated {output_product.file_type.value} output file entry")
 
         if output_directory:
             if output_product.file_dir.value != output_directory:
