@@ -10,8 +10,6 @@ BPS processors initialization
 ----------
 """
 
-import os
-from contextlib import contextmanager
 from pathlib import Path
 
 from bps.common import bps_logger
@@ -70,20 +68,3 @@ def processor_setup(
     bps_logger.info("Job order file: %s", job_order_path)
 
     return working_dir_path, job_order_path
-
-
-@contextmanager
-def working_directory(path: Path):
-    """Run code in path, restore previous dir on exit
-
-    Parameters
-    ----------
-    path : Path
-        working directory
-    """
-    prev_cwd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(prev_cwd)
