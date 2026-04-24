@@ -9,6 +9,9 @@
 
 import os
 from glob import glob
+from pathlib import Path
+
+from bps.common.io.mph import get_mph_path
 
 
 class BIOMASSAuxIns:
@@ -80,7 +83,7 @@ class BIOMASSAuxInsStructure:
             # Set paths of BIOMASS AUX_INS product single files starting from product name
             product_name = os.path.basename(self.product_path)
             # - MPH file
-            self.mph_file = os.path.join(self.product_path, product_name.lower() + ".xml")
+            self.mph_file = str(get_mph_path(Path(self.product_path)))
             # - Parameters file
             self.parameters_file = (
                 os.path.join(self.product_path, self.data_subfolder, product_name.lower()[:-10]) + "_ins.xml"

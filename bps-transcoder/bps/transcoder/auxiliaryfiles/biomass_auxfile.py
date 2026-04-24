@@ -9,6 +9,9 @@
 
 import os
 from glob import glob
+from pathlib import Path
+
+from bps.common.io.mph import get_mph_path
 
 
 class BIOMASSAuxFile:
@@ -49,13 +52,10 @@ class BIOMASSAuxFileStructure:
             _description_
         """
         if os.path.exists(self.product_path):
-            # Set paths of BIOMASS auxiliary file single files starting from an existing one
             # - MPH file
             self.mph_file = (glob(os.path.join(self.product_path, "*.xml")) or [None])[0]
         else:
-            # Set paths of BIOMASS auxiliary file single files starting from product name
-            product_name = os.path.basename(self.product_path)
             # - MPH file
-            self.mph_file = os.path.join(self.product_path, product_name.lower() + ".xml")
+            self.mph_file = str(get_mph_path(Path(self.product_path)))
 
         return True

@@ -16,6 +16,7 @@ from pathlib import Path
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common_types
+from bps.common.io.mph import get_mph_path
 from bps.transcoder.io import (
     common_annotation_models_l2,
     main_annotation_models_l2b_agb,
@@ -128,7 +129,7 @@ class BIOMASSL2bAGBProductStructure:
             # Set paths of BIOMASS L2b product single files starting from product name
             product_name = os.path.basename(self.product_path)
             # - MPH file
-            self.mph_file = os.path.join(self.product_path, product_name.lower() + ".xml")
+            self.mph_file = str(get_mph_path(Path(self.product_path)))
             # - Measurement files
             measurement_file_root = os.path.join(
                 self.product_path,
