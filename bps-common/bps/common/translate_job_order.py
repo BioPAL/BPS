@@ -16,7 +16,7 @@ from pathlib import Path
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import Swath
 from bps.common.io import joborder_models
-from bps.common.joborder import DeviceResources, ProcessorConfiguration
+from bps.common.joborder import DeviceResources, ProcessorConfiguration, TileProcessingParameters
 
 
 class InvalidJobOrder(ValueError):
@@ -380,6 +380,116 @@ def flatten_output_products(
     assert output_directory is not None
     assert output_baseline is not None
     return outputs, output_directory, output_baseline
+
+
+def retrieve_single_output_product(
+    output_products_list: list[joborder_models.JoOutputType],
+    valid_products: list[str],
+) -> tuple[Path, str, int]:
+    """Retrieve and validate a single output product from the output products section.
+
+    Parameters
+    ----------
+    output_products_list : list[joborder_models.JoOutputType]
+        output products tags
+    valid_products : list[str]
+        accepted output product identifiers
+
+    Returns
+    -------
+    tuple[Path, str, int]
+        Output directory, output product identifier, output baseline.
+
+    Raises
+    ------
+    InvalidJobOrder
+        in case of no/too many output products or unexpected product identifier
+    """
+    if len(output_products_list) == 0:
+        raise InvalidJobOrder("No output products specified: exactly one is required.")
+
+    output_products, output_directory, output_baseline = flatten_output_products(output_products_list)
+
+    if len(output_products) > 1:
+        raise InvalidJobOrder("Too many output products specified: just one is requested.")
+
+    output_product = output_products[0]
+    if output_product not in valid_products:
+        raise InvalidJobOrder(f"Unexpected output product identifier: {output_product}")
+
+    return Path(output_directory), output_product, output_baseline
+
+
+def retrieve_tile_processing_parameters(
+    metadata_parameters: list[joborder_models.ParameterType],
+    tile_id_param: str,
+) -> TileProcessingParameters:
+    """Retrieve tile processing parameters containing a single tile_id parameter.
+
+    Parameters
+    ----------
+    metadata_parameters : list[joborder_models.ParameterType]
+        list of processing parameters
+    tile_id_param : str
+        the parameter name for the tile id
+
+    Returns
+    -------
+    TileProcessingParameters
+        struct containing the processing parameters
+
+    Raises
+    ------
+    InvalidJobOrder
+        if unexpected parameter identifier is found
+    """
+    parameters = flatten_processing_params(metadata_parameters)
+
+    for param_id in parameters:
+        if param_id != tile_id_param:
+            raise InvalidJobOrder(f"Unexpected input processing parameter identifier: {param_id}")
+
+    result = TileProcessingParameters()
+    tile_id = parameters.pop(tile_id_param, None)
+    if tile_id:
+        result.tile_id = tile_id
+
+    assert len(parameters) == 0
+    return result
+
+
+def retrieve_optional_configuration_file(
+    configuration_files_list: list[joborder_models.CfgFileType],
+    conf_key: str,
+) -> Path | None:
+    """Retrieve a single optional configuration file from the section.
+
+    Parameters
+    ----------
+    configuration_files_list : list[joborder_models.CfgFileType]
+        list of configuration files tags
+    conf_key : str
+        the configuration file identifier to retrieve
+
+    Returns
+    -------
+    Path | None
+        the configuration file path, or None if not present
+
+    Raises
+    ------
+    InvalidJobOrder
+        if unexpected configuration file identifier is found
+    """
+    configuration_files = flatten_configuration_file(configuration_files_list)
+
+    for conf_files_id in configuration_files:
+        if conf_files_id != conf_key:
+            raise InvalidJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+
+    conf_raw = configuration_files.pop(conf_key, None)
+    assert len(configuration_files) == 0
+    return Path(conf_raw) if conf_raw is not None else None
 
 
 def flatten_intermediate_outputs(

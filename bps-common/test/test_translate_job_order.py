@@ -57,9 +57,12 @@ from bps.common.translate_job_order import (
     get_bps_logger_level,
     retrieve_configuration_params,
     retrieve_device_resources,
+    retrieve_optional_configuration_file,
     retrieve_single_input_products,
+    retrieve_single_output_product,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
+    retrieve_tile_processing_parameters,
     translate_logger_level,
 )
 from xsdata.models.datatype import XmlDateTime
@@ -496,6 +499,61 @@ class TestGetBpsLoggerLevel(unittest.TestCase):
             ProcessorConfiguration.LogLevel.INFO,
         )
         self.assertEqual(result, logging.INFO)
+
+
+class TestRetrieveSingleOutputProduct(unittest.TestCase):
+    def test_happy_path(self):
+        outputs = [_make_output("PROD_A", "/out", "01")]
+        path, product_id, baseline = retrieve_single_output_product(outputs, ["PROD_A"])
+        self.assertEqual(path, __import__("pathlib").Path("/out"))
+        self.assertEqual(product_id, "PROD_A")
+        self.assertEqual(baseline, 1)
+
+    def test_no_output_raises(self):
+        with self.assertRaises(InvalidJobOrder):
+            retrieve_single_output_product([], ["PROD_A"])
+
+    def test_too_many_outputs_raises(self):
+        outputs = [_make_output("PROD_A", "/out", "01"), _make_output("PROD_B", "/out", "01")]
+        with self.assertRaises(InvalidJobOrder):
+            retrieve_single_output_product(outputs, ["PROD_A", "PROD_B"])
+
+    def test_unexpected_product_raises(self):
+        outputs = [_make_output("PROD_X", "/out", "01")]
+        with self.assertRaises(InvalidJobOrder):
+            retrieve_single_output_product(outputs, ["PROD_A"])
+
+
+class TestRetrieveTileProcessingParameters(unittest.TestCase):
+    def test_happy_path_with_tile_id(self):
+        params = [ParameterType(name="TILE_ID", value="T42")]
+        result = retrieve_tile_processing_parameters(params, "TILE_ID")
+        self.assertEqual(result.tile_id, "T42")
+
+    def test_happy_path_empty_params(self):
+        result = retrieve_tile_processing_parameters([], "TILE_ID")
+        self.assertFalse(result.tile_id)
+
+    def test_unexpected_param_raises(self):
+        params = [ParameterType(name="UNEXPECTED", value="x")]
+        with self.assertRaises(InvalidJobOrder):
+            retrieve_tile_processing_parameters(params, "TILE_ID")
+
+
+class TestRetrieveOptionalConfigurationFile(unittest.TestCase):
+    def test_present_returns_path(self):
+        files = [CfgFileType(cfg_id=CfgId(value="CONF_KEY"), cfg_file_name="/path/conf.xml")]
+        result = retrieve_optional_configuration_file(files, "CONF_KEY")
+        self.assertEqual(result, __import__("pathlib").Path("/path/conf.xml"))
+
+    def test_absent_returns_none(self):
+        result = retrieve_optional_configuration_file([], "CONF_KEY")
+        self.assertIsNone(result)
+
+    def test_unexpected_key_raises(self):
+        files = [CfgFileType(cfg_id=CfgId(value="OTHER_KEY"), cfg_file_name="/path/conf.xml")]
+        with self.assertRaises(InvalidJobOrder):
+            retrieve_optional_configuration_file(files, "CONF_KEY")
 
 
 if __name__ == "__main__":
