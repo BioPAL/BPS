@@ -30,11 +30,11 @@ from bps.common.translate_job_order import (
     retrieve_device_resources,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
+    validate_configuration_file_ids,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
-
-EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
-"""Schema name for Biomass L2a processor"""
 
 EXPECTED_PROCESSOR_NAME = "L2A_P"
 """Processor name for Biomass L2a processor, valid for FD, FH, GN and TOMO FH"""
@@ -59,15 +59,6 @@ EXPECTED_PROCESSOR_NAMES_LIST = [
     EXPECTED_PROCESSOR_ALIAS_TOMO_FH,
 ]
 """All possible alias for Biomass L2a processors"""
-
-EXPECTED_PROCESSOR_VERSION = "04.44"
-"""Processor version for Biomass L2a processor"""
-
-EXPECTED_TASK_NAME = "L2A_P"
-"""Task name for Biomass L2a processor"""
-
-EXPECTED_TASK_VERSION = EXPECTED_PROCESSOR_VERSION
-"""Task version for Biomass L2a processor"""
 
 L2A_OUTPUT_PRODUCTS_ID_LIST = [
     L2A_OUTPUT_PRODUCT_FD,
@@ -138,9 +129,7 @@ def translate_l2a_list_of_inputs(
 
     input_products = flatten_input_products_allow_multiple_products(input_products_list)
 
-    for file_id in input_products:
-        if file_id not in L2a_INPUT_ID_LIST:
-            raise InvalidJobOrder(f"Unexpected input identifier: {file_id}")
+    validate_input_product_ids(input_products, L2a_INPUT_ID_LIST)
 
     input_stack = [Path(input_lic_path) for input_lic_path in input_products.pop(STA_PRODUCT_MAP[processing_swath])]
 
@@ -185,9 +174,7 @@ def retrieve_configuration_files(
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
-    for conf_files_id in configuration_files:
-        if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
-            raise InvalidJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+    validate_configuration_file_ids(configuration_files, CONFIGURATION_FILES_ID_LIST)
 
     l2a_p_conf = configuration_files.pop(CONFIGURATION_FILES_L2APCONF, None)
     if l2a_p_conf is not None:
@@ -270,17 +257,15 @@ def translate_model_to_l2a_job_order(
         If the job_order_content is not compatible with a L2a Processor job order.
     """
 
-    if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+    validate_schema_name(job_order)
 
     assert job_order.processor_configuration is not None
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAMES_LIST,
-        EXPECTED_PROCESSOR_VERSION,
     )
 
-    task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
+    task = retrieve_task(job_order, EXPECTED_PROCESSOR_NAME)
 
     device_resources = retrieve_device_resources(task)
 

@@ -47,6 +47,8 @@ from bps.common.io.joborder_models import (
 )
 from bps.common.joborder import ProcessorConfiguration
 from bps.common.translate_job_order import (
+    BIOMASS_PROCESSOR_VERSION,
+    BIOMASS_SCHEMA_NAME,
     InvalidJobOrder,
     flatten_configuration_file,
     flatten_input_products,
@@ -64,18 +66,19 @@ from bps.common.translate_job_order import (
     retrieve_task,
     retrieve_tile_processing_parameters,
     translate_logger_level,
+    validate_configuration_file_ids,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from xsdata.models.datatype import XmlDateTime
 
 _PROC_NAME = "MY_PROC"
-_PROC_VERSION = "01.00"
 _TASK_NAME = "MY_TASK"
-_TASK_VERSION = "01.00"
 
 
 def _make_proc_config(
     processor_name=_PROC_NAME,
-    processor_version=_PROC_VERSION,
+    processor_version=BIOMASS_PROCESSOR_VERSION,
     stdout_level=ListOfStdoutLogLevelsStdoutLogLevel.INFO,
     stderr_level=ListOfStderrLogLevelsStderrLogLevel.ERROR,
     toi=None,
@@ -124,7 +127,7 @@ def _make_output(file_type_value="OUTPUT_TYPE", file_dir="/out", baseline="01"):
     )
 
 
-def _make_task(task_name=_TASK_NAME, task_version=_TASK_VERSION, ramdisks=None):
+def _make_task(task_name=_TASK_NAME, task_version=BIOMASS_PROCESSOR_VERSION, ramdisks=None):
     return JoTaskType(
         task_name=TaskName(value=task_name),
         task_version=TaskVersion(value=task_version),
@@ -154,7 +157,7 @@ def _make_job_order(task=None, proc_config=None):
 class TestRetrieveConfigurationParams(unittest.TestCase):
     def test_happy_path(self):
         cfg = _make_proc_config()
-        result = retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, _PROC_NAME)
         self.assertIsInstance(result, ProcessorConfiguration)
         self.assertEqual(result.file_class, "OPER")
         self.assertEqual(result.stdout_log_level, ProcessorConfiguration.LogLevel.INFO)
@@ -164,7 +167,7 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
 
     def test_keep_intermediate_true(self):
         cfg = _make_proc_config(keep_intermediate=True)
-        result = retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, _PROC_NAME)
         self.assertTrue(result.keep_intermediate)
 
     def test_with_toi(self):
@@ -173,7 +176,7 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
             stop=XmlDateTime(2020, 12, 31, 23, 59, 59),
         )
         cfg = _make_proc_config(toi=toi)
-        result = retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, _PROC_NAME)
         self.assertIsNotNone(result.azimuth_interval)
 
     def test_toi_partial_raises(self):
@@ -182,17 +185,17 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
         toi = ToiType(start="2020-01-01T00:00:00", stop="")  # type: ignore[arg-type]
         cfg = _make_proc_config(toi=toi)
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+            retrieve_configuration_params(cfg, _PROC_NAME)
 
     def test_wrong_processor_name_raises(self):
         cfg = _make_proc_config(processor_name="WRONG")
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+            retrieve_configuration_params(cfg, _PROC_NAME)
 
     def test_wrong_processor_version_raises(self):
         cfg = _make_proc_config(processor_version="02.00")
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+            retrieve_configuration_params(cfg, _PROC_NAME)
 
     def test_multiple_stdout_levels_raises(self):
         cfg = _make_proc_config(
@@ -202,7 +205,7 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
             ]
         )
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+            retrieve_configuration_params(cfg, _PROC_NAME)
 
     def test_multiple_stderr_levels_raises(self):
         cfg = _make_proc_config(
@@ -212,28 +215,28 @@ class TestRetrieveConfigurationParams(unittest.TestCase):
             ]
         )
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, _PROC_NAME, _PROC_VERSION)
+            retrieve_configuration_params(cfg, _PROC_NAME)
 
     def test_list_of_names_first_match(self):
         cfg = _make_proc_config()
-        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"])
         self.assertIsInstance(result, ProcessorConfiguration)
 
     def test_list_of_names_second_match(self):
         cfg = _make_proc_config(processor_name="ALT_PROC")
-        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
+        result = retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"])
         self.assertIsInstance(result, ProcessorConfiguration)
 
     def test_list_of_names_no_match_raises(self):
         cfg = _make_proc_config(processor_name="UNKNOWN")
         with self.assertRaises(InvalidJobOrder):
-            retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"], _PROC_VERSION)
+            retrieve_configuration_params(cfg, [_PROC_NAME, "ALT_PROC"])
 
 
 class TestRetrieveTask(unittest.TestCase):
     def test_happy_path(self):
         jo = _make_job_order()
-        task = retrieve_task(jo, _TASK_NAME, _TASK_VERSION)
+        task = retrieve_task(jo, _TASK_NAME)
         self.assertEqual(task.task_name.value, _TASK_NAME)
 
     def test_multiple_tasks_raises(self):
@@ -242,17 +245,18 @@ class TestRetrieveTask(unittest.TestCase):
             list_of_tasks=JobOrderType.ListOfTasks(task=[_make_task(), _make_task()]),
         )
         with self.assertRaises(InvalidJobOrder):
-            retrieve_task(jo, _TASK_NAME, _TASK_VERSION)
+            retrieve_task(jo, _TASK_NAME)
 
     def test_wrong_task_name_raises(self):
         jo = _make_job_order()
         with self.assertRaises(InvalidJobOrder):
-            retrieve_task(jo, "WRONG_TASK", _TASK_VERSION)
+            retrieve_task(jo, "WRONG_TASK")
 
     def test_wrong_task_version_raises(self):
-        jo = _make_job_order()
+        task = _make_task(task_version="02.00")
+        jo = _make_job_order(task=task)
         with self.assertRaises(InvalidJobOrder):
-            retrieve_task(jo, _TASK_NAME, "02.00")
+            retrieve_task(jo, _TASK_NAME)
 
 
 class TestRetrieveDeviceResources(unittest.TestCase):
@@ -554,6 +558,47 @@ class TestRetrieveOptionalConfigurationFile(unittest.TestCase):
         files = [CfgFileType(cfg_id=CfgId(value="OTHER_KEY"), cfg_file_name="/path/conf.xml")]
         with self.assertRaises(InvalidJobOrder):
             retrieve_optional_configuration_file(files, "CONF_KEY")
+
+
+class TestValidateSchemaName(unittest.TestCase):
+    def test_valid_schema(self):
+        jo = _make_job_order()
+        jo.schema_name = BIOMASS_SCHEMA_NAME
+        validate_schema_name(jo)  # should not raise
+
+    def test_invalid_schema_raises(self):
+        jo = _make_job_order()
+        jo.schema_name = "WRONG_SCHEMA"
+        with self.assertRaises(InvalidJobOrder):
+            validate_schema_name(jo)
+
+
+class TestValidateInputProductIds(unittest.TestCase):
+    def test_all_valid(self):
+        products = {"TYPE_A": ["/path/a"], "TYPE_B": ["/path/b"]}
+        validate_input_product_ids(products, ["TYPE_A", "TYPE_B", "TYPE_C"])  # should not raise
+
+    def test_unexpected_id_raises(self):
+        products = {"TYPE_A": ["/path/a"], "UNKNOWN": ["/path/x"]}
+        with self.assertRaises(InvalidJobOrder):
+            validate_input_product_ids(products, ["TYPE_A"])
+
+    def test_empty_products(self):
+        validate_input_product_ids({}, ["TYPE_A"])  # should not raise
+
+
+class TestValidateConfigurationFileIds(unittest.TestCase):
+    def test_all_valid(self):
+        files = {"CFG_A": "/path/a.xml", "CFG_B": "/path/b.xml"}
+        validate_configuration_file_ids(files, ["CFG_A", "CFG_B"])  # should not raise
+
+    def test_unexpected_id_raises(self):
+        files = {"CFG_A": "/path/a.xml", "UNKNOWN": "/path/x.xml"}
+        with self.assertRaises(InvalidJobOrder):
+            validate_configuration_file_ids(files, ["CFG_A"])
+
+    def test_empty_files(self):
+        validate_configuration_file_ids({}, ["CFG_A"])  # should not raise
 
 
 if __name__ == "__main__":

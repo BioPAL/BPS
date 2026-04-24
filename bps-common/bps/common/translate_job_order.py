@@ -18,6 +18,12 @@ from bps.common import Swath
 from bps.common.io import joborder_models
 from bps.common.joborder import DeviceResources, ProcessorConfiguration, TileProcessingParameters
 
+BIOMASS_PROCESSOR_VERSION = "04.44"
+"""Expected processor version for all BIOMASS CPF processor job orders"""
+
+BIOMASS_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
+"""Expected XML schema name for all BIOMASS CPF processor job orders"""
+
 
 class InvalidJobOrder(ValueError):
     """Raised when failing to translate a joborder"""
@@ -26,7 +32,6 @@ class InvalidJobOrder(ValueError):
 def retrieve_configuration_params(
     configuration: joborder_models.ProcessorConfigurationType,
     expected_processor_name: str | list[str],
-    expected_processor_version: str,
 ) -> ProcessorConfiguration:
     """Retrieve configuration parameters from the processor configuration section
 
@@ -36,8 +41,6 @@ def retrieve_configuration_params(
         processor configuration section
     expected_processor_name : str | list[str]
         expected processor name, or list of accepted names
-    expected_processor_version : str
-        expected version of processor
 
     Returns
     -------
@@ -55,9 +58,9 @@ def retrieve_configuration_params(
     if configuration.processor_name.value not in accepted_names:
         raise InvalidJobOrder(f"Invalid processor name: {configuration.processor_name.value} not in {accepted_names}")
 
-    if configuration.processor_version.value != expected_processor_version:
+    if configuration.processor_version.value != BIOMASS_PROCESSOR_VERSION:
         raise InvalidJobOrder(
-            f"Invalid processor version: {configuration.processor_version.value} != {expected_processor_version}"
+            f"Invalid processor version: {configuration.processor_version.value} != {BIOMASS_PROCESSOR_VERSION}"
         )
 
     if len(configuration.list_of_stdout_log_levels.stdout_log_level) != 1:
@@ -96,7 +99,6 @@ def retrieve_configuration_params(
 def retrieve_task(
     job_order: joborder_models.JobOrder,
     expected_task_name: str,
-    expected_task_version: str,
 ) -> joborder_models.JoTaskType:
     """Get task from job order object
 
@@ -106,8 +108,6 @@ def retrieve_task(
         job order model
     expected_task_name : str
         expected name of the task
-    expected_task_version : str
-        expected version of the task
 
     Returns
     -------
@@ -127,8 +127,8 @@ def retrieve_task(
     if task.task_name.value != expected_task_name:
         raise InvalidJobOrder(f"Invalid task name: {task.task_name.value} != {expected_task_name}")
 
-    if task.task_version.value != expected_task_version:
-        raise InvalidJobOrder(f"Invalid task version: {task.task_version.value} != {expected_task_version}")
+    if task.task_version.value != BIOMASS_PROCESSOR_VERSION:
+        raise InvalidJobOrder(f"Invalid task version: {task.task_version.value} != {BIOMASS_PROCESSOR_VERSION}")
     return task
 
 
@@ -490,6 +490,63 @@ def retrieve_optional_configuration_file(
     conf_raw = configuration_files.pop(conf_key, None)
     assert len(configuration_files) == 0
     return Path(conf_raw) if conf_raw is not None else None
+
+
+def validate_schema_name(job_order: joborder_models.JobOrder) -> None:
+    """Validate the job order schema name against BIOMASS_SCHEMA_NAME.
+
+    Parameters
+    ----------
+    job_order : joborder_models.JobOrder
+        job order model
+
+    Raises
+    ------
+    InvalidJobOrder
+        if the schema name does not match BIOMASS_SCHEMA_NAME
+    """
+    if job_order.schema_name != BIOMASS_SCHEMA_NAME:
+        raise InvalidJobOrder(f"Invalid schema name: {job_order.schema_name} != {BIOMASS_SCHEMA_NAME}")
+
+
+def validate_input_product_ids(input_products: dict, valid_ids: list[str]) -> None:
+    """Validate that all input product identifiers are in the expected list.
+
+    Parameters
+    ----------
+    input_products : dict
+        dictionary of input products (keyed by identifier)
+    valid_ids : list[str]
+        list of accepted identifiers
+
+    Raises
+    ------
+    InvalidJobOrder
+        if an unexpected identifier is found
+    """
+    for file_id in input_products:
+        if file_id not in valid_ids:
+            raise InvalidJobOrder(f"Unexpected input product identifier: {file_id}")
+
+
+def validate_configuration_file_ids(configuration_files: dict, valid_ids: list[str]) -> None:
+    """Validate that all configuration file identifiers are in the expected list.
+
+    Parameters
+    ----------
+    configuration_files : dict
+        dictionary of configuration files (keyed by identifier)
+    valid_ids : list[str]
+        list of accepted identifiers
+
+    Raises
+    ------
+    InvalidJobOrder
+        if an unexpected identifier is found
+    """
+    for conf_files_id in configuration_files:
+        if conf_files_id not in valid_ids:
+            raise InvalidJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
 
 
 def flatten_intermediate_outputs(
