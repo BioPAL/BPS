@@ -26,6 +26,9 @@ from bps.common.translate_job_order import (
     retrieve_device_resources,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
+    validate_configuration_file_ids,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from bps.stack_processor.interface.external.joborder_stack import (
     StackExternalsProducts,
@@ -34,20 +37,8 @@ from bps.stack_processor.interface.external.joborder_stack import (
     StackProcessingParameters,
 )
 
-EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
-"""Schema name for Biomass Stack processor."""
-
 EXPECTED_PROCESSOR_NAME = "STA_P"
 """Processor name for Biomass Stack processor."""
-
-EXPECTED_PROCESSOR_VERSION = "04.44"
-"""Processor version for Biomass Stack processor."""
-
-EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
-"""Task name for Biomass Stack processor."""
-
-EXPECTED_TASK_VERSION = EXPECTED_PROCESSOR_VERSION
-"""Task version for Biomass Stack processor."""
 
 
 class StackJobOrderParsingError(ParsingError):
@@ -188,9 +179,7 @@ def retrieve_stack_input_and_aux_products(
     input_products = flatten_input_products_allow_multiple_products(input_products_list)
 
     l1_input_products = []
-    for file_id in input_products:
-        if file_id not in STACK_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST:
-            raise InvalidStackJobOrder(f"Unexpected input product identifier: {file_id}")
+    validate_input_product_ids(input_products, STACK_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST)
 
     input_standard_product = input_products.pop(L1_STANDARD_PRODUCT_SCS_MAP[processing_swath])
 
@@ -342,9 +331,7 @@ def retrieve_configuration_files(
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
-    for conf_files_id in configuration_files:
-        if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
-            raise InvalidStackJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+    validate_configuration_file_ids(configuration_files, CONFIGURATION_FILES_ID_LIST)
 
     stap_conf = configuration_files.pop(CONFIGURATION_FILES_STAPCONF, None)
     dem_dir = configuration_files.pop(CONFIGURATION_FILES_DEM_DIR, None)
@@ -384,16 +371,14 @@ def translate_model_to_stack_job_order(
         Object containing the job order for the Stack processor task.
 
     """
-    if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidStackJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+    validate_schema_name(job_order)
 
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAME,
-        EXPECTED_PROCESSOR_VERSION,
     )
 
-    task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
+    task = retrieve_task(job_order, EXPECTED_PROCESSOR_NAME)
 
     device_resources = retrieve_device_resources(task)
 

@@ -26,6 +26,9 @@ from bps.common.translate_job_order import (
     retrieve_single_input_products,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
+    validate_configuration_file_ids,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from bps.l1_processor.processor_interface.joborder_l1 import (
     L1AuxiliaryProducts,
@@ -39,20 +42,8 @@ from bps.l1_processor.processor_interface.joborder_l1 import (
     L1StripmapProducts,
 )
 
-EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
-"""Schema name for Biomass L1 processor"""
-
 EXPECTED_PROCESSOR_NAME = "L1_P"
 """Processor name for Biomass L1 processor"""
-
-EXPECTED_PROCESSOR_VERSION = "04.44"
-"""Processor version for Biomass L1 processor"""
-
-EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
-"""Task name for Biomass L1 processor"""
-
-EXPECTED_TASK_VERSION = EXPECTED_PROCESSOR_VERSION
-"""Task version for Biomass L1 processor"""
 
 
 class ProductsLevel(enum.Enum):
@@ -248,9 +239,7 @@ def retrieve_l1_input_and_aux_products(
     """
     input_products_multiple_products = flatten_input_products_allow_multiple_products(input_products_list)
 
-    for file_id in input_products_multiple_products:
-        if file_id not in L0_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST:
-            raise InvalidL1JobOrder(f"Unexpected input product identifier: {file_id}")
+    validate_input_product_ids(input_products_multiple_products, L0_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST)
 
     aux_tec_products = input_products_multiple_products.pop(AUX_TEC_PRODUCT, [])
 
@@ -431,9 +420,7 @@ def retrieve_configuration_files(
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
-    for conf_files_id in configuration_files:
-        if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
-            raise InvalidL1JobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+    validate_configuration_file_ids(configuration_files, CONFIGURATION_FILES_ID_LIST)
 
     dem_dir = configuration_files.pop(CONFIGURATION_FILES_DEM_DIR, None)
     gmf_product = configuration_files.pop(CONFIGURATION_FILES_GMF_DIR, None)
@@ -464,17 +451,15 @@ def translate_model_to_l1_job_order(job_order: joborder_models.JobOrder) -> L1Jo
         If the job_order_content is not compatible with a L1 Processor job order.
     """
 
-    if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidL1JobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+    validate_schema_name(job_order)
 
     assert job_order.processor_configuration is not None
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAME,
-        EXPECTED_PROCESSOR_VERSION,
     )
 
-    task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
+    task = retrieve_task(job_order, EXPECTED_PROCESSOR_NAME)
 
     device_resources = retrieve_device_resources(task)
 

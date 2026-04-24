@@ -23,6 +23,8 @@ from bps.common.translate_job_order import (
     retrieve_device_resources,
     retrieve_swath_from_products_identifiers,
     retrieve_task,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from bps.l1_framing_processor.core.joborder_l1f import (
     L1AuxiliaryProducts,
@@ -32,20 +34,8 @@ from bps.l1_framing_processor.core.joborder_l1f import (
     L1VirtualFrameOutputProducts,
 )
 
-EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
-"""Schema name for Biomass L1 framing processor"""
-
 EXPECTED_PROCESSOR_NAME = "L1F_P"
 """Processor name for Biomass L1 framing processor"""
-
-EXPECTED_PROCESSOR_VERSION = "04.44"
-"""Processor version for Biomass L1 framing processor"""
-
-EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
-"""Task name for Biomass L1 framing processor"""
-
-EXPECTED_TASK_VERSION = EXPECTED_PROCESSOR_VERSION
-"""Task version for Biomass L1 framing processor"""
 
 
 class ProductsLevel(enum.Enum):
@@ -94,11 +84,6 @@ AUX_ORB_PRODUCT = "AUX_ORB___"
 
 AUX_PRODUCTS_ID_LIST = [
     AUX_ORB_PRODUCT,
-]
-
-CONFIGURATION_FILES_L1FPCONF = "L1F_P_Conf"
-CONFIGURATION_FILES_ID_LIST = [
-    CONFIGURATION_FILES_L1FPCONF,
 ]
 
 
@@ -151,9 +136,7 @@ def retrieve_l1_input_and_aux_products(
     """
     input_products = flatten_input_products(input_products_list)
 
-    for file_id in input_products:
-        if file_id not in L0_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST:
-            raise InvalidL1FJobOrder(f"Unexpected input product identifier: {file_id}")
+    validate_input_product_ids(input_products, L0_INPUT_PRODUCTS_ID_LIST + AUX_PRODUCTS_ID_LIST)
 
     input_standard_product = input_products.pop(L0_STANDARD_PRODUCT_RAW_MAP[processing_swath])
 
@@ -251,16 +234,14 @@ def translate_model_to_l1f_job_order(
         If the job_order_content is not compatible with a L1 Framing Processor job order.
     """
 
-    if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidL1FJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+    validate_schema_name(job_order)
 
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAME,
-        EXPECTED_PROCESSOR_VERSION,
     )
 
-    task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
+    task = retrieve_task(job_order, EXPECTED_PROCESSOR_NAME)
 
     device_resources = retrieve_device_resources(task)
 

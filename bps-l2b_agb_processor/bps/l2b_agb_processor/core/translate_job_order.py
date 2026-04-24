@@ -24,13 +24,13 @@ from bps.common.translate_job_order import (
     retrieve_single_output_product,
     retrieve_task,
     retrieve_tile_processing_parameters,
+    validate_configuration_file_ids,
+    validate_input_product_ids,
+    validate_schema_name,
 )
 from bps.l2b_agb_processor.core.joborder_l2b_agb import (
     L2bAGBJobOrder,
 )
-
-EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
-"""Schema name for Biomass L2b AGB processor"""
 
 EXPECTED_PROCESSOR_NAME = "L2B_AGB_P"
 """Processor name for Biomass L2b AGB processor"""
@@ -55,15 +55,6 @@ EXPECTED_PROCESSOR_NAMES_LIST = [
     EXPECTED_PROCESSOR_ALIAS_YES_FD_YES_AGB,
 ]
 """All possible alias for Biomass L2b FH processors"""
-
-EXPECTED_PROCESSOR_VERSION = "04.44"
-"""Processor version for Biomass L2b AGB processor"""
-
-EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME
-"""Task name for Biomass L2b AGB processor"""
-
-EXPECTED_TASK_VERSION = EXPECTED_PROCESSOR_VERSION
-"""Task version for Biomass L2b AGB processor"""
 
 L2A_PRODUCT_GN = "FP_GN__L2A"
 
@@ -91,8 +82,6 @@ CONFIGURATION_FILES_ID_LIST = [
     CONFIGURATION_FILES_CAL_AB_DIR,
 ]
 PROCESSING_PARAMS_TILE_ID = "central_tile_id"
-
-PROCESSING_PARAMS_ID_LIST = [PROCESSING_PARAMS_TILE_ID]
 
 ALIAS_EXPECTED_INPUTS: dict[str, tuple[bool, bool]] = {
     EXPECTED_PROCESSOR_ALIAS_YES_FD_YES_AGB: (True, True),
@@ -131,9 +120,7 @@ def translate_l2b_agb_list_of_inputs(
 
     input_products = flatten_input_products_allow_multiple_products(input_products_list)
 
-    for file_id in input_products:
-        if file_id not in L2B_AGB_INPUT_ID_LIST:
-            raise InvalidJobOrder(f"Unexpected input identifier: {file_id}")
+    validate_input_product_ids(input_products, L2B_AGB_INPUT_ID_LIST)
 
     if L2A_PRODUCT_GN not in input_products:
         raise InvalidJobOrder(f"Missing required input: {L2A_PRODUCT_GN}")
@@ -191,9 +178,7 @@ def retrieve_configuration_files(
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
-    for conf_files_id in configuration_files:
-        if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
-            raise InvalidJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+    validate_configuration_file_ids(configuration_files, CONFIGURATION_FILES_ID_LIST)
 
     l2b_p_conf_raw = configuration_files.pop(CONFIGURATION_FILES_L2BAGBPCONF, None)
     l2b_p_conf = Path(l2b_p_conf_raw) if l2b_p_conf_raw is not None else None
@@ -234,16 +219,14 @@ def translate_model_to_l2b_agb_job_order(
         If the job_order_content is not compatible with a L2B AGB Processor job order.
     """
 
-    if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+    validate_schema_name(job_order)
 
     processor_configuration = retrieve_configuration_params(
         job_order.processor_configuration,
         EXPECTED_PROCESSOR_NAMES_LIST,
-        EXPECTED_PROCESSOR_VERSION,
     )
 
-    task = retrieve_task(job_order, EXPECTED_TASK_NAME, EXPECTED_TASK_VERSION)
+    task = retrieve_task(job_order, EXPECTED_PROCESSOR_NAME)
 
     input_ids = [p.input_id.value for p in task.list_of_inputs.input]
     found_optional_l2b_fd = L2B_OUTPUT_PRODUCT_FD in input_ids
