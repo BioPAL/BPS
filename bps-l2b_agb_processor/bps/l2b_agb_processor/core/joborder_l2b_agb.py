@@ -13,15 +13,7 @@ L2B AGB processor job order
 from dataclasses import dataclass
 from pathlib import Path
 
-from bps.common.joborder import DeviceResources, ProcessorConfiguration
-
-
-@dataclass
-class L2BAGBProcessingParameters:
-    """High level processing parameters"""
-
-    tile_id: str = ""
-    """Tile ID to be processed"""
+from bps.common.joborder import DeviceResources, ProcessorConfiguration, TileProcessingParameters
 
 
 @dataclass
@@ -55,7 +47,7 @@ class L2bAGBJobOrder:
     processor_configuration: ProcessorConfiguration
     """Processor configuration"""
 
-    processing_parameters: L2BAGBProcessingParameters
+    processing_parameters: TileProcessingParameters
     """High level processing parameters"""
 
     input_l2b_fd_products: list[Path] | None = None

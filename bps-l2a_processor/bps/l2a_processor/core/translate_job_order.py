@@ -22,6 +22,7 @@ from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_TFH,
 )
 from bps.common.translate_job_order import (
+    InvalidJobOrder,
     flatten_configuration_file,
     flatten_input_products_allow_multiple_products,
     flatten_output_products,
@@ -108,10 +109,6 @@ ALIAS_EXPECTED_OUTPUT: dict[str, str] = {
 """Maps each single-output processor alias to its expected output product."""
 
 
-class InvalidL2aJobOrder(ValueError):
-    """Raised when failing to translate a joborder meant for the L2a Processor"""
-
-
 def translate_l2a_list_of_inputs(
     input_products_list: list[joborder_models.JoInputType],
     processing_swath: Swath,
@@ -135,7 +132,7 @@ def translate_l2a_list_of_inputs(
 
     Raises
     ------
-    InvalidL2aJobOrder
+    InvalidJobOrder
         in case of unexpected input products identifiers, missing required input products
     """
 
@@ -143,12 +140,12 @@ def translate_l2a_list_of_inputs(
 
     for file_id in input_products:
         if file_id not in L2a_INPUT_ID_LIST:
-            raise InvalidL2aJobOrder(f"Unexpected input identifier: {file_id}")
+            raise InvalidJobOrder(f"Unexpected input identifier: {file_id}")
 
     input_stack = [Path(input_lic_path) for input_lic_path in input_products.pop(STA_PRODUCT_MAP[processing_swath])]
 
     if len(input_stack) < 2 or len(input_stack) > 8:
-        raise InvalidL2aJobOrder("Wrong number of input Sx_STA__1S file names: should be >2 and <8")
+        raise InvalidJobOrder("Wrong number of input Sx_STA__1S file names: should be >2 and <8")
 
     input_stack_mph_files = [get_mph_path(acquisition) for acquisition in input_stack]
 
@@ -161,7 +158,7 @@ def translate_l2a_list_of_inputs(
         input_l2a_fd_product = None
 
     if len(input_products) > 0:
-        raise InvalidL2aJobOrder(f"Unexpected input products: {input_products}")
+        raise InvalidJobOrder(f"Unexpected input products: {input_products}")
 
     return input_stack, input_stack_mph_files, aux_pp2_2a_path, input_l2a_fd_product
 
@@ -183,14 +180,14 @@ def retrieve_configuration_files(
 
     Raises
     ------
-    InvalidL2aJobOrder
+    InvalidJobOrder
         unexpected configuration files id
     """
     configuration_files = flatten_configuration_file(configuration_files_list)
 
     for conf_files_id in configuration_files:
         if conf_files_id not in CONFIGURATION_FILES_ID_LIST:
-            raise InvalidL2aJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
+            raise InvalidJobOrder(f"Unexpected configuration file identifier: {conf_files_id}")
 
     l2a_p_conf = configuration_files.pop(CONFIGURATION_FILES_L2APCONF, None)
     if l2a_p_conf is not None:
@@ -199,7 +196,7 @@ def retrieve_configuration_files(
     fnf_dir = Path(configuration_files.pop(CONFIGURATION_FILES_FNF_DIR))
 
     if len(configuration_files) > 0:
-        raise InvalidL2aJobOrder(f"Unexpected configuration files: {configuration_files}")
+        raise InvalidJobOrder(f"Unexpected configuration files: {configuration_files}")
 
     return fnf_dir, l2a_p_conf
 
@@ -224,7 +221,7 @@ def retrieve_l2a_output_directory(
 
     Raises
     ------
-    InvalidL2aJobOrder
+    InvalidJobOrder
         in case of unexpected output products identifiers, missing required output products or mismatches in processor_name and output products
     """
 
@@ -233,7 +230,7 @@ def retrieve_l2a_output_directory(
     if processor_name in ALIAS_EXPECTED_OUTPUT:
         expected_output = ALIAS_EXPECTED_OUTPUT[processor_name]
         if len(output_products) != 1 or output_products[0] != expected_output:
-            raise InvalidL2aJobOrder(
+            raise InvalidJobOrder(
                 f"when processor name is {processor_name}, the only admitted output is {expected_output}; "
                 f"found instead {output_products[0] if len(output_products) == 1 else output_products}"
             )
@@ -242,10 +239,10 @@ def retrieve_l2a_output_directory(
 
     for file_id in output_products:
         if file_id not in L2A_OUTPUT_PRODUCTS_ID_LIST:
-            raise InvalidL2aJobOrder(f"Unexpected output product identifier: {file_id}")
+            raise InvalidJobOrder(f"Unexpected output product identifier: {file_id}")
 
     if not any(prod_string in output_products for prod_string in L2A_OUTPUT_PRODUCTS_ID_LIST):
-        raise InvalidL2aJobOrder(
+        raise InvalidJobOrder(
             f"Missing required output product (at least one of three is necessary): {L2A_OUTPUT_PRODUCTS_ID_LIST}"
         )
 
@@ -269,12 +266,12 @@ def translate_model_to_l2a_job_order(
 
     Raises
     ------
-    InvalidL2aJobOrder
+    InvalidJobOrder
         If the job_order_content is not compatible with a L2a Processor job order.
     """
 
     if job_order.schema_name != EXPECTED_SCHEMA_NAME:
-        raise InvalidL2aJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
+        raise InvalidJobOrder(f"Invalid schema name: {job_order.schema_name} != {EXPECTED_SCHEMA_NAME}")
 
     assert job_order.processor_configuration is not None
     processor_configuration = retrieve_configuration_params(
@@ -298,7 +295,7 @@ def translate_model_to_l2a_job_order(
         STA_PRODUCT_MAP,
     )
     if processing_swath is None:
-        raise InvalidL2aJobOrder("Missing L1c product")
+        raise InvalidJobOrder("Missing L1c product")
 
     (
         input_stack_acquisitions,

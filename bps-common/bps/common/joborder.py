@@ -64,3 +64,11 @@ class DeviceResources:
 
     ramdisk_mount_point: Path | None = None
     """Mount point of the ram disk"""
+
+
+@dataclass
+class TileProcessingParameters:
+    """High level processing parameters for tile-based processors"""
+
+    tile_id: str = ""
+    """Tile ID to be processed"""
