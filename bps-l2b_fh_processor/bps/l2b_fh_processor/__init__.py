@@ -10,5 +10,5 @@ Biomass L2b FH Processor
 ------------------------
 """
 
-__version__ = "4.4.2"
+__version__ = "4.4.3"
 BPS_L2B_FH_PROCESSOR_NAME = "Biomass L2b FH Processor"

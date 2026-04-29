@@ -370,17 +370,16 @@ def ground_cancellation_core(
     """
 
     # Demodulation
-    for idx, data in enumerate(scs_acq_list):
-        scs_acq_list[idx] = data * np.exp(-1j * vertical_wavenumber_list[idx] * demodulation_height)
+    scs_acq_list_demodulated = [
+        data * np.exp(1j * vertical_wavenumber * demodulation_height)
+        for data, vertical_wavenumber in zip(scs_acq_list, vertical_wavenumber_list)
+    ]
 
     # Generating synthetic SLC through interpolation
-    Ikz0, mask_extrap = kzInterp(scs_acq_list, vertical_wavenumber_list, kz0)
+    Ikz0, mask_extrap = kzInterp(scs_acq_list_demodulated, vertical_wavenumber_list, kz0)
 
     # Modulation
-    for idx, data in enumerate(scs_acq_list):
-        scs_acq_list[idx] = data * np.exp(1j * vertical_wavenumber_list[idx] * demodulation_height)
-
-    Ikz0 = Ikz0 * np.exp(1j * kz0 * demodulation_height)
+    Ikz0 = Ikz0 * np.exp(-1j * kz0 * demodulation_height)
 
     ground_cancelled = scs_acq_list[idx_reference] - Ikz0
 
@@ -422,7 +421,7 @@ def kzInterp(
 
     # convert input List in a 3d matrix,
     # in order to have better performances in the computatios that follows
-    scs_acq_matrix = np.zeros((Naz, Nrg, num_acq), dtype=np.complex64)
+    scs_acq_matrix = np.zeros((Naz, Nrg, num_acq), dtype=np.complex128)
     vertical_wavenumber_matrix = np.zeros((Naz, Nrg, num_acq))
     for idx_acq, (scs_data, vertical_wavenumber) in enumerate(zip(scs_acq_list_in, vertical_wavenumber_list_in)):
         scs_acq_matrix[:, :, idx_acq] = scs_data

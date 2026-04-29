@@ -992,7 +992,7 @@ def geocoding_update_dem_coordinates(
     state_vectors: StateVectors
         State vectors from L1C orbit file [N_az,1]
     emphasized_forest_height: Union[float, np.ndarray]
-        single float value [m] for Forest Disturbance algorithm
+        single float value [m] for Forest Disturbance and Ground Cancellation algorithms
         Naz_sub x Nrg_sub matrix of float for Forest Height algorithm (is the estimated Forest Height)
     dgg_latitude_axis_rad: np.ndarray
         DGG sampling: output latitude vector [rad] where to geocode the input data
@@ -1030,7 +1030,10 @@ def geocoding_update_dem_coordinates(
     )
 
     bps_logger.info("Geocoding initialization: update DEM Coordinates")
-    bps_logger.info(f"    using AUX PP2 2A emphasized forest height: {emphasized_forest_height} [m]")
+    if np.ndim(emphasized_forest_height) == 0:
+        bps_logger.info(f"    using AUX PP2 2A emphasized forest height: {emphasized_forest_height} [m]")
+    else:
+        bps_logger.info("    using the estimated forest height")
 
     start_time = datetime.now()
     # Geocoding STEP 2/4: update DEM coordinates P0 -> P1
@@ -1093,6 +1096,12 @@ def geocoding_update_dem_coordinates(
     p1_llh_rad_mat = xyz2llh(
         np.array([p1_xyz_mat[0].flatten(), p1_xyz_mat[1].flatten(), p1_xyz_mat[2].flatten()])
     ).reshape(3, num_az, num_rg)
+
+    # Check if there are NaNs (this can happen inL2A FH, where the input forest height is the estimated one)
+    valid_p1_mask = ~np.isnan(p1_llh_rad_mat[0, :, :])
+
+    # Update the global mask
+    dem_valid_values_mask = dem_valid_values_mask & valid_p1_mask
 
     stop_time = datetime.now()
     elapsed_time = (stop_time - start_time).total_seconds()

@@ -1,0 +1,527 @@
+spec:
+  inputs:
+    bps-full-build:
+      type: boolean
+      default: false
+      description: Enable full build jobs such as packaging, docker and downstream release tasks.
+    test-plan-version:
+      type: string
+      default: ""
+      description: Test plan version to use when the full build flow enables test plan generation.
+    bps-enable-l1-test:
+      type: boolean
+      default: false
+      description: Enable the L1 integration test suites.
+    bps-enable-stack-test:
+      type: boolean
+      default: false
+      description: Enable the stack integration test suites.
+    bps-enable-win10-unittest:
+      type: boolean
+      default: false
+      description: Propagate Windows unit test enablement to downstream project pipelines.
+---
+
+stages:
+  - subproject
+  - integration_tests
+  - conda-packaging
+  - conda-integration-tests
+  - deploy
+  - docker
+  - testplan
+
+workflow:
+  rules:
+    - when: always
+
+include:
+  - local: ".conda-packaging-ci.yml"
+  - local: ".docker-ci.yml"
+  - local: ".testplan-ci.yml"
+    inputs:
+      bps-full-build: $[[ inputs.bps-full-build ]]
+      test-plan-version: $[[ inputs.test-plan-version ]]
+
+.enable_deploy:
+  rules:
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+
+.full_build:
+  rules:
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+
+.testing_rules:
+  rules:
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+
+.enable_l1:
+  rules:
+    - !reference [.testing_rules, rules]
+    - if: '"$[[ inputs.bps-enable-l1-test ]]" == "true"'
+
+.enable_stack:
+  rules:
+    - !reference [.testing_rules, rules]
+    - if: '"$[[ inputs.bps-enable-stack-test ]]" == "true"'
+
+.tags_rocky8_conda:
+  tags: ["eo", "rocky8", "conda"]
+
+.tags_win10_conda:
+  tags: ["eo", "win10", "conda"]
+
+.tags_deploy:
+  tags: ["eo", "deploy"]
+
+.subproject:
+  stage: subproject
+  variables:
+    SUBPROJECT: $CI_JOB_NAME
+    BPS_ENABLE_WIN10_UNITTEST: '$[[ inputs.bps-enable-win10-unittest ]]'
+  trigger:
+    strategy: mirror
+
+bps-common:
+  extends: .subproject
+  trigger:
+    include: bps-common/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-common/*
+        - bps-common/**/*
+
+bps-transcoder:
+  extends: .subproject
+  trigger:
+    include: bps-transcoder/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-transcoder/*
+        - bps-transcoder/**/*
+
+bps-l1_framing_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l1_framing_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l1_framing_processor/*
+        - bps-l1_framing_processor/**/*
+
+bps-l1_pre_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l1_pre_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l1_pre_processor/*
+        - bps-l1_pre_processor/**/*
+
+bps-l1_core_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l1_core_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l1_core_processor/*
+        - bps-l1_core_processor/**/*
+
+bps-l1_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l1_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l1_processor/*
+        - bps-l1_processor/**/*
+
+bps-stack_pre_processor:
+  extends: .subproject
+  trigger:
+    include: bps-stack_pre_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-stack_pre_processor/*
+        - bps-stack_pre_processor/**/*
+
+bps-stack_coreg_processor:
+  extends: .subproject
+  trigger:
+    include: bps-stack_coreg_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-stack_coreg_processor/*
+        - bps-stack_coreg_processor/**/*
+
+bps-stack_cal_processor:
+  extends: .subproject
+  trigger:
+    include: bps-stack_cal_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-stack_cal_processor/*
+        - bps-stack_cal_processor/**/*
+
+bps-stack_processor:
+  extends: .subproject
+  trigger:
+    include: bps-stack_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-stack_processor/*
+        - bps-stack_processor/**/*
+
+bps-l2a_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l2a_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l2a_processor/*
+        - bps-l2a_processor/**/*
+
+bps-l2b_fd_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l2b_fd_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l2b_fd_processor/*
+        - bps-l2b_fd_processor/**/*
+
+bps-l2b_fh_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l2b_fh_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l2b_fh_processor/*
+        - bps-l2b_fh_processor/**/*
+
+bps-l2b_agb_processor:
+  extends: .subproject
+  trigger:
+    include: bps-l2b_agb_processor/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-l2b_agb_processor/*
+        - bps-l2b_agb_processor/**/*
+
+bps-task-tables:
+  extends: .subproject
+  trigger:
+    include: bps-task-tables/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - bps-task-tables/*
+        - bps-task-tables/**/*
+
+.integration_test_rocky8:
+  stage: integration_tests
+  needs: []
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - when: always
+  extends:
+    - .tags_rocky8_conda
+  script:
+    - source .gitlab/ci/internal_ci_data.sh
+    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
+    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
+    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
+    - curl -s $L1_EXECUTABLES_LNX -o L1_executables.tgz
+    - tar -xzf L1_executables.tgz
+    - export PATH=${PWD}/L1_executables:${PATH}
+    - export LD_LIBRARY_PATH=${PWD}/L1_executables:${LD_LIBRARY_PATH}
+    - curl -s $STACK_EXECUTABLES_LNX -o Stack_Executables.tgz
+    - tar -xzf Stack_Executables.tgz
+    - export PATH=${PWD}/Stack_Executables:${PATH}
+    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda activate test
+    - python -m pip install -e ./bps-common -e ./bps-transcoder
+    - python -m pip install -e ./bps-l1_framing_processor
+    - python -m pip install -e ./bps-l1_pre_processor -e ./bps-l1_core_processor -e ./bps-l1_processor
+    - python -m pip install -e ./bps-stack_processor -e ./bps-stack_cal_processor -e ./bps-stack_coreg_processor -e ./bps-stack_pre_processor
+    - python -m pip install -e ./bps-l2a_processor -e ./bps-l2b_fd_processor -e ./bps-l2b_fh_processor -e ./bps-l2b_agb_processor
+    - python -m pip install -r test/requirements.txt
+    - python -m arepyextras.test --config test/integration/config/linux.toml test run ${INTEGRATION_TEST}
+
+base_rocky8_py312:
+  extends:
+    - .integration_test_rocky8
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/base"
+
+e2e_rocky8_py312:
+  extends:
+    - .integration_test_rocky8
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/e2e"
+
+e2e_rocky8_py313:
+  extends:
+    - .integration_test_rocky8
+  variables:
+    PYTHON: "3.13"
+    INTEGRATION_TEST: "test/integration/suite/e2e"
+
+e2e_rocky8_py314:
+  extends:
+    - .integration_test_rocky8
+  variables:
+    PYTHON: "3.14"
+    INTEGRATION_TEST: "test/integration/suite/e2e"
+
+l1_rocky8_py312:
+  extends:
+    - .integration_test_rocky8
+    - .enable_l1
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/l1"
+
+stack_rocky8_py312:
+  extends:
+    - .integration_test_rocky8
+    - .enable_stack
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/stack/basic"
+
+.integration_test_win10:
+  stage: integration_tests
+  needs: []
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - when: always
+  extends:
+    - .tags_win10_conda
+  script:
+    - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
+    - $ProgressPreference = 'SilentlyContinue'
+    - |
+      Get-Content .gitlab/ci/internal_ci_data.sh |
+      Where-Object { $_ -match '^export ' } |
+      ForEach-Object {
+        $entry = $_.Substring(7)
+        $name, $value = $entry -split '=', 2
+        $value = $value.Trim().Trim('"')
+        [System.Environment]::SetEnvironmentVariable($name, $value)
+      }
+    - Invoke-WebRequest -UseBasicParsing -Uri "$env:L1_EXECUTABLES_WIN" -OutFile "L1_executables.zip"
+    - Expand-Archive -Path "L1_executables.zip" -DestinationPath .
+    - Invoke-WebRequest -UseBasicParsing -Uri "$env:STACK_EXECUTABLES_WIN" -OutFile "Stack_Executables.zip"
+    - Expand-Archive -Path "Stack_Executables.zip" -DestinationPath .
+    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda activate test
+    - $L1_BIN_FOLDER = $("${pwd}" + "\L1_executables")
+    - $env:PATH = $($env:PATH + ";" + $L1_BIN_FOLDER)
+    - $STACK_BIN_FOLDER = $("${pwd}" + "\Stack_Executables")
+    - $env:PATH = $($env:PATH + ";" + $STACK_BIN_FOLDER)
+    - python -m pip install -e ./bps-common -e ./bps-transcoder
+    - python -m pip install -e ./bps-l1_pre_processor -e ./bps-l1_core_processor -e ./bps-l1_processor
+    - python -m pip install -e ./bps-stack_processor -e ./bps-stack_cal_processor -e ./bps-stack_coreg_processor -e ./bps-stack_pre_processor
+    - python -m pip install -e ./bps-l2a_processor -e ./bps-l2b_fd_processor -e ./bps-l2b_fh_processor -e ./bps-l2b_agb_processor
+    - python -m pip install -r test/requirements.txt
+    - mkdir tdir
+    - python -m arepyextras.test --config test/integration/config/win10.toml test run ${INTEGRATION_TEST}
+  retry: 2
+
+base_win10_py312:
+  extends:
+    - .integration_test_win10
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/base"
+
+l1_win10_py312:
+  extends:
+    - .integration_test_win10
+    - .enable_l1
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/l1"
+
+stack_win10_py312:
+  extends:
+    - .integration_test_win10
+    - .enable_stack
+  variables:
+    PYTHON: "3.12"
+    INTEGRATION_TEST: "test/integration/suite/stack/win_tests"
+
+.conda_integration_test_rocky8_base:
+  stage: conda-integration-tests
+  extends:
+    - .tags_rocky8_conda
+    - .full_build
+  script:
+    - source .gitlab/ci/internal_ci_data.sh
+    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
+    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
+    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
+    - conda create --name test python=${PYTHON} conda-build
+    - conda activate test
+    - python -m conda_index ./local_channel
+    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
+    - conda config --prepend channels conda-forge
+    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
+    - conda config --prepend channels ${PWD}/local_channel
+    - conda install --strict-channel-priority bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fd_processor bps-l2b_fh_processor bps-l2b_agb_processor
+    - conda list
+    - python -m pip install -r test/requirements.txt
+    - python -m arepyextras.test --config test/integration/config/linux.toml test run test/integration/suite/base
+    - python -m arepyextras.test --config test/integration/config/linux.toml test run test/integration/suite/stack/basic/bps-stack-normal.py:test_bps_sta_002_tom_reduced_data_nominal
+  needs:
+    - job: bps-common-conda
+      optional: true
+    - job: bps-transcoder-conda
+      optional: true
+    - job: bps-l1_framing_processor-conda
+      optional: true
+    - job: bps-l1_pre_processor-conda
+      optional: true
+    - job: bps-l1_core_processor-conda
+      optional: true
+    - job: bps-l1_processor-conda
+      optional: true
+    - job: bps-stack_pre_processor-conda
+      optional: true
+    - job: bps-stack_coreg_processor-conda
+      optional: true
+    - job: bps-stack_cal_processor-conda
+      optional: true
+    - job: bps-stack_processor-conda
+      optional: true
+    - job: bps-l2a_processor-conda
+      optional: true
+    - job: bps-l2b_fd_processor-conda
+      optional: true
+    - job: bps-l2b_fh_processor-conda
+      optional: true
+    - job: bps-l2b_agb_processor-conda
+      optional: true
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - ./*/dist/*.conda
+      - ./local_channel
+
+base_rocky8_conda_py312:
+  extends: .conda_integration_test_rocky8_base
+  variables:
+    PYTHON: "3.12"
+
+base_rocky8_conda_py313:
+  extends: .conda_integration_test_rocky8_base
+  variables:
+    PYTHON: "3.13"
+
+base_rocky8_conda_py314:
+  extends: .conda_integration_test_rocky8_base
+  variables:
+    PYTHON: "3.14"
+
+conda_deploy:
+  stage: deploy
+  extends:
+    - .tags_deploy
+    - .enable_deploy
+  script:
+    - eval "$(ssh-agent -s)"
+    - |
+      for file in ./*/dist/*.conda; do
+        eo_pgp-signme ${file} > ${file}.asc
+        if [[ $file == *"py_0.conda" ]]; then
+          ./.gitlab/ci/dashboard-copy.sh ${file} ${INTERNAL_CONDA_CHANNEL_PATH}/noarch &&
+          ./.gitlab/ci/dashboard-copy.sh ${file}.asc ${INTERNAL_CONDA_CHANNEL_PATH}/noarch;
+        else
+          ./.gitlab/ci/dashboard-copy.sh ${file} ${INTERNAL_CONDA_CHANNEL_PATH}/linux-64 &&
+          ./.gitlab/ci/dashboard-copy.sh ${file}.asc ${INTERNAL_CONDA_CHANNEL_PATH}/linux-64;
+        fi
+      done
+    - ./.gitlab/ci/conda-forge-update.sh ${INTERNAL_CONDA_CHANNEL_PATH}
+  needs:
+    - job: base_rocky8_conda_py312

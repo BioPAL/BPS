@@ -643,8 +643,8 @@ class FD:
         )
 
         wavenumber_spacings = np.abs(np.diff(average_wavenumbers))
-        hoa_min = 2 * np.pi / min(wavenumber_spacings)
-        hoa_max = 2 * np.pi / max(wavenumber_spacings)
+        hoa_max = 2 * np.pi / min(wavenumber_spacings)
+        hoa_min = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
             min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
             max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),

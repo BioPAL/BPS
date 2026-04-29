@@ -52,6 +52,7 @@ from bps.stack_cal_processor.core.msc.phaseplane import (
     phase_plane_inplace_compensation,
 )
 from bps.stack_cal_processor.core.msc.utils import (
+    SecondaryStackManager,
     azimuth_meters_to_pixels,
     coherence_window_size_px,
     compute_azimuth_space_axis,
@@ -66,7 +67,7 @@ from bps.stack_cal_processor.core.msc.warping import apply_constant_azimuth_shif
 def multi_squint_calibration(
     *,
     stack: tuple[tuple[npt.NDArray[complex], ...], ...],
-    stack_noshifts: tuple[tuple[npt.NDArray[complex], ...], ...],
+    secondary_stack_manager: SecondaryStackManager,
     synth_phases: tuple[npt.NDArray[float], ...],
     conf: StackCalConf.MscConf,
     stack_specs: StackDataSpecs,
@@ -99,10 +100,11 @@ def multi_squint_calibration(
         by coregistering both along-track and slant-range direction with speckle
         tracking.
 
-    stack_noshifts: tuple[tuple[npt.NDArray[complex], ...], ...]
-        A stack of Nimg frames of shape [Naz x Nrg]. This stack is obtained
-        by coregistering the slant-range direction with speckle tracking and
-        the along-track direction with orbit info/geometry only.
+    secondary_stack_manager: SecondaryStackManager
+        Object that manages loading the secondary stack, that is stack of
+        Nimg frames of shape [Naz x Nrg] obtained by coregistering the slant-range
+        direction with speckle tracking and the along-track direction with orbit
+        info/geometry only.
 
     synth_phases: tuple[npt.NDArray[float], ...]  [rad]
         The synthetic interferogram from the DEM.
@@ -170,14 +172,9 @@ def multi_squint_calibration(
     )
 
     # As first step, we need to compensate the stacks.
-    bps_logger.info("Compensating the flattening phase screens (DSI)")
+    bps_logger.info("Compensating the flattening phase screens (primary stack)")
     compensate_inplace_dsi_multithreaded(
         stack_images=stack,
-        synth_phases=synth_phases,
-        max_num_threads=max_num_threads,
-    )
-    compensate_inplace_dsi_multithreaded(
-        stack_images=stack_noshifts,
         synth_phases=synth_phases,
         max_num_threads=max_num_threads,
     )
@@ -224,6 +221,18 @@ def multi_squint_calibration(
     for index_p, index_s in interferometric_pair_indices:
         bps_logger.info("Calibrating secondary=%d vs primary=%d", index_s, index_p)
 
+        # Load the secondary frame.
+        bps_logger.info("Loading the secondary frame")
+        stack_noshifts = secondary_stack_manager.load(index_s)
+
+        # Compensate the flattening phase screens for the secondary stack.
+        bps_logger.info("Compensating the flattening phase screens (secondary stack)")
+        compensate_inplace_dsi_multithreaded(
+            stack_images=(stack_noshifts,),  # Must be a tuple.
+            synth_phases=(synth_phases[index_s],),  # Must also be a tuple.
+            max_num_threads=max_num_threads,
+        )
+
         # Compute the Multi-Squint coherence on the stack with only geometrical
         # coregistration in azimuth direction.
         bps_logger.info("Computing the MS-coherence matrix")
@@ -232,7 +241,7 @@ def multi_squint_calibration(
         )
         ms_coherence = compute_multisquint_coherence_multithreaded(
             image_p=stack[index_p][conf.polarization_index],
-            image_s=stack_noshifts[index_s][conf.polarization_index],
+            image_s=stack_noshifts[conf.polarization_index],
             azimuth_space_axis=azimuth_space_axis,
             slant_range_space_axis=slant_range_space_axis,
             ms_coherence_conf=ms_coherence_conf,
@@ -275,7 +284,7 @@ def multi_squint_calibration(
                 ms_shift_outputs[index_s].azimuth_shift,
             )
             apply_constant_azimuth_shifts_interp_inplace_multithreaded(
-                mpol_image=stack_noshifts[index_s],
+                mpol_image=stack_noshifts,
                 azimuth_residual_shift=azimuth_meters_to_pixels(
                     ms_shift_outputs[index_s].azimuth_shift,
                     azimuth_sampling_step=stack_specs.azimuth_sampling_step,
@@ -288,7 +297,7 @@ def multi_squint_calibration(
                 ms_shift_outputs[index_s].azimuth_frequency_centroid,
             )
             apply_inplace_centroid_correction(
-                mpol_image=stack_noshifts[index_s],
+                mpol_image=stack_noshifts,
                 azimuth_frequency_centroid=ms_shift_outputs[index_s].azimuth_frequency_centroid,
                 azimuth_space_axis=azimuth_space_axis,
             )
@@ -311,7 +320,7 @@ def multi_squint_calibration(
             )
             ms_coherence = compute_multisquint_coherence_multithreaded(
                 image_p=stack[index_p][conf.polarization_index],
-                image_s=stack_noshifts[index_s][conf.polarization_index],
+                image_s=stack_noshifts[conf.polarization_index],
                 azimuth_space_axis=azimuth_space_axis,
                 slant_range_space_axis=slant_range_space_axis,
                 ms_coherence_conf=ms_coherence_conf,
@@ -333,7 +342,7 @@ def multi_squint_calibration(
                 max_num_threads=max_num_threads,
             )
             ionosphere_inplace_correction_multithreaded(
-                mpol_image=stack_noshifts[index_s],
+                mpol_image=stack_noshifts,
                 ionosphere_estimation_output=iono_estimation_outputs[index_s],
                 azimuth_space_resolution=azimuth_space_resolution,
                 azimuth_space_axis=azimuth_space_axis,
@@ -351,8 +360,9 @@ def multi_squint_calibration(
             ionosphere_slant_range_space_axes[index_s] = slant_range_space_axis[ms_coherence.range_indices]
 
             # Update the stack with the iono-calibrated image.
-            for image, image_iono_comp in zip(stack[index_s], stack_noshifts[index_s]):
+            for image, image_iono_comp in zip(stack[index_s], stack_noshifts):
                 image[...] = image_iono_comp
+            del stack_noshifts  # Release the memory.
 
         # Run the phase plane removal (final refinement).
         bps_logger.info("Estimating and the phase plane slopes")

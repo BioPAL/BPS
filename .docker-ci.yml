@@ -1,0 +1,164 @@
+.docker_config:
+  tags:
+    - eo_docker_builder
+  services:
+    - "docker:dind"
+  before_script:
+    - source bps-dockerfiles/common_variables.sh
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "BPS version $BPS_VERSION - images will be tagged as $BPS_TAG"
+  artifacts:
+    expire_in: "2 hrs"
+  
+.processors:
+  parallel:
+    matrix:
+      - image: [
+                "l1_framing_processor",
+                "l1_processor",
+                "stack_processor",
+                "l2a_processor",
+                "l2b_fd_processor",
+                "l2b_fh_processor",
+                "l2b_agb_processor"
+              ]
+
+.docker_full_build:
+  extends:
+    - .full_build
+
+bundle:
+  stage: docker
+  extends:
+    - .docker_full_build
+  tags: ["manylinux_2_28"]
+  script:
+    - source bps-dockerfiles/common_variables.sh
+    - cd bps-dockerfiles
+    - source prepare_bundle.sh
+  artifacts:
+    paths:
+      - bps-dockerfiles/bundle
+  needs:
+    - job: bps-common-conda
+    - job: bps-l1_binaries-conda
+    - job: bps-stack_binaries-conda
+    - job: bps-transcoder-conda
+    - job: bps-l1_framing_processor-conda
+    - job: bps-l1_pre_processor-conda
+    - job: bps-l1_core_processor-conda
+    - job: bps-l1_processor-conda
+    - job: bps-stack_pre_processor-conda
+    - job: bps-stack_coreg_processor-conda
+    - job: bps-stack_cal_processor-conda
+    - job: bps-stack_processor-conda
+    - job: bps-l2a_processor-conda
+    - job: bps-l2b_fd_processor-conda
+    - job: bps-l2b_fh_processor-conda
+    - job: bps-l2b_agb_processor-conda
+
+test_deliverable_build_script:
+  stage: docker
+  extends:
+    - .docker_config
+    - .enable_deploy
+  script:
+    - cd bps-dockerfiles
+    - tar -czf bps-bundle-v$BPS_VERSION.tar.gz bundle
+    - ./build_docker_from_bundle.sh --bundle=bps-bundle-v$BPS_VERSION.tar.gz --test
+  needs:
+    - bundle
+
+prereq:
+  stage: docker
+  extends:
+    - .docker_full_build
+    - .docker_config
+  script:
+    - cd bps-dockerfiles
+    - cp prereq/Dockerfile bundle/prereq
+    - cd bundle/prereq
+    - docker build --no-cache --pull -t $CI_REGISTRY_IMAGE/bps-prereq:latest -t $CI_REGISTRY_IMAGE/bps-prereq:$BPS_TAG .
+    - docker image push --all-tags $CI_REGISTRY_IMAGE/bps-prereq
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        cd - && mkdir -p docker/prereq
+        mv bundle/prereq/Dockerfile docker/prereq/bps-prereq-dockerfile-v$BPS_VERSION
+        cd docker/prereq
+        docker run $CI_REGISTRY_IMAGE/bps-prereq:$BPS_TAG bash -c "conda env export" > bps-prereq-environment-v$BPS_VERSION.yml
+      fi
+  artifacts:
+    paths:
+      - bps-dockerfiles/docker
+  needs:
+    - bundle
+
+build:
+  stage: docker
+  extends:
+    - .docker_full_build
+    - .docker_config
+    - .processors
+  script:
+    - cd bps-dockerfiles
+    - IMAGE_NAME=$(echo $image | tr '_' '-')
+    - cp $image/Dockerfile bundle/$image/Dockerfile
+    - cd bundle/$image
+    - docker pull $CI_REGISTRY_IMAGE/bps-prereq:latest
+    - docker tag $CI_REGISTRY_IMAGE/bps-prereq:latest bps-prereq:latest
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG .
+    - docker image push $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG
+  dependencies:
+    - bundle
+  needs:
+    - prereq
+    - bundle
+
+test_extract:
+  stage: docker
+  extends:
+    - .docker_full_build
+    - .docker_config
+    - .processors
+  script:
+    - cd bps-dockerfiles
+    - IMAGE_NAME=$(echo $image | tr '_' '-')
+    - docker pull $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG
+    - docker run $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG bps_$image --help
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        mkdir -p docker/$image && cd docker/$image
+        mv ../../$image/Dockerfile bps-$IMAGE_NAME-dockerfile-v$BPS_VERSION
+        docker run $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG bash -c "conda env export" > bps-$IMAGE_NAME-environment-v$BPS_VERSION.yml
+        docker tag $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG bps-$IMAGE_NAME:$BPS_TAG
+        docker save bps-$IMAGE_NAME:$BPS_TAG | xz > bps-$IMAGE_NAME-dockerimage-v$BPS_VERSION.tar.xz
+      fi
+  artifacts:
+    paths:
+      - bps-dockerfiles/docker
+  needs:
+    - build
+
+deploy:
+  stage: docker
+  extends:
+    - .enable_deploy
+    - .tags_deploy
+  rules:
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+  script:
+    - source bps-dockerfiles/common_variables.sh
+    - cd bps-dockerfiles
+    - cp $CI_PROJECT_DIR/CREDITS.md docker
+    - cp $CI_PROJECT_DIR/LICENSE.md docker
+    - chmod 664 docker/*/*.xz
+    - mkdir $BPS_VERSION
+    - GZIP=-1 tar -czf $BPS_VERSION/bps-docker-v$BPS_VERSION.tar.gz docker
+    - GZIP=-1 tar -czf $BPS_VERSION/bps-bundle-v$BPS_VERSION.tar.gz bundle
+    - eval "$(ssh-agent)"
+    - cat "$DASHBOARD_PRIVATE_KEY" | base64 -d | ssh-add -
+    - rsync --stats -r $BPS_VERSION $INTERNAL_RELEASES_FOLDER
+  needs:
+    - bundle
+    - test_extract
+    - prereq

@@ -251,7 +251,7 @@ class GN:
             self.scs_axes_dict["scs_axis_sr_s"][axis_rg_subsampling_indexes],  # sub
             self.scs_axes_dict["scs_axis_az_mjd"][axis_az_subsampling_indexes],  # sub
             self.stack_products_list[self.primary_image_index].general_sar_orbit[0],  # SV
-            self.aux_pp2_2a.fd.ground_cancellaton.emphasized_forest_height,
+            self.aux_pp2_2a.agb.ground_cancellaton.emphasized_forest_height,
             np.deg2rad(dgg_latitude_axis_deg),
             np.deg2rad(dgg_longitude_axis_deg),
         )
@@ -578,8 +578,8 @@ class GN:
         )
 
         wavenumber_spacings = np.abs(np.diff(average_wavenumbers))
-        hoa_min = 2 * np.pi / min(wavenumber_spacings)
-        hoa_max = 2 * np.pi / max(wavenumber_spacings)
+        hoa_max = 2 * np.pi / min(wavenumber_spacings)
+        hoa_min = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
             min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
             max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
@@ -624,7 +624,7 @@ class GN:
             ),
             ads=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads(
                 fnf=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.Fnf(
-                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
+                    compression_factor=self.aux_pp2_2a.agb.compression_options.ads.fnf.compression_factor
                 ),
                 local_incidence_angle=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.LocalIncidenceAngle(
                     compression_factor=self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.compression_factor,

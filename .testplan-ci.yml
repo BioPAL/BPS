@@ -1,0 +1,233 @@
+spec:
+  inputs:
+    bps-full-build:
+      type: boolean
+      default: false
+    test-plan-version:
+      type: string
+      default: ""
+---
+
+.tags_bps_ci_rocky8:
+  tags:
+    - bps
+    - rocky8
+    - conda
+  stage: testplan
+
+.variables_testplan:
+  variables:
+    TEST_PLAN_VERSION: '$[[ inputs.test-plan-version ]]'
+
+.get_test_plan:
+  before_script:
+    - source .gitlab/ci/internal_ci_data.sh
+    - test -n "$TEST_PLAN_VERSION" || { echo "TEST_PLAN_VERSION is required";
+      exit 1; }
+    - mkdir -p ${INTERNAL_TEST_PLAN_ROOT} && cd ${INTERNAL_TEST_PLAN_ROOT}
+    - git clone ${INTERNAL_TEST_PLAN_REPO_URL} test_plan
+    - cd test_plan && git checkout $TEST_PLAN_VERSION
+    - ln -s ${INTERNAL_TDS_ROOT} tds
+    - sed -i "s|^BPS_PYTHON_ENV=.*|BPS_PYTHON_ENV=pipeline-$CI_PIPELINE_ID|" tools/scripts/set_environment.bash
+    - sed -i "s|conda activate \${BPS_PYTHON_ENV}|conda activate ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/\${BPS_PYTHON_ENV}|" tools/scripts/set_environment.bash
+
+.testplan_enabled:
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true" && "$[[ inputs.test-plan-version ]]" != ""'
+
+.run_test:
+  extends:
+    - .tags_bps_ci_rocky8
+  script:
+    - TEST_NAME="TEST-BPS-${TEST_NAME}"
+    - mkdir -p ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/install_dir
+    - cp -r $CI_PROJECT_DIR/bps-dockerfiles/bundle ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/install_dir
+    - set +e
+    - set -o pipefail
+    - cd ${INTERNAL_TEST_PLAN_ROOT}/test_plan/test_cases/$TEST_NAME
+    - |
+      ./run.bash --sta-skip-dockers 2>&1 | tee log_TEST-$TEST_NAME.txt; exit_code=$?
+      echo "Exit code captured: $exit_code"
+      if [ $exit_code -eq 0 ]; then
+        echo "Test succeeded."
+        mkdir -p ${INTERNAL_PIPELINES_DATA_ROOT}/logs/$CI_PIPELINE_ID
+        cp log_TEST-$TEST_NAME.txt ${INTERNAL_PIPELINES_DATA_ROOT}/logs/$CI_PIPELINE_ID
+      else
+        echo "Test failed."
+        mkdir -p ${INTERNAL_PIPELINES_DATA_ROOT}/quarantine/$CI_JOB_ID
+        cp -r * ${INTERNAL_PIPELINES_DATA_ROOT}/quarantine/$CI_JOB_ID
+        exit $exit_code
+      fi
+
+create_env:
+  extends:
+    - .testplan_enabled
+    - .variables_testplan
+    - .tags_bps_ci_rocky8
+    - .get_test_plan
+  script:
+    - conda config --append envs_dirs ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs
+    - |
+      if conda info --envs | grep -q "pipeline-$CI_PIPELINE_ID"; then
+        echo "Conda env already created"
+      else
+        echo "Creating conda env called pipeline-$CI_PIPELINE_ID"
+        mkdir -p local_channel/noarch
+        mkdir -p local_channel/linux-64
+        find $CI_PROJECT_DIR/bps-dockerfiles/bundle -type f \( -name '*-py_0.tar.bz2' -o -name '*-py_0.conda' \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/noarch/\"") }'
+        find $CI_PROJECT_DIR/bps-dockerfiles/bundle -type f \( -name '*-py[0-9]*_0.tar.bz2' -o -name '*-py[0-9]*_0.conda' -o -name '*-0.conda' \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/linux-64/\"") }'
+        conda index ./local_channel
+        conda config --prepend channels conda-forge
+        conda config --prepend channels ${PWD}/local_channel
+        conda create -y --prefix ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/pipeline-$CI_PIPELINE_ID python=3.12 bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fh_processor bps-l2b_fd_processor bps-l2b_agb_processor
+        conda activate ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/pipeline-$CI_PIPELINE_ID
+        pip install -r ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/scripts/requirements.txt
+      fi
+  needs:
+    - job: bundle
+      optional: true
+
+test_installation:
+  parallel:
+    matrix:
+      - TEST_NAME:
+          - L1-001
+          - L1F-001
+          - L2A-001
+          - STA-001
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .variables_testplan
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+TEST-BPS-L1-003-009-010-011-024:
+  extends:
+    - .testplan_enabled
+    - .variables_testplan
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+  script:
+    - mkdir -p ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/install_dir
+    - cp -r $CI_PROJECT_DIR/bps-dockerfiles/bundle ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/install_dir
+    - set +e
+    - set -o pipefail
+    - TEST_NAMES=("TEST-BPS-L1-003" "TEST-BPS-L1-009" "TEST-BPS-L1-010" "TEST-BPS-L1-011" "TEST-BPS-L1-024")
+    - |
+      for TEST_NAME in "${TEST_NAMES[@]}"; do
+        cd ${INTERNAL_TEST_PLAN_ROOT}/test_plan/test_cases/$TEST_NAME
+        ./run.bash 2>&1 | tee log_TEST-$TEST_NAME.txt; exit_code=$?
+        echo "Exit code captured: $exit_code"
+        if [ $exit_code -eq 0 ]; then
+          echo "Test succeeded."
+          mkdir -p ${INTERNAL_PIPELINES_DATA_ROOT}/logs/$CI_PIPELINE_ID
+          cp log_TEST-$TEST_NAME.txt ${INTERNAL_PIPELINES_DATA_ROOT}/logs/$CI_PIPELINE_ID
+        else
+          echo "Test failed."
+          mkdir -p ${INTERNAL_PIPELINES_DATA_ROOT}/quarantine/$CI_JOB_ID
+          cp -r * ${INTERNAL_PIPELINES_DATA_ROOT}/quarantine/$CI_JOB_ID
+          exit $exit_code
+        fi
+      done
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+L1P:
+  parallel:
+    matrix:
+      - TEST_NAME:
+          - L1-002
+          - L1-005
+          - L1-006
+          - L1-007
+          - L1-012
+          - L1-013
+          - L1-014
+          - L1-015
+          - L1-016
+          - L1-018
+          - L1-019
+          - L1-020
+          - L1-021
+          - L1-022
+          - L1-023
+          - L1-025
+          - L1-026
+          - L1-027
+          - L1-028
+          - L1-029
+          - L1-031
+          - L1-032
+          - L1F-002
+          - L1F-003
+          - ALL-001
+          - ALL-002
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+L1P_known_failure:
+  parallel:
+    matrix:
+      - TEST_NAME:
+          - L1-017
+          - L1-033
+  allow_failure: true
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+STA:
+  parallel:
+    matrix:
+      # These STA tests are intentionally excluded:
+      #   TEST-BPS-STA-003: Stop-and-resume test, requires manual execution.
+      #   TEST-BPS-STA-004: Multiple instance test, requires manual execution.
+      #   TEST-BPS-STA-011: The runtime test, hardware specific.
+      #   TEST-BPS-STA-016: IRF test is not expected to pass due to L1_P.
+      - TEST_NAME:
+          - STA-002
+          - STA-005
+          - STA-006
+          - STA-010
+          - STA-012
+          - STA-013
+          - STA-014
+          - STA-017
+          - STA-018
+          - STA-020
+          - STA-021
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true

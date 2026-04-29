@@ -5,7 +5,7 @@ authors = [{ name = "Aresys S.R.L.", email = "info@aresys.it" }]
 requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
-dependencies = ["arepytools>=1.8.1", "bps-common==4.4.2", "numpy", "scipy"]
+dependencies = ["arepytools>=1.8.1", "bps-common==4.4.3", "numpy", "scipy"]
 dynamic = ["version"]
 classifiers = [
     "Operating System :: OS Independent",

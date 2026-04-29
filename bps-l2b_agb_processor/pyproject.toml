@@ -12,8 +12,8 @@ dependencies = [
     "numba >= 0.57",
     "numpy",
     "scipy",
-    "bps-common==4.4.2",
-    "bps-transcoder==4.4.2",
+    "bps-common==4.4.3",
+    "bps-transcoder==4.4.3",
 ]
 dynamic = ["version"]
 classifiers = [

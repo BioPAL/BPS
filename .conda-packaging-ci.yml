@@ -1,0 +1,282 @@
+.conda_build_setup:
+  extends:
+    - .tags_rocky8_conda
+  before_script:
+    - source .gitlab/ci/internal_ci_data.sh
+    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
+    - python -m pip install build
+    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
+    - conda config --prepend channels conda-forge
+    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
+    - conda config --prepend channels ${PWD}/local_channel
+  script:
+    - cd ${BPSPROJECT}
+    - python -m build --sdist
+    - conda build recipe --output-folder conda_build_dir
+    - |
+        for file in conda_build_dir/*/*.conda; do
+          cp $file dist
+          if [[ $file == *"py_0.conda" ]]; then
+            cp $file ../local_channel/noarch
+          else
+            cp $file ../local_channel/linux-64
+          fi
+        done
+    - cd - && python -m conda_index --verbose ./local_channel
+  timeout: 20 minutes
+  retry: 2
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - ./*/dist/*.conda
+      - ./local_channel
+
+.conda_build_binaries_setup:
+  extends:
+    - .tags_rocky8_conda
+  before_script:
+    - source .gitlab/ci/internal_ci_data.sh
+    - mkdir -p ${BPSPROJECT}/dist
+    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
+    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
+    - conda config --prepend channels conda-forge
+    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
+    - conda config --prepend channels ${PWD}/local_channel
+  script:
+    - cd ${BPSPROJECT}
+    - conda build recipe --output-folder conda_build_dir
+    - ls conda_build_dir/*/*.conda
+    - |
+        for file in conda_build_dir/*/*.conda; do
+          cp $file dist
+          if [[ $file == *"py_0.conda" ]]; then
+            cp $file ../local_channel/noarch
+          else
+            cp $file ../local_channel/linux-64
+          fi
+        done
+    - cd - && python -m conda_index --verbose ./local_channel
+  timeout: 20 minutes
+  retry: 2
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - ./*/dist/*.conda
+      - ./local_channel
+
+.conda_packaging_rules:
+  extends:
+    - .full_build
+
+
+#Conda Packaging Stage 1
+
+bps-common-conda:
+  stage: conda-packaging
+  needs: []
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-common
+
+bps-l1_binaries-conda:
+  stage: conda-packaging
+  needs: []
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_binaries_setup
+  before_script:
+    - !reference [ .conda_build_binaries_setup, before_script ]
+    - curl -s $L1_EXECUTABLES_LNX -o L1_executables.tgz
+    - tar -xzf L1_executables.tgz
+    - mkdir -p bps-l1_binaries/bin
+    - cp L1_executables/BiomassL0ImportPreProc bps-l1_binaries/bin
+    - cp L1_executables/BPSL1CoreProcessor bps-l1_binaries/bin
+    - cp L1_executables/IonosphericHeightIRI20Estimator bps-l1_binaries/bin
+    - mkdir -p bps-l1_binaries/lib
+    - cp L1_executables/libareapplib_common.so bps-l1_binaries/lib
+    - cp L1_executables/libare_parsing.so bps-l1_binaries/lib
+    - cp L1_executables/libare_sarbase.so bps-l1_binaries/lib
+    - cp L1_executables/libare_core.so bps-l1_binaries/lib
+    - cp L1_executables/libareapplib_ionosphericCalibration.so bps-l1_binaries/lib
+    - cp L1_executables/libareapplib_rfimitigator.so bps-l1_binaries/lib
+    - cp L1_executables/libare_focus.so bps-l1_binaries/lib
+  variables:
+    BPSPROJECT: bps-l1_binaries
+
+bps-stack_binaries-conda:
+  stage: conda-packaging
+  needs: []
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_binaries_setup
+  before_script:
+    - !reference [ .conda_build_binaries_setup, before_script ]
+    - curl -s $STACK_EXECUTABLES_LNX -o Stack_Executables.tgz
+    - tar -xzf Stack_Executables.tgz
+    - export PATH=${PWD}/Stack_Executables:${PATH}
+    - mkdir -p bps-stack_binaries/bin
+    - cp Stack_Executables/BPSStackProcessor bps-stack_binaries/bin
+    - mkdir -p bps-stack_binaries/lib
+    - cp Stack_Executables/libareapplib_common.so bps-stack_binaries/lib
+    - cp Stack_Executables/libare_parsing.so bps-stack_binaries/lib
+    - cp Stack_Executables/libare_sarbase.so bps-stack_binaries/lib
+    - cp Stack_Executables/libare_core.so bps-stack_binaries/lib
+    - cp Stack_Executables/libare_focus.so bps-stack_binaries/lib
+  variables:
+    BPSPROJECT: bps-stack_binaries
+
+#Conda Packaging Stage 2
+
+bps-transcoder-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-transcoder
+
+bps-stack_cal_processor-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-stack_cal_processor
+
+bps-stack_pre_processor-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-stack_pre_processor
+
+bps-stack_coreg_processor-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-stack_coreg_processor
+
+bps-l1_core_processor-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-l1_core_processor
+
+bps-l1_pre_processor-conda:
+  stage: conda-packaging
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  variables:
+    BPSPROJECT: bps-l1_pre_processor
+
+#Conda Packaging Stage 3
+
+bps-l1_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+    - job: bps-l1_binaries-conda
+    - job: bps-l1_pre_processor-conda
+    - job: bps-l1_core_processor-conda
+  variables:
+    BPSPROJECT: bps-l1_processor
+
+bps-l1_framing_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  before_script:
+    - !reference [ .conda_build_setup, before_script ]
+    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
+    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
+    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  variables:
+    BPSPROJECT: bps-l1_framing_processor
+
+bps-l2a_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  variables:
+    BPSPROJECT: bps-l2a_processor
+
+bps-l2b_fd_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  variables:
+    BPSPROJECT: bps-l2b_fd_processor
+
+bps-l2b_fh_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  variables:
+    BPSPROJECT: bps-l2b_fh_processor
+
+bps-l2b_agb_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+  variables:
+    BPSPROJECT: bps-l2b_agb_processor
+
+bps-stack_processor-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-common-conda
+    - job: bps-transcoder-conda
+    - job: bps-stack_binaries-conda
+    - job: bps-stack_pre_processor-conda
+    - job: bps-stack_cal_processor-conda
+    - job: bps-stack_coreg_processor-conda
+  variables:
+    BPSPROJECT: bps-stack_processor

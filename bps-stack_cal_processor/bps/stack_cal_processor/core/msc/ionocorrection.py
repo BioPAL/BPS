@@ -139,7 +139,8 @@ def subband_inplace_refocusing_multithreaded(
     subband_axis: npt.NDArray[float],
     subband_azimuth_resolution: float,
     dtypes: EstimationDType,
-    max_num_threads: int = 1,
+    fft_num_threads: int = 3,
+    max_num_threads: int = 7,
 ):
     """
     Compensate in-place for ionospheric phase in the squint-frequency domain
@@ -179,8 +180,11 @@ def subband_inplace_refocusing_multithreaded(
     dtypes: EstimationDType
         The floating-point precision used for the computations.
 
-    max_num_threads: int = 1
-        Number of threads assigned to the job.
+    fft_num_threads: int = 3
+        Number of threads used by the FFT.
+
+    max_num_threads: int = 7
+        Total number of threads assigned to the job.
 
     """
     # Convert once the ionospheric phase screens into phasors.
@@ -218,10 +222,10 @@ def subband_inplace_refocusing_multithreaded(
         np.moveaxis(mpol_image, (0, 1, 2), (0, 2, 1)),
         n=num_freqs,
         axis=-1,
-        workers=max_num_threads,
+        workers=fft_num_threads,
     )
 
-    with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
+    with ThreadPoolExecutor(max_workers=max_num_threads // fft_num_threads) as executor:
         # Prepare the output.
         for image in mpol_image:
             image[...] = np.zeros_like(image)
@@ -238,13 +242,16 @@ def subband_inplace_refocusing_multithreaded(
         def refocus_fn(band):
             mpol_image_subband = sp.fft.ifft(
                 mpol_image_refoc_fft
-                * _rectpulse_ifftshift(
-                    (freq_axis - subband_axis[band]) * subband_azimuth_resolution,
-                    dtype=dtypes.float_dtype,
-                )
-                / filter_normalization,
+                * (
+                    _rectpulse_ifftshift(
+                        (freq_axis - subband_axis[band]) * subband_azimuth_resolution,
+                        dtype=dtypes.float_dtype,
+                    )
+                    / filter_normalization
+                ),
                 n=num_freqs,
                 axis=-1,
+                workers=fft_num_threads,
             )[..., :num_azimuths]
             iono_band_phi = _interp2d(
                 ms_ionosphere_phasors[..., band].T,

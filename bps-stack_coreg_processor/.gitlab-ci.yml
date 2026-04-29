@@ -1,0 +1,143 @@
+stages:
+  - analysis
+  - test
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - when: always
+
+variables:
+  GIT_DEPTH: 1
+
+.tags_manylinux2014:
+  tags: ["manylinux2014"]
+
+.tags_rocky8_conda:
+  tags: ["eo", "rocky8", "conda"]
+
+.tags_win10_conda:
+  tags: ["eo", "win10", "conda"]
+
+.tags_eo_deploy:
+  tags: ["eo", "deploy"]
+
+.enable_win10_unittest:
+  rules:
+    - if: '$BPS_ENABLE_WIN10_UNITTEST == "true"'
+
+ruff:
+  stage: analysis
+  needs: []
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s ruff
+
+fawlty_deps:
+  stage: analysis
+  needs: []
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s fawlty_deps
+
+format:
+  stage: analysis
+  needs: []
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s format_check
+
+.unittest_linux:
+  stage: test
+  needs: []
+  extends:
+    - .tags_rocky8_conda
+  script:
+    - cd $SUBPROJECT
+    - python3.9 -m pip install nox
+    - python3.9 -m nox -s unittest -p ${PYTHON}
+  artifacts:
+    reports:
+      junit:
+        - $SUBPROJECT/_build/unittest-report-*.xml
+
+unittest_linux_py312:
+  extends:
+    - .unittest_linux
+  variables:
+    PYTHON: "3.12"
+
+.unittest_win10:
+  stage: test
+  needs: []
+  extends:
+    - .tags_win10_conda
+    - .enable_win10_unittest
+  script:
+    - cd $SUBPROJECT
+    - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
+    - python -m pip install nox
+    - python -m nox -s unittest -p ${PYTHON}
+  retry: 2
+  artifacts:
+    reports:
+      junit:
+        - $SUBPROJECT/_build/unittest-report-*.xml
+
+unittest_win10_py312:
+  extends:
+    - .unittest_win10
+  variables:
+    PYTHON: "3.12"
+
+sdist:
+  stage: build
+  needs: []
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s build_sdist
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - $SUBPROJECT/dist/*.tar.gz
+
+wheel:
+  stage: build
+  needs: []
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s build_wheel
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - $SUBPROJECT/dist/*.whl
+
+deploy:
+  stage: deploy
+  extends:
+    - .tags_eo_deploy
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  script:
+    - eval "$(ssh-agent -s)"
+    - for file in ${SUBPROJECT}/dist/*; do
+      eo_pgp-signme ${file} > ${file}.asc &&
+      ./.gitlab/ci/dashboard-copy.sh ${file} develop/bps/bps-stack_coreg_processor/archive &&
+      ./.gitlab/ci/dashboard-copy.sh ${file}.asc develop/bps/bps-stack_coreg_processor/archive;
+      done

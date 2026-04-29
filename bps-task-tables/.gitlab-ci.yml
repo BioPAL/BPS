@@ -1,0 +1,44 @@
+stages:
+  - validation
+  - deploy
+
+workflow:
+  rules:
+    - when: always
+
+.tags_manylinux2014:
+  tags: ["manylinux2014"]
+
+.tags_deploy:
+  tags: ["eo", "deploy"]
+
+
+TaskTable_and_PMM_xml_validation:
+  stage: validation
+  extends:
+    - .tags_manylinux2014
+  script:
+    - cd $SUBPROJECT
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s validate_task_tables validate_product_metadata_mapping
+
+deploy:
+  stage: deploy
+  extends:
+    - .tags_deploy
+  rules:
+    - if: "$CI_COMMIT_TAG =~ /^bps-v.*/"
+  before_script:
+    - source bps-dockerfiles/common_variables.sh
+  script:
+    - delivery_dir=bps-tt-$BPS_VERSION
+    - mkdir $BPS_VERSION
+    - mkdir $delivery_dir
+    - mv $SUBPROJECT/*_processor $delivery_dir
+    - mv $SUBPROJECT/README.md $delivery_dir
+    - GZIP=-1 tar -czf $BPS_VERSION/$delivery_dir.tar.gz $delivery_dir
+    - eval "$(ssh-agent)"
+    - cat "$DASHBOARD_PRIVATE_KEY" | base64 -d | ssh-add -
+    - rsync --stats -r $BPS_VERSION $INTERNAL_RELEASES_FOLDER
+  needs:
+    - TaskTable_and_PMM_xml_validation

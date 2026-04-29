@@ -164,7 +164,9 @@ def run_l2a_processing(
         job_order.input_stack_acquisitions, input_baselines_indices
     ):
         if current_baseline_ordering_index in selected_baselines_indices:
-            bps_logger.debug(f"Reading acquisition with baseline indice #{current_baseline_ordering_index}")
+            bps_logger.debug(
+                f"Reading acquisition {acquisition_path.name}, with baseline indice #{current_baseline_ordering_index}"
+            )
             baselines_sorted_as_read.append(current_baseline_ordering_index)
 
             # read only the products selected by int subsetting routine
@@ -244,6 +246,7 @@ def run_l2a_processing(
             lut_axes_primary_list.append(lut_axes_primary)
             counter += 1
     del lut
+    bps_logger.debug(f"baselines sorted as read: {baselines_sorted_as_read}")
 
     # Merging cross polarisations:
     #   Chech input polarisation sequence
@@ -327,7 +330,10 @@ def run_l2a_processing(
             original_luts["waveNumbers"] = lut_wavenumber_reset
 
     # Sort read inputs basing on wavenumbers
-    wavenumbers_sorting_indices = np.argsort([np.mean(lut["waveNumbers"]) for lut in stack_lut_list])
+    wavenumbers_sorting_indices = np.argsort([np.nanmean(lut["waveNumbers"]) for lut in stack_lut_list])
+    bps_logger.debug(
+        f"Input acquisitions sorting basing on wavenumbers crescent ordering, using sorting indices {wavenumbers_sorting_indices}"
+    )
     stack_products_list = [stack_products_list[idx] for idx in wavenumbers_sorting_indices]
     acquisition_paths_selected = [acquisition_paths_selected[idx] for idx in wavenumbers_sorting_indices]
     stack_lut_list = [stack_lut_list[idx] for idx in wavenumbers_sorting_indices]
@@ -780,7 +786,7 @@ def _prepare_basin_id_lut():
 
     For the computation, to know in which country/continent the input STA product lies, we base on the
     Natural Earth Country ShapeFile:
-        Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.
+        Made with Natural Earth. Free vector and raster map data https://www.naturalearthdata.com/.
         1:110m Cultural Vectors
         Admin 0 - Countries
 
@@ -790,9 +796,7 @@ def _prepare_basin_id_lut():
         [latitude1:all longitudes, latitude2: all longitudes, ... ]
     """
 
-    natural_earth_shp_path = Path(
-        r"C:\Users\emanuele.giorgi\Downloads\ne_110m_admin_0_countries_lakes\ne_110m_admin_0_countries_lakes.shp"
-    )
+    natural_earth_shp_path = Path("ne_110m_admin_0_countries_lakes.shp")
 
     lon_indices = np.arange(360)
     lat_indices = np.arange(180)

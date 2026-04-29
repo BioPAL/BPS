@@ -1683,14 +1683,14 @@ class BIOMASSL2aProductWriter:
             layer = [
                 main_annotation_models_l2a_fh.LayerType.FNF,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer, count=len(layer))
+            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
             main_annotation_model = main_annotation_models_l2a_tfh.MainAnnotation(
-                product,
-                raster_image,
-                input_information,
-                processing_parameters,
-                annotation_lut,
+                product=product,
+                raster_image=raster_image,
+                input_information=input_information,
+                processing_parameters=processing_parameters,
+                annotation_lut=annotation_lut,
             )
 
         # Write main annotation file

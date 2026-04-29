@@ -58,9 +58,10 @@ from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.l1.quality_index import L1QualityIndex
 
-# Limits in seconds, for what swath length is considered to be nominal.
-SWATH_DURATION_MIN = 20.5  # [s].
-SWATH_DURATION_MAX = 21.5  # [s].
+# Limits in seconds for the nominal L1a data duration. Durations out of bounds
+# will be reported as non-nominal.
+SWATH_DURATION_MIN = 20.0  # [s].
+SWATH_DURATION_MAX = 22.0  # [s].
 
 # Length of the compressed creation time string.
 CREATION_STAMP_LENGTH = 6

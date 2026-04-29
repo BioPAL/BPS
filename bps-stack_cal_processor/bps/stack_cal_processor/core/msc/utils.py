@@ -10,11 +10,17 @@ The MSC's Utility Library
 -------------------------
 """
 
+from dataclasses import dataclass
+
 import numpy as np
 import numpy.typing as npt
 import scipy as sp
+from arepytools.io.metadata import EPolarization
+from arepytools.io.productfolder2 import ProductFolder2
 from bps.common import bps_logger
+from bps.common.roi_utils import RegionOfInterest
 from bps.stack_cal_processor.configuration import MSC_NAME
+from bps.stack_cal_processor.core.utils import read_productfolder_data_by_polarization
 
 
 class MscRuntimeError(RuntimeError):
@@ -22,6 +28,65 @@ class MscRuntimeError(RuntimeError):
 
     def __init__(self, message: str):
         super().__init__(f"[{MSC_NAME}]: {message}")
+
+
+@dataclass(kw_only=True, frozen=True)
+class SecondaryStackManager:
+    """
+    Manager for the MSC secondary stack (no azimuth residual shifts).
+
+    Attributes
+    ----------
+    product_cor_pfs : tuple[ProductFolder2 | None, ...]
+        Product folders of the the warped stack images. None only for
+        the coregistration primary image.
+    polarizations: tuple[EPolarization, ...]
+        The polarizations of the input stack.
+    roi: RegionOfInterest,optional
+        The stack region of interest.
+
+    Methods
+    -------
+    load(image_index: int) -> tuple[npt.NDArray[complex], ...]
+        Load all the polarizations of selected secondary frame.
+
+    """
+
+    product_cor_pfs: tuple[ProductFolder2 | None, ...]
+    coreg_primary_image_index: int
+    polarizations: tuple[EPolarization, ...]
+    roi: RegionOfInterest | None
+
+    def __post_init__(self):
+        """Minimal validation on the arguments."""
+        if self.product_cor_pfs[self.coreg_primary_image_index] is not None:
+            raise MscRuntimeError(
+                "Secondary stack should not contain the coreg primary",
+            )
+        if any(pf is None for i, pf in enumerate(self.product_cor_pfs) if i != self.coreg_primary_image_index):
+            raise MscRuntimeError(
+                "Missing frames in secondary stack",
+            )
+
+    def load(self, image_index: int) -> tuple[npt.NDArray[complex], ...]:
+        """Load all the polarizations of selected secondary frame."""
+        if self.product_cor_pfs[image_index] is None:
+            raise MscRuntimeError(
+                "Attempted reading coreg primary from secondary stack",
+            )
+
+        bps_logger.debug(
+            "Loading secondary stack data: frame=%s",
+            self.product_cor_pfs[image_index].path,
+        )
+        return tuple(
+            read_productfolder_data_by_polarization(
+                self.product_cor_pfs[image_index],
+                polarization=polarization,
+                roi=self.roi,
+            )
+            for polarization in self.polarizations
+        )
 
 
 def compute_azimuth_space_resolution(

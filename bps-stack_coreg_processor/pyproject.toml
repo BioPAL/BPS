@@ -7,7 +7,7 @@ readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
     "arepytools>=1.8.1",
-    "bps-common==4.4.2",
+    "bps-common==4.4.3",
     "numpy",
     "xmltodict",
     "scipy",

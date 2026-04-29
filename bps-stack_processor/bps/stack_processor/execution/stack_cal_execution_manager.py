@@ -18,11 +18,10 @@ from pathlib import Path
 import numpy as np
 import numpy.typing as npt
 from arepytools.io import open_product_folder
-from arepytools.io.metadata import EPolarization
+from arepytools.io.productfolder2 import ProductFolder2
 from bps.common import bps_logger
 from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
 from bps.common.io import common
-from bps.common.roi_utils import RegionOfInterest
 from bps.common.runner_helper import run_application
 from bps.stack_cal_processor.configuration import (
     AZF_NAME,
@@ -34,9 +33,9 @@ from bps.stack_cal_processor.configuration import (
 from bps.stack_cal_processor.core.azf.azimuthfilter import azimuth_spectral_filtering
 from bps.stack_cal_processor.core.iob.backgroundiono import remove_background_ionosphere
 from bps.stack_cal_processor.core.msc.mscalibration import multi_squint_calibration
+from bps.stack_cal_processor.core.msc.utils import SecondaryStackManager
 from bps.stack_cal_processor.core.skp.skpcalibration import skp_calibration
 from bps.stack_cal_processor.core.skp.skpquality import SkpFnFQualityMask
-from bps.stack_cal_processor.core.utils import read_productfolder_data_by_polarization
 from bps.stack_cal_processor.input_manager import (
     StackCalProcessorInputManager,
     StackCalProcessorInputProducts,
@@ -287,21 +286,23 @@ class StackCalExecutionManager:
 
         # Run the Multi-Squint Calibration (MSC).
         if enabled_modules[MSC_NAME]:
-            stack_noshifts = _StackWarpingManager(
-                job_order=self.job_order,
-                aux_pps=self.aux_pps,
-                breakpoint_dir=self.breakpoint_dir,
-            ).warp_stack_multithreaded(
-                stack_pre_proc_output_products=stack_pre_proc_output_products,
-                stack_coreg_proc_output_products=stack_coreg_proc_output_products,
-                coreg_primary_image_index=stack_pre_proc_exec_products["coreg_primary_image_index"],
-                polarizations=stack_pre_proc_exec_products["stack_polarizations"],
-                roi=stack_pre_proc_exec_products["stack_roi"],
-                max_num_threads=num_worker_threads,
-            )
             calibration_products[MSC_NAME] = multi_squint_calibration(
                 stack=stack_images,
-                stack_noshifts=stack_noshifts,
+                secondary_stack_manager=SecondaryStackManager(
+                    product_cor_pfs=_StackWarpingManager(
+                        job_order=self.job_order,
+                        aux_pps=self.aux_pps,
+                        breakpoint_dir=self.breakpoint_dir,
+                    ).warp_stack_multithreaded(
+                        stack_pre_proc_output_products=stack_pre_proc_output_products,
+                        stack_coreg_proc_output_products=stack_coreg_proc_output_products,
+                        coreg_primary_image_index=stack_pre_proc_exec_products["coreg_primary_image_index"],
+                        max_num_threads=num_worker_threads,
+                    ),
+                    coreg_primary_image_index=coreg_primary_image_index,
+                    polarizations=stack_pre_proc_exec_products["stack_polarizations"],
+                    roi=stack_pre_proc_exec_products["stack_roi"],
+                ),
                 synth_phases=synth_phases,
                 conf=stack_cal_conf.msc_conf,
                 stack_specs=stack_data_specs,
@@ -402,10 +403,8 @@ class _StackWarpingManager:
         stack_pre_proc_output_products: list[StackPreProcessorOutputProducts],
         stack_coreg_proc_output_products: list[CoregistrationOutputProducts],
         coreg_primary_image_index: int,
-        polarizations: tuple[EPolarization, ...],
-        roi: RegionOfInterest | None = None,
         max_num_threads: int = 1,
-    ) -> tuple[tuple[npt.NDArray[complex], ...] | None, ...]:
+    ) -> tuple[ProductFolder2 | None, ...]:
         """Warp the secondary images of a stack by applying the coregistration
         shifts (including residuals from data) in range direction, and only
         using geometry in azimuth direction.
@@ -422,12 +421,6 @@ class _StackWarpingManager:
         coreg_primary_image_index: int
             The index of the coregistration primary image.
 
-        polarizations: tuple[EPolarization, ...]
-            The stack polarizations.
-
-        roi: RegionOfInterest | None = None
-            Possibly a region of interest.
-
         max_num_threads: int = 1
             Number of threads assigned to the job.
 
@@ -437,64 +430,47 @@ class _StackWarpingManager:
 
         Return
         ------
-        tuple[npt.NDArray[complex], ...]
-            The warped image.
+        tuple[ProductFolder2 | None, ...]
+            Product folders containing the warped images. None for the coregistration
+            primary image.
 
         """
         # Reserve a list for storing the stack.
         nimages = len(stack_coreg_proc_output_products)
-        warped_stack = [None] * nimages
 
         # If the warping was already executed. Just read the data.
         if self._status_file_path().is_file():
             bps_logger.info("Stack without azimuth residual shifts already available. Loading stack")
-            warped_stack = self._read_warped_stack_from_status_file_multithreaded(
-                num_images=nimages,
-                polarizations=polarizations,
-                roi=roi,
-                max_num_threads=max_num_threads,
-            )
-        else:
+            return self._read_warped_stack_from_status_file_multithreaded(num_images=nimages)
+
+        # Run the coregisration process multithreaded.
+        with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
             bps_logger.info("Coregistering stack without azimuth residual shifts")
 
+            # Prepare the output.
             self._cleanup_output_pf(stack_pre_proc_output_products)
+            warped_stack_pfs = [None] * nimages
 
-            # Run the coregisration process multithreaded.
-            with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
-                # The warping coref function.
-                def warp_image_fn(index_s):
-                    warped_stack[index_s] = self.warp_image(
-                        stack_pre_proc_primary_output_products=stack_pre_proc_output_products[
-                            coreg_primary_image_index
-                        ],
-                        stack_pre_proc_secondary_output_products=stack_pre_proc_output_products[index_s],
-                        stack_coreg_proc_secondary_output_products=stack_coreg_proc_output_products[index_s],
-                        polarizations=polarizations,
-                        roi=roi,
-                    )
+            # The warping coref function.
+            def warp_image_fn(index_s):
+                warped_stack_pfs[index_s] = self.warp_image(
+                    stack_pre_proc_primary_output_products=stack_pre_proc_output_products[coreg_primary_image_index],
+                    stack_pre_proc_secondary_output_products=stack_pre_proc_output_products[index_s],
+                    stack_coreg_proc_secondary_output_products=stack_coreg_proc_output_products[index_s],
+                )
 
-                for _ in executor.map(
-                    warp_image_fn,
-                    (i for i in range(nimages) if i != coreg_primary_image_index),
-                ):
-                    pass
+            for _ in executor.map(
+                warp_image_fn,
+                (i for i in range(nimages) if i != coreg_primary_image_index),
+            ):
+                pass
 
             self._write_status_file(
                 stack_pre_proc_output_products=stack_pre_proc_output_products,
                 coreg_primary_image_index=coreg_primary_image_index,
             )
 
-        # Validate the stack.
-        npolarizations = len(polarizations)
-        if (
-            len(warped_stack) != nimages
-            or warped_stack[coreg_primary_image_index] is not None
-            or any(warped_stack[i] is None for i in range(nimages) if i != coreg_primary_image_index)
-            or any(len(warped_stack[i]) != npolarizations for i in range(nimages) if i != coreg_primary_image_index)
-        ):
-            raise RuntimeError("Broken stack_cal_processor working directory.")
-
-        return tuple(warped_stack)
+            return tuple(warped_stack_pfs)
 
     def warp_image(
         self,
@@ -502,9 +478,7 @@ class _StackWarpingManager:
         stack_pre_proc_primary_output_products: StackPreProcessorOutputProducts,
         stack_pre_proc_secondary_output_products: StackPreProcessorOutputProducts,
         stack_coreg_proc_secondary_output_products: CoregistrationOutputProducts,
-        polarizations: tuple[EPolarization, ...],
-        roi: RegionOfInterest | None = None,
-    ) -> tuple[npt.NDArray[complex], ...]:
+    ) -> tuple[ProductFolder2, ...]:
         """Execute the image warping of a product."""
         # The output path.
         output_pf_path = self._bps_coreg_output_pf_path(stack_pre_proc_secondary_output_products)
@@ -532,13 +506,7 @@ class _StackWarpingManager:
         # Execute the coregistration.
         bps_logger.debug("Running %s", self.sta_p_bin)
         run_application(self.sta_p_env, self.sta_p_bin, coreg_input_file_path, 1)
-
-        # Read the data.
-        bps_logger.debug("Loading coregistered image %s", output_pf_path)
-        output_pf = open_product_folder(output_pf_path)
-        return tuple(
-            read_productfolder_data_by_polarization(output_pf, polarization=pol, roi=roi) for pol in polarizations
-        )
+        return open_product_folder(output_pf_path)
 
     def _write_status_file(
         self,
@@ -568,34 +536,19 @@ class _StackWarpingManager:
         self,
         *,
         num_images: int,
-        polarizations: tuple[EPolarization, ...],
-        roi: RegionOfInterest | None = None,
-        max_num_threads: int = 1,
-    ) -> tuple[tuple[npt.NDArray[complex], ...] | None, ...]:
-        """Read the stack using the info stored in the status file."""
+    ) -> tuple[ProductFolder2 | None, ...]:
+        """Initialize the product folders using the info stored in the status file."""
+        # Read the status file.
+        warped_stack_info = json.loads(
+            self._status_file_path().read_text(encoding="utf-8"),
+        )
+
         # Storage for the output.
-        warped_stack = [None] * num_images
+        warped_stack_pfs = [None] * num_images
+        for i in sorted([int(j) for j in warped_stack_info]):
+            warped_stack_pfs[i] = open_product_folder(warped_stack_info[f"{i:02d}"])
 
-        # Read multi-threaded.
-        with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
-            # Read the status file.
-            warped_stack_info = json.loads(
-                self._status_file_path().read_text(encoding="utf-8"),
-            )
-
-            def read_image_fn(i):
-                pf = open_product_folder(warped_stack_info[f"{i:02d}"])
-                warped_stack[i] = tuple(
-                    read_productfolder_data_by_polarization(pf, polarization=pol, roi=roi) for pol in polarizations
-                )
-
-            for _ in executor.map(
-                read_image_fn,
-                sorted([int(i) for i in warped_stack_info]),
-            ):
-                pass
-
-        return tuple(warped_stack)
+        return tuple(warped_stack_pfs)
 
     def _bps_coreg_output_pf_path(
         self,

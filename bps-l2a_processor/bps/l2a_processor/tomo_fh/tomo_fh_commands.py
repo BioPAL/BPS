@@ -345,7 +345,7 @@ class TOMO_FH:
             self.scs_axes_dict["scs_axis_sr_s"][rg_vec_subs],  # sub
             self.scs_axes_dict["scs_axis_az_mjd"][az_vec_subs],  # sub
             self.stack_products_list[self.primary_image_index].general_sar_orbit[0],  # SV
-            self.aux_pp2_2a.fd.ground_cancellaton.emphasized_forest_height,
+            forest_height,
             np.deg2rad(dgg_latitude_axis_deg),
             np.deg2rad(dgg_longitude_axis_deg),
         )
@@ -690,11 +690,11 @@ class TOMO_FH:
         )
 
         wavenumber_spacings = np.abs(np.diff(average_wavenumbers))
-        hoa_min = 2 * np.pi / min(wavenumber_spacings)
-        hoa_max = 2 * np.pi / max(wavenumber_spacings)
+        hoa_max = 2 * np.pi / min(wavenumber_spacings)
+        hoa_min = 2 * np.pi / max(wavenumber_spacings)
         height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
+            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
         )
 
         main_ads_input_information = BIOMASSL2aMainADSInputInformation(
@@ -714,33 +714,35 @@ class TOMO_FH:
 
         # main_ads_processing_parameters
         general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            self.aux_pp2_2a.general.apply_calibration_screen.value,
-            self.aux_pp2_2a.general.forest_coverage_threshold,
-            self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            common_annotation_models_l2.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
-            translate_common.translate_polarisation_combination_method_to_model(
+            apply_calibration_screen=self.aux_pp2_2a.general.apply_calibration_screen.value,
+            forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
+            forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
+            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
+                self.aux_pp2_2a.general.subsetting_rule.value
+            ),
+            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
                 self.aux_pp2_2a.general.polarisation_combination_method
             ),
         )
 
         compression_options_tomo_fh = main_annotation_models_l2a_tfh.CompressionOptionsL2A(
-            main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds(
-                main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds.Tfh(
-                    self.aux_pp2_2a.tfh.compression_options.mds.tfh.compression_factor,
-                    self.aux_pp2_2a.tfh.compression_options.mds.tfh.max_z_error,
+            mds=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds(
+                tfh=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds.Tfh(
+                    compression_factor=self.aux_pp2_2a.tfh.compression_options.mds.tfh.compression_factor,
+                    max_z_error=self.aux_pp2_2a.tfh.compression_options.mds.tfh.max_z_error,
                 ),
-                main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds.Quality(
-                    self.aux_pp2_2a.tfh.compression_options.mds.quality.compression_factor,
-                    self.aux_pp2_2a.tfh.compression_options.mds.quality.max_z_error,
-                ),
-            ),
-            main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads(
-                main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads.Fnf(
-                    self.aux_pp2_2a.tfh.compression_options.ads.fnf.compression_factor
+                quality=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Mds.Quality(
+                    compression_factor=self.aux_pp2_2a.tfh.compression_options.mds.quality.compression_factor,
+                    max_z_error=self.aux_pp2_2a.tfh.compression_options.mds.quality.max_z_error,
                 ),
             ),
-            self.aux_pp2_2a.tfh.compression_options.mds_block_size,
-            self.aux_pp2_2a.tfh.compression_options.ads_block_size,
+            ads=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads(
+                fnf=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads.Fnf(
+                    compression_factor=self.aux_pp2_2a.tfh.compression_options.ads.fnf.compression_factor
+                ),
+            ),
+            mds_block_size=self.aux_pp2_2a.tfh.compression_options.mds_block_size,
+            ads_block_size=self.aux_pp2_2a.tfh.compression_options.ads_block_size,
         )
 
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersTOMOFH(
@@ -932,7 +934,7 @@ def BiomassForestHeightSKPD(
             for b_idx, stack_curr in enumerate(kz_stack.values()):
                 current_kz[b_idx] = stack_curr[rg_vec_subs[rg_sub_idx], az_vec_subs[az_sub_idx]]
 
-            A = np.exp(1j * current_kz * vertical_vector) / num_acq
+            A = np.exp(-1j * current_kz * vertical_vector) / num_acq
 
             # Spectra estimation
             for m in np.arange(4):

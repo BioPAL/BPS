@@ -10,8 +10,8 @@ dependencies = [
     "click",
     "numba >= 0.57",
     "numpy",
-    "bps-common==4.4.2",
-    "bps-transcoder==4.4.2",
+    "bps-common==4.4.3",
+    "bps-transcoder==4.4.3",
     "scipy",
 ]
 dynamic = ["version"]
