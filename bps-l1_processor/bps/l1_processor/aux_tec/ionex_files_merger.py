@@ -33,10 +33,15 @@ def _update_header(header: list[str], last_map_line: str, num_maps_line: str) ->
     header_out_tmp[num_maps_line_index_1] = num_maps_line
 
     # Drop aux data instead of merging them
-    start_aux_index = find_first_line_index(header, "START OF AUX DATA")
-    end_aux_index = find_first_line_index(header, "END OF AUX DATA")
-    header_out = header_out_tmp[:start_aux_index]
-    header_out = header_out + header_out_tmp[end_aux_index + 1 :]
+    start_string = "START OF AUX DATA"
+    end_string = "END OF AUX DATA"
+    if any(start_string in h for h in header) and any(end_string in h for h in header):
+        start_aux_index = find_first_line_index(header, start_string)
+        end_aux_index = find_first_line_index(header, end_string)
+        header_out = header_out_tmp[:start_aux_index]
+        header_out = header_out + header_out_tmp[end_aux_index + 1 :]
+    else:
+        header_out = header_out_tmp
 
     return header_out
 
