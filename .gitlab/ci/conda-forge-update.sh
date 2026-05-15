@@ -6,9 +6,6 @@ fi
 set -euo pipefail
 IFS=$'\n\t'
 
-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-# shellcheck source=.gitlab/ci/internal_ci_data.sh
-. "$SCRIPT_DIR/internal_ci_data.sh"
 
 print_usage() {
     echo "Update the aresys-forge channel on dashboard"

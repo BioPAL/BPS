@@ -21,11 +21,10 @@ spec:
 
 .get_test_plan:
   before_script:
-    - source .gitlab/ci/internal_ci_data.sh
     - test -n "$TEST_PLAN_VERSION" || { echo "TEST_PLAN_VERSION is required";
       exit 1; }
     - mkdir -p ${INTERNAL_TEST_PLAN_ROOT} && cd ${INTERNAL_TEST_PLAN_ROOT}
-    - git clone ${INTERNAL_TEST_PLAN_REPO_URL} test_plan
+    - git clone "https://gitlab-ci-token:${CI_JOB_TOKEN}@${INTERNAL_TEST_PLAN_REPO_BASE}" test_plan
     - cd test_plan && git checkout $TEST_PLAN_VERSION
     - ln -s ${INTERNAL_TDS_ROOT} tds
     - sed -i "s|^BPS_PYTHON_ENV=.*|BPS_PYTHON_ENV=pipeline-$CI_PIPELINE_ID|" tools/scripts/set_environment.bash
@@ -173,6 +172,7 @@ L1P:
     - !reference [.get_test_plan, before_script]
   extends:
     - .testplan_enabled
+    - .variables_testplan
     - .get_test_plan
     - .tags_bps_ci_rocky8
     - .run_test
@@ -192,6 +192,7 @@ L1P_known_failure:
     - !reference [.get_test_plan, before_script]
   extends:
     - .testplan_enabled
+    - .variables_testplan
     - .get_test_plan
     - .tags_bps_ci_rocky8
     - .run_test
@@ -224,6 +225,7 @@ STA:
     - !reference [.get_test_plan, before_script]
   extends:
     - .testplan_enabled
+    - .variables_testplan
     - .get_test_plan
     - .tags_bps_ci_rocky8
     - .run_test

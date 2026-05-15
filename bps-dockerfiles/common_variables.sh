@@ -1,6 +1,3 @@
-COMMON_VARIABLES_DIR=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-source "$COMMON_VARIABLES_DIR/../.gitlab/ci/internal_ci_data.sh"
-
 compute_bps_tag() {
    local version="$1"
    local major

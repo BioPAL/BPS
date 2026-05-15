@@ -1,0 +1,9 @@
+[data]
+url = "file://${DATASET_PATH_LNX}1.32"
+
+[env.variables]
+OMP_NUM_THREADS = {}
+LD_LIBRARY_PATH = { is_list = true }
+PATH = { is_list = true }
+COPERNICUS_DEM_FOLDER = {}
+PROJ_DATA = {}

@@ -40,7 +40,7 @@ EXPECTED_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
 EXPECTED_PROCESSOR_NAME = "STA_P"
 """Processor name for Biomass Stack processor."""
 
-EXPECTED_PROCESSOR_VERSION = "04.43"
+EXPECTED_PROCESSOR_VERSION = "04.44"
 """Processor version for Biomass Stack processor."""
 
 EXPECTED_TASK_NAME = EXPECTED_PROCESSOR_NAME

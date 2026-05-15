@@ -284,7 +284,7 @@ class StackCoregProcessorExecutionManager:
         if l1a_primary_geo_lut_axes[0].size <= 1 or l1a_primary_geo_lut_axes[1].size <= 1:
             raise StackCoregProcessorRuntimeError("Duped L1a coreg primary geometric axes")
 
-        # The LUT of the primary, just for some logging later on.
+        # The LUT of the primary.
         l1a_primary_luts = stack_pre_proc_exec_products["l1a_product_luts"][coreg_primary_image_index]
 
         # Compute the LUT primary grid, this is the output grid of the STA_P
@@ -349,37 +349,33 @@ class StackCoregProcessorExecutionManager:
         invalid_coreg_shifts_ratios = []
         invalid_coreg_shifts_masks = []
 
-        # We shift the LUTs of all products. Note that also the primary product
-        # requires being shifted since the LUT grid and the data grid may not
-        # be aligned.
-        for (
-            index,
-            (
-                l1a_data,
-                lut_data,
-                lut_azm_axis,
-                lut_rng_axis,
-                coreg_product,
-                coreg_params,
-                l1a_path,
-            ),
-        ) in enumerate(
-            zip(
-                l1a_product_data,
-                stack_pre_proc_exec_products["l1a_product_luts"],
-                stack_pre_proc_exec_products["l1a_product_luts_azm_axis"],
-                stack_pre_proc_exec_products["l1a_product_luts_rng_axis"],
-                stack_coreg_proc_output_products,
-                stack_coreg_proc_exec_products["actualized_coregistration_parameters"],
-                self.job_order.input_stack,
-            ),
-        ):
+        # We shift the LUTs of all secondary products except for the DEM luts
+        # and the terrain slope LUTs. Those LUTs are copied over from the
+        # coregistration primary. Note that for the coregistration primary,
+        # shifting is equivalent to subsampling.
+        num_images = len(stack_coreg_proc_output_products)
+        product_indices = [
+            coreg_primary_image_index,
+            *[i for i in range(num_images) if i != coreg_primary_image_index],
+        ]
+        for index in product_indices:
+            # Some shortcuts.
+            l1a_data = l1a_product_data[index]
+            lut_data = stack_pre_proc_exec_products["l1a_product_luts"][index]
+            lut_azm_axis = stack_pre_proc_exec_products["l1a_product_luts_azm_axis"][index]
+            lut_rng_axis = stack_pre_proc_exec_products["l1a_product_luts_rng_axis"][index]
+            coreg_product = stack_coreg_proc_output_products[index]
+            coreg_params = stack_coreg_proc_exec_products["actualized_coregistration_parameters"][index]
+            l1a_path = self.job_order.input_stack[index]
+
             # NOTE: Some LUTs require special treatment and we shift them
             # individually. We report them here.
             done_luts = set()
 
             bps_logger.info(
-                "Shifting and subsampling LUTs for secondary product %s",
+                "%s LUTs for %s product %s",
+                "Resampling" if coreg_primary_image_index == index else "Shifting and resampling",
+                "primary" if coreg_primary_image_index == index else "secondary",
                 l1a_path.name,
             )
 
@@ -453,7 +449,11 @@ class StackCoregProcessorExecutionManager:
                 # it to disk to release some memory, otherwise we simply
                 # dump it from memory.
                 if slow_ionosphere_removal_enabled:
-                    bps_logger.debug("Shifting and caching phaseScreen")
+                    bps_logger.debug(
+                        "% and caching phaseScreenResampling"
+                        if index == coreg_primary_image_index
+                        else "Shifting and resampling,",
+                    )
                     write_product_folder(
                         data=shift_lut(
                             lut_data=phase_screen_lut,
@@ -487,7 +487,11 @@ class StackCoregProcessorExecutionManager:
                 # it to disk to release some memory, otherwise we simply
                 # dump it from memory.
                 if slow_ionosphere_removal_enabled:
-                    bps_logger.debug("Shifting and caching rangeShifts")
+                    bps_logger.debug(
+                        "% and caching rangeShiftsResampling"
+                        if index == coreg_primary_image_index
+                        else "Shifting and resampling,",
+                    )
                     write_product_folder(
                         data=shift_lut(
                             lut_data=phase_screen_lut,  # [m].
@@ -513,11 +517,11 @@ class StackCoregProcessorExecutionManager:
                 done_luts.add("rangeShifts")
 
             # Apply the coregistration shifts to the downsampled LUTs.
-            bps_logger.debug("Subsampling coregistration shifts")
+            bps_logger.debug("Resampling coregistration shifts")
             lut_data["azimuthCoregistrationShifts"] = azimuth_coreg_shifts[lut_azm_indices, :][:, lut_rng_indices]
             lut_data["rangeCoregistrationShifts"] = range_coreg_shifts[lut_azm_indices, :][:, lut_rng_indices]
 
-            bps_logger.debug("Subsampling coregistration shifts from orbit")
+            bps_logger.debug("Resampling coregistration shifts from orbit")
             # fmt: off
             lut_data["azimuthOrbitCoregistrationShifts"] = (
                 azimuth_geo_coreg_shifts[lut_azm_indices, :][:, lut_rng_indices]
@@ -528,11 +532,6 @@ class StackCoregProcessorExecutionManager:
             # fmt: on
 
             lut_data["coregistrationShiftsQuality"] = coreg_shifts_quality
-
-            # In case we cross the antimeridian, we need to make sure that we
-            # need to unwrap the longitudes.
-            if np.ptp(lut_data["longitude"]) > 180.0:
-                lut_data["longitude"] = lut_data["longitude"] % 360.0
 
             for lut_name in list(lut_data.keys()):
                 # If we had to upsample LUTs, we took care of those already. If
@@ -551,11 +550,36 @@ class StackCoregProcessorExecutionManager:
                 if "coregistration" in lut_name.lower():
                     continue
 
+                # After shifting, DEM LUTs and terrain slope LUTs are supposed
+                # to be those of the coregistration primary image hence we
+                # simply interpolate the coreg primary.
+                # NOTE: We could cache the primary LUTs, but this is quite cheap
+                # and fast (<1s). So we recompute this for each L1c product.
+                if lut_name in {"latitude", "longitude", "height", "rangeTerrainSlope", "azimuthTerrainSlope"}:
+                    if index == coreg_primary_image_index:
+                        bps_logger.debug("Resampling primary %s", lut_name)
+                        lut_data[lut_name] = shift_lut(
+                            lut_data=l1a_primary_luts[lut_name],
+                            lut_axes=l1a_primary_geo_lut_axes,
+                            azimuth_coreg_shifts=l1a_primary_luts["azimuthCoregistrationShifts"],
+                            range_coreg_shifts=l1a_primary_luts["rangeCoregistrationShifts"],
+                            primary_raster_info=primary_raster_info,
+                            secondary_raster_info=primary_raster_info,
+                            lut_interp_fn=partial(
+                                interpolate_points_on_grid,
+                                fill_value=np.nan,
+                            ),
+                        )
+                    else:
+                        bps_logger.debug("Using primary %s", lut_name)
+                        lut_data[lut_name] = l1a_primary_luts[lut_name]
+                    continue
+
                 if lut_name not in lut_azm_axis or lut_name not in lut_rng_axis:
                     raise StackCoregProcessorRuntimeError(f"{lut_name} has no LUT axes")
 
                 # Shift the LUT.
-                bps_logger.debug("Shifting %s", lut_name)
+                bps_logger.debug("%s %s", "Resampling" if coreg_primary_image_index == index else "Shifting", lut_name)
                 lut_data[lut_name] = shift_lut(
                     lut_data=lut_data[lut_name],
                     lut_axes=(lut_azm_axis[lut_name], lut_rng_axis[lut_name]),
@@ -573,10 +597,6 @@ class StackCoregProcessorExecutionManager:
                     stack_coreg_exec_products=coreg_product,
                     expected_lut_brk_products=cached_lut_products,
                 )
-
-            # We normalize the angles the shifting around the antimeridian
-            # resulted in longitudes not in [-180, 180].
-            lut_data["longitude"] = _normalize_longitude(lut_data["longitude"])
 
         # From now on, all LUTs are defined on the grid of the primary, so no
         # more dictionaries etc. Same axes for all data.

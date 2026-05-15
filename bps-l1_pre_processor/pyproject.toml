@@ -10,8 +10,8 @@ dependencies = [
     "scipy>=1.10",
     "numpy",
     "netCDF4",
-    "bps-common==4.4.3",
-    "bps-transcoder==4.4.3",
+    "bps-common==4.4.4",
+    "bps-transcoder==4.4.4",
 ]
 dynamic = ["version"]
 classifiers = [

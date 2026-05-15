@@ -306,7 +306,7 @@ def compute_coherence_improvement(
         improvement=0,
     )
     if valid_ms_coh_mask.size > 0:
-        output.improvement = nanmean(output.average_ms_coherence) - nanmean(coherence)
+        output.improvement = nanmean(output.average_ms_coherence) - nanmean(coherence[valid_ms_coh_mask])
     return output
 
 

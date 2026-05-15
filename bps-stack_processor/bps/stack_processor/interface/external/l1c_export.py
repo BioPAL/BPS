@@ -845,8 +845,9 @@ def _fill_stack_insar_parameters(
         azimuth_phase_slope = msc_products["azimuth_phase_slopes"][image_index]
         range_phase_slope = msc_products["range_phase_slopes"][image_index]
         iono_correction_flag = msc_products["ionosphere_estimation_outputs"][image_index] is not None
-        if iono_correction_flag:
+        if msc_products["coherence_checks"][image_index] is not None:
             coherence_check_value = msc_products["coherence_checks"][image_index].improvement
+        if iono_correction_flag:
             azimuth_shift = msc_products["azimuth_shift_outputs"][image_index].azimuth_shift
             azimuth_frequency_centroid = msc_products["azimuth_shift_outputs"][image_index].azimuth_frequency_centroid
             iono_layer_altitudes = los_range_ground_to_altitude(

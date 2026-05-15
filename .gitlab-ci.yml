@@ -35,7 +35,16 @@ workflow:
   rules:
     - when: always
 
+variables:
+  L1_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/L1_executables_lnx_2026-0513-3dceeb5a-c159c2e3.tgz"
+  L1_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/L1_executables_win_2026-0513-3dceeb5a-c159c2e3.zip"
+  STACK_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/Stack_executables_lnx_2026-0513-3dceeb5a.tgz"
+  STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-0513-3dceeb5a.zip"
+
 include:
+  - project: 'biomass-bps/ci-variables'
+    ref: main
+    file: '/variables.yml'
   - local: ".conda-packaging-ci.yml"
   - local: ".docker-ci.yml"
   - local: ".testplan-ci.yml"
@@ -304,7 +313,6 @@ bps-task-tables:
   extends:
     - .tags_rocky8_conda
   script:
-    - source .gitlab/ci/internal_ci_data.sh
     - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
     - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
     - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
@@ -323,6 +331,7 @@ bps-task-tables:
     - python -m pip install -e ./bps-stack_processor -e ./bps-stack_cal_processor -e ./bps-stack_coreg_processor -e ./bps-stack_pre_processor
     - python -m pip install -e ./bps-l2a_processor -e ./bps-l2b_fd_processor -e ./bps-l2b_fh_processor -e ./bps-l2b_agb_processor
     - python -m pip install -r test/requirements.txt
+    - python -c "import os; f='test/integration/config/linux.toml'; content=open(f).read().replace('\${DATASET_PATH_LNX}', os.environ['DATASET_PATH_LNX']); open(f,'w').write(content)"
     - python -m arepyextras.test --config test/integration/config/linux.toml test run ${INTEGRATION_TEST}
 
 base_rocky8_py312:
@@ -381,15 +390,6 @@ stack_rocky8_py312:
   script:
     - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
     - $ProgressPreference = 'SilentlyContinue'
-    - |
-      Get-Content .gitlab/ci/internal_ci_data.sh |
-      Where-Object { $_ -match '^export ' } |
-      ForEach-Object {
-        $entry = $_.Substring(7)
-        $name, $value = $entry -split '=', 2
-        $value = $value.Trim().Trim('"')
-        [System.Environment]::SetEnvironmentVariable($name, $value)
-      }
     - Invoke-WebRequest -UseBasicParsing -Uri "$env:L1_EXECUTABLES_WIN" -OutFile "L1_executables.zip"
     - Expand-Archive -Path "L1_executables.zip" -DestinationPath .
     - Invoke-WebRequest -UseBasicParsing -Uri "$env:STACK_EXECUTABLES_WIN" -OutFile "Stack_Executables.zip"
@@ -406,6 +406,7 @@ stack_rocky8_py312:
     - python -m pip install -e ./bps-l2a_processor -e ./bps-l2b_fd_processor -e ./bps-l2b_fh_processor -e ./bps-l2b_agb_processor
     - python -m pip install -r test/requirements.txt
     - mkdir tdir
+    - (Get-Content test/integration/config/win10.toml) -replace '\$\{DATASET_PATH_WIN\}', $env:DATASET_PATH_WIN | Set-Content test/integration/config/win10.toml
     - python -m arepyextras.test --config test/integration/config/win10.toml test run ${INTEGRATION_TEST}
   retry: 2
 
@@ -438,7 +439,6 @@ stack_win10_py312:
     - .tags_rocky8_conda
     - .full_build
   script:
-    - source .gitlab/ci/internal_ci_data.sh
     - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
     - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
     - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
@@ -452,6 +452,7 @@ stack_win10_py312:
     - conda install --strict-channel-priority bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fd_processor bps-l2b_fh_processor bps-l2b_agb_processor
     - conda list
     - python -m pip install -r test/requirements.txt
+    - python -c "import os; f='test/integration/config/linux.toml'; content=open(f).read().replace('\${DATASET_PATH_LNX}', os.environ['DATASET_PATH_LNX']); open(f,'w').write(content)"
     - python -m arepyextras.test --config test/integration/config/linux.toml test run test/integration/suite/base
     - python -m arepyextras.test --config test/integration/config/linux.toml test run test/integration/suite/stack/basic/bps-stack-normal.py:test_bps_sta_002_tom_reduced_data_nominal
   needs:

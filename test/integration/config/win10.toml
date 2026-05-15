@@ -1,0 +1,11 @@
+[data]
+url = "file://${DATASET_PATH_WIN}1.32"
+
+[env]
+root = "tdir"
+
+[env.variables]
+OMP_NUM_THREADS = {}
+LD_LIBRARY_PATH = { is_list = true }
+PATH = { is_list = true }
+COPERNICUS_DEM_FOLDER = {}

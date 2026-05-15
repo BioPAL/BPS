@@ -2,7 +2,6 @@
   extends:
     - .tags_rocky8_conda
   before_script:
-    - source .gitlab/ci/internal_ci_data.sh
     - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
     - python -m pip install build
     - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
@@ -35,7 +34,6 @@
   extends:
     - .tags_rocky8_conda
   before_script:
-    - source .gitlab/ci/internal_ci_data.sh
     - mkdir -p ${BPSPROJECT}/dist
     - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
     - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
