@@ -281,6 +281,10 @@ class BIOMASSStackProductReader:
                 (lut_axes_main[0] - lut_axes_main[0][0]).astype(np.float64),
                 (lut_axes_main[1] - lut_axes_main[1][0]).astype(np.float64),
             )
+            lut_axes_main = (
+                l1c_axes[0] + l1c_raster_info.lines_start,
+                l1c_axes[1] + l1c_raster_info.samples_start,
+            )
 
         # Read the LUTs.
         lut_dict = {}
@@ -313,7 +317,7 @@ class BIOMASSStackProductReader:
                                 s=0,
                             )(l1c_axes[0], l1c_axes[1]),
                         )
-                    else:
+                    elif lut_layer_name != "ionospherePhaseScreens":
                         lut_dict[lut_layer_name] = sp.interpolate.RectBivariateSpline(
                             lut_axes[0],
                             lut_axes[1],
@@ -351,7 +355,7 @@ class BIOMASSStackProductReader:
         return (
             lut_dict,
             lut_axes_main,
-            lut_iono_axes,  # See docstring. Soon to be deprecated.
+            lut_iono_axes,
         )
 
     def __read_mph_file(self):

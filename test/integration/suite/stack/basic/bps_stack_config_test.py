@@ -373,7 +373,7 @@ def test_bps_sta_012_int_skp_and_dsi_correction_flags(session: TestSession, env:
         print(stack_processor.stderr.read_text())
     session.expect_run_successful(stack_processor, fatal=True)
 
-    _read_l1c(env.root)
+    _read_l1c(env.root, fit_to_l1c_raster=True)
 
 
 def test_bps_sta_013_int_skp_correction_goldstein_filter(session: TestSession, env: Environment, data: DataRepository):
@@ -427,7 +427,7 @@ def test_bps_sta_014_int_skp_correction_boxcar_filter(session: TestSession, env:
         print(stack_processor.stderr.read_text())
     session.expect_run_successful(stack_processor, fatal=True)
 
-    _read_l1c(env.root)
+    _read_l1c(env.root, fit_to_l1c_raster=True)
 
 
 def test_bps_sta_015_int_skp_median_filter(session: TestSession, env: Environment, data: DataRepository):
@@ -776,7 +776,7 @@ def test_bps_sta_026_int_msc_calibration(session: TestSession, env: Environment,
         print(stack_processor.stderr.read_text())
     session.expect_run_successful(stack_processor, fatal=True)
 
-    _read_l1c(env.root)
+    _read_l1c(env.root, fit_to_l1c_raster=True)
 
 
 def test_bps_sta_027_int_msc_ms_coh_low_res(session: TestSession, env: Environment, data: DataRepository):
@@ -958,6 +958,7 @@ def _initialize_stack_int_nominal_test(data, coreg_primary_index=1, calibration_
 def _read_l1c(
     root_path: Path,
     *,
+    fit_to_l1c_raster: bool = False,
     l1a_frame_list: list[Path] | None = None,
     expected_ios_height: int | None = None,
     expected_coreg_primary_index: int | None = None,
@@ -998,7 +999,7 @@ def _read_l1c(
             traceback.print_exc()
 
         try:
-            stack_product_reader.read_lut_annotation()
+            stack_product_reader.read_lut_annotation(fit_to_l1c_raster=fit_to_l1c_raster)
         except:  # noqa: E722
             errors.append(FAIL_FORMAT_STR.format(f"Ivalid L1c product LUTS {l1c_product_path}"))
             traceback.print_exc()
