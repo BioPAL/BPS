@@ -18,7 +18,6 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent / "stack" / "aux_pps_utils"))
 # fmt: on
 import os
-from typing import Literal
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
@@ -40,7 +39,9 @@ from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
 CURRENT_VERSION = get_version_in_logger_format(__version__)
 WORKER_THREADS = 7
 MAX_RAM_USAGE = 64768
-L1_OUT_DIR = "output_dir_l1"
+L1_OUT_DIR_1 = "output_dir_l1_1"
+L1_OUT_DIR_2 = "output_dir_l1_2"
+L1_OUT_DIR_3 = "output_dir_l1_3"
 STA_OUT_DIR = "output_dir_sta"
 L2A_OUT_DIR = "output_dir_l2a"
 L2B_FH_OUT_DIR = "output_dir_l2b_fh"
@@ -59,13 +60,31 @@ def test_001_l1(session: TestSession, env: Environment, data: DataRepository):
     """Run L1 Processing using ROI."""
     # Setup the job order and AUX-PP1.
 
-    job_order_path = data.pull("input/l1002/joborder")
-    _set_l1_configuration(
-        env=env,
-        data=data,
-        aux_pp1_path=data.pull("configurations/l1p/CONF-BPS-PP1-003"),
-        job_order_path=job_order_path,
-        output_directory=env.root.parent.joinpath(L1_OUT_DIR).absolute(),
+    job_order_path = data.pull("input/e2e/joborder_l1_1")
+    job_order = xml.Document(job_order_path)
+    aux_ins_path = data.pull("configurations/e2e/CONF-BPS-INS-002")
+
+    dem_dir, _ = _dem_setup(env)
+
+    aux_pp1 = data.pull("configurations/e2e/CONF-BPS-PP1-001")
+    aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
+    aux_pp1_doc = xml.Document(aux_pp1_xml)
+    aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+
+    _update_l1_job_order(
+        job_order,
+        Amount_of_RAM=MAX_RAM_USAGE,
+        Number_of_CPU_Cores=WORKER_THREADS,
+        DEM=str(dem_dir),
+        S2_RAW__0S=data.pull("product/frame_1/l0/S3_RAW__0S"),
+        S2_RAW__0M=data.pull("product/frame_1/l0/S3_RAW__0M"),
+        AUX_ORB=data.pull("product/frame_1/aux_files/AUX_ORB"),
+        AUX_ATT=data.pull("product/frame_1/aux_files/AUX_ATT"),
+        GMF=data.pull("internal_resources/GMF_14"),
+        AUX_INS=aux_ins_path,
+        AUX_PP1=aux_pp1,
+        AUX_TEC=data.pull("configurations/e2e/CONF-BPS-TEC-003"),
+        OUTPUT_DIR=env.root.parent.joinpath(L1_OUT_DIR_1).absolute(),
     )
 
     # Run the processor and check exit code.
@@ -78,7 +97,7 @@ def test_001_l1(session: TestSession, env: Environment, data: DataRepository):
 
     # Count L1a M products. Raise if amount found is not as expected.
     _check_products(
-        root_dir=env.root.parent.joinpath(L1_OUT_DIR),
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_1),
         pattern="BIO_S*_SCS__1M*",
         expected_num_files=L1A_PRODUCTS_COUNT,
     )
@@ -86,23 +105,135 @@ def test_001_l1(session: TestSession, env: Environment, data: DataRepository):
     # Count and read L1a S products. Raise if amount does not match or a product
     # fails to read.
     _check_products(
-        root_dir=env.root.parent.joinpath(L1_OUT_DIR),
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_1),
         pattern="BIO_S*_SCS__1S*",
         expected_num_files=L1A_PRODUCTS_COUNT,
         product_reader=BIOMASSL1ProductReader,
     )
 
 
-def test_002_sta(session: TestSession, env: Environment, data: DataRepository):
+def test_002_l1(session: TestSession, env: Environment, data: DataRepository):
+    """Run L1 Processing using ROI."""
+    # Setup the job order and AUX-PP1.
+
+    job_order_path = data.pull("input/e2e/joborder_l1_2")
+    job_order = xml.Document(job_order_path)
+    aux_ins_path = data.pull("configurations/e2e/CONF-BPS-INS-002")
+
+    dem_dir, _ = _dem_setup(env)
+
+    aux_pp1 = data.pull("configurations/e2e/CONF-BPS-PP1-001")
+    aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
+    aux_pp1_doc = xml.Document(aux_pp1_xml)
+    aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+
+    _update_l1_job_order(
+        job_order,
+        Amount_of_RAM=MAX_RAM_USAGE,
+        Number_of_CPU_Cores=WORKER_THREADS,
+        DEM=str(dem_dir),
+        S2_RAW__0S=data.pull("product/frame_2/l0/S3_RAW__0S"),
+        S2_RAW__0M=data.pull("product/frame_2/l0/S3_RAW__0M"),
+        AUX_ORB=data.pull("product/frame_2/aux_files/AUX_ORB"),
+        AUX_ATT=data.pull("product/frame_2/aux_files/AUX_ATT"),
+        GMF=data.pull("internal_resources/GMF_14"),
+        AUX_INS=aux_ins_path,
+        AUX_PP1=aux_pp1,
+        AUX_TEC=data.pull("configurations/e2e/CONF-BPS-TEC-003"),
+        OUTPUT_DIR=env.root.parent.joinpath(L1_OUT_DIR_2).absolute(),
+    )
+
+    # Run the processor and check exit code.
+    l1_proc = env.run("bps_l1_processor", job_order_path)
+    if l1_proc.returncode != 0:
+        assert l1_proc.stderr is not None
+        print(l1_proc.stderr.read_text())
+
+    session.expect_run_successful(l1_proc, fatal=True)
+
+    # Count L1a M products. Raise if amount found is not as expected.
+    _check_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_2),
+        pattern="BIO_S*_SCS__1M*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+    )
+
+    # Count and read L1a S products. Raise if amount does not match or a product
+    # fails to read.
+    _check_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_2),
+        pattern="BIO_S*_SCS__1S*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+        product_reader=BIOMASSL1ProductReader,
+    )
+
+
+def test_003_l1(session: TestSession, env: Environment, data: DataRepository):
+    """Run L1 Processing using ROI."""
+    # Setup the job order and AUX-PP1.
+
+    job_order_path = data.pull("input/e2e/joborder_l1_3")
+    job_order = xml.Document(job_order_path)
+    aux_ins_path = data.pull("configurations/e2e/CONF-BPS-INS-002")
+
+    dem_dir, _ = _dem_setup(env)
+
+    aux_pp1 = data.pull("configurations/e2e/CONF-BPS-PP1-001")
+    aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
+    aux_pp1_doc = xml.Document(aux_pp1_xml)
+    aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+
+    _update_l1_job_order(
+        job_order,
+        Amount_of_RAM=MAX_RAM_USAGE,
+        Number_of_CPU_Cores=WORKER_THREADS,
+        DEM=str(dem_dir),
+        S2_RAW__0S=data.pull("product/frame_3/l0/S3_RAW__0S"),
+        S2_RAW__0M=data.pull("product/frame_3/l0/S3_RAW__0M"),
+        AUX_ORB=data.pull("product/frame_3/aux_files/AUX_ORB"),
+        AUX_ATT=data.pull("product/frame_3/aux_files/AUX_ATT"),
+        GMF=data.pull("internal_resources/GMF_14"),
+        AUX_INS=aux_ins_path,
+        AUX_PP1=aux_pp1,
+        AUX_TEC=data.pull("configurations/e2e/CONF-BPS-TEC-003"),
+        OUTPUT_DIR=env.root.parent.joinpath(L1_OUT_DIR_3).absolute(),
+    )
+
+    # Run the processor and check exit code.
+    l1_proc = env.run("bps_l1_processor", job_order_path)
+    if l1_proc.returncode != 0:
+        assert l1_proc.stderr is not None
+        print(l1_proc.stderr.read_text())
+
+    session.expect_run_successful(l1_proc, fatal=True)
+
+    # Count L1a M products. Raise if amount found is not as expected.
+    _check_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_3),
+        pattern="BIO_S*_SCS__1M*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+    )
+
+    # Count and read L1a S products. Raise if amount does not match or a product
+    # fails to read.
+    _check_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_3),
+        pattern="BIO_S*_SCS__1S*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+        product_reader=BIOMASSL1ProductReader,
+    )
+
+
+def test_003_sta(session: TestSession, env: Environment, data: DataRepository):
     """Run stack processor."""
     # Setup the job order and AUX-PPS.
-    job_order_path = data.pull("input/sta_int/joborder")
+    job_order_path = data.pull("input/e2e/joborder_sta")
     _set_stack_configuration(
         env=env,
         data=data,
-        aux_pps_product_dir=data.pull("configurations/sta/CONF-BPS-PPS-001"),
+        aux_pps_product_dir=data.pull("configurations/e2e/CONF-BPS-PPS-002"),
         job_order_path=job_order_path,
-        output_directory=env.root.parent.joinpath(L1_OUT_DIR).absolute(),
+        output_directory=env.root.parent.joinpath(L1_OUT_DIR_1).absolute(),
     )
 
     # Run the processor and check exit code.
@@ -133,10 +264,10 @@ def test_002_sta(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_003_l2a(session: TestSession, env: Environment, data: DataRepository):
+def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
     """Run L2a processor."""
     # Setup the job order and configuration file.
-    job_order_path = data.pull("input/l2a/joborder")
+    job_order_path = data.pull("input/e2e/joborder_l2a")
     job_order = xml.Document(job_order_path)
 
     # Get L1c products. Raise if amount does not match expected.
@@ -146,7 +277,7 @@ def test_003_l2a(session: TestSession, env: Environment, data: DataRepository):
         expected_num_files=L1C_PRODUCTS_COUNT,
     )
 
-    aux_pp2_path = data.pull("configurations/l2/CONF-BPS-PP2-2A-ALL")
+    aux_pp2_path = data.pull("configurations/e2e/CONF-BPS-PP2-2A-ALL")
 
     job_order.set(
         "//List_of_Tasks/Task/Amount_of_RAM/text()",
@@ -228,10 +359,10 @@ def test_003_l2a(session: TestSession, env: Environment, data: DataRepository):
 def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FH processor."""
     # Setup the job order and configuration file.
-    job_order_path = data.pull("input/l2b_fh/joborder")
+    job_order_path = data.pull("input/e2e/joborder_l2b_1")
     job_order = xml.Document(job_order_path)
 
-    aux_pp2_fh_path = data.pull("configurations/l2/CONF-BPS-PP2-FH-001")
+    aux_pp2_fh_path = data.pull("configurations/e2e/CONF-BPS-PP2-FH-001")
     aux_pp2_fh = xml.Document(retrieve_aux_product_data_single_content(aux_pp2_fh_path))
     aux_pp2_fh.set("//minimumL2aCoverage/text()", 4.0)
 
@@ -289,10 +420,10 @@ def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository
 def test_005_l2b_fd(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FD processor."""
     # Setup the job order and configuration file.
-    job_order_path = data.pull("input/l2b_fd/joborder")
+    job_order_path = data.pull("input/e2e/joborder_l2b_2")
     job_order = xml.Document(job_order_path)
 
-    aux_pp2_fd_path = data.pull("configurations/l2/CONF-BPS-PP2-FD-001")
+    aux_pp2_fd_path = data.pull("configurations/e2e/CONF-BPS-PP2-FD-001")
     aux_pp2_fd = xml.Document(retrieve_aux_product_data_single_content(aux_pp2_fd_path))
     aux_pp2_fd.set("//minimumL2aCoverage/text()", 4.0)
 
@@ -342,87 +473,6 @@ def test_005_l2b_fd(session: TestSession, env: Environment, data: DataRepository
         pattern="BIO_FP_FD__L2B_*",
         expected_num_files=L2_PRODUCTS_COUNT,
         product_reader=BIOMASSL2bFDProductReader,
-    )
-
-
-def _set_l1_configuration(
-    *,
-    env: Environment,
-    data: DataRepository,
-    aux_pp1_path: Path,
-    job_order_path: Path,
-    output_directory: Path,
-):
-    """Setup for the L1 tests."""
-    job_order = xml.Document(job_order_path)
-    aux_pp1_xml_path = retrieve_aux_product_data_single_content(aux_pp1_path)
-    aux_pp1 = xml.Document(aux_pp1_xml_path)
-
-    aux_ins_path = data.pull("configurations/l1p/CONF-BPS-INS-002")
-
-    dem_dir, dem_version = _dem_setup(env)
-
-    _update_l1_job_order(
-        job_order,
-        TOI_Start=L1_TOI_START,
-        TOI_Stop=L1_TOI_STOP,
-        Amount_of_RAM=MAX_RAM_USAGE,
-        Number_of_CPU_Cores=WORKER_THREADS,
-        DEM=str(dem_dir),
-        S2_RAW__0S=data.pull("product/l1002/l0/S2_RAW__0S"),
-        S2_RAW__0M=data.pull("product/l1002/l0/S2_RAW__0M"),
-        AUX_ORB=data.pull("product/l1002/aux_files/AUX_ORB"),
-        AUX_ATT=data.pull("product/l1002/aux_files/AUX_ATT"),
-        GMF=data.pull("internal_resources/GMF_14"),
-        AUX_INS=aux_ins_path,
-        AUX_PP1=aux_pp1_path,
-        AUX_TEC=data.pull("configurations/l1p/CONF-BPS-TEC-003"),
-        OUTPUT_DIR=output_directory,
-    )
-    _update_aux_pp1(
-        aux_pp1=aux_pp1,
-        raw_data_correction_flag="false",
-        bias_correction_flag="false",
-        antenna_pattern_correction1_flag="false",
-        antenna_pattern_correction2_flag="false",
-        polarimetric_correction_flag="false",
-        faraday_rotation_correction_flag="false",
-        ionospheric_phase_screen_correction_flag="false",
-        group_delay_correction_flag="false",
-        azimuth_block_overlap_lines=BLOCK_OVERLAP,
-        dem_version=dem_version,
-        lut_range_decimation_factor=2,
-        lut_azimuth_decimation_factor=12,
-        dc_method="Geometry",
-    )
-
-    aux_pp1_xml_path = retrieve_aux_product_data_single_content(aux_pp1_path)
-
-    job_order.set(
-        "//Task/List_of_Proc_Parameters/Proc_Parameter[Name/text()='frame_status']/Value/text()",
-        "PARTIAL",
-    )
-    job_order.add("//Task/List_of_Proc_Parameters", "Proc_Parameter", "")
-    job_order.add(
-        "//Task/List_of_Proc_Parameters/Proc_Parameter[last()]",
-        "Name",
-        "range_start_time",
-    )
-    job_order.add(
-        "//Task/List_of_Proc_Parameters/Proc_Parameter[last()]",
-        "Value",
-        "0.005033364936743259",
-    )
-    job_order.add("//Task/List_of_Proc_Parameters", "Proc_Parameter", "")
-    job_order.add(
-        "//Task/List_of_Proc_Parameters/Proc_Parameter[last()]",
-        "Name",
-        "range_stop_time",
-    )
-    job_order.add(
-        "//Task/List_of_Proc_Parameters/Proc_Parameter[last()]",
-        "Value",
-        "0.005185799419326667",
     )
 
 
@@ -510,7 +560,7 @@ def _update_l1_job_order(
         )
     if S2_RAW__0S is not None:
         job_order.set(
-            '//Selected_Input[File_Type/text()="S2_RAW__0S"]/List_of_File_Names/File_Name/text()',
+            '//Selected_Input[File_Type/text()="S3_RAW__0S"]/List_of_File_Names/File_Name/text()',
             S2_RAW__0S,
         )
     if S3_RAW__0S is not None:
@@ -525,7 +575,7 @@ def _update_l1_job_order(
         )
     if S2_RAW__0M is not None:
         job_order.set(
-            '//Selected_Input[File_Type/text()="S2_RAW__0M"]/List_of_File_Names/File_Name/text()',
+            '//Selected_Input[File_Type/text()="S3_RAW__0M"]/List_of_File_Names/File_Name/text()',
             S2_RAW__0M,
         )
     if S3_RAW__0M is not None:
@@ -571,70 +621,6 @@ def _update_l1_job_order(
     job_order.set("//Task_Version/text()", CURRENT_VERSION)
 
 
-def _update_aux_pp1(
-    *,
-    aux_pp1: xml.Document,
-    raw_data_correction_flag: Literal["true", "false"] | None = None,
-    bias_correction_flag: Literal["true", "false"] | None = None,
-    antenna_pattern_correction1_flag: Literal["true", "false"] | None = None,
-    antenna_pattern_correction2_flag: Literal["true", "false"] | None = None,
-    polarimetric_correction_flag: Literal["true", "false"] | None = None,
-    faraday_rotation_correction_flag: Literal["true", "false"] | None = None,
-    ionospheric_phase_screen_correction_flag: Literal["true", "false"] | None = None,
-    group_delay_correction_flag: Literal["true", "false"] | None = None,
-    azimuth_block_overlap_lines: int | None = None,
-    dc_method: str | None = None,
-    dc_value: float | None = None,
-    remove_margin_flag: Literal["true", "false"] | None = None,
-    autofocus_flag: Literal["true", "false"] | None = None,
-    dem_version: str | None = None,
-    lut_range_decimation_factor: int | None = None,
-    lut_azimuth_decimation_factor: int | None = None,
-):
-    """Update the aux pp1 file with new parameters."""
-    if raw_data_correction_flag is not None:
-        aux_pp1.set("//rawDataCorrectionFlag/text()", raw_data_correction_flag)
-    if bias_correction_flag is not None:
-        aux_pp1.set("//biasCorrectionFlag/text()", bias_correction_flag)
-    if antenna_pattern_correction1_flag is not None:
-        aux_pp1.set("//antennaPatternCorrection1Flag/text()", antenna_pattern_correction1_flag)
-    if antenna_pattern_correction2_flag is not None:
-        aux_pp1.set("//antennaPatternCorrection2Flag/text()", antenna_pattern_correction2_flag)
-    if polarimetric_correction_flag is not None:
-        aux_pp1.set("//polarimetricCorrectionFlag/text()", polarimetric_correction_flag)
-    if faraday_rotation_correction_flag is not None:
-        aux_pp1.set("//faradayRotationCorrectionFlag/text()", faraday_rotation_correction_flag)
-    if ionospheric_phase_screen_correction_flag is not None:
-        aux_pp1.set(
-            "//ionosphericPhaseScreenCorrectionFlag/text()",
-            ionospheric_phase_screen_correction_flag,
-        )
-    if group_delay_correction_flag is not None:
-        aux_pp1.set("//groupDelayCorrectionFlag/text()", group_delay_correction_flag)
-    if azimuth_block_overlap_lines is not None:
-        aux_pp1.set("//blockOverlapLines/text()", azimuth_block_overlap_lines)
-    if dc_method is not None:
-        aux_pp1.set("//dcMethod/text()", dc_method)
-    if dc_value is not None:
-        aux_pp1.set("//dcValue/text()", dc_value)
-    if remove_margin_flag is not None:
-        aux_pp1.set("//azimuthFocusingMarginsRemovalFlag/text()", remove_margin_flag)
-    if autofocus_flag is not None:
-        aux_pp1.set("//autofocusFlag/text()", autofocus_flag)
-    if dem_version is not None:
-        aux_pp1.set("//heightModel/@version", dem_version)
-    if lut_range_decimation_factor is not None:
-        aux_pp1.set(
-            "//lutRangeDecimationFactorList/lutDecimationFactor",
-            lut_range_decimation_factor,
-        )
-    if lut_azimuth_decimation_factor is not None:
-        aux_pp1.set(
-            "//lutAzimuthDecimationFactorList/lutDecimationFactor",
-            lut_azimuth_decimation_factor,
-        )
-
-
 def _set_stack_configuration(
     *,
     env: Environment,
@@ -652,8 +638,18 @@ def _set_stack_configuration(
     job_order = xml.Document(job_order_path)
 
     # Get L1a products. Raise if amount does not match expected.
-    l1a_list = _find_products(
-        root_dir=env.root.parent.joinpath(L1_OUT_DIR),
+    l1a_list_1 = _find_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_1),
+        pattern="BIO_S*_SCS__1S*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+    )
+    l1a_list_2 = _find_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_2),
+        pattern="BIO_S*_SCS__1S*",
+        expected_num_files=L1A_PRODUCTS_COUNT,
+    )
+    l1a_list_3 = _find_products(
+        root_dir=env.root.parent.joinpath(L1_OUT_DIR_3),
         pattern="BIO_S*_SCS__1S*",
         expected_num_files=L1A_PRODUCTS_COUNT,
     )
@@ -668,15 +664,19 @@ def _set_stack_configuration(
     )
     job_order.set(
         "//Proc_Parameter[Name/text()='primary_image']/Value",
-        l1a_list[0],
+        l1a_list_1[0],
     )
     job_order.set(
         "//Input[Input_ID/text()='Sx_SCS__1S']/List_of_Selected_Inputs/Selected_Input/List_of_File_Names/File_Name[1]/text()",
-        l1a_list[0],
+        l1a_list_1[0],
     )
     job_order.set(
         "//Input[Input_ID/text()='Sx_SCS__1S']/List_of_Selected_Inputs/Selected_Input/List_of_File_Names/File_Name[2]/text()",
-        l1a_list[0],
+        l1a_list_2[0],
+    )
+    job_order.set(
+        "//Input[Input_ID/text()='Sx_SCS__1S']/List_of_Selected_Inputs/Selected_Input/List_of_File_Names/File_Name[3]/text()",
+        l1a_list_3[0],
     )
 
     # Remove third image from the INT job order.
