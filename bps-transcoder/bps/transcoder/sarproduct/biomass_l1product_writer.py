@@ -22,7 +22,7 @@ from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common, translate_common
 from bps.common.io.parsing import serialize
-from bps.transcoder import BPS_PFD_L1_VERSION, BPS_PPD_VERSION
+from bps.transcoder import BPS_ATBD_L1_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import (
     common_annotation_l1,
     main_annotation_l1ab,
@@ -432,6 +432,8 @@ class BIOMASSL1ProductWriter:
         xml4.text = f"BIOMASS L1a/b/c Products Format Specification (BPS_L1_PFD) {BPS_PFD_L1_VERSION}"
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
         xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS L1 SAR product ATBD (BPS_L1_SAR_ATBD) {BPS_ATBD_L1_VERSION}"
 
         # Write MPH file
         xmlstr = minidom.parseString(ET.tostring(xml1)).toprettyxml(indent="   ")
