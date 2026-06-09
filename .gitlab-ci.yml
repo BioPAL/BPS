@@ -42,7 +42,7 @@ variables:
   STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-0513-3dceeb5a.zip"
 
 include:
-  - project: 'biomass-bps/ci-variables'
+  - project: "biomass/bps/ci-variables"
     ref: main
     file: '/variables.yml'
   - local: ".conda-packaging-ci.yml"
