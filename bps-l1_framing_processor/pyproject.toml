@@ -11,8 +11,8 @@ dependencies = [
     "xsdata",
     "scipy",
     "numpy",
-    "bps-common==4.4.4",
-    "bps-transcoder==4.4.4",
+    "bps-common==4.4.5",
+    "bps-transcoder==4.4.5",
 ]
 dynamic = ["version"]
 classifiers = [
