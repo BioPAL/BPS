@@ -7,7 +7,7 @@ readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
     "arepytools>=1.8.1",
-    "bps-common==4.4.4",
+    "bps-common==4.4.5",
     "numba>=0.57.0",
     "numpy>=1.26",
     "opencv-python-headless<4.14",

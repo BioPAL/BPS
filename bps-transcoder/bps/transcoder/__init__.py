@@ -10,7 +10,7 @@ BPS Transcoder package
 ----------------------
 """
 
-__version__ = "4.4.4"
+__version__ = "4.4.5"
 
 BPS_PFD_L1_VERSION = "V1.6.1"
 BPS_PFD_FH_VERSION = "V3.4.0"

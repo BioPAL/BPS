@@ -10,5 +10,5 @@ Biomass L2a Processor
 ---------------------
 """
 
-__version__ = "4.4.4"
+__version__ = "4.4.5"
 BPS_L2A_PROCESSOR_NAME = "Biomass L2a Processor"
