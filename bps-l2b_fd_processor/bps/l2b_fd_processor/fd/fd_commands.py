@@ -239,21 +239,18 @@ class FDL2B:
 
         # Footprint mask for quick looks transparency
         footprint_masks_for_quicklooks = {}
+        fd_for_footprint = data_3d_mat_dict["fd"]
         if AVERAGING_FACTOR_QUICKLOOKS > 1:
-            fd_for_footprint = data_3d_mat_dict["fd"].squeeze()[
-                ::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS
-            ]
-        else:
-            fd_for_footprint = data_3d_mat_dict["dh"].squeeze()
-        footprint_masks_for_quicklooks["data_mask"] = np.logical_not(np.isnan(fd_for_footprint))
+            fd_for_footprint = data_3d_mat_dict["fd"][::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
+        footprint_masks_for_quicklooks["data_mask"] = np.logical_not(np.isnan(fd_for_footprint)).any(axis=-1)
 
         # Footprint mask for quick looks transparency
-        cfm_no_data_value_mask = data_3d_mat_dict["cfm"].squeeze() == INT_NODATA_VALUE
-        cfm_for_footprint = data_3d_mat_dict["cfm"].squeeze().astype(np.float32)
+        cfm_no_data_value_mask = data_3d_mat_dict["cfm"] == INT_NODATA_VALUE
+        cfm_for_footprint = data_3d_mat_dict["cfm"].astype(np.float32)
         cfm_for_footprint[cfm_no_data_value_mask] = np.nan
         if AVERAGING_FACTOR_QUICKLOOKS > 1:
             cfm_for_footprint = cfm_for_footprint[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
-        footprint_masks_for_quicklooks["cfm_mask"] = np.logical_not(np.isnan(cfm_for_footprint))
+        footprint_masks_for_quicklooks["cfm_mask"] = np.logical_not(np.isnan(cfm_for_footprint)).any(axis=-1)
 
         return (
             l2b_data_final_d,
