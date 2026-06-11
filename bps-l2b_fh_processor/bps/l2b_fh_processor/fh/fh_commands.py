@@ -93,47 +93,52 @@ class FHL2B:
         global_coverage_id = None
         l2a_inputs_list = []
         basin_id_list = []
+        counter = 0
         for idx, l2a_product in enumerate(self.l2a_fh_products_list):
-            basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
+            if self.job_order.processing_parameters.tile_id in l2a_product.main_ads_product.tile_id_list:
+                # Only the used L2A products (see dgg_tiling)
 
-            footprint = main_annotation_models_l2b_fh.FloatArrayWithUnits(
-                value=l2a_product.main_ads_input_information.footprint,
-                count=8,
-                units=common_types.UomType.DEG,
-            )
+                basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-            l1_inputs = common_annotation_models_l2.InputInformationL2AType(
-                product_type=common_annotation_models_l2.ProductType(
-                    l2a_product.main_ads_input_information.product_type
-                ),
-                overall_products_quality_index=l2a_product.main_ads_input_information.overall_products_quality_index,
-                nominal_stack=str(l2a_product.main_ads_input_information.nominal_stack).lower(),
-                polarisation_list=l2a_product.main_ads_input_information.polarisation_list,
-                projection=common_annotation_models_l2.ProjectionType(
-                    l2a_product.main_ads_input_information.projection
-                ),
-                footprint=footprint,
-                vertical_wavenumbers=l2a_product.main_ads_input_information.vertical_wavenumbers,
-                height_of_ambiguity=l2a_product.main_ads_input_information.height_of_ambiguity,
-                acquisition_list=l2a_product.main_ads_input_information.acquisition_list,
-            )
-
-            l2a_inputs_list.append(
-                common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
-                    l2a_product_folder_name=str(self.job_order.input_l2a_products[idx]),
-                    l2a_product_date=l2a_product.main_ads_product.start_time.isoformat(timespec="microseconds"),
-                    l1_inputs=l1_inputs,
+                footprint = main_annotation_models_l2b_fh.FloatArrayWithUnits(
+                    value=l2a_product.main_ads_input_information.footprint,
+                    count=8,
+                    units=common_types.UomType.DEG,
                 )
-            )
 
-            if idx == 0:
-                mission_phase_id = l2a_product.main_ads_product.mission_phase_id
-                global_coverage_id = l2a_product.main_ads_product.global_coverage_id
-            else:
-                if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
-                    raise ValueError(
-                        "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
+                l1_inputs = common_annotation_models_l2.InputInformationL2AType(
+                    product_type=common_annotation_models_l2.ProductType(
+                        l2a_product.main_ads_input_information.product_type
+                    ),
+                    overall_products_quality_index=l2a_product.main_ads_input_information.overall_products_quality_index,
+                    nominal_stack=str(l2a_product.main_ads_input_information.nominal_stack).lower(),
+                    polarisation_list=l2a_product.main_ads_input_information.polarisation_list,
+                    projection=common_annotation_models_l2.ProjectionType(
+                        l2a_product.main_ads_input_information.projection
+                    ),
+                    footprint=footprint,
+                    vertical_wavenumbers=l2a_product.main_ads_input_information.vertical_wavenumbers,
+                    height_of_ambiguity=l2a_product.main_ads_input_information.height_of_ambiguity,
+                    acquisition_list=l2a_product.main_ads_input_information.acquisition_list,
+                )
+
+                l2a_inputs_list.append(
+                    common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
+                        l2a_product_folder_name=str(self.job_order.input_l2a_products[idx]),
+                        l2a_product_date=l2a_product.main_ads_product.start_time.isoformat(timespec="microseconds"),
+                        l1_inputs=l1_inputs,
                     )
+                )
+
+                if counter == 0:
+                    mission_phase_id = l2a_product.main_ads_product.mission_phase_id
+                    global_coverage_id = l2a_product.main_ads_product.global_coverage_id
+                else:
+                    if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
+                        raise ValueError(
+                            "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
+                        )
+                counter += 1
 
         return (
             l2a_inputs_list,
@@ -199,7 +204,9 @@ class FHL2B:
 
             data_footprint_list = []
             for l2a_product in self.l2a_fh_products_list:
-                data_footprint_list.append(np.array(l2a_product.main_ads_input_information.footprint))
+                if self.job_order.processing_parameters.tile_id in l2a_product.main_ads_product.tile_id_list:
+                    # Only the used L2A products (see dgg_tiling)
+                    data_footprint_list.append(np.array(l2a_product.main_ads_input_information.footprint))
 
             # Average
             (
