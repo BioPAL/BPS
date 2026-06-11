@@ -259,13 +259,10 @@ class FHL2B:
             stop_time_l2a = max(stop_time_l2a, l2a_product.main_ads_product.stop_time)
 
         # Footprint mask for quick looks transparency
+        fh_for_footprint = data_3d_mat_dict["fh"]
         if AVERAGING_FACTOR_QUICKLOOKS > 1:
-            fh_for_footprint = data_3d_mat_dict["fh"].squeeze()[
-                ::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS
-            ]
-        else:
-            fh_for_footprint = data_3d_mat_dict["fh"].squeeze()
-        footprint_mask_for_quicklooks = np.logical_not(np.isnan(fh_for_footprint))
+            fh_for_footprint = data_3d_mat_dict["fh"][::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
+        footprint_mask_for_quicklooks = np.logical_not(np.isnan(fh_for_footprint)).any(axis=-1)
 
         return (
             l2b_data_final_d,
