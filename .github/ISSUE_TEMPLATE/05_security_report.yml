@@ -1,0 +1,107 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+
+name: 05 · Security report
+description: Report a non-sensitive security concern, hardening recommendation, or supply-chain issue.
+title: "[security] <short description>"
+labels: ["type:security", "needs-triage", "priority:high"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report a security concern that is **safe to disclose publicly**:
+        a hardening recommendation, a known CVE in a dependency, a supply-chain concern,
+        or a configuration weakness.
+
+        **Sensitive vulnerabilities that could be exploited must NOT be disclosed in
+        a public issue.** They must be reported through a private GitHub Security Advisory:
+        https://github.com/BioPAL/BPS/security/advisories/new
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Vulnerable dependency (known CVE)
+        - Supply-chain concern (provenance, signing, REUSE)
+        - CI/CD configuration weakness
+        - Repository or branch protection hardening
+        - Credential or secret exposure risk
+        - License or third-party code concern
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Estimated severity
+      description: Use the CVSS qualitative scale when applicable.
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+        - Informational
+    validations:
+      required: true
+
+  - type: input
+    id: identifiers
+    attributes:
+      label: CVE or advisory identifier (if applicable)
+      placeholder: "CVE-2025-12345  /  GHSA-xxxx-xxxx-xxxx"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Describe the concern. Do not include exploit code, working proof of concept,
+        or any information that could enable an attack before a fix is available.
+      placeholder: |
+        Example:
+          - Concern, attached below.
+          - Exploit code, attached below.
+          - Working proof of concept, attached below.
+          - Information that could enable an attack before a fix is available, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected component or configuration
+      description: Component, file, workflow, dependency or configuration impacted.
+      placeholder: |
+        Example:
+          - Component, attached below.
+          - File, attached below.
+          - Workflow, attached below.
+          - Dependency, attached below.
+          - Configuration, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Proposed mitigation or remediation
+      description: Suggested patch, configuration change, dependency upgrade, or other mitigation.
+      placeholder: |
+        Example:
+          - Patch, attached below.
+          - Configuration change, attached below.
+          - Dependency upgrade, attached below.
+          - Other mitigation, attached below.
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure acknowledgement
+      options:
+        - label: I confirm that the information disclosed in this issue is safe for public disclosure.
+          required: true
+        - label: I understand that sensitive or exploitable vulnerabilities must be reported through a private GitHub Security Advisory rather than a public issue.
+          required: true
+        - label: I have not included exploit code or any information that could enable an attack before a fix is available.
+          required: true
