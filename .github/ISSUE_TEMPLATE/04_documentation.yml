@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+
+name: 04 · Documentation issue
+description: Report an error, gap or improvement opportunity in the BIOMASS BPS documentation.
+title: "[docs] <short description>"
+labels: ["type:docs", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report an issue in the documentation: an error,
+        an omission, an outdated section, a broken link, or a request for clarification.
+
+  - type: dropdown
+    id: section
+    attributes:
+      label: Documentation section
+      description: Select the section of the BIOMASS BPS documentation site impacted.
+      options:
+        - About
+        - Getting started
+        - User guide
+        - Tutorials
+        - Science guide
+        - Developer guide
+        - Contributing
+        - Governance
+        - Index / landing page
+        - README or top-level repository files
+        - Templates
+        - Other (please specify in the description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Type of documentation issue
+      options:
+        - Technical error or incorrect information
+        - Outdated content
+        - Missing content or coverage gap
+        - Unclear or ambiguous wording
+        - Broken link or rendering issue
+        - Typographical or formatting issue
+        - Translation or terminology issue
+        - New content proposal
+        - Other (please specify in the description)
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Page URL or file path
+      description: Link to the affected page on the documentation site, or path in the repository.
+      placeholder: "https://biopal.github.io/BPS/...  or  docs/source/user_guide/...md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the issue
+      description: Describe what is wrong, unclear or missing. 
+      placeholder: |
+        Example:
+          - What is wrong, unclear or missing, attached below.
+          - New content proposal, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: If possible, propose the corrected wording or the missing content.
+      placeholder: |
+        Example:
+          - Corrected wording, attached below.
+          - Missing content, attached below.
+          - New content proposal, attached below.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have verified that the issue is present in the latest published version of the documentation.
+          required: true
+        - label: I have searched existing issues to confirm this is not a duplicate.
+          required: true
