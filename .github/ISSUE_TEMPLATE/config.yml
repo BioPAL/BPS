@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+#
+# Issue template chooser configuration for the BIOMASS BPS repository.
+# Blank issues are disabled to ensure every report follows a structured template,
+# which is required for automated triage and tier classification by the CI.
+
+blank_issues_enabled: false
+
+contact_links:
+  - name: Documentation site
+    url: https://biomass-disc.info/docs
+    about: User Guide, Tutorials, Science Guide and Governance. Please consult the documentation before opening an issue.
+
+  - name: GitHub Discussions
+    url: https://github.com/BioPAL/BPS/discussions
+    about: For open-ended questions, design discussions or community conversation that are not a concrete defect, request, or proposal.
