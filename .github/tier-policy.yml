@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+#
+# Tier decision policy used by `.github/workflows/ci.yml` (job: `tier-decision`).
+#
+# Why this file exists:
+# - It is the single place where "what should escalate to tier 1?" is defined.
+# - CI reads this policy from the PR BASE branch (not the PR head), so a PR
+#   cannot modify its own judge.
+#
+# Tier model (see scripts/ci_tier_decision.py):
+#   0 — Baseline only
+#   1 — Baseline + Extended (locked_paths, sme_owned_paths, marker fail, Dependabot major)
+#   2 — Baseline + Extended + Heavy (tier_2_paths, VERSION→main, or manual run_heavy when tier≥1)
+#
+# Policy is read from base_sha (PR merge target, or develop on dispatch without PR).
+#
+# Glob semantics:
+# - Patterns follow gitwildmatch syntax (similar to .gitignore).
+# - `**` matches across directory boundaries.
+
+locked_paths:
+  # ---- Version files (root + per-processor) ----------------------------------
+  - "VERSION"
+  - "pyproject.toml"
+  - "bps-*/pyproject.toml"
+
+  # ---- CI configuration and repository governance ----------------------------
+  - ".github/workflows/**"
+  - ".github/CODEOWNERS"
+  - ".github/dependabot.yml"
+  - ".github/PULL_REQUEST_TEMPLATE.md"
+  - ".github/tier-policy.yml"
+
+  # ---- Commit-time and lint configuration -----------------------------------
+  - ".pre-commit-config.yaml"
+  - "ruff.toml"
+  - "noxfile.py"
+
+  # ---- Licensing and REUSE compliance ---------------------------------------
+  - "LICENSES/**"
+  - "REUSE.toml"
+
+  # ---- Test harness, markers, and baselines (the judge itself) --------------
+  - "pytest.ini"
+  - "test/baseline/**"
+  - "test/extended/**"
+  - "test/heavy/**"
+  - "**/test/baseline/**"
+  - "**/test/smoke/**"
+
+  # ---- Calibration / auxiliary inputs to processors -------------------------
+  - "bps-l1_pre_processor/bps/l1_pre_processor/aux_ins/**"
+  - "bps-l1_pre_processor/test/aux_ins/**"
+  - "bps-l1_processor/bps/l1_processor/aux_tec/**"
+  - "bps-transcoder/bps/transcoder/auxiliaryfiles/**"
+
+# Paths that force tier 2 (Heavy) in addition to Extended.
+# Leave empty to rely on promotion.version_to_main_is_tier_2 and manual run_heavy only.
+tier_2_paths: []
+
+# Promotion / release rules (tier 2 = Heavy required).
+promotion:
+  # PR targeting main that changes VERSION → tier 2 (ESA review expected at merge time).
+  version_to_main_is_tier_2: true
+
+# Dependabot: semver-major dependency PRs → tier 1 (Extended).
+dependabot:
+  major_bump_is_tier_1: true
+
+# Paths that require SME escalation.
+# If any of these change, tier is elevated and Extended runs.
+sme_owned_paths:
+  - "bps-common/**"
+  - "bps-task-tables/**"
+  - "bps-transcoder/**"
+  - "bps-l1_binaries/**"
+  - "bps-l1_core_processor/**"
+  - "bps-l1_framing_processor/**"
+  - "bps-l1_pre_processor/**"
+  - "bps-l1_processor/**"
+  - "bps-l2a_processor/**"
+  - "bps-l2b_agb_processor/**"
+  - "bps-l2b_fd_processor/**"
+  - "bps-l2b_fh_processor/**"
+  - "bps-stack_binaries/**"
+  - "bps-stack_cal_processor/**"
+  - "bps-stack_coreg_processor/**"
+  - "bps-stack_pre_processor/**"
+  - "bps-stack_processor/**"
+  - "**/test/baseline/**"
+  - "**/test/smoke/**"
+  - "test/extended/**"
+  - "test/heavy/**"
+
+# Marker used for baseline signal tests.
+# Must match a marker declared in `pytest.ini`.
+baseline_marker: "baseline"
