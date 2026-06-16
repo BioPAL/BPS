@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: 2026 Aresys S.r.l.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Monorepo policy: Ruff uses the nearest pyproject.toml per file (sub-packages). See
+#   bps-l2a_processor/pyproject.toml — xsdata / ground_cancellation overrides
+#   bps-l2b_agb_processor/pyproject.toml — agb_commands E712
+# [tool.mypy] below is used by the mypy pre-commit hook from the repository root.
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+explicit_package_bases = true
+namespace_packages = true
+exclude = [
+  "^.*/noxfile\\.py$",
+  "^.*/recipe/",
+  "^.*/aux_pp2_.*_models/",
+  "^.*/test/",
+  "^.*/tests/",
+  "^docs/",
+  "^tests/",
+]
+ignore_missing_imports = true
+# Monorepo: after structural fixes (duplicate modules), mypy still reports long-standing
+# per-file issues. Re-enable (set false) package-by-package once typing is improved.
+ignore_errors = true

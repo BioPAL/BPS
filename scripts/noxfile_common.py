@@ -1,8 +1,7 @@
-# Project: BIOMASS Processing Suite (BPS)
+# Copyright (C) 2025 ARESYS S.r.l.
+# SPDX-FileCopyrightText: 2026 Aresys S.r.l.
 #
-# Copyright (c) 2025, ARESYS S.r.l.
-# Developed under contract with the European Space Agency (ESA)
-#
+# SPDX-License-Identifier: Apache-2.0
 # SPDX-License-Identifier: MIT
 
 """
@@ -32,7 +31,12 @@ _LICENSE_HEADER_ARESYS = """# Project: BIOMASS Processing Suite (BPS)
 
 """
 
-_GPP_FILES = ["main_autofocus_bps.py", "af_lib.py", "signalproclib.py", "save_aresys.py"]
+_GPP_FILES = [
+    "main_autofocus_bps.py",
+    "af_lib.py",
+    "signalproclib.py",
+    "save_aresys.py",
+]
 
 _LICENSE_HEADER_GPP = """# Project: BIOMASS Processing Suite (BPS)
 #
@@ -96,7 +100,9 @@ def run_ruff(session: nox.Session):
 def run_fawlty_deps(session: nox.Session):
     """Check dependencies with fawlty deps"""
     if not Path("bps").exists():
-        session.error("run fawlty_deps session inside package folder: e.g. 'cd bps-common; nox -s fawlty_deps'")
+        session.error(
+            "run fawlty_deps session inside package folder: e.g. 'cd bps-common; nox -s fawlty_deps'"
+        )
 
     session.install("FawltyDeps")
     session.run(
@@ -147,7 +153,9 @@ def run_unittest(session: nox.Session):
 def run_build_sdist(session: nox.Session):
     """Build source distribution"""
     if not Path("bps").exists():
-        session.error("run build_sdist session inside package folder: e.g. 'cd bps-common; nox -s build_sdist'")
+        session.error(
+            "run build_sdist session inside package folder: e.g. 'cd bps-common; nox -s build_sdist'"
+        )
 
     session.install("build")
     session.run("python", "-m", "build", "--sdist", silent=True)
@@ -156,7 +164,9 @@ def run_build_sdist(session: nox.Session):
 def run_build_wheel(session: nox.Session):
     """Build wheel distribution"""
     if not Path("bps").exists():
-        session.error("run build_wheel session inside package folder: e.g. 'cd bps-common; nox -s build_wheel'")
+        session.error(
+            "run build_wheel session inside package folder: e.g. 'cd bps-common; nox -s build_wheel'"
+        )
 
     session.install("build")
     session.run("python", "-m", "build", "--wheel", silent=True)
@@ -183,7 +193,9 @@ def run_check_xsd(session: nox.Session, package: str, file_list: list[str]):
             fail = True
 
     if fail:
-        session.error(f"xsd inside package are not aligned: run 'cd {package}; nox -s align_xsd")
+        session.error(
+            f"xsd inside package are not aligned: run 'cd {package}; nox -s align_xsd"
+        )
 
 
 def run_align_xsd(session: nox.Session, package: str, file_list: list[str]):

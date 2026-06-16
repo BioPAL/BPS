@@ -1,8 +1,7 @@
-# Project: BIOMASS Processing Suite (BPS)
+# Copyright (C) 2025 ARESYS S.r.l.
+# SPDX-FileCopyrightText: 2026 Aresys S.r.l.
 #
-# Copyright (c) 2025, ARESYS S.r.l.
-# Developed under contract with the European Space Agency (ESA)
-#
+# SPDX-License-Identifier: Apache-2.0
 # SPDX-License-Identifier: MIT
 
 """
@@ -74,13 +73,17 @@ def walk_with_filter(
         if relevant_dir and not relevant_dir(path):
             return
         for item in path.iterdir():
-            yield from walk_with_filter(item, relevant_file=relevant_file, relevant_dir=relevant_dir)
+            yield from walk_with_filter(
+                item, relevant_file=relevant_file, relevant_dir=relevant_dir
+            )
 
 
 def get_bps_common_version_no_install() -> str:
     """Get bps-common version by parsing of the init"""
 
-    content = Path("bps-common", "bps", "common", "__init__.py").read_text(encoding="utf-8")
+    content = Path("bps-common", "bps", "common", "__init__.py").read_text(
+        encoding="utf-8"
+    )
 
     current_version: str | None = None
     for line in content.splitlines():
@@ -108,7 +111,9 @@ def get_version_in_bps_format(version: str) -> str:
 def version_update(session: nox.Session) -> None:
     """Update BPS version"""
     if len(session.posargs) != 1:
-        raise RuntimeError("Unexpected number of input arguments, usage: 'nox -s version_update -- 1.0.0'")
+        raise RuntimeError(
+            "Unexpected number of input arguments, usage: 'nox -s version_update -- 1.0.0'"
+        )
 
     new_version = session.posargs[0]
     current_version = get_bps_common_version_no_install()
@@ -122,12 +127,16 @@ def version_update(session: nox.Session) -> None:
         return name != "build" and not name.startswith(".")
 
     updated_files = 0
-    for file in walk_with_filter(Path.cwd(), relevant_file=relevant_file, relevant_dir=relevant_dir):
+    for file in walk_with_filter(
+        Path.cwd(), relevant_file=relevant_file, relevant_dir=relevant_dir
+    ):
         text = file.read_text(encoding="utf-8")
         if current_version in text:
             updated_files += 1
             session.log(f"Updating version in {file}")
-            file.write_text(text.replace(current_version, new_version), encoding="utf-8")
+            file.write_text(
+                text.replace(current_version, new_version), encoding="utf-8"
+            )
     session.log(f"{updated_files} files updated")
 
     new_version_bps = get_version_in_bps_format(new_version)
@@ -138,14 +147,20 @@ def version_update(session: nox.Session) -> None:
 
     session.log(f"Bumping BPS version from {current_version_bps} to {new_version_bps}")
     updated_files = 0
-    for file in walk_with_filter(Path.cwd(), relevant_file=relevant_file, relevant_dir=relevant_dir):
+    for file in walk_with_filter(
+        Path.cwd(), relevant_file=relevant_file, relevant_dir=relevant_dir
+    ):
         text = file.read_text(encoding="utf-8")
         if current_version_bps in text:
             updated_files += 1
             session.log(f"Updating BPS version in {file}")
-            file.write_text(text.replace(current_version_bps, new_version_bps), encoding="utf-8")
+            file.write_text(
+                text.replace(current_version_bps, new_version_bps), encoding="utf-8"
+            )
     session.log(f"{updated_files} files updated")
 
     with session.chdir("bps-task-tables"):
         session.install("nox")
-        session.run(*f"python -m nox -r -s version_update -- {current_version_bps} {new_version_bps}".split())
+        session.run(
+            *f"python -m nox -r -s version_update -- {current_version_bps} {new_version_bps}".split()
+        )
