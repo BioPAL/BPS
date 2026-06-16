@@ -1,0 +1,137 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+---
+name: Extended CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull request number to validate"
+        required: true
+        type: string
+      processors:
+        description: "Comma-separated processors or 'all'"
+        required: true
+        default: "all"
+        type: string
+      dataset_path:
+        description: "Optional dataset path or URL (TBD)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  validate-scope:
+    name: Scope validation
+    runs-on: ubuntu-latest
+    environment: extended-ci
+    outputs:
+      selected_processors: ${{ steps.scope.outputs.selected_processors }}
+      touched_processors: ${{ steps.scope.outputs.touched_processors }}
+    steps:
+      - name: Validate requested processors against PR diff
+        id: scope
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const prNumber = Number("${{ inputs.pr_number }}");
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.setFailed("Input pr_number must be a positive integer.");
+              return;
+            }
+
+            const knownProcessors = [
+              "bps-common",
+              "bps-task-tables",
+              "bps-transcoder",
+              "bps-l1_binaries",
+              "bps-l1_core_processor",
+              "bps-l1_framing_processor",
+              "bps-l1_pre_processor",
+              "bps-l1_processor",
+              "bps-l2a_processor",
+              "bps-l2b_agb_processor",
+              "bps-l2b_fd_processor",
+              "bps-l2b_fh_processor",
+              "bps-stack_binaries",
+              "bps-stack_cal_processor",
+              "bps-stack_coreg_processor",
+              "bps-stack_pre_processor",
+              "bps-stack_processor"
+            ];
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              per_page: 100
+            });
+            const touched = new Set();
+            for (const file of files) {
+              const topLevel = (file.filename || "").split("/")[0];
+              if (knownProcessors.includes(topLevel)) {
+                touched.add(topLevel);
+              }
+            }
+
+            const raw = ("${{ inputs.processors }}" || "").trim();
+            const requested = raw.toLowerCase() === "all"
+              ? Array.from(touched)
+              : raw.split(",").map(p => p.trim()).filter(Boolean);
+
+            if (requested.length === 0) {
+              core.notice(
+                `No processor directories touched by PR #${prNumber}. Extended CI is pass-through for now.`
+              );
+              core.setOutput("selected_processors", "");
+              core.setOutput("touched_processors", Array.from(touched).join(","));
+              return;
+            }
+
+            const invalid = requested.filter(p => !knownProcessors.includes(p));
+            if (invalid.length > 0) {
+              core.setFailed(`Unknown processor(s): ${invalid.join(", ")}`);
+              return;
+            }
+
+            const notTouched = requested.filter(p => !touched.has(p));
+            if (notTouched.length > 0) {
+              core.setFailed(
+                `Requested processor(s) not touched by PR #${prNumber}: ${notTouched.join(", ")}`
+              );
+              return;
+            }
+
+            core.info(`Touched processors: ${Array.from(touched).join(", ")}`);
+            core.info(`Selected processors: ${requested.join(", ")}`);
+            core.setOutput("selected_processors", requested.join(","));
+            core.setOutput("touched_processors", Array.from(touched).join(","));
+
+  run-extended:
+    name: Extended tests
+    needs: validate-scope
+    if: needs.validate-scope.outputs.selected_processors != ''
+    runs-on: ubuntu-latest
+    environment: extended-ci
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+      - name: Run extended marker suite
+        run: |
+          if [ ! -d test/extended ]; then
+            echo "::notice::test/extended is missing; extended pipeline is pass-through for now."
+            exit 0
+          fi
+          pytest test/extended -m extended -q --maxfail=1 || {
+            echo "::warning::Extended tests are temporary non-blocking until harness is wired."
+            exit 0
+          }
