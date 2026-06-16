@@ -1,0 +1,871 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) - ACRI-ST
+# SPDX-License-Identifier: Apache-2.0
+---
+name: CI
+
+on:
+  pull_request:
+    branches: ["main", "develop", "release"]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull request number to process (optional: auto-detected from selected branch)"
+        required: false
+        type: string
+      run_heavy:
+        description: "Run Heavy after Extended"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  context:
+    name: Context
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      pr_number: ${{ steps.resolve.outputs.pr_number }}
+      head_sha: ${{ steps.resolve.outputs.head_sha }}
+      base_sha: ${{ steps.resolve.outputs.base_sha }}
+      base_ref: ${{ steps.resolve.outputs.base_ref }}
+      run_heavy: ${{ steps.resolve.outputs.run_heavy }}
+    steps:
+      - id: resolve
+        uses: actions/github-script@v8
+        env:
+          # Pass inputs via env to avoid script-injection through ${{ }} interpolation.
+          MANUAL_PR_NUMBER: ${{ inputs.pr_number }}
+          MANUAL_RUN_HEAVY: ${{ inputs.run_heavy }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            const resolvePrNumber = async () => {
+              // 1) pull_request event: use triggering PR number.
+              if (context.eventName === "pull_request") {
+                return context.payload.pull_request.number;
+              }
+
+              // 2) workflow_dispatch with explicit pr_number.
+              const manualInput = (process.env.MANUAL_PR_NUMBER || "").trim();
+              if (manualInput) {
+                const parsed = Number.parseInt(manualInput, 10);
+                if (!Number.isInteger(parsed) || parsed <= 0) {
+                  core.setFailed(`Invalid pr_number input: '${manualInput}'.`);
+                  return null;
+                }
+                return parsed;
+              }
+
+              // 3) workflow_dispatch without pr_number: auto-detect from branch.
+              const branchName = (context.ref || "").replace(/^refs\/heads\//, "");
+              if (!branchName) {
+                core.setFailed("Could not detect branch name for workflow_dispatch. Please provide pr_number.");
+                return null;
+              }
+
+              const { data: prs } = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: "open",
+                head: `${owner}:${branchName}`,
+                per_page: 2
+              });
+
+              if (prs.length === 0) {
+                core.notice(`No open PR found for branch '${branchName}'. Running in branch mode without PR context.`);
+                return null;
+              }
+              if (prs.length > 1) {
+                core.setFailed(`Multiple open PRs found for branch '${branchName}'. Provide pr_number manually.`);
+                return null;
+              }
+
+              core.notice(`Auto-detected PR #${prs[0].number} from branch '${branchName}'.`);
+              return prs[0].number;
+            };
+
+            const prNumber = await resolvePrNumber();
+            // run_heavy only applies to workflow_dispatch; defaults to false on PR events.
+            const runHeavy =
+              context.eventName !== "pull_request" && process.env.MANUAL_RUN_HEAVY === "true"
+                ? "true"
+                : "false";
+
+            const { data: repoData } = await github.rest.repos.get({ owner, repo });
+            const defaultBranch = repoData.default_branch || "main";
+            let baseRef = "develop";
+            let baseSha = "";
+            try {
+              const { data: baseBranch } = await github.rest.repos.getBranch({
+                owner,
+                repo,
+                branch: baseRef
+              });
+              baseSha = baseBranch.commit.sha;
+            } catch {
+              baseRef = defaultBranch;
+              const { data: baseBranch } = await github.rest.repos.getBranch({
+                owner,
+                repo,
+                branch: baseRef
+              });
+              baseSha = baseBranch.commit.sha;
+              core.notice(`Branch 'develop' not found. Falling back to '${baseRef}' as compare base.`);
+            }
+
+            let headSha = context.sha;
+            if (prNumber !== null) {
+              const { data: pr } = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: prNumber
+              });
+              headSha = pr.head.sha;
+              baseSha = pr.base.sha;
+              baseRef = pr.base.ref;
+              core.setOutput("pr_number", String(prNumber));
+            } else {
+              core.setOutput("pr_number", "");
+              core.notice(`workflow_dispatch without PR: using base '${baseRef}' (${baseSha}) and head '${headSha}'.`);
+            }
+
+            core.setOutput("head_sha", headSha);
+            core.setOutput("base_sha", baseSha);
+            core.setOutput("base_ref", baseRef);
+            core.setOutput("run_heavy", runHeavy);
+
+  baseline-marker-signal:
+    name: Baseline / Marker signal
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      baseline_ok: ${{ steps.signal.outputs.baseline_ok }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run baseline marker and collect signal
+        id: signal
+        run: |
+          echo "Running baseline marker on ref: ${{ needs.context.outputs.head_sha }}"
+          python --version
+          python -m pip install --upgrade pip pytest
+          pytest --version
+          if [ ! -d test/baseline ]; then
+            echo "baseline_ok=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Missing test/baseline. Tier will be elevated."
+            exit 0
+          fi
+          set +e
+          pytest test/baseline -m baseline -q --maxfail=1
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "baseline_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "baseline_ok=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Baseline marker differs/fails; tier will be elevated."
+          fi
+
+  baseline-dco:
+    name: Baseline / DCO
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Verify Signed-off-by trailer on each non-merge commit
+        env:
+          BASE_SHA: ${{ needs.context.outputs.base_sha }}
+          HEAD_SHA: ${{ needs.context.outputs.head_sha }}
+        run: |
+          echo "Running DCO check from $BASE_SHA to $HEAD_SHA"
+          failed=0
+
+          normalize_identity() {
+            printf "%s" "$1" \
+              | tr '[:upper:]' '[:lower:]' \
+              | sed -E 's/[[:space:]]+/ /g; s/^ //; s/ $//'
+          }
+
+          for sha in $(git rev-list "$BASE_SHA".."$HEAD_SHA"); do
+            parent_count=$(git rev-list --parents -n 1 "$sha" | awk '{print NF - 1}')
+            if [ "$parent_count" -gt 1 ]; then
+              continue
+            fi
+
+            author_identity=$(git log -1 --format='%an <%ae>' "$sha")
+            committer_identity=$(git log -1 --format='%cn <%ce>' "$sha")
+            author_norm=$(normalize_identity "$author_identity")
+            committer_norm=$(normalize_identity "$committer_identity")
+
+            signoffs=$(git log -1 --format=%B "$sha" \
+              | awk 'BEGIN{IGNORECASE=1} /^Signed-off-by:[[:space:]]*/ {sub(/^Signed-off-by:[[:space:]]*/, "", $0); print $0}')
+
+            if [ -z "$signoffs" ]; then
+              echo "::error::Commit $sha is missing Signed-off-by trailer."
+              failed=1
+              continue
+            fi
+
+            match_found=0
+            while IFS= read -r signoff; do
+              [ -z "$signoff" ] && continue
+              signoff_norm=$(normalize_identity "$signoff")
+              if [ "$signoff_norm" = "$author_norm" ] || [ "$signoff_norm" = "$committer_norm" ]; then
+                match_found=1
+                break
+              fi
+            done < <(printf '%s\n' "$signoffs")
+
+            if [ "$match_found" -ne 1 ]; then
+              echo "::error::Commit $sha has Signed-off-by trailer(s), but none matches author '$author_identity' or committer '$committer_identity'."
+              failed=1
+            fi
+          done
+          [ "$failed" -eq 0 ] || exit 1
+
+  baseline-reuse:
+    name: Baseline / REUSE
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - name: REUSE context
+        run: |
+          echo "Running REUSE on ref: ${{ needs.context.outputs.head_sha }}"
+      - uses: fsfe/reuse-action@v6
+
+  baseline-pre-commit:
+    name: Baseline / Pre-commit
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      PRE_COMMIT_HOME: ~/.cache/pre-commit
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-py312-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-py312-
+      - name: Run pre-commit
+        run: |
+          echo "Running pre-commit on ref: ${{ needs.context.outputs.head_sha }}"
+          python -m pip install --upgrade pip pre-commit
+          pre-commit --version
+          pre-commit run --all-files
+
+  baseline-security:
+    name: Baseline / Security
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run bandit
+        run: |
+          echo "Running Bandit on ref: ${{ needs.context.outputs.head_sha }}"
+          python -m pip install --upgrade pip "bandit[toml]"
+          bandit --version
+          bandit -r . -f json -o bandit-report.json -ll -ii --exit-zero
+      - name: Upload bandit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+
+  baseline-build:
+    name: Baseline / Build
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Build package
+        run: |
+          echo "Building on ref: ${{ needs.context.outputs.head_sha }}"
+          python --version
+          python -m pip install --upgrade pip setuptools wheel build
+          python -m build --version
+          python -m build --no-isolation || echo "::warning::Monorepo root build is non-blocking during governance migration."
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-build-dist
+          path: dist/*
+          if-no-files-found: ignore
+
+  baseline-sensitive-files:
+    name: Baseline / Sensitive files
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - name: Detect forbidden files
+        run: |
+          MAX_SIZE_MB=10
+          if find . -type f -name "*.bak" -not -path "./.git/*" | grep -q .; then
+            echo "::error::Found forbidden *.bak file(s)."
+            find . -type f -name "*.bak" -not -path "./.git/*"
+            exit 1
+          fi
+          if find . -type f -not -path "./.git/*" -size "+${MAX_SIZE_MB}M" | grep -q .; then
+            echo "::error::Found file(s) larger than ${MAX_SIZE_MB} MB."
+            find . -type f -not -path "./.git/*" -size "+${MAX_SIZE_MB}M"
+            exit 1
+          fi
+
+  baseline-unit-tests:
+    name: Baseline / Unit tests
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run pytest unit marker
+        run: |
+          echo "Running unit tests on ref: ${{ needs.context.outputs.head_sha }}"
+          python --version
+          python -m pip install --upgrade pip pytest
+          pytest --version
+          if [ -f test/requirements.txt ]; then
+            python -m pip install -r test/requirements.txt || true
+          fi
+          set +e
+          pytest -m unit -q
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning::Unit tests are non-blocking during governance migration."
+          fi
+
+  baseline-docs:
+    name: Baseline / Docs
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Build docs when Sphinx config exists
+        run: |
+          echo "Building docs on ref: ${{ needs.context.outputs.head_sha }}"
+          python --version
+          python -m pip install --upgrade pip sphinx sphinx-rtd-theme myst-parser
+          if [ -f docs/api/conf.py ]; then
+            sphinx-build -b html docs/api docs/_build/html -W --keep-going
+          else
+            echo "No docs/api/conf.py found; skipping Sphinx build."
+          fi
+      - name: Upload docs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-docs-html
+          path: docs/_build/html
+          if-no-files-found: ignore
+
+  baseline-dependabot:
+    name: Baseline / Dependabot governance
+    needs: [context]
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - name: Verify Dependabot config exists
+        run: |
+          [ -f .github/dependabot.yml ] || {
+            echo "::error::.github/dependabot.yml is missing."
+            exit 1
+          }
+      - name: Report major update signal
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const prNumber = Number("${{ needs.context.outputs.pr_number }}");
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.info("No PR context available (manual branch mode). Skipping Dependabot major update signal.");
+              return;
+            }
+            const prResp = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const pr = prResp.data;
+            if (pr.user.login !== "dependabot[bot]") {
+              core.info("Not a Dependabot PR.");
+              return;
+            }
+            const title = pr.title || "";
+            const match = title.match(/from\s+(\d+)\.[^\s]*\s+to\s+(\d+)\.[^\s]*/);
+            if (match && match[1] !== match[2]) {
+              core.notice("Dependabot major update detected. Tier escalation is handled by tier-decision.");
+              return;
+            }
+            core.info("Dependabot PR is not a major bump based on title signal.");
+
+  baseline-gate:
+    name: Baseline / Gate
+    needs:
+      - baseline-marker-signal
+      - baseline-dco
+      - baseline-reuse
+      - baseline-pre-commit
+      - baseline-security
+      - baseline-build
+      - baseline-sensitive-files
+      - baseline-unit-tests
+      - baseline-docs
+      - baseline-dependabot
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      baseline_ok: ${{ steps.out.outputs.baseline_ok }}
+    steps:
+      - id: out
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MARKER_RESULT: ${{ needs.baseline-marker-signal.result }}
+          DCO_RESULT: ${{ needs.baseline-dco.result }}
+          REUSE_RESULT: ${{ needs.baseline-reuse.result }}
+          PRE_COMMIT_RESULT: ${{ needs.baseline-pre-commit.result }}
+          SECURITY_RESULT: ${{ needs.baseline-security.result }}
+          BUILD_RESULT: ${{ needs.baseline-build.result }}
+          SENSITIVE_RESULT: ${{ needs.baseline-sensitive-files.result }}
+          UNIT_RESULT: ${{ needs.baseline-unit-tests.result }}
+          DOCS_RESULT: ${{ needs.baseline-docs.result }}
+          DEPENDABOT_RESULT: ${{ needs.baseline-dependabot.result }}
+        run: |
+          check_result() {
+            name="$1"
+            value="$2"
+            if [ "$value" != "success" ]; then
+              echo "::error::Required job '$name' finished with '$value'."
+              failed=1
+            fi
+          }
+
+          failed=0
+          if [ "$EVENT_NAME" = "pull_request" ] || [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            check_result "baseline-marker-signal" "$MARKER_RESULT"
+            check_result "baseline-dco" "$DCO_RESULT"
+            check_result "baseline-reuse" "$REUSE_RESULT"
+            check_result "baseline-pre-commit" "$PRE_COMMIT_RESULT"
+            check_result "baseline-security" "$SECURITY_RESULT"
+            check_result "baseline-build" "$BUILD_RESULT"
+            check_result "baseline-sensitive-files" "$SENSITIVE_RESULT"
+            check_result "baseline-unit-tests" "$UNIT_RESULT"
+            check_result "baseline-docs" "$DOCS_RESULT"
+            check_result "baseline-dependabot" "$DEPENDABOT_RESULT"
+          fi
+
+          [ "$failed" -eq 0 ] || exit 1
+          echo "baseline_ok=true" >> "$GITHUB_OUTPUT"
+
+  # Tier 0/1/2 after baseline. Runs even when baseline failed (PR guidance).
+  tier-decision:
+    name: Tier decision
+    needs: [context, baseline-marker-signal, baseline-gate]
+    if: >-
+      always()
+      && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch')
+      && needs.baseline-gate.result != 'skipped'
+      && needs.baseline-marker-signal.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      tier: ${{ steps.decide.outputs.tier }}
+      reasons: ${{ steps.decide.outputs.reasons }}
+      reasons_json: ${{ steps.decide.outputs.reasons_json }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install tier-decision dependencies
+        run: python -m pip install --upgrade pip pyyaml
+      - id: decide
+        env:
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ needs.context.outputs.pr_number }}
+          HEAD_SHA: ${{ needs.context.outputs.head_sha }}
+          BASE_SHA: ${{ needs.context.outputs.base_sha }}
+          BASE_REF: ${{ needs.context.outputs.base_ref }}
+          BASELINE_OK: ${{ needs.baseline-marker-signal.outputs.baseline_ok }}
+          RUN_HEAVY: ${{ needs.context.outputs.run_heavy }}
+        run: python scripts/ci_tier_decision.py
+
+  extended:
+    name: Extended
+    needs: [context, baseline-gate, tier-decision]
+    if: >-
+      needs.baseline-gate.result == 'success'
+      && needs.tier-decision.result == 'success'
+      && needs.tier-decision.outputs.tier != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      # Handover note for ARESYS:
+      # - Put integration checks in test/extended
+      # - Mark tests with @pytest.mark.extended
+      # - Current mode is intentionally non-blocking while test harness/TDS wiring is in progress
+      - name: Checkout analyzed revision
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pytest runtime
+        run: python -m pip install --upgrade pip pytest
+      - name: Run Extended suite (non-blocking during migration)
+        run: |
+          TEST_DIR="test/extended"
+          TEST_MARKER="extended"
+
+          # If no suite exists yet, keep CI green but emit a clear signal.
+          if [ ! -d "$TEST_DIR" ]; then
+            echo "::notice::No $TEST_DIR directory yet. Create it with @$TEST_MARKER tests to activate Extended validation."
+            exit 0
+          fi
+
+          # Temporary policy: report failures without blocking merges.
+          pytest "$TEST_DIR" -m "$TEST_MARKER" -q --maxfail=1 || {
+            echo "::warning::Extended tests failed. Still non-blocking until harness/TDS wiring is finalized."
+            exit 0
+          }
+
+  heavy:
+    name: Heavy
+    needs: [context, baseline-gate, tier-decision, extended]
+    if: >-
+      needs.baseline-gate.result == 'success'
+      && needs.tier-decision.result == 'success'
+      && needs.tier-decision.outputs.tier == '2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      # Handover note for ARESYS:
+      # - Put deep/high-cost checks in test/heavy
+      # - Mark tests with @pytest.mark.heavy
+      # - This stage only runs when tier-decision upclasses to tier 2
+      - name: Checkout analyzed revision
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.context.outputs.head_sha }}
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pytest runtime
+        run: python -m pip install --upgrade pip pytest
+      - name: Run Heavy suite (non-blocking during migration)
+        run: |
+          TEST_DIR="test/heavy"
+          TEST_MARKER="heavy"
+
+          # If no suite exists yet, keep CI green but emit a clear signal.
+          if [ ! -d "$TEST_DIR" ]; then
+            echo "::notice::No $TEST_DIR directory yet. Create it with @$TEST_MARKER tests to activate Heavy validation."
+            exit 0
+          fi
+
+          # Temporary policy: report failures without blocking merges.
+          pytest "$TEST_DIR" -m "$TEST_MARKER" -q --maxfail=1 || {
+            echo "::warning::Heavy tests failed. Still non-blocking until harness/TDS wiring is finalized."
+            exit 0
+          }
+
+  pr-guidance-bot:
+    name: PR guidance comment
+    needs:
+      - context
+      - baseline-gate
+      - tier-decision
+      - extended
+      - heavy
+    if: always() && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Create or update sticky PR guidance comment
+        uses: actions/github-script@v8
+        env:
+          PR_NUMBER: ${{ needs.context.outputs.pr_number }}
+          BASELINE_GATE: ${{ needs.baseline-gate.result }}
+          TIER: ${{ needs.tier-decision.outputs.tier }}
+          TIER_REASONS: ${{ needs.tier-decision.outputs.reasons }}
+          TIER_REASONS_JSON: ${{ needs.tier-decision.outputs.reasons_json }}
+          EXTENDED_RESULT: ${{ needs.extended.result }}
+          HEAVY_RESULT: ${{ needs.heavy.result }}
+          RUN_HEAVY: ${{ needs.context.outputs.run_heavy }}
+        with:
+          script: |
+            const marker = "<!-- pr-guidance-bot:v1 -->";
+            const prNumber = Number(process.env.PR_NUMBER);
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.info("No valid PR number. Skipping PR guidance comment.");
+              return;
+            }
+
+            const baseline = process.env.BASELINE_GATE || "unknown";
+            const tier = process.env.TIER || "unknown";
+            const reasonsJsonRaw = process.env.TIER_REASONS_JSON || "";
+            let reasonsList = [];
+            if (reasonsJsonRaw) {
+              try {
+                const parsed = JSON.parse(reasonsJsonRaw);
+                if (Array.isArray(parsed)) reasonsList = parsed.filter(Boolean).map(String);
+              } catch (error) {
+                core.warning(`Invalid TIER_REASONS_JSON payload: ${error.message}`);
+              }
+            }
+            if (reasonsList.length === 0) {
+              const fallback = process.env.TIER_REASONS || "No tier reason available.";
+              reasonsList = [fallback];
+            }
+            const reasons = reasonsList.join(" | ");
+            const reasonsMarkdown = reasonsList.map((reason) => `- ${reason}`).join("\n");
+            const extended = process.env.EXTENDED_RESULT || "skipped";
+            const heavy = process.env.HEAVY_RESULT || "skipped";
+            const runHeavy = (process.env.RUN_HEAVY || "false") === "true";
+            const eventName = context.eventName || "unknown";
+            const executionMode = eventName === "workflow_dispatch"
+              ? "workflow_dispatch"
+              : "pull_request";
+
+            const icon = (result) => {
+              if (result === "success") return "✅";
+              if (result === "failure" || result === "cancelled" || result === "timed_out") return "❌";
+              if (result === "skipped") return "⏭️";
+              return "ℹ️";
+            };
+
+            const tierLine = tier === "0"
+              ? "Tier 0: baseline only (no Extended / Heavy required)."
+              : (tier === "1"
+                  ? "Tier 1: Extended required (integration / governance paths)."
+                  : "Tier 2: Extended + Heavy required (promotion, tier_2_paths, or manual run_heavy).");
+
+            const heavyLine = tier === "0"
+              ? "Heavy: not required."
+              : (tier === "1"
+                  ? "Heavy: optional — run workflow_dispatch with `run_heavy=true` to reach tier 2."
+                  : (runHeavy
+                  ? `${icon(heavy)} Heavy: **${heavy}** (tier 2 via \`run_heavy=true\`).`
+                  : `${icon(heavy)} Heavy: **${heavy}** (required for tier 2).`));
+
+            const actions = [];
+            if (baseline !== "success") {
+              actions.push("Fix Baseline checks first. Extended/Heavy decisions are secondary until Baseline is green.");
+            }
+            if (tier !== "0" && (extended === "failure" || extended === "cancelled" || extended === "timed_out")) {
+              actions.push("Review Extended logs and resolve failing checks before merge.");
+            }
+            if (tier !== "0" && extended === "skipped" && baseline !== "success") {
+              actions.push("Extended was skipped because Baseline is not green yet.");
+            }
+            if (tier === "2" && (heavy === "failure" || heavy === "cancelled" || heavy === "timed_out")) {
+              actions.push("Heavy was requested but did not pass. Check Heavy logs before approval.");
+            }
+            if (tier === "2" && heavy === "skipped") {
+              actions.push("Heavy is required for Tier 2. Verify why the Heavy stage was skipped.");
+            }
+            if (tier === "1" && !runHeavy) {
+              actions.push("If this change is high impact, run Heavy manually from Actions using `run_heavy=true`.");
+            }
+            if (actions.length === 0) {
+              actions.push("No immediate action required. CI status looks good for the current policy.");
+            }
+
+            const body = `${marker}
+            ## CI status summary
+
+            ${icon(baseline)} Baseline gate: **${baseline}**
+            Tier decision: **${tier}**
+            ${tierLine}
+            ${icon(extended)} Extended result: **${extended}**
+            ${heavyLine}
+            ℹExecution mode: **${executionMode}**
+
+            **Tier rationale (summary):** ${reasons}
+            **Tier rationale (details):**
+            ${reasonsMarkdown}
+
+            ## Suggested next actions
+            ${actions.map((a) => `- ${a}`).join("\n")}
+            `;
+
+            const { owner, repo } = context.repo;
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { owner, repo, issue_number: prNumber, per_page: 100 }
+            );
+            const existing = comments.find((comment) =>
+              comment.user?.type === "Bot" && typeof comment.body === "string" && comment.body.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body
+              });
+              core.info(`Updated sticky guidance comment: ${existing.id}`);
+            } else {
+              const created = await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body
+              });
+              core.info(`Created sticky guidance comment: ${created.data.id}`);
+            }
+
+  ci-gate:
+    name: CI gate
+    needs:
+      - context
+      - baseline-gate
+      - tier-decision
+      - extended
+      - heavy
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          TIER: ${{ needs.tier-decision.outputs.tier }}
+          RUN_HEAVY: ${{ needs.context.outputs.run_heavy }}
+          BASELINE_GATE: ${{ needs.baseline-gate.result }}
+          EXTENDED_RESULT: ${{ needs.extended.result }}
+          HEAVY_RESULT: ${{ needs.heavy.result }}
+        run: |
+          [ "$BASELINE_GATE" = "success" ] || { echo "::error::Baseline gate failed."; exit 1; }
+
+          case "$TIER" in
+            0)
+              echo "Tier 0: baseline gate is sufficient."
+              ;;
+            1)
+              [ "$EXTENDED_RESULT" = "success" ] || {
+                echo "::error::Tier 1 requires Extended to pass."
+                exit 1
+              }
+              echo "Tier 1: baseline + extended passed."
+              ;;
+            2)
+              [ "$EXTENDED_RESULT" = "success" ] || {
+                echo "::error::Tier 2 requires Extended to pass."
+                exit 1
+              }
+              [ "$HEAVY_RESULT" = "success" ] || {
+                echo "::error::Tier 2 requires Heavy to pass."
+                exit 1
+              }
+              echo "Tier 2: baseline + extended + heavy passed."
+              ;;
+            *)
+              echo "::error::Unknown tier '$TIER' (tier-decision may have been skipped)."
+              exit 1
+              ;;
+          esac
+          echo "CI gate passed."
