@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Aresys S.r.l.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 [tool.fawltydeps]
 actions = ['check_undeclared', 'check_unused']
 output_format = 'human_detailed'

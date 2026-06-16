@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: 2026 Aresys S.r.l.
+# SPDX-License-Identifier: Apache-2.0
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        # Conda: recipe/meta.yaml is Jinja2-templated, not parseable as plain YAML
+        exclude: "recipe/meta\\.yaml$"
+      - id: check-added-large-files
+        args: [ "--maxkb=10240" ]
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3.12
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
+    hooks:
+      - id: ruff
+        args: [ "--fix" ]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [ types-PyYAML ]
+        # Align with [tool.mypy] in root pyproject.toml: duplicate noxfile modules, generated paths
+        exclude: "^(tests/|docs/|.*/test/|.*/tests/|.*noxfile\\.py$|.*/recipe/|.*/aux_pp2_.*_models/)"
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: [ "--baseline", ".secrets.baseline" ]
+        exclude: "(^\\.git/|LICENSES/|.*\\.lock$)"
+
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v5.0.2
+    hooks:
+      - id: reuse
+
+  # DCO — block commits without Signed-off-by (install: pre-commit install --hook-type commit-msg)
+  - repo: local
+    hooks:
+      - id: dco-signed-off-by
+        name: DCO Signed-off-by
+        language: system
+        stages: [commit-msg]
+        entry: scripts/check-dco-commit-msg.sh
