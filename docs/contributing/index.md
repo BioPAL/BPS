@@ -16,61 +16,134 @@ before the issue has been approved.** This is a deliberate guardrail
 that protects contributors from wasted effort and protects the project
 from scope creep.
 
-```
-  1. OPEN AN ISSUE          ─►  pick one of the 5 templates
-                                (bug, feature, algorithm, docs, security)
+::::{grid} 1 1 1 1
+:gutter: 2
 
-  2. TRIAGE                 ─►  a maintainer reviews and labels:
-                                needs-triage, needs-sme, needs-discussion
+:::{grid-item-card} 1 &middot; Open an issue
+:class-card: sd-border-success
 
-  3. APPROVAL (the gate)    ─►  the issue is labelled
-                                status:approved, good-first-issue,
-                                or help-wanted
-                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                                Until this label is set, do not code.
+Pick one of the five templates: bug report, feature or enhancement
+request, algorithm proposal, documentation issue, or security report.
+:::
 
-  4. CODE + OPEN A PR       ─►  fork, branch, commit (signed off),
-                                open a PR that links the issue
+:::{grid-item-card} 2 &middot; Triage
+:class-card: sd-border-success
 
-  5. REVIEW + MERGE         ─►  CODEOWNERS review, CI green,
-                                squash merge, issue auto-closed
-```
+A maintainer reviews the issue and applies routing labels:
+`needs-triage`, `needs-sme`, or `needs-discussion`.
+:::
+
+:::{grid-item-card} 3 &middot; Approval (the gate)
+:class-card: sd-border-warning
+
+The issue is labelled `status:approved`, `good-first-issue`,
+or `help-wanted`. **Until one of these labels is set, do not code.**
+:::
+
+:::{grid-item-card} 4 &middot; Code and open a PR
+:class-card: sd-border-success
+
+Fork, branch, commit with `Signed-off-by` (DCO), open a pull request
+that links the issue.
+:::
+
+:::{grid-item-card} 5 &middot; Review and merge
+:class-card: sd-border-success
+
+CODEOWNERS review, CI green, squash merge. The linked issue closes
+automatically.
+:::
+
+::::
 
 For questions or open-ended discussions that are not yet a concrete
 issue, use [GitHub Discussions](https://github.com/BioPAL/BPS/discussions).
-Use issues only for actionable items.
+Issues are reserved for actionable items.
 
-## Read in order
+## The three stages
 
-The Contributing Guide is organised into four sections. Read them in
-order, especially if you are new to the project.
+```{mermaid}
+flowchart TD
+    subgraph Before["1. Proposal and approval"]
+        direction TB
+        Backlog["Backlog"]
+        PathA["Path A<br/>Pick an approved issue"]
+        PathB["Path B<br/>Propose a new issue"]
+        Gate{"Wait for the label<br/><code>status:approved</code><br/><code>good-first-issue</code><br/><code>help-wanted</code>"}
+        Backlog --> PathA
+        Backlog --> PathB
+        PathA --> Gate
+        PathB --> Gate
+    end
 
-::::{grid} 1 2 2 2
+    subgraph Building["2. Implementation"]
+        direction TB
+        Fork["Fork &amp; branch"]
+        Implement["Implement + tests"]
+        Local["Local checks<br/>ruff · mypy · pytest"]
+        Commit["Commit signed off"]
+        OpenPR["Open the PR"]
+        Fork --> Implement --> Local --> Commit --> OpenPR
+    end
+
+    subgraph After["3. Review and integration"]
+        direction TB
+        CI{"CI status"}
+        Review["Review"]
+        Merge["Squash merge"]
+        Released["Released<br/>tag + DOI"]
+        Iterate["Iterate<br/>push fixes"]
+        CI -->|green| Review
+        Review --> Merge
+        Merge --> Released
+        CI -->|red| Iterate
+        Iterate --> CI
+    end
+
+    Gate -->|approved| Fork
+    OpenPR --> CI
+
+    classDef gate fill:#FFE082,stroke:#FFB300,color:#000
+    class Gate gate
+```
+
+::::{grid} 1 3 3 3
 :gutter: 3
 
-:::{grid-item-card} 📘 Understanding the Project
-:link: process
+:::{grid-item-card} 1. Proposal and approval
+:link: proposal-and-approval
 :link-type: doc
 
-Start here if you are new to contributing. Conceptual information
-needed before writing any code: tiers, governance, DCO, testing
-requirements, branch protection, coding standards.
+Backlog, issue templates, triage, and the approval gate. Do not code until the issue is approved.
 :::
 
-:::{grid-item-card} ⚙️ Practical Instructions
-:link: workflow
+:::{grid-item-card} 2. Implementation
+:link: implementation
 :link-type: doc
 
-Step-by-step setup and implementation guide: bug reports, version
-control, environment setup, and the full development workflow.
+Fork, implement, local checks, DCO-signed commits, and open the pull request.
 :::
 
-:::{grid-item-card} 📋 Help and Resources
-:link: templates
+:::{grid-item-card} 3. Review and integration
+:link: review-and-integration
 :link-type: doc
 
-Issue templates, Discussions categories, PR template, pre-submission
-checklists, learning resources, recognition policy.
+CI green/red loop, review, baseline changes, merge, and release path.
+:::
+
+::::
+
+## Foundations
+
+::::{grid} 1 3 3 3
+:gutter: 3
+
+:::{grid-item-card} 📜 Licensing
+:link: ../about/licensing
+:link-type: doc
+
+Apache 2.0 terms, REUSE compliance, SPDX headers, and dependency licence
+requirements. Every contribution must comply.
 :::
 
 :::{grid-item-card} 🤝 Code of Conduct
@@ -79,6 +152,91 @@ checklists, learning resources, recognition policy.
 
 Community standards that govern interactions inside the project.
 Required reading for all contributors.
+:::
+
+:::{grid-item-card} 🏛️ Governance
+:link: ../governance/index
+:link-type: doc
+
+Roles (Maintainer, SME, ESA), decision authority, and the chain of
+approvals. Who decides what, and when.
+:::
+
+::::
+
+## Quick reference
+
+::::{grid} 1 2 2 2
+:gutter: 3
+
+:::{grid-item-card} ⚙️ CI automation and contribution tiers
+:link: ci-automation-and-contribution-tiers
+:link-type: doc
+
+Tier classification, CI job catalog, branch protection, and judge-from-base policy.
+:::
+
+:::{grid-item-card} 📋 Templates & checklists
+:link: templates-and-checklists
+:link-type: doc
+
+Issue and PR templates, CODEOWNERS routing, and pre-submission checklists.
+:::
+
+:::{grid-item-card} ✅ Quality & validation
+:link: quality-and-validation
+:link-type: doc
+
+Testing, scientific validation, backwards compatibility, and documentation expectations.
+:::
+
+:::{grid-item-card} 🛠️ Practical workflow
+:link: practical-workflow
+:link-type: doc
+
+Environment setup, Git commands, and code examples for tests and standards.
+:::
+
+:::{grid-item-card} 👥 Becoming a maintainer
+:link: becoming-a-maintainer
+:link-type: doc
+
+Path from contributor to maintainer: stages, qualities, and responsibilities.
+:::
+
+:::{grid-item-card} 💬 Community
+:link: ../governance/communication
+:link-type: doc
+
+Meetings, GitHub Discussions categories, workshops, and communication channels.
+:::
+
+::::
+
+## Technical reference
+
+::::{grid} 1 3 3 3
+:gutter: 3
+
+:::{grid-item-card} 🏗️ Architecture
+:link: architecture
+:link-type: doc
+
+Monorepo layout, `bps-*` modules, dependency graph, and processor structure.
+:::
+
+:::{grid-item-card} 📝 Code standards
+:link: code-standards
+:link-type: doc
+
+Naming, formatting, type hints, tests, error handling, and logging.
+:::
+
+:::{grid-item-card} 📚 Documentation standards
+:link: documentation-standards
+:link-type: doc
+
+Docstrings, writing conventions, and documentation update expectations.
 :::
 
 ::::
@@ -96,8 +254,16 @@ is the right space for algorithm and methodology questions.
 :maxdepth: 2
 :hidden:
 
-process
-workflow
-templates
-code-of-conduct
+Proposal and approval <proposal-and-approval>
+Implementation <implementation>
+Review and integration <review-and-integration>
+ci-automation-and-contribution-tiers
+quality-and-validation
+Architecture <architecture>
+Code standards <code-standards>
+Documentation standards <documentation-standards>
+practical-workflow
+templates-and-checklists
+becoming-a-maintainer
+BioPAL Code of Conduct <code-of-conduct>
 ```
