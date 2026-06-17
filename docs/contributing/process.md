@@ -1,64 +1,92 @@
-# Contributing to BIOMASS L2 Processors - Understanding the Project
+# Understanding the project
 
-This section covers all the conceptual information you need to understand before starting to write any code or clone the repository.
+This page is the conceptual overview of how a contribution flows through
+BIOMASS BPS. Read it once, then refer back to it as you submit your first
+pull request.
 
-**Important:** Please read this entire section before starting to write any code or clone the repository. Understanding our processes, standards, and expectations will help you contribute more effectively.
+The contribution journey has three phases. **The approval gate between
+phase 1 and phase 2 is the most important guardrail in the project: no
+code is written before the issue is approved.**
 
----
+## The contribution journey at a glance
 
-## Table of Contents
+```{mermaid}
+flowchart LR
+    subgraph Before["1. Before the PR"]
+        direction TB
+        Backlog["Backlog"]
+        PathA["Path A<br/>Pick an approved issue"]
+        PathB["Path B<br/>Propose a new issue"]
+        Gate{"Wait for the label<br/><code>status:approved</code><br/><code>good-first-issue</code><br/><code>help-wanted</code>"}
+        Backlog --> PathA
+        Backlog --> PathB
+        PathA --> Gate
+        PathB --> Gate
+    end
 
-- Licensing Requirements
-- Code of Conduct
-- Governance
-- Contribution Tiers
-- Development Workflow Overview
-- Pull Request Process
-- Testing Requirements
-- Scientific Validation
-- Coding Standards
-- Documentation Standards
-- Becoming a Maintainer
+    subgraph Building["2. Building the PR"]
+        direction TB
+        Fork["Fork &amp; branch"]
+        Implement["Implement<br/>+ tests"]
+        Local["Local checks<br/>ruff · mypy · pytest"]
+        Commit["Commit signed off"]
+        OpenPR["Open the PR"]
+        Fork --> Implement --> Local --> Commit --> OpenPR
+    end
 
-**Read this entire section before writing any code or setting up your environment.** Understanding our processes, standards, and expectations will make your contribution journey smoother and more successful.
+    subgraph After["3. After the PR"]
+        direction TB
+        CI{"CI status"}
+        Review["Review"]
+        Merge["Squash merge"]
+        Released["Released<br/>tag + DOI"]
+        Iterate["Iterate<br/>push fixes"]
+        CI -->|green| Review --> Merge --> Released
+        CI -->|red| Iterate --> CI
+    end
 
----
+    Gate -->|approved| Fork
+    OpenPR --> CI
 
-## Licensing Requirements
+    classDef gate fill:#FFE082,stroke:#FFB300,color:#000
+    class Gate gate
+```
 
-**All contributions to BioPAL must be compatible with the Apache License 2.0.** This is a critical legal requirement that ensures the project can maintain its open-source status and legal clarity.
+The three phases are detailed in the [practical workflow page](workflow.md).
+This page focuses on the **supporting machinery** that the journey relies
+on: contribution tiers, branch protections, the CI pipeline, and the
+project foundations.
 
-### Key Requirements
+## Foundations
 
-- **All code contributions** must be licensed under Apache 2.0
-- **External libraries and dependencies** must be Apache 2.0 compatible
-- **Third-party code** must be properly attributed and license-compatible
-- **License headers** should be included in source files
+::::{grid} 1 3 3 3
+:gutter: 3
 
-### Before Submitting a Pull Request
+:::{grid-item-card} 📜 Licensing
+:link: ../about/licensing
+:link-type: doc
 
-When adding external libraries or dependencies to your PR, you must:
+Apache 2.0 terms, REUSE compliance, SPDX headers, and dependency licence
+requirements. Every contribution must comply.
+:::
 
-1. Verify the library's license is compatible with Apache 2.0
-2. Document the license in your PR description
-3. Ensure no GPL or other incompatible licenses are included
-4. Provide proper attribution for any third-party code
+:::{grid-item-card} 🤝 Code of Conduct
+:link: code-of-conduct
+:link-type: doc
 
-For complete information about licensing requirements, license compatibility, external dependencies, and legal obligations, please see the [Licensing documentation](https://biomass-disc.info/docs/licensing).
+Community standards that govern interactions inside the project.
+Required reading for all contributors.
+:::
 
----
+:::{grid-item-card} 🏛️ Governance
+:link: ../governance/index
+:link-type: doc
 
-## Code of Conduct
+Roles (Maintainer, SME, ESA), decision authority, and the chain of
+approvals. Who decides what, and when.
+:::
 
-
-This project adheres to a Code of Conduct that all contributors are expected to follow. For complete details, please see the [Code of Conduct documentation](https://biomass-disc.info/docs/code-of-conduct).
-
----
-
-## Governance
-
-
-For complete information about BioPAL's governance structure, including the Steering Council, BDFL, and Institutional Partners, please see the [Governance documentation](https://biomass-disc.info/docs/governance).
+::::
 
 ---
 
