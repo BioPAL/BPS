@@ -139,14 +139,14 @@ CI green/red loop, review, baseline changes, merge, and release path.
 :gutter: 3
 
 :::{grid-item-card} 📜 Licensing
-:link: ../about/licensing
+:link: ../about/licensing/index
 :link-type: doc
 
 Apache 2.0 terms, REUSE compliance, SPDX headers, and dependency licence
 requirements. Every contribution must comply.
 :::
 
-:::{grid-item-card} 🤝 Code of Conduct
+:::{grid-item-card} Code of Conduct
 :link: code-of-conduct
 :link-type: doc
 
@@ -154,7 +154,7 @@ Community standards that govern interactions inside the project.
 Required reading for all contributors.
 :::
 
-:::{grid-item-card} 🏛️ Governance
+:::{grid-item-card} Governance
 :link: ../governance/index
 :link-type: doc
 
@@ -169,46 +169,53 @@ approvals. Who decides what, and when.
 ::::{grid} 1 2 2 2
 :gutter: 3
 
-:::{grid-item-card} ⚙️ CI automation and contribution tiers
+:::{grid-item-card} CI automation and contribution tiers
 :link: ci-automation-and-contribution-tiers
 :link-type: doc
 
 Tier classification, CI job catalog, branch protection, and judge-from-base policy.
 :::
 
-:::{grid-item-card} 📋 Templates & checklists
+:::{grid-item-card} Templates and checklists
 :link: templates-and-checklists
 :link-type: doc
 
 Issue and PR templates, CODEOWNERS routing, and pre-submission checklists.
 :::
 
-:::{grid-item-card} ✅ Quality & validation
+:::{grid-item-card} Quality and validation
 :link: quality-and-validation
 :link-type: doc
 
 Testing, scientific validation, backwards compatibility, and documentation expectations.
 :::
 
-:::{grid-item-card} 🛠️ Practical workflow
+:::{grid-item-card} Practical workflow
 :link: practical-workflow
 :link-type: doc
 
 Environment setup, Git commands, and code examples for tests and standards.
 :::
 
-:::{grid-item-card} 👥 Becoming a maintainer
+:::{grid-item-card} Becoming a maintainer
 :link: becoming-a-maintainer
 :link-type: doc
 
 Path from contributor to maintainer: stages, qualities, and responsibilities.
 :::
 
-:::{grid-item-card} 💬 Community
-:link: ../governance/communication
+:::{grid-item-card} Community
+:link: ../communication/index
 :link-type: doc
 
 Meetings, GitHub Discussions categories, workshops, and communication channels.
+:::
+
+:::{grid-item-card} Release process
+:link: release-process
+:link-type: doc
+
+Maintainer runbook: develop to release to main, versioning, and ESA gate.
 :::
 
 ::::
@@ -218,25 +225,32 @@ Meetings, GitHub Discussions categories, workshops, and communication channels.
 ::::{grid} 1 3 3 3
 :gutter: 3
 
-:::{grid-item-card} 🏗️ Architecture
+:::{grid-item-card} Architecture
 :link: architecture
 :link-type: doc
 
 Monorepo layout, `bps-*` modules, dependency graph, and processor structure.
 :::
 
-:::{grid-item-card} 📝 Code standards
+:::{grid-item-card} Code standards
 :link: code-standards
 :link-type: doc
 
 Naming, formatting, type hints, tests, error handling, and logging.
 :::
 
-:::{grid-item-card} 📚 Documentation standards
+:::{grid-item-card} Documentation standards
 :link: documentation-standards
 :link-type: doc
 
 Docstrings, writing conventions, and documentation update expectations.
+:::
+
+:::{grid-item-card} 📄 Interface specifications
+:link: ../about/applicable-documents
+:link-type: doc
+
+Official ICD, IODD, and auxiliary product format PDFs for integrators.
 :::
 
 ::::
@@ -250,20 +264,49 @@ is the recommended place for usage questions, and
 is the right space for algorithm and methodology questions.
 
 ```{toctree}
-:caption: Contributing
-:maxdepth: 2
+:caption: Contribution journey
+:maxdepth: 1
 :hidden:
 
 Proposal and approval <proposal-and-approval>
 Implementation <implementation>
 Review and integration <review-and-integration>
-ci-automation-and-contribution-tiers
-quality-and-validation
+```
+
+```{toctree}
+:caption: Automation and quality
+:maxdepth: 1
+:hidden:
+
+CI automation and contribution tiers <ci-automation-and-contribution-tiers>
+Quality and validation <quality-and-validation>
+```
+
+```{toctree}
+:caption: Technical reference
+:maxdepth: 1
+:hidden:
+
 Architecture <architecture>
 Code standards <code-standards>
 Documentation standards <documentation-standards>
-practical-workflow
-templates-and-checklists
-becoming-a-maintainer
+```
+
+```{toctree}
+:caption: Workflow and templates
+:maxdepth: 1
+:hidden:
+
+Practical workflow <practical-workflow>
+Templates and checklists <templates-and-checklists>
+```
+
+```{toctree}
+:caption: Policy and maintainers
+:maxdepth: 1
+:hidden:
+
+Becoming a maintainer <becoming-a-maintainer>
+Release process <release-process>
 BioPAL Code of Conduct <code-of-conduct>
 ```

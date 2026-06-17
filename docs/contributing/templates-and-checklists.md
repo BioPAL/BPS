@@ -1,6 +1,19 @@
-# Contributing to BIOMASS BPS - Help & Resources
+# Templates and checklists
 
-This section provides resources, checklists, templates, and information on how to get help.
+Structured forms and checklists so contributors are never lost between
+the project and GitHub. Four touchpoints guide every contribution:
+
+1. **Auto tier classification**: every PR is risk-scored on opening from
+   the diff; no manual tier labels. See [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md).
+2. **CODEOWNERS routing**: the right SME is auto-assigned from the files
+   touched.
+3. **Issue and PR templates**: structured forms for every issue type and
+   pull request (below).
+4. **PR guidance comment**: CI posts a sticky summary with tier, job
+   status, and reviewers needed.
+
+This page also lists help resources, learning links, and pre-submission
+checklists.
 
 ---
 
@@ -15,7 +28,7 @@ This section provides resources, checklists, templates, and information on how t
 ## Getting Help
 
 For complete information about communication channels and meetings, see
-the [Communication](https://biomass-disc.info/docs/governance/communication) page.
+the [Communication](../communication/index.md) page.
 
 ### Quick reference
 
@@ -23,8 +36,8 @@ the [Communication](https://biomass-disc.info/docs/governance/communication) pag
 |---|---|
 | [GitHub Issues](https://github.com/BioPAL/BPS/issues/new/choose) | Actionable items only: bug reports, feature requests, algorithm proposals, documentation issues, security reports. Use the matching template. |
 | [GitHub Discussions](https://github.com/BioPAL/BPS/discussions) | Open ended questions, brainstorming, scientific discussions, governance, community. |
-| Office Hours | Weekly open session for contributor questions. |
-| Community Meetings | Regular community meetings. |
+| Office Hours | Planned weekly open session for contributor questions (not scheduled yet). |
+| Community Meetings | Planned regular community meetings (not scheduled yet). |
 
 The recommended place to ask a question is
 [GitHub Discussions](https://github.com/BioPAL/BPS/discussions). The Q&A
@@ -111,7 +124,7 @@ When adding external libraries or dependencies to your PR, include the following
   - License URL: [Link to license]
 ```
 
-For complete licensing requirements, see the [Licensing documentation](https://biomass-disc.info/docs/licensing).
+For complete licensing requirements, see the [Licensing](../about/licensing/index.md) section.
 
 ---
 
@@ -120,17 +133,17 @@ For complete licensing requirements, see the [Licensing documentation](https://b
 ### Documentation
 
 - [Getting Started](https://biomass-disc.info/docs) - Introduction and getting started guide
-- [Code of Conduct](https://biomass-disc.info/docs/code-of-conduct) - Community standards and expectations
-- [Contributing Guide](https://biomass-disc.info/docs/contributing) - This file - Contribution process and workflows
-- [Governance](https://biomass-disc.info/docs/governance) - Roles, responsibilities, and decision-making
-- [Architecture](https://biomass-disc.info/docs/architecture) - System architecture and design
-- [Architecture](https://biomass-disc.info/docs/architecture) - Monorepo layout, `bps-*` modules, and root configuration
-- [Code Standards](https://biomass-disc.info/docs/code-standards) - Coding conventions and best practices
-- [Documentation Standards](https://biomass-disc.info/docs/documentation-standards) - Documentation writing standards and best practices
-- [CI/CD Guide](https://biomass-disc.info/docs/ci-cd-guide) - Pipeline reference, tier detection, branch protection
-- [Release Process](https://biomass-disc.info/docs/release-process) - How to prepare and publish a release
-- [Communication](https://biomass-disc.info/docs/communication) - Communication channels and meeting schedules
-- [Licensing](https://biomass-disc.info/docs/licensing) - Apache 2.0 license requirements and legal obligations
+- [Code of Conduct](code-of-conduct.md) - Community standards and expectations
+- [Contributing overview](index.md) - Journey-based contribution workflow
+- [Governance](../governance/index.md) - Roles, responsibilities, and decision-making
+- [Processor ownership](../governance/processor-ownership.md) - Scientific and technical contacts per module
+- [Architecture](architecture.md) - Monorepo layout, `bps-*` modules, and processor structure
+- [Code standards](code-standards.md) - Coding conventions and best practices
+- [Documentation standards](documentation-standards.md) - Documentation writing standards and best practices
+- [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md) - Pipeline reference, tier detection, branch protection
+- [Release process](release-process.md) - How to prepare and publish a release
+- [Communication](../communication/index.md) - Communication channels and meeting schedules
+- [Licensing](../about/licensing/index.md) - Apache 2.0 license requirements and legal obligations
 
 ### Learning Resources
 
@@ -190,7 +203,8 @@ For complete licensing requirements, see the [Licensing documentation](https://b
 - [ ] Pre-commit hooks installed and passing (`pre-commit run --all-files`).
 - [ ] Code formatted with `ruff format src/ test/`.
 - [ ] Linting clean: `ruff check --fix src/ test/`.
-- [ ] Type hints present where appropriate.
+- [ ] Type hints present where appropriate; `mypy` passes.
+- [ ] All code follows the [Code standards](code-standards.md).
 - [ ] No secrets or sensitive data in code.
 
 **DCO and Licensing:**
@@ -210,7 +224,8 @@ For complete licensing requirements, see the [Licensing documentation](https://b
 **Pull Request:**
 - [ ] PR template completed fully.
 - [ ] Clear description of what changes (not the problem, that lives in the issue).
-- [ ] Scientific validation summary included for Tier 1 and Tier 2 changes.
+- [ ] Commit messages are clear and descriptive.
+- [ ] Scientific validation completed or summary included for Tier 1 and Tier 2 changes.
 - [ ] Branch up to date with `develop`, no merge conflicts.
 - [ ] All CI checks passing (`CI gate` green).
 
@@ -249,5 +264,5 @@ actionable items that match one of the five templates.
 
 ---
 
-**Previous:** [Practical Instructions](workflow.md)
+**Previous:** [Practical workflow](practical-workflow.md) | **Next:** [Becoming a maintainer](becoming-a-maintainer.md)
 

@@ -1,0 +1,83 @@
+# ------------------------------------------------------------------------------
+# BIOMASS BPS Code Owners
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) - ACRI-ST
+# SPDX-License-Identifier: Apache-2.0
+#
+# Rules:
+#   - Last matching line wins.
+#   - Only users with WRITE access can be code owners.
+#   - Personal repos accept @usernames only (no @org/team syntax).
+#   - Replace @handles below with real GitHub usernames before enforcing.
+#
+# ESA repository gate (documented in docs/governance/repository-stewards.md):
+#   - Klaus Scipal ESA final authority (disputes, release gate)
+#   - Clement Albinet ESA repository representative
+# ------------------------------------------------------------------------------
+
+# ---- Catch-all: Core Maintainer reviews anything not matched below -----------
+*                                       @matteoaletti
+
+# ---- CI / CD / repo governance -----------------------------------------------
+/.github/                               @yreyricord
+/.pre-commit-config.yaml                @matteoaletti
+/REUSE.toml                             @yreyricord
+/LICENSES/                              @yreyricord
+/pyproject.toml                         @matteoaletti
+/pytest.ini                             @matteoaletti
+/ruff.toml                              @matteoaletti
+/noxfile.py                             @matteoaletti
+/.gitignore                             @matteoaletti
+/.secrets.baseline                      @matteoaletti
+
+# ---- Shared libraries (technical: R. Piantanida) ----------------------------
+/bps-common/                            @matteoaletti
+/bps-task-tables/                       @matteoaletti
+/bps-transcoder/                        @matteoaletti
+
+# ---- L1 processors (scientific: S. Tebaldini) -------------------------------
+/bps-l1_binaries/                       @matteoaletti
+/bps-l1_core_processor/                 @matteoaletti
+/bps-l1_framing_processor/              @matteoaletti
+/bps-l1_pre_processor/                  @matteoaletti
+/bps-l1_processor/                      @matteoaletti
+
+# ---- L2 processors -----------------------------------------------------------
+/bps-l2a_processor/                     @matteoaletti
+/bps-l2b_agb_processor/                 @matteoaletti
+/bps-l2b_fd_processor/                  @matteoaletti
+/bps-l2b_fh_processor/                  @matteoaletti
+
+# ---- Stack processors --------------------------------------------------------
+/bps-stack_binaries/                    @matteoaletti
+/bps-stack_cal_processor/               @matteoaletti
+/bps-stack_coreg_processor/             @matteoaletti
+/bps-stack_pre_processor/               @matteoaletti
+/bps-stack_processor/                   @matteoaletti
+
+# ---- Container / packaging ---------------------------------------------------
+/bps-dockerfiles/                       @matteoaletti
+
+# ---- Tests -------------------------------------------------------------------
+/test/                                  @matteoaletti
+**/tests/unit/                          @matteoaletti
+**/tests/integration/                   @matteoaletti
+**/tests/fixtures/                      @matteoaletti
+**/tests/baseline/                      @matteoaletti
+**/tests/smoke/                         @matteoaletti
+/tests/extended/                        @matteoaletti
+/tests/heavy/                           @matteoaletti
+
+# ---- Documentation -----------------------------------------------------------
+/README.md                              @matteoaletti
+/CREDITS.md                             @matteoaletti
+/LICENSE.md                             @yreyricord
+/docs/                                  @yreyricord
+
+# ---- Scripts & schemas -------------------------------------------------------
+/scripts/                               @matteoaletti
+/xsd/                                   @matteoaletti
+
+# ---- Release gate (ESA approval mandatory) ----------------------------------
+# Replace @handles with Klaus Scipal (final authority) and Clement Albinet GitHub usernames.
+/VERSION                                @matteoaletti
+/CHANGELOG.md                           @matteoaletti

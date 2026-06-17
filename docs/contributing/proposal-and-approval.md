@@ -105,7 +105,7 @@ settled, the issue receives `status:approved`, `good-first-issue`, or
 
 Scientific proposals may require SME review and, for significant
 changes, escalation to ESA. See
-[Governance](../governance/governance-overview.md) for roles and
+[Governance](../governance/roles-and-authority.md) for roles and
 decision authority.
 
 ---

@@ -39,11 +39,11 @@ published as open source in alignment with ESA's **Open Science policy** and the
 The full list of ATBDs, SUM, ICD, PFD and auxiliary specifications applicable to the current BPS release, with PDF downloads.
 :::
 
-:::{grid-item-card} 📜 Licensing
-:link: licensing
+:::{grid-item-card} Licensing
+:link: licensing/index
 :link-type: doc
 
-Apache 2.0 license terms, SPDX headers, REUSE compliance, and dependency licence requirements.
+Project license, contributions, dependencies, and REUSE compliance.
 :::
 
 ::::
@@ -56,7 +56,7 @@ If you use BIOMASS BPS in your research, please cite the project. A citation fil
 ## Contact
 
 - **Bug reports / feature requests**: open an issue on [GitHub](https://github.com/BioPAL/BPS/issues).
-- **General questions**: see the [Communication](../governance/communication.md) page for channels and meetings.
+- **General questions**: see the [Communication](../communication/index.md) page for channels and meetings.
 - **Security concerns**: see `SECURITY.md` in the repository (to be added).
 
 ## Acknowledgements
@@ -72,5 +72,5 @@ If you use BIOMASS BPS in your research, please cite the project. A citation fil
 :hidden:
 
 applicable-documents
-licensing
+Licensing <licensing/index>
 ```

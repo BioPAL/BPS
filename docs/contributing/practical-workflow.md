@@ -1,15 +1,16 @@
-# Contributing to BIOMASS BPS - Practical Instructions
+# Practical workflow
 
-This section provides step-by-step instructions with commands and code examples for setting up your environment and implementing contributions.
+Step-by-step instructions with commands and code examples for setting up
+your environment and implementing contributions.
 
-**Prerequisites:** Make sure you've read [Understanding the Project](https://biomass-disc.info/docs/contributing/overview) first to understand our processes, standards, and expectations.
+**Prerequisites:** Read the journey pages first:
+[Proposal and approval](proposal-and-approval.md), [Implementation](implementation.md),
+and [Review and integration](review-and-integration.md).
 
 ---
 
 ## Table of Contents
 
-- Where to Start?
-- Bug Reports and Enhancement Requests
 - Version Control, Git, and GitHub
 - Getting Started - Setting Up Your Environment
 - Development Workflow - Step by Step
@@ -19,71 +20,10 @@ This section provides step-by-step instructions with commands and code examples 
 
 ---
 
-## Where to Start?
+## Where to start?
 
-If you are brand new to BIOMASS BPS or to open source development, the
-right entry point is the [Issues tab](https://github.com/BioPAL/BPS/issues)
-of the repository.
-
-**Look only at issues that already carry one of the three approval labels:**
-
-- `status:approved`: triaged, scoped, ready to be picked up.
-- `good-first-issue`: approved and explicitly suitable for newcomers.
-- `help-wanted`: approved and the project actively welcomes external contributions.
-
-An open issue without one of these labels is still under triage or
-discussion. Comment on it to express interest, do not start coding yet.
-A maintainer will label it once the scope is settled.
-
-If no approved issue matches what you want to work on, open a new one
-using the appropriate [issue template](https://github.com/BioPAL/BPS/issues/new/choose):
-
-- **Bug report** for a defect in a processor, the CI, or the documentation.
-- **Feature or enhancement request** for a non-scientific feature or tooling improvement.
-- **Algorithm proposal** for a new scientific algorithm or a methodological change.
-- **Documentation issue** for an error, gap, or improvement in the documentation.
-- **Security report** for a non-sensitive security concern.
-
-For open-ended questions, ideas, or discussions that are not yet a
-concrete issue, use [GitHub Discussions](https://github.com/BioPAL/BPS/discussions).
-
----
-
-## Bug Reports and Enhancement Requests
-
-Bug reports are an important part of making BIOMASS BPS more stable.
-A complete bug report allows others to reproduce the bug and provides
-insight into fixing it.
-
-Trying out the bug-producing code on the `main` branch is often a
-worthwhile exercise to confirm that the bug still exists. It is also
-worth searching existing bug reports and pull requests to see if the
-issue has already been reported and fixed.
-
-### Submitting a Bug Report
-
-Open an issue using the [**Bug report** template](https://github.com/BioPAL/BPS/issues/new?template=01_bug_report.yml).
-The template guides you through the structured fields the maintainers need.
-For feature requests, algorithm proposals, documentation issues, and security
-reports, use the matching template instead.
-
-If you are reporting a bug, please use the provided template which includes the following:
-
-1. **Include a short, self-contained code snippet reproducing the problem.** You can format the code nicely by using GitHub Flavored Markdown:
-
-```python
-from bps_common import ...
-
-# Your code that reproduces the bug
-```
-
-2. **Include the full version string of BPS and its dependencies.** The global version is tracked in the `VERSION` file at the root of the repository.
-
-3. **Explain why the current behavior is wrong/not desired and what you expect instead.**
-
-The issue will then be open to comments/ideas from the team.
-
-See this [Stack Overflow article for tips on writing a good bug report](https://stackoverflow.com/help/mcve).
+See [Proposal and approval](proposal-and-approval.md) for the approval gate, issue templates,
+and bug-report guidance.
 
 ---
 
@@ -94,12 +34,7 @@ The code is hosted on GitHub. To contribute you will need to sign up for a [free
 
 ### Learning Git
 
-Some great resources for learning Git:
-
-- The [GitHub help pages](https://help.github.com/)
-- The [Git documentation](https://git-scm.com/doc)
-- [Atlassian's Git tutorials](https://www.atlassian.com/git/tutorials)
-- [GitHub's Git Handbook](https://guides.github.com/introduction/git-handbook/)
+See [Learning resources](templates-and-checklists.md#learning-resources)) in Templates & checklists, or [GitHub's setup guide](https://help.github.com/set-up-git-redirect).
 
 ### Getting Started with Git
 
@@ -188,7 +123,7 @@ pytest -m unit
 
 ### Repository Structure
 
-See [architecture.md](../developer-guide/architecture.md#structure-of-a-typical-module) for the full structure. Each `bps-*` module follows this layout:
+See [architecture.md](architecture.md#structure-of-a-typical-module)) for the full structure. Each `bps-*` module follows this layout:
 
 ```
 bps-<module>/
@@ -205,15 +140,11 @@ bps-<module>/
 
 ## Development Workflow - Step by Step
 
-This section provides detailed step-by-step instructions with commands for the development workflow. Make sure you've read the "Development Workflow Overview" section in Part 1 first to understand the concepts.
+This section provides commands for the build phase. For concepts, see
+[Implementation](implementation.md). For branching policy, see
+[CI automation and contribution tiers](ci-automation-and-contribution-tiers.md#branching-strategy)).
 
-
-### Branching Strategy
-
-- **`main`**: Operational/production branch (protected, stable). Promoted to from `release` after ESA approval.
-- **`release`**: Release candidate branch (protected). Pre-release validation runs here; Heavy CI is mandatory before promotion to `main`.
-- **`develop`**: Main development branch (protected, latest development state).
-- **Feature branches**: `feature/description`, `bugfix/issue-id`, `docs/topic`: opened from `develop`.
+Branch from an up-to-date `develop` using `feature/`, `bugfix/`, or `docs/` prefixes.
 
 ### Update the develop branch
 
@@ -293,9 +224,9 @@ git diff --staged  # Shows staged changes
 git diff src/biomass_l2_core/algorithms.py  # Shows changes in a specific file
 ```
 
-4. **Build the documentation** (for documentation changes) - see the "Documentation Standards - Code Examples and Commands" section in Part 2 for details.
+4. **Build the documentation** (for documentation changes): see [Documentation standards](practical-workflow.md#documentation-standards---code-examples-and-commands)).
 
-5. **Run the test suite** (for code changes) - see the "Testing Requirements - Code Examples and Commands" section in Part 2 for details.
+5. **Run the test suite** (for code changes): see [Testing requirements](practical-workflow.md#testing-requirements---code-examples-and-commands)).
 
 ### Step-by-Step Contribution Process
 
@@ -307,7 +238,7 @@ git checkout -b feature/your-feature-name
 ```
 
 2. **Make your changes** (see "The editing workflow" above):
-   - Write code following our [Code Standards](https://biomass-disc.info/docs/code-standards)
+   - Write code following our [Code standards](code-standards.md)
    - Add or update tests
    - Update documentation as needed
    - Use `git status` and `git diff` to review your changes
@@ -428,7 +359,7 @@ git push origin --delete feature/your-feature-name
 
 ## Coding Standards - Code Examples
 
-This section provides detailed code examples for implementing coding standards. For the conceptual overview, see the "Coding Standards" section in Part 1.
+This section provides detailed code examples for implementing coding standards. For the conceptual overview, see [Quality and validation](quality-and-validation.md#coding-standards)).
 
 ### Implementing Deprecation Warnings
 
@@ -498,7 +429,7 @@ def calculate_biomass_v1(sar_data, config):
 
 ## Testing Requirements - Code Examples and Commands
 
-This section provides detailed code examples and commands for testing. For the conceptual overview, see the "Testing Requirements" section in Part 1.
+This section provides detailed code examples and commands for testing. For the conceptual overview, see [Quality and validation](quality-and-validation.md#testing-requirements)).
 
 ### Writing Tests - Code Examples
 
@@ -714,9 +645,9 @@ python -m memory_profiler your_script.py
 
 ## Documentation Standards - Code Examples and Commands
 
-For complete documentation standards, including docstring format (NumPy style), documentation types, writing conventions for Markdown and reStructuredText, code examples, and commands for building and previewing documentation, please refer to the **[Documentation Standards](https://biomass-disc.info/docs/documentation-standards)** documentation.
+For complete documentation standards, including docstring format (NumPy style), documentation types, writing conventions for Markdown and reStructuredText, code examples, and commands for building and previewing documentation, please refer to the **[Documentation standards](documentation-standards.md)** documentation.
 
 ---
 
-**Previous:** [Understanding the Project](process.md) | **Next:** [Help & Resources](templates.md)
+**Previous:** [Documentation standards](documentation-standards.md) | **Next:** [Templates and checklists](templates-and-checklists.md)
 

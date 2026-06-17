@@ -37,6 +37,8 @@ master_doc = "index"
 # Patterns to ignore
 exclude_patterns = [
     "_build",
+    ".venv",
+    "**/.venv/**",
     "Thumbs.db",
     ".DS_Store",
     "README.md",
@@ -97,7 +99,7 @@ html_logo = "_static/logo.png"
 # Theme-specific options (PyData Sphinx Theme).
 # See https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/index.html
 html_theme_options = {
-    # Top navbar — xarray-style: section names in the header, search on the right
+    # Top navbar xarray-style: section names in the header, search on the right
     "navbar_start": ["navbar-logo"],
     "navbar_center": ["navbar-nav"],
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
@@ -132,7 +134,7 @@ html_theme_options = {
     # Misc
     "use_edit_page_button": True,
     "show_prev_next": True,
-    "announcement": "BIOMASS BPS is an Open Science project — every contribution is welcome.",
+    "announcement": "BIOMASS BPS is an Open Science project - every contribution is welcome.",
 
     # Secondary sidebar (right): only the "Edit on GitHub" button.
     # We hide page-toc (already covered by left sidebar) and sourcelink.
@@ -143,7 +145,9 @@ html_theme_options = {
 
     # Primary sidebar (left): always start collapsed at depth 1, then expand
     # the current section. This gives the same UX as xarray.
-    "primary_sidebar_end": ["sidebar-ethical-ads"],
+    # Ethical ads removed: local builds showed a violet RTD placeholder and
+    # this site is not served from Read the Docs.
+    "primary_sidebar_end": [],
 }
 
 # Context used by the "Edit on GitHub" button.
@@ -166,6 +170,10 @@ html_context = {
 # top-level section.
 html_sidebars = {
     "index": [],
+    "getting-started/index": [],
+    "user-guide/index": [],
+    "tutorials/index": [],
+    "science-guide/index": [],
     "**": ["sidebar-nav-bs"],
 }
 

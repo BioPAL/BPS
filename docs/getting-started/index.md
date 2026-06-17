@@ -12,39 +12,45 @@ whether you want to use BPS, discuss it, or contribute to it.
 
 ## Find your path
 
+Choose the path that matches your goal. Each branch links to the
+resources described in the sections below.
+
 ```{mermaid}
 flowchart TD
-    Start["👋 Welcome to BIOMASS BPS<br/>What brings you here?"]
+    start([What brings you here?])
 
-    Start --> Use["🚀 I want to <b>use</b> BPS"]
-    Start --> Discuss["💬 I have a question<br/>or an idea"]
-    Start --> Contribute["🛠️ I want to <b>contribute</b><br/>code or docs"]
+    start --> u_start
+    start --> d_start
+    start --> c_start
 
-    Use --> UseResources["Tutorials<br/>User Guide<br/>Science Guide<br/>Applicable documents (PDFs)"]
+    subgraph use_path [Use BPS]
+        direction TB
+        u_start[Run processors and products]
+        u_guides[User Guide · Science Guide · Tutorials]
+        u_docs[Applicable documents]
+        u_start --> u_guides --> u_docs
+    end
 
-    Discuss --> DiscussionsHub["GitHub Discussions"]
-    DiscussionsHub --> CatQA["❓ Q&A<br/>usage questions"]
-    DiscussionsHub --> CatIdeas["💡 Ideas<br/>brainstorm before an issue"]
-    DiscussionsHub --> CatSci["🔬 Scientific discussions<br/>algorithms, methodology"]
-    DiscussionsHub --> CatGov["🏛️ Governance"]
+    subgraph discuss_path [Ask or discuss]
+        direction TB
+        d_start[GitHub Discussions]
+        d_cats["Q&A · Ideas · Scientific · Governance"]
+        d_start --> d_cats
+    end
 
-    Contribute --> IssueGate["1. Pick an approved issue<br/>or open a new one"]
-    IssueGate --> Labels["Wait for the label<br/><code>status:approved</code><br/><code>good-first-issue</code><br/><code>help-wanted</code>"]
-    Labels --> Code["2. Fork, branch, code<br/>(commits signed off)"]
-    Code --> PR["3. Open a Pull Request<br/>linking the issue"]
-    PR --> Review["4. CODEOWNERS review<br/>+ CI green, then squash merge"]
-
-    classDef start fill:#347891,stroke:#347891,color:#fff
-    classDef use fill:#9EBE3D,stroke:#9EBE3D,color:#fff
-    classDef discuss fill:#5A9CB5,stroke:#5A9CB5,color:#fff
-    classDef contribute fill:#FF7E79,stroke:#FF7E79,color:#fff
-    classDef gate fill:#FFE082,stroke:#FFB300,color:#000
-
-    class Start start
-    class Use,UseResources use
-    class Discuss,DiscussionsHub,CatQA,CatIdeas,CatSci,CatGov discuss
-    class Contribute,Code,PR,Review contribute
-    class IssueGate,Labels gate
+    subgraph contrib_path [Contribute]
+        direction TB
+        c_start[Open or select an issue]
+        c_gate{Approval label assigned?}
+        c_wait[Wait for maintainer triage]
+        c_impl[Implement on a signed branch]
+        c_pr[Open pull request]
+        c_review[CODEOWNERS review and CI]
+        c_merge[Squash merge]
+        c_start --> c_gate
+        c_gate -->|no| c_wait --> c_start
+        c_gate -->|yes| c_impl --> c_pr --> c_review --> c_merge
+    end
 ```
 
 ---
@@ -167,14 +173,17 @@ a maintainer merges with squash, and the linked issue closes.
 
 For the long form, including environment setup, coding standards, the
 DCO sign off mechanics, and the tier classification system, see the
-[Contributing guide](../contributing/index.md).
+[Contributing guide](../contributing/index.md) especially
+[Proposal and approval](../contributing/proposal-and-approval.md),
+[Implementation](../contributing/implementation.md), and
+[Review and integration](../contributing/review-and-integration.md).
 
 ---
 
 ## Need more help?
 
 - Read the [Contributing guide](../contributing/index.md) for the long form workflow.
-- Check the [Communication page](../governance/communication.md) for meeting schedules and community channels.
+- Check the [Communication page](../communication/index.md) for meeting schedules and community channels.
 - Ask in [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) on GitHub Discussions.
 
 ```{toctree}

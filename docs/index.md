@@ -86,6 +86,7 @@ Get Started <getting-started/index>
 User Guide <user-guide/index>
 Tutorials <tutorials/index>
 Science Guide <science-guide/index>
+Communication <communication/index>
 ```
 
 ```{toctree}
@@ -94,7 +95,6 @@ Science Guide <science-guide/index>
 :caption: For contributors
 
 Contributing <contributing/index>
-Developer Guide <developer-guide/index>
 Governance <governance/index>
 About <about/index>
 ```
