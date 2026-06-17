@@ -1,0 +1,115 @@
+/*
+ * SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Custom overrides for the PyData Sphinx Theme on the BIOMASS BPS docs.
+ */
+
+/* ----- Slight ESA-tinted accent ----------------------------------------- */
+:root {
+  --pst-color-primary: #003247;
+  --pst-color-secondary: #00b6f0;
+  --pst-color-link: #00689d;
+  --pst-color-link-hover: #00b6f0;
+}
+
+html[data-theme="dark"] {
+  --pst-color-primary: #4dc4ff;
+  --pst-color-secondary: #00b6f0;
+  --pst-color-link: #4dc4ff;
+  --pst-color-link-hover: #ffffff;
+}
+
+/* ----- Tables: wider and zebra-striped ---------------------------------- */
+.bd-content table {
+  width: 100%;
+}
+
+.bd-content table tbody tr:nth-child(even) {
+  background-color: var(--pst-color-surface);
+}
+
+/* ----- Inline code: slightly more contrast ------------------------------ */
+.bd-content code.literal {
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* ----- Landing-page cards (sphinx-design) ------------------------------- */
+.sd-card {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.sd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 50, 71, 0.15);
+}
+
+/* ----- Quote blocks ------------------------------------------------------ */
+.bd-content blockquote {
+  border-left: 4px solid var(--pst-color-secondary);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--pst-color-text-muted);
+}
+
+/* ----- Mermaid diagrams: center and bound width ------------------------- */
+div.mermaid {
+  text-align: center;
+  margin: 1.5em auto;
+}
+
+/* ----- Section navigation (left sidebar): xarray-style polish ---------- */
+
+/* Section captions: bolder, slightly larger, with a subtle accent */
+.bd-sidebar-primary .caption-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pst-color-primary);
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+
+/* Section navigation items: more breathing room */
+.bd-sidebar-primary .nav-link {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Currently-selected page in the sidebar */
+.bd-sidebar-primary .nav-link.active,
+.bd-sidebar-primary .current > .nav-link {
+  font-weight: 600;
+  background-color: rgba(0, 182, 240, 0.08);
+  border-left: 3px solid var(--pst-color-secondary);
+  padding-left: calc(0.5rem - 3px);
+}
+
+/* "Edit this page" button (right sidebar) — xarray-style */
+.bd-sidebar-secondary .editthispage a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.7em;
+  border-radius: 4px;
+  border: 1px solid var(--pst-color-border);
+  font-size: 0.85rem;
+  color: var(--pst-color-text-muted);
+  text-decoration: none;
+  transition: all 120ms ease;
+}
+
+.bd-sidebar-secondary .editthispage a:hover {
+  background-color: var(--pst-color-primary);
+  color: var(--pst-color-on-background);
+  border-color: var(--pst-color-primary);
+}
+
+/* Page table of contents (right sidebar) -------------------------------- */
+.bd-sidebar-secondary .page-toc .nav-link {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+}
