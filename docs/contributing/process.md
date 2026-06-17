@@ -11,7 +11,7 @@ code is written before the issue is approved.**
 ## The contribution journey at a glance
 
 ```{mermaid}
-flowchart LR
+flowchart TD
     subgraph Before["1. Before the PR"]
         direction TB
         Backlog["Backlog"]
@@ -27,7 +27,7 @@ flowchart LR
     subgraph Building["2. Building the PR"]
         direction TB
         Fork["Fork &amp; branch"]
-        Implement["Implement<br/>+ tests"]
+        Implement["Implement + tests"]
         Local["Local checks<br/>ruff · mypy · pytest"]
         Commit["Commit signed off"]
         OpenPR["Open the PR"]
@@ -41,8 +41,11 @@ flowchart LR
         Merge["Squash merge"]
         Released["Released<br/>tag + DOI"]
         Iterate["Iterate<br/>push fixes"]
-        CI -->|green| Review --> Merge --> Released
-        CI -->|red| Iterate --> CI
+        CI -->|green| Review
+        Review --> Merge
+        Merge --> Released
+        CI -->|red| Iterate
+        Iterate --> CI
     end
 
     Gate -->|approved| Fork
