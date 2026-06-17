@@ -5,6 +5,12 @@
  * Custom overrides for the PyData Sphinx Theme on the BIOMASS BPS docs.
  */
 
+# Hide the RTD ethical-ads placeholder if the theme still injects the slot.
+# Without a publisher ID it renders as a large violet block in the sidebar.
+#ethical-ad-placement {
+  display: none !important;
+}
+
 /* ----- Slight ESA-tinted accent ----------------------------------------- */
 :root {
   --pst-color-primary: #003247;
@@ -99,6 +105,32 @@ html[data-theme="dark"] {
 div.mermaid {
   text-align: center;
   margin: 1.5em auto;
+  max-width: 52rem;
+}
+
+/* Subgraph titles and entry nodes: clearer hierarchy, theme-aware */
+div.mermaid .cluster-label .nodeLabel,
+div.mermaid .cluster-label span {
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+div.mermaid .node.default .label {
+  font-size: 0.9em;
+}
+
+div.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Keep section navigation visible (mermaid pages load extra JS/CSS) */
+.bd-sidebar-primary .sidebar-primary-items__start {
+  display: block !important;
+}
+
+.bd-sidebar-primary .bd-docs-nav {
+  display: block !important;
 }
 
 /* ----- Section navigation (left sidebar): xarray-style polish ---------- */
@@ -129,7 +161,7 @@ div.mermaid {
   padding-left: calc(0.5rem - 3px);
 }
 
-/* "Edit this page" button (right sidebar) — xarray-style */
+/* "Edit this page" button (right sidebar) xarray-style */
 .bd-sidebar-secondary .editthispage a {
   display: inline-flex;
   align-items: center;

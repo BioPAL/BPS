@@ -141,7 +141,7 @@ This is the core security guarantee of the CI: every PR is evaluated
 against the rules in effect on the branch it targets, not against the
 rules it tries to introduce.
 
-### At a glance
+### Tier comparison
 
 | | Tier 0 &middot; Baseline | Tier 1 &middot; Extended | Tier 2 &middot; Heavy |
 |---|---|---|---|

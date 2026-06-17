@@ -41,7 +41,7 @@ nox -s version_update
 
 Then update `CHANGELOG.md` with the changes for this release.
 
-> **ESA gate:** both `VERSION` and `CHANGELOG.md` are listed in `CODEOWNERS`. Any PR modifying these files requires explicit approval from the designated ESA reviewer. No release can be merged into `main` without this approval.
+> **ESA gate:** both `VERSION` and `CHANGELOG.md` are listed in `CODEOWNERS`. Any PR modifying these files requires explicit approval from the ESA representatives (Klaus Scipal, final authority, and Clement Albinet). See [Repository stewards](../governance/repository-stewards.md). No release can be merged into `main` without this approval.
 
 Commit with sign-off:
 
@@ -139,3 +139,7 @@ The CycloneDX SBOM lists all project dependencies and their licenses. It is gene
 ---
 
 **Last Updated:** 2026
+
+---
+
+**Previous:** [Becoming a maintainer](becoming-a-maintainer.md) | **Next:** [BioPAL Code of Conduct](code-of-conduct.md)

@@ -55,7 +55,7 @@ status, and the reviewers still required.
 
 ## Open and update your pull request
 
-When you're ready to ask for a code review, file a pull request. Before you do, complete the [pre-submission checklist](templates-and-checklists.md#before-submitting-a-pr).
+When you're ready to ask for a code review, file a pull request. Before you do, complete the [pre-submission checklist](templates-and-checklists.md#before-submitting-a-pr)).
 
 1. **Navigate to your repository on GitHub** at https://github.com/your-username/BPS (or the main repository if working directly)
 2. **Click on "Branches"**
@@ -81,11 +81,11 @@ If you don't think your request is ready to be merged, use GitHub's **Draft PR**
 
 Mention anything you'd like particular attention for, such as a complicated change or some code you are not happy with.
 
-If you need to make more changes after submitting your PR, push to your branch. The pull request updates automatically and CI re-runs. See [Practical workflow](practical-workflow.md#updating-your-pull-request) for commands.
+If you need to make more changes after submitting your PR, push to your branch. The pull request updates automatically and CI re-runs. See [Practical workflow](practical-workflow.md#updating-your-pull-request)) for commands.
 
 ## Accepting an intentional baseline change
 
-If your PR intentionally changes processor output (e.g. a scientific fix or new algorithm), the baseline check will report a difference and CI may elevate the PR to a higher tier. See [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md#automatic-tier-detection) for how that works.
+If your PR intentionally changes processor output (e.g. a scientific fix or new algorithm), the baseline check will report a difference and CI may elevate the PR to a higher tier. See [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md#automatic-tier-detection)) for how that works.
 
 To get the change merged:
 
@@ -102,14 +102,14 @@ There is no `baseline:accepted` label any more; SME approval flows through the n
 - CI re-runs automatically on each push
 - Iterate until all approvals are obtained
 
-Release-related files such as `VERSION` and `CHANGELOG.md` require ESA approval via `CODEOWNERS`. See [branch protection rules](ci-automation-and-contribution-tiers.md#branch-protection-rules) for the full policy.
+Release-related files such as `VERSION` and `CHANGELOG.md` require ESA approval via `CODEOWNERS`. See [branch protection rules](ci-automation-and-contribution-tiers.md#branch-protection-rules)) for the full policy.
 
 ## After merge
 
 Your pull request is squash-merged into `develop`, the linked issue closes automatically, and the change follows the normal release path when promoted.
 
 You may delete your feature branch. See
-[Practical workflow](practical-workflow.md#delete-your-merged-branch-optional) for commands.
+[Practical workflow](practical-workflow.md#delete-your-merged-branch-optional)) for commands.
 
 ---
 
