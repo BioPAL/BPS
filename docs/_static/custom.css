@@ -12,9 +12,9 @@
   --pst-color-link: #00689d;
   --pst-color-link-hover: #00b6f0;
 
-  /* Announcement bar custom palette */
-  --bps-announcement-start: #003247;
-  --bps-announcement-end: #00689d;
+  /* Announcement bar: ACRI palette (Blue ACRI to Green ACRI) */
+  --bps-announcement-start: #347891;
+  --bps-announcement-end: #9ebe3d;
   --bps-announcement-text: #ffffff;
 }
 
@@ -24,9 +24,10 @@ html[data-theme="dark"] {
   --pst-color-link: #4dc4ff;
   --pst-color-link-hover: #ffffff;
 
-  --bps-announcement-start: #001f2e;
-  --bps-announcement-end: #00465f;
-  --bps-announcement-text: #e6f7ff;
+  /* Darker ACRI palette so the gradient still reads on dark navbar */
+  --bps-announcement-start: #1f4a59;
+  --bps-announcement-end: #6f8b2b;
+  --bps-announcement-text: #f5fbe6;
 }
 
 /* ----- Announcement bar: ESA gradient with subtle polish --------------- */
