@@ -53,21 +53,110 @@ The Steering Council and its Members play a special role in certain situations. 
 - Make decisions about the Services that are run by The Project and manage those Services for the benefit of The Project and Community.
 - Make decisions when regular Community discussion does not produce consensus on an issue in a reasonable time frame.
 
-**Current Steering Council Members:**
+### Current BIOMASS BPS Steering Council Members
 
-**Project Development and Maintenance** (alphabetical by first name):
-- Giovanni Amoroso (Aresys)
-- Klaus Scipal (ESA)
-- Michele Caccia (ESA)
-- Riccardo Piantanida (Aresys)
-- Yoann Rey-Ricord (ACRI-ST)
+The BIOMASS BPS Steering Council is the sub-set of the wider BIOMASS DISC
+organisation that holds the keys to the BPS repository. Members are
+listed alphabetically by first name.
 
-**Scientific Advisory Board** (alphabetical by first name):
-- Maciej Soja (WENR)
+| Role | Member | Affiliation |
+|---|---|---|
+| Project Development and Maintenance | Giovanni Amoroso | Aresys |
+| Project Development and Maintenance | Klaus Scipal | ESA |
+| Project Development and Maintenance | Michele Caccia | ESA |
+| Project Development and Maintenance | Riccardo Piantanida | Aresys |
+| Project Development and Maintenance | Yoann Rey-Ricord | ACRI-ST |
+| Scientific Advisory Board | Maciej Soja | WENR |
+| Retired Steering Council member | Davide Giudici | Aresys |
+| Retired Steering Council member | Simone Mancon | Aresys |
 
-**Retired steering council members:**
-- Davide Giudici (Aresys)
-- Simone Mancon (Aresys)
+### Where BPS sits in the BIOMASS DISC organisation
+
+BPS is one of the deliverables of the BIOMASS DISC project. The DISC
+itself is a wider ESA-funded organisation with three pillars:
+service management, scientific coordination through the Expert Support
+Laboratories (ESL) network, and the technical office that operates the
+processing chain on a day to day basis. The table below recaps every
+role visible on the official organisation chart.
+
+#### 🔵 Service Management
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Service Manager | Eric Jeansou | ACRI-ST |
+| Contract Manager | A. Riguccini | ACRI-ST |
+| QA Manager | E. Dardouri | ACRI-ST |
+| Security Manager | S. Clouaire | ACRI-ST |
+| Web portal Manager | J-M. Rivet | ACRI-ST |
+
+#### ⚪ BioPAL / Open Science Office
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Open Science Manager and Community Manager | Yoann Rey-Ricord | ACRI-ST |
+
+#### 🟢 Scientific Coordination
+
+| Role | Member | Affiliation |
+|---|---|---|
+| PIs' leader | S. Tebaldini | PoliMi |
+| ESLs coordination | D. Giudici | Aresys |
+| Core Products algorithm leader | F. Banda | Aresys |
+| Secondary products algorithm leader | S. Falco | Aresys |
+
+#### 🟢 ESL Network — Core Products
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Instrument Calibration and Performance Monitoring (PI) | A. Barros Cardoso da Silva | DLR |
+| Level-1 (PI) | S. Tebaldini | PoliMi |
+| Above-Ground Biomass (AGB, PI) | L. Ulander | Chalmers |
+| Forest Height (FH, PI) | K. Papathanassiou | DLR |
+| Forest Disturbance (FD, PI) | L. Ferro-Famil | CESBIO |
+
+#### 🟢 ESL Network — Experimental Products and Secondary Objectives
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Digital Terrain Model (DTM, PI) | S. Tebaldini | PoliMi |
+| Tomography (PI) | M. Pardini | DLR |
+| Ionosphere (PI) | S. Tebaldini | PoliMi |
+| Desert (PI) | S. Tebaldini | PoliMi |
+| Ice (PI) | J. Dall | DTU |
+
+#### 🟢 ESL Network — Validation
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Validation data provision and Geophysical validation (PI) | J. Chave | CNRS |
+
+#### 🟠 Technical Office — Routine monitoring and performance assessment
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Operations | V. Tourino | ACRI-ST |
+| SAR expert | A. Necchia | Aresys |
+
+#### 🟠 Technical Office — Processors and tools maintenance
+
+| Role | Member | Affiliation |
+|---|---|---|
+| BIOMASS Processing Suite (BPS) and BTK software | R. Piantanida | Aresys |
+| STA software manager | G. Amoroso | Aresys |
+
+#### 🟠 Technical Office — MPMF service (SI and JT)
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Technical manager | S.V. Niemeijer | |
+| Service leader | R.A. Klavers | |
+
+#### 🟠 Technical Office — Data management support
+
+| Role | Member | Affiliation |
+|---|---|---|
+| Core L2B/L3 products generation | L. Ferro-Famil | CESBIO |
+| Core Product reprocessing | F. Rouffi | ACRI-ST |
 
 ---
 
@@ -346,14 +435,14 @@ Changes to governance:
 
 - [Getting Started](https://biomass-disc.info/docs) - Introduction and getting started guide
 - [Licensing](https://biomass-disc.info/docs/licensing) - Apache 2.0 license requirements and legal obligations
-- [Code of Conduct](https://biomass-disc.info/docs/code-of-conduct) - Community standards and expectations
+- [Code of Conduct](../contributing/code-of-conduct.md) - Community standards and expectations
 - [Contributing Guide](https://biomass-disc.info/docs/contributing) - Contribution process and workflows
-- [Architecture](https://biomass-disc.info/docs/architecture) - System architecture and design
-- [Architecture](https://biomass-disc.info/docs/architecture) - Monorepo layout and `bps-*` modules
+- [Architecture](../contributing/architecture.md) - System architecture and design
+- [Architecture](../contributing/architecture.md) - Monorepo layout and `bps-*` modules
 - [CI/CD Guide](https://biomass-disc.info/docs/ci-cd-guide) - Pipeline, tier detection, branch protection
 - [Release Process](https://biomass-disc.info/docs/release-process) - Release preparation and ESA gate
-- [Code Standards](https://biomass-disc.info/docs/code-standards) - Coding conventions and best practices
-- [Documentation Standards](https://biomass-disc.info/docs/documentation-standards) - Documentation writing standards and best practices
+- [Code Standards](../contributing/code-standards.md) - Coding conventions and best practices
+- [Documentation Standards](../contributing/documentation-standards.md) - Documentation writing standards and best practices
 - [Communication](https://biomass-disc.info/docs/communication) - Communication channels and meeting schedules
 
 ### External Resources
