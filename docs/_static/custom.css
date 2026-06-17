@@ -11,6 +11,11 @@
   --pst-color-secondary: #00b6f0;
   --pst-color-link: #00689d;
   --pst-color-link-hover: #00b6f0;
+
+  /* Announcement bar custom palette */
+  --bps-announcement-start: #003247;
+  --bps-announcement-end: #00689d;
+  --bps-announcement-text: #ffffff;
 }
 
 html[data-theme="dark"] {
@@ -18,6 +23,41 @@ html[data-theme="dark"] {
   --pst-color-secondary: #00b6f0;
   --pst-color-link: #4dc4ff;
   --pst-color-link-hover: #ffffff;
+
+  --bps-announcement-start: #001f2e;
+  --bps-announcement-end: #00465f;
+  --bps-announcement-text: #e6f7ff;
+}
+
+/* ----- Announcement bar: ESA gradient with subtle polish --------------- */
+.bd-header-announcement {
+  background: linear-gradient(
+    90deg,
+    var(--bps-announcement-start) 0%,
+    var(--bps-announcement-end) 100%
+  );
+  color: var(--bps-announcement-text);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 0.6em 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.bd-header-announcement a,
+.bd-header-announcement a:visited {
+  color: var(--bps-announcement-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.bd-header-announcement a:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  padding: 0 0.25em;
+  text-decoration: none;
 }
 
 /* ----- Tables: wider and zebra-striped ---------------------------------- */
