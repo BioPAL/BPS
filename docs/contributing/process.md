@@ -93,86 +93,105 @@ approvals. Who decides what, and when.
 
 ---
 
-## Contribution Tiers
+## Contribution tiers
 
+Every pull request is automatically classified into one of three tiers
+based on the diff it introduces. The tier determines which CI stages run
+and how many approvals are required to merge.
 
-All contributions are classified into **tiers** based on their impact and scope. This helps ensure appropriate review and validation processes.
+- **Tiers 0, 1 and 2** are computed automatically by the CI from the
+  policy declared in `.github/tier-policy.yml`. The contributor does not
+  assign the tier; the CI does.
+- **Tier 3** is a separate qualitative governance category for release
+  decisions and policy changes that go through an ESA process outside
+  the automated pipeline.
 
-- **Tiers 0, 1, and 2** are computed automatically by the CI on every commit, from the changed files and the policy in `.github/tier-policy.yml`. They determine which CI stages run.
-- **Tier 3** is not a CI-computed tier. It is a qualitative governance category covering release decisions and policy changes that go through an ESA decision outside the automated pipeline.
+### The three automated tiers
 
-The flowchart below provides a detailed breakdown by tier:
+::::{grid} 1 3 3 3
+:gutter: 3
 
-```{mermaid}
-flowchart TD
-    PR["Pull Request (PR)"]
-    Tiers["Contribution Tiers\n(automatic tier detection via tier-policy.yml)"]
+:::{grid-item-card} 🟢 Tier 0 &middot; Baseline
+No risk-elevating change detected.
 
-    PR --> Tiers
+**Triggers**
+- No `locked_paths` modified.
+- No SME-owned paths touched.
+- Baseline marker unchanged.
 
-    Tiers --> Tier0["Tier 0\nRoutine / Performance\n1 Reviewer"]
-    Tiers --> Tier1["Tier 1\nMinor Scientific\n2 Reviewers"]
-    Tiers --> Tier2["Tier 2\nMajor Algorithmic\n3 Reviewers"]
-    Tiers --> Tier3["Tier 3\nRelease & Policy\nESA Decision"]
+**Approvals**: 1 maintainer.
+**CI**: Baseline gate only.
 
-    Tier0 --> Val0["Baseline gate only\n(10 parallel jobs: baseline-marker, DCO, REUSE,\npre-commit, security, build, sensitive-files,\nunit, docs, dependabot)"]
-    Tier1 --> Val1["Baseline + Extended CI\n(pytest -m extended on test/extended/)"]
-    Tier2 --> Val2["Baseline + Extended + Heavy CI\n(pytest -m heavy on test/heavy/,\nrun_heavy=true required on release PRs)"]
-    Tier3 --> Val3["Governance & Strategic Decision\n(no automated pipeline)"]
+*Examples*: bug fixes, doc updates, refactors without scientific impact,
+typo corrections.
+:::
 
-    Val0 --> Review0["1 Core Maintainer approval"]
-    Val1 --> Review1["Scientific Module Expert\n+ Core Maintainer approval"]
-    Val2 --> Review2["Scientific Module Expert(s)\n+ ESA representative\n+ Core Maintainer approval"]
-    Val3 --> Review3["Explicit ESA decision\nin consultation with governance group"]
+:::{grid-item-card} 🟡 Tier 1 &middot; Extended
+Locked or SME-owned paths modified.
 
-    Review0 --> Meeting0["WEEKLY Review Meeting\nOpen and documented"]
-    Review1 --> Meeting1["MONTHLY Review Meeting\nOpen and documented"]
-    Review2 --> Meeting2["QUARTERLY Review Meeting\nOpen and documented"]
-    Review3 --> Merge3["Merge Decision"]
+**Triggers**
+- Touches `locked_paths`.
+- Touches SME-owned paths.
+- Baseline marker differs.
+- Dependabot major version bump.
 
-    Meeting0 --> Merge0["Merge Decision"]
-    Meeting1 --> Merge1["Merge Decision"]
-    Meeting2 --> Merge2["Merge Decision"]
+**Approvals**: 2 (incl. SME).
+**CI**: Baseline + Extended.
 
-    classDef defaultStyle fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px,color:#333
-    class PR,Tiers,Tier0,Tier1,Tier2,Tier3,Val0,Val1,Val2,Val3,Review0,Review1,Review2,Review3,Meeting0,Meeting1,Meeting2,Merge0,Merge1,Merge2,Merge3 defaultStyle
+*Examples*: small parameter updates, minor algorithm changes,
+CI configuration changes.
+:::
 
-    style PR fill:#e1bee7,stroke:#e1bee7,stroke-width:2px
-    style Tiers fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px
-    style Tier0 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Tier1 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Tier2 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Tier3 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Val0 fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px
-    style Val1 fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px
-    style Val2 fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px
-    style Val3 fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px
-    style Review0 fill:#e1bee7,stroke:#e1bee7,stroke-width:2px
-    style Review1 fill:#e1bee7,stroke:#e1bee7,stroke-width:2px
-    style Review2 fill:#e1bee7,stroke:#e1bee7,stroke-width:2px
-    style Review3 fill:#e1bee7,stroke:#e1bee7,stroke-width:2px
-    style Meeting0 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Meeting1 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Meeting2 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:2px
-    style Merge0 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:3px
-    style Merge1 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:3px
-    style Merge2 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:3px
-    style Merge3 fill:#a3d8b0,stroke:#a3d8b0,stroke-width:3px
+:::{grid-item-card} 🔴 Tier 2 &middot; Heavy
+Release branch or explicit upclass.
+
+**Triggers**
+- PR targets the `release` branch.
+- `run_heavy=true` requested on dispatch.
+- Manual upclass from Tier 1.
+
+**Approvals**: 3 (incl. SME and ESA).
+**CI**: Baseline + Extended + Heavy.
+
+*Examples*: new retrieval approaches, significant changes to error
+models, anything promoted to `release`.
+:::
+
+::::
+
+### Tier 3 &middot; governance
+
+Tier 3 is a separate path for **release decisions and policy changes**.
+It is not computed by the CI. These changes are approved through an
+explicit ESA decision in consultation with the governance group, then
+reflected in the repository through the standard branching mechanism
+once the decision has been recorded.
+
+*Examples*: new processor version releases, governance changes, major
+policy updates.
+
+### Judge from base, never from PR
+
+```{important}
+🔒 **The tier policy is read from the base branch SHA, never from the PR
+head.** The policy file, the baseline references, and the test harness
+are all locked at the base commit. A pull request cannot rewrite its
+own judge.
 ```
 
-### Tier Comparison Table
+This is the core security guarantee of the CI: every PR is evaluated
+against the rules in effect on the branch it targets, not against the
+rules it tries to introduce.
 
-| Aspect | Tier 0: Routine Maintenance | Tier 1: Minor Scientific | Tier 2: Major Algorithmic | Tier 3: Release & Policy |
-|--------|----------------------------|-------------------------|--------------------------|------------------------|
-| **Type** | Routine / Performance | Minor Scientific | Major Algorithmic | Release & Policy |
-| **Tier detection** | Automatic: no locked or SME paths modified, baseline marker OK | Automatic: locked paths modified, SME-owned paths modified, baseline marker differs, or Dependabot major bump | Automatic: PR targets `release` branch (Heavy mandatory), or `run_heavy=true` upclass from Tier 1 via `workflow_dispatch` | Not computed by CI: ESA governance category |
-| **Reviewers** | 1 Core Maintainer | Scientific Module Expert + Core Maintainer | Scientific Module Expert(s) + ESA representative + Core Maintainer | ESA Decision |
-| **Examples** | Bug fixes, documentation, code refactoring without scientific impact, typo corrections | Small parameter updates, improved default values, minor algorithm modifications, changes to CI config or any locked path | New retrieval approaches, significant changes to error models, redefinition of key L2 product variables, anything promoted to the `release` branch | New processor version releases, governance changes, major policy updates |
-| **CI Pipeline** | Baseline gate only (10 parallel jobs: marker-signal + DCO + REUSE + pre-commit + security + build + sensitive-files + unit + docs + dependabot) | Baseline + Extended (`pytest -m extended` on `test/extended/`) | Baseline + Extended + Heavy (`pytest -m heavy` on `test/heavy/`). Heavy requires `run_heavy=true` set via `workflow_dispatch` to be merge-eligible. | No automated pipeline: governance process |
-| **Validation** | Baseline tests must pass. No scientific validation required. | Extended TDS validation (automatic via CI). Scientific validation summary in PR. | Full heavy TDS validation (automatic via CI). Design document with proposed change and alternatives. | Documented discussion in issues or governance documents |
-| **Timeline** | < 3 days | 5–7 days | 10–14 days | By urgency |
-| **Expected Volume** | 60–70% of PRs | 20–25% of PRs | 5–10% of PRs | < 5% of PRs |
-| **Review Meeting** | Weekly (open and documented) | Monthly (open and documented) | Quarterly (open and documented) | N/A |
+### At a glance
+
+| | Tier 0 &middot; Baseline | Tier 1 &middot; Extended | Tier 2 &middot; Heavy |
+|---|---|---|---|
+| **CI stages** | Baseline | Baseline + Extended | Baseline + Extended + Heavy |
+| **Approvals** | 1 maintainer | 2 (incl. SME) | 3 (incl. SME + ESA) |
+| **Expected volume** | 60–70% of PRs | 20–25% of PRs | 5–10% of PRs |
+| **Typical timeline** | under 3 days | 5 to 7 days | 10 to 14 days |
+| **Review cadence** | Weekly | Monthly | Quarterly |
 
 
 ---
