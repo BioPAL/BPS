@@ -11,6 +11,116 @@
   display: none !important;
 }
 
+/* ----- Top banner: return link + announcement (custom, not .bd-header-announcement) */
+.bps-top-banner {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--bps-announcement-start) 0%,
+    var(--bps-announcement-end) 100%
+  );
+  color: var(--bps-announcement-text);
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Prevent PyData/Bootstrap link tokens from tinting the return pill on hover */
+  --pst-color-link: var(--bps-announcement-text);
+  --pst-color-link-hover: var(--bps-announcement-text);
+  --pst-color-link-higher-contrast: var(--bps-announcement-text);
+}
+
+.bps-top-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  max-width: 100%;
+}
+
+.bps-top-banner a.bps-return-link,
+.bps-top-banner a.bps-return-link:link,
+.bps-top-banner a.bps-return-link:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  min-height: 2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.bps-top-banner a.bps-return-link i {
+  font-size: 0.7rem;
+  color: inherit;
+}
+
+.bps-top-banner a.bps-return-link:hover,
+.bps-top-banner a.bps-return-link:focus,
+.bps-top-banner a.bps-return-link:focus-visible,
+.bps-top-banner a.bps-return-link:active {
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.24) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.bps-top-banner__sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  background-color: rgba(255, 255, 255, 0.45);
+}
+
+.bps-top-banner__message {
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+@media (max-width: 576px) {
+  .bps-top-banner__inner {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .bps-top-banner__sep {
+    display: none;
+  }
+}
+
+/* Optional: compact text link in navbar end (not active by default) */
+.bps-return-to-site--end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--pst-color-link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bps-return-to-site--end:hover {
+  color: var(--pst-color-link-hover);
+  text-decoration: underline;
+}
+
 /* ----- Slight ESA-tinted accent ----------------------------------------- */
 :root {
   --pst-color-primary: #003247;
