@@ -5,13 +5,14 @@
 # Theme: PyData Sphinx Theme (same family as docs.xarray.dev).
 # Source: Markdown via MyST parser.
 
+import os
 from datetime import datetime
 
 # -----------------------------------------------------------------------------
 # Project information
 # -----------------------------------------------------------------------------
 project = "BIOMASS BPS"
-author = "ESA / Aresys / ACRI-ST"
+author = "ACRI-ST / ESA / Aresys "
 copyright = f"{datetime.now().year}, {author}"
 release = "0.2.0"
 
@@ -82,6 +83,12 @@ html_theme = "pydata_sphinx_theme"
 html_title = "BIOMASS BPS Documentation"
 html_short_title = "BIOMASS BPS"
 
+# Base URL when docs are served under a subpath (e.g. biomass-disc.info/docs/).
+html_baseurl = os.environ.get("SPHINX_HTML_BASEURL", "/docs/")
+
+# Main website URL for the "return to site" navbar link (site root when embedded).
+site_home_url = os.environ.get("SPHINX_SITE_HOME_URL", "/")
+
 # Static assets (custom CSS, logos, favicons)
 html_static_path = ["_static"]
 
@@ -134,7 +141,7 @@ html_theme_options = {
     # Misc
     "use_edit_page_button": True,
     "show_prev_next": True,
-    "announcement": "BIOMASS BPS is an Open Science project - every contribution is welcome.",
+    "announcement": "BIOMASS BPS is an Open Science project — every contribution is welcome.",
 
     # Secondary sidebar (right): only the "Edit on GitHub" button.
     # We hide page-toc (already covered by left sidebar) and sourcelink.
@@ -155,8 +162,9 @@ html_theme_options = {
 html_context = {
     "github_user": "BioPAL",
     "github_repo": "BPS",
-    "github_version": "main",
+    "github_version": os.environ.get("SPHINX_GITHUB_VERSION", "docs/sphinx-site-migration"),
     "doc_path": "docs",
+    "site_home_url": site_home_url,
     # default_mode: "auto" lets the user's choice (stored in localStorage)
     # take precedence on subsequent page loads. "auto" also matches the OS
     # preference on first visit.
@@ -181,3 +189,5 @@ html_sidebars = {
 html_css_files = [
     "custom.css",
 ]
+
+templates_path = ["_templates"]

@@ -1,0 +1,23 @@
+{#- Custom top banner: return link + announcement (avoids PyData `.bd-header-announcement a:hover`). -#}
+<div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="{{ _('Version warning') }}"></aside>
+{%- set announcement_banner_label = _("Announcement") -%}
+{%- set announcement_banner_classes = "bd-header-announcement d-print-none" -%}
+{%- set announcement_is_remote = theme_announcement and theme_announcement.startswith("http") -%}
+{%- set announcement_is_local = theme_announcement and not announcement_is_remote -%}
+  {%- if announcement_is_remote %}
+  <aside class="{{ announcement_banner_classes }} d-none" aria-label="{{ announcement_banner_label }}" data-pst-announcement-url="{{ theme_announcement }}"></aside>
+  {%- endif %}
+</div>
+{%- if announcement_is_local %}
+<aside class="bps-top-banner d-print-none" aria-label="Site navigation">
+  <div class="bps-top-banner__inner">
+    <a class="bps-return-link" href="{{ site_home_url }}" title="Return to Biomass DISC website">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      <span>Biomass DISC website</span>
+    </a>
+    <span class="bps-top-banner__sep" aria-hidden="true"></span>
+    <span class="bps-top-banner__message">{{ theme_announcement }}</span>
+  </div>
+</aside>
+{%- endif %}
