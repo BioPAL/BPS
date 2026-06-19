@@ -14,14 +14,10 @@
 /* ----- Top banner: return link + announcement (custom, not .bd-header-announcement) */
 .bps-top-banner {
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--bps-announcement-start) 0%,
-    var(--bps-announcement-end) 100%
-  );
+  background: var(--bps-announcement-gradient);
   color: var(--bps-announcement-text);
   padding: 0.55rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--bps-announcement-border);
   /* Prevent PyData/Bootstrap link tokens from tinting the return pill on hover */
   --pst-color-link: var(--bps-announcement-text);
   --pst-color-link-hover: var(--bps-announcement-text);
@@ -88,7 +84,8 @@
 .bps-top-banner__message {
   font-weight: 500;
   font-size: 0.9rem;
-  opacity: 0.95;
+  opacity: 0.98;
+  text-shadow: 0 1px 1px rgba(47, 33, 78, 0.25);
 }
 
 @media (max-width: 576px) {
@@ -147,10 +144,16 @@
   --pst-color-link: var(--brand-link-color);
   --pst-color-link-hover: var(--brand-link-hover);
 
-  /* Announcement bar: ACRI palette (Blue ACRI to Green ACRI) */
-  --bps-announcement-start: #347891;
-  --bps-announcement-end: #9ebe3d;
+  /* Announcement bar: BioPAL violet → ACRI blue → green */
+  --bps-announcement-gradient: linear-gradient(
+    90deg,
+    var(--theme-color-a) 0%,
+    var(--main-color-light) 32%,
+    var(--acri-color-blue) 68%,
+    #6fa882 100%
+  );
   --bps-announcement-text: #ffffff;
+  --bps-announcement-border: rgba(255, 255, 255, 0.12);
 }
 
 html[data-theme="dark"] {
@@ -169,24 +172,26 @@ html[data-theme="dark"] {
   --pst-color-link: var(--brand-link-color);
   --pst-color-link-hover: var(--brand-link-hover);
 
-  /* Darker ACRI palette so the gradient still reads on dark navbar */
-  --bps-announcement-start: #1f4a59;
-  --bps-announcement-end: #6f8b2b;
+  /* Announcement bar: deeper stops for dark mode readability */
+  --bps-announcement-gradient: linear-gradient(
+    90deg,
+    #1a1230 0%,
+    #3d2a6b 30%,
+    #1f4a59 62%,
+    #4a7356 100%
+  );
   --bps-announcement-text: #f5fbe6;
+  --bps-announcement-border: rgba(255, 255, 255, 0.1);
 }
 
-/* ----- Announcement bar: ESA gradient with subtle polish --------------- */
+/* ----- Announcement bar: BioPAL brand gradient -------------------------------- */
 .bd-header-announcement {
-  background: linear-gradient(
-    90deg,
-    var(--bps-announcement-start) 0%,
-    var(--bps-announcement-end) 100%
-  );
+  background: var(--bps-announcement-gradient);
   color: var(--bps-announcement-text);
   font-weight: 500;
   letter-spacing: 0.01em;
   padding: 0.6em 1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--bps-announcement-border);
   text-align: center;
 }
 
