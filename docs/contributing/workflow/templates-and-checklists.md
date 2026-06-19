@@ -4,7 +4,7 @@ Structured forms and checklists so contributors are never lost between
 the project and GitHub. Four touchpoints guide every contribution:
 
 1. **Auto tier classification**: every PR is risk-scored on opening from
-   the diff; no manual tier labels. See [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md).
+   the diff; no manual tier labels. See [CI automation and contribution tiers](../automation/ci-automation-and-contribution-tiers.md).
 2. **CODEOWNERS routing**: the right SME is auto-assigned from the files
    touched.
 3. **Issue and PR templates**: structured forms for every issue type and
@@ -28,16 +28,16 @@ checklists.
 ## Getting Help
 
 For complete information about communication channels and meetings, see
-the [Communication](../communication/index.md) page.
+the [Communication](../../communication/index.md) page.
 
 ### Quick reference
 
-| Where | What for |
-|---|---|
+| Where                                                            | What for                                                                                                                                      |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | [GitHub Issues](https://github.com/BioPAL/BPS/issues/new/choose) | Actionable items only: bug reports, feature requests, algorithm proposals, documentation issues, security reports. Use the matching template. |
-| [GitHub Discussions](https://github.com/BioPAL/BPS/discussions) | Open ended questions, brainstorming, scientific discussions, governance, community. |
-| Office Hours | Planned weekly open session for contributor questions (not scheduled yet). |
-| Community Meetings | Planned regular community meetings (not scheduled yet). |
+| [GitHub Discussions](https://github.com/BioPAL/BPS/discussions)  | Open ended questions, brainstorming, scientific discussions, governance, community.                                                           |
+| Office Hours                                                     | Weekly open session for contributor questions.                                                                                                |
+| Community Meetings                                               | Regular community meetings.                                                                                                                   |
 
 The recommended place to ask a question is
 [GitHub Discussions](https://github.com/BioPAL/BPS/discussions). The Q&A
@@ -71,13 +71,13 @@ Pick the one that matches what you want to report. Each template asks for
 exactly the information the maintainers need to triage and route the issue
 to the right reviewer.
 
-| Template | When to use |
-|---|---|
-| **01 Bug report** | A defect in a processor, the CI/CD pipeline, or the documentation. |
-| **02 Feature or enhancement request** | A non-scientific feature, an enhancement to an existing component, or a tooling improvement. |
-| **03 Algorithm proposal** | A new scientific algorithm, a methodological change, or any modification with a scientific impact on the processing chain. Scientific justification is required. |
-| **04 Documentation issue** | An error, a gap, an outdated section, a broken link, or a request for clarification in the documentation. |
-| **05 Security report** | A non-sensitive security concern, hardening recommendation, or supply-chain issue. Sensitive vulnerabilities go through a [private security advisory](https://github.com/BioPAL/BPS/security/advisories/new) instead. |
+| Template                              | When to use                                                                                                                                                                                                           |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **01 Bug report**                     | A defect in a processor, the CI/CD pipeline, or the documentation.                                                                                                                                                    |
+| **02 Feature or enhancement request** | A non-scientific feature, an enhancement to an existing component, or a tooling improvement.                                                                                                                          |
+| **03 Algorithm proposal**             | A new scientific algorithm, a methodological change, or any modification with a scientific impact on the processing chain. Scientific justification is required.                                                      |
+| **04 Documentation issue**            | An error, a gap, an outdated section, a broken link, or a request for clarification in the documentation.                                                                                                             |
+| **05 Security report**                | A non-sensitive security concern, hardening recommendation, or supply-chain issue. Sensitive vulnerabilities go through a [private security advisory](https://github.com/BioPAL/BPS/security/advisories/new) instead. |
 
 ### Discussions categories
 
@@ -124,7 +124,7 @@ When adding external libraries or dependencies to your PR, include the following
   - License URL: [Link to license]
 ```
 
-For complete licensing requirements, see the [Licensing](../about/licensing/index.md) section.
+For complete licensing requirements, see the [Licensing](../../about/licensing/index.md) section.
 
 ---
 
@@ -133,21 +133,22 @@ For complete licensing requirements, see the [Licensing](../about/licensing/inde
 ### Documentation
 
 - [Getting Started](https://biomass-disc.info/docs) - Introduction and getting started guide
-- [Code of Conduct](code-of-conduct.md) - Community standards and expectations
-- [Contributing overview](index.md) - Journey-based contribution workflow
-- [Governance](../governance/index.md) - Roles, responsibilities, and decision-making
-- [Processor ownership](../governance/processor-ownership.md) - Scientific and technical contacts per module
-- [Architecture](architecture.md) - Monorepo layout, `bps-*` modules, and processor structure
-- [Code standards](code-standards.md) - Coding conventions and best practices
-- [Documentation standards](documentation-standards.md) - Documentation writing standards and best practices
-- [CI automation and contribution tiers](ci-automation-and-contribution-tiers.md) - Pipeline reference, tier detection, branch protection
-- [Release process](release-process.md) - How to prepare and publish a release
-- [Communication](../communication/index.md) - Communication channels and meeting schedules
-- [Licensing](../about/licensing/index.md) - Apache 2.0 license requirements and legal obligations
+- [Code of Conduct](../code-of-conduct.md) - Community standards and expectations
+- [Contributing overview](../index.md) - Journey-based contribution workflow
+- [Governance](../../governance/index.md) - Roles, responsibilities, and decision-making
+- [Processor ownership](../../governance/processor-ownership.md) - Scientific and technical contacts per module
+- [Architecture](../technical/architecture.md) - Monorepo layout, `bps-*` modules, and processor structure
+- [Code standards](../technical/code-standards.md) - Coding conventions and best practices
+- [Documentation standards](../technical/documentation-standards.md) - Documentation writing standards and best practices
+- [CI automation and contribution tiers](../automation/ci-automation-and-contribution-tiers.md) - Pipeline reference, tier detection, branch protection
+- [Release process](../policy/release-process.md) - How to prepare and publish a release
+- [Communication](../../communication/index.md) - Communication channels and meeting schedules
+- [Licensing](../../about/licensing/index.md) - Apache 2.0 license requirements and legal obligations
 
 ### Learning Resources
 
 **Git and Version Control:**
+
 - [GitHub Help Pages](https://help.github.com/)
 - [Git Documentation](https://git-scm.com/doc)
 - [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
@@ -155,22 +156,26 @@ For complete licensing requirements, see the [Licensing](../about/licensing/inde
 - [Pro Git Book](https://git-scm.com/book/en/v2) (free online)
 
 **Python Development:**
+
 - [Python Documentation](https://docs.python.org/3/)
 - [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/)
 - [Real Python](https://realpython.com/) - Python tutorials and guides
 - [Python Type Hints](https://docs.python.org/3/library/typing.html)
 
 **Testing:**
+
 - [pytest Documentation](https://doc.pytest.org/en/latest/)
 - [pytest Best Practices](https://docs.pytest.org/en/latest/explanation/goodpractices.html)
 - [Test-Driven Development with Python](https://www.obeythetestinggoat.com/)
 
 **Scientific Python:**
+
 - [NumPy Documentation](https://numpy.org/doc/stable/)
 - [SciPy Documentation](https://docs.scipy.org/doc/scipy/)
 - [xarray Documentation](https://docs.xarray.dev/) - Similar project structure
 
 **Code Quality:**
+
 - [Black Code Formatter](https://black.readthedocs.io/)
 - [Ruff Linter](https://docs.astral.sh/ruff/)
 - [mypy Type Checker](https://mypy.readthedocs.io/)
@@ -195,33 +200,39 @@ For complete licensing requirements, see the [Licensing](../about/licensing/inde
 ### Before Submitting a PR
 
 **Issue and scope:**
+
 - [ ] A tracking issue exists for this change.
 - [ ] The issue is labelled `status:approved`, `good-first-issue`, or `help-wanted`.
 - [ ] The PR closes exactly one issue, and the scope matches what was approved.
 
 **Code Quality:**
+
 - [ ] Pre-commit hooks installed and passing (`pre-commit run --all-files`).
 - [ ] Code formatted with `ruff format src/ test/`.
 - [ ] Linting clean: `ruff check --fix src/ test/`.
 - [ ] Type hints present where appropriate; `mypy` passes.
-- [ ] All code follows the [Code standards](code-standards.md).
+- [ ] All code follows the [Code standards](../technical/code-standards.md).
 - [ ] No secrets or sensitive data in code.
 
 **DCO and Licensing:**
+
 - [ ] All commits carry a `Signed-off-by:` trailer (`git commit -s`).
 - [ ] New files include SPDX headers (`SPDX-FileCopyrightText` + `SPDX-License-Identifier: Apache-2.0`).
 - [ ] `reuse lint` passes locally (or the pre-commit reuse hook passes).
 
 **Testing:**
+
 - [ ] Tests added or modified and passing (`pytest -m baseline` on `test/baseline/`).
 - [ ] Baseline reference outputs updated if the behaviour intentionally changed.
 - [ ] If targeting `release`, you understand that the `CI gate` will be red until a maintainer triggers the workflow with `run_heavy=true`.
 
 **Documentation:**
+
 - [ ] Docstrings added or updated.
 - [ ] Documentation site updated if the change is user facing.
 
 **Pull Request:**
+
 - [ ] PR template completed fully.
 - [ ] Clear description of what changes (not the problem, that lives in the issue).
 - [ ] Commit messages are clear and descriptive.
@@ -243,6 +254,7 @@ For complete licensing requirements, see the [Licensing](../about/licensing/inde
 ## Recognition
 
 Contributors are recognized in:
+
 - Release notes
 - Project documentation
 - Community communications
@@ -264,5 +276,4 @@ actionable items that match one of the five templates.
 
 ---
 
-**Previous:** [Practical workflow](practical-workflow.md) | **Next:** [Becoming a maintainer](becoming-a-maintainer.md)
-
+**Previous:** [Practical workflow](practical-workflow.md) | **Next:** [Becoming a maintainer](../policy/becoming-a-maintainer.md)

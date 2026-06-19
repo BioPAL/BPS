@@ -55,39 +55,52 @@ flowchart TD
 
 ---
 
-## 🚀 I want to use BPS
+## <i class="doc-icon fa-regular fa-compass fa-fw" aria-hidden="true"></i> I want to use BPS
 
 You want to run a processor, understand a data format, or read the
 science behind an algorithm.
 
 ::::{grid} 1 2 2 2
 :gutter: 3
+:class-container: intro-grid
 
-:::{grid-item-card} 📘 User Guide
+:::{grid-item-card}
 :link: ../user-guide/index
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-book-open fa-fw" aria-hidden="true"></i> **User Guide**
+^^^
 Software User Manual (SUM) and authoritative user reference.
 :::
 
-:::{grid-item-card} 🛰️ Science Guide
+:::{grid-item-card}
 :link: ../science-guide/index
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-satellite fa-fw" aria-hidden="true"></i> **Science Guide**
+^^^
 ATBDs and Product Format Documents for L1, L2a, and L2b products.
 :::
 
-:::{grid-item-card} 🧪 Tutorials
+:::{grid-item-card}
 :link: ../tutorials/index
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-flask fa-fw" aria-hidden="true"></i> **Tutorials**
+^^^
 Walkthroughs and worked examples.
 :::
 
-:::{grid-item-card} 📋 Applicable documents
+:::{grid-item-card}
 :link: ../about/applicable-documents
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-clipboard fa-fw" aria-hidden="true"></i> **Applicable documents**
+^^^
 The full list of ATBDs, SUM, ICD, IODD and auxiliary specifications
 with PDF download links.
 :::
@@ -99,7 +112,7 @@ For the published documentation portal, see
 
 ---
 
-## 💬 I have a question or an idea
+## <i class="doc-icon fa-regular fa-comments fa-fw" aria-hidden="true"></i> I have a question or an idea
 
 Use [**GitHub Discussions**](https://github.com/BioPAL/BPS/discussions).
 Open issues are reserved for actionable items; open Discussions for
@@ -107,16 +120,16 @@ everything else. Six categories help you find the right thread.
 
 | Category | When to use |
 |---|---|
-| ❓ [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) | Usage, installation, API, processing chain, data formats. Mark the helpful reply as the answer. |
-| 💡 [Ideas](https://github.com/BioPAL/BPS/discussions/categories/ideas) | Brainstorm a feature or a change before opening a tracking issue. |
-| 🔬 [Scientific discussions](https://github.com/BioPAL/BPS/discussions/categories/scientific-discussions) | Algorithms, validation, methodology, ATBD interpretations, references. |
-| 🏛️ [Governance](https://github.com/BioPAL/BPS/discussions/categories/governance) | Project governance, maintainer paths, policy. |
-| 👋 [Show and tell](https://github.com/BioPAL/BPS/discussions/categories/show-and-tell) | Introductions, usage stories, papers, conference talks. |
-| 📢 [Announcements](https://github.com/BioPAL/BPS/discussions/categories/announcements) | Releases and governance decisions. Read only for external contributors. |
+| <i class="doc-icon fa-regular fa-circle-question fa-fw" aria-hidden="true"></i> [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) | Usage, installation, API, processing chain, data formats. Mark the helpful reply as the answer. |
+| <i class="doc-icon fa-regular fa-lightbulb fa-fw" aria-hidden="true"></i> [Ideas](https://github.com/BioPAL/BPS/discussions/categories/ideas) | Brainstorm a feature or a change before opening a tracking issue. |
+| <i class="doc-icon fa-solid fa-microscope fa-fw" aria-hidden="true"></i> [Scientific discussions](https://github.com/BioPAL/BPS/discussions/categories/scientific-discussions) | Algorithms, validation, methodology, ATBD interpretations, references. |
+| <i class="doc-icon fa-solid fa-landmark fa-fw" aria-hidden="true"></i> [Governance](https://github.com/BioPAL/BPS/discussions/categories/governance) | Project governance, maintainer paths, policy. |
+| <i class="doc-icon fa-regular fa-hand fa-fw" aria-hidden="true"></i> [Show and tell](https://github.com/BioPAL/BPS/discussions/categories/show-and-tell) | Introductions, usage stories, papers, conference talks. |
+| <i class="doc-icon fa-solid fa-bullhorn fa-fw" aria-hidden="true"></i> [Announcements](https://github.com/BioPAL/BPS/discussions/categories/announcements) | Releases and governance decisions. Read only for external contributors. |
 
 ---
 
-## 🛠️ I want to contribute
+## <i class="doc-icon fa-solid fa-code-branch fa-fw" aria-hidden="true"></i> I want to contribute
 
 Every contribution to BIOMASS BPS follows the same five steps. **No code
 is written before the issue has been approved.** This guardrail protects
@@ -129,11 +142,11 @@ cover every actionable case:
 
 | Template | When to use |
 |---|---|
-| 🐛 Bug report | A defect in a processor, the CI, or the documentation. |
-| ✨ Feature or enhancement request | A non-scientific feature or tooling improvement. |
-| 🔬 Algorithm proposal | A new scientific algorithm or a methodological change. Justification required. |
-| 📄 Documentation issue | An error or a gap in the documentation. |
-| 🔒 Security report | A non-sensitive security concern. Sensitive vulnerabilities go through a [private advisory](https://github.com/BioPAL/BPS/security/advisories/new) instead. |
+| <i class="doc-icon fa-solid fa-bug fa-fw" aria-hidden="true"></i> Bug report | A defect in a processor, the CI, or the documentation. |
+| <i class="doc-icon fa-solid fa-wand-magic-sparkles fa-fw" aria-hidden="true"></i> Feature or enhancement request | A non-scientific feature or tooling improvement. |
+| <i class="doc-icon fa-solid fa-flask fa-fw" aria-hidden="true"></i> Algorithm proposal | A new scientific algorithm or a methodological change. Justification required. |
+| <i class="doc-icon fa-regular fa-file-lines fa-fw" aria-hidden="true"></i> Documentation issue | An error or a gap in the documentation. |
+| <i class="doc-icon fa-solid fa-lock fa-fw" aria-hidden="true"></i> Security report | A non-sensitive security concern. Sensitive vulnerabilities go through a [private advisory](https://github.com/BioPAL/BPS/security/advisories/new) instead. |
 
 If an issue that matches what you want to do already exists, pick that
 one instead of opening a duplicate.

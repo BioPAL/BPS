@@ -15,12 +15,17 @@ satellite mission.
 
 **Version**: 0.2.0
 
-**Useful links**:
+<div class="brand-link-bar" markdown="1">
+
+**Useful links:**  
 [BIOMASS Mission](https://www.esa.int/Applications/Observing_the_Earth/FutureEO/Biomass) |
+[BioPAL on GitHub](https://github.com/BioPAL) |
 [Code Repository](https://github.com/BioPAL/BPS) |
 [Issues](https://github.com/BioPAL/BPS/issues) |
 [Discussions](https://github.com/BioPAL/BPS/discussions) |
 [Releases](https://github.com/BioPAL/BPS/releases)
+
+</div>
 
 ::::{grid} 1 1 2 2
 :gutter: 3
@@ -31,11 +36,10 @@ satellite mission.
 :link-type: doc
 :class-card: intro-card
 
-🚀 **Get started**
+<i class="doc-icon fa-regular fa-compass fa-fw" aria-hidden="true"></i> **Get started**
 ^^^
 
-*New to BIOMASS BPS?*
-Start here with installation instructions and a brief overview of the suite.
+Installation, first steps, and how to find your way around BPS.
 :::
 
 :::{grid-item-card}
@@ -43,12 +47,10 @@ Start here with installation instructions and a brief overview of the suite.
 :link-type: doc
 :class-card: intro-card
 
-📖 **User guide**
+<i class="doc-icon fa-regular fa-book-open fa-fw" aria-hidden="true"></i> **User guide**
 ^^^
 
-*Ready to deepen your understanding of BPS?*
-Visit the user guide for detailed explanations of the data structures, common
-processing patterns, and more.
+Software User Manual and authoritative user reference (PDF).
 :::
 
 :::{grid-item-card}
@@ -56,11 +58,10 @@ processing patterns, and more.
 :link-type: doc
 :class-card: intro-card
 
-🛰️ **Science Guide**
+<i class="doc-icon fa-solid fa-satellite fa-fw" aria-hidden="true"></i> **Science guide**
 ^^^
 
-*Looking for the science behind a specific processor?*
-Algorithm descriptions, inputs and outputs, validation, and references for every BPS processor.
+ATBDs and product format documents for every BPS processor.
 :::
 
 :::{grid-item-card}
@@ -68,11 +69,10 @@ Algorithm descriptions, inputs and outputs, validation, and references for every
 :link-type: doc
 :class-card: intro-card
 
-🤝 **Contribute**
+<i class="doc-icon fa-regular fa-handshake fa-fw" aria-hidden="true"></i> **Contribute**
 ^^^
 
-*Saw a typo in the documentation? Want to improve an existing feature?*
-Please review our guide on improving BPS.
+Contribution workflow, standards, governance, and community channels.
 :::
 
 ::::

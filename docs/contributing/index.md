@@ -138,10 +138,13 @@ CI green/red loop, review, baseline changes, merge, and release path.
 ::::{grid} 1 3 3 3
 :gutter: 3
 
-:::{grid-item-card} 📜 Licensing
+:::{grid-item-card}
 :link: ../about/licensing/index
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-scale-balanced fa-fw" aria-hidden="true"></i> **Licensing**
+^^^
 Apache 2.0 terms, REUSE compliance, SPDX headers, and dependency licence
 requirements. Every contribution must comply.
 :::
@@ -246,10 +249,13 @@ Naming, formatting, type hints, tests, error handling, and logging.
 Docstrings, writing conventions, and documentation update expectations.
 :::
 
-:::{grid-item-card} 📄 Interface specifications
+:::{grid-item-card}
 :link: ../about/applicable-documents
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-file-lines fa-fw" aria-hidden="true"></i> **Interface specifications**
+^^^
 Official ICD, IODD, and auxiliary product format PDFs for integrators.
 :::
 

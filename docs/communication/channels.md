@@ -80,12 +80,12 @@ Six categories help route the conversation:
 
 | Category | When to use |
 |---|---|
-| 📢 [Announcements](https://github.com/BioPAL/BPS/discussions/categories/announcements) | Project announcements, releases, governance decisions. Posts restricted to maintainers. |
-| ❓ [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) | Usage, installation, API, processing chain, data formats. Mark the helpful reply as the answer. |
-| 💡 [Ideas](https://github.com/BioPAL/BPS/discussions/categories/ideas) | Brainstorm a feature or a change before opening a tracking issue. |
-| 🔬 [Scientific discussions](https://github.com/BioPAL/BPS/discussions/categories/scientific-discussions) | Algorithms, validation, methodology, ATBD interpretations, references. |
-| 🏛️ [Governance](https://github.com/BioPAL/BPS/discussions/categories/governance) | Project governance, maintainer paths, policy questions. |
-| 👋 [Show and tell](https://github.com/BioPAL/BPS/discussions/categories/show-and-tell) | Introductions, usage stories, papers, conference talks. |
+| <i class="doc-icon fa-solid fa-bullhorn fa-fw" aria-hidden="true"></i> [Announcements](https://github.com/BioPAL/BPS/discussions/categories/announcements) | Project announcements, releases, governance decisions. Posts restricted to maintainers. |
+| <i class="doc-icon fa-regular fa-circle-question fa-fw" aria-hidden="true"></i> [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) | Usage, installation, API, processing chain, data formats. Mark the helpful reply as the answer. |
+| <i class="doc-icon fa-regular fa-lightbulb fa-fw" aria-hidden="true"></i> [Ideas](https://github.com/BioPAL/BPS/discussions/categories/ideas) | Brainstorm a feature or a change before opening a tracking issue. |
+| <i class="doc-icon fa-solid fa-microscope fa-fw" aria-hidden="true"></i> [Scientific discussions](https://github.com/BioPAL/BPS/discussions/categories/scientific-discussions) | Algorithms, validation, methodology, ATBD interpretations, references. |
+| <i class="doc-icon fa-solid fa-landmark fa-fw" aria-hidden="true"></i> [Governance](https://github.com/BioPAL/BPS/discussions/categories/governance) | Project governance, maintainer paths, policy questions. |
+| <i class="doc-icon fa-regular fa-hand fa-fw" aria-hidden="true"></i> [Show and tell](https://github.com/BioPAL/BPS/discussions/categories/show-and-tell) | Introductions, usage stories, papers, conference talks. |
 
 **Tips:**
 - Search existing discussions before posting

@@ -10,39 +10,80 @@ Every contribution is risk-scored before any human reviews it. The
 classifier reads its policy from the base branch so the PR cannot
 rewrite its own judge.
 
-::::{grid} 2 2 4 4
+::::{grid} 1 1 1 1
 :gutter: 2
+:class-container: stat-cards-list
 
-:::{grid-item-card} 10
-:class-card: sd-text-center sd-fs-2
+:::{grid-item-card}
+:class-card: stat-card
 
-Parallel baseline checks per PR.
+<div class="stat-card__inner" markdown="1">
+
+<span class="stat-card__value">10</span>
+
+<div class="stat-card__content">
+
+**Parallel baseline checks per PR.**
 
 `REUSE · DCO · Bandit · pre-commit · build · tests · docs · ...`
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 3
-:class-card: sd-text-center sd-fs-2
+:::{grid-item-card}
+:class-card: stat-card
 
-Automated tier levels.
+<div class="stat-card__inner" markdown="1">
+
+<span class="stat-card__value">3</span>
+
+<div class="stat-card__content">
+
+**Automated tier levels.**
 
 `Tier 0 · Tier 1 · Tier 2`, computed from the diff.
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 1
-:class-card: sd-text-center sd-fs-2
+:::{grid-item-card}
+:class-card: stat-card
 
-Single source of truth.
+<div class="stat-card__inner" markdown="1">
+
+<span class="stat-card__value">1</span>
+
+<div class="stat-card__content">
+
+**Single source of truth.**
 
 `tier-policy.yml`, read from the base branch, never from the PR.
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 100 %
-:class-card: sd-text-center sd-fs-2
+:::{grid-item-card}
+:class-card: stat-card
 
-Auto-classified changes.
+<div class="stat-card__inner" markdown="1">
+
+<span class="stat-card__value">100&nbsp;%</span>
+
+<div class="stat-card__content">
+
+**Auto-classified changes.**
 
 No labels to set. The CI scores every PR before any human reviews it.
+
+</div>
+
+</div>
 :::
 
 ::::
@@ -69,7 +110,11 @@ run and how many approvals are required to merge.
 ::::{grid} 1 3 3 3
 :gutter: 3
 
-:::{grid-item-card} 🟢 Tier 0 &middot; Baseline
+:::{grid-item-card}
+:class-card: intro-card
+
+<i class="doc-icon fa-solid fa-shield fa-fw" aria-hidden="true"></i> **Tier 0 · Baseline**
+^^^
 No risk-elevating change detected.
 
 **Triggers**
@@ -84,7 +129,11 @@ No risk-elevating change detected.
 typo corrections.
 :::
 
-:::{grid-item-card} 🟡 Tier 1 &middot; Extended
+:::{grid-item-card}
+:class-card: intro-card
+
+<i class="doc-icon fa-solid fa-layer-group fa-fw" aria-hidden="true"></i> **Tier 1 · Extended**
+^^^
 Locked or SME-owned paths modified.
 
 **Triggers**
@@ -100,7 +149,11 @@ Locked or SME-owned paths modified.
 CI configuration changes.
 :::
 
-:::{grid-item-card} 🔴 Tier 2 &middot; Heavy
+:::{grid-item-card}
+:class-card: intro-card
+
+<i class="doc-icon fa-solid fa-server fa-fw" aria-hidden="true"></i> **Tier 2 · Heavy**
+^^^
 Release branch or explicit upclass.
 
 **Triggers**
@@ -131,7 +184,7 @@ policy updates.
 ### Judge from base, never from PR
 
 ```{important}
-🔒 **The tier policy is read from the base branch SHA, never from the PR
+<i class="doc-icon fa-solid fa-lock fa-fw" aria-hidden="true"></i> **The tier policy is read from the base branch SHA, never from the PR
 head.** The policy file, the baseline references, and the test harness
 are all locked at the base commit. A pull request cannot rewrite its
 own judge.
