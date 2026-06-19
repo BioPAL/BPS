@@ -7,7 +7,15 @@ SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# BIOMASS BPS documentation
+# BioPAL documentation
+
+<div class="biopal-scope-banner" markdown="1">
+
+**About this site.** [BioPAL](https://github.com/BioPAL) (*BIOMASS Product Algorithm Laboratory*)
+hosts this documentation portal. All pages here cover **BPS** (BIOMASS Processing Suite) today.
+Documentation for other BioPAL repositories will be added here as it becomes available.
+
+</div>
 
 The **BIOMASS Processing Suite (BPS)** is the open-source software that processes
 Level 1, Level 2A, and Level 2B data from the ESA **BIOMASS** Earth Explorer

@@ -1,19 +1,18 @@
 # SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
 # SPDX-License-Identifier: Apache-2.0
 #
-# Sphinx configuration for the BIOMASS BPS documentation site.
+# Sphinx configuration for the BioPAL documentation site (BPS content).
 # Theme: PyData Sphinx Theme (same family as docs.xarray.dev).
 # Source: Markdown via MyST parser.
 
 import os
 from datetime import datetime
-import os
 
 # -----------------------------------------------------------------------------
 # Project information
 # -----------------------------------------------------------------------------
-project = "BIOMASS BPS"
-author = "ACRI-ST / ESA / Aresys "
+project = "BioPAL"
+author = "ACRI-ST / ESA / Aresys"
 copyright = f"{datetime.now().year}, {author}"
 release = "0.2.0"
 
@@ -81,8 +80,8 @@ myst_heading_anchors = 3
 # -----------------------------------------------------------------------------
 html_theme = "pydata_sphinx_theme"
 
-html_title = "BIOMASS BPS Documentation"
-html_short_title = "BIOMASS BPS"
+html_title = "BioPAL Documentation"
+html_short_title = "BioPAL"
 
 # Base URL when docs are served under a subpath (e.g. biomass-disc.info/docs/).
 html_baseurl = os.environ.get("SPHINX_HTML_BASEURL", "/docs/")
