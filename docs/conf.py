@@ -6,6 +6,7 @@
 # Source: Markdown via MyST parser.
 
 from datetime import datetime
+import os
 
 # -----------------------------------------------------------------------------
 # Project information
@@ -82,6 +83,10 @@ html_theme = "pydata_sphinx_theme"
 html_title = "BIOMASS BPS Documentation"
 html_short_title = "BIOMASS BPS"
 
+# GitHub Pages project site is served at https://biopal.github.io/BPS/ .
+# CI sets DOCS_BASEURL; leave empty for local builds (file:// or localhost).
+html_baseurl = os.environ.get("DOCS_BASEURL", "")
+
 # Static assets (custom CSS, logos, favicons)
 html_static_path = ["_static"]
 
@@ -155,7 +160,7 @@ html_theme_options = {
 html_context = {
     "github_user": "BioPAL",
     "github_repo": "BPS",
-    "github_version": "main",
+    "github_version": os.environ.get("DOCS_GITHUB_VERSION", "develop"),
     "doc_path": "docs",
     # default_mode: "auto" lets the user's choice (stored in localStorage)
     # take precedence on subsequent page loads. "auto" also matches the OS

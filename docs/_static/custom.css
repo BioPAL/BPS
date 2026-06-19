@@ -5,8 +5,8 @@
  * Custom overrides for the PyData Sphinx Theme on the BIOMASS BPS docs.
  */
 
-# Hide the RTD ethical-ads placeholder if the theme still injects the slot.
-# Without a publisher ID it renders as a large violet block in the sidebar.
+/* Hide the RTD ethical-ads placeholder if the theme still injects the slot.
+   Without a publisher ID it renders as a large violet block in the sidebar. */
 #ethical-ad-placement {
   display: none !important;
 }
