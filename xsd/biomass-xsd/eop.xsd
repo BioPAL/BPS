@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 Open Geospatial Consortium (OGC) and contributors
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 <schema xmlns:gml="http://www.opengis.net/gml/3.2" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:eop="http://www.opengis.net/eop/2.1" xmlns:om="http://www.opengis.net/om/2.0" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:swe="http://www.opengis.net/swe/1.0" xmlns:wcs="http://www.opengis.net/wcs/1.0" targetNamespace="http://www.opengis.net/eop/2.1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1.0">
 	<annotation>
 		<documentation>Earth Observation Products application schema, also the base schema which other products, OPT, ATM etc., extend.

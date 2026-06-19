@@ -1,175 +1,18 @@
-# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-FileCopyrightText: 2026 ACRI-ST - European Space Agency (ESA)
 # SPDX-License-Identifier: Apache-2.0
 #
-# REUSE 3.0 manifest for BIOMASS BPS.
+# Minimal REUSE 3.0 manifest for BIOMASS BPS.
 #
-# Strategy.
-#   Files added from this point on must carry inline SPDX headers
-#   (`SPDX-FileCopyrightText` and `SPDX-License-Identifier`) in their own
-#   source. This manifest covers two categories:
-#     1. Legacy files that pre-date the REUSE work, grouped by category.
-#        A follow-up issue tracks their progressive migration to inline
-#        headers.
-#     2. Files that cannot carry an inline header (binary assets, third
-#        party content with strict format).
+# All textual source files carry inline SPDX headers. This manifest covers
+# only files that cannot carry an inline header (binary assets) and the
+# LICENSES/ directory (licence texts are CC0).
 #
 # Spec:  https://reuse.software/spec/
 # Lint:  reuse lint
 
 version = 1
 
-# ─────────────────────────────────────────────────────────────────────
-# Repository-level configuration and metadata
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  ".gitignore",
-  "**/.gitignore",
-  "**/.dockerignore",
-  ".vscode/**",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Legacy GitLab CI configuration (kept until full migration to GitHub
-# Actions is complete)
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  ".gitlab-ci.yml",
-  ".gitlab/**",
-  "**/.gitlab-ci.yml",
-  ".conda-packaging-ci.yml",
-  ".docker-ci.yml",
-  ".testplan-ci.yml",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Top-level and per-package READMEs and credits
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "README.md",
-  "CREDITS.md",
-  "**/README.md",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Python project metadata, build, and lint configuration
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "**/pyproject.toml",
-  "**/noxfile.py",
-  "ruff.toml",
-  "scripts/fawltydeps.toml",
-  "scripts/**/*.toml",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Conda recipes
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "**/recipe/meta.yaml",
-  "**/recipe/build.sh",
-  "**/recipe/conda_build_config.yaml",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Docker assets
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "**/Dockerfile",
-  "**/Dockerfile-*",
-  "bps-dockerfiles/**/*.sh",
-  "bps-dockerfiles/bundle_resources/**",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Existing test suites and fixtures
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "**/test/**",
-  "**/tests/**",
-  "test/integration/**",
-  "test/requirements.txt",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# BIOMASS-specific XSD schemas and XML task tables
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "xsd/biomass-xsd/**",
-  "xsd/.xsdata.xml",
-  "**/biomass-xsd/**",
-  "bps-task-tables/**/*.xml",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# ESA ground-segment generic schemas (ICD)
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = ["xsd/icd-xsd/**"]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Reference data bundled with the L1 processor
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "bps-l1_processor/bps/l1_processor/resources/bulletinb-*.txt",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "International Earth Rotation and Reference Systems Service (IERS)"
-SPDX-License-Identifier = "CC-BY-4.0"
-
-# ─────────────────────────────────────────────────────────────────────
-# Third-party schemas (OGC and external standards bodies).
-# Licence declared provisionally as CC-BY-4.0 pending confirmation by
-# legal maintainers. To resolve before this manifest is merged.
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "**/eop.xsd",
-  "**/sar.xsd",
-  "**/bio-l1-vrt.xsd",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "Open Geospatial Consortium (OGC) and contributors"
-SPDX-License-Identifier = "CC-BY-4.0"
-
-# ─────────────────────────────────────────────────────────────────────
 # Binary assets (cannot carry inline headers)
-# ─────────────────────────────────────────────────────────────────────
 [[annotations]]
 path = [
   "**/*.png",
@@ -181,26 +24,10 @@ path = [
   "**/*.pdf",
 ]
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
+SPDX-FileCopyrightText = "2026 ARESYS - European Space Agency (ESA)"
 SPDX-License-Identifier = "Apache-2.0"
 
-# ─────────────────────────────────────────────────────────────────────
-# Sphinx build artefacts (generated; deployed with the documentation
-# site, not part of the source tree)
-# ─────────────────────────────────────────────────────────────────────
-[[annotations]]
-path = [
-  "docs/_build/**",
-  "docs/_static/css/**",
-  "docs/_static/js/**",
-]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 European Space Agency (ESA)"
-SPDX-License-Identifier = "Apache-2.0"
-
-# ─────────────────────────────────────────────────────────────────────
 # Licence texts themselves are CC0
-# ─────────────────────────────────────────────────────────────────────
 [[annotations]]
 path = ["LICENSES/**"]
 precedence = "override"
