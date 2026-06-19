@@ -31,18 +31,25 @@ published as open source in alignment with ESA's **Open Science policy** and the
 
 ::::{grid} 1 2 2 2
 :gutter: 3
+:class-container: intro-grid
 
-:::{grid-item-card} 📋 Applicable documents
+:::{grid-item-card}
 :link: applicable-documents
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-clipboard fa-fw" aria-hidden="true"></i> **Applicable documents**
+^^^
 The full list of ATBDs, SUM, ICD, PFD and auxiliary specifications applicable to the current BPS release, with PDF downloads.
 :::
 
-:::{grid-item-card} Licensing
+:::{grid-item-card}
 :link: licensing/index
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-scale-balanced fa-fw" aria-hidden="true"></i> **Licensing**
+^^^
 Project license, contributions, dependencies, and REUSE compliance.
 :::
 

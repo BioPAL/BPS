@@ -5,6 +5,7 @@
 # Theme: PyData Sphinx Theme (same family as docs.xarray.dev).
 # Source: Markdown via MyST parser.
 
+import os
 from datetime import datetime
 import os
 
@@ -12,7 +13,7 @@ import os
 # Project information
 # -----------------------------------------------------------------------------
 project = "BIOMASS BPS"
-author = "ESA / Aresys / ACRI-ST"
+author = "ACRI-ST / ESA / Aresys "
 copyright = f"{datetime.now().year}, {author}"
 release = "0.2.0"
 
@@ -20,9 +21,9 @@ release = "0.2.0"
 # General configuration
 # -----------------------------------------------------------------------------
 extensions = [
-    "myst_parser",            # Markdown support (CommonMark + extensions)
-    "sphinx_copybutton",      # Copy button on code blocks
-    "sphinx_design",          # Cards, grids, tabs, etc.
+    "myst_parser",  # Markdown support (CommonMark + extensions)
+    "sphinx_copybutton",  # Copy button on code blocks
+    "sphinx_design",  # Cards, grids, tabs, etc.
     "sphinxcontrib.mermaid",  # Mermaid diagrams (used in CONTRIBUTING_PART1)
 ]
 
@@ -61,15 +62,15 @@ language = "en"
 # -----------------------------------------------------------------------------
 # Enable common MyST extensions for richer Markdown.
 myst_enable_extensions = [
-    "colon_fence",       # ::: fenced directives
-    "deflist",           # definition lists
-    "html_admonition",   # raw HTML admonitions
-    "html_image",        # raw HTML <img> tags
-    "linkify",           # auto-link bare URLs
-    "replacements",      # textual replacements (e.g. (c) -> ©)
-    "smartquotes",       # smart quotes
-    "substitution",      # variable substitution
-    "tasklist",          # GitHub-style task lists
+    "colon_fence",  # ::: fenced directives
+    "deflist",  # definition lists
+    "html_admonition",  # raw HTML admonitions
+    "html_image",  # raw HTML <img> tags
+    "linkify",  # auto-link bare URLs
+    "replacements",  # textual replacements (e.g. (c) -> ©)
+    "smartquotes",  # smart quotes
+    "substitution",  # variable substitution
+    "tasklist",  # GitHub-style task lists
 ]
 
 # Auto-generate anchors for headings up to level 3 (cross-doc linking)
@@ -83,9 +84,11 @@ html_theme = "pydata_sphinx_theme"
 html_title = "BIOMASS BPS Documentation"
 html_short_title = "BIOMASS BPS"
 
-# GitHub Pages project site is served at https://biopal.github.io/BPS/ .
-# CI sets DOCS_BASEURL; leave empty for local builds (file:// or localhost).
-html_baseurl = os.environ.get("DOCS_BASEURL", "")
+# Base URL when docs are served under a subpath (e.g. biomass-disc.info/docs/).
+html_baseurl = os.environ.get("SPHINX_HTML_BASEURL", "/docs/")
+
+# Main website URL for the "return to site" navbar link (site root when embedded).
+site_home_url = os.environ.get("SPHINX_SITE_HOME_URL", "/")
 
 # Static assets (custom CSS, logos, favicons)
 html_static_path = ["_static"]
@@ -109,10 +112,8 @@ html_theme_options = {
     "navbar_center": ["navbar-nav"],
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
     "navbar_persistent": ["search-button"],
-
     # How many top-nav links to show before collapsing into "More" dropdown
     "header_links_before_dropdown": 6,
-
     # Icon links (top right)
     "icon_links": [
         {
@@ -122,7 +123,6 @@ html_theme_options = {
             "type": "fontawesome",
         },
     ],
-
     # Left sidebar (section navigation)
     # show_nav_level = 1 → only show top-level section name expanded,
     # sub-pages appear when the user is inside that section. This matches xarray.
@@ -131,23 +131,19 @@ html_theme_options = {
     "collapse_navigation": False,
     # Right sidebar (page table of contents)
     "show_toc_level": 2,
-
     # Footer
     "footer_start": ["copyright"],
     "footer_end": ["sphinx-version", "theme-version"],
-
     # Misc
     "use_edit_page_button": True,
     "show_prev_next": True,
-    "announcement": "BIOMASS BPS is an Open Science project - every contribution is welcome.",
-
+    "announcement": "BIOMASS BPS is an Open Science project — every contribution is welcome.",
     # Secondary sidebar (right): only the "Edit on GitHub" button.
     # We hide page-toc (already covered by left sidebar) and sourcelink.
     "secondary_sidebar_items": {
         "**": ["edit-this-page"],
         "index": [],  # no right sidebar on the landing page
     },
-
     # Primary sidebar (left): always start collapsed at depth 1, then expand
     # the current section. This gives the same UX as xarray.
     # Ethical ads removed: local builds showed a violet RTD placeholder and
@@ -160,8 +156,11 @@ html_theme_options = {
 html_context = {
     "github_user": "BioPAL",
     "github_repo": "BPS",
-    "github_version": os.environ.get("DOCS_GITHUB_VERSION", "develop"),
+    "github_version": os.environ.get(
+        "SPHINX_GITHUB_VERSION", "docs/sphinx-site-migration"
+    ),
     "doc_path": "docs",
+    "site_home_url": site_home_url,
     # default_mode: "auto" lets the user's choice (stored in localStorage)
     # take precedence on subsequent page loads. "auto" also matches the OS
     # preference on first visit.
@@ -186,3 +185,5 @@ html_sidebars = {
 html_css_files = [
     "custom.css",
 ]
+
+templates_path = ["_templates"]

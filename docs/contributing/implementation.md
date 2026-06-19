@@ -19,43 +19,104 @@ You start with an **approved issue in hand** and end with a **pull
 request live on GitHub** that the CI has begun classifying. Each step
 is small; together they keep the diff focused and the CI stable.
 
-::::{grid} 1 1 2 5
+::::{grid} 1 1 1 1
 :gutter: 2
+:class-container: workflow-steps-list
 
-:::{grid-item-card} 01 &middot; Fork and branch
-:class-card: sd-border-info
+:::{grid-item-card}
+:class-card: workflow-step-card sd-border-info
+
+<div class="workflow-step-card__inner" markdown="1">
+
+<span class="workflow-step-card__num">01</span>
+
+<div class="workflow-step-card__content">
+
+**Fork and branch**
 
 Fork the repository on GitHub and create a feature branch from an
 up-to-date `develop`. Branch prefix: `feature/`, `bugfix/`, or `docs/`.
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 02 &middot; Implement and test
-:class-card: sd-border-info
+:::{grid-item-card}
+:class-card: workflow-step-card sd-border-info
+
+<div class="workflow-step-card__inner" markdown="1">
+
+<span class="workflow-step-card__num">02</span>
+
+<div class="workflow-step-card__content">
+
+**Implement and test**
 
 Code the change inside the approved scope. Add or update tests so the
 behaviour is exercised at the right tier (`unit`, `baseline`,
 `extended`).
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 03 &middot; Local checks
-:class-card: sd-border-info
+:::{grid-item-card}
+:class-card: workflow-step-card sd-border-info
+
+<div class="workflow-step-card__inner" markdown="1">
+
+<span class="workflow-step-card__num">03</span>
+
+<div class="workflow-step-card__content">
+
+**Local checks**
 
 Run `ruff`, `mypy`, and `pytest -m unit` locally. Add `baseline` if you
 expect the marker output to move. Save the CI a round-trip.
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 04 &middot; Commit, signed off
-:class-card: sd-border-info
+:::{grid-item-card}
+:class-card: workflow-step-card sd-border-info
+
+<div class="workflow-step-card__inner" markdown="1">
+
+<span class="workflow-step-card__num">04</span>
+
+<div class="workflow-step-card__content">
+
+**Commit, signed off**
 
 Every commit needs a `Signed-off-by:` trailer for the DCO. Group
 related changes into atomic commits with clear messages.
+
+</div>
+
+</div>
 :::
 
-:::{grid-item-card} 05 &middot; Open the pull request
-:class-card: sd-border-success
+:::{grid-item-card}
+:class-card: workflow-step-card sd-border-success
+
+<div class="workflow-step-card__inner" markdown="1">
+
+<span class="workflow-step-card__num">05</span>
+
+<div class="workflow-step-card__content">
+
+**Open the pull request**
 
 Push the branch and open a PR against `develop` that links the issue
 with `Closes #N`. The CI starts and the tier is computed from the diff.
+
+</div>
+
+</div>
 :::
 
 ::::

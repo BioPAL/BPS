@@ -11,12 +11,141 @@
   display: none !important;
 }
 
-/* ----- Slight ESA-tinted accent ----------------------------------------- */
+/* ----- Top banner: return link + announcement (custom, not .bd-header-announcement) */
+.bps-top-banner {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--bps-announcement-start) 0%,
+    var(--bps-announcement-end) 100%
+  );
+  color: var(--bps-announcement-text);
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Prevent PyData/Bootstrap link tokens from tinting the return pill on hover */
+  --pst-color-link: var(--bps-announcement-text);
+  --pst-color-link-hover: var(--bps-announcement-text);
+  --pst-color-link-higher-contrast: var(--bps-announcement-text);
+}
+
+.bps-top-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  max-width: 100%;
+}
+
+.bps-top-banner a.bps-return-link,
+.bps-top-banner a.bps-return-link:link,
+.bps-top-banner a.bps-return-link:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  min-height: 2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.bps-top-banner a.bps-return-link i {
+  font-size: 0.7rem;
+  color: inherit;
+}
+
+.bps-top-banner a.bps-return-link:hover,
+.bps-top-banner a.bps-return-link:focus,
+.bps-top-banner a.bps-return-link:focus-visible,
+.bps-top-banner a.bps-return-link:active {
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.24) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.bps-top-banner__sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  background-color: rgba(255, 255, 255, 0.45);
+}
+
+.bps-top-banner__message {
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+@media (max-width: 576px) {
+  .bps-top-banner__inner {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .bps-top-banner__sep {
+    display: none;
+  }
+}
+
+/* Optional: compact text link in navbar end (not active by default) */
+.bps-return-to-site--end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--pst-color-link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bps-return-to-site--end:hover {
+  color: var(--pst-color-link-hover);
+  text-decoration: underline;
+}
+
+/* ----- BioPAL brand tokens + PyData theme mapping ----------------------- */
 :root {
-  --pst-color-primary: #003247;
-  --pst-color-secondary: #00b6f0;
-  --pst-color-link: #00689d;
-  --pst-color-link-hover: #00b6f0;
+  /* BioPAL brand palette */
+  --theme-color-a: #2f214e;
+  --theme-color-b: #a3d8b0;
+  --auxiliary-color-a: #b182f9;
+  --main-color-light: #5234c9;
+  --acri-color-blue: #347891;
+  --acri-color-blue-bright: #00b6f0;
+
+  /* Violet default · ACRI blue hover (light) */
+  --brand-accent-color: var(--main-color-light);
+  --brand-accent-hover: var(--acri-color-blue);
+  --doc-icon-color: var(--brand-accent-color);
+  --doc-icon-color-hover: var(--brand-accent-hover);
+  --doc-icon-opacity: 0.82;
+  --brand-link-color: var(--brand-accent-color);
+  --brand-link-hover: var(--brand-accent-hover);
+  --brand-nav-active-bg: color-mix(in srgb, var(--main-color-light) 10%, transparent);
+
+  /* PyData theme: align links and accents with BioPAL */
+  --pst-color-primary: var(--main-color-light);
+  --pst-color-secondary: var(--theme-color-b);
+  --pst-color-link: var(--brand-link-color);
+  --pst-color-link-hover: var(--brand-link-hover);
 
   /* Announcement bar: ACRI palette (Blue ACRI to Green ACRI) */
   --bps-announcement-start: #347891;
@@ -25,10 +154,20 @@
 }
 
 html[data-theme="dark"] {
-  --pst-color-primary: #4dc4ff;
-  --pst-color-secondary: #00b6f0;
-  --pst-color-link: #4dc4ff;
-  --pst-color-link-hover: #ffffff;
+  /* Violet default · green hover (dark) */
+  --brand-accent-color: var(--auxiliary-color-a);
+  --brand-accent-hover: var(--theme-color-b);
+  --doc-icon-color: var(--brand-accent-color);
+  --doc-icon-color-hover: var(--brand-accent-hover);
+  --doc-icon-opacity: 0.9;
+  --brand-link-color: var(--brand-accent-color);
+  --brand-link-hover: var(--brand-accent-hover);
+  --brand-nav-active-bg: color-mix(in srgb, var(--auxiliary-color-a) 14%, transparent);
+
+  --pst-color-primary: var(--auxiliary-color-a);
+  --pst-color-secondary: var(--theme-color-b);
+  --pst-color-link: var(--brand-link-color);
+  --pst-color-link-hover: var(--brand-link-hover);
 
   /* Darker ACRI palette so the gradient still reads on dark navbar */
   --bps-announcement-start: #1f4a59;
@@ -83,6 +222,214 @@ html[data-theme="dark"] {
   font-size: 0.9em;
 }
 
+/* ----- BioPAL scope notice (homepage) ----------------------------------- */
+.biopal-scope-banner {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--pst-color-border);
+  background: var(--pst-color-surface);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--pst-color-text-muted);
+}
+
+.biopal-scope-banner strong {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+}
+
+/* ----- Brand links and doc icons (violet → ACRI blue / green) ------------ */
+.brand-link,
+.brand-link-bar a,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text),
+.bd-main .bd-content a.reference.external:not(.headerlink) {
+  color: var(--brand-link-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.brand-link:hover,
+.brand-link:focus-visible,
+.brand-link-bar a:hover,
+.brand-link-bar a:focus-visible,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text):hover,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text):focus-visible,
+.bd-main .bd-content a.reference.external:not(.headerlink):hover,
+.bd-main .bd-content a.reference.external:not(.headerlink):focus-visible,
+.bd-content table tbody tr:hover a.reference {
+  color: var(--brand-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.brand-link-bar {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.brand-link-bar strong {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.doc-icon {
+  display: inline-block;
+  margin-right: 0.4rem;
+  font-size: 0.88em;
+  line-height: 1;
+  color: var(--doc-icon-color);
+  opacity: var(--doc-icon-opacity);
+  vertical-align: 0.08em;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.intro-grid .sd-card-header .doc-icon,
+.intro-grid .sd-card-body .doc-icon {
+  font-size: 0.95em;
+  margin-right: 0.35rem;
+}
+
+.intro-grid .sd-card:hover .doc-icon,
+.intro-grid .sd-card:focus-within .doc-icon,
+.intro-grid .sd-card.sd-card-hover:hover .doc-icon,
+.bd-content table tbody tr:hover .doc-icon {
+  color: var(--doc-icon-color-hover);
+  opacity: 1;
+}
+
+/* Keep card titles/body readable; only icons pick up brand accent */
+.intro-grid .sd-card .sd-card-text,
+.intro-grid .sd-card .sd-card-text strong,
+.intro-grid .sd-card.sd-card-hover:hover .sd-card-text,
+.intro-grid .sd-card.sd-card-hover:hover .sd-card-text strong {
+  color: var(--pst-color-text-base);
+}
+
+h2 .doc-icon,
+h3 .doc-icon {
+  font-size: 0.82em;
+}
+
+.bd-content table .doc-icon {
+  font-size: 0.85em;
+  margin-right: 0.25rem;
+}
+
+.bd-content table tbody tr:hover .doc-icon {
+  color: var(--doc-icon-color-hover);
+  opacity: 1;
+}
+
+/* Heading anchor (#): violet, hover accent — not default blue */
+.bd-content a.headerlink,
+.bd-content a.headerlink:visited {
+  color: var(--brand-link-color);
+  opacity: 0.42;
+  text-decoration: none;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.bd-content a.headerlink:hover,
+.bd-content a.headerlink:focus-visible {
+  color: var(--brand-link-hover);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.intro-grid .sd-card-header .sd-card-title {
+  font-weight: 600;
+}
+
+/* ----- Horizontal workflow step cards ----------------------------------- */
+.workflow-steps-list .workflow-step-card .sd-card-body {
+  padding: 0;
+}
+
+.workflow-step-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+.workflow-step-card__num {
+  flex: 0 0 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--brand-link-color);
+}
+
+.workflow-step-card__content {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.workflow-step-card__content > p:first-child {
+  margin-top: 0;
+}
+
+.workflow-step-card__content > p:last-child {
+  margin-bottom: 0;
+}
+
+.workflow-step-card__content strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+  color: var(--pst-color-text-base);
+}
+
+/* ----- Horizontal stat cards -------------------------------------------- */
+.stat-cards-list .stat-card .sd-card-body {
+  padding: 0;
+}
+
+.stat-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+.stat-card__value {
+  flex: 0 0 4.5rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--brand-link-color);
+  text-align: right;
+}
+
+.stat-card__content {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.stat-card__content > p:first-child {
+  margin-top: 0;
+}
+
+.stat-card__content > p:last-child {
+  margin-bottom: 0;
+}
+
+.stat-card__content strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--pst-color-text-base);
+}
+
+.stat-card__content code {
+  font-size: 0.88em;
+}
+
 /* ----- Landing-page cards (sphinx-design) ------------------------------- */
 .sd-card {
   transition: transform 120ms ease, box-shadow 120ms ease;
@@ -95,7 +442,7 @@ html[data-theme="dark"] {
 
 /* ----- Quote blocks ------------------------------------------------------ */
 .bd-content blockquote {
-  border-left: 4px solid var(--pst-color-secondary);
+  border-left: 4px solid var(--brand-link-color);
   padding-left: 1em;
   font-style: italic;
   color: var(--pst-color-text-muted);
@@ -133,35 +480,79 @@ div.mermaid svg {
   display: block !important;
 }
 
-/* ----- Section navigation (left sidebar): xarray-style polish ---------- */
+/* ----- Section navigation (left sidebar + top navbar) ------------------- */
 
-/* Section captions: bolder, slightly larger, with a subtle accent */
+/* Section captions */
 .bd-sidebar-primary .caption-text {
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--pst-color-primary);
+  color: var(--brand-link-color);
   margin-top: 1.2em;
   margin-bottom: 0.4em;
 }
 
-/* Section navigation items: more breathing room */
-.bd-sidebar-primary .nav-link {
+/* Left sidebar links */
+.bd-sidebar-primary .nav-link,
+.bd-sidebar-primary .nav-link:visited {
   padding: 0.35rem 0.5rem;
   font-size: 0.9rem;
+  color: var(--pst-color-text-base);
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
-/* Currently-selected page in the sidebar */
+.bd-sidebar-primary .nav-link:hover,
+.bd-sidebar-primary .nav-link:focus-visible {
+  color: var(--brand-link-hover);
+}
+
 .bd-sidebar-primary .nav-link.active,
 .bd-sidebar-primary .current > .nav-link {
+  color: var(--brand-link-color);
   font-weight: 600;
-  background-color: rgba(0, 182, 240, 0.08);
-  border-left: 3px solid var(--pst-color-secondary);
+  background-color: var(--brand-nav-active-bg);
+  border-left: 3px solid var(--brand-link-hover);
   padding-left: calc(0.5rem - 3px);
 }
 
-/* "Edit this page" button (right sidebar) xarray-style */
+/* Top navbar section links */
+.bd-header .navbar-nav .nav-link,
+.bd-header .navbar-nav .nav-link:visited {
+  color: var(--pst-color-text-base);
+  transition: color 160ms ease;
+}
+
+.bd-header .navbar-nav .nav-link:hover,
+.bd-header .navbar-nav .nav-link:focus-visible,
+.bd-header .navbar-nav .nav-link.active {
+  color: var(--brand-link-hover);
+}
+
+.bd-header .navbar-nav .nav-link.active {
+  color: var(--brand-link-color);
+  font-weight: 600;
+}
+
+/* Right sidebar: on-this-page + edit button */
+.bd-sidebar-secondary .page-toc .nav-link {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+  color: var(--pst-color-text-muted);
+  transition: color 160ms ease;
+}
+
+.bd-sidebar-secondary .page-toc .nav-link:hover,
+.bd-sidebar-secondary .page-toc .nav-link:focus-visible,
+.bd-sidebar-secondary .page-toc .nav-link.active {
+  color: var(--brand-link-hover);
+}
+
+.bd-sidebar-secondary .page-toc .nav-link.active {
+  color: var(--brand-link-color);
+  font-weight: 600;
+}
+
 .bd-sidebar-secondary .editthispage a {
   display: inline-flex;
   align-items: center;
@@ -176,13 +567,81 @@ div.mermaid svg {
 }
 
 .bd-sidebar-secondary .editthispage a:hover {
-  background-color: var(--pst-color-primary);
-  color: var(--pst-color-on-background);
-  border-color: var(--pst-color-primary);
+  background-color: var(--brand-link-color);
+  color: #ffffff;
+  border-color: var(--brand-link-color);
 }
 
-/* Page table of contents (right sidebar) -------------------------------- */
-.bd-sidebar-secondary .page-toc .nav-link {
+html[data-theme="dark"] .bd-sidebar-secondary .editthispage a:hover {
+  color: var(--theme-color-a);
+}
+
+/* ----- Prev / Next page navigation -------------------------------------- */
+.prev-next-area a.left-prev,
+.prev-next-area a.right-next,
+.prev-next-area a.left-prev:visited,
+.prev-next-area a.right-next:visited {
+  color: var(--brand-link-color);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.prev-next-area a.left-prev:hover,
+.prev-next-area a.right-next:hover,
+.prev-next-area a.left-prev:focus-visible,
+.prev-next-area a.right-next:focus-visible {
+  color: var(--brand-link-hover);
+}
+
+.prev-next-area a.left-prev i,
+.prev-next-area a.right-next i {
+  color: var(--brand-link-color);
+  transition: color 160ms ease;
+}
+
+.prev-next-area a.left-prev:hover i,
+.prev-next-area a.right-next:hover i,
+.prev-next-area a.left-prev:focus-visible i,
+.prev-next-area a.right-next:focus-visible i {
+  color: var(--brand-link-hover);
+}
+
+.prev-next-subtitle {
+  color: var(--pst-color-text-muted);
+}
+
+.prev-next-title {
+  color: inherit;
+  font-weight: 600;
+}
+
+/* ----- Site footer (Sphinx / PyData credits) ---------------------------- */
+.bd-footer .sphinx-version,
+.bd-footer .theme-version,
+.bd-footer .copyright {
+  color: var(--pst-color-text-muted);
   font-size: 0.85rem;
-  padding: 0.2rem 0.5rem;
+}
+
+.bd-footer .sphinx-version a,
+.bd-footer .theme-version a,
+.bd-footer .copyright a,
+.bd-footer .sphinx-version a:visited,
+.bd-footer .theme-version a:visited,
+.bd-footer .copyright a:visited {
+  color: var(--brand-link-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.bd-footer .sphinx-version a:hover,
+.bd-footer .theme-version a:hover,
+.bd-footer .copyright a:hover,
+.bd-footer .sphinx-version a:focus-visible,
+.bd-footer .theme-version a:focus-visible,
+.bd-footer .copyright a:focus-visible {
+  color: var(--brand-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
