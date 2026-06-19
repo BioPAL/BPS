@@ -6,7 +6,21 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/"
+    directories:
+      - "/bps-common"
+      - "/bps-l1_core_processor"
+      - "/bps-l1_framing_processor"
+      - "/bps-l1_pre_processor"
+      - "/bps-l1_processor"
+      - "/bps-l2a_processor"
+      - "/bps-l2b_agb_processor"
+      - "/bps-l2b_fd_processor"
+      - "/bps-l2b_fh_processor"
+      - "/bps-stack_cal_processor"
+      - "/bps-stack_coreg_processor"
+      - "/bps-stack_pre_processor"
+      - "/bps-stack_processor"
+      - "/bps-transcoder"
     schedule:
       interval: "weekly"
       day: "monday"
