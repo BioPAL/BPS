@@ -1,5 +1,13 @@
 # Release Process
 
+```{warning}
+**Maintainers only.** This runbook describes the branch promotion path
+(`develop` → `release` → `main`), versioning, tagging, and the ESA approval
+gate. Contributors should follow [Implementation](implementation.md) and
+[Review and integration](review-and-integration.md); release steps are
+executed by maintainers.
+```
+
 ## Overview
 
 ```
