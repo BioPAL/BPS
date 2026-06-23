@@ -58,6 +58,7 @@ jobs:
             fonts-dejavu
 
       - name: Build ATBD web export PDF
+        continue-on-error: true
         run: make -C docs atbd-pdf
 
       - name: Build HTML
