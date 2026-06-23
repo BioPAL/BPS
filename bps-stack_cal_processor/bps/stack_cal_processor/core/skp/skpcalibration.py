@@ -338,8 +338,8 @@ def skp_calibration(
         skp_calibration_phases=subsampled_calibration_phases,
         azimuth_axis=azimuth_axis,
         range_axis=range_axis,
-        azimuth_estimation_axis=azimuth_axis[azimuth_estimation_indices],
-        range_estimation_axis=range_axis[range_estimation_indices],
+        azimuth_estimation_axis=azimuth_axis[azimuth_estimation_indices].squeeze(),
+        range_estimation_axis=range_axis[range_estimation_indices].squeeze(),
         output_azimuth_subsampling_step=conf.output_azimuth_subsampling_step,
         output_range_subsampling_step=conf.output_range_subsampling_step,
         dtypes=estimation_dtypes,
@@ -354,8 +354,8 @@ def skp_calibration(
         bps_logger.info("Extracting qualities from FNF mask")
         skp_calibration_quality = compute_skp_fnf_quality(
             skp_fnf_mask=skp_fnf_mask,
-            skp_azimuth_axis=azimuth_axis[azimuth_output_indices],
-            skp_range_axis=range_axis[range_output_indices],
+            skp_azimuth_axis=azimuth_axis[azimuth_output_indices].squeeze(),
+            skp_range_axis=range_axis[range_output_indices].squeeze(),
         )
 
     # Possibly, postprocess the SKP calibration phase with a filter.

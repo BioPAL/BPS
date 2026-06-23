@@ -310,8 +310,8 @@ def upsample_skp_phases_multithreaded(
     # Apply the flattening phases to the SKP calibration phases.
     with ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
         # The output axes.
-        azimuth_output_axis = azimuth_axis[azimuth_output_indices]
-        range_output_axis = range_axis[range_output_indices]
+        azimuth_output_axis = azimuth_axis[azimuth_output_indices].squeeze()
+        range_output_axis = range_axis[range_output_indices].squeeze()
 
         # The core routine.
         def compute_skp_calibration_phases_fn(phi_cal):
