@@ -6,7 +6,10 @@
 # Source: Markdown via MyST parser.
 
 import os
+import sys
 from datetime import datetime
+
+sys.path.insert(0, os.path.abspath("_ext"))
 
 # -----------------------------------------------------------------------------
 # Project information
@@ -24,6 +27,11 @@ extensions = [
     "sphinx_copybutton",  # Copy button on code blocks
     "sphinx_design",  # Cards, grids, tabs, etc.
     "sphinxcontrib.mermaid",  # Mermaid diagrams (used in CONTRIBUTING_PART1)
+    "sphinxcontrib.bibtex",  # BibTeX bibliography (ATBD/PFD conversions)
+    "atbd_sidebar_toc",  # PDF-style collapsible TOC in ATBD left sidebar
+    "atbd_doc_refs",  # [ADn] / [RDn] / Fig.N / sec. / eq. links in the ATBD
+    "science_guide_nav",  # Science Guide hub: ATBD list sidebar (not chapter tree)
+    "bps_version",  # Latest bps-v* tag for homepage version badge
 ]
 
 # Tell Sphinx that .md files exist alongside .rst
@@ -40,9 +48,17 @@ exclude_patterns = [
     "_build",
     ".venv",
     "**/.venv/**",
+    "_ext",
     "Thumbs.db",
     ".DS_Store",
     "README.md",
+    "**/README.md",
+    "science-guide/_includes/*",
+    "science-guide/draft-pfd-l2-fh.md",
+    # Tutorial bundle assets: shipped with the docs but not Sphinx-rendered.
+    "tutorials/run-bps-locally/scripts/*",
+    "tutorials/run-bps-locally/notebooks/*",
+    "tutorials/run-bps-locally/CONFIGURATION_FILE/**",
 ]
 
 # Suppress noisy warnings.
@@ -51,6 +67,8 @@ exclude_patterns = [
 #   browser, so the warning is misleading.
 suppress_warnings = [
     "image.not_readable",
+    "toc.not_included",
+    "myst.header",
 ]
 
 # Language
@@ -61,8 +79,10 @@ language = "en"
 # -----------------------------------------------------------------------------
 # Enable common MyST extensions for richer Markdown.
 myst_enable_extensions = [
+    "amsmath",  # AMS math environments in MyST
     "colon_fence",  # ::: fenced directives
     "deflist",  # definition lists
+    "dollarmath",  # $...$ and $$...$$ math (ATBD equations)
     "html_admonition",  # raw HTML admonitions
     "html_image",  # raw HTML <img> tags
     "linkify",  # auto-link bare URLs
@@ -72,8 +92,20 @@ myst_enable_extensions = [
     "tasklist",  # GitHub-style task lists
 ]
 
-# Auto-generate anchors for headings up to level 3 (cross-doc linking)
-myst_heading_anchors = 3
+# Auto-generate anchors for headings up to level 6 (ATBD §3.4.4.2.1, etc.)
+myst_heading_anchors = 6
+
+# Numbered figures and tables ({numref}`fig:...` in ATBD pages).
+# Equation numbers use PDF-style \tag{} in ATBD sources (not auto (1), (2), …).
+numfig = True
+math_numfig = False
+
+# -----------------------------------------------------------------------------
+# BibTeX (sphinxcontrib-bibtex). Edit docs/references.bib for the site build.
+# To refresh from your local private pipeline: make sync-bib (requires private/atbd-conversion/).
+bibtex_bibfiles = ["references.bib"]
+bibtex_default_style = "plain"
+bibtex_reference_style = "author_year"
 
 # -----------------------------------------------------------------------------
 # HTML output configuration
@@ -100,8 +132,21 @@ html_static_path = ["_static"]
 html_extra_path = ["_extra_static"]
 
 # Logo and favicon. The PyData theme auto-scales the logo in the navbar header.
-html_logo = "_static/logo.png"
+html_logo = "_static/logos/BioPAL_textonright.png"
 # html_favicon = "_static/favicon.ico"
+
+# Right sidebar: every page gets "On this page" + Edit on GitHub.
+# Homepage hides the secondary sidebar entirely via its own frontmatter.
+# ATBD chapters add the PDF download button in addition.
+_secondary_sidebar_items = {
+    "index": [],
+    "**": ["page-toc", "edit-this-page"],
+    "science-guide/atbd-l2-agb/*": [
+        "page-toc",
+        "atbd-download-pdf.html",
+        "edit-this-page",
+    ],
+}
 
 # Theme-specific options (PyData Sphinx Theme).
 # See https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/index.html
@@ -137,12 +182,9 @@ html_theme_options = {
     "use_edit_page_button": True,
     "show_prev_next": True,
     "announcement": "BIOMASS BPS is an Open Science project — every contribution is welcome.",
-    # Secondary sidebar (right): only the "Edit on GitHub" button.
-    # We hide page-toc (already covered by left sidebar) and sourcelink.
-    "secondary_sidebar_items": {
-        "**": ["edit-this-page"],
-        "index": [],  # no right sidebar on the landing page
-    },
+    # Secondary sidebar (right): in-page TOC on content pages; section hubs
+    # and the homepage omit "On this page" (see _SECTION_INDEX_PAGES).
+    "secondary_sidebar_items": _secondary_sidebar_items,
     # Primary sidebar (left): always start collapsed at depth 1, then expand
     # the current section. This gives the same UX as xarray.
     # Ethical ads removed: local builds showed a violet RTD placeholder and
@@ -166,17 +208,25 @@ html_context = {
     "default_mode": "auto",
 }
 
-# Left sidebar configuration.
-# On the landing page (`index`) we hide the sidebar entirely so the homepage
-# stays clean (xarray pattern). On every other page we show the default
-# section navigation (sidebar-nav-bs), which lists the pages of the current
-# top-level section.
+# Left sidebar: section navigation on all pages except those listed below.
+# - Homepage: full-width, no sidebars.
+# - Hubs without sibling chapters (user-guide, getting-started): nothing
+#   meaningful to show, so the sidebar is hidden rather than rendered empty.
+# - developer-guide/index: orphan redirect page.
+# - Science Guide and ATBD chapters use custom collapsible templates.
 html_sidebars = {
     "index": [],
-    "getting-started/index": [],
     "user-guide/index": [],
-    "tutorials/index": [],
-    "science-guide/index": [],
+    "getting-started/index": [],
+    "developer-guide/index": [],
+    "science-guide/index": [
+        "sidebar-collapse",
+        "science-guide-atbd-nav.html",
+    ],
+    "science-guide/atbd-l2-agb/*": [
+        "sidebar-collapse",
+        "atbd-sidebar-toc.html",
+    ],
     "**": ["sidebar-nav-bs"],
 }
 
@@ -186,3 +236,38 @@ html_css_files = [
 ]
 
 templates_path = ["_templates"]
+
+# Single-ATBD PDF export (make atbd-pdf ATBD=atbd-l2-agb).
+_sphinx_atbd_pdf = os.environ.get("SPHINX_ATBD_PDF")
+if _sphinx_atbd_pdf:
+    _atbd_doc = _sphinx_atbd_pdf.removesuffix("/index").removesuffix("/")
+    if _atbd_doc.startswith("science-guide/"):
+        _atbd_doc = _atbd_doc.removeprefix("science-guide/")
+    _atbd_latex_stem = _atbd_doc.split("/")[-1]
+    _atbd_latex_titles = {
+        "atbd-l2-agb": "Above-Ground Biomass Product ATBD (BioPAL web export)",
+    }
+    _atbd_latex_title = _atbd_latex_titles.get(_atbd_latex_stem, "BioPAL ATBD")
+    latex_documents = [
+        (
+            f"science-guide/{_atbd_doc}/index",
+            f"{_atbd_latex_stem}.tex",
+            _atbd_latex_title,
+            author,
+            "manual",
+        ),
+    ]
+    latex_engine = "pdflatex"
+    latex_elements = {
+        "papersize": "a4paper",
+        "pointsize": "11pt",
+        "preamble": r"""
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+""",
+    }
+    # Mermaid diagrams need mermaid-cli (mmdc) and a headless browser; they are
+    # skipped with a warning when unavailable. Re-run `make atbd-pdf` after
+    # installing mmdc for complete figure coverage.
+    mermaid_output_format = "png"

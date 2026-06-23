@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-tags: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -42,6 +44,18 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended
+
+      - name: Build ATBD web export PDF
+        run: make -C docs atbd-pdf
 
       - name: Build HTML
         env:

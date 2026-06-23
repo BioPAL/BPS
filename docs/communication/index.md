@@ -11,32 +11,45 @@ long-time maintainer.
 
 ::::{grid} 1 2 2 2
 :gutter: 3
+:class-container: intro-grid
 
-:::{grid-item-card} Channels
+:::{grid-item-card}
 :link: channels
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-comments fa-fw" aria-hidden="true"></i> **Channels**
+^^^
 GitHub Issues, Discussions, Office Hours, and email when to use each.
 :::
 
-:::{grid-item-card} Meetings and events
+:::{grid-item-card}
 :link: meetings
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-calendar fa-fw" aria-hidden="true"></i> **Meetings and events**
+^^^
 Technical, governance, and community meetings plus workshops.
 :::
 
-:::{grid-item-card} Conflict resolution
+:::{grid-item-card}
 :link: conflict-resolution
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-scale-balanced fa-fw" aria-hidden="true"></i> **Conflict resolution**
+^^^
 How we handle disagreements fairly and respectfully.
 :::
 
-:::{grid-item-card} Getting help
+:::{grid-item-card}
 :link: getting-help
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-regular fa-circle-question fa-fw" aria-hidden="true"></i> **Getting help**
+^^^
 Code of Conduct, contacts, and how to improve this guide.
 :::
 
@@ -59,7 +72,7 @@ Code of Conduct, contacts, and how to improve this guide.
 
 ```{toctree}
 :caption: Communication
-:maxdepth: 2
+:maxdepth: 1
 :hidden:
 
 Channels <channels>

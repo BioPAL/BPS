@@ -41,3 +41,6 @@ Desktop.ini
 .cache
 .config
 .local
+
+# Private ATBD conversion workflow (local only; not published)
+private/

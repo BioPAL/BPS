@@ -102,7 +102,7 @@ There is no `baseline:accepted` label any more; SME approval flows through the n
 - CI re-runs automatically on each push
 - Iterate until all approvals are obtained
 
-Release-related files such as `VERSION` and `CHANGELOG.md` require ESA approval via `CODEOWNERS`. See [branch protection rules](ci-automation-and-contribution-tiers.md#branch-protection-rules)) for the full policy.
+Release-related files such as `VERSION` and `CHANGELOG.md` require ESA approval via `CODEOWNERS`. See [branch protection rules](ci-automation-and-contribution-tiers.md#branch-protection-and-approvals) for the full policy.
 
 ## After merge
 

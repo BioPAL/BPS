@@ -20,10 +20,3 @@ portal.
 For the full list of applicable documents (release note, ATBDs, ICD, IODD,
 auxiliary formats), see
 [About → Applicable documents](../about/applicable-documents.md).
-
-```{toctree}
-:caption: User Guide
-:maxdepth: 1
-:hidden:
-
-```
