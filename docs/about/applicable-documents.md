@@ -30,10 +30,10 @@ and the [User Guide](../user-guide/index.md) link back here.
 
 ## Level 2b: Above-Ground Biomass (AGB)
 
-| Document | Reference | Version | Date | Download |
-|---|---|---|---|---|
-| AGB Products Format Specification | `BIO-BPS-AGB-PFD-ARE-010257` | 3.4.0 | 2026-03-13 | [PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_PFD_v3_4_0.pdf) |
-| AGB Product ATBD | `BIO-BPS-AGB-ATBD-ARE-024912` | 3.1.4 | 2026-04-02 | [PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_ATBD_v3_1_4.pdf) |
+| Document | Reference | Version | Date | PDF | Web |
+|---|---|---|---|---|---|
+| AGB Products Format Specification | `BIO-BPS-AGB-PFD-ARE-010257` | 3.4.0 | 2026-03-13 | [PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_PFD_v3_4_0.pdf) | — |
+| AGB Product ATBD | `BIO-BPS-AGB-ATBD-ARE-024912` | 3.1.4 | 2026-04-02 | [PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_ATBD_v3_1_4.pdf) | [Draft](../science-guide/atbd-l2-agb/index.md) |
 
 ## Level 2b: Forest Height (FH)
 
@@ -68,5 +68,6 @@ and the [User Guide](../user-guide/index.md) link back here.
   refresh; this table will be updated accordingly.
 - **Markdown conversion** of the ATBDs and SUM is tracked progressively in
   separate `[docs]` issues on the [issue tracker](https://github.com/BioPAL/BPS/issues).
-  Until each conversion is merged, the PDF linked here remains the authoritative
-  reference.
+  Until each conversion is merged and SME-approved, the PDF linked here remains
+  the authoritative reference. Draft web pages (when available) are linked in the
+  **Web** column and labelled accordingly in the [Science Guide](../science-guide/index.md).

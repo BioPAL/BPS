@@ -9,25 +9,35 @@ Who decides, who stewards the repository, and who reviews each processor module.
 
 ::::{grid} 1 3 3 3
 :gutter: 3
+:class-container: intro-grid
 
-:::{grid-item-card} Roles and authority
+:::{grid-item-card}
 :link: roles-and-authority
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-landmark fa-fw" aria-hidden="true"></i> **Roles and authority**
+^^^
 Decision flow, role summary, ESA release gate, and governance principles.
 :::
 
-:::{grid-item-card} Repository stewards
+:::{grid-item-card}
 :link: repository-stewards
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-user-shield fa-fw" aria-hidden="true"></i> **Repository stewards**
+^^^
 ESA representatives (Klaus Scipal, final authority; Clement Albinet) and core maintainers with repository access.
 :::
 
-:::{grid-item-card} Processor ownership
+:::{grid-item-card}
 :link: processor-ownership
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-microchip fa-fw" aria-hidden="true"></i> **Processor ownership**
+^^^
 Scientific and technical contacts per `bps-*` module.
 :::
 
@@ -38,7 +48,7 @@ Maintainer release steps are in [Release process](../contributing/release-proces
 
 ```{toctree}
 :caption: Governance
-:maxdepth: 2
+:maxdepth: 1
 :hidden:
 
 Roles and authority <roles-and-authority>

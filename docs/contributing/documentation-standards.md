@@ -84,7 +84,7 @@ The BioPAL documentation consists of two main parts:
 - Methodology documentation
 - References to papers
 
-**Location:** `docs/scientific/` or similar
+**Location:** `docs/science-guide/` (ATBDs and PFDs).
 
 ---
 

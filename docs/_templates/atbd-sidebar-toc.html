@@ -1,0 +1,89 @@
+{# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{% if atbd_sidebar_toc %}
+<nav class="atbd-sidebar-toc" aria-label="{{ _('Table of contents') }}">
+  <a class="atbd-sidebar-toc__home{% if atbd_sidebar_current == atbd_index_docname %} atbd-sidebar-toc__home--current{% endif %}"
+     href="{{ pathto(atbd_index_docname) }}">
+    {{ atbd_index_title }}
+  </a>
+
+  <div class="atbd-sidebar-toc__tree">
+    {% macro atbd_section_href(docname, anchor) -%}
+      {%- set base = pathto(docname) -%}
+      {%- if base == '#' -%}
+        #{{ anchor }}
+      {%- else -%}
+        {{ base }}#{{ anchor }}
+      {%- endif -%}
+    {%- endmacro %}
+
+    {%- for chapter in atbd_sidebar_toc %}
+    <details class="atbd-sidebar-toc__chapter{% if chapter.docname == atbd_sidebar_current %} atbd-sidebar-toc__chapter--current{% endif %}"
+             data-atbd-doc="{{ chapter.docname }}"
+             {% if chapter.docname == atbd_sidebar_current %}open{% endif %}>
+      <summary class="atbd-sidebar-toc__chapter-summary">
+        <a class="atbd-sidebar-toc__chapter-link"
+           href="{{ pathto(chapter.docname) }}">{{ chapter.title }}</a>
+      </summary>
+      {%- if chapter.sections %}
+      <ul class="atbd-sidebar-toc__sections">
+        {%- for section in chapter.sections %}
+        <li class="atbd-sidebar-toc__section">
+          <a class="atbd-sidebar-toc__section-link"
+             href="{{ atbd_section_href(chapter.docname, section.anchor) }}"
+             data-atbd-anchor="{{ section.anchor }}">{{ section.title }}</a>
+        </li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+    </details>
+    {%- endfor %}
+  </div>
+</nav>
+<script>
+(function () {
+  function openAtbdTocForCurrentPage() {
+    var nav = document.querySelector(".atbd-sidebar-toc");
+    if (!nav) return;
+
+    nav.querySelectorAll(".atbd-sidebar-toc__section-link--active").forEach(function (el) {
+      el.classList.remove("atbd-sidebar-toc__section-link--active");
+    });
+
+    var pagename = {{ atbd_sidebar_current | tojson }};
+    var chapter = nav.querySelector('[data-atbd-doc="' + pagename + '"]');
+    if (chapter) chapter.open = true;
+
+    var hash = window.location.hash ? window.location.hash.slice(1) : "";
+    if (!hash || !chapter) return;
+
+    var link = chapter.querySelector('a[data-atbd-anchor="' + hash + '"]');
+    if (!link) return;
+    link.classList.add("atbd-sidebar-toc__section-link--active");
+    link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  function enableAtbdTocLinks() {
+    var nav = document.querySelector(".atbd-sidebar-toc");
+    if (!nav) return;
+    nav.addEventListener("click", function (e) {
+      if (e.target.closest(".atbd-sidebar-toc__chapter-link")) {
+        e.stopPropagation();
+      }
+    });
+  }
+
+  function initAtbdToc() {
+    openAtbdTocForCurrentPage();
+    enableAtbdTocLinks();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAtbdToc);
+  } else {
+    initAtbdToc();
+  }
+  window.addEventListener("hashchange", openAtbdTocForCurrentPage);
+})();
+</script>
+{% endif %}

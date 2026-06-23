@@ -55,7 +55,7 @@ flowchart TD
 
 ---
 
-## <i class="doc-icon fa-regular fa-compass fa-fw" aria-hidden="true"></i> I want to use BPS
+## I want to use BPS
 
 You want to run a processor, understand a data format, or read the
 science behind an algorithm.
@@ -112,7 +112,7 @@ For the published documentation portal, see
 
 ---
 
-## <i class="doc-icon fa-regular fa-comments fa-fw" aria-hidden="true"></i> I have a question or an idea
+## I have a question or an idea
 
 Use [**GitHub Discussions**](https://github.com/BioPAL/BPS/discussions).
 Open issues are reserved for actionable items; open Discussions for
@@ -129,7 +129,7 @@ everything else. Six categories help you find the right thread.
 
 ---
 
-## <i class="doc-icon fa-solid fa-code-branch fa-fw" aria-hidden="true"></i> I want to contribute
+## I want to contribute
 
 Every contribution to BIOMASS BPS follows the same five steps. **No code
 is written before the issue has been approved.** This guardrail protects
@@ -198,9 +198,3 @@ DCO sign off mechanics, and the tier classification system, see the
 - Read the [Contributing guide](../contributing/index.md) for the long form workflow.
 - Check the [Communication page](../communication/index.md) for meeting schedules and community channels.
 - Ask in [Q&A](https://github.com/BioPAL/BPS/discussions/categories/q-a) on GitHub Discussions.
-
-```{toctree}
-:hidden:
-:caption: Getting started
-
-```
