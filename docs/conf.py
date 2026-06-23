@@ -262,6 +262,9 @@ if _sphinx_atbd_pdf:
     latex_elements = {
         "papersize": "a4paper",
         "pointsize": "11pt",
+        # Default Sphinx fonts (TeX Gyre Termes/Heros) are not always packaged on
+        # minimal CI images; Latin Modern is in texlive-fonts-recommended.
+        "fontpkg": r"\usepackage{lmodern}",
         "preamble": r"""
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
