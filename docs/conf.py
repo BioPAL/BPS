@@ -258,13 +258,16 @@ if _sphinx_atbd_pdf:
             "manual",
         ),
     ]
-    latex_engine = "pdflatex"
+    latex_engine = "xelatex"
     latex_elements = {
         "papersize": "a4paper",
         "pointsize": "11pt",
-        # Use default Computer Modern (no extra .sty packages required on CI).
+        # XeLaTeX + DejaVu handles Unicode math symbols in ATBD body text.
         "fontpkg": "",
         "preamble": r"""
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}[Scale=0.95]
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{hyperref}

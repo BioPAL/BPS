@@ -93,7 +93,10 @@ atbd-pdf:
 	@SPHINX_ATBD_PDF=$(ATBD) $(SPHINXBUILD) -M latex "$(SOURCEDIR)" "$(BUILDDIR)/atbd-pdf" $(SPHINXOPTS)
 	@cd "$(ATBD_LATEX_DIR)" && \
 	  if command -v latexmk >/dev/null 2>&1; then \
-	    latexmk -pdf -interaction=nonstopmode "$(ATBD).tex"; \
+	    latexmk -xelatex -interaction=nonstopmode "$(ATBD).tex"; \
+	  elif command -v xelatex >/dev/null 2>&1; then \
+	    xelatex -interaction=nonstopmode "$(ATBD).tex"; \
+	    xelatex -interaction=nonstopmode "$(ATBD).tex"; \
 	  elif command -v pdflatex >/dev/null 2>&1; then \
 	    pdflatex -interaction=nonstopmode "$(ATBD).tex"; \
 	    pdflatex -interaction=nonstopmode "$(ATBD).tex"; \
