@@ -53,7 +53,9 @@ jobs:
             texlive-latex-recommended \
             texlive-latex-extra \
             texlive-fonts-recommended \
-            texlive-fonts-extra
+            texlive-fonts-extra \
+            texlive-xetex \
+            fonts-dejavu
 
       - name: Build ATBD web export PDF
         run: make -C docs atbd-pdf
