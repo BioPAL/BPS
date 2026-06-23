@@ -90,3 +90,83 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Trigger the biomass-disc frontend rebuild on the ACRI GitLab pipeline.
+  # The trigger token is write-only (cannot read pipeline status from here);
+  # the GitLab web URL is logged as a GitHub Actions notice so a human can
+  # follow the rebuild manually.
+  #
+  # Routes:
+  #   push -> develop          : auto-trigger DEV cluster
+  #   workflow_dispatch (dev)  : manual trigger DEV cluster
+  #   workflow_dispatch (prod) : manual trigger PROD cluster
+  trigger-biomass-disc:
+    needs: build
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod' && 'biomass-disc-prod' || 'biomass-disc-dev' }}
+    steps:
+      - name: Resolve deploy overlay
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_INPUT: ${{ inputs.deploy_target }}
+        run: |
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
+            case "${DISPATCH_INPUT}" in
+              dev|prod) overlay="${DISPATCH_INPUT}" ;;
+              *) echo "::error::Invalid deploy_target: ${DISPATCH_INPUT}"; exit 1 ;;
+            esac
+          else
+            overlay="dev"
+          fi
+          echo "overlay=${overlay}" >> "$GITHUB_OUTPUT"
+          echo "Resolved overlay: ${overlay}"
+
+      - name: Trigger biomass-disc GitLab pipeline
+        env:
+          GITLAB_TRIGGER_TOKEN: ${{ secrets.BIOMASS_DISC_TRIGGER_TOKEN }}
+          DEPLOY_OVERLAY: ${{ steps.target.outputs.overlay }}
+        run: |
+          if [ -z "${GITLAB_TRIGGER_TOKEN}" ]; then
+            echo "::error::Secret BIOMASS_DISC_TRIGGER_TOKEN is missing. Add it under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          response=$(curl -s --fail-with-body --request POST \
+            --form "token=${GITLAB_TRIGGER_TOKEN}" \
+            --form "ref=development" \
+            --form "variables[REBUILD_FRONTEND]=true" \
+            --form "variables[DO_BUILD]=true" \
+            --form "variables[DO_PUBLISH]=true" \
+            --form "variables[DO_DEPLOY]=true" \
+            --form "variables[DO_TAG]=false" \
+            --form "variables[SKIP_BUILD_BACKEND]=true" \
+            --form "variables[SKIP_BUILD_DB]=true" \
+            --form "variables[SKIP_TEST]=true" \
+            --form "variables[DEPLOY_OVERLAY]=${DEPLOY_OVERLAY}" \
+            "https://gitlab.shared.acrist-services.com/api/v4/projects/1478/trigger/pipeline")
+
+          echo "Raw response:"
+          echo "${response}"
+
+          pipeline_url=$(echo "${response}" | python3 -c "import sys, json; print(json.load(sys.stdin).get('web_url', ''))")
+          pipeline_id=$(echo "${response}"  | python3 -c "import sys, json; print(json.load(sys.stdin).get('id', ''))")
+
+          if [ -z "${pipeline_url}" ]; then
+            echo "::error::Trigger call did not return a pipeline URL. Check the raw response above."
+            exit 1
+          fi
+
+          echo "::notice title=biomass-disc ${DEPLOY_OVERLAY} pipeline started::${pipeline_url}"
+          {
+            echo "## biomass-disc rebuild triggered"
+            echo ""
+            echo "- **Cluster:** ${DEPLOY_OVERLAY}"
+            echo "- **Pipeline:** [${pipeline_id}](${pipeline_url})"
+            echo ""
+            echo "The trigger token is write-only, so the GitHub run cannot follow the GitLab pipeline status. Open the link above to verify the rebuild and deploy."
+          } >> "$GITHUB_STEP_SUMMARY"
