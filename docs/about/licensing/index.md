@@ -11,32 +11,45 @@ obligations, and best practices for contributors and users of the codebase.
 
 ::::{grid} 1 2 2 2
 :gutter: 3
+:class-container: intro-grid
 
-:::{grid-item-card} Project license
+:::{grid-item-card}
 :link: project-license
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-scale-balanced fa-fw" aria-hidden="true"></i> **Project license**
+^^^
 Apache 2.0 terms, patent grant, trademark usage, and obligations for downstream users.
 :::
 
-:::{grid-item-card} Contributions
+:::{grid-item-card}
 :link: contributions
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-pen-nib fa-fw" aria-hidden="true"></i> **Contributions**
+^^^
 Contributor license terms, SPDX headers in source files, and the contributor checklist.
 :::
 
-:::{grid-item-card} Dependencies
+:::{grid-item-card}
 :link: dependencies
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-puzzle-piece fa-fw" aria-hidden="true"></i> **Dependencies**
+^^^
 License compatibility for libraries, third-party code, NOTICE file, and PR requirements.
 :::
 
-:::{grid-item-card} REUSE compliance
+:::{grid-item-card}
 :link: reuse-compliance
 :link-type: doc
+:class-card: intro-card
 
+<i class="doc-icon fa-solid fa-shield-halved fa-fw" aria-hidden="true"></i> **REUSE compliance**
+^^^
 `LICENSES/` directory, REUSE / SPDX standard, and the blocking CI gate.
 :::
 

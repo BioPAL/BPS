@@ -39,6 +39,14 @@ ESA provides BPS pre-installable on the
 walks through that setup end-to-end.
 :::
 
+:::{admonition} MAAP access eligibility
+:class: warning maap-eligibility-notice
+MAAP is available only to users who are nationals of an
+[ESA Member State](https://www.esa.int/About_Us/Corporate_news/Member_States) or
+of a State that contributes to ESA programmes and participates in the MAAP
+platform. If you are not eligible, use the local install paths below instead.
+:::
+
 ## Choose an install path
 
 ::::{tab-set}
@@ -66,6 +74,13 @@ not in the public repository. They are delivered via the Aresys bundle.
 
 :::{tab-item} C. MAAP platform
 **Who it's for:** users who don't want to install anything locally.
+
+<div class="maap-eligibility-notice maap-eligibility-notice--compact" markdown="0">
+  <p class="maap-eligibility-notice__title">Eligibility required</p>
+  <p>MAAP access is limited to nationals of ESA Member States and of States that
+  contribute to ESA programmes and participate in MAAP. Users from
+  non-participating countries should choose path A or B above.</p>
+</div>
 
 ESA provides BPS pre-installable on the
 [ESA MAAP](https://biomass.pal.maap.eo.esa.int/) platform. Follow the

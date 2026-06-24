@@ -11,7 +11,7 @@
   display: none !important;
 }
 
-/* ----- Top banner: return link + announcement (custom, not .bd-header-announcement) */
+/* ----- Top banner: return link + announcement -------------------------------- */
 .bps-top-banner {
   width: 100%;
   background: var(--bps-announcement-gradient);
@@ -99,25 +99,6 @@
   }
 }
 
-/* Optional: compact text link in navbar end (not active by default) */
-.bps-return-to-site--end {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-right: 0.5rem;
-  padding: 0.25rem 0;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--pst-color-link);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.bps-return-to-site--end:hover {
-  color: var(--pst-color-link-hover);
-  text-decoration: underline;
-}
-
 /* ----- BioPAL brand tokens + PyData theme mapping ----------------------- */
 :root {
   /* BioPAL brand palette */
@@ -182,33 +163,6 @@ html[data-theme="dark"] {
   );
   --bps-announcement-text: #f5fbe6;
   --bps-announcement-border: rgba(255, 255, 255, 0.1);
-}
-
-/* ----- Announcement bar: BioPAL brand gradient -------------------------------- */
-.bd-header-announcement {
-  background: var(--bps-announcement-gradient);
-  color: var(--bps-announcement-text);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  padding: 0.6em 1em;
-  border-bottom: 1px solid var(--bps-announcement-border);
-  text-align: center;
-}
-
-.bd-header-announcement a,
-.bd-header-announcement a:visited {
-  color: var(--bps-announcement-text);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-}
-
-.bd-header-announcement a:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
-  padding: 0 0.25em;
-  text-decoration: none;
 }
 
 /* ----- Tables: wider and zebra-striped ---------------------------------- */
@@ -433,7 +387,6 @@ html[data-mode="dark"] .index-hero__logo {
 }
 
 /* ----- Brand links and doc icons (violet → ACRI blue / green) ------------ */
-.brand-link,
 .brand-link-bar a,
 .bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text),
 .bd-main .bd-content a.reference.external:not(.headerlink) {
@@ -443,8 +396,6 @@ html[data-mode="dark"] .index-hero__logo {
   transition: color 160ms ease;
 }
 
-.brand-link:hover,
-.brand-link:focus-visible,
 .brand-link-bar a:hover,
 .brand-link-bar a:focus-visible,
 .bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text):hover,
@@ -1167,4 +1118,62 @@ div.math .eqno {
 .bd-content span.math mjx-container,
 .bd-content div.math mjx-container {
   overflow: visible !important;
+}
+
+/* MAAP eligibility callouts — semantic accent colours */
+.maap-eligibility-notice.admonition,
+div.maap-eligibility-notice {
+  padding: 0.85rem 1rem 0.95rem;
+  border-style: solid;
+  border-width: 1px;
+  border-left-width: 0.45rem;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.maap-eligibility-notice .admonition-title,
+.maap-eligibility-notice__title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.45rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.maap-eligibility-notice .admonition-title::before,
+.maap-eligibility-notice__title::before {
+  font-family: var(--fa-style-family-classic, "Font Awesome 6 Free");
+  font-weight: 900;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.maap-eligibility-notice .admonition-content > p:last-child,
+.maap-eligibility-notice > .section > p:last-child,
+.maap-eligibility-notice > p:last-child {
+  margin-bottom: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.maap-eligibility-notice.admonition,
+div.maap-eligibility-notice {
+  border-color: color-mix(in srgb, var(--pst-color-warning) 55%, var(--pst-color-border));
+  background: color-mix(in srgb, var(--pst-color-warning) 12%, var(--pst-color-surface));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--pst-color-warning) 18%, transparent);
+}
+
+.maap-eligibility-notice .admonition-title,
+.maap-eligibility-notice__title {
+  color: var(--pst-color-warning);
+}
+
+.maap-eligibility-notice .admonition-title::before,
+.maap-eligibility-notice__title::before {
+  content: "\f071";
+}
+
+.maap-eligibility-notice--compact {
+  margin: 0.75rem 0 1rem;
 }

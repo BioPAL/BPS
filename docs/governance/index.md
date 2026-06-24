@@ -32,11 +32,11 @@ ESA representatives (Klaus Scipal, final authority; Clement Albinet) and core ma
 :::
 
 :::{grid-item-card}
-:link: processor-ownership
+:link: processor-leads
 :link-type: doc
 :class-card: intro-card
 
-<i class="doc-icon fa-solid fa-microchip fa-fw" aria-hidden="true"></i> **Processor ownership**
+<i class="doc-icon fa-solid fa-microchip fa-fw" aria-hidden="true"></i> **Processor leads**
 ^^^
 Scientific and technical contacts per `bps-*` module.
 :::
@@ -53,5 +53,5 @@ Maintainer release steps are in [Release process](../contributing/release-proces
 
 Roles and authority <roles-and-authority>
 Repository stewards <repository-stewards>
-Processor ownership <processor-ownership>
+Processor leads <processor-leads>
 ```

@@ -3,16 +3,16 @@
 People with governance responsibility on the BPS GitHub repository.
 ESA oversight is separate from day-to-day maintainer review.
 
-Processor-level contacts are in [Processor ownership](processor-ownership.md).
+Processor-level contacts are in [Processor leads](processor-leads.md).
 
 ---
 
 ## ESA representatives on the repository
 
-| Name | Affiliation | Scope |
-| ---- | ----------- | ----- |
-| Klaus Scipal | ESA | ESA final authority (disputes, release gate) |
-| Clement Albinet | ESA | ESA repository representative |
+| Name            | Affiliation | Scope                                        |
+| --------------- | ----------- | -------------------------------------------- |
+| Klaus Scipal    | ESA         | ESA final authority (disputes, release gate) |
+| Clement Albinet | ESA         | ESA repository representative                |
 
 Both are required reviewers on `VERSION` and `CHANGELOG.md` via `CODEOWNERS`. Klaus Scipal has final ESA authority on release promotion and governance disputes.
 
@@ -22,12 +22,12 @@ Both are required reviewers on `VERSION` and `CHANGELOG.md` via `CODEOWNERS`. Kl
 
 Industrial partners with repository write access and merge responsibility.
 
-| Name | Affiliation | Role |
-| ---- | ----------- | ---- |
-| Giovanni Amoroso | Aresys | Project development and maintenance |
-| Riccardo Piantanida | Aresys | Technical lead (BPS) |
-| Matteo Aletti | Aresys | Core development and maintenance |
-| Yoann Rey-Ricord | ACRI-ST | Open Science and community |
+| Name                | Affiliation | Role                                |
+| ------------------- | ----------- | ----------------------------------- |
+| Giovanni Amoroso    | Aresys      | Project development and maintenance |
+| Riccardo Piantanida | Aresys      | Technical lead (BPS)                |
+| Matteo Aletti       | Aresys      | Core development and maintenance    |
+| Yoann Rey-Ricord    | ACRI-ST     | Open Science and community          |
 
 ---
 
@@ -48,4 +48,4 @@ Organisations that employ maintainers or scientific module experts:
 
 ---
 
-**Previous:** [Roles and authority](roles-and-authority.md) | **Next:** [Processor ownership](processor-ownership.md)
+**Previous:** [Roles and authority](roles-and-authority.md) | **Next:** [Processor leads](processor-leads.md)

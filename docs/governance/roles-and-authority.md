@@ -7,7 +7,7 @@ documentation and non-scientific fixes.
 
 For who holds repository access and module routing, see
 [Repository stewards](repository-stewards.md) and
-[Processor ownership](processor-ownership.md).
+[Processor leads](processor-leads.md).
 
 ---
 
@@ -32,13 +32,13 @@ Merge rules, branch protection, and tier definitions are in
 
 ## Roles and responsibilities
 
-| Role | Responsibility | Decision scope |
-| ---- | -------------- | -------------- |
-| **ESA** | Mission owner, repository oversight, release authority | Final say on disputes; mandatory approval on `VERSION` and `CHANGELOG.md`; Tier 2–3 governance |
-| **Open Science Lead** | FAIR strategy, documentation quality, community coordination | Tier 2 Open Science compliance; documentation standards |
-| **Core maintainers** | Technical review, merges, release execution | Tier 0–2 technical approval; branch and release operations |
-| **Scientific module experts** | Algorithm and baseline validation in their domain | Tier 1–2 scientific approval on owned processors |
-| **Contributors** | Code, docs, tests via pull request | Propose changes; respond to review |
+| Role                          | Responsibility                                               | Decision scope                                                                                 |
+| ----------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| **ESA**                       | Mission owner, repository oversight, release authority       | Final say on disputes; mandatory approval on `VERSION` and `CHANGELOG.md`; Tier 2–3 governance |
+| **Open Science Lead**         | FAIR strategy, documentation quality, community coordination | Tier 2 Open Science compliance; documentation standards                                        |
+| **Core maintainers**          | Technical review, merges, release execution                  | Tier 0–2 technical approval; branch and release operations                                     |
+| **Scientific module experts** | Algorithm and baseline validation in their domain            | Tier 1–2 scientific approval on owned processors                                               |
+| **Contributors**              | Code, docs, tests via pull request                           | Propose changes; respond to review                                                             |
 
 ---
 

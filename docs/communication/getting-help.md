@@ -5,6 +5,7 @@
 All community members are expected to follow our [Code of Conduct](../contributing/code-of-conduct.md). The Code of Conduct ensures a welcoming, inclusive, and respectful environment for everyone.
 
 **Key points:**
+
 - Be respectful and inclusive
 - Welcome newcomers and help them learn
 - Focus on constructive feedback
@@ -27,7 +28,7 @@ If you experience or witness behavior that violates the Code of Conduct, please 
 
 Use this address for partnership, press, or other matters that are not appropriate for a public GitHub thread. For technical questions, contributions, and community interaction, prefer the channels listed above.
 
-Named contacts for governance and processor modules are in [Repository stewards](../governance/repository-stewards.md) and [Processor ownership](../governance/processor-ownership.md).
+Named contacts for governance and processor modules are in [Repository stewards](../governance/repository-stewards.md) and [Processor leads](../governance/processor-leads.md).
 
 ## Contributing to this guide
 

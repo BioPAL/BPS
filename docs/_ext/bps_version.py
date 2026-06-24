@@ -13,9 +13,6 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from docutils import nodes
-from sphinx.util.docutils import SphinxDirective
-
 _BPS_TAG_RE = re.compile(r"^bps-v(?P<version>.+)$", re.IGNORECASE)
 _GITHUB_TAGS_API = "https://api.github.com/repos/BioPAL/BPS/tags?per_page=100"
 
@@ -114,15 +111,6 @@ def resolve_bps_release(
     return fallback_version, f"bps-v{fallback_version}"
 
 
-class IndexHeroMetaDirective(SphinxDirective):
-    """Render the homepage BPS version badge from config.bps_version."""
-
-    has_content = False
-
-    def run(self) -> list[nodes.Node]:
-        return _hero_meta_nodes(self.config)
-
-
 def _hero_meta_html(config: Any) -> str:
     version = config.bps_version
     url = config.bps_releases_url
@@ -133,10 +121,6 @@ def _hero_meta_html(config: Any) -> str:
         f'<span class="index-version-note">Processing Suite release</span>'
         f"</p>"
     )
-
-
-def _hero_meta_nodes(config: Any) -> list[nodes.Node]:
-    return [nodes.raw("", _hero_meta_html(config), format="html")]
 
 
 _BADGE_PLACEHOLDER = "<!-- bps-version-badge -->"
@@ -156,7 +140,6 @@ def setup(app: Any) -> dict[str, Any]:
     app.add_config_value("bps_version", version, "html")
     app.add_config_value("bps_tag", tag, "html")
     app.add_config_value("bps_releases_url", releases_url, "html")
-    app.add_directive("index-hero-meta", IndexHeroMetaDirective)
     app.connect("source-read", _inject_bps_version_badge)
 
     return {
