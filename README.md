@@ -3,7 +3,8 @@
 The BIOMASS Product Algorithm Laboratory hosts official tools for processing and analysing ESA\'s BIOMASS mission data.
 
 - Website: [www.biomass-disc.info](https://www.biomass-disc.info/)
-- Documentation: [www.biomass-disc.info/release_note](https://www.biomass-disc.info/release_note)
+- Documentation: [https://www.biomass-disc.info/docs/](https://www.biomass-disc.info/docs/)
+- Release Note: [www.biomass-disc.info/release_note](https://www.biomass-disc.info/release_note)
 - Repository: [github.com/BioPAL/BPS](https://github.com/BioPAL/BPS)
 - Bug reports: [github.com/BioPAL/BPS/issues](https://github.com/BioPAL/BPS/issues)
 
