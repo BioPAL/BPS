@@ -1,0 +1,172 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) - ACRI-ST
+# SPDX-License-Identifier: Apache-2.0
+
+name: 03 · Algorithm proposal
+description: Propose a new scientific algorithm, methodological change, or processing chain modification. Scientific justification is required.
+title: "[algorithm] <short description>"
+labels: ["type:algorithm", "needs-sme"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose a new scientific algorithm, a change to an
+        existing retrieval method, or any modification with a scientific impact
+        on the BIOMASS processing chain.
+
+        Proposals submitted through this template are routed to the relevant
+        Scientific Expert and to ESA. A peer-reviewed
+        reference or a written scientific justification is required.
+
+  - type: dropdown
+    id: processor
+    attributes:
+      label: Target processor or processing stage
+      options:
+        - bps-l1_pre_processor
+        - bps-l1_framing_processor
+        - bps-l1_core_processor
+        - bps-l1_processor
+        - bps-l2a_processor
+        - bps-l2b_agb_processor (Above-Ground Biomass)
+        - bps-l2b_fh_processor (Forest Height)
+        - bps-l2b_fd_processor (Forest Disturbance)
+        - bps-stack_pre_processor
+        - bps-stack_cal_processor
+        - bps-stack_coreg_processor
+        - bps-stack_processor
+        - bps-transcoder
+        - Cross-cutting (multiple processors)
+        - General methodology
+    validations:
+      required: true
+
+  - type: dropdown
+    id: proposal_type
+    attributes:
+      label: Type of proposal
+      options:
+        - New algorithm
+        - Modification of an existing algorithm 
+        - Change in calibration or auxiliary data/LUTs (lookup tables)
+        - New LUT or Auxiliary / Files (lookup tables)
+        - Change in validation methodology or acceptance criteria
+    validations:
+      required: true
+
+  - type: textarea
+    id: scientific_context
+    attributes:
+      label: Scientific context and motivation
+      description: Describe the scientific gap, limitation or improvement opportunity that motivates this proposal.
+      placeholder: |
+        Example:
+          - Scientific gap, limitation or improvement opportunity, attached below.
+          - Scientific justification, attached below.
+          - Validation plan, attached below.
+          - Test datasets, attached below.
+          - Reference products, attached below.
+          - Expected accuracy metrics, attached below.
+          - Acceptance criteria, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_algorithm
+    attributes:
+      label: Proposed algorithm or method
+      description: |
+        Provide a concise but complete description of the proposed algorithm,
+        including inputs, outputs, key equations, assumptions and limitations.
+      placeholder: |
+        Example:
+          - Algorithm description, attached below.
+          - Key equations, attached below.
+          - Assumptions, attached below.
+          - Limitations, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Scientific justification
+      description: |
+        Provide a peer-reviewed reference (DOI, arXiv ID or full citation) or
+        a written justification supported by experimental evidence.
+      placeholder: |
+        Example:
+          - K. Scipal et al., "BIOMASS: ESA’s P-Band SAR Mission," in Proceedings of the IEEE, doi: 10.1109/JPROC.2026.3687416
+          - Internal technical note, attached below.
+          - External technical note, attached below.
+          - Experimental evidence, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation_plan
+    attributes:
+      label: Validation plan
+      description: |
+        Describe how the proposed algorithm will be validated: test datasets,
+        reference products, expected accuracy metrics and acceptance criteria.
+      placeholder: |
+        Example:
+          - Validation plan, attached below.
+          - Test datasets, attached below.
+          - Reference products, attached below.
+          - Expected accuracy metrics, attached below.
+          - Acceptance criteria, attached below.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected impact on the processing chain
+      description: |
+        Backward compatibility, interface or product format changes, dependency
+        on upstream products, expected change in performance or accuracy.
+      placeholder: |
+        Example:
+          - Backward compatibility, interface or product format changes, dependency
+          on upstream products, expected change in performance or accuracy.
+          - Expected change in performance or accuracy.
+          - Expected change in accuracy metrics.
+          - Expected change in acceptance criteria.
+          - Expected change in validation methodology.
+          - Expected change in validation plan.
+          - Expected change in test datasets.
+          - Expected change in reference products.
+          - Expected change in expected accuracy metrics.
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Additional references and attachments
+      description: |
+        Drag and drop any technical note, ATBD draft, validation report or plot
+        that supports the proposal. Do not attach data covered by NDA or export
+        restrictions.
+      placeholder: |
+        Example:
+          - Validation plan, attached below.
+          - Test datasets, attached below.
+          - Reference products, attached below.
+          - Expected accuracy metrics, attached below.
+          - Acceptance criteria, attached below.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: A peer-reviewed reference or a written scientific justification has been provided.
+          required: true
+        - label: I have consulted the relevant Science Guide and ATBD sections.
+          required: true
+        - label: I understand that this proposal will be reviewed by the SME and the ESA scientific board before any implementation.
+          required: true
+        - label: I am not attaching any data covered by an NDA or export restrictions.
+          required: true

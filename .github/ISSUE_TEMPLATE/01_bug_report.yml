@@ -1,0 +1,137 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) - ACRI-ST
+# SPDX-License-Identifier: Apache-2.0
+
+name: 01 · Bug report
+description: Report a defect in a processor, the CI/CD pipeline, or the documentation.
+title: "[bug] <short description>"
+labels: ["type:bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please complete this form to report a defect in the BIOMASS BPS software,
+        the CI/CD pipeline, or the documentation. The more reproducible the report,
+        the faster the issue can be diagnosed and resolved.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      description: Select the part of BIOMASS BPS impacted by this defect.
+      options:
+        - bps-common
+        - bps-dockerfiles
+        - bps-l1_binaries
+        - bps-l1_core_processor
+        - bps-l1_framing_processor
+        - bps-l1_pre_processor
+        - bps-l1_processor
+        - bps-l2a_processor
+        - bps-l2b_agb_processor
+        - bps-l2b_fd_processor
+        - bps-l2b_fh_processor
+        - bps-stack_binaries
+        - bps-stack_cal_processor
+        - bps-stack_coreg_processor
+        - bps-stack_pre_processor
+        - bps-stack_processor
+        - bps-task-tables
+        - bps-transcoder
+        - CI / GitHub Actions
+        - Documentation
+        - Other (please specify in the description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: Operational impact of the defect.
+      options:
+        - Critical - blocks the processing chain
+        - Major - incorrect scientific output
+        - Minor - degraded behaviour with workaround
+        - Cosmetic - documentation or display only
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit reference
+      description: Output of `git describe --tags --always`, or the release tag, or the commit SHA.
+      placeholder: "v4.4.4  or  a1b2c3d"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Local developer environment
+        - GitHub Actions (CI)
+        - MAAP
+        - Operational deployment
+        - Jupyter Notebook
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Observed behaviour
+      description: A clear and concise description of the defect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What was expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Minimal, deterministic sequence of commands or actions.
+      value: |
+        1.
+        2.
+        3.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and traceback
+      description: Relevant log output or Python traceback. Will be rendered as a code block.
+      render: shell
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: |
+        Optional. Suspected root cause, relevant file paths, links to related issues
+        or pull requests, screenshots, references, or any other context that may
+        help triage.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have searched existing issues and confirmed this is not a duplicate.
+          required: true
+        - label: I am running a supported version (a tagged release or the current `develop` branch).
+          required: true
+        - label: I have included enough information for the defect to be reproduced.
+          required: true

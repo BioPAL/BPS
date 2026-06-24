@@ -1,0 +1,112 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) - ACRI-ST
+# SPDX-License-Identifier: Apache-2.0
+
+name: 02 · Feature or enhancement request
+description: Propose a non-scientific feature, an enhancement, or a tooling improvement.
+title: "[feature] <short description>"
+labels: ["type:feature", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose a software feature, an enhancement to an existing
+        component, or a tooling improvement.
+
+        For the proposal of a new scientific algorithm or a methodological change,
+        please use the **Algorithm proposal** template instead.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope of the proposal
+      options:
+        - New software feature
+        - Enhancement to an existing component
+        - Performance or scalability improvement
+        - CI/CD or tooling improvement
+        - Governance or process improvement
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Most impacted component
+      options:
+        - bps-common
+        - bps-dockerfiles
+        - bps-l1_binaries
+        - bps-l1_core_processor
+        - bps-l1_framing_processor
+        - bps-l1_pre_processor
+        - bps-l1_processor
+        - bps-l2a_processor
+        - bps-l2b_agb_processor
+        - bps-l2b_fd_processor
+        - bps-l2b_fh_processor
+        - bps-stack_binaries
+        - bps-stack_cal_processor
+        - bps-stack_coreg_processor
+        - bps-stack_pre_processor
+        - bps-stack_processor
+        - bps-task-tables
+        - bps-transcoder
+        - CI / GitHub Actions
+        - Documentation
+        - Not specific to one component
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement and motivation
+      description: What problem does this address? Who is affected and why does it matter?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the proposed change in concrete terms.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches that were considered and reasons for rejection.
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected impact
+      description: |
+        Discuss backward compatibility, interfaces, performance, dependencies,
+        documentation and validation impact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: |
+        Optional. Relevant file paths, links to related issues or pull requests,
+        screenshots, prior art in other projects, references, or any other context
+        that may help triage.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have searched existing issues and discussions for a similar proposal.
+          required: true
+        - label: I have read the contributing guidelines and the project governance.
+          required: true
+        - label: I am available to discuss the design before any implementation starts.
+          required: true
