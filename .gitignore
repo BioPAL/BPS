@@ -26,3 +26,21 @@ bps-stack_binaries/lib
 
 # local test config
 test/integration/config/local.toml
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+.DS_Store
+.cache
+.config
+.local
+
+# Private ATBD conversion workflow (local only; not published)
+private/

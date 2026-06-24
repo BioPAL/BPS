@@ -1,0 +1,1179 @@
+/*
+ * SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Custom overrides for the PyData Sphinx Theme on the BIOMASS BPS docs.
+ */
+
+/* Hide the RTD ethical-ads placeholder if the theme still injects the slot.
+   Without a publisher ID it renders as a large violet block in the sidebar. */
+#ethical-ad-placement {
+  display: none !important;
+}
+
+/* ----- Top banner: return link + announcement -------------------------------- */
+.bps-top-banner {
+  width: 100%;
+  background: var(--bps-announcement-gradient);
+  color: var(--bps-announcement-text);
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--bps-announcement-border);
+  /* Prevent PyData/Bootstrap link tokens from tinting the return pill on hover */
+  --pst-color-link: var(--bps-announcement-text);
+  --pst-color-link-hover: var(--bps-announcement-text);
+  --pst-color-link-higher-contrast: var(--bps-announcement-text);
+}
+
+.bps-top-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  max-width: 100%;
+}
+
+.bps-top-banner a.bps-return-link,
+.bps-top-banner a.bps-return-link:link,
+.bps-top-banner a.bps-return-link:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  min-height: 2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.bps-top-banner a.bps-return-link i {
+  font-size: 0.7rem;
+  color: inherit;
+}
+
+.bps-top-banner a.bps-return-link:hover,
+.bps-top-banner a.bps-return-link:focus,
+.bps-top-banner a.bps-return-link:focus-visible,
+.bps-top-banner a.bps-return-link:active {
+  color: var(--bps-announcement-text) !important;
+  text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  background-color: rgba(255, 255, 255, 0.24) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.bps-top-banner__sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  background-color: rgba(255, 255, 255, 0.45);
+}
+
+.bps-top-banner__message {
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.98;
+  text-shadow: 0 1px 1px rgba(47, 33, 78, 0.25);
+}
+
+@media (max-width: 576px) {
+  .bps-top-banner__inner {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .bps-top-banner__sep {
+    display: none;
+  }
+}
+
+/* ----- BioPAL brand tokens + PyData theme mapping ----------------------- */
+:root {
+  /* BioPAL brand palette */
+  --theme-color-a: #2f214e;
+  --theme-color-b: #a3d8b0;
+  --auxiliary-color-a: #b182f9;
+  --main-color-light: #5234c9;
+  --acri-color-blue: #347891;
+  --acri-color-blue-bright: #00b6f0;
+
+  /* Violet default · ACRI blue hover (light) */
+  --brand-accent-color: var(--main-color-light);
+  --brand-accent-hover: var(--acri-color-blue);
+  --doc-icon-color: var(--brand-accent-color);
+  --doc-icon-color-hover: var(--brand-accent-hover);
+  --doc-icon-opacity: 0.82;
+  --brand-link-color: var(--brand-accent-color);
+  --brand-link-hover: var(--brand-accent-hover);
+  --brand-nav-active-bg: color-mix(in srgb, var(--main-color-light) 10%, transparent);
+
+  /* PyData theme: align links and accents with BioPAL */
+  --pst-color-primary: var(--main-color-light);
+  --pst-color-secondary: var(--theme-color-b);
+  --pst-color-link: var(--brand-link-color);
+  --pst-color-link-hover: var(--brand-link-hover);
+
+  /* Announcement bar: BioPAL violet → ACRI blue → green */
+  --bps-announcement-gradient: linear-gradient(
+    90deg,
+    var(--theme-color-a) 0%,
+    var(--main-color-light) 32%,
+    var(--acri-color-blue) 68%,
+    #6fa882 100%
+  );
+  --bps-announcement-text: #ffffff;
+  --bps-announcement-border: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] {
+  /* Violet default · green hover (dark) */
+  --brand-accent-color: var(--auxiliary-color-a);
+  --brand-accent-hover: var(--theme-color-b);
+  --doc-icon-color: var(--brand-accent-color);
+  --doc-icon-color-hover: var(--brand-accent-hover);
+  --doc-icon-opacity: 0.9;
+  --brand-link-color: var(--brand-accent-color);
+  --brand-link-hover: var(--brand-accent-hover);
+  --brand-nav-active-bg: color-mix(in srgb, var(--auxiliary-color-a) 14%, transparent);
+
+  --pst-color-primary: var(--auxiliary-color-a);
+  --pst-color-secondary: var(--theme-color-b);
+  --pst-color-link: var(--brand-link-color);
+  --pst-color-link-hover: var(--brand-link-hover);
+
+  /* Announcement bar: deeper stops for dark mode readability */
+  --bps-announcement-gradient: linear-gradient(
+    90deg,
+    #1a1230 0%,
+    #3d2a6b 30%,
+    #1f4a59 62%,
+    #4a7356 100%
+  );
+  --bps-announcement-text: #f5fbe6;
+  --bps-announcement-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ----- Tables: wider and zebra-striped ---------------------------------- */
+.bd-content table {
+  width: 100%;
+}
+
+.bd-content table tbody tr:nth-child(even) {
+  background-color: var(--pst-color-surface);
+}
+
+/* ----- Inline code: slightly more contrast ------------------------------ */
+.bd-content code.literal {
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* ----- Homepage hero ----------------------------------------------------- */
+.index-hero {
+  margin: 0 0 2.25rem;
+}
+
+.index-hero__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 3.5vw, 2.75rem);
+  flex-wrap: wrap;
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid var(--pst-color-border);
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand-accent-color) 7%, var(--pst-color-surface)) 0%,
+    var(--pst-color-background) 52%,
+    color-mix(in srgb, var(--theme-color-b) 10%, var(--pst-color-background)) 100%
+  );
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--pst-color-text-base) 6%, transparent);
+}
+
+.index-hero__logo-stage {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(5.25rem, 13vw, 7rem);
+  height: clamp(5.25rem, 13vw, 7rem);
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 12px 24px color-mix(in srgb, var(--brand-accent-color) 20%, transparent));
+}
+
+.index-hero__halo {
+  position: absolute;
+  inset: -10%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--brand-accent-color) 28%, transparent) 0%,
+    transparent 72%
+  );
+  animation: index-hero-halo-breathe 10s ease-in-out infinite;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.index-hero__logo-motion {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  animation: index-hero-logo-float 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
+}
+
+.index-hero__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+.index-hero__copy-col {
+  flex: 1 1 15rem;
+  max-width: 38rem;
+  min-width: 0;
+  text-align: left;
+}
+
+.index-hero__copy {
+  min-width: 0;
+}
+
+.index-hero__title {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.85rem, 4vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.index-hero__eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--brand-accent-color);
+}
+
+.index-hero__tagline {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--pst-color-text-muted);
+}
+
+.index-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  margin: 0.9rem 0 0;
+}
+
+.index-version-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-family: var(--pst-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, monospace);
+  color: var(--brand-accent-color);
+  background: color-mix(in srgb, var(--brand-accent-color) 11%, var(--pst-color-surface));
+  border: 1px solid color-mix(in srgb, var(--brand-accent-color) 26%, var(--pst-color-border));
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.index-version-badge:hover,
+.index-version-badge:focus-visible {
+  color: var(--brand-accent-hover);
+  border-color: color-mix(in srgb, var(--brand-accent-hover) 40%, var(--pst-color-border));
+  background: color-mix(in srgb, var(--brand-accent-hover) 14%, var(--pst-color-surface));
+  text-decoration: none;
+}
+
+.index-version-note {
+  font-size: 0.8125rem;
+  color: var(--pst-color-text-muted);
+}
+
+/* PyData dark theme adds background-color:#fff on .bd-content img. */
+html[data-theme="dark"] .index-hero__logo,
+html[data-mode="dark"] .index-hero__logo {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+@keyframes index-hero-logo-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  35% {
+    transform: translate3d(0, -3px, 0);
+  }
+
+  65% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+
+@keyframes index-hero-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .index-hero__logo-motion,
+  .index-hero__halo {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .index-hero__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .index-hero__copy-col {
+    text-align: center;
+  }
+}
+
+/* ----- BioPAL scope notice (homepage) ----------------------------------- */
+.biopal-scope-banner {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--pst-color-border);
+  background: var(--pst-color-surface);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--pst-color-text-muted);
+}
+
+.biopal-scope-banner strong {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+}
+
+/* ----- Brand links and doc icons (violet → ACRI blue / green) ------------ */
+.brand-link-bar a,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text),
+.bd-main .bd-content a.reference.external:not(.headerlink) {
+  color: var(--brand-link-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.brand-link-bar a:hover,
+.brand-link-bar a:focus-visible,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text):hover,
+.bd-main .bd-content a.reference:not(.headerlink):not(.sd-stretched-link):not(.sd-hide-link-text):focus-visible,
+.bd-main .bd-content a.reference.external:not(.headerlink):hover,
+.bd-main .bd-content a.reference.external:not(.headerlink):focus-visible,
+.bd-content table tbody tr:hover a.reference {
+  color: var(--brand-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.brand-link-bar {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.brand-link-bar strong {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.doc-icon {
+  display: inline-block;
+  margin-right: 0.4rem;
+  font-size: 0.88em;
+  line-height: 1;
+  color: var(--doc-icon-color);
+  opacity: var(--doc-icon-opacity);
+  vertical-align: 0.08em;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.intro-grid .sd-card-header .doc-icon,
+.intro-grid .sd-card-body .doc-icon {
+  font-size: 0.95em;
+  margin-right: 0.35rem;
+}
+
+.intro-grid .sd-card:hover .doc-icon,
+.intro-grid .sd-card:focus-within .doc-icon,
+.intro-grid .sd-card.sd-card-hover:hover .doc-icon,
+.bd-content table tbody tr:hover .doc-icon {
+  color: var(--doc-icon-color-hover);
+  opacity: 1;
+}
+
+/* Keep card titles/body readable; only icons pick up brand accent */
+.intro-grid .sd-card .sd-card-text,
+.intro-grid .sd-card .sd-card-text strong,
+.intro-grid .sd-card.sd-card-hover:hover .sd-card-text,
+.intro-grid .sd-card.sd-card-hover:hover .sd-card-text strong {
+  color: var(--pst-color-text-base);
+}
+
+h2 .doc-icon,
+h3 .doc-icon {
+  font-size: 0.82em;
+}
+
+.bd-content table .doc-icon {
+  font-size: 0.85em;
+  margin-right: 0.25rem;
+}
+
+.bd-content table tbody tr:hover .doc-icon {
+  color: var(--doc-icon-color-hover);
+  opacity: 1;
+}
+
+/* Heading anchor (#): violet, hover accent — not default blue */
+.bd-content a.headerlink,
+.bd-content a.headerlink:visited {
+  color: var(--brand-link-color);
+  opacity: 0.42;
+  text-decoration: none;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.bd-content a.headerlink:hover,
+.bd-content a.headerlink:focus-visible {
+  color: var(--brand-link-hover);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.intro-grid .sd-card-header .sd-card-title {
+  font-weight: 600;
+}
+
+/* Font Awesome icons in sphinx-design dropdown titles */
+.sd-summary-text .doc-icon {
+  margin-right: 0.35rem;
+  color: var(--brand-accent-color);
+}
+
+/* ----- Horizontal workflow step cards ----------------------------------- */
+.workflow-steps-list .workflow-step-card .sd-card-body {
+  padding: 0;
+}
+
+.workflow-step-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+.workflow-step-card__num {
+  flex: 0 0 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--brand-link-color);
+}
+
+.workflow-step-card__content {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.workflow-step-card__content > p:first-child {
+  margin-top: 0;
+}
+
+.workflow-step-card__content > p:last-child {
+  margin-bottom: 0;
+}
+
+.workflow-step-card__content strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+  color: var(--pst-color-text-base);
+}
+
+/* ----- Horizontal stat cards -------------------------------------------- */
+.stat-cards-list .stat-card .sd-card-body {
+  padding: 0;
+}
+
+.stat-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+.stat-card__value {
+  flex: 0 0 4.5rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--brand-link-color);
+  text-align: right;
+}
+
+.stat-card__content {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.stat-card__content > p:first-child {
+  margin-top: 0;
+}
+
+.stat-card__content > p:last-child {
+  margin-bottom: 0;
+}
+
+.stat-card__content strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--pst-color-text-base);
+}
+
+.stat-card__content code {
+  font-size: 0.88em;
+}
+
+/* ----- Landing-page cards (sphinx-design) ------------------------------- */
+.sd-card {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.sd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 50, 71, 0.15);
+}
+
+/* ----- Quote blocks ------------------------------------------------------ */
+.bd-content blockquote {
+  border-left: 4px solid var(--brand-link-color);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--pst-color-text-muted);
+}
+
+/* ATBD draft: PDF-style collapsible table of contents (left sidebar) */
+.atbd-sidebar-toc {
+  margin-bottom: 1.25rem;
+}
+
+.atbd-sidebar-toc__home {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.2rem 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--pst-color-heading);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.atbd-sidebar-toc__home:hover {
+  color: var(--pst-color-link);
+  text-decoration: none;
+}
+
+.atbd-sidebar-toc__home--current {
+  color: var(--pst-color-link);
+}
+
+.atbd-sidebar-toc__tree {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.atbd-sidebar-toc__chapter {
+  margin: 0 0 0.3rem;
+  border: none;
+  background: transparent;
+}
+
+.atbd-sidebar-toc__chapter-summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.25rem 0;
+}
+
+.atbd-sidebar-toc__chapter-summary::-webkit-details-marker {
+  display: none;
+}
+
+.atbd-sidebar-toc__chapter-summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 0.85rem;
+  margin-right: 0.15rem;
+  color: var(--brand-link-color);
+  font-size: 0.72rem;
+  transition: transform 0.15s ease;
+}
+
+.atbd-sidebar-toc__chapter[open] > .atbd-sidebar-toc__chapter-summary::before {
+  transform: rotate(90deg);
+}
+
+.atbd-sidebar-toc__chapter-link {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.atbd-sidebar-toc__chapter-link:hover {
+  color: var(--pst-color-link);
+  text-decoration: none;
+}
+
+.atbd-sidebar-toc__chapter--current > .atbd-sidebar-toc__chapter-summary .atbd-sidebar-toc__chapter-link {
+  color: var(--pst-color-link);
+}
+
+.atbd-sidebar-toc__sections {
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0.1rem 0 0.25rem 1.35rem;
+}
+
+.atbd-sidebar-toc__section {
+  margin: 0;
+}
+
+.atbd-sidebar-toc__section-link {
+  display: block;
+  padding: 0.15rem 0;
+  margin: 0.05rem 0;
+  color: var(--pst-color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.atbd-sidebar-toc__section-link:hover {
+  color: var(--pst-color-link);
+  text-decoration: none;
+}
+
+.atbd-sidebar-toc__section-link--active {
+  color: var(--pst-color-link);
+  font-weight: 600;
+}
+
+.atbd-download-pdf a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ATBD partner logo banner (ESA, Aresys) at top of each chapter */
+.atbd-logo-banner {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 0.25rem;
+  border: none;
+  border-bottom: 1px solid var(--pst-color-border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.atbd-logo-banner__inner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.atbd-logo-banner__link {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 1 auto;
+  line-height: 0;
+  background: transparent;
+}
+
+.atbd-logo-banner__link--left {
+  margin-right: auto;
+}
+
+.atbd-logo-banner__link--right {
+  margin-left: auto;
+}
+
+.atbd-logo-banner__img {
+  display: block;
+  height: 4rem;
+  width: auto;
+  max-width: 15rem;
+  object-fit: contain;
+  background: transparent;
+}
+
+/* PyData Sphinx Theme (html[data-theme=dark] .bd-content img) forces a white mat
+   behind every image so dark-on-transparent figures stay visible. ATBD partner
+   logos are white-on-transparent and must stay background-free. only-dark
+   opts out; this block is a safety net for data-mode / load-order edge cases. */
+html[data-theme="dark"] .atbd-logo-banner .atbd-logo-banner__img,
+html[data-mode="dark"] .atbd-logo-banner .atbd-logo-banner__img {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  filter: none !important;
+}
+
+/* Default to dark-theme assets (safe when data-mode="dark" but data-theme="auto"). */
+.atbd-logo-banner__img--light {
+  display: none !important;
+}
+
+.atbd-logo-banner__img--dark {
+  display: block !important;
+}
+
+/* Explicit light theme (PyData sets data-theme and/or data-mode). */
+html[data-theme="light"] .atbd-logo-banner__img--light,
+html[data-mode="light"] .atbd-logo-banner__img--light {
+  display: block !important;
+  mix-blend-mode: multiply;
+}
+
+html[data-theme="light"] .atbd-logo-banner__img--dark,
+html[data-mode="light"] .atbd-logo-banner__img--dark {
+  display: none !important;
+}
+
+/* System auto: follow OS preference when user has not forced light/dark. */
+@media (prefers-color-scheme: light) {
+  html[data-theme="auto"][data-mode="auto"] .atbd-logo-banner__img--light {
+    display: block !important;
+    mix-blend-mode: multiply;
+  }
+
+  html[data-theme="auto"][data-mode="auto"] .atbd-logo-banner__img--dark {
+    display: none !important;
+  }
+}
+
+@media print {
+  .atbd-logo-banner {
+    border: none;
+    padding: 0 0 0.75rem;
+  }
+
+  .atbd-logo-banner__img {
+    height: 3.25rem;
+  }
+
+  html[data-theme="light"] .atbd-logo-banner__img--light,
+  html[data-mode="light"] .atbd-logo-banner__img--light {
+    mix-blend-mode: normal;
+  }
+}
+
+/* ATBD figures: PNG, Mermaid, and tables in one contained block (PDF Fig. N caption) */
+.atbd-mermaid-figure {
+  display: block;
+  margin: 1.25rem auto 2rem;
+  max-width: 52rem;
+  padding: 1rem 1rem 0.85rem;
+  border: 1px solid var(--pst-color-border);
+  border-radius: 0.25rem;
+  background: var(--pst-color-background);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.atbd-mermaid-figure .atbd-figure-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
+
+/* Diagram / image area stays inside the figure frame */
+.atbd-mermaid-figure .atbd-figure-content > img,
+.atbd-mermaid-figure .atbd-figure-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.atbd-mermaid-figure .atbd-figure-content > table {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+
+.atbd-mermaid-figure .mermaid-container,
+.atbd-mermaid-figure pre.mermaid,
+.atbd-mermaid-figure div.mermaid {
+  margin: 0 auto !important;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.atbd-mermaid-figure .mermaid-container {
+  position: relative;
+  display: block;
+}
+
+.atbd-mermaid-figure .mermaid-fullscreen-btn {
+  right: 0.35rem;
+  top: 0.35rem;
+}
+
+.atbd-mermaid-figure svg {
+  display: block;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 auto;
+}
+
+/* Hide layout-only edges between nodes inside a Mermaid subgraph */
+.atbd-mermaid-figure .cluster .edgePath .path,
+.atbd-mermaid-figure .cluster .edgePath marker path {
+  stroke: transparent !important;
+  fill: transparent !important;
+}
+
+.atbd-mermaid-figure figcaption.atbd-figure-caption {
+  margin: 0.85rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--pst-color-border);
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--pst-color-text-muted);
+  line-height: 1.45;
+}
+
+.atbd-mermaid-figure .atbd-figure-caption .caption-number {
+  font-weight: 600;
+  color: var(--pst-color-text-base);
+}
+
+/* Standalone mermaid outside ATBD figures (contributing pages, etc.) */
+div.mermaid:not(.atbd-mermaid-figure div.mermaid),
+pre.mermaid:not(.atbd-mermaid-figure pre.mermaid) {
+  text-align: center;
+  margin: 1.5em auto;
+  max-width: 52rem;
+}
+
+div.mermaid .cluster-label .nodeLabel,
+div.mermaid .cluster-label span {
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+div.mermaid .node.default .label {
+  font-size: 0.9em;
+}
+
+div.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Keep section navigation visible (mermaid pages load extra JS/CSS) */
+.bd-sidebar-primary .sidebar-primary-items__start {
+  display: block !important;
+}
+
+.bd-sidebar-primary .bd-docs-nav {
+  display: block !important;
+}
+
+/* ----- Section navigation (left sidebar + top navbar) ------------------- */
+
+/* Section captions */
+.bd-sidebar-primary .caption-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-link-color);
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+
+/* Left sidebar links */
+.bd-sidebar-primary .nav-link,
+.bd-sidebar-primary .nav-link:visited {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+  color: var(--pst-color-text-base);
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.bd-sidebar-primary .nav-link:hover,
+.bd-sidebar-primary .nav-link:focus-visible {
+  color: var(--brand-link-hover);
+}
+
+.bd-sidebar-primary .nav-link.active,
+.bd-sidebar-primary .current > .nav-link {
+  color: var(--brand-link-color);
+  font-weight: 600;
+  background-color: var(--brand-nav-active-bg);
+  border-left: 3px solid var(--brand-link-hover);
+  padding-left: calc(0.5rem - 3px);
+}
+
+/* Top navbar section links */
+.bd-header .navbar-nav .nav-link,
+.bd-header .navbar-nav .nav-link:visited {
+  color: var(--pst-color-text-base);
+  transition: color 160ms ease;
+}
+
+.bd-header .navbar-nav .nav-link:hover,
+.bd-header .navbar-nav .nav-link:focus-visible,
+.bd-header .navbar-nav .nav-link.active {
+  color: var(--brand-link-hover);
+}
+
+.bd-header .navbar-nav .nav-link.active {
+  color: var(--brand-link-color);
+  font-weight: 600;
+}
+
+/* Right sidebar: on-this-page + edit button */
+.bd-sidebar-secondary .page-toc .nav-link {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+  color: var(--pst-color-text-muted);
+  transition: color 160ms ease;
+}
+
+.bd-sidebar-secondary .page-toc .nav-link:hover,
+.bd-sidebar-secondary .page-toc .nav-link:focus-visible,
+.bd-sidebar-secondary .page-toc .nav-link.active {
+  color: var(--brand-link-hover);
+}
+
+.bd-sidebar-secondary .page-toc .nav-link.active {
+  color: var(--brand-link-color);
+  font-weight: 600;
+}
+
+.bd-sidebar-secondary .editthispage a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.7em;
+  border-radius: 4px;
+  border: 1px solid var(--pst-color-border);
+  font-size: 0.85rem;
+  color: var(--pst-color-text-muted);
+  text-decoration: none;
+  transition: all 120ms ease;
+}
+
+.bd-sidebar-secondary .editthispage a:hover {
+  background-color: var(--brand-link-color);
+  color: #ffffff;
+  border-color: var(--brand-link-color);
+}
+
+html[data-theme="dark"] .bd-sidebar-secondary .editthispage a:hover {
+  color: var(--theme-color-a);
+}
+
+/* ----- Prev / Next page navigation -------------------------------------- */
+.prev-next-area a.left-prev,
+.prev-next-area a.right-next,
+.prev-next-area a.left-prev:visited,
+.prev-next-area a.right-next:visited {
+  color: var(--brand-link-color);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.prev-next-area a.left-prev:hover,
+.prev-next-area a.right-next:hover,
+.prev-next-area a.left-prev:focus-visible,
+.prev-next-area a.right-next:focus-visible {
+  color: var(--brand-link-hover);
+}
+
+.prev-next-area a.left-prev i,
+.prev-next-area a.right-next i {
+  color: var(--brand-link-color);
+  transition: color 160ms ease;
+}
+
+.prev-next-area a.left-prev:hover i,
+.prev-next-area a.right-next:hover i,
+.prev-next-area a.left-prev:focus-visible i,
+.prev-next-area a.right-next:focus-visible i {
+  color: var(--brand-link-hover);
+}
+
+.prev-next-subtitle {
+  color: var(--pst-color-text-muted);
+}
+
+.prev-next-title {
+  color: inherit;
+  font-weight: 600;
+}
+
+/* ----- Site footer (Sphinx / PyData credits) ---------------------------- */
+.bd-footer .sphinx-version,
+.bd-footer .theme-version,
+.bd-footer .copyright {
+  color: var(--pst-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.bd-footer .sphinx-version a,
+.bd-footer .theme-version a,
+.bd-footer .copyright a,
+.bd-footer .sphinx-version a:visited,
+.bd-footer .theme-version a:visited,
+.bd-footer .copyright a:visited {
+  color: var(--brand-link-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.bd-footer .sphinx-version a:hover,
+.bd-footer .theme-version a:hover,
+.bd-footer .copyright a:hover,
+.bd-footer .sphinx-version a:focus-visible,
+.bd-footer .theme-version a:focus-visible,
+.bd-footer .copyright a:focus-visible {
+  color: var(--brand-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* ----- ATBD equations (PDF-style \tag{}) --------------------------------- */
+/* Sphinx still emits (1), (2) in .eqno when labels are present; hide them
+   so only MathJax \tag{3.1} numbers from the source PDF are visible. */
+div.math .eqno {
+  display: none;
+}
+
+/* MathJax limit bars (\rule workaround for under/overline limits).
+   CHTML renders \rule as mjx-mspace with background-color: black, which
+   disappears on some theme/background combinations. Follow text color instead. */
+.bd-content mjx-mspace[style*="background-color: black"],
+.bd-content mjx-mspace[style*="background-color:black"] {
+  background-color: currentColor !important;
+}
+
+/* PyData sets overflow:hidden on math containers; clip overset/underset bars. */
+.bd-content span.math,
+.bd-content div.math,
+.bd-content span.math mjx-container,
+.bd-content div.math mjx-container {
+  overflow: visible !important;
+}
+
+/* MAAP eligibility callouts — semantic accent colours */
+.maap-eligibility-notice.admonition,
+div.maap-eligibility-notice {
+  padding: 0.85rem 1rem 0.95rem;
+  border-style: solid;
+  border-width: 1px;
+  border-left-width: 0.45rem;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.maap-eligibility-notice .admonition-title,
+.maap-eligibility-notice__title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.45rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.maap-eligibility-notice .admonition-title::before,
+.maap-eligibility-notice__title::before {
+  font-family: var(--fa-style-family-classic, "Font Awesome 6 Free");
+  font-weight: 900;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.maap-eligibility-notice .admonition-content > p:last-child,
+.maap-eligibility-notice > .section > p:last-child,
+.maap-eligibility-notice > p:last-child {
+  margin-bottom: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.maap-eligibility-notice.admonition,
+div.maap-eligibility-notice {
+  border-color: color-mix(in srgb, var(--pst-color-warning) 55%, var(--pst-color-border));
+  background: color-mix(in srgb, var(--pst-color-warning) 12%, var(--pst-color-surface));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--pst-color-warning) 18%, transparent);
+}
+
+.maap-eligibility-notice .admonition-title,
+.maap-eligibility-notice__title {
+  color: var(--pst-color-warning);
+}
+
+.maap-eligibility-notice .admonition-title::before,
+.maap-eligibility-notice__title::before {
+  content: "\f071";
+}
+
+.maap-eligibility-notice--compact {
+  margin: 0.75rem 0 1rem;
+}

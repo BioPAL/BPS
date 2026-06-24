@@ -1,0 +1,19 @@
+{# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{% if science_guide_atbds %}
+<nav class="bd-docs-nav bd-links" aria-label="{{ _('Section Navigation') }}">
+  <p class="bd-links__title" role="heading" aria-level="1">{{ _("Section Navigation") }}</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading">
+      <span class="caption-text">{{ _("Available ATBDs") }}</span>
+    </p>
+    <ul class="nav bd-sidenav">
+      {% for atbd in science_guide_atbds %}
+      <li class="toctree-l1">
+        <a class="reference internal" href="{{ pathto(atbd.docname) }}">{{ atbd.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+{% endif %}

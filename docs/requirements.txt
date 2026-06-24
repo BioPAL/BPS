@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+#
+# Build requirements for the BIOMASS BPS documentation site.
+# Install with:  pip install -r requirements.txt
+
+# Core
+sphinx>=7.0,<9.0
+
+# Markdown source support
+myst-parser>=2.0
+linkify-it-py>=2.0    # required by MyST 'linkify' extension
+
+# Theme (same family as docs.xarray.dev)
+pydata-sphinx-theme>=0.15
+
+# Useful extensions
+sphinx-copybutton>=0.5     # copy-to-clipboard button on code blocks
+sphinx-design>=0.6         # cards, grids, tabs (used on landing page)
+sphinxcontrib-mermaid>=0.9 # Mermaid diagrams (used in CONTRIBUTING_PART1)
+sphinxcontrib-bibtex>=2.6  # BibTeX citations in MyST ATBD/PFD pages

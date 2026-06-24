@@ -1,0 +1,183 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+#
+# Build the Sphinx site and publish to GitHub Pages on every push to develop.
+# Preview builds run on pull requests (no deploy).
+# biomass-disc rebuild also runs on push to docs/sphinx-site-migration (temporary).
+
+name: Documentation
+
+on:
+  push:
+    branches:
+      - develop
+      - docs/sphinx-site-migration
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-xetex \
+            fonts-dejavu
+
+      - name: Build ATBD web export PDF
+        continue-on-error: true
+        run: make -C docs atbd-pdf
+
+      - name: Build HTML
+        env:
+          DOCS_BASEURL: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'https://biopal.github.io/BPS/' || '' }}
+          DOCS_GITHUB_VERSION: develop
+        run: make -C docs html
+
+      - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_build/html
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Trigger the biomass-disc frontend rebuild on the ACRI GitLab pipeline.
+  # The trigger token is write-only (cannot read pipeline status from here);
+  # the GitLab web URL is logged as a GitHub Actions notice so a human can
+  # follow the rebuild manually.
+  #
+  # Routes:
+  #   push -> develop                    : auto-trigger DEV cluster (deploy)
+  #   push -> docs/sphinx-site-migration : auto-trigger PROD publish (no deploy)
+  #   workflow_dispatch (dev)            : manual trigger DEV cluster
+  #   workflow_dispatch (prod)           : manual trigger PROD cluster
+  trigger-biomass-disc:
+    needs: build
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/docs/sphinx-site-migration')) ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ ((github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod') || (github.event_name == 'push' && github.ref == 'refs/heads/docs/sphinx-site-migration')) && 'biomass-disc-prod' || 'biomass-disc-dev' }}
+    steps:
+      - name: Resolve deploy overlay
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_INPUT: ${{ inputs.deploy_target }}
+          GIT_REF: ${{ github.ref }}
+        run: |
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
+            case "${DISPATCH_INPUT}" in
+              dev|prod) overlay="${DISPATCH_INPUT}" ;;
+              *) echo "::error::Invalid deploy_target: ${DISPATCH_INPUT}"; exit 1 ;;
+            esac
+            do_deploy="true"
+          elif [ "${GIT_REF}" = "refs/heads/docs/sphinx-site-migration" ]; then
+            overlay="prod"
+            do_deploy="false"
+          else
+            overlay="dev"
+            do_deploy="true"
+          fi
+          echo "overlay=${overlay}" >> "$GITHUB_OUTPUT"
+          echo "do_deploy=${do_deploy}" >> "$GITHUB_OUTPUT"
+          echo "Resolved overlay: ${overlay}, DO_DEPLOY=${do_deploy}"
+
+      - name: Trigger biomass-disc GitLab pipeline
+        env:
+          GITLAB_TRIGGER_TOKEN: ${{ secrets.BIOMASS_DISC_TRIGGER_TOKEN }}
+          DEPLOY_OVERLAY: ${{ steps.target.outputs.overlay }}
+          DO_DEPLOY: ${{ steps.target.outputs.do_deploy }}
+        run: |
+          if [ -z "${GITLAB_TRIGGER_TOKEN}" ]; then
+            echo "::error::Secret BIOMASS_DISC_TRIGGER_TOKEN is missing. Add it under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          response=$(curl -s --fail-with-body --request POST \
+            --form "token=${GITLAB_TRIGGER_TOKEN}" \
+            --form "ref=development" \
+            --form "variables[REBUILD_FRONTEND]=true" \
+            --form "variables[DO_BUILD]=true" \
+            --form "variables[DO_PUBLISH]=true" \
+            --form "variables[DO_DEPLOY]=${DO_DEPLOY}" \
+            --form "variables[DO_TAG]=false" \
+            --form "variables[SKIP_BUILD_BACKEND]=true" \
+            --form "variables[SKIP_BUILD_DB]=true" \
+            --form "variables[SKIP_TEST]=true" \
+            --form "variables[DEPLOY_OVERLAY]=${DEPLOY_OVERLAY}" \
+            "https://gitlab.shared.acrist-services.com/api/v4/projects/1478/trigger/pipeline")
+
+          echo "Raw response:"
+          echo "${response}"
+
+          pipeline_url=$(echo "${response}" | python3 -c "import sys, json; print(json.load(sys.stdin).get('web_url', ''))")
+          pipeline_id=$(echo "${response}"  | python3 -c "import sys, json; print(json.load(sys.stdin).get('id', ''))")
+
+          if [ -z "${pipeline_url}" ]; then
+            echo "::error::Trigger call did not return a pipeline URL. Check the raw response above."
+            exit 1
+          fi
+
+          echo "::notice title=biomass-disc ${DEPLOY_OVERLAY} pipeline started::${pipeline_url}"
+          {
+            echo "## biomass-disc rebuild triggered"
+            echo ""
+            echo "- **Cluster:** ${DEPLOY_OVERLAY}"
+            echo "- **Pipeline:** [${pipeline_id}](${pipeline_url})"
+            echo ""
+            echo "The trigger token is write-only, so the GitHub run cannot follow the GitLab pipeline status. Open the link above to verify the rebuild and deploy."
+          } >> "$GITHUB_STEP_SUMMARY"

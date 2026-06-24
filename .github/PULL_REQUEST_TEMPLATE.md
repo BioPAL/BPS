@@ -53,6 +53,14 @@ If yes, write one short release-note sentence here (it will be picked up in `CHA
 - [ ] This PR does not modify the documentation, and no documentation update is needed.
 - [ ] This PR does not modify the documentation, but a documentation update is needed and tracked in issue #_____.
 
+## Testing
+
+- [ ] Unit tests cover new or changed logic
+- [ ] Integration or workflow tests added where relevant
+- [ ] Scientific regression handled (`baseline` / `extended` / `heavy` updated if applicable)
+- [ ] Coverage ≥ 60% on touched code; all relevant tests pass locally
+- [ ] Tests are independent; test data is included or documented
+
 ## Tier rationale
 
 The CI computes the tier automatically from the diff against the base branch. You do not assign it, but stating your expectation helps reviewers spot a mismatch quickly.
