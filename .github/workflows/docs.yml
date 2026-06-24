@@ -3,6 +3,7 @@
 #
 # Build the Sphinx site and publish to GitHub Pages on every push to develop.
 # Preview builds run on pull requests (no deploy).
+# biomass-disc rebuild also runs on push to docs/sphinx-site-migration (temporary).
 
 name: Documentation
 
@@ -10,6 +11,7 @@ on:
   push:
     branches:
       - develop
+      - docs/sphinx-site-migration
     paths:
       - "docs/**"
       - ".github/workflows/docs.yml"
@@ -97,39 +99,48 @@ jobs:
   # follow the rebuild manually.
   #
   # Routes:
-  #   push -> develop          : auto-trigger DEV cluster
-  #   workflow_dispatch (dev)  : manual trigger DEV cluster
-  #   workflow_dispatch (prod) : manual trigger PROD cluster
+  #   push -> develop                    : auto-trigger DEV cluster (deploy)
+  #   push -> docs/sphinx-site-migration : auto-trigger PROD publish (no deploy)
+  #   workflow_dispatch (dev)            : manual trigger DEV cluster
+  #   workflow_dispatch (prod)           : manual trigger PROD cluster
   trigger-biomass-disc:
     needs: build
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/docs/sphinx-site-migration')) ||
       (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod' && 'biomass-disc-prod' || 'biomass-disc-dev' }}
+      name: ${{ ((github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod') || (github.event_name == 'push' && github.ref == 'refs/heads/docs/sphinx-site-migration')) && 'biomass-disc-prod' || 'biomass-disc-dev' }}
     steps:
       - name: Resolve deploy overlay
         id: target
         env:
           EVENT_NAME: ${{ github.event_name }}
           DISPATCH_INPUT: ${{ inputs.deploy_target }}
+          GIT_REF: ${{ github.ref }}
         run: |
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
             case "${DISPATCH_INPUT}" in
               dev|prod) overlay="${DISPATCH_INPUT}" ;;
               *) echo "::error::Invalid deploy_target: ${DISPATCH_INPUT}"; exit 1 ;;
             esac
+            do_deploy="true"
+          elif [ "${GIT_REF}" = "refs/heads/docs/sphinx-site-migration" ]; then
+            overlay="prod"
+            do_deploy="false"
           else
             overlay="dev"
+            do_deploy="true"
           fi
           echo "overlay=${overlay}" >> "$GITHUB_OUTPUT"
-          echo "Resolved overlay: ${overlay}"
+          echo "do_deploy=${do_deploy}" >> "$GITHUB_OUTPUT"
+          echo "Resolved overlay: ${overlay}, DO_DEPLOY=${do_deploy}"
 
       - name: Trigger biomass-disc GitLab pipeline
         env:
           GITLAB_TRIGGER_TOKEN: ${{ secrets.BIOMASS_DISC_TRIGGER_TOKEN }}
           DEPLOY_OVERLAY: ${{ steps.target.outputs.overlay }}
+          DO_DEPLOY: ${{ steps.target.outputs.do_deploy }}
         run: |
           if [ -z "${GITLAB_TRIGGER_TOKEN}" ]; then
             echo "::error::Secret BIOMASS_DISC_TRIGGER_TOKEN is missing. Add it under Settings -> Secrets and variables -> Actions."
@@ -142,7 +153,7 @@ jobs:
             --form "variables[REBUILD_FRONTEND]=true" \
             --form "variables[DO_BUILD]=true" \
             --form "variables[DO_PUBLISH]=true" \
-            --form "variables[DO_DEPLOY]=true" \
+            --form "variables[DO_DEPLOY]=${DO_DEPLOY}" \
             --form "variables[DO_TAG]=false" \
             --form "variables[SKIP_BUILD_BACKEND]=true" \
             --form "variables[SKIP_BUILD_DB]=true" \

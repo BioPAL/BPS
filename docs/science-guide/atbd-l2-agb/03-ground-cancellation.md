@@ -1,8 +1,8 @@
 <!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-```{include} ../_includes/atbd-logo-banner.md
-```
+:::{atbd-logo-banner}
+:::
 
 
 # 3. Ground cancellation (L2A_P)

@@ -1,8 +1,8 @@
 <!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-```{include} ../_includes/atbd-logo-banner.md
-```
+:::{atbd-logo-banner}
+:::
 
 
 # 4. AGB estimation (L2B_AGB_P)
