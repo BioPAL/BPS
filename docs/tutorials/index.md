@@ -23,10 +23,13 @@ prior BPS experience.
 Install BPS in a dedicated conda environment on your local workstation,
 download a full Tomographic stack, and run the complete processing chain
 from L1 framing to L2A. Three install paths covered: bundle, source
-(developer), and a pointer to MAAP.
+(developer).
 
-**Companion scripts and notebooks:**
-[`docs/tutorials/run-bps-locally/`](https://github.com/BioPAL/BPS/tree/main/docs/tutorials/run-bps-locally)
+:::{admonition} Companion scripts and notebooks
+:class: note
+Runnable notebooks, helper scripts, JobOrder templates, and configuration
+files ship with the tutorial so you can copy them straight into your workspace.
+:::
 :::
 
 :::{grid-item-card}
@@ -39,6 +42,12 @@ from L1 framing to L2A. Three install paths covered: bundle, source
 Prefer not to install anything locally? ESA provides BPS pre-installable on
 the [ESA MAAP](https://biomass.pal.maap.eo.esa.int/) JupyterLab platform.
 Opens the BioPAL/MAAP_BPS_scripts walkthrough on GitHub.
+
+:::{admonition} MAAP access eligibility
+:class: warning
+MAAP is available only to users who are nationals of an
+[ESA Member State](https://www.esa.int/About_Us/Corporate_news/Member_States) or
+of a State that contributes to ESA programmes and participates in the MAAP.
 :::
 
 ::::
