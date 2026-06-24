@@ -1008,106 +1008,106 @@ class BIOMASSL2bFDProductWriter:
         _type_
             _description_
         """
+        with np.errstate(divide="ignore", invalid="ignore"):  # FD may have all NaNs at first cycle
+            dirname = Path(self.product_structure.quicklook_files[0]).parent
+            if not dirname.exists():
+                dirname.mkdir(parents=True, exist_ok=True)
 
-        dirname = Path(self.product_structure.quicklook_files[0]).parent
-        if not dirname.exists():
-            dirname.mkdir(parents=True, exist_ok=True)
+            for key in self.product.measurement.data_dict.keys():
+                if key not in [
+                    "fd",
+                    "cfm",
+                    "probability_ofchange",
+                    "heat_map",
+                ]:
+                    continue
 
-        for key in self.product.measurement.data_dict.keys():
-            if key not in [
-                "fd",
-                "cfm",
-                "probability_ofchange",
-                "heat_map",
-            ]:
-                continue
+                imm_to_save = self.product.measurement.data_dict[key]
 
-            imm_to_save = self.product.measurement.data_dict[key]
-
-            # set no data values to zeros, for the quick look
-            name_to_search = "_" + key + "_ql"
-            if key in ["fd", "cfm"]:
-                imm_to_save[imm_to_save == INT_NODATA_VALUE] = 0
-            if key == "heat_map":
-                imm_to_save1 = self.product.measurement.data_dict[key]["heat_map_contributing"]
-                imm_to_save2 = self.product.measurement.data_dict[key]["heat_map_agreeing"]
-                imm_to_save1[imm_to_save1 == INT_NODATA_VALUE] = 0
-                imm_to_save2[imm_to_save2 == INT_NODATA_VALUE] = 0
-            if key == "probability_ofchange":
-                imm_to_save[imm_to_save == FLOAT_NODATA_VALUE] = 0.0
-                name_to_search = "_probability_ql"
-
-            # If required, multilook input data
-            if AVERAGING_FACTOR_QUICKLOOKS > 1:
-                boxcar = np.ones((AVERAGING_FACTOR_QUICKLOOKS, AVERAGING_FACTOR_QUICKLOOKS))
-
+                # set no data values to zeros, for the quick look
+                name_to_search = "_" + key + "_ql"
+                if key in ["fd", "cfm"]:
+                    imm_to_save[imm_to_save == INT_NODATA_VALUE] = 0
                 if key == "heat_map":
-                    imm_to_save1 = np.sqrt(
-                        convolve2d(imm_to_save1**2, boxcar, "same")
-                        / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
-                    )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
+                    imm_to_save1 = self.product.measurement.data_dict[key]["heat_map_contributing"]
+                    imm_to_save2 = self.product.measurement.data_dict[key]["heat_map_agreeing"]
+                    imm_to_save1[imm_to_save1 == INT_NODATA_VALUE] = 0
+                    imm_to_save2[imm_to_save2 == INT_NODATA_VALUE] = 0
+                if key == "probability_ofchange":
+                    imm_to_save[imm_to_save == FLOAT_NODATA_VALUE] = 0.0
+                    name_to_search = "_probability_ql"
 
-                    imm_to_save2 = np.sqrt(
-                        convolve2d(imm_to_save2**2, boxcar, "same")
-                        / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
-                    )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
-                else:
-                    imm_to_save = np.sqrt(
-                        convolve2d(imm_to_save**2, boxcar, "same")
-                        / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
-                    )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
+                # If required, multilook input data
+                if AVERAGING_FACTOR_QUICKLOOKS > 1:
+                    boxcar = np.ones((AVERAGING_FACTOR_QUICKLOOKS, AVERAGING_FACTOR_QUICKLOOKS))
 
-            fname = None
-            for fname in self.product_structure.quicklook_files:
-                if name_to_search in fname:
-                    break
-            assert fname is not None
+                    if key == "heat_map":
+                        imm_to_save1 = np.sqrt(
+                            convolve2d(imm_to_save1**2, boxcar, "same")
+                            / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
+                        )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
 
-            # Write quicklook file
-            if key == "heat_map":
-                full_fname = Path(fname)
-                file_name = full_fname.name
-                file_name1 = file_name[0:35] + "hmcontrib_ql.png"
-                full_fname1 = str(full_fname.parent.joinpath(file_name1))
-                file_name2 = file_name[0:35] + "hmagreeing_ql.png"
-                full_fname2 = str(full_fname.parent.joinpath(file_name2))
+                        imm_to_save2 = np.sqrt(
+                            convolve2d(imm_to_save2**2, boxcar, "same")
+                            / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
+                        )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
+                    else:
+                        imm_to_save = np.sqrt(
+                            convolve2d(imm_to_save**2, boxcar, "same")
+                            / (AVERAGING_FACTOR_QUICKLOOKS * AVERAGING_FACTOR_QUICKLOOKS)
+                        )[::DECIMATION_FACTOR_QUICKLOOKS, ::DECIMATION_FACTOR_QUICKLOOKS]
 
-                # Scale float values to be integers in the [0:255] range
-                imm_to_save1 = (255.0 * imm_to_save1 / np.max(imm_to_save1)).astype(np.uint8)
-                imm_to_save2 = (255.0 * imm_to_save2 / np.max(imm_to_save2)).astype(np.uint8)
+                fname = None
+                for fname in self.product_structure.quicklook_files:
+                    if name_to_search in fname:
+                        break
+                assert fname is not None
 
-                # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
-                imm_bgra1 = cv2.cvtColor(imm_to_save1, cv2.COLOR_GRAY2BGRA)
-                # make transparent (alpha = 0) out of the footprint
-                alpha = np.where(self.footprint_masks_for_quicklooks["data_mask"], 255, 0).astype(np.uint8)
-                # Insert Alpha channel to the image BRGA
-                imm_bgra1[:, :, 3] = alpha
-                cv2.imwrite(fname, imm_bgra1)
+                # Write quicklook file
+                if key == "heat_map":
+                    full_fname = Path(fname)
+                    file_name = full_fname.name
+                    file_name1 = file_name[0:35] + "hmcontrib_ql.png"
+                    full_fname1 = str(full_fname.parent.joinpath(file_name1))
+                    file_name2 = file_name[0:35] + "hmagreeing_ql.png"
+                    full_fname2 = str(full_fname.parent.joinpath(file_name2))
 
-                # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
-                imm_bgra2 = cv2.cvtColor(imm_to_save2, cv2.COLOR_GRAY2BGRA)
-                # make transparent (alpha = 0) out of the footprint
-                alpha = np.where(self.footprint_masks_for_quicklooks["data_mask"], 255, 0).astype(np.uint8)
-                # Insert Alpha channel to the image BRGA
-                imm_bgra2[:, :, 3] = alpha
+                    # Scale float values to be integers in the [0:255] range
+                    imm_to_save1 = (255.0 * imm_to_save1 / np.max(imm_to_save1)).astype(np.uint8)
+                    imm_to_save2 = (255.0 * imm_to_save2 / np.max(imm_to_save2)).astype(np.uint8)
 
-                cv2.imwrite(full_fname1, imm_bgra1)
-                cv2.imwrite(full_fname2, imm_bgra1)
-
-            else:
-                # Scale float values to be integers in the [0:255] range
-                imm_to_save = (255.0 * imm_to_save / np.max(imm_to_save)).astype(np.uint8)
-
-                # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
-                imm_bgra = cv2.cvtColor(imm_to_save, cv2.COLOR_GRAY2BGRA)
-                # make transparent (alpha = 0) out of the footprint
-                if key == "cfm":
-                    alpha = np.where(self.footprint_masks_for_quicklooks["cfm_mask"], 255, 0).astype(np.uint8)
-                else:
+                    # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
+                    imm_bgra1 = cv2.cvtColor(imm_to_save1, cv2.COLOR_GRAY2BGRA)
+                    # make transparent (alpha = 0) out of the footprint
                     alpha = np.where(self.footprint_masks_for_quicklooks["data_mask"], 255, 0).astype(np.uint8)
-                # Insert Alpha channel to the image BRGA
-                imm_bgra[:, :, 3] = alpha
-                cv2.imwrite(fname, imm_bgra)
+                    # Insert Alpha channel to the image BRGA
+                    imm_bgra1[:, :, 3] = alpha
+                    cv2.imwrite(fname, imm_bgra1)
+
+                    # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
+                    imm_bgra2 = cv2.cvtColor(imm_to_save2, cv2.COLOR_GRAY2BGRA)
+                    # make transparent (alpha = 0) out of the footprint
+                    alpha = np.where(self.footprint_masks_for_quicklooks["data_mask"], 255, 0).astype(np.uint8)
+                    # Insert Alpha channel to the image BRGA
+                    imm_bgra2[:, :, 3] = alpha
+
+                    cv2.imwrite(full_fname1, imm_bgra1)
+                    cv2.imwrite(full_fname2, imm_bgra1)
+
+                else:
+                    # Scale float values to be integers in the [0:255] range
+                    imm_to_save = (255.0 * imm_to_save / np.max(imm_to_save)).astype(np.uint8)
+
+                    # Convert from 2D GRAY image a 4D BGRA (replica of image in three RGB channels)
+                    imm_bgra = cv2.cvtColor(imm_to_save, cv2.COLOR_GRAY2BGRA)
+                    # make transparent (alpha = 0) out of the footprint
+                    if key == "cfm":
+                        alpha = np.where(self.footprint_masks_for_quicklooks["cfm_mask"], 255, 0).astype(np.uint8)
+                    else:
+                        alpha = np.where(self.footprint_masks_for_quicklooks["data_mask"], 255, 0).astype(np.uint8)
+                    # Insert Alpha channel to the image BRGA
+                    imm_bgra[:, :, 3] = alpha
+                    cv2.imwrite(fname, imm_bgra)
 
     def _write_overlay_files(self):
         # NE, SE, SW, NW
