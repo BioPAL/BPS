@@ -161,7 +161,11 @@ def _silence_sidebar_wildcard_warnings(_app: Any, _config: Any) -> None:
 
     class _Filter(logging.Filter):
         def filter(self, record: logging.LogRecord) -> bool:
-            msg = record.getMessage()
+            try:
+                msg = record.getMessage()
+            except TypeError:
+                # Some Sphinx warnings use literal % in the message without args.
+                msg = str(record.msg)
             return not (
                 "matches two" in msg
                 and ("html_sidebars" in msg or "secondary_sidebar_items" in msg)
