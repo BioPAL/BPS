@@ -6,11 +6,12 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
-    "arepytools>=1.8.1",
+    "arepytools>=1.9.0",
     "bps-common==4.6.0.dev0",
     "numba>=0.57.0",
     "numpy>=1.26",
     "opencv-python-headless<4.14",
+    "perseo_core>=1.0.0",
     "scikit-image",
     "scikit-learn",
     "scipy",
@@ -25,7 +26,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",
-
 ]
 
 [project.optional-dependencies]

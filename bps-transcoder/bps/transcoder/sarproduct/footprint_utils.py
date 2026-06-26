@@ -10,7 +10,7 @@
 import numpy as np
 from arepytools.geometry.conversions import xyz2llh
 from arepytools.geometry.generalsarorbit import GeneralSarOrbit
-from arepytools.timing.precisedatetime import PreciseDateTime
+from perseo_core.timing import PreciseDateTime
 
 
 def compute_footprint(

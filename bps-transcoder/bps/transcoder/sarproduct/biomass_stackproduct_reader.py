@@ -20,7 +20,6 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.constants import LIGHT_SPEED
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.io.parsing import parse
@@ -51,6 +50,7 @@ from bps.transcoder.utils.gdal_utils import read_geotiff
 from bps.transcoder.utils.product_name import parse_l1product_name
 from netCDF4 import Dataset
 from osgeo import gdal
+from perseo_core.timing import PreciseDateTime
 
 gdal.UseExceptions()
 

@@ -15,9 +15,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Self
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import AcquisitionMode, MissionPhaseID, Swath
 from bps.transcoder.sarproduct.mph import get_footprint, get_phenomenon_time, get_sensor
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

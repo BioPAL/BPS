@@ -16,7 +16,6 @@ from pathlib import Path
 
 from arepyextras.runner import Environment
 from arepytools.io import open_product_folder
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import (
     AcquisitionMode,
     bps_logger,
@@ -48,6 +47,7 @@ from bps.l1_processor.processor_interface.joborder_l1 import (
 from bps.l1_processor.settings.l1_binaries import BPS_L1PREPROC_EXE_NAME
 from bps.l1_processor.settings.l1_intermediates import L1PreProcessorOutputProducts
 from bps.transcoder.auxiliaryfiles.aux_attitude import write_attitude_file
+from perseo_core.timing import PreciseDateTime
 
 
 @log_elapsed_time("L1PreProcessor")

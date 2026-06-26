@@ -17,9 +17,9 @@ from typing import Iterable, Literal, Sequence
 
 import numpy as np
 import numpy.typing as npt
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.common import retrieve_aux_product_data_single_content
 from osgeo import gdal
+from perseo_core.timing import PreciseDateTime
 
 
 def retrieve_product_content(

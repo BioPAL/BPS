@@ -15,9 +15,9 @@ from decimal import Decimal
 from pathlib import Path
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.parsing import parse, serialize
 from bps.transcoder.io import aux_att_models
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

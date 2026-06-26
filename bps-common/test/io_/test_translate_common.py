@@ -12,8 +12,8 @@ Common translate test
 
 import unittest
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common, common_types, translate_common
+from perseo_core.timing import PreciseDateTime
 
 
 class CommonTranslateTestCase(unittest.TestCase):

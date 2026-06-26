@@ -6,7 +6,6 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
-    "arepytools",
     "click",
     "gdal>=3.10,<3.11",
     "numba >= 0.57",
@@ -14,6 +13,7 @@ dependencies = [
     "scipy",
     "bps-common==4.6.0.dev0",
     "bps-transcoder==4.6.0.dev0",
+    "perseo_core>=1.0.0",
 ]
 dynamic = ["version"]
 classifiers = [

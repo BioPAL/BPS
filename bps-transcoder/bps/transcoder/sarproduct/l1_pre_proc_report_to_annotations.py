@@ -11,11 +11,11 @@ from dataclasses import dataclass, field
 from typing import Literal, Self
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l1product import QualityParameters
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

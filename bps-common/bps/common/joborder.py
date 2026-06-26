@@ -14,7 +14,7 @@ import enum
 from dataclasses import dataclass
 from pathlib import Path
 
-from arepytools.timing.precisedatetime import PreciseDateTime
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

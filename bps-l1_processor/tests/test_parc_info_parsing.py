@@ -13,9 +13,9 @@ PARC info parsing test
 import unittest
 
 import numpy.testing as npt
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_processor.parc.parc_info import ScatteringResponse
 from bps.l1_processor.parc.parc_info_utils import parse_parc_info
+from perseo_core.timing import PreciseDateTime
 
 PARC_INFO_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <auxiliaryCalSiteInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../support/bio-parc-info.xsd">

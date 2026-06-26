@@ -16,7 +16,6 @@ from pathlib import Path
 
 import bps.l2a_processor
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
 from bps.common.io import common
@@ -54,6 +53,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
 from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
 from netCDF4 import Dataset
+from perseo_core.timing import PreciseDateTime
 from scipy.signal import medfilt2d
 from scipy.sparse import csr_matrix
 

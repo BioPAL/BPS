@@ -29,9 +29,9 @@ from arepytools.io.metadata import (
     RasterInfo,
     SwathInfo,
 )
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import AcquisitionMode, Polarization, bps_logger
 from bps.l1_pre_processor.aux_ins.aux_ins import AuxInsParameters
+from perseo_core.timing import PreciseDateTime
 
 
 def retrieve_noise_power(aux_ins: AuxInsParameters, acquisition_mode: AcquisitionMode) -> dict[Polarization, complex]:

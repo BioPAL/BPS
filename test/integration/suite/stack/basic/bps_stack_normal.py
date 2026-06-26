@@ -24,7 +24,6 @@ import traceback
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
-from arepytools.timing.precisedatetime import PreciseDateTime
 from aux_pps_utils import initialize_aux_pps
 from bps.common import BIOMASS_PROCESSOR_VERSION
 from bps.common.common import retrieve_aux_product_data_single_content
@@ -33,6 +32,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct import REQUIRED_LUT_LAYERS
 from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
 )
+from perseo_core.timing import PreciseDateTime
 
 CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 OUTPUT_DIR = "od"  # Short name to keep the paths short enough for Windows.

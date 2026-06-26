@@ -15,7 +15,6 @@ from pathlib import Path
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
 from arepytools.io import open_product_folder, read_metadata
 from arepytools.io.metadata import Pulse
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.common import STRIPMAP_SWATHS
 from bps.l1_processor.parc.parc_info import ParcInfoList
@@ -30,6 +29,7 @@ from bps.l1_processor.processor_interface.joborder_l1 import (
     L1JobOrder,
     L1StripmapOutputProducts,
 )
+from perseo_core.timing import PreciseDateTime
 
 
 def retrieve_chirp_length(chirp_replica_product: Path | None, pulse: Pulse) -> float:

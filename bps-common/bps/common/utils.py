@@ -19,9 +19,9 @@ from warnings import catch_warnings, simplefilter
 import numpy as np
 import numpy.typing as npt
 from arepytools.io.metadata import EPolarization, MetaDataElement, SwathInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
+from perseo_core.timing import PreciseDateTime
 
 
 class EarthModel(Enum):

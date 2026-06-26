@@ -18,9 +18,9 @@ import numpy.typing as npt
 import scipy as sp
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
 from arepytools.io.metadata import EPolarization, ESideLooking, RasterInfo, StateVectors
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.common.toi_utils import TimeOfInterest, toi_to_axis_slice
+from perseo_core.timing import PreciseDateTime
 
 
 class StackPreProcessorRuntimeError(RuntimeError):

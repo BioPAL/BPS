@@ -22,7 +22,6 @@ from arepytools.io.metadata import (
     MetaDataElement,
     StateVectors,
 )
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.stack_pre_processor.configuration import PrimaryImageSelectionConf
@@ -33,6 +32,7 @@ from bps.stack_pre_processor.core.utils import (
     compute_rfi_indices,
     sort_from_pivot,
 )
+from perseo_core.timing import PreciseDateTime
 
 
 def compute_critical_baseline(

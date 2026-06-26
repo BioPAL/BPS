@@ -13,7 +13,7 @@ PF selector input structures
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
-from arepytools.timing.precisedatetime import PreciseDateTime
+from perseo_core.timing import PreciseDateTime
 
 
 class PFSelectorPolarization(Enum):

@@ -18,7 +18,6 @@ from pathlib import Path
 import numpy as np
 from arepytools import io
 from arepytools.io import metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_core_processor.input_file import (
     AntennaProducts,
     BPSL1CoreProcessorInputFile,
@@ -30,6 +29,7 @@ from bps.l1_core_processor.pf_selector_input_file import (
     PFSelectorAreaTimeCoordinates,
 )
 from bps.l1_processor.processor_interface.joborder_l1 import L1JobOrder
+from perseo_core.timing import PreciseDateTime
 
 
 def _get_metadata_sections(

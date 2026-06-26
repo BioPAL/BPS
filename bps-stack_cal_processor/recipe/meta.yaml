@@ -21,13 +21,14 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools >=1.8.1
+    - arepytools >=1.9.0
     - bps-common =={{ version }}
     - numba >=0.57.0
     - py-opencv <4.14=*headless*
     - scipy
     - scikit-image
     - scikit-learn
+    - perseo-core >=1.0.0
 
 test:
   imports:

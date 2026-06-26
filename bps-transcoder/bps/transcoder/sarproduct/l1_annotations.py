@@ -21,10 +21,10 @@ from arepytools.io import (
     read_raster_with_raster_info,
 )
 from arepytools.math.genericpoly import create_sorted_poly_list
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import Polarization
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
+from perseo_core.timing import PreciseDateTime
 from scipy.constants import speed_of_light
 
 

@@ -14,11 +14,11 @@ from pathlib import Path
 from typing import Literal, get_args
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFD, BIOMASSL2aProductFH, BIOMASSL2aProductGN
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
+from perseo_core.timing import PreciseDateTime
 from scipy.interpolate import RegularGridInterpolator
 
 L2B_OUTPUT_PRODUCT_FD_LITERAL = Literal["FP_FD__L2B"]

@@ -15,8 +15,8 @@ import unittest
 import numpy as np
 import numpy.typing as npt
 from arepytools.geometry.conversions import llh2xyz
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.stack_pre_processor.core.geometry import compute_ecef_dem
+from perseo_core.timing import PreciseDateTime
 
 
 def _make_dem_wgs84(

@@ -14,8 +14,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Self, get_args
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import l2_joborder_tags
+from perseo_core.timing import PreciseDateTime
 
 
 class ProcessingModeType(Enum):

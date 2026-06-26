@@ -21,7 +21,7 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools >=1.8.1
+    - arepytools >=1.9.0
     - gdal >=3.10,<3.11
     - netcdf4
     - py-opencv <4.14=*headless*
@@ -29,6 +29,7 @@ requirements:
     - scipy >=1.10
     - pyproj
     - bps-common =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

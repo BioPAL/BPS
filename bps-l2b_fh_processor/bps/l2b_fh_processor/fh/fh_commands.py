@@ -15,7 +15,6 @@ from pathlib import Path
 import bps.l2b_fh_processor
 import numba as nb
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.l2b_fh_processor.core.aux_pp2_2b_fh import AuxProcessingParametersL2BFH
@@ -49,6 +48,7 @@ from bps.transcoder.sarproduct.biomass_l2bfhproduct_writer import (
     BIOMASSL2bFHProductWriter,
 )
 from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
+from perseo_core.timing import PreciseDateTime
 
 
 class FHL2B:

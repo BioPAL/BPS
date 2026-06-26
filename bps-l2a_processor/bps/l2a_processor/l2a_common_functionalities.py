@@ -23,7 +23,6 @@ from arepytools.geometry.conversions import llh2xyz, xyz2llh
 from arepytools.geometry.ellipsoid import WGS84
 from arepytools.geometry.generalsarorbit import GeneralSarOrbit, create_general_sar_orbit
 from arepytools.io.metadata import StateVectors
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
 from bps.l2a_processor.core.aux_pp2_2a import CalibrationScreenType, GeneralConf
@@ -31,6 +30,7 @@ from bps.transcoder.sarproduct.biomass_l2aproduct_writer import COMPRESSION_SCHE
 from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
 from bps.transcoder.utils.time_conversions import pdt_to_compact_date
 from osgeo import gdal, ogr
+from perseo_core.timing import PreciseDateTime
 from scipy.interpolate import CloughTocher2DInterpolator, LinearNDInterpolator
 from scipy.sparse import csr_matrix
 from scipy.spatial import Delaunay
