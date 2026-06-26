@@ -23,7 +23,7 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools >=1.8.1
+    - arepytools >=1.9.0
     - click
     - xsdata
     - arepyextras-runner
@@ -37,6 +37,7 @@ requirements:
     - bps-l1_pre_processor =={{ version }}
     - bps-l1_core_processor =={{ version }}
     - bps-transcoder =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

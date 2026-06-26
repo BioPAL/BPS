@@ -15,7 +15,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.io.main_annotation_l1c import (
     BIOMASSStackCoregistrationParameters,
     BIOMASSStackInSARParameters,
@@ -28,6 +27,7 @@ from bps.transcoder.utils.time_conversions import (
     pdt_to_compact_date,
     pdt_to_compact_string,
 )
+from perseo_core.timing import PreciseDateTime
 
 
 # Handle an invalid L1c product.

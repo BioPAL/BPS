@@ -15,7 +15,6 @@ from pathlib import Path
 import numpy as np
 from arepytools.geometry.generalsarattitude import create_general_sar_attitude
 from arepytools.io import read_metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.l1_processor import BPS_L1_PROCESSOR_NAME
@@ -56,6 +55,7 @@ from bps.transcoder.sarproduct.navigation_files_utils import (
 )
 from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.utils import quicklook_utils
+from perseo_core.timing import PreciseDateTime
 
 TAI_UTC = 37
 

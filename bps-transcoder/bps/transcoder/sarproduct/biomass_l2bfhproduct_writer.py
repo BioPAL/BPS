@@ -15,7 +15,6 @@ from xml.dom import minidom
 import cv2
 import numpy as np
 import pystac
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.io.parsing import serialize
@@ -37,6 +36,7 @@ from bps.transcoder.utils.production_model_utils import (
     translate_global_coverage_id,
 )
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
+from perseo_core.timing import PreciseDateTime
 from scipy.signal import convolve2d
 
 for key, value in MPH_NAMESPACES.items():

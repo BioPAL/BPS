@@ -21,7 +21,6 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.io.metadata import EPolarization, ESideLooking, StateVectors
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import MissionPhaseID, bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import raise_if_roi_is_invalid
@@ -57,6 +56,7 @@ from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.l1.quality_index import L1QualityIndex
+from perseo_core.timing import PreciseDateTime
 
 # Limits in seconds for the nominal L1a data duration. Durations out of bounds
 # will be reported as non-nominal.

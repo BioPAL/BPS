@@ -21,8 +21,8 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools
     - bps-common =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

@@ -17,7 +17,6 @@ from xml.dom import minidom
 import numpy as np
 from arepytools.constants import LIGHT_SPEED
 from arepytools.math import genericpoly
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.transcoder import BPS_ATBD_L1_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
@@ -51,6 +50,7 @@ from bps.transcoder.utils.gdal_utils import GeotiffConf, GeotiffMetadata, write_
 from bps.transcoder.utils.production_model_utils import encode_mph_id_value
 from bps.transcoder.utils.rxgain_table import get_rx_gain_from_parameters_code
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
+from perseo_core.timing import PreciseDateTime
 
 CURRENT_AZIMUTH_TIME = PreciseDateTime.now()
 TAI_UTC = 37

@@ -14,8 +14,8 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.geometry.conversions import llh2xyz
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.stack_pre_processor.core.utils import StackPreProcessorRuntimeError
+from perseo_core.timing import PreciseDateTime
 
 
 def compute_ecef_dem(

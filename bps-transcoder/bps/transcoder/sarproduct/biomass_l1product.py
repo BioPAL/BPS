@@ -12,7 +12,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from arepytools.io import metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
@@ -25,6 +24,7 @@ from bps.transcoder.utils.time_conversions import (
     pdt_to_compact_date,
     pdt_to_compact_string,
 )
+from perseo_core.timing import PreciseDateTime
 
 # Type conversions between L1 products and SAR products.
 SAR_TO_L1A_PRODUCT_TYPE = {"SLC": "SCS", "GRD": "DGM"}

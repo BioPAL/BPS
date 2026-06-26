@@ -14,7 +14,6 @@ from xml.etree import ElementTree
 import arepytools.io.metadata as metadata
 import numpy as np
 from arepytools.constants import LIGHT_SPEED
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file
@@ -39,6 +38,7 @@ from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.utils.gdal_utils import read_geotiff
 from bps.transcoder.utils.product_name import parse_l1product_name
 from osgeo import gdal
+from perseo_core.timing import PreciseDateTime
 
 gdal.UseExceptions()
 

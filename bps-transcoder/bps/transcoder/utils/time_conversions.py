@@ -12,8 +12,8 @@ Time conversions module
 """
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.utils.constants import REFERENCE_EPOCH
+from perseo_core.timing import PreciseDateTime
 
 REFERENCE_PDT = PreciseDateTime.fromisoformat(REFERENCE_EPOCH)
 

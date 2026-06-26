@@ -17,7 +17,6 @@ import numpy as np
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
 from arepytools.io import read_metadata
 from arepytools.io.productfolder2 import ProductFolder2
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
@@ -32,6 +31,7 @@ from bps.stack_cal_processor.core.utils import (
     compute_satellite_state,
     compute_target_ground_speed,
 )
+from perseo_core.timing import PreciseDateTime
 
 # The names of the modules.
 AZF_NAME = "azimuthSpectralFilter"

@@ -21,7 +21,6 @@ from xml.dom import minidom
 import numpy as np
 import numpy.typing as npt
 from arepytools.io.metadata import RasterInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.transcoder import BPS_ATBD_STA_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
@@ -67,6 +66,7 @@ from bps.transcoder.utils.time_conversions import (
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
 from netCDF4 import Dataset as NetCDF4Dataset
 from netCDF4 import Group as NetCDF4Group
+from perseo_core.timing import PreciseDateTime
 
 # Default compression level for L1c products.
 ZLIB_L1C_COMPLEVEL = 2

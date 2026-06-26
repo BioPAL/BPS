@@ -10,7 +10,6 @@ Common annotations l1 translate
 -------------------------------
 """
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1, translate_common
 from bps.transcoder.io.v445 import common as common_v445
@@ -22,6 +21,7 @@ from bps.transcoder.utils.production_model_utils import (
     translate_major_cycle_id,
     translate_repeat_cycle_id,
 )
+from perseo_core.timing import PreciseDateTime
 
 NoiseGainListType = v450.NoiseGainListType | v445.NoiseGainListType
 ProcessingGainListType = v450.ProcessingGainListType | v445.ProcessingGainListType

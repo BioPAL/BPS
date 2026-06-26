@@ -16,10 +16,10 @@ from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.mask_io import read_mask, retrieve_product_content
 from osgeo import gdal
+from perseo_core.timing import PreciseDateTime
 
 gdal.UseExceptions()
 

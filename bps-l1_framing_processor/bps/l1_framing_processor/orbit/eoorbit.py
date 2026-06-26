@@ -13,9 +13,9 @@ import os
 from pathlib import Path
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_framing_processor.io import aux_orb_models
 from bps.l1_framing_processor.orbit.orbit import EOrbitType, Orbit
+from perseo_core.timing import PreciseDateTime
 from xsdata.formats.dataclass.context import XmlContext
 from xsdata.formats.dataclass.parsers import XmlParser
 

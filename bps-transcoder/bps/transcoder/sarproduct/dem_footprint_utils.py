@@ -12,10 +12,10 @@ L1 Post Processor interface
 
 import numpy as np
 from arepytools.geometry.conversions import xyz2llh
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.sarproduct.footprint_utils import gcp_axis_sampling
 from bps.transcoder.sarproduct.generic_product import GenericProduct
 from bps.transcoder.sarproduct.sarproduct import SARProduct
+from perseo_core.timing import PreciseDateTime
 
 
 def _find_index(value, array):

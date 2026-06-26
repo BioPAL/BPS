@@ -22,7 +22,6 @@ from arepytools.io import open_product_folder, read_metadata
 from arepytools.io.metadata import EPolarization
 from arepytools.io.productfolder2 import ProductFolder2, is_product_folder
 from arepytools.math.genericpoly import GenericPoly
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
@@ -31,6 +30,7 @@ from bps.stack_cal_processor.core.utils import (
     read_productfolder_data_by_polarization,
     read_raster_info,
 )
+from perseo_core.timing import PreciseDateTime
 
 # As per BPSStackProcessor convention, in every coregistered product
 # the metadata channel 0 is that of the coregistered product (that is,

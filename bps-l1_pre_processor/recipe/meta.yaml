@@ -21,10 +21,11 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools
+    - arepytools >=1.9.0
     - scipy >=1.10
     - bps-common =={{ version }}
     - bps-transcoder =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

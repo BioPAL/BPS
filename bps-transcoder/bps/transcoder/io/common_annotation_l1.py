@@ -12,8 +12,8 @@ Common annotations l1
 
 from dataclasses import dataclass
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
+from perseo_core.timing import PreciseDateTime
 
 ProcessingGainList = list[common.FloatWithPolarisation]
 NoiseGainList = list[common.FloatWithPolarisation]

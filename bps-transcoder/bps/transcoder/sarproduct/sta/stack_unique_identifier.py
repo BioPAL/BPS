@@ -14,9 +14,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.utils.production_model_utils import encode_product_name_id_value
 from bps.transcoder.utils.time_conversions import pdt_to_compact_date, pdt_to_compact_string
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

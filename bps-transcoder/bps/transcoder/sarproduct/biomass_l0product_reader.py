@@ -9,11 +9,11 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.sarproduct import mph
 from bps.transcoder.sarproduct.biomass_l0product import BIOMASSL0Product
 from bps.transcoder.sarproduct.l0.product_content import L0ProductContent
+from perseo_core.timing import PreciseDateTime
 
 
 def _retrieve_xml_file(product_path: Path, content: L0ProductContent):

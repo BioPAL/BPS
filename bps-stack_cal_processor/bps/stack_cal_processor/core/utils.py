@@ -32,8 +32,8 @@ from arepytools.io.metadata import (
     SamplingConstants,
 )
 from arepytools.io.productfolder2 import ProductFolder2
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
+from perseo_core.timing import PreciseDateTime
 from scipy import constants
 
 

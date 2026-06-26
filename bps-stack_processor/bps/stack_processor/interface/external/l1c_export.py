@@ -18,7 +18,6 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.io.metadata import EPolarization, RasterInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest
@@ -76,6 +75,7 @@ from bps.transcoder.sarproduct.sta.stack_unique_identifier import StackUniqueID
 from bps.transcoder.utils.polarization_conversions import translate_arepytools_polarization_to_common
 from bps.transcoder.utils.quicklook_utils import QuickLookConf
 from bps.transcoder.utils.time_conversions import round_precise_datetime
+from perseo_core.timing import PreciseDateTime
 
 
 def export_l1c_product(

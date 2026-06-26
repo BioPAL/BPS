@@ -21,7 +21,6 @@ from pathlib import Path
 import bps.l2b_agb_processor
 import numba as nb
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.lcm_utils import LCMMask
@@ -48,6 +47,7 @@ from bps.transcoder.sarproduct.biomass_l2bagbproduct_writer import (
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
 from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
+from perseo_core.timing import PreciseDateTime
 
 warnings.filterwarnings("ignore", message="invalid value encountered in divide")
 warnings.filterwarnings("ignore", message="invalid value encountered in multiply")

@@ -10,13 +10,13 @@ Translation module
 ------------------
 """
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import aresys_configuration_models, aresys_inputfile_models
 from bps.l1_pre_processor.configuration import (
     L1PreProcessorConfiguration,
     L1PreProcessorConfigurationFile,
 )
 from bps.l1_pre_processor.input_file import L1PreProcessorInputFile
+from perseo_core.timing import PreciseDateTime
 
 
 def translate_time_of_interest_to_model(

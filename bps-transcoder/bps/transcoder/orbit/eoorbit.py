@@ -17,10 +17,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.parsing import parse
 from bps.transcoder.io import aux_orb_models
 from bps.transcoder.orbit.orbit import EOrbitType, Orbit
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

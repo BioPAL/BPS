@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from netCDF4 import Dataset
+from perseo_core.timing import PreciseDateTime
 
 VALID_LUT_LAYERS = [
     "rfiMaskHH",  # for backward compatibility

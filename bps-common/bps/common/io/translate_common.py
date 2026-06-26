@@ -12,8 +12,8 @@ Common translate
 
 from __future__ import annotations
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common, common_types
+from perseo_core.timing import PreciseDateTime
 from xsdata.models.datatype import XmlDateTime
 
 

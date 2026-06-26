@@ -23,13 +23,13 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools
     - click
     - numba >=0.57
     - xsdata
     - netcdf4
     - bps-common =={{ version }}
     - bps-transcoder =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

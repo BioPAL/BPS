@@ -13,13 +13,13 @@ Common annotations l1 translate test
 import copy
 import unittest
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1, translate_common_annotation_l1
 from bps.transcoder.io.v445 import common as common_v445
 from bps.transcoder.io.v445 import common_annotation_models_l1 as v445
 from bps.transcoder.io.v450 import common as common_v450
 from bps.transcoder.io.v450 import common_annotation_models_l1 as v450
+from perseo_core.timing import PreciseDateTime
 
 VERSIONS = ((v445, common_v445), (v450, common_v450))
 LATEST_VERSION = v450
