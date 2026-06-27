@@ -30,7 +30,7 @@ GitHub Issues, Discussions, Office Hours, and email when to use each.
 
 <i class="doc-icon fa-regular fa-calendar fa-fw" aria-hidden="true"></i> **Meetings and events**
 ^^^
-Technical, governance, and community meetings plus workshops.
+Past session slides, upcoming technical and community meetings, workshops.
 :::
 
 :::{grid-item-card}
@@ -64,7 +64,7 @@ Code of Conduct, contacts, and how to improve this guide.
 
 **I want to contribute:**
 - Start with the [Contributing guide](../contributing/index.md)
-- [Technical meetings](meetings.md) and [workshops](meetings.md) are planned for the future — see the warning on that page
+- Browse [Meetings and events](meetings.md) for session slides (including the [First Developer Meeting](developer-meeting.md))
 
 **I have a conflict or concern:**
 - Review [Conflict resolution](conflict-resolution.md)
@@ -77,6 +77,7 @@ Code of Conduct, contacts, and how to improve this guide.
 
 Channels <channels>
 Meetings and events <meetings>
+First Developer Meeting <developer-meeting>
 Conflict resolution <conflict-resolution>
 Getting help <getting-help>
 ```

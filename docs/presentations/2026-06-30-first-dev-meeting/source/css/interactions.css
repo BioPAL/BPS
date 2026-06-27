@@ -1,0 +1,284 @@
+/* Interaction-only animations — no autoplay loops */
+
+/* Slide entrance animations (from Claude Design export helmet) */
+@keyframes journey-in {
+  0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes journey-arrow {
+  0% { opacity: 0; transform: translateX(-15px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes journey-specs {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes journey-loop {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Chapter dividers — Roman numeral entrance */
+@keyframes chapter-numeral-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.45);
+    filter: blur(12px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes chapter-rule-in {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* Harmonized stagger entrance — data-deck-stagger + data-stagger-item */
+[data-deck-stagger] [data-stagger-item] {
+  transform-origin: center center;
+}
+
+.deck-stagger-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chapter-numeral,
+.chapter-rule,
+.chapter-title {
+  transform-origin: center center;
+}
+
+.deck-browser-mock {
+  cursor: default;
+}
+
+.deck-browser-viewport {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 122, 148, 0.5) transparent;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+}
+
+.deck-browser-viewport::-webkit-scrollbar {
+  width: 8px;
+}
+
+.deck-browser-viewport::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 148, 0.45);
+  border-radius: 4px;
+}
+
+.deck-browser-viewport iframe {
+  display: block;
+  width: 100%;
+  min-height: 1800px;
+  border: 0;
+  background: #fff;
+  pointer-events: auto;
+}
+
+.deck-browser-chrome a,
+.deck-browser-chrome [data-open-url] {
+  cursor: pointer;
+}
+
+.deck-browser-chrome [data-open-url]:hover {
+  color: var(--cy, #00B6F0) !important;
+}
+
+/* Journey hexagons — slide 14 */
+[data-deck-journey] [data-journey-step] {
+  transition: transform 0.35s ease, filter 0.35s ease, opacity 0.35s ease;
+  cursor: pointer;
+}
+
+[data-deck-journey] [data-journey-step].deck-dim {
+  opacity: 0.35;
+  filter: saturate(0.4);
+}
+
+[data-deck-journey] [data-journey-step].deck-active {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.04);
+}
+
+[data-deck-journey] [data-journey-step].deck-active [data-journey-hex] {
+  box-shadow: 0 0 28px rgba(0, 182, 240, 0.45);
+}
+
+[data-deck-journey] [data-journey-arrow] {
+  transition: opacity 0.35s ease, color 0.35s ease;
+}
+
+[data-deck-journey] [data-journey-arrow].deck-lit {
+  color: var(--cy, #00B6F0) !important;
+  opacity: 1 !important;
+}
+
+/* Flow slides — 15, 20, 25 */
+[data-deck-flow] [data-flow-step] {
+  transition: opacity 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer;
+}
+
+[data-deck-flow] [data-flow-step].deck-dim {
+  opacity: 0.4;
+}
+
+[data-deck-flow] [data-flow-step].deck-active {
+  opacity: 1;
+  box-shadow: 0 0 0 2px rgba(0, 182, 240, 0.35);
+}
+
+[data-deck-flow] [data-flow-path] {
+  transition: opacity 0.35s ease;
+  cursor: pointer;
+}
+
+[data-deck-flow] [data-flow-path].deck-dim {
+  opacity: 0.45;
+}
+
+/* Template chooser — slide 16 */
+[data-deck-templates] [data-template-row] {
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+[data-deck-templates] [data-template-row]:hover,
+[data-deck-templates] [data-template-row].deck-active {
+  border-color: rgba(0, 182, 240, 0.55) !important;
+  background: rgba(0, 182, 240, 0.08) !important;
+  box-shadow: 0 0 20px rgba(0, 182, 240, 0.15);
+}
+
+/* GitHub Discussions — slide 28 (footer 35) */
+[data-deck-discussions] [data-discussion-row] {
+  transition: background 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 0 -8px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+[data-deck-discussions] [data-discussion-row]:hover,
+[data-deck-discussions] [data-discussion-row].deck-active {
+  background: rgba(0, 182, 240, 0.08);
+  box-shadow: inset 3px 0 0 var(--tl);
+}
+
+/* CI/CD guided tour — slide 22 */
+[data-deck-cicd-tour] [data-cicd-zone] {
+  transition: border-color 0.35s ease, background 0.35s ease;
+  cursor: pointer;
+}
+
+[data-deck-cicd-tour] [data-cicd-zone].deck-dim {
+  opacity: 0.45;
+}
+
+[data-deck-cicd-tour] [data-cicd-zone].deck-active {
+  opacity: 1;
+  box-shadow: 0 0 18px rgba(0, 182, 240, 0.2);
+}
+
+[data-deck-cicd-tour] [data-cicd-viewport],
+[data-deck-cicd-tour] .deck-cicd-viewport {
+  overflow: auto !important;
+  min-height: 0;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  position: relative;
+}
+
+[data-deck-cicd-tour] [data-cicd-viewport]::-webkit-scrollbar,
+[data-deck-cicd-tour] .deck-cicd-viewport::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-deck-cicd-tour] [data-cicd-viewport]::-webkit-scrollbar-thumb,
+[data-deck-cicd-tour] .deck-cicd-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+[data-deck-cicd-tour] [data-cicd-viewport] img[data-cicd-pan] {
+  display: block;
+  width: 200%;
+  height: auto;
+}
+
+[data-deck-cicd-tour] .deck-cicd-hint {
+  font-style: italic;
+  color: rgba(0, 182, 240, 0.65);
+}
+
+/* Scroll-sync panels — issue template walkthrough (footer slides 22–24) */
+.deck-scroll-sync {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 122, 148, 0.5) transparent;
+  flex: 1;
+  min-height: 0;
+}
+
+.deck-scroll-sync::-webkit-scrollbar {
+  width: 8px;
+}
+
+.deck-scroll-sync::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 148, 0.45);
+  border-radius: 4px;
+}
+
+.deck-scroll-frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+[data-sync-items] > * {
+  transition: background 0.2s ease, border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-deck-journey] [data-journey-step],
+  [data-deck-flow] [data-flow-step],
+  .chapter-numeral,
+  .chapter-rule,
+  .chapter-title,
+  [data-deck-stagger] [data-stagger-item] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

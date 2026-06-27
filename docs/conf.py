@@ -32,6 +32,7 @@ extensions = [
     "atbd_doc_refs",  # [ADn] / [RDn] / Fig.N / sec. / eq. links in the ATBD
     "science_guide_nav",  # Science Guide hub: ATBD list sidebar (not chapter tree)
     "bps_version",  # Latest bps-v* tag for homepage version badge
+    "meeting_status",  # Status badge from presentations/<deck>/meeting.yaml
 ]
 
 # Tell Sphinx that .md files exist alongside .rst

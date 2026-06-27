@@ -44,3 +44,7 @@ Desktop.ini
 
 # Private ATBD conversion workflow (local only; not published)
 private/
+
+# Generated HTML decks (built via `make html` / `make presentation`)
+docs/_extra_static/presentations/
+docs/presentations/*/dist/

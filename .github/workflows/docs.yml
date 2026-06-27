@@ -14,10 +14,12 @@ on:
       - docs/sphinx-site-migration
     paths:
       - "docs/**"
+      - "docs/presentations/**"
       - ".github/workflows/docs.yml"
   pull_request:
     paths:
       - "docs/**"
+      - "docs/presentations/**"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -46,6 +48,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Install presentation build deps
+        run: pip install -r docs/presentations/2026-06-30-first-dev-meeting/requirements.txt
 
       - name: Install LaTeX
         run: |

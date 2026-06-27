@@ -24,12 +24,14 @@ SPHINXOPTS    ?=
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-.PHONY: help install html html-all clean livehtml linkcheck diagrams sync-bib atbd-pdf
+.PHONY: help install html html-all clean livehtml linkcheck diagrams sync-bib atbd-pdf presentation presentation-shared
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 	@echo
 	@echo "Extra targets:"
+	@echo "  make presentation        Build dated deck slides into _extra_static/"
+	@echo "  make presentation-shared Sync shared logos only (after editing _shared/logos/)"
 	@echo "  make atbd-pdf     Build web-export PDF for the L2 AGB ATBD (requires LaTeX)"
 	@echo "  make html-all     atbd-pdf + html"
 	@echo "  make sync-bib     Copy references.bib from the private conversion pipeline"
@@ -39,8 +41,14 @@ install:
 	$(PIP) install -r requirements.txt sphinx-autobuild
 	@echo "Docs venv ready. Run: make html  (or: make livehtml)"
 
-# Standard HTML build
-html:
+presentation:
+	@$(MAKE) -C presentations/2026-06-30-first-dev-meeting publish
+
+presentation-shared:
+	@python3 presentations/2026-06-30-first-dev-meeting/scripts/publish_docs.py --shared-only
+
+# Standard HTML build (includes presentation static files when built)
+html: presentation-shared presentation
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 	@echo
 	@echo "Build finished. Open $(BUILDDIR)/html/index.html in your browser."

@@ -1,0 +1,206 @@
+title: BPS First Developer Meeting — Open Source & Open Science
+id: 2026-06-30-first-dev-meeting
+date: '2026-06-30'
+width: 1920
+height: 1080
+slides:
+- id: '01'
+  file: slides/01-title.html
+  title: Title
+  act: I
+  interactions: []
+- id: CH-I
+  file: slides/CH-I-act-i.html
+  title: ACT I
+  act: chapter
+  interactions: []
+  kind: chapter
+- id: '02'
+  file: slides/02-biomass-bps-transforming-p-band-sar-data-into-global-forest-biomass-maps.html
+  title: BIOMASS BPS Transforming P-band SAR Data into Global Forest Biomass Maps
+  act: I
+  interactions: []
+- id: '03'
+  file: slides/03-what-is-open-source-open-science.html
+  title: What is Open Source / Open Science?
+  act: I
+  interactions: []
+- id: '05'
+  file: slides/05-why-open-source-for-an-esa-processor-s-suite.html
+  title: Why open source for an ESA processor's suite
+  act: I
+  interactions: []
+- id: '04'
+  file: slides/04-five-pillars-one-open-project.html
+  title: Five pillars, one open project.
+  act: I
+  interactions: []
+- id: 04b
+  file: slides/04b-document-the-project.html
+  title: Document the project
+  act: I
+  interactions: []
+- id: CH-II
+  file: slides/CH-II-act-ii.html
+  title: ACT II
+  act: chapter
+  interactions: []
+  kind: chapter
+- id: '06'
+  file: slides/06-one-site-every-resource-one-click-away.html
+  title: One site. Every resource. One click away.
+  act: II
+  interactions:
+  - browser
+- id: '07'
+  file: slides/07-find-your-path.html
+  title: Find your path
+  act: II
+  interactions: []
+- id: 08
+  file: slides/08-software-user-manual-v4-4-1.html
+  title: Software User Manual v4.4.1
+  act: II
+  interactions:
+  - browser
+- id: 09
+  file: slides/09-run-bps-on-your-own-computer.html
+  title: Run BPS on your own computer.
+  act: II
+  interactions:
+  - browser
+- id: '10'
+  file: slides/10-atbds-afd-pfds-catalog.html
+  title: ATBDs AFD & PFDs catalog
+  act: II
+  interactions:
+  - browser
+- id: '11'
+  file: slides/11-five-steps-no-code-before-approval.html
+  title: Five steps, no code before approval.
+  act: II
+  interactions:
+  - browser
+- id: '12'
+  file: slides/12-roles-stewards-processor-leads.html
+  title: Roles, stewards, processor leads.
+  act: II
+  interactions:
+  - browser
+- id: '13'
+  file: slides/13-one-repo-one-site-one-source-of-truth.html
+  title: One repo. One site. One source of truth.
+  act: II
+  interactions: []
+- id: CH-III
+  file: slides/CH-III-act-iii.html
+  title: ACT III
+  act: chapter
+  interactions: []
+  kind: chapter
+- id: GH-1
+  file: slides/GH-1-what-is-github.html
+  title: What is GitHub?
+  act: III
+  interactions: []
+- id: '14'
+  file: slides/14-how-biomass-runs-on-github.html
+  title: How BIOMASS runs on GitHub
+  act: III
+  interactions: []
+- id: '15'
+  file: slides/15-before-the-pr.html
+  title: Before the PR
+  act: III
+  interactions:
+  - flow
+- id: '16'
+  file: slides/16-five-issue-templates-pick-yours.html
+  title: Five issue templates · pick yours
+  act: III
+  interactions:
+  - templates
+- id: '17'
+  file: slides/17-inside-a-bug-report.html
+  title: Inside a Bug report
+  act: III
+  interactions: []
+- id: '18'
+  file: slides/18-inside-a-feature-request.html
+  title: Inside a Feature request
+  act: III
+  interactions: []
+- id: '19'
+  file: slides/19-inside-an-algorithm-proposal.html
+  title: Inside an Algorithm proposal
+  act: III
+  interactions: []
+- id: GH-2
+  file: slides/GH-2-github-contribution-process.html
+  title: GitHub Contribution Process
+  act: III
+  interactions: []
+- id: '20'
+  file: slides/20-building-the-pr.html
+  title: Building the PR
+  act: III
+  interactions:
+  - flow
+- id: '21'
+  file: slides/21-the-ci-cd-pipeline.html
+  title: The CI/CD pipeline
+  act: III
+  interactions: []
+- id: '22'
+  file: slides/22-three-zones-one-flow.html
+  title: Three zones, one flow.
+  act: III
+  interactions:
+  - cicd-tour
+- id: '23'
+  file: slides/23-tier-policy.html
+  title: Tier policy
+  act: III
+  interactions: []
+- id: '24'
+  file: slides/24-branch-protection-approvals.html
+  title: Branch protection & approvals
+  act: III
+  interactions: []
+- id: '25'
+  file: slides/25-after-the-pr.html
+  title: After the PR
+  act: III
+  interactions:
+  - flow
+- id: '26'
+  file: slides/26-no-contributor-is-ever-lost.html
+  title: No contributor is ever lost.
+  act: III
+  interactions: []
+- id: CH-IV
+  file: slides/CH-IV-act-iv.html
+  title: ACT IV
+  act: chapter
+  interactions: []
+  kind: chapter
+- id: '27'
+  file: slides/27-a-project-lives-by-its-community.html
+  title: A project lives by its community.
+  act: IV
+  interactions: []
+- id: '28'
+  file: slides/28-channels-and-meetings.html
+  title: Channels and meetings
+  act: IV
+  interactions: []
+- id: DEMO
+  file: slides/DEMO-demo-time.html
+  title: Demo Time
+  act: IV
+  interactions: []
+- id: '30'
+  file: slides/30-q-a-status-update.html
+  title: Q&A · Status update
+  act: IV
+  interactions: []

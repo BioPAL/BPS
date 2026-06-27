@@ -135,4 +135,4 @@ If you're unsure how to handle a conflict or need guidance:
 
 ---
 
-**Previous:** [Meetings and events](meetings.md) | **Next:** [Getting help](getting-help.md)
+**Previous:** [First Developer Meeting](developer-meeting.md) | **Next:** [Getting help](getting-help.md)
