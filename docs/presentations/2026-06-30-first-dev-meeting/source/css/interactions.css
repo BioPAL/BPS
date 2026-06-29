@@ -282,3 +282,54 @@
     filter: none !important;
   }
 }
+
+/* Acronym tooltips — first occurrence only (see deck-interactions.js) */
+.bps-acronym {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dashed rgba(0, 182, 240, 0.55);
+  text-decoration: none;
+  color: inherit;
+}
+
+.bps-acronym::after {
+  content: attr(data-def);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 3px);
+  transform: translateX(-50%) translateY(4px);
+  min-width: 16rem;
+  max-width: 28rem;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: rgba(15, 25, 35, 0.96);
+  border: 1px solid rgba(0, 182, 240, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--fs);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 20;
+}
+
+.bps-acronym:hover::after,
+.bps-acronym:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bps-acronym::after {
+    transition: none;
+  }
+}

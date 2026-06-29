@@ -350,6 +350,25 @@
     });
   }
 
+  /** Keep tooltip only on the first marked occurrence of each acronym in deck order. */
+  function initAcronyms(deck) {
+    const seen = new Set();
+    deck.querySelectorAll('section.slide').forEach((section) => {
+      section.querySelectorAll('.bps-acronym[data-def]').forEach((el) => {
+        const key = (el.dataset.acronym || el.textContent.trim()).toUpperCase();
+        if (seen.has(key)) {
+          el.classList.remove('bps-acronym');
+          el.removeAttribute('data-def');
+          el.removeAttribute('data-acronym');
+          el.removeAttribute('tabindex');
+        } else {
+          seen.add(key);
+          el.setAttribute('tabindex', '0');
+        }
+      });
+    });
+  }
+
   function initSection(section) {
     if (section.hasAttribute('data-deck-chapter')) replayCssAnimations(section);
     if (section.hasAttribute('data-browser-url')) initBrowserMocks(section);
@@ -427,6 +446,7 @@
 
   function bindDeck(deck) {
     initDeckProgress(deck);
+    initAcronyms(deck);
     initAll(deck);
     deck.addEventListener('slidechange', (e) => {
       if (e.detail) updateDeckProgress(e.detail);

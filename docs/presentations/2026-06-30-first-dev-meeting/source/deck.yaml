@@ -1,4 +1,4 @@
-title: BPS First Developer Meeting — Open Source & Open Science
+title: BPS First Developer Meeting · Open Source & Open Science
 id: 2026-06-30-first-dev-meeting
 date: '2026-06-30'
 width: 1920
@@ -17,7 +17,7 @@ slides:
   kind: chapter
 - id: '02'
   file: slides/02-biomass-bps-transforming-p-band-sar-data-into-global-forest-biomass-maps.html
-  title: BIOMASS BPS Transforming P-band SAR Data into Global Forest Biomass Maps
+  title: BIOMASS BPS Transforming P-band SAR Data into Global Forest Biomass (AGB) Maps
   act: I
   interactions: []
 - id: '03'
@@ -27,7 +27,7 @@ slides:
   interactions: []
 - id: '05'
   file: slides/05-why-open-source-for-an-esa-processor-s-suite.html
-  title: Why open source for an ESA processor's suite
+  title: Why open source for an ESA processor suite?
   act: I
   interactions: []
 - id: '04'
@@ -71,7 +71,7 @@ slides:
   - browser
 - id: '10'
   file: slides/10-atbds-afd-pfds-catalog.html
-  title: ATBDs AFD & PFDs catalog
+  title: ATBDs AFD & PFDs catalogue
   act: II
   interactions:
   - browser
@@ -89,7 +89,7 @@ slides:
   - browser
 - id: '13'
   file: slides/13-one-repo-one-site-one-source-of-truth.html
-  title: One repo. One site. One source of truth.
+  title: One repo. One site. One reference.
   act: II
   interactions: []
 - id: CH-III
