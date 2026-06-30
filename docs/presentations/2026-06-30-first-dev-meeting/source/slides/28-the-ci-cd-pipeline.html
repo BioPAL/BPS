@@ -1,0 +1,86 @@
+<section class="slide slide--act-iii" data-deck-stagger="" data-stagger-base="0.15" data-stagger-step="0.11" data-label="28" data-screen-label="The CI/CD pipeline" style="font-family:var(--fs);background:var(--bg);color:#fff;">
+  <div class="slide-ribbon"><div class="slide-ribbon__accent"><div class="slide-ribbon__progress" aria-hidden="true"></div></div><div class="slide-ribbon__bar"><span class="slide-ribbon__label">ACT III · HOW YOU CONTRIBUTE</span><div class="slide-ribbon__logo"><img src="../_shared/logos/biopal-text-right.png" alt="BioPAL" style="height:48px;object-fit:contain"></div></div></div>
+  <div style="position:absolute;top:92px;left:72px;right:72px;bottom:60px;display:flex;flex-direction:column;padding-top:28px;gap:14px;box-sizing:border-box;">
+    <!-- Title row -->
+    <div data-stagger-item="" data-stagger-order="0"><div style="font-weight:500;font-size:var(--tc);letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:6px;"><i class="fa-solid fa-gears" style="margin-right:6px;"></i>HOW YOU CONTRIBUTE</div><h2 style="font-weight:700;font-size:var(--tt);color:#fff;margin:0;letter-spacing:-.01em;">The CI/CD pipeline</h2></div>
+    <!-- Mini flow strip -->
+    <div data-stagger-item="" data-stagger-order="1" style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 20px;">
+      <span style="background: rgba(0,122,148,.3); border: 1px solid rgba(0,122,148,.5); border-radius: 4px; padding: 4px 12px; font-size: 27px; font-weight: 600; color: var(--cy)">PR opened</span>
+      <span style="color:rgba(255,255,255,.4);font-size:22px;">→</span>
+      <span style="background: rgba(151,192,11,.15); border: 1px solid rgba(151,192,11,.35); border-radius: 4px; padding: 4px 12px; font-size: 27px; font-weight: 600; color: var(--gr)">10 baseline checks</span>
+      <span style="color:rgba(255,255,255,.4);font-size:22px;">→</span>
+      <span style="background: rgba(0,182,240,.1); border: 1px solid rgba(0,182,240,.3); border-radius: 4px; padding: 4px 12px; font-size: 27px; font-weight: 600; color: var(--cy)">Auto tier triage</span>
+      <span style="color:rgba(255,255,255,.4);font-size:22px;">→</span>
+      <span style="background: rgba(82,52,201,.2); border: 1px solid rgba(82,52,201,.4); border-radius: 4px; padding: 4px 12px; font-size: 27px; font-weight: 600; color: #a080f0">Tier-appropriate review</span>
+      <span style="color:rgba(255,255,255,.4);font-size:22px;">→</span>
+      <span style="background: rgba(151,192,11,.2); border: 1px solid rgba(151,192,11,.4); border-radius: 4px; padding: 4px 12px; font-size: 27px; font-weight: 600; color: var(--gr)">Merge</span>
+    </div>
+    <!-- 3 columns -->
+    <div style="flex:1;display:flex;gap:16px;min-height:0;">
+      <!-- Col 1: Baseline Gate -->
+      <div data-stagger-item="" data-stagger-order="2" style="flex: 1; min-height: 0; overflow: hidden; background: rgba(0,122,148,.1); border: 1px solid rgba(0,122,148,.25); border-top: 4px solid var(--tl); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 42px; margin-top: 7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <i class="fa-solid fa-shield-halved" style="font-size:26px;color:var(--tl);"></i>
+          <div style="font-weight: 700; font-size: 44px; color: #fff">&nbsp;Baseline gate</div>
+        </div>
+        <div style="font-size: 31px; color: rgba(255,255,255,.55)">10 checks run in parallel on every PR<div><br></div></div>
+        <div style="display: flex; flex-direction: column; gap: 23px; flex: 1">
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">REUSE / <span class="bps-acronym" data-acronym="SPDX" data-def="Software Package Data Exchange">SPDX</span> licence compliance</span></div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">DCO sign-off on every commit</span></div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">Bandit security scan</span></div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">pre-commit hooks (ruff, mypy)</span></div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">Build + unit tests + docs</span></div>
+          <div style="display:flex;gap:10px;align-items:center;font-size:var(--tc);color:rgba(255,255,255,.8);"><i class="fa-solid fa-circle-check" style="color:var(--gr);flex-shrink:0;"></i><span style="font-size: 30px">Baseline reference check</span></div>
+        </div>
+        <div style="background: rgba(255,126,121,.1); border-left: 3px solid var(--pk); border-radius: 0 4px 4px 0; padding: 8px 12px; font-size: 27px; color: rgba(255,255,255,.65)"><i class="fa-solid fa-rotate-left" style="color:var(--pk);margin-right:6px;"></i>Any failure → fix &amp; repush → restart</div>
+      </div>
+      <!-- Col 2: Tier classification -->
+      <div data-stagger-item="" data-stagger-order="3" style="flex: 1; min-height: 0; overflow: hidden; background: rgba(151,192,11,.08); border: 1px solid rgba(151,192,11,.2); border-top: 4px solid var(--gr); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 42px; margin-top: 7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <i class="fa-solid fa-code-branch" style="font-size:26px;color:var(--gr);"></i>
+          <div style="font-weight: 700; font-size: 44px; color: #fff">&nbsp;Auto tier classification</div>
+        </div>
+        <div style="font-size: 31px; color: rgba(255,255,255,.55)">Computed from the diff&nbsp;<div><br></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;">
+            <div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--gr);">T0 · BASELINE</div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.65); margin-top: 2px; line-height: 1.3">No locked paths · baseline unchanged · routine</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;">
+            <div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--tl);">T1 · EXTENDED</div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.65); margin-top: 2px; line-height: 1.3">Locked/SME paths · baseline differs · major dep bump</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;">
+            <div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--pk);">T2 · HEAVY</div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.65); margin-top: 2px; line-height: 1.3">Release branch target · <span style="font-family:var(--fm);font-size:22px;">run_heavy=true</span> · upclass</div>
+          </div>
+        </div>
+        
+      </div>
+      <!-- Col 3: Review gates -->
+      <div data-stagger-item="" data-stagger-order="4" style="flex: 1; min-height: 0; overflow: hidden; background: rgba(0,182,240,.07); border: 1px solid rgba(0,182,240,.2); border-top: 4px solid var(--cy); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 42px; margin-top: 7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <i class="fa-solid fa-user-check" style="font-size:26px;color:var(--cy);"></i>
+          <div style="font-weight: 700; font-size: 44px; color: #fff">&nbsp;Review gates</div>
+        </div>
+        <div style="font-size: 31px; color: rgba(255,255,255,.55)">Auto routes to the right reviewer<div><br></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="background:rgba(151,192,11,.12);border:1px solid rgba(151,192,11,.25);border-radius:6px;padding:10px 14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--gr);">T0</div><div style="font-size:var(--tc);color:rgba(255,255,255,.75);">Baseline only</div></div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.6); margin-top: 3px"><i class="fa-solid fa-user" style="margin-right:4px;"></i>1 maintainer · merge allowed</div>
+          </div>
+          <div style="background:rgba(0,122,148,.12);border:1px solid rgba(0,122,148,.25);border-radius:6px;padding:10px 14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--tl);">T1</div><div style="font-size:var(--tc);color:rgba(255,255,255,.75);">Baseline + Extended</div></div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.6); margin-top: 3px"><i class="fa-solid fa-users" style="margin-right: 4px;"></i>&nbsp;2 reviewers incl. SME</div>
+          </div>
+          <div style="background:rgba(255,126,121,.1);border:1px solid rgba(255,126,121,.25);border-radius:6px;padding:10px 14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-family:var(--fm);font-weight:700;font-size:var(--tc);color:var(--pk);">T2</div><div style="font-size:var(--tc);color:rgba(255,255,255,.75);">Baseline Extended Heavy</div></div>
+            <div style="font-size: 28px; color: rgba(255,255,255,.6); margin-top: 3px"><i class="fa-solid fa-building-columns" style="margin-right: 4px;"></i>&nbsp;3 reviewers incl. ESA · <span class="bps-acronym" data-acronym="GPG" data-def="GNU Privacy Guard (signed commits)">GPG</span>-signed</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="slide-footer__tagline">Open Source &amp; Open Science · First Dev Meeting · 2026</span><div class="slide-footer__logos"><img src="../_shared/logos/esa-dark.png" style="height:26px;object-fit:contain;opacity:.6;"><img src="../_shared/logos/acri-st.png" style="height:24px;object-fit:contain;opacity:.85;"><img src="../_shared/logos/biomass-disc.png" style="height:28px;object-fit:contain;opacity:.75;"></div><span class="slide-footer__number">28<br></span></div>
+</section>
