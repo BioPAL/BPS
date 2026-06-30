@@ -1,4 +1,4 @@
 # Session status shown on docs pages (meetings + developer-meeting).
-# Change only `status` — allowed values:
+# Change only  + 'status' +  - allowed values:
 #   planned | held | cancelled
-status: planned
+status: held
