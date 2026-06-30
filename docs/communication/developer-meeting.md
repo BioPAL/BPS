@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 ```{meeting-status} 2026-06-30-first-dev-meeting
 ```
 
-**30 June 2026** · Open Source & Open Science · 37 slides
+**30 June 2026** · Open Source & Open Science · 38 slides
 
 This session introduces the BioMASS Processing Suite as an open project: why ESA is opening the processor suite, what is already available on the documentation portal and GitHub, and how to contribute through issues and pull requests. The deck is organised in four parts—intent and principles, the live resources today, the end-to-end GitHub workflow (from issue templates to CI/CD and review), and how the community stays connected through channels and meetings.
 

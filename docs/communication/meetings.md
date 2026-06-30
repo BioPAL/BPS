@@ -18,7 +18,7 @@ We organize meetings and events to keep the BioPAL community connected. Session 
     <ul class="bps-last-event__meta">
       <li><i class="fa-regular fa-calendar" aria-hidden="true"></i> 30 June 2026</li>
       <li><!-- meeting-status:2026-06-30-first-dev-meeting:inline --></li>
-      <li><i class="fa-solid fa-display" aria-hidden="true"></i> 37 slides</li>
+      <li><i class="fa-solid fa-display" aria-hidden="true"></i> 38 slides</li>
       <li><i class="fa-regular fa-user" aria-hidden="true"></i> Yoann Rey-Ricord · ACRI-ST</li>
     </ul>
     <div class="bps-last-event__actions">
