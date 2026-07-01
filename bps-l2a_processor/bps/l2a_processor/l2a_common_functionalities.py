@@ -831,23 +831,26 @@ def get_dgg_sampling(
 
     # compute DGG: latitude and longitude vectors to cover the whole footprint
 
-    # create a gap before and end, to avoid cropping final data during geocoding
-    lat_min = lat_min - dgg_sampling_extracted["latitude_spacing_deg"] * 5
-    lat_max = lat_max + dgg_sampling_extracted["latitude_spacing_deg"] * 5
-    lon_min = lon_min - dgg_sampling_extracted["longitude_spacing_deg"] * 5
-    lon_max = lon_max + dgg_sampling_extracted["longitude_spacing_deg"] * 5
+    latitude_spacing = dgg_sampling_extracted["latitude_spacing_deg"]
+    longitude_spacing = dgg_sampling_extracted["longitude_spacing_deg"]
 
-    latitude_n = int((lat_max - lat_min) / dgg_sampling_extracted["latitude_spacing_deg"])
-    dgg_latitude_axis_deg = lat_min + dgg_sampling_extracted["latitude_spacing_deg"] * np.arange(latitude_n).astype(
-        np.float64
-    )
+    # create a gap before and end, to avoid cropping final data during geocoding
+    lat_min = lat_min - latitude_spacing * 5
+    lat_max = lat_max + latitude_spacing * 5
+    lon_min = lon_min - longitude_spacing * 5
+    lon_max = lon_max + longitude_spacing * 5
+
+    # The starting point must be anchored to a multiple of the spacing, to remain aligned to a common dgg grid
+    lat_min = np.floor(lat_min / latitude_spacing) * latitude_spacing
+    lon_min = np.floor(lon_min / longitude_spacing) * longitude_spacing
+
+    latitude_n = int((lat_max - lat_min) / latitude_spacing)
+    dgg_latitude_axis_deg = lat_min + latitude_spacing * np.arange(latitude_n).astype(np.float64)
     if invert_latitude:
         dgg_latitude_axis_deg = np.flip(dgg_latitude_axis_deg)
 
-    longitude_n = int((lon_max - lon_min) / dgg_sampling_extracted["longitude_spacing_deg"])
-    dgg_longitude_axis_deg = lon_min + dgg_sampling_extracted["latitude_spacing_deg"] * np.arange(longitude_n).astype(
-        np.float64
-    )
+    longitude_n = int((lon_max - lon_min) / longitude_spacing)
+    dgg_longitude_axis_deg = lon_min + longitude_spacing * np.arange(longitude_n).astype(np.float64)
     if invert_longitude:
         dgg_longitude_axis_deg = np.flip(dgg_longitude_axis_deg)
 
