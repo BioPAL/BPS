@@ -59,7 +59,7 @@ def dgg_search_tiles(latlon_coverage: list[float], create_tiles_dict: bool | Non
     pixel_spacing_lon_list[latitude_vector <= -70] = 6 / 3600
 
     lat_tiles_name = ["S{:02d}".format(90 - lat) for lat in range(0, 90, tile_extent_lat)] + [
-        "N{:02d}".format(lat) for lat in range(0, 89, tile_extent_lat)
+        "N{:02d}".format(lat) for lat in range(0, 90, tile_extent_lat)
     ]
 
     # extract input requested latitude vectors from the whole ones:
