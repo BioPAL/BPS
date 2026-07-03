@@ -24,7 +24,15 @@ from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_GN,
     L2A_OUTPUT_PRODUCT_TFH,
 )
-from bps.transcoder import BPS_PFD_AGB_VERSION, BPS_PFD_FD_VERSION, BPS_PFD_FH_VERSION, BPS_PPD_VERSION
+from bps.transcoder import (
+    BPS_ATBD_AGB_VERSION,
+    BPS_ATBD_FD_VERSION,
+    BPS_ATBD_FH_VERSION,
+    BPS_PFD_AGB_VERSION,
+    BPS_PFD_FD_VERSION,
+    BPS_PFD_FH_VERSION,
+    BPS_PPD_VERSION,
+)
 from bps.transcoder.io import (
     common_annotation_models_l2,
     main_annotation_models_l2a_fd,
@@ -502,20 +510,34 @@ class BIOMASSL2aProductWriter:
             xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}sourceProduct")
             xml6.text = stack_acquisition_name
 
-        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        assert self.product_structure.schema_files is not None
+
+        ppd_doc_string = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
         if L2A_OUTPUT_PRODUCT_FD in self.product_structure.schema_files[0]:
-            xml4.text = f"BIOMASS Forest Disturbance Product Format Specification (BPS_FD_PFD) {BPS_PFD_FD_VERSION}"
+            pfd_doc_string = (
+                f"BIOMASS Forest Disturbance Product Format Specification (BPS_FD_PFD) {BPS_PFD_FD_VERSION}"
+            )
+            atbd_doc_string = f"BIOMASS Forest Disturbance Algorithms Theoretical Baseline Document (BPS_FD_ATBD) {BPS_ATBD_FD_VERSION}"
         if L2A_OUTPUT_PRODUCT_FH in self.product_structure.schema_files[0]:
-            xml4.text = f"BIOMASS Forest Height Product Format Specification (BPS_FH_PFD) {BPS_PFD_FH_VERSION}"
+            pfd_doc_string = f"BIOMASS Forest Height Product Format Specification (BPS_FH_PFD) {BPS_PFD_FH_VERSION}"
+            atbd_doc_string = (
+                f"BIOMASS Forest Height Algorithms Theoretical Baseline Document (BPS_FH_ATBD) {BPS_ATBD_FH_VERSION}"
+            )
         if L2A_OUTPUT_PRODUCT_GN in self.product_structure.schema_files[0]:
-            xml4.text = f"BIOMASS Above Ground Biomass Product Format Specification (BPS_AGB_PFD) {BPS_PFD_AGB_VERSION}"
+            pfd_doc_string = (
+                f"BIOMASS Above Ground Biomass Product Format Specification (BPS_AGB_PFD) {BPS_PFD_AGB_VERSION}"
+            )
+            atbd_doc_string = f"BIOMASS Above Ground Biomass Algorithms Theoretical Baseline Document (BPS_AGB_ATBD) {BPS_ATBD_AGB_VERSION}"
         if L2A_OUTPUT_PRODUCT_TFH in self.product_structure.schema_files[0]:
-            xml4.text = "not provided"
+            pfd_doc_string = "not provided"
+            ppd_doc_string = "not provided"
+
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
-        if L2A_OUTPUT_PRODUCT_TFH in self.product_structure.schema_files[0]:
-            xml4.text = "not provided"
-        else:
-            xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4.text = pfd_doc_string
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = ppd_doc_string
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = atbd_doc_string
 
         # Write MPH file
         xmlstr = minidom.parseString(ET.tostring(xml1)).toprettyxml(indent="   ")
