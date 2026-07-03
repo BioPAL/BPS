@@ -26,6 +26,7 @@ from bps.common import bps_logger
 from bps.common.io.common import UomType
 from bps.common.io.parsing import parse, serialize
 from bps.common.io.translate_common import translate_float_array_with_units_to_model
+from bps.transcoder import BPS_ATBD_STA_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
 from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c
 from bps.transcoder.sarproduct.biomass_stackproduct import (
@@ -72,8 +73,6 @@ from netCDF4 import Group as NetCDF4Group
 # Default compression level for L1c products.
 ZLIB_L1C_COMPLEVEL = 2
 
-# Field to use in case of missing field from L1a product.
-MISSING_FROM_INPUT_PRODUCT = "N/A"
 
 for key, value in MPH_NAMESPACES.items():
     ET.register_namespace(key, value)
@@ -676,14 +675,12 @@ class BIOMASSStackProductWriter:
         xml4.text = "true" if self.product.frame_status == "PARTIAL" else "false"
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}isMerged")
         xml4.text = "true" if self.product.frame_status == "MERGED" else "false"
-
-        if self.source_mph_ref_docs is not None:
-            for ref_doc in self.source_mph_ref_docs:
-                xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
-                xml4.text = ref_doc.text
-        else:
-            xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
-            xml4.text = MISSING_FROM_INPUT_PRODUCT
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS L1a/b/c Products Format Specification (BPS_L1_PFD) {BPS_PFD_L1_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS L1c Stack Product ATBD (BPS_L1_STACK_ATBD) {BPS_ATBD_STA_VERSION}"
 
         # Write MPH file.
         self.product_structure.mph_file.write_text(
