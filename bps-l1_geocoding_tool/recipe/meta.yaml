@@ -1,0 +1,49 @@
+{% set name = "bps-l1_geocoding_tool" %}
+{% set version = "4.4.4" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: file://{{ RECIPE_DIR }}/../dist/bps_l1_geocoding_tool-{{ version }}.tar.gz
+
+build:
+  noarch: python
+  entry_points:
+    - bps_l1_geocoding_tool = bps.l1_geocoding_tool.__main__:main
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.12
+    - hatchling
+    - pip
+  run:
+    - python >=3.12
+    - arepytools >=1.8.1
+    - arepyextras-copernicus_dem_extractor
+    - arepyextras-runner
+    - click
+    - netcdf4
+    - numpy
+    - bps-transcoder =={{ version }}
+    - bps-l1_binaries =={{ version }}
+
+test:
+  imports:
+    - bps
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: Biomass L1 Geocoding Tool package.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl
