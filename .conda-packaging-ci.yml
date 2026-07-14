@@ -92,6 +92,7 @@ bps-l1_binaries-conda:
     - cp L1_executables/BiomassL0ImportPreProc bps-l1_binaries/bin
     - cp L1_executables/BPSL1CoreProcessor bps-l1_binaries/bin
     - cp L1_executables/IonosphericHeightIRI20Estimator bps-l1_binaries/bin
+    - cp L1_executables/GenericGeocoder bps-l1_binaries/bin
     - mkdir -p bps-l1_binaries/lib
     - cp L1_executables/libareapplib_common.so bps-l1_binaries/lib
     - cp L1_executables/libare_parsing.so bps-l1_binaries/lib
@@ -203,6 +204,17 @@ bps-l1_processor-conda:
     - job: bps-l1_core_processor-conda
   variables:
     BPSPROJECT: bps-l1_processor
+
+bps-l1_geocoding_tool-conda:
+  stage: conda-packaging
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_setup
+  needs:
+    - job: bps-transcoder-conda
+    - job: bps-l1_binaries-conda
+  variables:
+    BPSPROJECT: bps-l1_geocoding_tool
 
 bps-l1_framing_processor-conda:
   stage: conda-packaging
