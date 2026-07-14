@@ -502,10 +502,7 @@ class BIOMASSStackProductReader:
                 metadata_di.sensor_name = sensor_name
                 metadata_di.description = ""
                 metadata_di.sense_date = translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
-                if temp_product.type == "SLC":
-                    metadata_di.image_type = "AZIMUTH FOCUSED RANGE COMPENSATED"
-                elif temp_product.type == "GRD":
-                    metadata_di.image_type = "MULTILOOK"
+                metadata_di.image_type = "COREGISTERED SLANT RANGE COMPLEX IMAGE"
                 metadata_di.projection = projection
                 metadata_di.acquisition_station = ""
                 metadata_di.processing_center = ""
