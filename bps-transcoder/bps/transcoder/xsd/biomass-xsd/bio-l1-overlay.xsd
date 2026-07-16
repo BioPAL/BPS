@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <!-- edited with XMLSpy v2018 sp1 (x64) (http://www.altova.com) by (ARESYS srl) -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" elementFormDefault="unqualified" attributeFormDefault="unqualified">
 	<xsd:import namespace="http://www.google.com/kml/ext/2.2" schemaLocation="./bio-l1-overlay-support.xsd"/>

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 print_usage() {
     echo "Tool to build the bps docker images from the bundle archive"
     echo "  build_docker_from_bundle.sh --bundle=..."

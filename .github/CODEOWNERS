@@ -1,0 +1,81 @@
+# ------------------------------------------------------------------------------
+# BIOMASS BPS — Code Owners
+# SPDX-FileCopyrightText: 2026 ACRI-ST - European Space Agency (ESA) - ARESYS
+# SPDX-License-Identifier: Apache-2.0
+#
+# Rules:
+#   - Last matching line wins.
+#   - Only users with WRITE access can be code owners.
+#   - Personal repos accept @usernames only (no @org/team syntax).
+#   - Replace handles below with real GitHub usernames before enforcing.
+# ------------------------------------------------------------------------------
+
+# ---- Catch-all: Core Maintainer reviews anything not matched below -----------
+*                                       @matteoaletti
+
+# ---- CI / CD / repo governance -----------------------------------------------
+/.github/                               @yreyricord
+/.pre-commit-config.yaml                @matteoaletti
+/REUSE.toml                             @yreyricord
+/LICENSES/                              @yreyricord
+/pyproject.toml                         @matteoaletti
+/pytest.ini                             @matteoaletti
+/ruff.toml                              @matteoaletti
+/noxfile.py                             @matteoaletti
+/.gitignore                             @matteoaletti
+/.secrets.baseline                      @matteoaletti
+
+# ---- Shared libraries --------------------------------------------------------
+/bps-common/                            @matteoaletti 
+/bps-task-tables/                       @matteoaletti 
+/bps-transcoder/                        @matteoaletti 
+
+# ---- L1 processors (SME review required) ------------------------------------
+/bps-l1_binaries/                       @matteoaletti 
+/bps-l1_core_processor/                 @matteoaletti 
+/bps-l1_framing_processor/              @matteoaletti 
+/bps-l1_pre_processor/                  @matteoaletti 
+/bps-l1_processor/                      @matteoaletti 
+
+# ---- L2 processors (SME review required) ------------------------------------
+/bps-l2a_processor/                     @matteoaletti 
+/bps-l2b_agb_processor/                 @matteoaletti 
+/bps-l2b_fd_processor/                  @matteoaletti 
+/bps-l2b_fh_processor/                  @matteoaletti 
+
+# ---- Stack processors (SME review required) ---------------------------------
+/bps-stack_binaries/                    @matteoaletti 
+/bps-stack_cal_processor/               @matteoaletti 
+/bps-stack_coreg_processor/             @matteoaletti 
+/bps-stack_pre_processor/               @matteoaletti 
+/bps-stack_processor/                   @matteoaletti 
+
+# ---- Container / packaging ---------------------------------------------------
+/bps-dockerfiles/                       @matteoaletti
+
+# ---- Tests -------------------------------------------------------------------
+/test/                                  @matteoaletti
+**/tests/unit/                          @matteoaletti
+**/tests/integration/                   @matteoaletti 
+**/tests/fixtures/                      @matteoaletti 
+# baseline and smoke dirs: SME must review when reference outputs change
+**/tests/baseline/                      @matteoaletti 
+**/tests/smoke/                         @matteoaletti 
+/tests/extended/                        @matteoaletti 
+/tests/heavy/                           @matteoaletti 
+
+# ---- Documentation -----------------------------------------------------------
+/README.md                              @matteoaletti
+/CREDITS.md                             @matteoaletti
+/LICENSE.md                             @yreyricord
+**/docs/                                @yreyricord
+**/docs/science/                        @yreyricord 
+
+# ---- Scripts & schemas -------------------------------------------------------
+/scripts/                               @matteoaletti
+/xsd/                                   @matteoaletti 
+
+# ---- Release gate (ESA approval mandatory) ----------------------------------
+# Any change to VERSION triggers mandatory ESA review on main.
+# This is enforced via "Require review from Code Owners" on the main ruleset.
+/VERSION                                @matteoaletti 

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="DemIndex" type="DemIndexType" />
     <xs:complexType name="DemIndexType" mixed="false">

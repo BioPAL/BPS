@@ -1,7 +1,5 @@
-# Project: BIOMASS Processing Suite (BPS)
-#
-# Copyright (c) 2025, ARESYS S.r.l., DLR, Deimos Space
-# Developed under contract with the European Space Agency (ESA)
+# SPDX-FileCopyrightText: 2025 ARESYS - European Space Agency (ESA)
+# Copyright (C) 2025 ARESYS S.r.l., DLR, Deimos Space
 #
 # SPDX-License-Identifier: MIT
 

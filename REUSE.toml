@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 ACRI-ST - European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+#
+# Minimal REUSE 3.0 manifest for BIOMASS BPS.
+#
+# All textual source files carry inline SPDX headers. This manifest covers
+# only files that cannot carry an inline header (binary assets) and the
+# LICENSES/ directory (licence texts are CC0).
+#
+# Spec:  https://reuse.software/spec/
+# Lint:  reuse lint
+
+version = 1
+
+# Binary assets (cannot carry inline headers)
+[[annotations]]
+path = [
+  "**/*.png",
+  "**/*.jpg",
+  "**/*.jpeg",
+  "**/*.gif",
+  "**/*.svg",
+  "**/*.ico",
+  "**/*.pdf",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ARESYS - European Space Agency (ESA)"
+SPDX-License-Identifier = "Apache-2.0"
+
+# Licence texts themselves are CC0
+[[annotations]]
+path = ["LICENSES/**"]
+precedence = "override"
+SPDX-FileCopyrightText = "Various"
+SPDX-License-Identifier = "CC0-1.0"

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Create a conda environment
 # - it must have gdal installed
 # - python 3.9 is the suggested version
