@@ -1,0 +1,133 @@
+title: '[BIOMASS DISC] QSM#3 - Open Source readiness'
+id: 2026-07-QSM-3
+date: '2026-07-17'
+width: 1920
+height: 1080
+slides:
+- id: '01'
+  file: slides/01-title.html
+  title: Title
+  act: I
+  interactions: []
+- id: '02'
+  file: slides/02-todays-plan.html
+  title: Agenda
+  act: I
+  interactions: []
+- id: '03'
+  file: slides/03-act-i.html
+  title: ACT I
+  act: chapter
+  kind: chapter
+  interactions: []
+- id: '04'
+  file: slides/04-progress-timeline.html
+  title: Progress to date
+  act: I
+  interactions: []
+- id: '05'
+  file: slides/05-docs-portal.html
+  title: Documentation website
+  act: I
+  interactions: []
+- id: '06'
+  file: slides/06-get-started.html
+  title: Get Started
+  act: I
+  interactions: []
+- id: '07'
+  file: slides/07-user-guide.html
+  title: User Guide
+  act: I
+  interactions: []
+- id: '08'
+  file: slides/08-tutorials.html
+  title: Tutorials
+  act: I
+  interactions: []
+- id: '09'
+  file: slides/09-science-guide.html
+  title: Science Guide
+  act: I
+  interactions: []
+- id: '10'
+  file: slides/10-communication.html
+  title: Communication
+  act: I
+  interactions: []
+- id: '11'
+  file: slides/11-contributing.html
+  title: Contributing
+  act: I
+  interactions: []
+- id: '12'
+  file: slides/12-ci-pipeline.html
+  title: CI/CD pipeline design
+  act: I
+  interactions: []
+- id: '13'
+  file: slides/13-public-home.html
+  title: Public repository
+  act: I
+  interactions: []
+- id: '14'
+  file: slides/14-github-tour.html
+  title: GitHub live tour
+  act: I
+  interactions: []
+- id: '15'
+  file: slides/15-governance.html
+  title: Governance
+  act: I
+  interactions: []
+- id: '16'
+  file: slides/16-website-tour.html
+  title: Website live tour
+  act: I
+  interactions: []
+- id: '17'
+  file: slides/17-act-ii.html
+  title: ACT II
+  act: chapter
+  kind: chapter
+  interactions: []
+- id: '18'
+  file: slides/18-near-term-target.html
+  title: Near-term target
+  act: II
+  interactions: []
+- id: '19'
+  file: slides/19-workstream-repo-ci.html
+  title: Track A - Quality and review
+  act: II
+  interactions: []
+- id: '20'
+  file: slides/20-workstream-docs.html
+  title: Track B - Documentation
+  act: II
+  interactions: []
+- id: '21'
+  file: slides/21-atbd-plan.html
+  title: Document conversion plan
+  act: II
+  interactions: []
+- id: '22'
+  file: slides/22-workstream-licensing-community.html
+  title: Track C - Licensing and community
+  act: II
+  interactions: []
+- id: '23'
+  file: slides/23-close.html
+  title: Summary
+  act: close
+  interactions: []
+- id: '24'
+  file: slides/24-discussion.html
+  title: Discussion
+  act: close
+  interactions: []
+- id: '25'
+  file: slides/25-questions.html
+  title: Questions
+  act: close
+  interactions: []
