@@ -25,6 +25,9 @@ We organize meetings and events to keep the BioPAL community connected. Session 
       <a class="bps-last-event__btn bps-last-event__btn--primary" href="../presentations/2026-06-30-first-dev-meeting/index.html" target="_blank" rel="noopener noreferrer">
         <i class="fa-solid fa-play" aria-hidden="true"></i> Open slides
       </a>
+      <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting.html#recording">
+        <i class="fa-solid fa-video" aria-hidden="true"></i> Watch recording
+      </a>
       <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting.html">
         <i class="fa-regular fa-file-lines" aria-hidden="true"></i> About this session
       </a>

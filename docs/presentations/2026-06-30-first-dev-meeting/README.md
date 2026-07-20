@@ -46,4 +46,4 @@ Published copy lands in `docs/_extra_static/presentations/2026-06-30-first-dev-m
 
 ## Docs page
 
-Community entry point: [`docs/communication/developer-meeting.md`](../../communication/developer-meeting.md)
+Community entry point (slides + session recording): [`docs/communication/developer-meeting.md`](../../communication/developer-meeting.md)
