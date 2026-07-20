@@ -32,7 +32,6 @@ Navigation in the deck: **← / →**, **Space**, thumbnail rail, **R** to reset
 | `meeting.yaml` | Docs status badge (`planned`, `held`, `cancelled`) |
 | `source/css/`, `source/js/` | Shared chrome and interactions |
 | `acronyms.md` | Acronym definitions and tooltip reference |
-| `speaker-notes.md` | Per-slide oral checklists by theme (what to add beyond the slide) |
 | `source/assets/` | Session screenshots and diagrams |
 | `../_shared/logos/` | Logos used by all meeting decks |
 | `dist/` | Generated output (gitignored) |
