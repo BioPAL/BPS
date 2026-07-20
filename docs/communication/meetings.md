@@ -61,6 +61,7 @@ More meeting decks will appear in this section as we hold technical sessions, co
 **Format:** Video call with public meeting notes
 
 **What we discuss:**
+
 - Review of Tier 0–1 pull requests
 - Technical discussions and architecture decisions
 - Short-term planning and priorities
@@ -75,6 +76,7 @@ More meeting decks will appear in this section as we hold technical sessions, co
 **Format:** Video call with public meeting notes and decisions
 
 **What we discuss:**
+
 - Review of Tier 2 pull requests
 - Strategic decisions and roadmap
 - Policy updates and governance changes
@@ -89,6 +91,7 @@ More meeting decks will appear in this section as we hold technical sessions, co
 **Format:** Video call with public meeting notes and recordings
 
 **What we discuss:**
+
 - Feature presentations and demos
 - Q&A sessions with maintainers
 - Feedback collection from users

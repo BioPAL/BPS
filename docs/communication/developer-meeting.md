@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 # First Developer Meeting
 
 ```{meeting-status} 2026-06-30-first-dev-meeting
+
 ```
 
 **30 June 2026** · Open Source & Open Science · 38 slides
