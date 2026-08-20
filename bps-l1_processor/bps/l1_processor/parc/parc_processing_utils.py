@@ -287,8 +287,10 @@ def update_aux_pp1_for_parc_processing(
     """
 
     for swath in STRIPMAP_SWATHS:
-        aux_pp1.azimuth_compression.parameters[swath].time_bias += parc_delays.azimuth_delay
         aux_pp1.range_compression.parameters[swath].time_bias += parc_delays.range_delay
+        aux_pp1.azimuth_compression.parameters[swath].time_bias += (
+            parc_delays.azimuth_delay - aux_pp1.range_compression.parameters[swath].time_bias
+        )
 
     aux_pp1.azimuth_compression.block_lines = (
         aux_pp1.azimuth_compression.block_overlap_lines
