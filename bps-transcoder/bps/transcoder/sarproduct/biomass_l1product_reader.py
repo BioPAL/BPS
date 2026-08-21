@@ -103,7 +103,7 @@ class BIOMASSL1ProductReader:
 
         # Populate the no data values.
         for data, nodata_val in zip(self.product.data_list, geotiff.nodata_values):
-            data[nodata_mask] = self.nodata_fill_value if self.nodata_fill_value is None else nodata_val
+            data[nodata_mask] = self.nodata_fill_value if self.nodata_fill_value is not None else nodata_val
 
     def _read_mph_file(self):
         tree = ElementTree.parse(self.product_path.joinpath(self.content.mph_file))
