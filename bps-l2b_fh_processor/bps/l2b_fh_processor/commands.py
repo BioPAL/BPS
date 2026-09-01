@@ -15,6 +15,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
+import numba as nb
 import numpy as np
 from bps.common import bps_logger, retrieve_aux_product_data_single_content
 from bps.common.translate_job_order import get_bps_logger_level
@@ -54,6 +55,9 @@ def run_l2b_fh_processing(
 
     # Input parsing: joborder
     job_order = parse_l2b_job_order(job_order_file.read_text())
+
+    # setting number of threads
+    nb.set_num_threads(job_order.device_resources.num_threads)
 
     # Relative paths in the joborder are intended as relative to the directory where the JobOrder is
     job_order_dir = job_order_file.parent

@@ -19,6 +19,7 @@ from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 
+import numba as nb
 import numpy as np
 from bps.common import bps_logger, retrieve_aux_product_data_single_content
 from bps.common.fnf_utils import read_fnf_mask, retrieve_fnf_content
@@ -94,6 +95,9 @@ def run_l2a_processing(
 
     # Input parsing: joborder
     job_order = parse_l2a_job_order(job_order_file.read_text())
+
+    # setting number of threads
+    nb.set_num_threads(job_order.device_resources.num_threads)
 
     # Relative paths in the joborder are intended as relative to the directory where the JobOrder is
     job_order_dir = job_order_file.parent
@@ -175,12 +179,17 @@ def run_l2a_processing(
             stack_products_list.append(stack_product_obj.read())
             acquisition_paths_selected.append(acquisition_path)
 
-            decoded_quality = StackQualityIndex.decode(stack_product_obj.stack_quality.overall_product_quality_index)
-            decoded_quality_string = [k.replace("_", " ") for k, v in decoded_quality.__dict__.items() if v is True]
-            if len(decoded_quality_string):
-                bps_logger.warning(
-                    f"Input L1c acquisition staQuality overallProductQualityIndex={stack_product_obj.stack_quality.overall_product_quality_index}: {decoded_quality_string[0]}"
-                )
+            sta_decoded_quality = StackQualityIndex.decode(
+                stack_product_obj.stack_quality.overall_product_quality_index
+            )
+            sta_decoded_quality_string = [
+                k.replace("_", " ") for k, v in vars(sta_decoded_quality).items() if v is True
+            ]
+            if len(sta_decoded_quality_string):
+                sta_quality_messages = ", ".join(sta_decoded_quality_string)
+                sta_message = f"Input L1c acquisition staQuality overall product quality index={stack_product_obj.stack_quality.overall_product_quality_index}: {sta_quality_messages}"
+                bps_logger.warning(f"{sta_message}")
+
             if stack_product_obj.stack_processing_parameters.skp_phase_correction_flag:
                 bps_logger.debug(f"SKP phase correction has been applied to input L1c acquisition {acquisition_path}")
                 if counter == 0 and aux_pp2_2a.general.apply_calibration_screen != CalibrationScreenType.NONE:

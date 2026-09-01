@@ -230,8 +230,8 @@ class ComplexPol:
 
 class CoregMode(Enum):
     GEOMETRY = "GEOMETRY"
-    FULL_ACCURACY = "FULL_ACCURACY"
-    AUTOMATIC = "AUTOMATIC"
+    GEOMETRY_AND_DATA = "GEOMETRY_AND_DATA"
+    DATA = "DATA"
 
 
 @dataclass(kw_only=True)
@@ -378,6 +378,10 @@ class CoregistrationOutputProductsConfType:
     )
 
 
+class DataRefinementMode(Enum):
+    FULL_ACCURACY = "FULL_ACCURACY"
+
+
 @dataclass(kw_only=True)
 class DccoreAlgorithmType:
     class Meta:
@@ -471,6 +475,148 @@ class FormatType(Enum):
 class FullAccuracyPostProcessingConfTypeResidualShiftFittingModel(Enum):
     POLYNOMIAL = "POLYNOMIAL"
     MODEL_BASED = "MODEL_BASED"
+    NON_STATIONARY_AREAS = "NON_STATIONARY_AREAS"
+
+
+@dataclass(kw_only=True)
+class FullAccuracyPreProcessingConfType:
+    """
+    Generic configuration parameters.
+
+    Parameters
+    ----------
+    range_max_shift
+        Maxima Shift in Range
+    azimuth_max_shift
+        Maxima Shift in Azimuth
+    range_block_size
+        Block Size in Range
+    azimuth_block_size
+        Block Size in Azimuth
+    coarse_input
+        Coarse input flag
+    range_min_overlap
+        Minuma Overlap on Range
+    azimuth_min_overlap
+        Minuma Overlap on Azimuth
+    azimuth_oversampling_factor
+        Oversampling factor for data block oversampling in azimuth direction
+    range_oversampling_factor
+        Oversampling factor for data block oversampling in range direction
+    memory
+    verbose
+    report_level
+    enable_common_band_range_filter
+        Enable Common Bandwidth Range Filter
+    """
+
+    class Meta:
+        target_namespace = "aresysConfTypes"
+
+    range_max_shift: int = field(
+        default=4,
+        metadata={
+            "name": "RangeMaxShift",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    azimuth_max_shift: int = field(
+        default=4,
+        metadata={
+            "name": "AzimuthMaxShift",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    range_block_size: int = field(
+        default=0,
+        metadata={
+            "name": "RangeBlockSize",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    azimuth_block_size: int = field(
+        default=0,
+        metadata={
+            "name": "AzimuthBlockSize",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    coarse_input: int = field(
+        default=0,
+        metadata={
+            "name": "CoarseInput",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    range_min_overlap: int = field(
+        default=1000,
+        metadata={
+            "name": "RangeMinOverlap",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    azimuth_min_overlap: int = field(
+        default=1000,
+        metadata={
+            "name": "AzimuthMinOverlap",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    azimuth_oversampling_factor: None | int = field(
+        default=None,
+        metadata={
+            "name": "AzimuthOversamplingFactor",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    range_oversampling_factor: None | int = field(
+        default=None,
+        metadata={
+            "name": "RangeOversamplingFactor",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    memory: int = field(
+        default=256,
+        metadata={
+            "name": "Memory",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    verbose: int = field(
+        default=0,
+        metadata={
+            "name": "Verbose",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    report_level: int = field(
+        default=0,
+        metadata={
+            "name": "ReportLevel",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    enable_common_band_range_filter: None | bool = field(
+        default=None,
+        metadata={
+            "name": "EnableCommonBandRangeFilter",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
 
 
 class InterpType(Enum):
@@ -1115,136 +1261,6 @@ class Fcomplex:
         default=None,
         metadata={
             "name": "ComplexPol",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-
-
-@dataclass(kw_only=True)
-class FullAccuracyPreProcessingConfType:
-    """
-    Generic configuration parameters.
-
-    Parameters
-    ----------
-    coreg_reference_polarization
-    range_max_shift
-        Maxima Shift in Range
-    azimuth_max_shift
-        Maxima Shift in Azimuth
-    range_block_size
-        Block Size in Range
-    azimuth_block_size
-        Block Size in Azimuth
-    coarse_input
-        Coarse input flag
-    range_min_overlap
-        Minuma Overlap on Range
-    azimuth_min_overlap
-        Minuma Overlap on Azimuth
-    memory
-    verbose
-    report_level
-    enable_common_band_range_filter
-        Enable Common Bandwidth Range Filter
-    """
-
-    class Meta:
-        target_namespace = "aresysConfTypes"
-
-    coreg_reference_polarization: None | PolarizationType = field(
-        default=None,
-        metadata={
-            "name": "CoregReferencePolarization",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    range_max_shift: int = field(
-        default=4,
-        metadata={
-            "name": "RangeMaxShift",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    azimuth_max_shift: int = field(
-        default=4,
-        metadata={
-            "name": "AzimuthMaxShift",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    range_block_size: int = field(
-        default=0,
-        metadata={
-            "name": "RangeBlockSize",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    azimuth_block_size: int = field(
-        default=0,
-        metadata={
-            "name": "AzimuthBlockSize",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    coarse_input: int = field(
-        default=0,
-        metadata={
-            "name": "CoarseInput",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    range_min_overlap: int = field(
-        default=1000,
-        metadata={
-            "name": "RangeMinOverlap",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    azimuth_min_overlap: int = field(
-        default=1000,
-        metadata={
-            "name": "AzimuthMinOverlap",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    memory: int = field(
-        default=256,
-        metadata={
-            "name": "Memory",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    verbose: int = field(
-        default=0,
-        metadata={
-            "name": "Verbose",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    report_level: int = field(
-        default=0,
-        metadata={
-            "name": "ReportLevel",
-            "type": "Element",
-            "namespace": "",
-        },
-    )
-    enable_common_band_range_filter: None | bool = field(
-        default=None,
-        metadata={
-            "name": "EnableCommonBandRangeFilter",
             "type": "Element",
             "namespace": "",
         },
@@ -2639,6 +2655,7 @@ class FullAccuracyPostProcessingConfType:
     Parameters
     ----------
     non_stationary_coreg_conf
+    enable_automatic_mode
     quality_threshold_for_automatic_mode
         R squared quality threshold
     residual_shift_fitting_model
@@ -2655,6 +2672,14 @@ class FullAccuracyPostProcessingConfType:
         default=None,
         metadata={
             "name": "NonStationaryCoregConf",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    enable_automatic_mode: None | bool = field(
+        default=None,
+        metadata={
+            "name": "EnableAutomaticMode",
             "type": "Element",
             "namespace": "",
         },
@@ -3258,6 +3283,27 @@ class Bpsl1CoreProcessingSettingsType:
 
 
 @dataclass(kw_only=True)
+class FullAccuracyConfType:
+    class Meta:
+        target_namespace = "aresysConfTypes"
+
+    full_accuracy_pre_processing_conf: FullAccuracyPreProcessingConfType = field(
+        metadata={
+            "name": "FullAccuracyPreProcessingConf",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    full_accuracy_post_processing_conf: FullAccuracyPostProcessingConfType = field(
+        metadata={
+            "name": "FullAccuracyPostProcessingConf",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+
+
+@dataclass(kw_only=True)
 class MultilookConfType(BaseConfType):
     """
     Multilooking configuration parameters.
@@ -3367,22 +3413,92 @@ class MultilookConfType(BaseConfType):
 
 
 @dataclass(kw_only=True)
+class Bpsl1CoreProcessorConfType(BaseConfType):
+    """
+    BPSL1CoreProcessor configuration parameters.
+    """
+
+    class Meta:
+        name = "BPSL1CoreProcessorConfType"
+        target_namespace = "aresysConfTypes"
+
+    processing_steps: SarfocProcessingStepsType = field(
+        metadata={
+            "name": "ProcessingSteps",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    processing_settings: Bpsl1CoreProcessingSettingsType = field(
+        metadata={
+            "name": "ProcessingSettings",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    output_products: SarfocOutputProductsType = field(
+        metadata={
+            "name": "OutputProducts",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    external_resources: SarfocExternalResourcesType = field(
+        metadata={
+            "name": "ExternalResources",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    interface_settings: Bpsl1CoreProcessorInterfaceSettingsType = field(
+        metadata={
+            "name": "InterfaceSettings",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+
+
+@dataclass(kw_only=True)
+class DataRefinementConfType:
+    class Meta:
+        target_namespace = "aresysConfTypes"
+
+    data_refinement_mode: DataRefinementMode = field(
+        metadata={
+            "name": "DataRefinementMode",
+            "type": "Element",
+            "namespace": "",
+        }
+    )
+    full_accuracy_conf: None | FullAccuracyConfType = field(
+        default=None,
+        metadata={
+            "name": "FullAccuracyConf",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+    coreg_reference_polarization: None | PolarizationType = field(
+        default=None,
+        metadata={
+            "name": "CoregReferencePolarization",
+            "type": "Element",
+            "namespace": "",
+        },
+    )
+
+
+@dataclass(kw_only=True)
 class StaprocessorConfType:
     class Meta:
         name = "STAProcessorConfType"
         target_namespace = "aresysConfTypes"
 
-    full_accuracy_pre_processing_conf: FullAccuracyPreProcessingConfType = field(
-        metadata={
-            "name": "FullAccuracyPreProcessingConf",
-            "type": "Element",
-            "namespace": "",
-        }
-    )
-    full_accuracy_post_processing_conf: None | FullAccuracyPostProcessingConfType = field(
+    data_refinement_conf: None | DataRefinementConfType = field(
         default=None,
         metadata={
-            "name": "FullAccuracyPostProcessingConf",
+            "name": "DataRefinementConf",
             "type": "Element",
             "namespace": "",
         },
@@ -3400,14 +3516,6 @@ class StaprocessorConfType:
             "type": "Element",
             "namespace": "",
         }
-    )
-    skip_geometry_shifts_computation: None | bool = field(
-        default=None,
-        metadata={
-            "name": "SkipGeometryShiftsComputation",
-            "type": "Element",
-            "namespace": "",
-        },
     )
     earth_geometry: None | EarthGeometry = field(
         default=None,
@@ -3470,53 +3578,6 @@ class StaprocessorConfType:
             "type": "Element",
             "namespace": "",
         },
-    )
-
-
-@dataclass(kw_only=True)
-class Bpsl1CoreProcessorConfType(BaseConfType):
-    """
-    BPSL1CoreProcessor configuration parameters.
-    """
-
-    class Meta:
-        name = "BPSL1CoreProcessorConfType"
-        target_namespace = "aresysConfTypes"
-
-    processing_steps: SarfocProcessingStepsType = field(
-        metadata={
-            "name": "ProcessingSteps",
-            "type": "Element",
-            "namespace": "",
-        }
-    )
-    processing_settings: Bpsl1CoreProcessingSettingsType = field(
-        metadata={
-            "name": "ProcessingSettings",
-            "type": "Element",
-            "namespace": "",
-        }
-    )
-    output_products: SarfocOutputProductsType = field(
-        metadata={
-            "name": "OutputProducts",
-            "type": "Element",
-            "namespace": "",
-        }
-    )
-    external_resources: SarfocExternalResourcesType = field(
-        metadata={
-            "name": "ExternalResources",
-            "type": "Element",
-            "namespace": "",
-        }
-    )
-    interface_settings: Bpsl1CoreProcessorInterfaceSettingsType = field(
-        metadata={
-            "name": "InterfaceSettings",
-            "type": "Element",
-            "namespace": "",
-        }
     )
 
 

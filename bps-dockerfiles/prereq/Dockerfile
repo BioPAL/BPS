@@ -8,10 +8,10 @@ ENV PROJ_DATA="/opt/conda_folder/envs/env/share/proj"
 
 USER root
 RUN cd /tmp && \
-    curl -sSL https://github.com/conda-forge/miniforge/releases/download/24.7.1-0/Mambaforge-Linux-x86_64.sh -o Mambaforge.sh && \
-    chmod +x Mambaforge.sh && \
-    ./Mambaforge.sh -b -p /opt/conda_folder && \
-    /opt/conda_folder/bin/conda install -y -c conda-forge conda-build && \
+    curl -fsSL https://github.com/conda-forge/miniforge/releases/download/25.1.1-2/Miniforge3-Linux-x86_64.sh -o Miniforge3.sh && \
+    chmod +x Miniforge3.sh && \
+    ./Miniforge3.sh -b -p /opt/conda_folder && \
+    /opt/conda_folder/bin/conda install -y -c conda-forge conda-index && \
     /opt/conda_folder/bin/conda index --verbose /tmp/python-packages && \
     /opt/conda_folder/bin/conda config --prepend channels conda-forge && \
     /opt/conda_folder/bin/conda config --prepend channels /tmp/python-packages && \

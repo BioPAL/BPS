@@ -35,7 +35,6 @@ from bps.l1_processor.intermediate_footprint import (
 from bps.l1_processor.parc.parc_processing_info import Delays, Window
 from bps.l1_processor.parc.parc_processing_utils import (
     ScatteringResponse,
-    apply_delay_to_product,
     update_aux_pp1_for_parc_processing,
     update_job_order_for_parc_processing,
 )
@@ -238,26 +237,24 @@ def parc_processing_contex(
     parc_job_order = update_job_order_for_parc_processing(deepcopy(job_order), parc_processing_roi)
     parc_aux_pp1 = update_aux_pp1_for_parc_processing(deepcopy(aux_pp1), parc_delays)
 
-    # Ionospheric height model file is taken from the main run
+    # Ionospheric height model file, Faraday Rotation and Phase Screen products are taken from the main run
     parc_core_outputs.directory.mkdir(parents=True, exist_ok=True)
+
     if layout.core_processor_outputs.ionospheric_height_model_file.exists():
         shutil.copy(
             layout.core_processor_outputs.ionospheric_height_model_file,
             parc_core_outputs.ionospheric_height_model_file,
-        )
+        )  # file is copied to avoid deletion when removing parc_core_outputs
 
-    # Apply delay also to intermediate outputs from main run
     faraday_rotation_product = layout.core_processor_outputs.output_products.get(IntermediateProductID.FR, None)
     if faraday_rotation_product and faraday_rotation_product.path.exists():
-        apply_delay_to_product(
-            faraday_rotation_product.path, parc_delays, parc_core_additional_inputs.faraday_rotation_product
-        )
+        parc_core_additional_inputs.faraday_rotation_product = faraday_rotation_product.path
 
     phase_screen_product = layout.core_processor_outputs.output_products.get(
         IntermediateProductID.PHASE_SCREEN_BB, None
     )
     if phase_screen_product and phase_screen_product.path.exists():
-        apply_delay_to_product(phase_screen_product.path, parc_delays, parc_core_additional_inputs.phase_screen_product)
+        parc_core_additional_inputs.phase_screen_product = phase_screen_product.path
 
     yield parc_job_order, parc_aux_pp1, parc_core_files, parc_core_outputs, parc_core_additional_inputs
 
@@ -270,9 +267,6 @@ def parc_processing_contex(
 
         bps_logger.debug("Removing input L1 PARC core processor files")
         parc_core_files.delete()
-
-        bps_logger.debug("Removing input L1 PARC core additional inputs")
-        parc_core_additional_inputs.delete()
 
         # Remove the entire parc directory if empty
         if len(list(parc_core_files.directory.iterdir())) == 0:

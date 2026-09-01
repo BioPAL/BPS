@@ -17,6 +17,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 
+import numba as nb
 import numpy as np
 from bps.common import (
     bps_logger,
@@ -76,6 +77,9 @@ def run_l2b_agb_processing(
 
     # Input parsing: joborder
     job_order = parse_l2b_job_order(job_order_file.read_text())
+
+    # setting number of threads
+    nb.set_num_threads(job_order.device_resources.num_threads)
 
     # Relative paths in the joborder are intended as relative to the directory where the JobOrder is
     job_order_dir = job_order_file.parent

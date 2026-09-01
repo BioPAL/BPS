@@ -20,7 +20,7 @@ from bps.common import bps_logger
 from bps.common.io import common, translate_common
 from bps.common.io.parsing import serialize
 from bps.common.l2_joborder_tags import L2B_OUTPUT_PRODUCT_AGB
-from bps.transcoder import BPS_PFD_AGB_VERSION, BPS_PPD_VERSION
+from bps.transcoder import BPS_ATBD_AGB_VERSION, BPS_PFD_AGB_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import (
     common_annotation_models_l2,
     main_annotation_models_l2b_agb,
@@ -462,6 +462,8 @@ class BIOMASSL2bAGBProductWriter:
         xml4.text = f"BIOMASS Above Ground Biomass Product Format Specification (BPS_AGB_PFD) {BPS_PFD_AGB_VERSION}"
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
         xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS Above Ground Biomass Algorithms Theoretical Baseline Document (BPS_AGB_ATBD) {BPS_ATBD_AGB_VERSION}"
 
         # Write MPH file
         xmlstr = minidom.parseString(ET.tostring(xml1)).toprettyxml(indent="   ")

@@ -10,11 +10,10 @@ PARC processing utils
 ---------
 """
 
-import shutil
 from pathlib import Path
 
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
-from arepytools.io import create_product_folder, iter_channels, open_product_folder, read_metadata, write_metadata
+from arepytools.io import open_product_folder, read_metadata
 from arepytools.io.metadata import Pulse
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
@@ -287,42 +286,13 @@ def update_aux_pp1_for_parc_processing(
     """
 
     for swath in STRIPMAP_SWATHS:
-        aux_pp1.azimuth_compression.parameters[swath].time_bias += parc_delays.azimuth_delay
         aux_pp1.range_compression.parameters[swath].time_bias += parc_delays.range_delay
+        aux_pp1.azimuth_compression.parameters[swath].time_bias += (
+            parc_delays.azimuth_delay - aux_pp1.range_compression.parameters[swath].time_bias
+        )
 
     aux_pp1.azimuth_compression.block_lines = (
         aux_pp1.azimuth_compression.block_overlap_lines
     ) + aux_pp1.general.parc_roi_lines // 2
 
     return aux_pp1
-
-
-def apply_delay_to_product(input_product: Path, parc_delays: Delays, delayed_product: Path):
-    """Apply delay directly to raster info"""
-
-    input_pf = open_product_folder(input_product)
-    output_pf = create_product_folder(delayed_product, overwrite_ok=True)
-
-    for channel_index, channel_metadata in iter_channels(input_pf):
-        input_raster_file = input_pf.get_channel_data(channel_index)
-        output_raster_file = output_pf.get_channel_data(channel_index)
-        output_metadata_file = output_pf.get_channel_metadata(channel_index)
-
-        shutil.copy2(input_raster_file, output_raster_file)
-
-        raster_info = channel_metadata.get_raster_info()
-        raster_info.file_name = output_raster_file.name
-        raster_info.set_lines_axis(
-            raster_info.lines_start - parc_delays.azimuth_delay,
-            raster_info.lines_start_unit,
-            raster_info.lines_step,
-            raster_info.lines_step_unit,
-        )
-        raster_info.set_samples_axis(
-            raster_info.samples_start - parc_delays.range_delay,
-            raster_info.samples_start_unit,
-            raster_info.samples_step,
-            raster_info.samples_step_unit,
-        )
-
-        write_metadata(channel_metadata, output_metadata_file)

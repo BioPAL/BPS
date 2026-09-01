@@ -17,6 +17,8 @@ from bps.common.io import aresys_inputfile_models as are_input
 from bps.stack_coreg_processor.configuration import (
     CoregistrationOutputProductsConfType,
     CoregStackProcessorInternalConfiguration,
+    DataRefinementConfType,
+    FullAccuracyConfType,
     FullAccuracyPostProcessingConfType,
     FullAccuracyPreProcessingConfType,
     GeneralCoregStackProcessorInternalConfiguration,
@@ -96,7 +98,6 @@ def translate_full_accuracy_preproc_conf_to_model(
         memory=conf.memory,
         verbose=conf.verbose,
         report_level=conf.report_level,
-        coreg_reference_polarization=conf.coreg_reference_polarization.value,
     )
 
 
@@ -147,13 +148,68 @@ def translate_full_accuracy_postproc_conf_type_to_model(
     """
     return are_conf.FullAccuracyPostProcessingConfType(
         residual_shift_fitting_model=are_conf.FullAccuracyPostProcessingConfTypeResidualShiftFittingModel(
-            value="MODEL_BASED"
+            value=conf.residual_shift_fitting_model.value,
         ),
         weight_threshold_refine_rg=conf.weight_threshold_refine_rg,
         weight_threshold_refine_az=conf.weight_threshold_refine_az,
         quality_threshold_for_automatic_mode=conf.quality_threshold_for_automatic_mode,
         min_valid_blocks=conf.min_valid_blocks,
-        non_stationary_coreg_conf=translate_non_stationary_coreg_conf(conf.non_stationary_coreg_conf),
+        non_stationary_coreg_conf=translate_non_stationary_coreg_conf(conf.non_stationary_coreg_conf)
+        if conf.non_stationary_coreg_conf is not None
+        else None,
+    )
+
+
+def translate_full_accuracy_conf_type_to_model(
+    conf: FullAccuracyConfType,
+) -> are_conf.FullAccuracyConfType:
+    """
+    Translate a FullAccuracyConfType object to the XSD model.
+
+    Parameters
+    ----------
+    conf: FullAccuracyConfType
+        The full-accuracy post-processing conf object.
+
+    Returns
+    -------
+    aresys_configuration_models.FullAccuracyConfType
+        The XSD object.
+
+    """
+    return are_conf.FullAccuracyConfType(
+        full_accuracy_post_processing_conf=translate_full_accuracy_postproc_conf_type_to_model(
+            conf.full_accuracy_postprocessing_conf
+        ),
+        full_accuracy_pre_processing_conf=translate_full_accuracy_preproc_conf_to_model(
+            conf.full_accuracy_preprocessing_conf
+        ),
+    )
+
+
+def translate_data_refinement_conf_type_to_model(
+    conf: DataRefinementConfType,
+) -> are_conf.DataRefinementConfType:
+    """
+    Translate a DataRefinementConfType object to the XSD model.
+
+    Parameters
+    ----------
+    conf: DataRefinementConfType
+        The data refinement conf object.
+
+    Returns
+    -------
+    aresys_configuration_models.DataRefinementConfType
+        The XSD object.
+
+    """
+    return are_conf.DataRefinementConfType(
+        data_refinement_mode=are_conf.DataRefinementMode(
+            value=conf.data_refinement_mode.value,
+        ),
+        full_accuracy_conf=translate_full_accuracy_conf_type_to_model(conf.full_accuracy_conf),
+        coreg_reference_polarization=are_conf.PolarizationType(conf.coreg_reference_polarization.value),
     )
 
 
@@ -265,12 +321,7 @@ def translate_coreg_configuration_to_model(
     """
     # The coregistration configurations.
     coreg_stack_conf = are_conf.StaprocessorConfType(
-        full_accuracy_pre_processing_conf=translate_full_accuracy_preproc_conf_to_model(
-            conf.full_accuracy_preproc_conf,
-        ),
-        full_accuracy_post_processing_conf=translate_full_accuracy_postproc_conf_type_to_model(
-            conf.full_accuracy_postproc_conf,
-        ),
+        data_refinement_conf=translate_data_refinement_conf_type_to_model(conf.data_refinement_conf),
         reinterpolation_conf=translate_reinterpolation_conf_type_to_model(
             conf.reinterp_conf,
         ),

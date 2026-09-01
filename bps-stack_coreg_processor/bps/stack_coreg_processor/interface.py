@@ -27,12 +27,11 @@ from bps.stack_coreg_processor.serialization import (
 )
 from bps.stack_coreg_processor.utils import StackCoregProcessorRuntimeError
 
-# Map from BPSStackProcessor coregistration method (i.e. "AUTOMATIC",
-# "FULL_ACCURACY", and "GEOMETRY") to L1c product coregistration methods
-# (i.e. "AUTOMATIC", "GEOMETRY", and "GEOMETRY_AND_DATA")
+# Map from BPSStackProcessor coregistration method (i.e.
+# "GEOMETRY_AND_DATA", and "GEOMETRY") to L1c product coregistration methods
+# (i.e. "GEOMETRY", and "GEOMETRY_AND_DATA")
 COREG_CONF_TO_L1C_CONF = {
-    CoregStackProcessorInternalConfiguration.CoregMode.AUTOMATIC: CoregistrationMethodType.AUTOMATIC,
-    CoregStackProcessorInternalConfiguration.CoregMode.FULL_ACCURACY: CoregistrationMethodType.GEOMETRY_AND_DATA,
+    CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY_AND_DATA: CoregistrationMethodType.GEOMETRY_AND_DATA,
     CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY: CoregistrationMethodType.GEOMETRY,
 }
 

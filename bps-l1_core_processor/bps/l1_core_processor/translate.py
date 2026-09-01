@@ -671,7 +671,7 @@ def translate_ionospheric_calibration_conf_to_model(
     return are_conf.IonosphericCalibrationConfType(
         beam=conf.swath,
         perform_defocusing_on_ionospheric_height=int(conf.perform_defocusing_on_ionospheric_height),
-        perform_faraday_rotation_correction=int(conf.perform_defocusing_on_ionospheric_height),
+        perform_faraday_rotation_correction=int(conf.perform_faraday_rotation_correction),
         perform_phase_screen_correction=int(conf.perform_phase_screen_correction),
         perform_group_delay_correction=int(conf.perform_group_delay_correction),
         ionospheric_height_estimation_method=are_conf.IonosphericCalibrationConfTypeIonosphericHeightEstimationMethod(

@@ -46,7 +46,7 @@ def dgg_search_tiles(latlon_coverage: list[float], create_tiles_dict: bool | Non
     tile_extent_lonlat_dict = {}  # list of tile degrees extension in lat / lon for each tile [tile extent lon deg, tile extent lat deg]
 
     # whole Copernicus latitude vector
-    latitude_vector = np.arange(-70, 70, tile_extent_lat) + pixel_spacing_lat / 2
+    latitude_vector = np.arange(-90, 90, tile_extent_lat) + pixel_spacing_lat / 2
 
     # Copernicus longitude pixel spacing varies depending on latitude sector
     pixel_spacing_lon_list = np.zeros(latitude_vector.shape).astype(np.float64)
@@ -55,9 +55,11 @@ def dgg_search_tiles(latlon_coverage: list[float], create_tiles_dict: bool | Non
     pixel_spacing_lon_list[np.logical_and(latitude_vector >= -50, latitude_vector < 50)] = 3 / 3600
     pixel_spacing_lon_list[np.logical_and(latitude_vector >= 50, latitude_vector < 60)] = 4.5 / 3600
     pixel_spacing_lon_list[np.logical_and(latitude_vector >= 60, latitude_vector < 70)] = 6 / 3600
+    pixel_spacing_lon_list[latitude_vector >= 70] = 6 / 3600
+    pixel_spacing_lon_list[latitude_vector <= -70] = 6 / 3600
 
-    lat_tiles_name = ["S{:02d}".format(70 - lat) for lat in range(0, 70, tile_extent_lat)] + [
-        "N{:02d}".format(lat) for lat in range(0, 89, tile_extent_lat)
+    lat_tiles_name = ["S{:02d}".format(90 - lat) for lat in range(0, 90, tile_extent_lat)] + [
+        "N{:02d}".format(lat) for lat in range(0, 90, tile_extent_lat)
     ]
 
     # extract input requested latitude vectors from the whole ones:
