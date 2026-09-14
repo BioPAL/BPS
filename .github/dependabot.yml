@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: 2026 ACRI-ST - European Space Agency (ESA) - ARESYS
+#
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+---
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directories:
+      - "/bps-common"
+      - "/bps-l1_core_processor"
+      - "/bps-l1_framing_processor"
+      - "/bps-l1_pre_processor"
+      - "/bps-l1_processor"
+      - "/bps-l2a_processor"
+      - "/bps-l2b_agb_processor"
+      - "/bps-l2b_fd_processor"
+      - "/bps-l2b_fh_processor"
+      - "/bps-stack_cal_processor"
+      - "/bps-stack_coreg_processor"
+      - "/bps-stack_pre_processor"
+      - "/bps-stack_processor"
+      - "/bps-transcoder"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    target-branch: "develop"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    target-branch: "develop"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"

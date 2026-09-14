@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 line-length = 120
 output-format = "concise"
 target-version = "py312"

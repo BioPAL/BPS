@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <Task_Table schemaName="BIOMASS CPF-Processor ICD" schemaVersion="1.4">
     <Processor_Name>L2B_AGB_P_withFD_withAGB</Processor_Name>
     <Processor_Version>04.44</Processor_Version>

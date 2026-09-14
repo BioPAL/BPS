@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <Config xmlns="http://pypi.org/project/xsdata" version="22.2">
   <Output maxLineLength="119">
     <Package>generated</Package>

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 PREPARE_BUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(CDPATH= cd -- "${PREPARE_BUNDLE_DIR}/.." && pwd)
 

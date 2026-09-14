@@ -1,4 +1,11 @@
 <?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.1">
 	<xs:annotation>
 		<xs:documentation>This schema defines the format of the repository common elements and types.</xs:documentation>

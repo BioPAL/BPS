@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 compute_bps_tag() {
    local version="$1"
    local major

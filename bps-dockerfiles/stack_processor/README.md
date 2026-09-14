@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # BIOMASS Processing Suite (BPS)
 ## STA_P Processor
 ### Installation package README file

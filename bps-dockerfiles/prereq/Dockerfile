@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ARESYS - European Space Agency (ESA)
+#
+# SPDX-License-Identifier: Apache-2.0
+
 FROM registry.access.redhat.com/ubi8-minimal:latest
 
 COPY pkgs /tmp/python-packages
