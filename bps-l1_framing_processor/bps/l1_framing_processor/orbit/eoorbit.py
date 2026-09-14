@@ -69,12 +69,8 @@ class EOOrbit(Orbit):
         fixed_header = orbit_model.earth_observation_header.fixed_header
         self.mission = fixed_header.mission
         self.type = self.orbit_type_dict.get(fixed_header.file_type, EOrbitType.UNKNOWN.value)
-        self.start_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_start[4:] + ".000000"
-        )
-        self.stop_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_stop[4:] + ".000000"
-        )
+        self.start_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_start[4:] + ".000000")
+        self.stop_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_stop[4:] + ".000000")
 
         # - Set orbit data
         list_of_osvs = orbit_model.data_block.list_of_osvs
@@ -88,7 +84,7 @@ class EOOrbit(Orbit):
             self.velocity_sv[sv][0] = float(list_of_osvs.osv[sv].vx.value)
             self.velocity_sv[sv][1] = float(list_of_osvs.osv[sv].vy.value)
             self.velocity_sv[sv][2] = float(list_of_osvs.osv[sv].vz.value)
-        self.reference_time = PreciseDateTime().set_from_utc_string(list_of_osvs.osv[0].utc[4:])
-        self.delta_time = PreciseDateTime().set_from_utc_string(list_of_osvs.osv[1].utc[4:]) - self.reference_time
+        self.reference_time = PreciseDateTime.from_utc_string(list_of_osvs.osv[0].utc[4:])
+        self.delta_time = PreciseDateTime.from_utc_string(list_of_osvs.osv[1].utc[4:]) - self.reference_time
 
         return True

@@ -707,7 +707,7 @@ class StackCalProcessorInputManager:
 
                 doppler_centroids_poly_gen = GenericPoly(
                     (
-                        PreciseDateTime().set_from_utc_string(str(doppler_centroids_poly.t_ref_az)),
+                        PreciseDateTime.from_utc_string(str(doppler_centroids_poly.t_ref_az)),
                         doppler_centroids_poly.t_ref_rg,
                     ),
                     doppler_centroids_poly.coefficients,

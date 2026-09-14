@@ -7,7 +7,6 @@
 
 import unittest
 
-from arepytools.timing.precisedatetime import InvalidUtcString
 from bps.transcoder.utils.product_name import (
     InvalidBIOMASSProductName,
     parse_l1product_name,
@@ -124,11 +123,11 @@ class ParseL1ProductNameTest(unittest.TestCase):
             parse_l1product_name(42)
 
     def test_parse_invalid_utc_start_time(self):
-        with self.assertRaises(InvalidUtcString):
+        with self.assertRaises(ValueError):
             parse_l1product_name("BIO_S3_SCS__1S_01234567T012345_20170212T060344_I_G01_M01_C01_T001_F001_01_C2CY70")
 
     def test_parse_invalid_utc_stop_time(self):
-        with self.assertRaises(InvalidUtcString):
+        with self.assertRaises(ValueError):
             parse_l1product_name("BIO_S3_SCS__1S_20170212T060344_01234567T012345_I_G01_M01_C01_T001_F001_01_C2CY70")
 
 

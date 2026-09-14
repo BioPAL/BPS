@@ -53,7 +53,7 @@ class StateVectors:
 def _get_time_from_state_vector(
     state_vector: aux_orb_models.OsvType,
 ) -> PreciseDateTime:
-    return PreciseDateTime().set_from_utc_string(state_vector.utc[4:])
+    return PreciseDateTime.from_utc_string(state_vector.utc[4:])
 
 
 def _translate_state_vector(
@@ -127,12 +127,8 @@ class EOOrbit(Orbit):
 
         self.type = self.orbit_type_dict.get(fixed_header.file_type, EOrbitType.UNKNOWN.value)
 
-        self.start_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_start[4:] + ".000000"
-        )
-        self.stop_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_stop[4:] + ".000000"
-        )
+        self.start_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_start[4:] + ".000000")
+        self.stop_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_stop[4:] + ".000000")
 
         # - Set orbit data
         state_vectors = StateVectors.translate_state_vectors(orbit_model.data_block.list_of_osvs.osv)
