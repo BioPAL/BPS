@@ -192,7 +192,7 @@ def parse_l1product_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName, TypeError
 
     Return
     ------
@@ -270,7 +270,7 @@ def parse_l2aproduct_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName, TypeError
 
     Return
     ------
@@ -337,7 +337,7 @@ def parse_l2bproduct_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName, TypeError
 
     Return
     ------
