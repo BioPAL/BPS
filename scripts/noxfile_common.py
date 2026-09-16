@@ -144,24 +144,6 @@ def run_unittest(session: nox.Session):
     )
 
 
-def run_build_sdist(session: nox.Session):
-    """Build source distribution"""
-    if not Path("bps").exists():
-        session.error("run build_sdist session inside package folder: e.g. 'cd bps-common; nox -s build_sdist'")
-
-    session.install("build")
-    session.run("python", "-m", "build", "--sdist", silent=True)
-
-
-def run_build_wheel(session: nox.Session):
-    """Build wheel distribution"""
-    if not Path("bps").exists():
-        session.error("run build_wheel session inside package folder: e.g. 'cd bps-common; nox -s build_wheel'")
-
-    session.install("build")
-    session.run("python", "-m", "build", "--wheel", silent=True)
-
-
 def run_check_xsd(session: nox.Session, package: str, file_list: list[str]):
     """Check that XSD inside package are aligned with those main folder"""
 
@@ -226,15 +208,3 @@ def ruff(session: nox.Session):
 def fawlty_deps(session: nox.Session):
     """Check dependencies with fawlty deps"""
     run_fawlty_deps(session)
-
-
-@nox.session()
-def build_sdist(session: nox.Session):
-    """Build source distribution"""
-    run_build_sdist(session)
-
-
-@nox.session()
-def build_wheel(session: nox.Session):
-    """Build wheel distribution"""
-    run_build_wheel(session)

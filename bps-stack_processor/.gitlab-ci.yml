@@ -57,32 +57,19 @@ format:
     - python3.12 -m pip install nox
     - python3.12 -m nox -s format_check
 
-sdist:
+build:
   stage: build
   needs: []
   extends:
     - .tags_manylinux2014
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s build_sdist
+    - python3.12 -m pip install build
+    - python3.12 -m build
   artifacts:
     expire_in: 2 weeks
     paths:
       - $SUBPROJECT/dist/*.tar.gz
-
-wheel:
-  stage: build
-  needs: []
-  extends:
-    - .tags_manylinux2014
-  script:
-    - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s build_wheel
-  artifacts:
-    expire_in: 2 weeks
-    paths:
       - $SUBPROJECT/dist/*.whl
 
 deploy:
