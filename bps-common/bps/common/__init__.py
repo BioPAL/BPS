@@ -10,7 +10,7 @@ BPS common
 ----------
 """
 
-__version__ = "4.4.4"
+__version__ = "4.5.0.dev0"
 
 from bps.common.common import (
     STRIPMAP_SWATHS,

@@ -18,7 +18,7 @@ from bps.common import Swath
 from bps.common.io import joborder_models
 from bps.common.joborder import DeviceResources, ProcessorConfiguration, TileProcessingParameters
 
-BIOMASS_PROCESSOR_VERSION = "04.44"
+BIOMASS_PROCESSOR_VERSION = "04.50"
 """Expected processor version for all BIOMASS CPF processor job orders"""
 
 BIOMASS_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
