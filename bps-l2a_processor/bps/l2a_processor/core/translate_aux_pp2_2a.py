@@ -189,7 +189,6 @@ def translate_model_to_gn_conf(
 
     if gn_type == "AGB":
         return GroundCancellationConfAGB(
-            compute_gn_power_flag=str_to_bool(conf.compute_gnpower_flag),
             radiometric_calibration_flag=str_to_bool(conf.radiometric_calibration_flag),
             emphasized_forest_height=conf.emphasized_forest_height.value,
             operational_mode=OperationalModeType(conf.operational_mode.value),

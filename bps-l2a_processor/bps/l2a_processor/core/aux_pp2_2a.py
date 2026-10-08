@@ -58,7 +58,6 @@ class GroundCancellationConfFD:
 class GroundCancellationConfAGB(GroundCancellationConfFD):
     """Ground Cancellation configurations for GN (AGB)"""
 
-    compute_gn_power_flag: bool
     radiometric_calibration_flag: bool
 
 

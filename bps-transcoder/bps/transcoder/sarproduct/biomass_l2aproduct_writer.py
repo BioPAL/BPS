@@ -1633,7 +1633,6 @@ class BIOMASSL2aProductWriter:
             operational_mode = main_annotation_models_l2a_gn.OperationalModeType(
                 self.product.main_ads_processing_parameters.operational_mode
             )
-            compute_gn_power_flag = str(self.product.main_ads_processing_parameters.compute_gn_power_flag).lower()
             radiometric_calibration_flag = str(
                 self.product.main_ads_processing_parameters.radiometric_calibration_flag
             ).lower()
@@ -1652,7 +1651,6 @@ class BIOMASSL2aProductWriter:
                 general_configuration_parameters=general_configuration_parameters,
                 emphasized_forest_height=emphasized_forest_height,
                 operational_mode=operational_mode,
-                compute_gnpower_flag=compute_gn_power_flag,
                 radiometric_calibration_flag=radiometric_calibration_flag,
                 images_pair_selection=(
                     self.product.main_ads_processing_parameters.images_pair_selection
