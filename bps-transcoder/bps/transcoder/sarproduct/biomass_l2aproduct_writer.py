@@ -1921,8 +1921,8 @@ class BIOMASSL2aProductWriter:
                 ),
                 fill_value=FLOAT_NODATA_VALUE,
             )
-            incidence_var.description = """Local incidence angle image in radiants, which takes into account terrain local slope and defined in the latitude-longitude based on DGG projection, cropped to have a  coverage containing the L2a Ground cancelled backscatter image product boundaries."""
-            incidence_var.units = "rad"
+            incidence_var.description = """Local incidence angle image in degrees, which takes into account terrain local slope and defined in the latitude-longitude based on DGG projection, cropped to have a  coverage containing the L2a Ground cancelled backscatter image product boundaries."""
+            incidence_var.units = "deg"
             bps_logger.info(
                 f"    Output product LUT ADS Incidence Angle compression factor: {compression_options.ads.local_incidence_angle.compression_factor}"
             )
