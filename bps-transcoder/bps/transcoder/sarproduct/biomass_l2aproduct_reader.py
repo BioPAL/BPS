@@ -450,14 +450,12 @@ class BIOMASSL2aProductReader:
         elif self.product_type == "FP_GN__L2A":
             assert main_annotation_model.processing_parameters.emphasized_forest_height is not None
             assert main_annotation_model.processing_parameters.operational_mode is not None
-            assert main_annotation_model.processing_parameters.compute_gnpower_flag is not None
             assert main_annotation_model.processing_parameters.radiometric_calibration_flag is not None
             assert main_annotation_model.processing_parameters.disable_ground_cancellation_flag is not None
             assert main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle is not None
             least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle.least_significant_digit
             emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
             operational_mode = main_annotation_model.processing_parameters.operational_mode.value
-            compute_gn_power_flag = str_to_bool(main_annotation_model.processing_parameters.compute_gnpower_flag)
             radiometric_calibration_flag = str_to_bool(
                 main_annotation_model.processing_parameters.radiometric_calibration_flag
             )
@@ -476,7 +474,6 @@ class BIOMASSL2aProductReader:
                 least_significant_digit,
                 emphasized_forest_height,
                 operational_mode,
-                compute_gn_power_flag,
                 radiometric_calibration_flag,
                 product_resolution,
                 upsampling_factor,

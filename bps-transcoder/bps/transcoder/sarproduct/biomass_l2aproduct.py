@@ -356,7 +356,6 @@ class BIOMASSL2aMainADSProcessingParametersGN:
     least_significant_digit_inc_angle: int
     emphasized_forest_height: float
     operational_mode: str
-    compute_gn_power_flag: bool
     radiometric_calibration_flag: bool
     product_resolution: float
     upsampling_factor: int

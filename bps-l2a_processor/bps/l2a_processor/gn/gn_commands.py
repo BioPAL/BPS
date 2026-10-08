@@ -647,7 +647,6 @@ class GN:
             least_significant_digit,
             self.aux_pp2_2a.agb.ground_cancellaton.emphasized_forest_height,
             self.aux_pp2_2a.agb.ground_cancellaton.operational_mode.value,
-            self.aux_pp2_2a.agb.ground_cancellaton.compute_gn_power_flag,
             self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
             self.aux_pp2_2a.agb.product_resolution,
             self.aux_pp2_2a.agb.upsampling_factor,
