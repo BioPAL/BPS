@@ -1012,6 +1012,12 @@ def geocoding_update_dem_coordinates(
         meshgrid of the dgg_latitude_axis_rad [rad] of dimensions [num_lat_out, num_lon_out]
     dgg_longitude_mesh_rad:np.ndarray
         meshgrid of the dgg_longitude_axis_rad [rad] of dimensions [num_lat_out, num_lon_out]
+    dem_height_m:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
+    dem_latitude_deg:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
+    dem_longitude_deg:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
     """
 
     # Geocoding STEP 1/4: initialization (DEM interpolation and GSO initialization)
@@ -1137,6 +1143,9 @@ def geocoding_update_dem_coordinates(
         dgg_latitude_mesh_rad,
         dgg_longitude_mesh_rad,
         dem_valid_values_mask,
+        dem_height_m,
+        np.rad2deg(dem_latitude_rad),
+        np.rad2deg(dem_longitude_rad),
     )
 
 

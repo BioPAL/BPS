@@ -242,6 +242,7 @@ def run_l2a_processing(
                     "latitude",
                     "longitude",
                     "incidenceAngle",
+                    "elevationAngle",
                     "rangeTerrainSlope",
                     "azimuthTerrainSlope",
                     "waveNumbers",

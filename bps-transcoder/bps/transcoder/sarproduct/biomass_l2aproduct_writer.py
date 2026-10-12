@@ -1521,6 +1521,13 @@ class BIOMASSL2aProductWriter:
                 main_annotation_models_l2a_fd.LayerType.FNF,
                 main_annotation_models_l2a_fd.LayerType.ACM,
                 main_annotation_models_l2a_fd.LayerType.NUMBER_OF_AVERAGES,
+                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
+                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
             ]
             annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
@@ -1615,6 +1622,13 @@ class BIOMASSL2aProductWriter:
             # - annotationLUT
             layer = [
                 main_annotation_models_l2a_fh.LayerType.FNF,
+                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
+                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
             ]
             annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
@@ -1667,9 +1681,16 @@ class BIOMASSL2aProductWriter:
             # - annotationLUT
             layer = [
                 main_annotation_models_l2a_gn.LayerType.FNF,
-                main_annotation_models_l2a_gn.LayerType.INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_gn.LayerType.LOCAL_INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
+                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=int(2))
+            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
             main_annotation_model = main_annotation_models_l2a_gn.MainAnnotation(
                 product=product,
@@ -1703,6 +1724,13 @@ class BIOMASSL2aProductWriter:
             # - annotationLUT
             layer = [
                 main_annotation_models_l2a_fh.LayerType.FNF,
+                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
+                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
+                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
+                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
             ]
             annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
 
@@ -1794,26 +1822,43 @@ class BIOMASSL2aProductWriter:
         # le inserisco in gruppi per scelta (non obbligatorio)
         # oltre ai dati, qui ci vanno anche tutte le cose che nei nostri documenti abbiamo messo in DIMENSIONS
 
-        fnf_group = ncfile.createGroup("FNF")
+        groups_list = [
+            ncfile.createGroup("FNF"),  # [0]
+            ncfile.createGroup("height"),  # [1]
+            ncfile.createGroup("latitude"),  # [2]
+            ncfile.createGroup("longitude"),  # [3]
+            ncfile.createGroup("incidenceAngle"),  # [4]
+            ncfile.createGroup("elevationAngle"),  # [5]
+            ncfile.createGroup("rangeTerrainSlope"),  # [6]
+            ncfile.createGroup("azimuthTerrainSlope"),  # [7]
+        ]
+        fnf_index = 0
+        dem_elevation_index = 1
+        latitude_index = 2
+        longitude_index = 3
+        incidence_angle_index = 4
+        elevation_angle_index = 5
+        range_dem_slope_index = 6
+        azimuth_dem_slope_index = 7
+
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
             acm_group = ncfile.createGroup("ACM")
             acm_group.description = """ACM represents the covariance history of all previous cycles (see also numberOfAverages variable): it is obtained by averaging the covariance computed with FD algorithm at the given Global cycle with the previous ACM in input to the processor. At first Global cycle it is the current covariance. It consists of six images of which three real and three complex, stored in nine NetCDF layers as three layers for the three real images and three complex images, each split in the amplitude value layer and the phase value (radiants) layer."""
             noa_group = ncfile.createGroup("numberOfAverages")
+            groups_list.append(acm_group)
+            groups_list.append(noa_group)
+            acm_group_index = 8
+            noa_group_index = 9
+
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
             inc_group = ncfile.createGroup("localIncidenceAngle")
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
-            groups_list = [fnf_group, acm_group, noa_group]
-        if self.product.product_type in [
-            L2A_OUTPUT_PRODUCT_FH,
-            L2A_OUTPUT_PRODUCT_TFH,
-        ]:
-            groups_list = [fnf_group]
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
-            groups_list = [fnf_group, inc_group]
+            groups_list.append(inc_group)
+            local_incidence_angle_index = 8
 
         compression_options = self.product.main_ads_processing_parameters.compression_options
 
-        fnf_mask_var = fnf_group.createVariable(
+        # FNF VARIABLE
+        fnf_mask_var = groups_list[fnf_index].createVariable(
             "FNF",
             np.uint8,
             ("Latitude", "Longitude"),
@@ -1825,13 +1870,161 @@ class BIOMASSL2aProductWriter:
             complevel=compression_options.ads.fnf.compression_factor,
             fill_value=INT_NODATA_VALUE,
         )
-        fnf_mask_var.description = "Forest/Non-Forest mask: this is an external image, defined outside of BPS from aggregated C3S LCM, representing the initial two-dimensional mask, here defined in the same latitude-longitude based on DGG projection used for L2a images and cropped to have a coverage containing the L2a product image boundaries. It defines, for each geographical pixel, the initial presence or absence of forest."
+        fnf_mask_var.description = """Forest/Non-Forest mask: this is an external image, defined outside of BPS from aggregated C3S LCM, representing the initial two-dimensional mask, here defined in the same latitude-longitude based on DGG projection used for L2a images and cropped to have a coverage containing the L2a product image boundaries. It defines, for each geographical pixel, the initial presence or absence of forest."""
         bps_logger.info(
             f"    Output product LUT ADS FNF compression factor: {compression_options.ads.fnf.compression_factor}"
         )
 
+        ########### compression_options.ads.geometric_luts ################ DA CREARE
+        # DEM (elevation) VARIABLE
+        dem_elevation_var = groups_list[dem_elevation_index].createVariable(
+            "height",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        dem_elevation_var.description = """Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]"""
+        dem_elevation_var.units = "m"
+
+        # LATITUDE VARIABLE
+        latitude_var = groups_list[latitude_index].createVariable(
+            "latitude",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        latitude_var.description = """Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]."""
+        latitude_var.units = "deg"
+
+        # LONGITUDE VARIABLE
+        longitude_var = groups_list[longitude_index].createVariable(
+            "longitude",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        longitude_var.description = """Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]."""
+        longitude_var.units = "deg"
+
+        # INCIDENCE ANGLE VARIABLE
+        incidence_angle_var = groups_list[incidence_angle_index].createVariable(
+            "incidenceAngle",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        incidence_angle_var.description = """Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg]."""
+        incidence_angle_var.units = "deg"
+
+        # ELEVATION ANGLE VARIABLE
+        elevatione_angle_var = groups_list[elevation_angle_index].createVariable(
+            "elevationAngle",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        elevatione_angle_var.description = """Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg]."""
+        elevatione_angle_var.units = "deg"
+
+        # RANGE DEM SLOPE VARIABLE
+        range_dem_slope_var = groups_list[range_dem_slope_index].createVariable(
+            "rangeTerrainSlope",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        range_dem_slope_var.description = """Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg]."""
+        range_dem_slope_var.units = "deg"
+
+        # AZIMUTH DEM SLOPE VARIABLE
+        azimuth_dem_slope_var = groups_list[azimuth_dem_slope_index].createVariable(
+            "azimuthTerrainSlope",
+            np.float32,
+            ("Latitude", "Longitude"),
+            chunksizes=(
+                compression_options.ads_block_size,
+                compression_options.ads_block_size,
+            ),  # chunk sizes
+            compression=COMPRESSION_SCHEMA_ADS,
+            complevel=compression_options.ads.geometric_luts.compression_factor,
+            least_significant_digit=(
+                compression_options.ads.geometric_luts.least_significant_digit
+                if compression_options.ads.geometric_luts.least_significant_digit
+                else None
+            ),
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        azimuth_dem_slope_var.description = """Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg]."""
+        azimuth_dem_slope_var.units = "deg"
+
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
-            noa_var = noa_group.createVariable(
+            noa_var = groups_list[noa_group_index].createVariable(
                 "numberOfAverages",
                 np.uint8,
                 ("Latitude", "Longitude"),
@@ -1843,7 +2036,7 @@ class BIOMASSL2aProductWriter:
                 complevel=compression_options.ads.number_of_averages.compression_factor,
                 fill_value=INT_NODATA_VALUE,
             )
-            noa_var.description = "It represents, for the ACM, the number of covariances averaged so far at given Global cycle, pixel wise (see also ACM variable). At first Global cycle it is zero for each pixel."
+            noa_var.description = """It represents, for the ACM, the number of covariances averaged so far at given Global cycle, pixel wise (see also ACM variable). At first Global cycle it is zero for each pixel."""
             bps_logger.info(
                 f"    Output product LUT ADS Number of Averages compression factor: {compression_options.ads.number_of_averages.compression_factor}"
             )
@@ -1871,8 +2064,8 @@ class BIOMASSL2aProductWriter:
             ):
                 layer_idx = list_idx + 1
                 acm_layers_list.append(
-                    acm_group.createVariable(
-                        "layer{}".format(layer_idx),
+                    groups_list[acm_group_index].createVariable(
+                        f"layer{layer_idx}",
                         np.float32,
                         ("Latitude", "Longitude"),
                         chunksizes=(
@@ -1889,9 +2082,9 @@ class BIOMASSL2aProductWriter:
                         fill_value=FLOAT_NODATA_VALUE,
                     )
                 )
-                acm_layers_list[list_idx].description = "layer {}: ACM image {} of 6, {}".format(
-                    layer_idx, image_idx_first, image_description
-                )
+                acm_layers_list[
+                    list_idx
+                ].description = f"layer {layer_idx}: ACM image {image_idx_first} of 6, {image_description}"
                 if "phase" in image_description:
                     acm_layers_list[list_idx].units = "rad"
 
@@ -1903,7 +2096,7 @@ class BIOMASSL2aProductWriter:
                     f"    Output product LUT ADS ACM  least significant digit: {compression_options.ads.acm.least_significant_digit}"
                 )
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
-            incidence_var = inc_group.createVariable(
+            local_incidence_var = groups_list[local_incidence_angle_index].createVariable(
                 "localIncidenceAngle",
                 np.float32,
                 ("Latitude", "Longitude"),
@@ -1920,8 +2113,8 @@ class BIOMASSL2aProductWriter:
                 ),
                 fill_value=FLOAT_NODATA_VALUE,
             )
-            incidence_var.description = """Local incidence angle image in degrees, which takes into account terrain local slope and defined in the latitude-longitude based on DGG projection, cropped to have a  coverage containing the L2a Ground cancelled backscatter image product boundaries."""
-            incidence_var.units = "deg"
+            local_incidence_var.description = """Local incidence angle image in degrees, which takes into account terrain local slope and defined in the latitude-longitude based on DGG projection, cropped to have a  coverage containing the L2a Ground cancelled backscatter image product boundaries."""
+            local_incidence_var.units = "deg"
             bps_logger.info(
                 f"    Output product LUT ADS Incidence Angle compression factor: {compression_options.ads.geometric_luts.compression_factor}"
             )
@@ -1933,12 +2126,22 @@ class BIOMASSL2aProductWriter:
         for group in groups_list:
             if group.name == "FNF":
                 md = self.product.lut_ads.lut_fnf_metadata
-            if group.name == "numberOfAverages":
+            if group.name == "numberOfAverages":  # FD
                 md = self.product.lut_ads.lut_number_of_averages_metadata
-            if group.name == "ACM":
+            if group.name == "ACM":  # FD
                 md = self.product.lut_ads.lut_acm_metadata
-            if group.name == "localIncidenceAngle":
-                md = self.product.lut_ads.lut_local_incidence_angle_metadata
+
+            if group.name in [
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+                "localIncidenceAngle",  # GN: incidence - slope
+            ]:
+                md = self.product.lut_ads.lut_geometric_metadata
 
             firstSample = group.createVariable("firstSample", np.uint32, dimensions=("scalar"))
             firstSample.description = "Product image MDS sample the first LUT sample corresponds to"
@@ -1979,7 +2182,17 @@ class BIOMASSL2aProductWriter:
             geodeticReferenceFrame.description = "Geodetic reference frame"
             geodeticReferenceFrame[:] = np.array([md.geodeticReferenceFrame], dtype="object")
 
-            if group.name == "ACM":
+            if group.name in [
+                "ACM",
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+                "localIncidenceAngle",  # GN: incidence - slope
+            ]:
                 if type(md.least_significant_digit) is str:
                     least_significant_digit = group.createVariable(
                         "least_significant_digit", str, dimensions=("string")
@@ -1999,8 +2212,15 @@ class BIOMASSL2aProductWriter:
         lon_var[:] = self.product.measurement.longitude_vec
         # Write the main matrices variables
 
-        # Write FNF
+        # Write luts to NetCFD
         fnf_mask_var[:, :] = self.product.lut_ads.lut_fnf
+        dem_elevation_var[:, :] = self.product.lut_ads.lut_dem
+        latitude_var[:, :] = self.product.lut_ads.lut_latitude
+        longitude_var[:, :] = self.product.lut_ads.lut_longitude
+        incidence_angle_var[:, :] = self.product.lut_ads.lut_incidence_angle
+        elevatione_angle_var[:, :] = self.product.lut_ads.lut_elevation_angle
+        range_dem_slope_var[:, :] = self.product.lut_ads.lut_range_dem_slope
+        azimuth_dem_slope_var[:, :] = self.product.lut_ads.lut_azimuth_dem_slope
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
             # Write Number of Averages
@@ -2012,7 +2232,7 @@ class BIOMASSL2aProductWriter:
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
             # Write Local Incidence Angle
-            incidence_var[:, :] = self.product.lut_ads.lut_local_incidence_angle
+            local_incidence_var[:, :] = self.product.lut_ads.lut_local_incidence_angle
 
         # Close the Dataset and examine the contents with ncdump.
         ncfile.close()
