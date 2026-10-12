@@ -338,6 +338,8 @@ def run_l2a_processing(
         for original_luts, lut_wavenumber_reset in zip(stack_lut_list, lut_wavenumbers_reset):
             original_luts["waveNumbers"] = lut_wavenumber_reset
 
+    bps_logger.debug(f"Primary image index is {primary_image_index}")
+
     # Sort read inputs basing on wavenumbers
     wavenumbers_sorting_indices = np.argsort([np.nanmean(lut["waveNumbers"]) for lut in stack_lut_list])
     bps_logger.debug(
