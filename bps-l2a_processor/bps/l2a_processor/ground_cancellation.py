@@ -8,10 +8,13 @@
 import warnings
 from datetime import datetime
 from pathlib import Path
+from typing import Any, cast
 
 import numexpr as ne
 import numpy as np
 from bps.common import bps_logger
+from bps.common.io import common
+from bps.common.utils import cross_pol_merging
 from bps.l2a_processor.core.translate_aux_pp2_2a import (
     GroundCancellationConfAGB,
     GroundCancellationConfFD,
@@ -34,6 +37,7 @@ def ground_cancellation(
     vert_wavenumber_axis_az_s: np.ndarray,
     aux_pp2_conf_gn: GroundCancellationConfAGB | GroundCancellationConfFD,
     acquisition_paths_selected_not_sorted: list[Path],
+    polarisation_combination_method: common.PolarisationCombinationMethodType | None,
 ) -> tuple[list[np.ndarray], int | None]:
     """Ground cancellation
 
@@ -104,8 +108,8 @@ def ground_cancellation(
         bps_logger.info(f"    using AUX PP2 2A operational mode: {aux_pp2_conf_gn.operational_mode.value}")
         if aux_pp2_conf_gn.operational_mode == OperationalModeType.INSAR_PAIR:
             # In case of "insar pair", read here the two images specified in "images_pair_selection"
-            path_1 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)
-            path_2 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)
+            path_1 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)  # type: ignore
+            path_2 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[1].value)  # type: ignore
             bps_logger.info(
                 f"    reading now following insar pair acquisitions, from AUX PP2 2A: \r\n{path_1} \r\n{path_2}"
             )
@@ -135,6 +139,44 @@ def ground_cancellation(
             for idx, data in enumerate(product_2.data_list):
                 nan_mask = data == FLOAT_NODATA_VALUE
                 product_2.data_list[idx][nan_mask] = np.nan
+
+            # Cross pol merging for the two insar pair acquisitions specified in aux pp2 2a configuration
+            if len(product_1.polarization_list) == 4:
+                if polarisation_combination_method is None:
+                    raise ValueError(
+                        "        With 4-polarisation inputs, a merging method is required. 'None' cannot be used; please choose between 'Average', 'VH', and 'HV'."
+                    )
+                bps_logger.info(
+                    f"        Cross polarisation merging using AUX PP2 2A polarisation combination method '{polarisation_combination_method.value}'"
+                )
+                for stack_data in (product_1, product_2):
+                    # cross_pol_merging requires the denoising LUTs of the cross-pol channels (and their axes)
+                    # even if only the data are needed here: pass throwaway placeholders.
+                    placeholder = np.zeros(1, dtype=np.float32)
+                    n_channels = cross_pol_merging(
+                        data_list=stack_data.data_list,
+                        swath_info_list=stack_data.swath_info_list,
+                        polarization_list=cast("list[str]", stack_data.polarization_list),
+                        metadata_list=cast(
+                            "list[list[Any]]",
+                            [
+                                stack_data.raster_info_list,
+                                stack_data.burst_info_list,
+                                stack_data.sampling_constants_list,
+                                stack_data.acquisition_timeline_list,
+                                stack_data.data_statistics_list,
+                                stack_data.dc_vector_list,
+                                stack_data.dr_vector_list,
+                                stack_data.slant_to_ground_list,
+                                stack_data.ground_to_slant_list,
+                                stack_data.pulse_list,
+                            ],
+                        ),
+                        lut_data={"denoisingHV": placeholder.copy(), "denoisingVH": placeholder.copy()},
+                        lut_axes=cast(Any, ({"denoisingHV": placeholder.copy()}, {"denoisingHV": placeholder.copy()})),
+                        xpol_merging_method=polarisation_combination_method,
+                    )
+                    assert len(stack_data.data_list) == n_channels == len(stack_data.swath_info_list)
 
             # Only reshape of the list of lists
             scs_pol_list = []

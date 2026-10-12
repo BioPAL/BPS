@@ -187,6 +187,7 @@ class GN:
             self.stack_lut_axes_dict["axis_primary_az_s"],
             self.aux_pp2_2a.agb.ground_cancellaton,
             self.acquisition_paths_selected_not_sorted,
+            self.aux_pp2_2a.general.polarisation_combination_method,
         )
         acquisition_id_reference_image = (
             self.acquisition_paths_selected_not_sorted[idx_selected_reference].name
@@ -635,10 +636,6 @@ class GN:
             ads_block_size=self.aux_pp2_2a.agb.compression_options.ads_block_size,
         )
 
-        images_pair_selection = None
-        if self.aux_pp2_2a.agb.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
-            main_ads_input_information.acquisition_list.acquisition
-
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersGN(
             bps.l2a_processor.__version__,
             self.start_time,
@@ -650,7 +647,7 @@ class GN:
             self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
             self.aux_pp2_2a.agb.product_resolution,
             self.aux_pp2_2a.agb.upsampling_factor,
-            images_pair_selection,
+            self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection,
             self.aux_pp2_2a.agb.ground_cancellaton.disable_ground_cancellation_flag,
         )
 

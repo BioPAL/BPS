@@ -23,6 +23,7 @@ from bps.common.io import common_types, translate_common
 from bps.common.l2_joborder_tags import L2A_OUTPUT_PRODUCT_FD
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
+from bps.l2a_processor.core.translate_aux_pp2_2a import OperationalModeType
 from bps.l2a_processor.fd import BPS_L2A_FD_PROCESSOR_NAME
 from bps.l2a_processor.ground_cancellation import ground_cancellation
 from bps.l2a_processor.l2a_common_functionalities import (
@@ -194,6 +195,7 @@ class FD:
             self.stack_lut_axes_dict["axis_primary_az_s"],
             self.aux_pp2_2a.fd.ground_cancellaton,
             self.acquisition_paths_selected_not_sorted,
+            self.aux_pp2_2a.general.polarisation_combination_method,
         )
         acquisition_id_reference_image = (
             self.acquisition_paths_selected_not_sorted[idx_selected_reference].name
