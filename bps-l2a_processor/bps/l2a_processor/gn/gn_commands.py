@@ -223,6 +223,23 @@ class GN:
             self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
         )
 
+        bps_logger.info(
+            "Interpolation of incidence angle, elevation angle and range, azimuth DEM Slopes over LUTs axis"
+        )
+        # height, latitude, longitude are already interpolated
+        luts_interpolated_list = parallel_reinterpolate(
+            [
+                self.stack_lut_list[self.primary_image_index]["incidenceAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["elevationAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["azimuthTerrainSlope"].astype(np.float32),
+            ],
+            self.stack_lut_axes_dict["axis_primary_az_s"],
+            self.stack_lut_axes_dict["axis_primary_sr_s"],
+            self.scs_axes_dict["scs_axis_az_s"][axis_az_subsampling_indexes],  # sub,
+            self.scs_axes_dict["scs_axis_sr_s"][axis_rg_subsampling_indexes],  # sub,
+        )
+
         # Get the DGG sampling parameters, needed for the geocoding step:
         # Check the orientation of FNF lat lon axis and keep this convention in the L2a product.
         invert_latitude, invert_longitude = check_lat_lon_orientation(self.fnf.lat_axis, self.fnf.lon_axis)
@@ -242,6 +259,9 @@ class GN:
             dgg_latitude_mesh_rad,
             dgg_longitude_mesh_rad,
             dem_valid_values_mask,
+            dem_for_lut,
+            latitude_deg_for_lut,
+            longitude_deg_for_lut,
         ) = geocoding_update_dem_coordinates(
             self.stack_lut_list[self.primary_image_index]["height"],
             self.stack_lut_list[self.primary_image_index]["latitude"],
@@ -270,6 +290,44 @@ class GN:
             fill_value=FLOAT_NODATA_VALUE,
         )
 
+        bps_logger.info(
+            "Geocoding of DEM, latitude, longitude, incidence and elevation angles, range and azimuth DEM Slopes for LUTs annotation"
+        )
+        luts_geocoded_list = geocoding(
+            [
+                dem_for_lut,  # height
+                latitude_deg_for_lut,  # latitude
+                longitude_deg_for_lut,  # longitude
+                luts_interpolated_list[0],  # incidenceAngle
+                luts_interpolated_list[1],  # elevationAngle
+                luts_interpolated_list[2],  # rangeTerrainSlope
+                luts_interpolated_list[3],  # azimuthTerrainSlope
+            ],
+            delaunay,
+            dgg_latitude_mesh_rad,
+            dgg_longitude_mesh_rad,
+            dem_valid_values_mask,
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        del luts_interpolated_list
+
+        lut_dict = {}
+        for lut_name, lut_geocoded in zip(
+            [
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+            ],
+            luts_geocoded_list,
+        ):
+            lut_dict[lut_name] = lut_geocoded.astype(np.float32)
+            lut_dict[lut_name][~np.isfinite(lut_dict[lut_name])] = FLOAT_NODATA_VALUE
+        del luts_geocoded_list
+
         # Filling the output dictionary for GN
         # Casting back to float32 all the float data before saving
         # Geocoded list contains 3 GN polarizations plus the incidence angle at idx == 3
@@ -291,15 +349,13 @@ class GN:
         del geocoded_list  # free memory
 
         # FNF annotation step
-        lut_dict = {
-            "fnf": fnf_annotation(
-                self.fnf,
-                dgg_latitude_axis_deg.astype(np.float32),
-                dgg_longitude_axis_deg.astype(np.float32),
-                self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            ),
-            "local_incidence_angle": local_inc_angle_deg_multilook_geocoded.astype(np.float32),
-        }
+        lut_dict["fnf"] = fnf_annotation(
+            self.fnf,
+            dgg_latitude_axis_deg.astype(np.float32),
+            dgg_longitude_axis_deg.astype(np.float32),
+            self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
+        )
+        lut_dict["local_incidence_angle"] = local_inc_angle_deg_multilook_geocoded.astype(np.float32)
 
         not_footprint_mask = gn_multilooked_geocoded["gn"][0] == FLOAT_NODATA_VALUE
         lut_dict["fnf"]["fnf"][not_footprint_mask] = INT_NODATA_VALUE
@@ -342,7 +398,7 @@ class GN:
 
         self.radar_carrier_frequency = 435000000.0
 
-        lut_obj = BIOMASSL2aLutAdsGN.LutMetadata(
+        lut_dict["fnf_metadata"] = BIOMASSL2aLutAdsGN.LutMetadata(
             first_sample=1,
             first_line=1,
             samples_interval=1,
@@ -353,16 +409,21 @@ class GN:
             coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
             geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
         )
-        lut_dict["fnf_metadata"] = deepcopy(lut_obj)
 
-        lut_obj.pixelType = "32 bit Float"
-        lut_obj.no_data_value = FLOAT_NODATA_VALUE
-
-        lut_obj.least_significant_digit = np.uint8(
-            self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.least_significant_digit
+        lut_dict["geometric_metadata"] = BIOMASSL2aLutAdsGN.LutMetadata(
+            first_sample=1,
+            first_line=1,
+            samples_interval=1,
+            lines_interval=1,
+            pixelType="32 bit Float",
+            no_data_value=FLOAT_NODATA_VALUE,
+            projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
+            coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
+            geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
         )
-
-        lut_dict["incidence_angle_metadata"] = deepcopy(lut_obj)
+        lut_dict["geometric_metadata"].least_significant_digit = np.uint8(
+            self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit
+        )
 
         # COG metadata, for GN
         metadata = {
@@ -653,10 +714,17 @@ class GN:
 
         # lut_ads
         lut_ads = BIOMASSL2aLutAdsGN(
-            lut_dict["fnf"]["fnf"],
-            lut_dict["local_incidence_angle"],
-            lut_dict["fnf_metadata"],
-            lut_dict["incidence_angle_metadata"],
+            lut_fnf=lut_dict["fnf"]["fnf"],
+            lut_local_incidence_angle=lut_dict["local_incidence_angle"],
+            lut_latitude=lut_dict["latitude"],
+            lut_longitude=lut_dict["longitude"],
+            lut_dem=lut_dict["height"],
+            lut_incidence_angle=lut_dict["incidenceAngle"],
+            lut_elevation_angle=lut_dict["elevationAngle"],
+            lut_range_dem_slope=lut_dict["rangeTerrainSlope"],
+            lut_azimuth_dem_slope=lut_dict["azimuthTerrainSlope"],
+            lut_fnf_metadata=lut_dict["fnf_metadata"],
+            lut_geometric_metadata=lut_dict["geometric_metadata"],
         )
 
         # Initialize GN Product

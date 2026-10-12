@@ -381,9 +381,19 @@ class BIOMASSL2aLutAdsFD:
     lut_fnf: np.ndarray
     lut_acm: dict  # Dict with keys "layer1", "layer2"..., "layer9"
     lut_number_of_averages: np.ndarray
+    # Geometryc luts
+    lut_latitude: np.ndarray
+    lut_longitude: np.ndarray
+    lut_dem: np.ndarray
+    lut_incidence_angle: np.ndarray
+    lut_elevation_angle: np.ndarray
+    lut_range_dem_slope: np.ndarray
+    lut_azimuth_dem_slope: np.ndarray
+    # Metadata
     lut_fnf_metadata: LutMetadata
     lut_acm_metadata: LutMetadata
     lut_number_of_averages_metadata: LutMetadata
+    lut_geometric_metadata: LutMetadata
 
 
 @dataclass
@@ -414,9 +424,20 @@ class BIOMASSL2aLutAdsFH:
         projection: str
         coordinateReferenceSystem: str
         geodeticReferenceFrame: str
+        least_significant_digit: int | None = None
 
     lut_fnf: np.ndarray
+    # Geometric luts
+    lut_latitude: np.ndarray
+    lut_longitude: np.ndarray
+    lut_dem: np.ndarray
+    lut_incidence_angle: np.ndarray
+    lut_elevation_angle: np.ndarray
+    lut_range_dem_slope: np.ndarray
+    lut_azimuth_dem_slope: np.ndarray
+    # Metadata
     lut_fnf_metadata: LutMetadata
+    lut_geometric_metadata: LutMetadata
 
 
 @dataclass
@@ -436,8 +457,17 @@ class BIOMASSL2aLutAdsGN:
 
     lut_fnf: np.ndarray
     lut_local_incidence_angle: np.ndarray
+    # Geometric luts
+    lut_latitude: np.ndarray
+    lut_longitude: np.ndarray
+    lut_dem: np.ndarray
+    lut_incidence_angle: np.ndarray
+    lut_elevation_angle: np.ndarray
+    lut_range_dem_slope: np.ndarray
+    lut_azimuth_dem_slope: np.ndarray
+    # Metadata
     lut_fnf_metadata: LutMetadata
-    lut_local_incidence_angle_metadata: LutMetadata
+    lut_geometric_metadata: LutMetadata
 
 
 @dataclass
@@ -453,9 +483,20 @@ class BIOMASSL2aLutAdsTOMOFH:
         projection: str
         coordinateReferenceSystem: str
         geodeticReferenceFrame: str
+        least_significant_digit: int | None = None
 
     lut_fnf: np.ndarray
+    # Geometryc luts
+    lut_latitude: np.ndarray
+    lut_longitude: np.ndarray
+    lut_dem: np.ndarray
+    lut_incidence_angle: np.ndarray
+    lut_elevation_angle: np.ndarray
+    lut_range_dem_slope: np.ndarray
+    lut_azimuth_dem_slope: np.ndarray
+    # Metadata
     lut_fnf_metadata: LutMetadata
+    lut_geometric_metadata: LutMetadata
 
 
 class BIOMASSL2aProduct:

@@ -192,7 +192,7 @@ class FH:
             coherence_for_baseline_combinations,
             vertical_wavenumbers,  # Terrain corrected
             inc_angle_terrain_corrected_rad,
-            terrain_slope_rad,
+            range_dem_slope_rad,
             resolution_rg,
             axis_az_subsampling_indexes,
             axis_rg_subsampling_indexes,
@@ -228,7 +228,7 @@ class FH:
             coherence_for_baseline_combinations,
             resolution_rg,
             vertical_wavenumbers,
-            terrain_slope_rad,
+            range_dem_slope_rad,
             inc_angle_terrain_corrected_rad,
             self.aux_pp2_2a.fh.residual_decorrelation,
             self.aux_pp2_2a.fh.vertical_reflectivity_default_profile,
@@ -243,7 +243,22 @@ class FH:
             self.aux_pp2_2a.fh.temporal_decorrelation_ground_to_volume_ratio,
         )
 
-        lut_dict = {}
+        bps_logger.info(
+            "Interpolation of incidence angle, elevation angle and range, azimuth DEM Slopes over LUTs axis"
+        )
+        # height, latitude, longitude are already interpolated
+        luts_interpolated_list = parallel_reinterpolate(
+            [
+                self.stack_lut_list[self.primary_image_index]["incidenceAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["elevationAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["azimuthTerrainSlope"].astype(np.float32),
+            ],
+            self.stack_lut_axes_dict["axis_primary_az_s"],
+            self.stack_lut_axes_dict["axis_primary_sr_s"],
+            self.scs_axes_dict["scs_axis_az_s"][axis_az_subsampling_indexes],  # sub,
+            self.scs_axes_dict["scs_axis_sr_s"][axis_rg_subsampling_indexes],  # sub,
+        )
 
         # Get the DGG sampling parameters, needed for the geocoding step:
         # Check the orientation of FNF lat lon axis and keep this convention in the L2a product.
@@ -266,6 +281,9 @@ class FH:
             dgg_latitude_mesh_rad,
             dgg_longitude_mesh_rad,
             dem_valid_values_mask,
+            dem_for_lut,
+            latitude_deg_for_lut,
+            longitude_deg_for_lut,
         ) = geocoding_update_dem_coordinates(
             self.stack_lut_list[self.primary_image_index]["height"],
             self.stack_lut_list[self.primary_image_index]["latitude"],
@@ -291,6 +309,44 @@ class FH:
             dem_valid_values_mask,
             fill_value=FLOAT_NODATA_VALUE,
         )
+
+        bps_logger.info(
+            "Geocoding of DEM, latitude, longitude, incidence and elevation angles, range and azimuth DEM Slopes for LUTs annotation"
+        )
+        luts_geocoded_list = geocoding(
+            [
+                dem_for_lut,  # height
+                latitude_deg_for_lut,  # latitude
+                longitude_deg_for_lut,  # longitude
+                luts_interpolated_list[0],  # incidenceAngle
+                luts_interpolated_list[1],  # elevationAngle
+                luts_interpolated_list[2],  # rangeTerrainSlope
+                luts_interpolated_list[3],  # azimuthTerrainSlope
+            ],
+            delaunay,
+            dgg_latitude_mesh_rad,
+            dgg_longitude_mesh_rad,
+            dem_valid_values_mask,
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        del luts_interpolated_list
+
+        lut_dict = {}
+        for lut_name, lut_geocoded in zip(
+            [
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+            ],
+            luts_geocoded_list,
+        ):
+            lut_dict[lut_name] = lut_geocoded.astype(np.float32)
+            lut_dict[lut_name][~np.isfinite(lut_dict[lut_name])] = FLOAT_NODATA_VALUE
+        del luts_geocoded_list
 
         # Filling the output dictionary for GN
         # Casting back to float32 all the float data before saving
@@ -408,6 +464,21 @@ class FH:
             projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
             coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
             geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
+        )
+
+        lut_dict["geometric_metadata"] = BIOMASSL2aLutAdsFH.LutMetadata(
+            first_sample=1,
+            first_line=1,
+            samples_interval=1,
+            lines_interval=1,
+            pixelType="32 bit Float",
+            no_data_value=FLOAT_NODATA_VALUE,
+            projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
+            coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
+            geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
+        )
+        lut_dict["geometric_metadata"].least_significant_digit = np.uint8(
+            self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit
         )
 
         # COG metadata
@@ -752,7 +823,18 @@ class FH:
         )
 
         # lut_ads
-        lut_ads = BIOMASSL2aLutAdsFH(lut_dict["fnf"]["fnf"], lut_dict["fnf_metadata"])
+        lut_ads = BIOMASSL2aLutAdsFH(
+            lut_fnf=lut_dict["fnf"]["fnf"],
+            lut_latitude=lut_dict["latitude"],
+            lut_longitude=lut_dict["longitude"],
+            lut_dem=lut_dict["height"],
+            lut_incidence_angle=lut_dict["incidenceAngle"],
+            lut_elevation_angle=lut_dict["elevationAngle"],
+            lut_range_dem_slope=lut_dict["rangeTerrainSlope"],
+            lut_azimuth_dem_slope=lut_dict["azimuthTerrainSlope"],
+            lut_fnf_metadata=lut_dict["fnf_metadata"],
+            lut_geometric_metadata=lut_dict["geometric_metadata"],
+        )
 
         # Initialize FH Product
         product_to_write = BIOMASSL2aProductFH(

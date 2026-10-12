@@ -376,7 +376,6 @@ def ground_cancellation(
             else:
                 ground_cancelled_list.append(None)
 
-        warnings.simplefilter("always")
         return ground_cancelled_list, idx_reference_to_save
 
 

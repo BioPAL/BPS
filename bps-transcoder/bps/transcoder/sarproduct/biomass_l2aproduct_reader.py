@@ -498,6 +498,17 @@ class BIOMASSL2aProductReader:
             )
 
     def _read_lut_annotation_file(self):
+        if self.product_type == "FP_FD__L2A":
+            lut_class = BIOMASSL2aLutAdsFD
+        elif self.product_type == "FP_FH__L2A":
+            lut_class = BIOMASSL2aLutAdsFH
+        elif self.product_type == "FP_GN__L2A":
+            lut_class = BIOMASSL2aLutAdsGN
+        elif self.product_type == "FP_TFH_L2A":
+            lut_class = BIOMASSL2aLutAdsTOMOFH
+        else:
+            raise ValueError(f"Product type non supportato: {self.product_type}")
+
         ncfile_read = Dataset(self.product_structure.lut_annotation_file, mode="r")
 
         nc_groups = [group for group in ncfile_read.groups]
@@ -513,6 +524,27 @@ class BIOMASSL2aProductReader:
 
                 if var_name == "numberOfAverages":
                     lut_number_of_averages = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "height":
+                    lut_dem = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "latitude":
+                    lut_latitude = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "longitude":
+                    lut_longitude = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "elevationAngle":
+                    lut_elevation_angle = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "incidenceAngle":
+                    lut_incidence_angle = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "rangeTerrainSlope":
+                    lut_range_dem_slope = np.array(ncfile_read[group_name].variables[var_name][:])
+
+                if var_name == "azimuthTerrainSlope":
+                    lut_azimuth_dem_slope = np.array(ncfile_read[group_name].variables[var_name][:])
 
                 if var_name in [  # ACM
                     "layer1",
@@ -563,57 +595,20 @@ class BIOMASSL2aProductReader:
                     least_significant_digit = ncfile_read[group_name].variables[var_name][:][0]
 
             if group_name == "FNF":
-                if self.product_type == "FP_FD__L2A":
-                    lut_fnf_metadata = BIOMASSL2aLutAdsFD.LutMetadata(
-                        first_sample,
-                        first_line,
-                        samples_interval,
-                        lines_interval,
-                        pixelType,
-                        no_data_value,
-                        projection,
-                        coordinateReferenceSystem,
-                        geodeticReferenceFrame,
-                    )
-                if self.product_type == "FP_FH__L2A":
-                    lut_fnf_metadata = BIOMASSL2aLutAdsFH.LutMetadata(
-                        first_sample,
-                        first_line,
-                        samples_interval,
-                        lines_interval,
-                        pixelType,
-                        no_data_value,
-                        projection,
-                        coordinateReferenceSystem,
-                        geodeticReferenceFrame,
-                    )
-                if self.product_type == "FP_GN__L2A":
-                    lut_fnf_metadata = BIOMASSL2aLutAdsFH.LutMetadata(
-                        first_sample,
-                        first_line,
-                        samples_interval,
-                        lines_interval,
-                        pixelType,
-                        no_data_value,
-                        projection,
-                        coordinateReferenceSystem,
-                        geodeticReferenceFrame,
-                    )
-                if self.product_type == "FP_TFH_L2A":
-                    lut_fnf_metadata = BIOMASSL2aLutAdsTOMOFH.LutMetadata(
-                        first_sample,
-                        first_line,
-                        samples_interval,
-                        lines_interval,
-                        pixelType,
-                        no_data_value,
-                        projection,
-                        coordinateReferenceSystem,
-                        geodeticReferenceFrame,
-                    )
+                lut_fnf_metadata = lut_class.LutMetadata(
+                    first_sample,
+                    first_line,
+                    samples_interval,
+                    lines_interval,
+                    pixelType,
+                    no_data_value,
+                    projection,
+                    coordinateReferenceSystem,
+                    geodeticReferenceFrame,
+                )
 
             if group_name == "ACM":
-                lut_acm_metadata = BIOMASSL2aLutAdsFD.LutMetadata(
+                lut_acm_metadata = lut_class.LutMetadata(
                     first_sample,
                     first_line,
                     samples_interval,
@@ -626,7 +621,7 @@ class BIOMASSL2aProductReader:
                     least_significant_digit,
                 )
             if group_name == "numberOfAverages":
-                lut_number_of_averages_metadata = BIOMASSL2aLutAdsFD.LutMetadata(
+                lut_number_of_averages_metadata = lut_class.LutMetadata(
                     first_sample,
                     first_line,
                     samples_interval,
@@ -637,8 +632,17 @@ class BIOMASSL2aProductReader:
                     coordinateReferenceSystem,
                     geodeticReferenceFrame,
                 )
-            if group_name == "localIncidenceAngle":
-                lut_local_incidence_angle_metadata = BIOMASSL2aLutAdsGN.LutMetadata(
+            if group_name in [
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+                "localIncidenceAngle",  # GN: incidence - slope
+            ]:
+                lut_geometric_metadata = lut_class.LutMetadata(
                     first_sample,
                     first_line,
                     samples_interval,
@@ -648,36 +652,68 @@ class BIOMASSL2aProductReader:
                     projection,
                     coordinateReferenceSystem,
                     geodeticReferenceFrame,
+                    least_significant_digit,
                 )
 
         if self.product_type == "FP_FD__L2A":
-            self.lut_ads = BIOMASSL2aLutAdsFD(
+            self.lut_ads = lut_class(
                 lut_fnf,
                 lut_acm,
                 lut_number_of_averages,
-                lut_fnf_metadata,  # type: ignore
+                lut_latitude,
+                lut_longitude,
+                lut_dem,
+                lut_incidence_angle,
+                lut_elevation_angle,
+                lut_range_dem_slope,
+                lut_azimuth_dem_slope,
+                lut_fnf_metadata,
                 lut_acm_metadata,
                 lut_number_of_averages_metadata,
+                lut_geometric_metadata,
             )
 
         elif self.product_type == "FP_FH__L2A":
-            self.lut_ads = BIOMASSL2aLutAdsFH(
+            self.lut_ads = lut_class(
                 lut_fnf,
-                lut_fnf_metadata,  # type: ignore
+                lut_latitude,
+                lut_longitude,
+                lut_dem,
+                lut_incidence_angle,
+                lut_elevation_angle,
+                lut_range_dem_slope,
+                lut_azimuth_dem_slope,
+                lut_fnf_metadata,
+                lut_geometric_metadata,
             )
 
         elif self.product_type == "FP_GN__L2A":
-            self.lut_ads = BIOMASSL2aLutAdsGN(
+            self.lut_ads = lut_class(
                 lut_fnf,
                 lut_local_incidence_angle,
-                lut_fnf_metadata,  # type: ignore
-                lut_local_incidence_angle_metadata,
+                lut_latitude,
+                lut_longitude,
+                lut_dem,
+                lut_incidence_angle,
+                lut_elevation_angle,
+                lut_range_dem_slope,
+                lut_azimuth_dem_slope,
+                lut_fnf_metadata,
+                lut_geometric_metadata,
             )
 
         elif self.product_type == "FP_TFH_L2A":
-            self.lut_ads = BIOMASSL2aLutAdsFH(
+            self.lut_ads = lut_class(
                 lut_fnf,
-                lut_fnf_metadata,  # type: ignore
+                lut_latitude,
+                lut_longitude,
+                lut_dem,
+                lut_incidence_angle,
+                lut_elevation_angle,
+                lut_range_dem_slope,
+                lut_azimuth_dem_slope,
+                lut_fnf_metadata,
+                lut_geometric_metadata,
             )
         ncfile_read.close()
 
