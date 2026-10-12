@@ -902,8 +902,6 @@ class GroundCancellationTypeAgb:
     """
     Parameters
     ----------
-    compute_gnpower_flag
-        True to compute the power of ground cancelled data (absolute square), False to keep amplitude data value.
     radiometric_calibration_flag
         True if the incidence angle radiometric calibration has been applied, False otherwise.
     emphasized_forest_height
@@ -923,9 +921,6 @@ class GroundCancellationTypeAgb:
     class Meta:
         name = "GroundCancellationTypeAGB"
 
-    compute_gnpower_flag: str = field(
-        metadata={"name": "computeGNPowerFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
-    )
     radiometric_calibration_flag: str = field(
         metadata={
             "name": "radiometricCalibrationFlag",
