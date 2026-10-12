@@ -36,11 +36,6 @@
 					<xsd:documentation>Ground Cancellation method used between the followings. “multi reference”: multiple data computation using each image as reference, followed by data averaging. “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element imagesPairSelection. Note: in case of only two images available, the operationalMode is automatically set to “insar pair” (without the need of imagesPairSelection element).</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="computeGNPowerFlag" type="bool">
-				<xsd:annotation>
-					<xsd:documentation>True if the returned GN L2a image is an absolute squared value (power), False if it is the complex value. The flag is ineffective in case of multi reference operational mode (in this case the result is real only)</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
 			<xsd:element name="radiometricCalibrationFlag" type="bool">
 				<xsd:annotation>
 					<xsd:documentation>True if the incidence angle radiometric calibration has been applied, False otherwise.</xsd:documentation>

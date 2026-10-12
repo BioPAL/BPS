@@ -111,11 +111,6 @@
 	</xsd:complexType>
 	<xsd:complexType name="GroundCancellationTypeAGB">
 		<xsd:sequence>
-			<xsd:element name="computeGNPowerFlag" type="bool">
-				<xsd:annotation>
-					<xsd:documentation>True to compute the power of ground cancelled data (absolute square), False to keep amplitude data value.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
 			<xsd:element name="radiometricCalibrationFlag" type="bool">
 				<xsd:annotation>
 					<xsd:documentation>True if the incidence angle radiometric calibration has been applied, False otherwise.</xsd:documentation>

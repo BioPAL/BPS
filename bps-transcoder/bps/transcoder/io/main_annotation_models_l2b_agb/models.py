@@ -778,9 +778,6 @@ class ProcessingParametersL2AType:
         computation with only the two images specified in the optional element imagesPairSelection. Note: in case of
         only two images available, the operationalMode is automatically set to “insar pair” (without the need of
         imagesPairSelection element).
-    compute_gnpower_flag
-        True if the returned GN L2a image is an absolute squared value (power), False if it is the complex value.
-        The flag is ineffective in case of multi reference operational mode (in this case the result is real only)
     radiometric_calibration_flag
         True if the incidence angle radiometric calibration has been applied, False otherwise.
     images_pair_selection
@@ -835,9 +832,6 @@ class ProcessingParametersL2AType:
             "type": "Element",
             "namespace": "",
         },
-    )
-    compute_gnpower_flag: str = field(
-        metadata={"name": "computeGNPowerFlag", "type": "Element", "namespace": "", "pattern": r"(false)|(true)"}
     )
     radiometric_calibration_flag: str = field(
         metadata={
