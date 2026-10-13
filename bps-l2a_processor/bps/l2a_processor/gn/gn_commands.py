@@ -359,7 +359,7 @@ class GN:
         lut_obj.no_data_value = FLOAT_NODATA_VALUE
 
         lut_obj.least_significant_digit = np.uint8(
-            self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.least_significant_digit
+            self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.least_significant_digit
         )
 
         lut_dict["incidence_angle_metadata"] = deepcopy(lut_obj)
@@ -614,7 +614,7 @@ class GN:
             ),
         )
 
-        least_significant_digit = self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.least_significant_digit
+        least_significant_digit = self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.least_significant_digit
 
         compression_options_gn = main_annotation_models_l2a_gn.CompressionOptionsL2A(
             mds=main_annotation_models_l2a_gn.CompressionOptionsL2A.Mds(
@@ -627,8 +627,8 @@ class GN:
                 fnf=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.Fnf(
                     compression_factor=self.aux_pp2_2a.agb.compression_options.ads.fnf.compression_factor
                 ),
-                local_incidence_angle=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.LocalIncidenceAngle(
-                    compression_factor=self.aux_pp2_2a.agb.compression_options.ads.incidence_angle.compression_factor,
+                geometric_luts=main_annotation_models_l2a_gn.CompressionOptionsL2A.Ads.GeometricLuts(
+                    compression_factor=self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.compression_factor,
                     least_significant_digit=least_significant_digit,
                 ),
             ),

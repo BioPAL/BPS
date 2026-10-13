@@ -513,6 +513,7 @@ class BIOMASSL2aProductWriter:
         assert self.product_structure.schema_files is not None
 
         ppd_doc_string = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        atbd_doc_string = ""  # For TOMO FH
         if L2A_OUTPUT_PRODUCT_FD in self.product_structure.schema_files[0]:
             pfd_doc_string = (
                 f"BIOMASS Forest Disturbance Product Format Specification (BPS_FD_PFD) {BPS_PFD_FD_VERSION}"
@@ -1911,10 +1912,10 @@ class BIOMASSL2aProductWriter:
                     compression_options.ads_block_size,
                 ),  # chunk sizes
                 compression=COMPRESSION_SCHEMA_ADS,
-                complevel=compression_options.ads.local_incidence_angle.compression_factor,
+                complevel=compression_options.ads.geometric_luts.compression_factor,
                 least_significant_digit=(
-                    compression_options.ads.local_incidence_angle.least_significant_digit
-                    if compression_options.ads.local_incidence_angle.least_significant_digit
+                    compression_options.ads.geometric_luts.least_significant_digit
+                    if compression_options.ads.geometric_luts.least_significant_digit
                     else None
                 ),
                 fill_value=FLOAT_NODATA_VALUE,
@@ -1922,11 +1923,11 @@ class BIOMASSL2aProductWriter:
             incidence_var.description = """Local incidence angle image in degrees, which takes into account terrain local slope and defined in the latitude-longitude based on DGG projection, cropped to have a  coverage containing the L2a Ground cancelled backscatter image product boundaries."""
             incidence_var.units = "deg"
             bps_logger.info(
-                f"    Output product LUT ADS Incidence Angle compression factor: {compression_options.ads.local_incidence_angle.compression_factor}"
+                f"    Output product LUT ADS Incidence Angle compression factor: {compression_options.ads.geometric_luts.compression_factor}"
             )
-            if compression_options.ads.local_incidence_angle.least_significant_digit:
+            if compression_options.ads.geometric_luts.least_significant_digit:
                 bps_logger.info(
-                    f"    Output product LUT ADS Incidence Angle least significant digit: {compression_options.ads.local_incidence_angle.least_significant_digit}"
+                    f"    Output product LUT ADS Incidence Angle least significant digit: {compression_options.ads.geometric_luts.least_significant_digit}"
                 )
 
         for group in groups_list:

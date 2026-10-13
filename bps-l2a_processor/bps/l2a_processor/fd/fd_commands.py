@@ -708,6 +708,10 @@ class FD:
                 number_of_averages=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.NumberOfAverages(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.ads.number_of_averages.compression_factor
                 ),
+                geometric_luts=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.GeometricLuts(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.geometric_luts.compression_factor,
+                    least_significant_digit=self.aux_pp2_2a.fd.compression_options.ads.geometric_luts.least_significant_digit,
+                ),
             ),
             mds_block_size=self.aux_pp2_2a.fd.compression_options.mds_block_size,
             ads_block_size=self.aux_pp2_2a.fd.compression_options.ads_block_size,

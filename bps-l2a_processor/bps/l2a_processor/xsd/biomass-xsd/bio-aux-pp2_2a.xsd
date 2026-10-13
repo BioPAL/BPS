@@ -494,7 +494,7 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>
-						<xsd:element name="localIncidenceAngle">
+						<xsd:element name="geometricLUTs">
 							<xsd:complexType>
 								<xsd:sequence>
 									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
@@ -612,6 +612,22 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>
+						<xsd:element name="geometricLUTs">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="least_significant_digit" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -681,6 +697,22 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>
+						<xsd:element name="geometricLUTs">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="least_significant_digit" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less compression.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -745,6 +777,22 @@
 									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
 										<xsd:annotation>
 											<xsd:documentation>ZLIB algorithm compression factor for the FNF ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="geometricLUTs">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="compressionFactor" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="least_significant_digit" type="xsd:unsignedShort">
+										<xsd:annotation>
+											<xsd:documentation>For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less compression.</xsd:documentation>
 										</xsd:annotation>
 									</xsd:element>
 								</xsd:sequence>

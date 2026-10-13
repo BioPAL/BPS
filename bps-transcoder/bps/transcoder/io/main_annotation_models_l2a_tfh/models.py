@@ -219,6 +219,13 @@ class CompressionOptionsL2A:
                 "namespace": "",
             },
         )
+        geometric_luts: CompressionOptionsL2A.Ads.GeometricLuts = field(
+            metadata={
+                "name": "geometricLUTs",
+                "type": "Element",
+                "namespace": "",
+            },
+        )
 
         @dataclass(kw_only=True)
         class Fnf:
@@ -232,6 +239,33 @@ class CompressionOptionsL2A:
             compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+
+        @dataclass(kw_only=True)
+        class GeometricLuts:
+            """
+            Parameters
+            ----------
+            compression_factor
+                ZLIB algorithm compression factor. From 1 to 9.
+            least_significant_digit
+                define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of
+                ten of the smallest decimal place in the data that is a reliable value. Zero means loss-less
+                compression.
+            """
+
+            compression_factor: int = field(
+                metadata={
+                    "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+            least_significant_digit: int = field(
+                metadata={
                     "type": "Element",
                     "namespace": "",
                 },
