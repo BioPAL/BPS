@@ -129,7 +129,7 @@ class L2aAGBConf:
             """Compression configuration for AGB L2a ADS"""
 
             fnf: IntCompressionType
-            incidence_angle: ADSfloatCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -168,6 +168,7 @@ class L2aFDConf:
             fnf: IntCompressionType
             acm: ADSfloatCompressionType
             number_of_averages: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -214,6 +215,7 @@ class L2aFHConf:
             """Compression configuration for FH L2a ADS"""
 
             fnf: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -263,6 +265,7 @@ class L2aTFHConf:
             """Compression configuration for TOMO FH L2a ADS"""
 
             fnf: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS

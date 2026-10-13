@@ -203,9 +203,9 @@ class CompressionOptionsL2AAgb:
                 "namespace": "",
             },
         )
-        local_incidence_angle: CompressionOptionsL2AAgb.Ads.LocalIncidenceAngle = field(
+        geometric_luts: CompressionOptionsL2AAgb.Ads.GeometricLuts = field(
             metadata={
-                "name": "localIncidenceAngle",
+                "name": "geometricLUTs",
                 "type": "Element",
                 "namespace": "",
             },
@@ -229,7 +229,7 @@ class CompressionOptionsL2AAgb:
             )
 
         @dataclass(kw_only=True)
-        class LocalIncidenceAngle:
+        class GeometricLuts:
             """
             Parameters
             ----------
@@ -409,6 +409,13 @@ class CompressionOptionsL2AFd:
                 "namespace": "",
             },
         )
+        geometric_luts: CompressionOptionsL2AFd.Ads.GeometricLuts = field(
+            metadata={
+                "name": "geometricLUTs",
+                "type": "Element",
+                "namespace": "",
+            },
+        )
 
         @dataclass(kw_only=True)
         class Fnf:
@@ -466,6 +473,33 @@ class CompressionOptionsL2AFd:
             compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+
+        @dataclass(kw_only=True)
+        class GeometricLuts:
+            """
+            Parameters
+            ----------
+            compression_factor
+                ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.
+            least_significant_digit
+                For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is
+                allowed to be, specifying the power of ten of the smallest decimal place in the data that is a
+                reliable value. Zero means loss-less compression.
+            """
+
+            compression_factor: int = field(
+                metadata={
+                    "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+            least_significant_digit: int = field(
+                metadata={
                     "type": "Element",
                     "namespace": "",
                 },
@@ -597,6 +631,13 @@ class CompressionOptionsL2AFh:
                 "namespace": "",
             },
         )
+        geometric_luts: CompressionOptionsL2AFh.Ads.GeometricLuts = field(
+            metadata={
+                "name": "geometricLUTs",
+                "type": "Element",
+                "namespace": "",
+            },
+        )
 
         @dataclass(kw_only=True)
         class Fnf:
@@ -610,6 +651,33 @@ class CompressionOptionsL2AFh:
             compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+
+        @dataclass(kw_only=True)
+        class GeometricLuts:
+            """
+            Parameters
+            ----------
+            compression_factor
+                ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.
+            least_significant_digit
+                For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is
+                allowed to be, specifying the power of ten of the smallest decimal place in the data that is a
+                reliable value. Zero means loss-less compression.
+            """
+
+            compression_factor: int = field(
+                metadata={
+                    "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+            least_significant_digit: int = field(
+                metadata={
                     "type": "Element",
                     "namespace": "",
                 },
@@ -741,6 +809,13 @@ class CompressionOptionsL2ATfh:
                 "namespace": "",
             },
         )
+        geometric_luts: CompressionOptionsL2ATfh.Ads.GeometricLuts = field(
+            metadata={
+                "name": "geometricLUTs",
+                "type": "Element",
+                "namespace": "",
+            },
+        )
 
         @dataclass(kw_only=True)
         class Fnf:
@@ -754,6 +829,33 @@ class CompressionOptionsL2ATfh:
             compression_factor: int = field(
                 metadata={
                     "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+
+        @dataclass(kw_only=True)
+        class GeometricLuts:
+            """
+            Parameters
+            ----------
+            compression_factor
+                ZLIB algorithm compression factor for the local incidence angle ADS. From 1 to 9.
+            least_significant_digit
+                For the local incidence angle ADS, define exactly how lossy the ZLIB compression algorithm is
+                allowed to be, specifying the power of ten of the smallest decimal place in the data that is a
+                reliable value. Zero means loss-less compression.
+            """
+
+            compression_factor: int = field(
+                metadata={
+                    "name": "compressionFactor",
+                    "type": "Element",
+                    "namespace": "",
+                },
+            )
+            least_significant_digit: int = field(
+                metadata={
                     "type": "Element",
                     "namespace": "",
                 },

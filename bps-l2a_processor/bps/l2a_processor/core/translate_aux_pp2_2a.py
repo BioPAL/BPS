@@ -236,9 +236,9 @@ def translate_model_to_comp_agb_conf(
         ),
         ads=L2aAGBConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
-            incidence_angle=ADSfloatCompressionType(
-                compression_factor=conf.ads.local_incidence_angle.compression_factor,
-                least_significant_digit=conf.ads.local_incidence_angle.least_significant_digit,
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
             ),
         ),
         mds_block_size=conf.mds_block_size,
@@ -270,6 +270,10 @@ def translate_model_to_comp_fd_conf(
                 least_significant_digit=conf.ads.acm.least_significant_digit,
             ),
             number_of_averages=IntCompressionType(compression_factor=conf.ads.acm.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,
@@ -293,6 +297,10 @@ def translate_model_to_comp_fh_conf(
         ),
         ads=L2aFHConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,
@@ -316,6 +324,10 @@ def translate_model_to_comp_tfh_conf(
         ),
         ads=L2aTFHConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,

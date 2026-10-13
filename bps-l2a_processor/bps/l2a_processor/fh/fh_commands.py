@@ -689,6 +689,10 @@ class FH:
                 fnf=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.Fnf(
                     compression_factor=self.aux_pp2_2a.fh.compression_options.ads.fnf.compression_factor
                 ),
+                geometric_luts=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.GeometricLuts(
+                    compression_factor=self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.compression_factor,
+                    least_significant_digit=self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit,
+                ),
             ),
             mds_block_size=self.aux_pp2_2a.fh.compression_options.mds_block_size,
             ads_block_size=self.aux_pp2_2a.fh.compression_options.ads_block_size,

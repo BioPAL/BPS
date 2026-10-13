@@ -186,9 +186,9 @@ class CompressionOptionsL2A:
                 "namespace": "",
             },
         )
-        local_incidence_angle: CompressionOptionsL2A.Ads.LocalIncidenceAngle = field(
+        geometric_luts: CompressionOptionsL2A.Ads.GeometricLuts = field(
             metadata={
-                "name": "localIncidenceAngle",
+                "name": "geometricLUTs",
                 "type": "Element",
                 "namespace": "",
             },
@@ -212,7 +212,7 @@ class CompressionOptionsL2A:
             )
 
         @dataclass(kw_only=True)
-        class LocalIncidenceAngle:
+        class GeometricLuts:
             """
             Parameters
             ----------

@@ -234,6 +234,7 @@ class LayerType(Enum):
     SKP_CALIBRATION_PHASE_SCREEN_QUALITY = "SKP calibration phase screen quality"
     INTERFEROGRAM_RAD = "Interferogram [rad]"
     COHERENCE = "Coherence"
+    LOCAL_INCIDENCE_ANGLE_DEG = "Local Incidence angle [deg]"
 
 
 @dataclass(kw_only=True)

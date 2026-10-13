@@ -211,7 +211,7 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>
-						<xsd:element name="localIncidenceAngle">
+						<xsd:element name="geometricLUTs">
 							<xsd:complexType>
 								<xsd:sequence>
 									<xsd:element name="compressionFactor" type="xsd:unsignedByte">

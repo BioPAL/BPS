@@ -740,6 +740,10 @@ class TOMO_FH:
                 fnf=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads.Fnf(
                     compression_factor=self.aux_pp2_2a.tfh.compression_options.ads.fnf.compression_factor
                 ),
+                geometric_luts=main_annotation_models_l2a_tfh.CompressionOptionsL2A.Ads.GeometricLuts(
+                    compression_factor=self.aux_pp2_2a.tfh.compression_options.ads.geometric_luts.compression_factor,
+                    least_significant_digit=self.aux_pp2_2a.tfh.compression_options.ads.geometric_luts.least_significant_digit,
+                ),
             ),
             mds_block_size=self.aux_pp2_2a.tfh.compression_options.mds_block_size,
             ads_block_size=self.aux_pp2_2a.tfh.compression_options.ads_block_size,
@@ -886,9 +890,9 @@ def BiomassForestHeightSKPD(
 
     tomo_cube = np.zeros((Nrg_subs, Naz_subs, Nz))
     Nrg_subs_string = str(Nrg_subs)
-    for rg_sub_idx in np.arange(Nrg_subs):
+    for rg_sub_idx in np.arange(10):  # Nrg_subs):
         bps_logger.info("   Heigth step " + str(rg_sub_idx + 1) + " of " + Nrg_subs_string)
-        for az_sub_idx in np.arange(Naz_subs):
+        for az_sub_idx in np.arange(10):  # Naz_subs):
             # Spectra estimation initialization
             class spectra:
                 pass

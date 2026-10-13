@@ -452,8 +452,8 @@ class BIOMASSL2aProductReader:
             assert main_annotation_model.processing_parameters.operational_mode is not None
             assert main_annotation_model.processing_parameters.radiometric_calibration_flag is not None
             assert main_annotation_model.processing_parameters.disable_ground_cancellation_flag is not None
-            assert main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle is not None
-            least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.local_incidence_angle.least_significant_digit
+            assert main_annotation_model.processing_parameters.compression_options.ads.geometric_luts is not None
+            least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.geometric_luts.least_significant_digit
             emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
             operational_mode = main_annotation_model.processing_parameters.operational_mode.value
             radiometric_calibration_flag = str_to_bool(
