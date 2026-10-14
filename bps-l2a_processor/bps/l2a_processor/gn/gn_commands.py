@@ -11,6 +11,7 @@ GN commands
 """
 
 from copy import deepcopy
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 
@@ -422,7 +423,7 @@ class GN:
             geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
         )
         lut_dict["geometric_metadata"].least_significant_digit = np.uint8(
-            self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit
+            self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.least_significant_digit
         )
 
         # COG metadata, for GN
@@ -697,6 +698,30 @@ class GN:
             ads_block_size=self.aux_pp2_2a.agb.compression_options.ads_block_size,
         )
 
+        # imagesPairSelection: the AUX contains AuxppacquisitionListType.AcquisitionFolderName objects,
+        # the annotation needs AcquisitionType: pick them from the stack acquisition list
+        images_pair_selection = None
+        if self.aux_pp2_2a.agb.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
+            pair_from_aux = {
+                Path(acq.value).name: acq
+                for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection.acquisition
+            }
+            pair = [
+                replace(
+                    acq,
+                    reference_image=pair_from_aux[acq.folder_name].reference_image,
+                    average_wavenumber=pair_from_aux[acq.folder_name].average_wavenumber,
+                )
+                for acq in acquisition_list
+                if acq.folder_name in pair_from_aux
+            ]
+            if len(pair) != 2:
+                raise RuntimeError(
+                    f"INSAR_PAIR: expected 2 acquisitions from AUX PP2 2A images pair selection "
+                    f"{list(pair_from_aux)} in the stack, found {len(pair)}"
+                )
+            images_pair_selection = common_annotation_models_l2.AcquisitionListType(acquisition=pair, count=len(pair))
+
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersGN(
             bps.l2a_processor.__version__,
             self.start_time,
@@ -708,7 +733,7 @@ class GN:
             self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
             self.aux_pp2_2a.agb.product_resolution,
             self.aux_pp2_2a.agb.upsampling_factor,
-            self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection,
+            images_pair_selection,
             self.aux_pp2_2a.agb.ground_cancellaton.disable_ground_cancellation_flag,
         )
 
