@@ -10,12 +10,10 @@ workflow:
 
 variables:
   GIT_DEPTH: 1
+  PIP_EXTRA_INDEX_URL: "$INTERNAL_PYPI_URL"
 
 .tags_manylinux2014:
   tags: ["manylinux2014"]
-
-.tags_rocky8_conda:
-  tags: ["eo", "rocky8", "conda"]
 
 .tags_win10_conda:
   tags: ["eo", "win10", "conda"]
@@ -71,8 +69,7 @@ format:
 .unittest_linux:
   stage: test
   needs: []
-  extends:
-    - .tags_rocky8_conda
+  image: condaforge/miniforge3
   script:
     - cd $SUBPROJECT
     - python -m pip install nox
