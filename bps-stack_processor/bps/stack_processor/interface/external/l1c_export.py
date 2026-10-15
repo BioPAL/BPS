@@ -77,7 +77,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct_writer import (
 from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.sarproduct.sta.quality_index import StackQualityIndex
 from bps.transcoder.sarproduct.sta.stack_unique_identifier import StackUniqueID
-from bps.transcoder.utils.polarization_conversions import translate_polarization
+from bps.transcoder.utils.polarization_conversions import translate_arepytools_polarization_to_common
 from bps.transcoder.utils.quicklook_utils import QuickLookConf
 from bps.transcoder.utils.time_conversions import round_precise_datetime
 
@@ -934,7 +934,7 @@ def _fill_stack_quality(
                 invalid_skp_calibration_phase_screen_ratio=invalid_skp_calibration_phase_screen_ratio,
                 skp_calibration_phase_screen_quality_threshold=aux_pps.skp_phase_calibration.skp_calibration_phase_screen_quality_threshold,
                 skp_decomposition_index=skp_decomposition_index,
-                polarization=translate_polarization(polarization),
+                polarization=translate_arepytools_polarization_to_common(polarization),
                 coherence_mean=np.nanmean(coherence),
                 coherence_std=np.nanstd(coherence),
                 coherence_min=np.nanmin(coherence),
@@ -999,10 +999,10 @@ def _fill_stack_processing_parameters(
         rfi_degradation_estimation_flag=aux_pps.rfi_degradation_estimation.rfi_degradation_estimation_flag,
         azimuth_spectral_filtering_flag=aux_pps.azimuth_spectral_filtering.azimuth_spectral_filtering_flag,
         calibration_primary_image_flag=aux_pps.slow_ionosphere_removal.primary_image_flag,
-        polarization_used_for_slow_ionosphere_removal=translate_polarization(
+        polarization_used_for_slow_ionosphere_removal=translate_arepytools_polarization_to_common(
             aux_pps.slow_ionosphere_removal.polarization_used
         ),
-        polarization_used_for_multi_squint_calibration=translate_polarization(
+        polarization_used_for_multi_squint_calibration=translate_arepytools_polarization_to_common(
             aux_pps.multi_squint_calibration.polarization_used,
         ),
         slow_ionosphere_removal_flag=aux_pps.slow_ionosphere_removal.slow_ionosphere_removal_flag,
@@ -1098,7 +1098,7 @@ def _fill_stack_coregistration_parameters(
         average_azimuth_coregistration_shift=average_azimuth_coreg_shifts,
         average_range_coregistration_shift=average_range_coreg_shifts,
         normal_baseline=normal_baseline,
-        polarization_used=translate_polarization(aux_pps.coregistration.polarization_used),
+        polarization_used=translate_arepytools_polarization_to_common(aux_pps.coregistration.polarization_used),
     )
 
 
