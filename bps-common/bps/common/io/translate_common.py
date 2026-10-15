@@ -17,6 +17,37 @@ from bps.common.io import common, common_types
 from xsdata.models.datatype import XmlDateTime
 
 
+def translate_min_max_type(values: common_types.MinMaxType) -> common.MinMaxType:
+    """Translate minimum and maximum values from the annotation model."""
+    return common.MinMaxType(min=float(values.min), max=float(values.max))
+
+
+def translate_min_max_type_to_model(values: common.MinMaxType) -> common_types.MinMaxType:
+    """Translate minimum and maximum values to the annotation model."""
+    return common_types.MinMaxType(min=float(values.min), max=float(values.max))
+
+
+def translate_min_max_type_with_unit(values: common_types.MinMaxTypeWithUnit) -> common.MinMaxTypeWithUnit:
+    """Translate minimum and maximum values while retaining their shared unit."""
+    if values.min.units != values.max.units:
+        raise ValueError("MinMaxTypeWithUnit endpoints must use the same unit")
+    return common.MinMaxTypeWithUnit(
+        min=translate_float_with_unit(values.min),
+        max=translate_float_with_unit(values.max),
+        units=translate_uom_type(values.min.units),
+    )
+
+
+def translate_min_max_type_with_unit_to_model(
+    values: common.MinMaxTypeWithUnit,
+) -> common_types.MinMaxTypeWithUnit:
+    """Translate minimum and maximum values with their unit to the annotation model."""
+    return common_types.MinMaxTypeWithUnit(
+        min=translate_float_with_unit_to_model(values.min, values.units),
+        max=translate_float_with_unit_to_model(values.max, values.units),
+    )
+
+
 def translate_processing_mode(
     mode: common_types.ProcessingModeType,
 ) -> common.ProcessingModeType:
@@ -85,6 +116,20 @@ def translate_rfi_mask_generation_method_type_to_model(
     return common_types.RfiMaskGenerationMethodType[method.name]
 
 
+def translate_rfi_fmmitigation_method_type(
+    method: common_types.RfiFmmitigationMethodType,
+) -> common.RfiFmmitigationMethodType:
+    """Translate frequency-domain RFI mitigation method."""
+    return common.RfiFmmitigationMethodType[method.name]
+
+
+def translate_rfi_fmmitigation_method_type_to_model(
+    method: common.RfiFmmitigationMethodType,
+) -> common_types.RfiFmmitigationMethodType:
+    """Translate frequency-domain RFI mitigation method to the annotation model."""
+    return common_types.RfiFmmitigationMethodType[method.name]
+
+
 def translate_range_compression_method_type(
     method: common_types.RangeCompressionMethodType,
 ) -> common.RangeCompressionMethodType:
@@ -111,6 +156,20 @@ def translate_range_reference_function_type_to_model(
 ) -> common_types.RangeReferenceFunctionType:
     """Translate range reference source nominal/internal/replica enum"""
     return common_types.RangeReferenceFunctionType[source_type.name]
+
+
+def translate_compression_method_type(
+    method: common_types.CompressionMethodType,
+) -> common.CompressionMethodType:
+    """Translate TIFF compression method."""
+    return common.CompressionMethodType[method.name]
+
+
+def translate_compression_method_type_to_model(
+    method: common.CompressionMethodType,
+) -> common_types.CompressionMethodType:
+    """Translate TIFF compression method to the annotation model."""
+    return common_types.CompressionMethodType[method.name]
 
 
 def translate_dc_method_type(
@@ -318,6 +377,24 @@ def translate_float_array_to_model(
     )
 
 
+def translate_int_array(coefficients: common_types.IntArray) -> list[int]:
+    """Translate integer array model to a list and validate its count."""
+    values = [int(value) for value in coefficients.value.split()]
+    if len(values) != coefficients.count:
+        raise RuntimeError(
+            "Inconsistency in integer array: " + f"{coefficients.value} and count: {coefficients.count} do not match"
+        )
+    return values
+
+
+def translate_int_array_to_model(coefficients: list[int]) -> common_types.IntArray:
+    """Translate a list of integers to the annotation model."""
+    return common_types.IntArray(
+        count=len(coefficients),
+        value=" ".join(str(int(value)) for value in coefficients),
+    )
+
+
 def translate_double_array(
     coefficients: common_types.DoubleArray,
 ) -> list[float]:
@@ -423,6 +500,20 @@ def translate_projection_type_to_model(
 ) -> common_types.ProjectionType:
     """Translate projection"""
     return common_types.ProjectionType[projection.name]
+
+
+def translate_baseline_method_type(
+    baseline_method: common_types.BaselineMethodType,
+) -> common.BaselineMethodType:
+    """Translate baseline method."""
+    return common.BaselineMethodType[baseline_method.name]
+
+
+def translate_baseline_method_type_to_model(
+    baseline_method: common.BaselineMethodType,
+) -> common_types.BaselineMethodType:
+    """Translate baseline method to the annotation model."""
+    return common_types.BaselineMethodType[baseline_method.name]
 
 
 def translate_geodetic_reference_frame_type(
@@ -671,24 +762,6 @@ def translate_time_with_pol_to_model(
     )
 
 
-def translate_float_with_pol(
-    pair: common_types.FloatWithPolarisation,
-) -> tuple[common.PolarisationType, float]:
-    """Translate float with pol"""
-    return translate_polarisation_type(pair.polarisation), pair.value
-
-
-def translate_float_with_pol_to_model(
-    pair: tuple[common.PolarisationType, float],
-) -> common_types.FloatWithPolarisation:
-    """Translate time with pol"""
-    pol, value = pair
-    return common_types.FloatWithPolarisation(
-        polarisation=translate_polarisation_type_to_model(pol),
-        value=float(value),
-    )
-
-
 def translate_slant_range_polynomial(
     poly: common_types.SlantRangePolynomialType,
 ) -> common.SlantRangePolynomialType:
@@ -812,7 +885,7 @@ def translate_polarisation_combination_method_to_model(
 
 def translate_primary_image_selection_information(
     info: common_types.PrimaryImageSelectionInformationType,
-) -> common.PrimaryImageSelectionInformationType | None:
+) -> common.PrimaryImageSelectionInformationType:
     """Translate the primary image selection information"""
     return common.PrimaryImageSelectionInformationType[info.name]
 
@@ -822,6 +895,34 @@ def translate_primary_image_selection_information_to_model(
 ) -> common_types.PrimaryImageSelectionInformationType:
     """Translate the primary image selection information"""
     return common_types.PrimaryImageSelectionInformationType[info.name]
+
+
+def translate_primary_image_selection_method(
+    method: common_types.PrimaryImageSelectionMethodType,
+) -> common.PrimaryImageSelectionMethodType:
+    """Translate the primary image selection method"""
+    return common.PrimaryImageSelectionMethodType[method.name]
+
+
+def translate_primary_image_selection_method_to_model(
+    method: common.PrimaryImageSelectionMethodType,
+) -> common_types.PrimaryImageSelectionMethodType:
+    """Translate the primary image selection method"""
+    return common_types.PrimaryImageSelectionMethodType[method.name]
+
+
+def translate_skp_phase_calibration_postprocessing_type(
+    method: common_types.SkpPhaseCalibrationPostprocessingType,
+) -> common.SkpPhaseCalibrationPostprocessingType:
+    """Translate SKP calibration phase-screen postprocessing method."""
+    return common.SkpPhaseCalibrationPostprocessingType[method.name]
+
+
+def translate_skp_phase_calibration_postprocessing_type_to_model(
+    method: common.SkpPhaseCalibrationPostprocessingType,
+) -> common_types.SkpPhaseCalibrationPostprocessingType:
+    """Translate SKP calibration phase-screen postprocessing method to model."""
+    return common_types.SkpPhaseCalibrationPostprocessingType[method.name]
 
 
 def translate_coregistration_method(
@@ -896,3 +997,17 @@ def translate_channel_imbalance_list_to_model(
         channel_imbal_hvrx=translate_complex_to_model(channel_imbalance_list.hv_rx),
         channel_imbal_hvtx=translate_complex_to_model(channel_imbalance_list.hv_tx),
     )
+
+
+def translate_channel_type(
+    channel: common_types.ChannelType,
+) -> common.ChannelType:
+    """Translate the channel type."""
+    return common.ChannelType[channel.name]
+
+
+def translate_channel_type_to_model(
+    channel: common.ChannelType,
+) -> common_types.ChannelType:
+    """Translate the channel type."""
+    return common_types.ChannelType[channel.name]

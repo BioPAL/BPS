@@ -53,6 +53,13 @@ class RfiMaskGenerationMethodType(Enum):
     OR = "OR"
 
 
+class RfiFmmitigationMethodType(Enum):
+    """Frequency-domain RFI mitigation methods."""
+
+    NOTCH_FILTER = "NOTCH_FILTER"
+    NEAREST_NEIGHBOUR_INTERPOLATION = "NEAREST_NEIGHBOUR_INTERPOLATION"
+
+
 class RangeCompressionMethodType(Enum):
     """Available range compression methods"""
 
@@ -106,6 +113,14 @@ class PolarisationType(Enum):
 FloatWithPolarisation = tuple[float, PolarisationType]
 
 
+@dataclass
+class MinMaxType:
+    """Minimum and maximum numeric values."""
+
+    min: float
+    max: float
+
+
 class IonosphereHeightEstimationMethodType(Enum):
     """Ionosphere height estimation methods"""
 
@@ -134,7 +149,6 @@ class UomType(Enum):
     """Unit of measures."""
 
     S = "s"
-    UTC = "UTC"
     M = "m"
     SAMPLES = "samples"
     LINES = "lines"
@@ -142,17 +156,28 @@ class UomType(Enum):
     RAD = "rad"
     HZ = "Hz"
     HZ_S = "Hz/s"
+    MHZ = "MHz"
     D_B = "dB"
     MBPS = "Mbps"
     C = "C"
     K = "K"
     DEG_S = "deg/s"
+    RAD_S = "rad/s"
     MM_KM = "mm/Km"
     DEG_M = "deg/m"
+    RAD_M = "rad/m"
     VALUE_1_M = "1/m"
     T_HA = "t/ha"
     RAD_N_T_2 = "(rad/nT)^2"
-    VALUE = ""
+
+
+@dataclass
+class MinMaxTypeWithUnit:
+    """Minimum and maximum numeric values with their shared unit."""
+
+    min: float
+    max: float
+    units: UomType
 
 
 class ProjectionType(Enum):
@@ -249,7 +274,15 @@ class ProductType(Enum):
     FD_L2_A = "FD_L2A"
     FD_L2_B = "FD_L2B"
     GN_L2_A = "GN_L2A"
+    TFH_L2_A = "TFH_L2A"
     AGB_L2_B = "AGB_L2B"
+
+
+class BaselineMethodType(Enum):
+    """Baseline selection methods used by calibration processing."""
+
+    SINGLE_BASELINE = "Single-Baseline"
+    MULTI_BASELINE = "Multi-Baseline"
 
 
 class MissionPhaseIdtype(Enum):
@@ -283,6 +316,17 @@ class ProductCompositionType(Enum):
     PARTIAL = "Partial"
     INCOMPLETE = "Incomplete"
     NOT_FRAMED = "Not Framed"
+
+
+class CompressionMethodType(Enum):
+    """TIFF compression methods supported by product export."""
+
+    NONE = "NONE"
+    DEFLATE = "DEFLATE"
+    ZSTD = "ZSTD"
+    LERC = "LERC"
+    LERC_DEFLATE = "LERC_DEFLATE"
+    LERC_ZSTD = "LERC_ZSTD"
 
 
 class DataFormatModeType(Enum):
@@ -365,15 +409,18 @@ class LayerType(Enum):
     ACM = "ACM"
     NUMBER_OF_AVERAGES = "numberOfAverages"
     AZIMUTH_COREGISTRATION_SHIFTS_M = "Azimuth coregistration shifts [m]"
+    AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M = "Azimuth orbit coregistration shifts [m]"
     RANGE_COREGISTRATION_SHIFTS_M = "Range coregistration shifts [m]"
+    RANGE_ORBIT_COREGISTRATION_SHIFTS_M = "Range orbit coregistration shifts [m]"
     COREGISTRATION_SHIFTS_QUALITY = "Coregistration shifts quality"
     WAVENUMBERS_RAD_M = "Wavenumbers [rad/m]"
     FLATTENING_PHASE_SCREEN_RAD = "Flattening phase screen [rad]"
-    BASELINE_ERROR_PHASE_SCREEN_RAD = "Baseline error phase screen [rad]"
-    RESIDUAL_IONOSPHERE_PHASE_SCREEN_RAD = "Residual ionosphere phase screen [rad]"
-    RESIDUAL_IONOSPHERE_PHASE_SCREEN_QUALITY = "Residual ionosphere phase screen quality"
+    IONOSPHERE_PHASE_SCREENS_RAD = "Ionosphere phase screens [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_RAD = "SKP calibration phase screen [rad]"
     SKP_CALIBRATION_PHASE_SCREEN_QUALITY = "SKP calibration phase screen quality"
+    INTERFEROGRAM_RAD = "Interferogram [rad]"
+    COHERENCE = "Coherence"
+    LOCAL_INCIDENCE_ANGLE_DEG = "Local Incidence angle [deg]"
 
 
 class PolarisationCombinationMethodType(Enum):
@@ -391,6 +438,25 @@ class PrimaryImageSelectionInformationType(Enum):
     GEOMETRY_AND_RFI_CORRECTION = "Geometry and RFI Correction"
     GEOMETRY_AND_FR_CORRECTION = "Geometry and FR Correction"
     GEOMETRY_AND_RFI_FR_CORRECTIONS = "Geometry and RFI+FR Corrections"
+    TEMPORAL_BASELINE = "Temporal Baseline"
+
+
+class SkpPhaseCalibrationPostprocessingType(Enum):
+    """Postprocessing methods for the SKP calibration phase screen."""
+
+    NONE = "None"
+    GOLDSTEIN = "Goldstein"
+    BOXCAR = "Boxcar"
+    MEDIAN = "Median"
+
+
+class PrimaryImageSelectionMethodType(Enum):
+    """
+    Enumeration of coregistration primary image selection methods.
+    """
+
+    GEOMETRY = "Geometry"
+    GEOMETRY_AND_QUALITY = "Geometry and Quality"
     TEMPORAL_BASELINE = "Temporal Baseline"
 
 
@@ -426,3 +492,13 @@ class ChannelImbalanceList:
 
     hv_rx: complex
     hv_tx: complex
+
+
+class ChannelType(Enum):
+    """
+    Enumeration of valid RGB channels.
+    """
+
+    RED = "RED"
+    GREEN = "GREEN"
+    BLUE = "BLUE"

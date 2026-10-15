@@ -599,7 +599,7 @@ def _translate_list_float_with_pol(
 ) -> dict[common.PolarisationType, float]:
     output = {}
     for item in pol_list:
-        pol, value = translate_common.translate_float_with_pol(item)
+        value, pol = translate_common.translate_float_with_polarisation(item)
         output[pol] = value
     return output
 
@@ -607,7 +607,9 @@ def _translate_list_float_with_pol(
 def _translate_list_float_with_pol_to_model(
     pol_list: dict[common.PolarisationType, float],
 ) -> list[common_types.FloatWithPolarisation]:
-    return [translate_common.translate_float_with_pol_to_model(item) for item in pol_list.items()]
+    return [
+        translate_common.translate_float_with_polarisation_to_model((value, pol)) for pol, value in pol_list.items()
+    ]
 
 
 def _translate_list_state(
