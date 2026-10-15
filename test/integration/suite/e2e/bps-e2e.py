@@ -278,6 +278,8 @@ def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
     )
 
     aux_pp2_path = data.pull("configurations/e2e/CONF-BPS-PP2-2A-ALL")
+    aux_pp2_2a = xml.Document(retrieve_aux_product_data_single_content(aux_pp2_path))
+    _update_aux_pp2_2a(aux_pp2_2a)
 
     job_order.set(
         "//List_of_Tasks/Task/Amount_of_RAM/text()",
@@ -754,6 +756,29 @@ def _check_products(
 
             except Exception as ex:
                 raise RuntimeError(f"Product {product.name} failed to read (error: {ex})") from ex
+
+
+def _update_aux_pp2_2a(aux_pp2_2a: xml.Document):
+    """Convert BPSv4.4.4 AUX-PP2-2A into the current one (BPS 4.5.0).
+
+    - AGB/groundCancellation: removed computeGNPowerFlag.
+    - AGB/compressionOptions/ADS: localIncidenceAngle renamed to geometricLUTs.
+    - FD, FH, TFH compressionOptions/ADS: added geometricLUTs.
+    """
+    # AGB: flag no longer present in the schema.
+    aux_pp2_2a.remove("//AGB/groundCancellation/computeGNPowerFlag")
+
+    # AGB: rename localIncidenceAngle -> geometricLUTs. There is no rename primitive,
+    # so remove the old node; the new one is appended below with the same content
+    # (compressionFactor=5, least_significant_digit=5) and the same position (last in ADS).
+    aux_pp2_2a.remove("//AGB/compressionOptions/ADS/localIncidenceAngle")
+
+    # AGB (renamed above), FD, FH, TFH: geometricLUTs is always the last child of ADS.
+    for product in ("AGB", "FD", "FH", "TFH"):
+        geometric_luts = f"//{product}/compressionOptions/ADS/geometricLUTs"
+        aux_pp2_2a.add(f"//{product}/compressionOptions/ADS", "geometricLUTs", "")
+        aux_pp2_2a.add(geometric_luts, "compressionFactor", "5")
+        aux_pp2_2a.add(geometric_luts, "least_significant_digit", "5")
 
 
 if __name__ == "__main__":
