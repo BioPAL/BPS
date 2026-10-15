@@ -10,12 +10,10 @@ workflow:
 
 variables:
   GIT_DEPTH: 1
+  PIP_EXTRA_INDEX_URL: "$INTERNAL_PYPI_URL"
 
 .tags_manylinux2014:
   tags: ["manylinux2014"]
-
-.tags_rocky8_conda:
-  tags: ["eo", "rocky8", "conda"]
 
 .tags_win10_conda:
   tags: ["eo", "win10", "conda"]
@@ -60,12 +58,11 @@ format:
 .unittest_linux:
   stage: test
   needs: []
-  extends:
-    - .tags_rocky8_conda
+  image: condaforge/miniforge3
   script:
     - cd $SUBPROJECT
-    - python3.9 -m pip install nox
-    - python3.9 -m nox -s unittest -p ${PYTHON}
+    - python3 -m pip install nox
+    - python3 -m nox -s unittest -p ${PYTHON}
   artifacts:
     reports:
       junit:
@@ -86,8 +83,8 @@ unittest_linux_py312:
   script:
     - cd $SUBPROJECT
     - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
-    - python -m pip install nox
-    - python -m nox -s unittest -p ${PYTHON}
+    - python3.12 -m pip install nox
+    - python3.12 -m nox -s unittest -p ${PYTHON}
   retry: 2
   artifacts:
     reports:
