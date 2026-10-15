@@ -17,7 +17,7 @@ from arepytools.geometry.generalsarattitude import create_general_sar_attitude
 from arepytools.io import read_metadata
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, common_types
+from bps.common.io import common
 from bps.l1_processor import BPS_L1_PROCESSOR_NAME
 from bps.l1_processor import __version__ as VERSION
 from bps.l1_processor.processor_interface.aux_pp1 import (
@@ -28,7 +28,6 @@ from bps.l1_processor.processor_interface.aux_pp1 import (
 from bps.l1_processor.processor_interface.joborder_l1 import L1JobOrder
 from bps.l1_processor.settings.intermediate_names import IntermediateProductID
 from bps.transcoder.io import common_annotation_l1
-from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
 from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l0product_reader import read_l0_product
@@ -105,7 +104,9 @@ def fill_bps_l1_processing_parameters(
         rfi_mask_generation_method=common.RfiMaskGenerationMethodType[
             aux_pp1.rfi_mitigation.mask_generation_method.name
         ],
-        rfi_fm_mitigation_method=aux_pp1.rfi_mitigation.freq_domain_processing_parameters.mitigation_method,
+        rfi_fm_mitigation_method=common.RfiFmmitigationMethodType[
+            aux_pp1.rfi_mitigation.freq_domain_processing_parameters.mitigation_method
+        ],
         rfi_fm_chirp_source=common.RangeReferenceFunctionType[
             aux_pp1.rfi_mitigation.freq_domain_processing_parameters.chirp_source.name
         ],
@@ -121,11 +122,11 @@ def fill_bps_l1_processing_parameters(
             aux_pp1.range_compression.range_compression_method.name
         ],
         range_window_type={
-            k.value: main_annotation_models.WeightingWindowType[v.window_type.name]
+            common.SwathType[k.value]: common.WeightingWindowType[v.window_type.name]
             for k, v in aux_pp1.range_compression.parameters.items()
         },
         range_window_coefficient={
-            k.value: v.window_coefficient for k, v in aux_pp1.range_compression.parameters.items()
+            common.SwathType[k.value]: v.window_coefficient for k, v in aux_pp1.range_compression.parameters.items()
         },
         extended_swath_processing=aux_pp1.range_compression.extended_swath_processing,
         dc_method=common.DcMethodType[aux_pp1.doppler_estimation.method.name],
@@ -138,11 +139,11 @@ def fill_bps_l1_processing_parameters(
         azimuth_compression_block_overlap_samples=aux_pp1.azimuth_compression.block_overlap_samples,
         azimuth_compression_block_overlap_lines=aux_pp1.azimuth_compression.block_overlap_lines,
         azimuth_window_type={
-            k.value: main_annotation_models.WeightingWindowType[v.window_type.name]
+            common.SwathType[k.value]: common.WeightingWindowType[v.window_type.name]
             for k, v in aux_pp1.azimuth_compression.parameters.items()
         },
         azimuth_window_coefficient={
-            k.value: v.window_coefficient for k, v in aux_pp1.azimuth_compression.parameters.items()
+            common.SwathType[k.value]: v.window_coefficient for k, v in aux_pp1.azimuth_compression.parameters.items()
         },
         bistatic_delay_correction_flag=aux_pp1.azimuth_compression.bistatic_delay_correction,
         bistatic_delay_correction_method=common.BistaticDelayCorrectionMethodType[
@@ -161,15 +162,17 @@ def fill_bps_l1_processing_parameters(
         group_delay_correction_flag=aux_pp1.ionosphere_calibration.group_delay_correction_flag,
         autofocus_flag=aux_pp1.autofocus.autofocus_flag,
         autofocus_method=common.AutofocusMethodType[aux_pp1.autofocus.autofocus_method.name],
-        range_upsampling_factor={k.value: v.upsampling_factor for k, v in aux_pp1.multilook.range_parameters.items()},
+        range_upsampling_factor={
+            common.SwathType[k.value]: v.upsampling_factor for k, v in aux_pp1.multilook.range_parameters.items()
+        },
         range_downsampling_factor={
-            k.value: v.downsampling_factor for k, v in aux_pp1.multilook.range_parameters.items()
+            common.SwathType[k.value]: v.downsampling_factor for k, v in aux_pp1.multilook.range_parameters.items()
         },
         azimuth_upsampling_factor={
-            k.value: v.upsampling_factor for k, v in aux_pp1.multilook.azimuth_parameters.items()
+            common.SwathType[k.value]: v.upsampling_factor for k, v in aux_pp1.multilook.azimuth_parameters.items()
         },
         azimuth_downsampling_factor={
-            k.value: v.downsampling_factor for k, v in aux_pp1.multilook.azimuth_parameters.items()
+            common.SwathType[k.value]: v.downsampling_factor for k, v in aux_pp1.multilook.azimuth_parameters.items()
         },
         detection_flag=aux_pp1.multilook.apply_detection,
         thermal_denoising_flag=aux_pp1.thermal_denoising.thermal_denoising_flag,
@@ -228,15 +231,11 @@ def fill_sar_image_parameters(
     """
     sar_image_parameters = SARImageParameters(
         pixel_representation=aux_pp1.l1_product_export.pixel_representation,
-        pixel_type=main_annotation_models.PixelTypeType.VALUE_32_BIT_FLOAT,
-        abs_compression_method=common_types.CompressionMethodType[
-            aux_pp1.l1_product_export.abs_compression_method.name
-        ],
+        pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+        abs_compression_method=common.CompressionMethodType[aux_pp1.l1_product_export.abs_compression_method.name],
         abs_max_z_error=aux_pp1.l1_product_export.abs_max_zerror,
         abs_max_z_error_percentile=aux_pp1.l1_product_export.abs_max_zerror_percentile,
-        phase_compression_method=common_types.CompressionMethodType[
-            aux_pp1.l1_product_export.phase_compression_method.name
-        ],
+        phase_compression_method=common.CompressionMethodType[aux_pp1.l1_product_export.phase_compression_method.name],
         phase_max_z_error=aux_pp1.l1_product_export.phase_max_zerror,
         phase_max_z_error_percentile=aux_pp1.l1_product_export.phase_max_zerror_percentile,
         no_pixel_value=aux_pp1.l1_product_export.no_pixel_value,
@@ -308,7 +307,7 @@ def fill_quicklook_parameters(
         ql_azimuth_decimation_factor=aux_pp1.l1_product_export.ql_azimuth_decimation_factor,
         ql_azimuth_averaging_factor=aux_pp1.l1_product_export.ql_azimuth_averaging_factor,
         ql_absolute_scaling_factor={
-            k.value: v for k, v in aux_pp1.l1_product_export.ql_absolute_scaling_factor_list.items()
+            common.ChannelType[k.name]: v for k, v in aux_pp1.l1_product_export.ql_absolute_scaling_factor_list.items()
         },
     )
     return quicklook_parameters
@@ -586,6 +585,7 @@ def export_in_bps_format(
     )
 
     # Write quicklook to standard product
+    assert configuration.quicklook_parameters is not None
     quicklook_conf = quicklook_utils.QuickLookConf(
         l1a_colour_coding_method=configuration.quicklook_parameters.l1a_ql_colour_coding_method,
         l1b_colour_coding_method=configuration.quicklook_parameters.l1b_ql_colour_coding_method,

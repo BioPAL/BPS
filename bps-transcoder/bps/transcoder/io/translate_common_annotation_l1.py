@@ -111,7 +111,9 @@ def translate_processing_parameters(
         rfi_mask_generation_method=translate_common.translate_rfi_mask_generation_method_type(
             params.rfi_mask_generation_method
         ),
-        rfi_fm_mitigation_method=params.rfi_fmmitigation_method.value,
+        rfi_fm_mitigation_method=translate_common.translate_rfi_fmmitigation_method_type(
+            params.rfi_fmmitigation_method
+        ),
         rfi_fm_chirp_source=translate_common.translate_range_reference_function_type(params.rfi_fmchirp_source),
         internal_calibration_estimation_flag=translate_common.translate_bool(
             params.internal_calibration_estimation_flag
@@ -186,7 +188,9 @@ def translate_processing_parameters_to_model(
         rfi_fmchirp_source=translate_common.translate_range_reference_function_type_to_model(
             params.rfi_fm_chirp_source
         ),
-        rfi_fmmitigation_method=common_types.RfiFmmitigationMethodType[params.rfi_fm_mitigation_method],
+        rfi_fmmitigation_method=translate_common.translate_rfi_fmmitigation_method_type_to_model(
+            params.rfi_fm_mitigation_method
+        ),
         internal_calibration_estimation_flag=translate_common.translate_bool_to_model(
             params.internal_calibration_estimation_flag
         ),

@@ -20,7 +20,7 @@ from arepytools.constants import LIGHT_SPEED
 from arepytools.math import genericpoly
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, translate_common
+from bps.common.io import common
 from bps.common.io.parsing import serialize
 from bps.transcoder import BPS_ATBD_L1_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import (
@@ -451,12 +451,12 @@ class BIOMASSL1ProductWriter:
             data_shape=self.product.data_list[0].shape,
             product_type=self.product.type,
             processing_parameters=self.product.processing_parameters,
-            swath=self.product.swath_list[0],
+            swath=common.SwathType(self.product.swath_list[0]),
         )
         assert nodata_mask.shape == self.product.data_list[0].shape
 
         geotiff_conf_abs = GeotiffConf(
-            compression_schema=self.product.sar_image_parameters.abs_compression_method.value,
+            compression_schema=self.product.sar_image_parameters.abs_compression_method.name,
             max_z_error=self.product.sar_image_parameters.abs_max_z_error,
             nodata_value=self.product.sar_image_parameters.no_pixel_value,
             block_size=self.product.sar_image_parameters.block_size,
@@ -465,7 +465,7 @@ class BIOMASSL1ProductWriter:
         )
 
         geotiff_conf_phase = copy.copy(geotiff_conf_abs)
-        geotiff_conf_phase.compression_schema = self.product.sar_image_parameters.phase_compression_method.value
+        geotiff_conf_phase.compression_schema = self.product.sar_image_parameters.phase_compression_method.name
         geotiff_conf_phase.max_z_error = self.product.sar_image_parameters.phase_max_z_error
 
         geotiff_metadata = GeotiffMetadata(
@@ -682,7 +682,7 @@ class BIOMASSL1ProductWriter:
             datum=datum,
             footprint=np.reshape(self.product.footprint, (8,)).tolist(),
             pixel_representation=representation_dict[self.product.type],
-            pixel_type=translate_common.translate_pixel_type_type(self.product.sar_image_parameters.pixel_type),
+            pixel_type=self.product.sar_image_parameters.pixel_type,
             pixel_quantity=common.PixelQuantityType.BETA_NOUGHT,
             no_data_value=self.product.sar_image_parameters.no_pixel_value,
         )
@@ -802,9 +802,13 @@ class BIOMASSL1ProductWriter:
             antenna_pattern_correction2_flag=(self.product.processing_parameters.antenna_pattern_correction2_flag),
             antenna_cross_talk_correction_flag=(self.product.processing_parameters.antenna_cross_talk_correction_flag),
             range_processing_parameters=common_annotation_l1.SpectrumProcessingParametersType(
-                window_type=self.product.processing_parameters.range_window_type[self.product.swath_list[0]],
+                window_type=self.product.processing_parameters.range_window_type[
+                    common.SwathType[self.product.swath_list[0]]
+                ],
                 window_coefficient=(
-                    self.product.processing_parameters.range_window_coefficient[self.product.swath_list[0]]
+                    self.product.processing_parameters.range_window_coefficient[
+                        common.SwathType[self.product.swath_list[0]]
+                    ]
                 ),
                 total_bandwidth=self.product.sampling_constants_list[0].frg_hz,  # Hz
                 processing_bandwidth=self.product.sampling_constants_list[0].brg_hz,  # Hz
@@ -813,9 +817,13 @@ class BIOMASSL1ProductWriter:
                 look_overlap=0,  # Hz
             ),
             azimuth_processing_parameters=common_annotation_l1.SpectrumProcessingParametersType(
-                window_type=self.product.processing_parameters.azimuth_window_type[self.product.swath_list[0]],
+                window_type=self.product.processing_parameters.azimuth_window_type[
+                    common.SwathType[self.product.swath_list[0]]
+                ],
                 window_coefficient=(
-                    self.product.processing_parameters.azimuth_window_coefficient[self.product.swath_list[0]]
+                    self.product.processing_parameters.azimuth_window_coefficient[
+                        common.SwathType[self.product.swath_list[0]]
+                    ]
                 ),
                 total_bandwidth=self.product.sampling_constants_list[0].faz_hz,  # Hz
                 processing_bandwidth=self.product.sampling_constants_list[0].baz_hz,  # Hz
