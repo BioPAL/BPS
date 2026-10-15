@@ -169,7 +169,7 @@ class CommonAnnotationL1TranslateTestCase(unittest.TestCase):
             rfi_mitigation_method=common.RfiMitigationMethodType.FREQUENCY,
             rfi_mask=common.RfiMaskType.MULTIPLE,
             rfi_mask_generation_method=common.RfiMaskGenerationMethodType.AND,
-            rfi_fm_mitigation_method="NEAREST_NEIGHBOUR_INTERPOLATION",
+            rfi_fm_mitigation_method=common.RfiFmmitigationMethodType.NEAREST_NEIGHBOUR_INTERPOLATION,
             rfi_fm_chirp_source=common.RangeReferenceFunctionType.REPLICA,
             internal_calibration_estimation_flag=True,
             internal_calibration_correction_flag=True,
