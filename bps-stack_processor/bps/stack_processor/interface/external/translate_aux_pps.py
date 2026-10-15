@@ -28,7 +28,7 @@ from bps.stack_processor.interface.external.aux_pps import (
     SlowIonosphereRemovalConf,
 )
 from bps.stack_processor.io import aux_pps_models
-from bps.transcoder.utils.polarization_conversions import translate_polarization_tag
+from bps.transcoder.utils.polarization_conversions import translate_common_polarization_to_arepytools
 
 
 class AuxPPSParsingError(RuntimeError):
@@ -79,9 +79,8 @@ def translate_model_to_coregistration_conf(
     return CoregistrationConf(
         coregistration_method=translate_common.translate_coregistration_method(conf.coregistration_method),
         residual_shift_quality_threshold=conf.residual_shifts_quality_threshold,
-        polarization_used=translate_polarization_tag(
-            conf.polarisation_used.value,
-            poltype="arepytools",
+        polarization_used=translate_common_polarization_to_arepytools(
+            translate_common.translate_polarisation_type(conf.polarisation_used),
         ),
         block_quality_threshold=conf.block_quality_threshold,
         fitting_quality_threshold=conf.fitting_quality_threshold,
@@ -150,7 +149,9 @@ def translate_model_to_slow_ionosphere_removal_conf(
     return SlowIonosphereRemovalConf(
         slow_ionosphere_removal_flag=translate_common.translate_bool(conf.slow_ionosphere_removal_flag),
         primary_image_flag=translate_common.translate_bool(conf.primary_image_flag),
-        polarization_used=translate_polarization_tag(conf.polarisation_used.value, poltype="arepytools"),
+        polarization_used=translate_common_polarization_to_arepytools(
+            translate_common.translate_polarisation_type(conf.polarisation_used)
+        ),
         range_look_bandwidth=conf.range_look_bandwidth,
         range_look_frequency=conf.range_look_frequency,
         phase_unwrapping_flag=translate_common.translate_bool(conf.phase_unwrapping_flag),
@@ -238,7 +239,9 @@ def translate_model_to_multi_squint_calibration_conf(
     """Translate Multi-Squint calibration type to corresponding conf."""
     return MultiSquintCalibrationConf(
         multi_squint_calibration_flag=translate_common.translate_bool(conf.multi_squint_calibration_flag),
-        polarization_used=translate_polarization_tag(conf.polarisation_used.value, poltype="arepytools"),
+        polarization_used=translate_common_polarization_to_arepytools(
+            translate_common.translate_polarisation_type(conf.polarisation_used)
+        ),
         seed_range_coherence_threshold=conf.seed_range_coherence_threshold,
         edge_guard=conf.edge_guard,
         valid_azimuth_threshold=conf.valid_azimuth_threshold,

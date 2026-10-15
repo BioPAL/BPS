@@ -23,12 +23,13 @@ import numpy.typing as npt
 from arepytools.io.metadata import RasterInfo
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
+from bps.common.io import common
 from bps.common.io.common import UomType
 from bps.common.io.parsing import parse, serialize
 from bps.common.io.translate_common import translate_float_array_with_units_to_model
 from bps.transcoder import BPS_ATBD_STA_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c
+from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c, translate_common_annotation_l1
 from bps.transcoder.sarproduct.biomass_stackproduct import (
     LUT_LAYERS,
     BIOMASSStackProduct,
@@ -45,7 +46,6 @@ from bps.transcoder.sarproduct.sta.product_content import BIOMASSStackProductStr
 from bps.transcoder.sarproduct.sta.stack_unique_identifier import StackUniqueID
 from bps.transcoder.sarproduct.vrt import VRTInfo, write_vrt_file
 from bps.transcoder.utils.gdal_utils import GeotiffConf, GeotiffMetadata, write_geotiff
-from bps.transcoder.utils.polarization_conversions import translate_polarization_tag
 from bps.transcoder.utils.production_model_utils import (
     encode_mph_id_value,
     translate_global_coverage_id,
@@ -785,9 +785,8 @@ class BIOMASSStackProductWriter:
         # - acquisition_information.
         acquisition_information = main_annotation2_model.acquisition_information
         acquisition_information.product_type = self.product.type
-        acquisition_information.polarisation_list = main_annotation_models.PolarisationListType(
-            polarisation=[translate_polarization_tag(pol, poltype="bps") for pol in self.product.polarization_list],
-            count=len(self.product.polarization_list),
+        acquisition_information.polarisation_list = translate_common_annotation_l1.translate_polarisation_list_to_model(
+            [common.PolarisationType[pol.replace("/", "")] for pol in self.product.polarization_list]
         )
         acquisition_information.start_time = no_zulu_isoformat(
             self.product.start_time,

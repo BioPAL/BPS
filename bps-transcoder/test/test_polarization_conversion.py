@@ -6,45 +6,47 @@
 # SPDX-License-Identifier: MIT
 
 import unittest
-from itertools import product
 
 from arepytools.io.metadata import EPolarization
-from bps.common.io.common_types import PolarisationType
+from bps.common.io import common
 from bps.transcoder.utils.polarization_conversions import (
     UnsupportedPolarizationError,
-    translate_polarization,
-    translate_polarization_tag,
+    translate_arepytools_polarization_to_common,
+    translate_common_polarization_to_arepytools,
 )
 
 
-class TranslatePolarizationTests(unittest.TestCase):
-    def test_polarization_tag_translation(self):
-        for poltag in map(
-            lambda x: "".join(x),
-            product(("h", "H"), ("", "/"), ("H", "h")),
-        ):
-            self.assertEqual(
-                translate_polarization_tag(poltag, poltype="bps"),
-                PolarisationType.HH,
-            )
+class TestPolarizationConversions(unittest.TestCase):
+    def test_arepytools_to_common(self):
+        expected = {
+            EPolarization.hh: common.PolarisationType.HH,
+            EPolarization.hv: common.PolarisationType.HV,
+            EPolarization.vh: common.PolarisationType.VH,
+            EPolarization.vv: common.PolarisationType.VV,
+        }
+        for source, target in expected.items():
+            with self.subTest(source=source):
+                self.assertEqual(translate_arepytools_polarization_to_common(source), target)
 
-    def test_polarization_translation_roundtrip(self):
-        self.assertEqual(self.__roundtrip("H/H"), PolarisationType.HH)
-        self.assertEqual(self.__roundtrip("H/V"), PolarisationType.HV)
-        self.assertEqual(self.__roundtrip("X/X"), PolarisationType.XX)
-        self.assertEqual(self.__roundtrip("V/H"), PolarisationType.VH)
-        self.assertEqual(self.__roundtrip("V/V"), PolarisationType.VV)
+    def test_common_to_arepytools(self):
+        expected = {
+            common.PolarisationType.HH: EPolarization.hh,
+            common.PolarisationType.HV: EPolarization.hv,
+            common.PolarisationType.VH: EPolarization.vh,
+            common.PolarisationType.VV: EPolarization.vv,
+        }
+        for source, target in expected.items():
+            with self.subTest(source=source):
+                self.assertEqual(translate_common_polarization_to_arepytools(source), target)
 
-    def test_unsupported_polarization(self):
+    def test_unsupported_arepytools_polarization(self):
         with self.assertRaises(UnsupportedPolarizationError):
-            translate_polarization(EPolarization.crh)
-        with self.assertRaises(UnsupportedPolarizationError):
-            translate_polarization_tag("foo", poltype="bps")
-        with self.assertRaises(UnsupportedPolarizationError):
-            translate_polarization_tag("foo", poltype="arepytools")
+            translate_arepytools_polarization_to_common(EPolarization.none)
 
-    def __roundtrip(self, poltag):
-        return translate_polarization(translate_polarization_tag(poltag, poltype="arepytools"))
+    def test_unsupported_common_polarization(self):
+        with self.assertRaises(UnsupportedPolarizationError):
+            # pyrefly: ignore[bad-argument-type]
+            translate_common_polarization_to_arepytools("")
 
 
 if __name__ == "__main__":
