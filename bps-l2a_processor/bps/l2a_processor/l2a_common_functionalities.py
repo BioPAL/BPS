@@ -650,7 +650,7 @@ def mpmb_covariance_estimation(
 
 
 def _build_filtering_matrix(
-    num_rows: int, average_window_size: int, decimation_factor: int
+    num_rows: int, one_sided_average_window_size: int, decimation_factor: int
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Internal function to build a sparse matrix
     to carry out one-dimensional moving average.
@@ -660,7 +660,7 @@ def _build_filtering_matrix(
     ----------
     num_rows: int
         number of rows of the matrix to be filtered
-    average_window_size: int
+    one_sided_average_window_size: int
         one-sided length of the average window
     decimation_factor: int
         subsampling factor of the filtered signal
@@ -677,7 +677,7 @@ def _build_filtering_matrix(
     filtered_signal_axis = np.arange(0, num_rows, decimation_factor)
     Nxout = filtered_signal_axis.size
 
-    average_window_size_used = average_window_size - 1
+    average_window_size_used = one_sided_average_window_size - 1
     col = np.kron(filtered_signal_axis, np.ones((1, 2 * average_window_size_used + 1))) + np.kron(
         np.ones((1, Nxout)),
         np.arange(-average_window_size_used, average_window_size_used + 1),
@@ -705,9 +705,9 @@ def _build_filtering_matrix(
 def build_filtering_sparse_matrices(
     num_az_in: int,
     num_rg_in: int,
-    averaging_window_size_rg: int,
+    full_averaging_window_size_rg: int,
     decimation_factor_rg: int,
-    averaging_window_size_az: int,
+    full_averaging_window_size_az: int,
     decimation_factor_az: int,
 ) -> tuple[np.ndarray, int, np.ndarray, int]:
     """
@@ -719,12 +719,12 @@ def build_filtering_sparse_matrices(
         Input azimuth matrix dimension
     num_rg_in: int
         Input slant range matrix dimension
-    averaging_window_size_az: int
-        Averaging windows size in azimuth direction
+    full_averaging_window_size_rg: int
+        Averaging full-windows size in range direction
     decimation_factor_rg: int
         Slant Range decimation factor for the multi look computed from AUX PP input upsampling factor
-    averaging_window_size_rg: int
-        Averaging windows size in slant range direction
+    full_averaging_window_size_az: int
+        Averaging full-windows size in slant azimuth direction
     decimation_factor_az: int
         Azimuth decimation factor for the multi look computed from AUX PP input upsampling factor
 
@@ -740,12 +740,23 @@ def build_filtering_sparse_matrices(
         indices for the original slant range axis, to obtain the decimated output mpmb_covariance data axis
     """
 
+    # Avoid using uint8 variables here
+    full_averaging_window_size_rg = int(full_averaging_window_size_rg)
+    decimation_factor_rg = int(decimation_factor_rg)
+    full_averaging_window_size_az = int(full_averaging_window_size_az)
+    decimation_factor_az = int(decimation_factor_az)
+
+    # averaging_window_size_* = FULL window width in samples; _build_filtering_matrix wants the one-sided
+    # length (true width = 2*one_sided - 1). Exact for odd W; W-1 for even W.
+    one_sided_averaging_window_size_rg = (full_averaging_window_size_rg + 1) // 2
+    one_sided_averaging_window_size_az = (full_averaging_window_size_az + 1) // 2
+
     # sparse_filtering_matrix, filtered_signal_axis, normalizing_matrix
     (
         sparse_filtering_matrix_rg,
         axis_rg_subsampling_indexes,
         normalizing_matrix_rg,
-    ) = _build_filtering_matrix(num_rg_in, averaging_window_size_rg, decimation_factor_rg)
+    ) = _build_filtering_matrix(num_rg_in, one_sided_averaging_window_size_rg, decimation_factor_rg)
     fr_normalized_transposed = (normalizing_matrix_rg @ sparse_filtering_matrix_rg).T
 
     # Azimuth filter matrix
@@ -753,7 +764,7 @@ def build_filtering_sparse_matrices(
         sparse_filtering_matrix_az,
         axis_az_subsampling_indexes,
         normalizing_matrix_az,
-    ) = _build_filtering_matrix(num_az_in, averaging_window_size_az, decimation_factor_az)
+    ) = _build_filtering_matrix(num_az_in, one_sided_averaging_window_size_az, decimation_factor_az)
     fa_normalized = normalizing_matrix_az @ sparse_filtering_matrix_az
 
     return (
