@@ -5,11 +5,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""_summary_"""
+"""Writer for BIOMASS L1 products"""
 
 import copy
 import itertools
-import os
 import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -80,7 +79,7 @@ def convert_baq_compression_level(
 
 
 class BIOMASSL1ProductWriter:
-    """_summary_"""
+    """Writer class for BIOMASS L1 products"""
 
     def __init__(
         self,
@@ -91,24 +90,11 @@ class BIOMASSL1ProductWriter:
         processor_version: str = "1.0.0",
         gdal_num_threads: int = 1,
     ) -> None:
-        """_summary_
-
-        Parameters
-        ----------
-        product : BIOMASSL1Product
-            _description_
-        product_path : _type_
-            _description_
-        product_lut : dict
-            _description_
-        processor_name : str
-            _description_
-        processor_version : str
-            _description_
-        """
+        """Writer class init"""
         self.product = product
+        assert self.product.name is not None
         self.product_path = Path(product_path).joinpath(self.product.name)
-        if os.path.exists(self.product_path):
+        if self.product_path.exists():
             raise FileExistsError(f"Folder {self.product_path} already exists.")
 
         self.product_lut = product_lut if product_lut else {}
@@ -126,6 +112,14 @@ class BIOMASSL1ProductWriter:
 
         def build_relative_href_path(path: str | Path):
             return f"./{Path(path).relative_to(self.product_path)}"
+
+        assert self.product.name is not None
+        assert self.product.start_time is not None
+        assert self.product.stop_time is not None
+        assert self.product.anx_time is not None
+        assert self.product.global_coverage_id is not None
+        assert self.product.major_cycle_id is not None
+        assert self.product.repeat_cycle_id is not None
 
         name = self.product.name
         id_counter = 0
@@ -322,10 +316,13 @@ class BIOMASSL1ProductWriter:
         xml6.text = "EPSG:4326"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}fileName")
         if self.product.type == "SCS":
+            assert self.content.quicklook_pauli is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
             if not quicklook_file.exists():
+                assert self.content.quicklook_hsv is not None
                 quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
         else:
+            assert self.content.quicklook_lexicographic is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
         xml7 = ET.SubElement(
             xml6,
@@ -562,6 +559,7 @@ class BIOMASSL1ProductWriter:
         assert self.product.orbit_direction is not None
         assert self.product.datatake_id is not None
         assert self.product.type is not None
+        assert self.product.platform_heading is not None
         acquisition_information = common_annotation_l1.AcquisitionInformationType(
             mission=common.MissionType.BIOMASS,
             swath=common.SwathType[self.product.swath_list[0]],
@@ -773,6 +771,10 @@ class BIOMASSL1ProductWriter:
         raw_data_analysis = raw_data_analysis_values.to_annotation()
 
         # - processingParameters
+        assert self.product.sampling_constants_list[0].frg_hz is not None
+        assert self.product.sampling_constants_list[0].brg_hz is not None
+        assert self.product.sampling_constants_list[0].faz_hz is not None
+        assert self.product.sampling_constants_list[0].baz_hz is not None
         processing_parameters = common_annotation_l1.ProcessingParameters(
             processor_version=self.processor_version,
             product_generation_time=CURRENT_AZIMUTH_TIME,
@@ -878,6 +880,7 @@ class BIOMASSL1ProductWriter:
 
             for polarisation in self.product.polarization_list:
                 polarisation_enum = polarisation_dict[polarisation]
+                # pyrefly: ignore[bad-index]
                 rx_pol = polarisation_enum.value[1]
                 preamble = (
                     self.product.preproc_report.noise_preamble_h
@@ -1044,7 +1047,8 @@ class BIOMASSL1ProductWriter:
             for index in range(dr_vector_list_ref.get_number_of_poly()):
                 dr_poly = dr_vector_list_ref.get_poly(index)
                 coefficients = np.concatenate((dr_poly.coefficients[0:2], dr_poly.coefficients[4:]))
-
+                assert isinstance(dr_poly.t_ref_az, PreciseDateTime)
+                assert dr_poly.t_ref_rg is not None
                 fm_rate_estimate.append(
                     common.SlantRangePolynomialType(dr_poly.t_ref_az, dr_poly.t_ref_rg, coefficients.tolist())
                 )
@@ -1308,12 +1312,15 @@ class BIOMASSL1ProductWriter:
         # Write quick-look file
         if quicklook_pauli_file is not None:
             bps_logger.debug("..quick-look file (Pauli decomposition)")
+            assert self.content.quicklook_pauli is not None
             shutil.copyfile(quicklook_pauli_file, self.product_path.joinpath(self.content.quicklook_pauli))
         if quicklook_hsv_file is not None:
             bps_logger.debug("..quick-look file (HSV representation)")
+            assert self.content.quicklook_hsv is not None
             shutil.copyfile(quicklook_hsv_file, self.product_path.joinpath(self.content.quicklook_hsv))
         if quicklook_lexicographic_file is not None:
             bps_logger.debug("..quick-look file (lexicographic representation)")
+            assert self.content.quicklook_lexicographic is not None
             shutil.copyfile(
                 quicklook_lexicographic_file, self.product_path.joinpath(self.content.quicklook_lexicographic)
             )
@@ -1321,11 +1328,15 @@ class BIOMASSL1ProductWriter:
         # Write overlay file
         bps_logger.debug("..overlay file")
         if self.product.type == "SCS":
+            assert self.content.quicklook_pauli is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
             if not quicklook_file.exists():
+                assert self.content.quicklook_hsv is not None
                 quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
         else:
+            assert self.content.quicklook_lexicographic is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
+        assert self.product.name is not None
         write_overlay_file(
             self.product_path.joinpath(self.content.overlay),
             quicklook_file,

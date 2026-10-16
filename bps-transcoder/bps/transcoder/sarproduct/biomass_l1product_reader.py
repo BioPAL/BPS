@@ -224,9 +224,10 @@ class BIOMASSL1ProductReader:
 
             # - BurstInfo
             burst_info = metadata.BurstInfo()
+            assert isinstance(raster_info.samples_start, float)
             burst_info.add_burst(
                 raster_info.samples_start,
-                raster_info.lines_start,
+                raster_info.lines_start_date,
                 raster_info.lines,
                 burst_center_azimuth_shift_i=None,
             )
@@ -250,7 +251,7 @@ class BIOMASSL1ProductReader:
                 metadata_di.processing_center = ""
                 metadata_di.processing_date = PreciseDateTime.now()
                 metadata_di.processing_software = ""
-                metadata_di.side_looking = "LEFT"
+                metadata_di.side_looking = metadata.ESideLooking.left_looking
                 # metadata_di.external_calibration_factor = 1.0
                 # metadata_di.data_take_id = "1"
                 self.product.dataset_info.append(metadata_di)
