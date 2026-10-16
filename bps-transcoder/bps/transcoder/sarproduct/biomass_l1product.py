@@ -15,7 +15,6 @@ from arepytools.io import metadata
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
-from bps.transcoder.io.common_annotation_l1 import PolarimetricDistortionType
 from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l0product import BIOMASSL0Product
@@ -87,7 +86,7 @@ class BIOMASSL1ProcessingParameters:
     requested_height_model_version: str
     requested_height_model_used: bool
     absolute_calibration_constants: dict[common.PolarisationType, float]
-    polarimetric_distortion: PolarimetricDistortionType
+    polarimetric_distortion: common_annotation_l1.PolarimetricDistortionType
 
     @classmethod
     def from_l1_annotation(cls, params: common_annotation_l1.ProcessingParameters) -> BIOMASSL1ProcessingParameters:
@@ -316,32 +315,21 @@ class BIOMASSL1Product(SARProduct):
             self.swath_list = ["S1"]
 
         self.sensor_mode = "MEASUREMENT"
-        if source is not None:
-            self.source_name = source.name
-            self.mission_phase_id = source.mission_phase_id
-            self.instrument_configuration_id = source.instrument_configuration_id
-            self.datatake_id = source.datatake_id
-            self.orbit_number = source.orbit_number
-            self.orbit_drift_flag = source.orbit_drift_flag
-            self.global_coverage_id = source.global_coverage_id
-            self.major_cycle_id = source.major_cycle_id
-            self.repeat_cycle_id = source.repeat_cycle_id
-            self.track_number = source.track_number
-            self.anx_time = source.anx_time
-            self.source_bit_rate = source.bit_rate if isinstance(source, BIOMASSL0Product) else 0.0
-        else:
-            self.source_name = "L0S"
-            self.mission_phase_id = "INTERFEROMETRIC"
-            self.instrument_configuration_id = 1
-            self.datatake_id = 1
-            self.orbit_number = 1
-            self.orbit_drift_flag = False
-            self.global_coverage_id = 1
-            self.major_cycle_id = 1
-            self.repeat_cycle_id = 1
-            self.track_number = 1
-            self.anx_time = None
-            self.source_bit_rate = 0.0
+        self.source_name = source.name if source is not None else "L0S"
+        self.anx_time = source.anx_time if source is not None else None
+        self.orbit_number = source.orbit_number if source is not None else 1
+        input_is_l0 = source is not None and isinstance(source, BIOMASSL0Product)
+
+        self.mission_phase_id = source.mission_phase_id if input_is_l0 else "INTERFEROMETRIC"
+        self.instrument_configuration_id = source.instrument_configuration_id if input_is_l0 else 1
+        self.datatake_id = source.datatake_id if input_is_l0 else 1
+        self.orbit_drift_flag = source.orbit_drift_flag if input_is_l0 else False
+        self.global_coverage_id = source.global_coverage_id if input_is_l0 else 1
+        self.major_cycle_id = source.major_cycle_id if input_is_l0 else 1
+        self.repeat_cycle_id = source.repeat_cycle_id if input_is_l0 else 1
+        self.track_number = source.track_number if input_is_l0 else 1
+        self.source_bit_rate = source.bit_rate if input_is_l0 else 0.0
+        self.slice_number = source.slice_number if input_is_l0 else 1
 
         if source_monitoring is not None:
             self.source_monitoring_name = source_monitoring.name
@@ -390,6 +378,10 @@ class BIOMASSL1Product(SARProduct):
         assert self.mission_phase_id is not None
         assert self.start_time is not None
         assert self.stop_time is not None
+        assert self.global_coverage_id is not None
+        assert self.major_cycle_id is not None
+        assert self.repeat_cycle_id is not None
+        assert self.track_number is not None
         self.creation_date = PreciseDateTime.now()
         global_coverage_id_str = encode_product_name_id_value(self.global_coverage_id, npad=2)
         major_cycle_id_str = encode_product_name_id_value(self.major_cycle_id, npad=2)
@@ -505,7 +497,7 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
             common.PolarisationType.VH: 1.0,
             common.PolarisationType.VV: 1.0,
         },
-        polarimetric_distortion=PolarimetricDistortionType(
+        polarimetric_distortion=common_annotation_l1.PolarimetricDistortionType(
             cross_talk=common.CrossTalkList(
                 hv_rx=complex(0, 0),
                 hv_tx=complex(0, 0),
