@@ -10,10 +10,8 @@ AUX PPS Translation
 -------------------
 """
 
-import bps.common.io.common_types.models as common_models
 import numpy as np
-from bps.common.io import translate_common
-from bps.stack_cal_processor.configuration import BaselineMethodType
+from bps.common.io import common, translate_common
 from bps.stack_cal_processor.core.filtering import ConvolutionWindowType
 from bps.stack_pre_processor.configuration import PrimaryImageSelectionConf
 from bps.stack_processor.interface.external.aux_pps import (
@@ -112,10 +110,10 @@ def translate_model_to_rfi_degradation_estimation_conf(
 
 
 def translate_weighting_window(
-    weighting_window: common_models.WeightingWindowType,
+    weighting_window: common.WeightingWindowType,
 ) -> ConvolutionWindowType:
     """Translate the convolution window type."""
-    return ConvolutionWindowType(weighting_window.value.upper())
+    return ConvolutionWindowType(weighting_window.name)
 
 
 def translate_model_to_azimuth_spectral_filtering_conf(
@@ -128,18 +126,13 @@ def translate_model_to_azimuth_spectral_filtering_conf(
             conf.use_primary_weighting_window_flag,
         ),
         spectral_weighting_window=translate_weighting_window(
-            conf.spectral_weighting_window,
+            translate_common.translate_weighting_window_type(
+                conf.spectral_weighting_window,
+            )
         ),
         spectral_weighting_window_parameter=conf.spectral_weighting_window_parameter,
         use_32bit_flag=translate_common.translate_bool(conf.use32bit_flag),
     )
-
-
-def translate_baseline_method(
-    baseline_method: common_models.BaselineMethodType,
-) -> BaselineMethodType:
-    """Translate AUX-PPS interface model to internal AUX-PPS model."""
-    return BaselineMethodType(baseline_method.value.upper().replace("-", "_"))
 
 
 def translate_model_to_slow_ionosphere_removal_conf(
@@ -156,7 +149,7 @@ def translate_model_to_slow_ionosphere_removal_conf(
         range_look_frequency=conf.range_look_frequency,
         phase_unwrapping_flag=translate_common.translate_bool(conf.phase_unwrapping_flag),
         latitude_threshold=np.deg2rad(translate_common.translate_float_with_unit(conf.latitude_threshold)),
-        baseline_method=translate_baseline_method(conf.baseline_method),
+        baseline_method=translate_common.translate_baseline_method_type(conf.baseline_method),
         multi_baseline_critical_baseline_threshold=conf.multi_baseline_critical_baseline_threshold,
         sublook_window_azimuth_size=conf.sublook_window_azimuth_size,
         sublook_window_range_size=conf.sublook_window_range_size,
@@ -187,7 +180,9 @@ def translate_model_to_skp_calibration_conf(
         estimation_window_size=translate_common.translate_float_with_unit(conf.estimation_window_size),
         skp_calibration_phase_screen_quality_threshold=conf.skp_calibration_phase_screen_quality_threshold,
         overall_product_quality_threshold=conf.overall_product_quality_threshold,
-        calibration_phase_postprocessing=conf.calibration_phase_postprocessing.value.upper(),
+        calibration_phase_postprocessing=translate_common.translate_skp_phase_calibration_postprocessing_type(
+            conf.calibration_phase_postprocessing
+        ).name,
         postprocessing_filter_window_size=translate_common.translate_float_with_unit(
             conf.postprocessing_filter_window_size
         ),
@@ -201,12 +196,6 @@ def translate_model_to_skp_calibration_conf(
     )
 
 
-def translate_compression_method(
-    pixel_compression: common_models.CompressionMethodType,
-) -> L1cProductExportConf.CompressionMethodType:
-    return L1cProductExportConf.CompressionMethodType(pixel_compression.value)
-
-
 def translate_model_to_l1c_product_export_conf(
     conf: aux_pps_models.L1CProductExportType,
 ) -> L1cProductExportConf:
@@ -215,9 +204,9 @@ def translate_model_to_l1c_product_export_conf(
         l1_product_doi=conf.l1_product_doi,
         pixel_representation=translate_common.translate_pixel_representation_type(conf.pixel_representation),
         pixel_quantity=translate_common.translate_pixel_quantity_type(conf.pixel_quantity),
-        abs_compression_method=translate_compression_method(conf.abs_compression_method),
+        abs_compression_method=translate_common.translate_compression_method_type(conf.abs_compression_method),
         abs_max_z_error=conf.abs_max_zerror,
-        phase_compression_method=translate_compression_method(conf.phase_compression_method),
+        phase_compression_method=translate_common.translate_compression_method_type(conf.phase_compression_method),
         phase_max_z_error=conf.phase_max_zerror.value,
         no_pixel_value=conf.no_pixel_value,
         l1c_ql_colour_coding_method=translate_common.translate_l1ac_ql_colour_coding_method_type(

@@ -16,7 +16,7 @@ from pathlib import Path
 
 import xmltodict
 from bps.common import bps_logger
-from bps.common.io.common_types.models import CoregistrationMethodType
+from bps.common.io import common
 from bps.stack_coreg_processor.configuration import (
     CoregStackProcessorInternalConfiguration,
 )
@@ -31,8 +31,8 @@ from bps.stack_coreg_processor.utils import StackCoregProcessorRuntimeError
 # "GEOMETRY_AND_DATA", and "GEOMETRY") to L1c product coregistration methods
 # (i.e. "GEOMETRY", and "GEOMETRY_AND_DATA")
 COREG_CONF_TO_L1C_CONF = {
-    CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY_AND_DATA: CoregistrationMethodType.GEOMETRY_AND_DATA,
-    CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY: CoregistrationMethodType.GEOMETRY,
+    CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY_AND_DATA: common.CoregistrationMethodType.GEOMETRY_AND_DATA,
+    CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY: common.CoregistrationMethodType.GEOMETRY,
 }
 
 

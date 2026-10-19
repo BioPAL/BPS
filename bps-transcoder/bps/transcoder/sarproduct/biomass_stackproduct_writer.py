@@ -24,12 +24,10 @@ from arepytools.io.metadata import RasterInfo
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
-from bps.common.io.common import UomType
-from bps.common.io.parsing import parse, serialize
-from bps.common.io.translate_common import translate_float_array_with_units_to_model
 from bps.transcoder import BPS_ATBD_STA_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
-from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c, translate_common_annotation_l1
+from bps.transcoder.io import main_annotation_l1c
+from bps.transcoder.io.translate_main_annotation_l1ab import read_main_annotation_l1ab
+from bps.transcoder.io.translate_main_annotation_l1c import write_main_annotation_l1c
 from bps.transcoder.sarproduct.biomass_stackproduct import (
     LUT_LAYERS,
     BIOMASSStackProduct,
@@ -80,38 +78,38 @@ for key, value in MPH_NAMESPACES.items():
 # Mapping between LUT names and official LUT layers.
 STACK_LUT_LAYER_MAP = {
     # Radiometry LUTs.
-    "gammaNought": main_annotation_models.LayerType.GAMMA_NOUGHT_LUT,
-    "sigmaNought": main_annotation_models.LayerType.SIGMA_NOUGHT_LUT,
+    "gammaNought": common.LayerType.GAMMA_NOUGHT_LUT,
+    "sigmaNought": common.LayerType.SIGMA_NOUGHT_LUT,
     # Denoising LUTs.
-    "denoisingHH": main_annotation_models.LayerType.DENOISING_MAP_HH,
-    "denoisingHV": main_annotation_models.LayerType.DENOISING_MAP_HV,
-    "denoisingXX": main_annotation_models.LayerType.DENOISING_MAP_XX,
-    "denoisingVH": main_annotation_models.LayerType.DENOISING_MAP_VH,
-    "denoisingVV": main_annotation_models.LayerType.DENOISING_MAP_VV,
+    "denoisingHH": common.LayerType.DENOISING_MAP_HH,
+    "denoisingHV": common.LayerType.DENOISING_MAP_HV,
+    "denoisingXX": common.LayerType.DENOISING_MAP_XX,
+    "denoisingVH": common.LayerType.DENOISING_MAP_VH,
+    "denoisingVV": common.LayerType.DENOISING_MAP_VV,
     # Geometry LUTs.
-    "latitude": main_annotation_models.LayerType.LATITUDE_DEG,
-    "longitude": main_annotation_models.LayerType.LONGITUDE_DEG,
-    "height": main_annotation_models.LayerType.HEIGHT_M,
-    "incidenceAngle": main_annotation_models.LayerType.INCIDENCE_ANGLE_DEG,
-    "elevationAngle": main_annotation_models.LayerType.ELEVATION_ANGLE_DEG,
-    "rangeTerrainSlope": main_annotation_models.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-    "azimuthTerrainSlope": main_annotation_models.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
+    "latitude": common.LayerType.LATITUDE_DEG,
+    "longitude": common.LayerType.LONGITUDE_DEG,
+    "height": common.LayerType.HEIGHT_M,
+    "incidenceAngle": common.LayerType.INCIDENCE_ANGLE_DEG,
+    "elevationAngle": common.LayerType.ELEVATION_ANGLE_DEG,
+    "rangeTerrainSlope": common.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+    "azimuthTerrainSlope": common.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
     # Coregistration LUTs.
-    "azimuthCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_COREGISTRATION_SHIFTS_M,
-    "azimuthOrbitCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M,
-    "rangeCoregistrationShifts": main_annotation_models.LayerType.RANGE_COREGISTRATION_SHIFTS_M,
-    "rangeOrbitCoregistrationShifts": main_annotation_models.LayerType.RANGE_ORBIT_COREGISTRATION_SHIFTS_M,
-    "coregistrationShiftsQuality": main_annotation_models.LayerType.COREGISTRATION_SHIFTS_QUALITY,
-    "waveNumbers": main_annotation_models.LayerType.WAVENUMBERS_RAD_M,
-    "flatteningPhaseScreen": main_annotation_models.LayerType.FLATTENING_PHASE_SCREEN_RAD,
+    "azimuthCoregistrationShifts": common.LayerType.AZIMUTH_COREGISTRATION_SHIFTS_M,
+    "azimuthOrbitCoregistrationShifts": common.LayerType.AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M,
+    "rangeCoregistrationShifts": common.LayerType.RANGE_COREGISTRATION_SHIFTS_M,
+    "rangeOrbitCoregistrationShifts": common.LayerType.RANGE_ORBIT_COREGISTRATION_SHIFTS_M,
+    "coregistrationShiftsQuality": common.LayerType.COREGISTRATION_SHIFTS_QUALITY,
+    "waveNumbers": common.LayerType.WAVENUMBERS_RAD_M,
+    "flatteningPhaseScreen": common.LayerType.FLATTENING_PHASE_SCREEN_RAD,
     # Inteferometric LUTs.
-    "coherence": main_annotation_models.LayerType.COHERENCE,
-    "interferogram": main_annotation_models.LayerType.INTERFEROGRAM_RAD,
+    "coherence": common.LayerType.COHERENCE,
+    "interferogram": common.LayerType.INTERFEROGRAM_RAD,
     # MSC LUTS.
-    "ionospherePhaseScreens": main_annotation_models.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
+    "ionospherePhaseScreens": common.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
     # SKP LUTs.
-    "skpCalibrationPhaseScreen": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_RAD,
-    "skpCalibrationPhaseScreenQuality": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_QUALITY,
+    "skpCalibrationPhaseScreen": common.LayerType.SKP_CALIBRATION_PHASE_SCREEN_RAD,
+    "skpCalibrationPhaseScreenQuality": common.LayerType.SKP_CALIBRATION_PHASE_SCREEN_QUALITY,
 }
 
 
@@ -763,114 +761,73 @@ class BIOMASSStackProductWriter:
 
     def __write_main_annotation2_file(self):
         """Write the annotation file for product 2."""
-        # Read main annotation file from secondary image.
-        main_annotation1_path = Path(
-            self.source_product1_path.joinpath(self.source_product1_content.main_annotation),
+        # Read source annotations in translated form.
+        main_annotation1 = read_main_annotation_l1ab(
+            self.source_product1_path / self.source_product1_content.main_annotation
         )
-        main_annotation1_model: main_annotation_models_l1ab.MainAnnotation = parse(
-            main_annotation1_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1ab.MainAnnotation,
-        )
-
-        # Read main annotation file from secondary image.
-        main_annotation2_path = Path(
-            self.source_product2_path.joinpath(self.source_product2_content.main_annotation),
-        )
-        main_annotation2_model: main_annotation_models_l1ab.MainAnnotation = parse(
-            main_annotation2_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1ab.MainAnnotation,
+        main_annotation2 = read_main_annotation_l1ab(
+            self.source_product2_path / self.source_product2_content.main_annotation
         )
 
-        # Fill coregistered image main annotation model.
+        # Fill coregistered image main annotation.
         # - acquisition_information.
-        acquisition_information = main_annotation2_model.acquisition_information
-        acquisition_information.product_type = self.product.type
-        acquisition_information.polarisation_list = translate_common_annotation_l1.translate_polarisation_list_to_model(
-            [common.PolarisationType[pol.replace("/", "")] for pol in self.product.polarization_list]
-        )
-        acquisition_information.start_time = no_zulu_isoformat(
-            self.product.start_time,
-            timespec="microseconds",
-        )
-        acquisition_information.stop_time = no_zulu_isoformat(
-            self.product.stop_time,
-            timespec="microseconds",
-        )
+        acquisition_information = main_annotation2.acquisition_information
+        acquisition_information.product_type = common.ProductType[self.product.type]
+        acquisition_information.polarisation_list = [
+            common.PolarisationType[pol.replace("/", "")] for pol in self.product.polarization_list
+        ]
+        acquisition_information.start_time = self.product.start_time
+        acquisition_information.stop_time = self.product.stop_time
 
-        sar_image = main_annotation1_model.sar_image
+        sar_image = main_annotation1.sar_image
 
         # We need to update the size of the raster in azimuth direction, in
         # case the data was cropped to a TOI.
         sar_image.number_of_lines = self.product.number_of_lines
 
-        sar_image.first_line_azimuth_time = no_zulu_isoformat(self.product.start_time, timespec="microseconds")
-        sar_image.last_line_azimuth_time = no_zulu_isoformat(self.product.stop_time, timespec="microseconds")
+        sar_image.first_line_azimuth_time = self.product.start_time
+        sar_image.last_line_azimuth_time = self.product.stop_time
         sar_image.no_data_value = self.product.product_nodata_value
 
         # As per PFD convention, it's not specified whether the footprint must
         # be closed or open. We leave it as we inherited from the primary L1a
         # product.
-        sar_image.footprint = translate_float_array_with_units_to_model(
-            np.reshape(self.product.stack_footprint, -1),
-            units=UomType.DEG,
-        )
-
-        instrument_parameters = main_annotation2_model.instrument_parameters
-
-        raw_data_analysis = main_annotation2_model.raw_data_analysis
-
-        processing_parameters = main_annotation2_model.processing_parameters
-
-        internal_calibration = main_annotation2_model.internal_calibration
-
-        rfi_mitigation = main_annotation2_model.rfi_mitigation
-
-        doppler_parameters = main_annotation2_model.doppler_parameters
-
-        radiometric_calibration = main_annotation2_model.radiometric_calibration
-
-        polarimetric_distortion = main_annotation2_model.polarimetric_distortion
-
-        ionosphere_correction = main_annotation2_model.ionosphere_correction
-
-        geometry = main_annotation2_model.geometry
-
-        quality = main_annotation2_model.quality
+        sar_image.footprint = [float(value) for value in np.reshape(self.product.stack_footprint, -1)]
 
         # Populate the LUT layers.
-        layers = [
+        annotation_lut = [
             annot_lut_layer
             for lut_layer, annot_lut_layer in STACK_LUT_LAYER_MAP.items()
             if lut_layer in self.product_lut
         ]
-        annotation_lut = main_annotation_models.LayerListType(layer=layers, count=len(layers))
 
-        stack_main_annotation_model = main_annotation_models_l1c.MainAnnotation(
+        assert self.product.stack_processing_parameters is not None
+        assert self.product.stack_coregistration_parameters is not None
+        assert self.product.stack_in_sarparameters is not None
+        assert self.product.stack_quality is not None
+        stack_main_annotation = main_annotation_l1c.MainAnnotationL1c(
             acquisition_information=acquisition_information,
             sar_image=sar_image,
-            instrument_parameters=instrument_parameters,
-            raw_data_analysis=raw_data_analysis,
-            processing_parameters=processing_parameters,
-            internal_calibration=internal_calibration,
-            rfi_mitigation=rfi_mitigation,
-            doppler_parameters=doppler_parameters,
-            radiometric_calibration=radiometric_calibration,
-            polarimetric_distortion=polarimetric_distortion,
-            ionosphere_correction=ionosphere_correction,
-            geometry=geometry,
-            quality=quality,
+            instrument_parameters=main_annotation2.instrument_parameters,
+            raw_data_analysis=main_annotation2.raw_data_analysis,
+            processing_parameters=main_annotation2.processing_parameters,
+            internal_calibration=main_annotation2.internal_calibration,
+            rfi_mitigation=main_annotation2.rfi_mitigation,
+            doppler_parameters=main_annotation2.doppler_parameters,
+            radiometric_calibration=main_annotation2.radiometric_calibration,
+            polarimetric_distortion=main_annotation2.polarimetric_distortion,
+            ionosphere_correction=main_annotation2.ionosphere_correction,
+            geometry=main_annotation2.geometry,
+            quality=main_annotation2.quality,
             annotation_lut=annotation_lut,
-            sta_processing_parameters=self.product.stack_processing_parameters.to_l1c_annotation(),
-            sta_coregistration_parameters=self.product.stack_coregistration_parameters.to_l1c_annotation(),
-            sta_in_sarparameters=self.product.stack_in_sarparameters.to_l1c_annotation(),
-            sta_quality=self.product.stack_quality.to_l1c_annotation(),
+            sta_processing_parameters=self.product.stack_processing_parameters,
+            sta_coregistration_parameters=self.product.stack_coregistration_parameters,
+            sta_in_sarparameters=self.product.stack_in_sarparameters,
+            sta_quality=self.product.stack_quality,
         )
 
         # Write coregistered image main annotation file.
-        self.product_structure.main_annotation2_file.write_text(
-            serialize(stack_main_annotation_model),
-            encoding="utf-8",
-        )
+        write_main_annotation_l1c(self.product_structure.main_annotation2_file, stack_main_annotation)
 
     def __write_lut_annotation2_file(self):
         """Write LUT annotation file for product 2."""

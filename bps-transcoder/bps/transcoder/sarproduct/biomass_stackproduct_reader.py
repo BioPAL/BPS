@@ -22,28 +22,25 @@ import scipy as sp
 from arepytools.constants import LIGHT_SPEED
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common_types
+from bps.common.io import common
 from bps.common.io.parsing import parse
-from bps.common.io.translate_common import translate_datetime
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file
 from bps.transcoder.io import (
     aux_orb_models,
-    main_annotation_models_l1ab,
-    main_annotation_models_l1c,
-    translate_common_annotation_l1,
+    main_annotation_l1ab,
+    main_annotation_l1c,
+)
+from bps.transcoder.io.translate_main_annotation_l1ab import read_main_annotation_l1ab
+from bps.transcoder.io.translate_main_annotation_l1c import (
+    read_main_annotation_l1c,
 )
 from bps.transcoder.sarproduct.biomass_stackproduct import (
     LUT_LAYERS,
     REQUIRED_LUT_LAYERS,
-    BIOMASSStackCoregistrationParameters,
-    BIOMASSStackInSARParameters,
-    BIOMASSStackProcessingParameters,
     BIOMASSStackProduct,
     BIOMASSStackProductConfiguration,
-    BIOMASSStackQuality,
     InvalidBIOMASSStackProductError,
 )
-from bps.transcoder.sarproduct.footprint_utils import parse_footprint_string
 from bps.transcoder.sarproduct.mph import MPH_NAMESPACES
 from bps.transcoder.sarproduct.navigation_files_utils import (
     translate_attitude_file_to_attitude_info,
@@ -409,41 +406,33 @@ class BIOMASSStackProductReader:
         # Read main annotation file.
         # If is_primary_immage is True, then read main_annotation1_file,
         # otherwise read main_annotation2_file for coregistered image.
-        main_annotation_model: main_annotation_models_l1ab.MainAnnotation | main_annotation_models_l1c.MainAnnotation
+        main_annotation: main_annotation_l1ab.MainAnnotationL1ab | main_annotation_l1c.MainAnnotationL1c
         if is_primary_image:
-            main_annotation_path = Path(self.product_structure.main_annotation1_file)
-            main_annotation_model = parse(
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l1ab.MainAnnotation,
-            )
+            main_annotation = read_main_annotation_l1ab(Path(self.product_structure.main_annotation1_file))
         else:
-            main_annotation_path = Path(self.product_structure.main_annotation2_file)
-            main_annotation_model = parse(
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l1c.MainAnnotation,
-            )
+            main_annotation = read_main_annotation_l1c(Path(self.product_structure.main_annotation2_file))
 
         # Fill attributes.
         temp_product = SARProduct()
         temp_product.name = self.product_path.name
-        temp_product.mission = main_annotation_model.acquisition_information.mission.value
+        temp_product.mission = main_annotation.acquisition_information.mission.value
         temp_product.acquisition_mode = "STRIPMAP"
         temp_product.type = "STA"
-        temp_product.swath_list = [main_annotation_model.acquisition_information.swath.value]
+        temp_product.swath_list = [main_annotation.acquisition_information.swath.value]
         temp_product.polarization_list = [
-            p.value[0] + "/" + p.value[1]
-            for p in main_annotation_model.acquisition_information.polarisation_list.polarisation
+            p.value[0] + "/" + p.value[1] for p in main_annotation.acquisition_information.polarisation_list
         ]
-        temp_product.start_time = translate_datetime(main_annotation_model.acquisition_information.start_time)
-        temp_product.stop_time = translate_datetime(main_annotation_model.acquisition_information.stop_time)
+        temp_product.start_time = main_annotation.acquisition_information.start_time
+        temp_product.stop_time = main_annotation.acquisition_information.stop_time
 
-        footprint = main_annotation_model.sar_image.footprint.value
-        if len(footprint.split(" ")) > 1:
-            temp_product.footprint = parse_footprint_string(footprint, closed=True)
+        footprint = main_annotation.sar_image.footprint
+        if len(footprint) > 2:
+            temp_product.footprint = [footprint[index : index + 2] for index in range(0, len(footprint), 2)]
+            temp_product.footprint.append(temp_product.footprint[0])
         else:
             temp_product.footprint = [[0.0, 0.0]] * 5
 
-        temp_product.channels = main_annotation_model.acquisition_information.polarisation_list.count
+        temp_product.channels = len(main_annotation.acquisition_information.polarisation_list)
 
         if len(temp_product.polarization_list) != temp_product.channels:
             raise InvalidBIOMASSStackProductError(
@@ -455,16 +444,16 @@ class BIOMASSStackProductReader:
 
         for channel in range(temp_product.channels):
             # - RasterInfo
-            samples = main_annotation_model.sar_image.number_of_samples
-            samples_start = main_annotation_model.sar_image.first_sample_slant_range_time.value
+            samples = main_annotation.sar_image.number_of_samples
+            samples_start = main_annotation.sar_image.first_sample_slant_range_time
             samples_start_unit = "s"
-            samples_step = main_annotation_model.sar_image.range_time_interval.value
+            samples_step = main_annotation.sar_image.range_time_interval
             samples_step_unit = samples_start_unit
 
-            lines = main_annotation_model.sar_image.number_of_lines
-            lines_start = translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
+            lines = main_annotation.sar_image.number_of_lines
+            lines_start = main_annotation.sar_image.first_line_azimuth_time
             lines_start_unit = "Utc"
-            lines_step = main_annotation_model.sar_image.azimuth_time_interval.value
+            lines_step = main_annotation.sar_image.azimuth_time_interval
             lines_step_unit = "s"
             cell_type = "FLOAT_COMPLEX"
             metadata_ri = metadata.RasterInfo(
@@ -494,14 +483,14 @@ class BIOMASSStackProductReader:
 
             # - DataSetInfo
             if channel == 0:
-                sensor_name = main_annotation_model.acquisition_information.mission.value
+                sensor_name = main_annotation.acquisition_information.mission.value
                 acquisition_mode = "STRIPMAP"
-                projection = main_annotation_model.sar_image.projection.value.upper()
-                fc_hz = main_annotation_model.instrument_parameters.radar_carrier_frequency.value
+                projection = main_annotation.sar_image.projection.value.upper()
+                fc_hz = main_annotation.instrument_parameters.radar_carrier_frequency
                 metadata_di = metadata.DataSetInfo(acquisition_mode, fc_hz)
                 metadata_di.sensor_name = sensor_name
                 metadata_di.description = ""
-                metadata_di.sense_date = translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
+                metadata_di.sense_date = main_annotation.sar_image.first_line_azimuth_time
                 metadata_di.image_type = "COREGISTERED SLANT RANGE COMPLEX IMAGE"
                 metadata_di.projection = projection
                 metadata_di.acquisition_station = ""
@@ -512,53 +501,43 @@ class BIOMASSStackProductReader:
                 temp_product.dataset_info.append(metadata_di)
 
             # - SwathInfo
-            swath = main_annotation_model.acquisition_information.swath.value
-            polarization = main_annotation_model.acquisition_information.polarisation_list.polarisation[channel].value
+            swath = main_annotation.acquisition_information.swath.value
+            polarization = main_annotation.acquisition_information.polarisation_list[channel].value
             polarization = polarization[0] + "/" + polarization[1]
-            acquisition_prf = main_annotation_model.instrument_parameters.prf_list.prf[0].value.value
+            acquisition_prf = main_annotation.instrument_parameters.prf_list[0][1]
             metadata_si = metadata.SwathInfo(swath, polarization, acquisition_prf)
-            metadata_si.rank = main_annotation_model.instrument_parameters.rank
+            metadata_si.rank = main_annotation.instrument_parameters.rank
             metadata_si.range_delay_bias = 0
-            metadata_si.acquisition_start_time = translate_datetime(
-                main_annotation_model.acquisition_information.start_time
-            )
+            metadata_si.acquisition_start_time = main_annotation.acquisition_information.start_time
             metadata_si.azimuth_steering_rate_reference_time = 0
             metadata_si.azimuth_steering_rate_pol = (0, 0, 0)
-            metadata_si.echoes_per_burst = main_annotation_model.sar_image.number_of_lines
+            metadata_si.echoes_per_burst = main_annotation.sar_image.number_of_lines
             metadata_si.rx_gain = 1
             temp_product.swath_info_list.append(metadata_si)
 
             # - SamplingConstants
-            frg_hz = 1 / main_annotation_model.sar_image.range_time_interval.value
-            brg_hz = main_annotation_model.processing_parameters.range_processing_parameters.look_bandwidth.value
-            faz_hz = 1 / main_annotation_model.sar_image.azimuth_time_interval.value
-            baz_hz = main_annotation_model.processing_parameters.azimuth_processing_parameters.look_bandwidth.value
+            frg_hz = 1 / main_annotation.sar_image.range_time_interval
+            brg_hz = main_annotation.processing_parameters.range_processing_parameters.look_bandwidth
+            faz_hz = 1 / main_annotation.sar_image.azimuth_time_interval
+            baz_hz = main_annotation.processing_parameters.azimuth_processing_parameters.look_bandwidth
             metadata_sc = metadata.SamplingConstants(frg_hz, brg_hz, faz_hz, baz_hz)
             temp_product.sampling_constants_list.append(metadata_sc)
 
             # - AcquisitionTimeline
             missing_lines_number = 0
             missing_lines_azimuth_times = None
-            swp_list = main_annotation_model.instrument_parameters.swp_list
-            swp_changes_number = swp_list.count
-            swp_changes_azimuth_times = [
-                translate_datetime(swp.azimuth_time)
-                - translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
-                for swp in swp_list.swp
-            ]
-            swp_changes_values = [float(swp.value.value) for swp in swp_list.swp]
+            swp_list = main_annotation.instrument_parameters.swp_list
+            swp_changes_number = len(swp_list)
+            swp_changes_azimuth_times = [swp[0] - main_annotation.sar_image.first_line_azimuth_time for swp in swp_list]
+            swp_changes_values = [float(swp[1]) for swp in swp_list]
             noise_packets_number = 0
             noise_packets_azimuth_times = None
             internal_calibration_number = 0
             internal_calibration_azimuth_times = None
-            swl_list = main_annotation_model.instrument_parameters.swl_list
-            swl_changes_number = swl_list.count
-            swl_changes_azimuth_times = [
-                translate_datetime(swl.azimuth_time)
-                - translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
-                for swl in swl_list.swl
-            ]
-            swl_changes_values = [float(swl.value.value) for swl in swl_list.swl]
+            swl_list = main_annotation.instrument_parameters.swl_list
+            swl_changes_number = len(swl_list)
+            swl_changes_azimuth_times = [swl[0] - main_annotation.sar_image.first_line_azimuth_time for swl in swl_list]
+            swl_changes_values = [float(swl[1]) for swl in swl_list]
             metadata_at = metadata.AcquisitionTimeLine(
                 missing_lines_number,
                 missing_lines_azimuth_times,
@@ -576,9 +555,7 @@ class BIOMASSStackProductReader:
             temp_product.acquisition_timeline_list.append(metadata_at)
 
             # - DataStatistics
-            i_num_samples = (
-                main_annotation_model.sar_image.number_of_samples * main_annotation_model.sar_image.number_of_lines
-            )
+            i_num_samples = main_annotation.sar_image.number_of_samples * main_annotation.sar_image.number_of_lines
             i_max_i = 0
             i_max_q = 0
             i_min_i = 0
@@ -605,20 +582,20 @@ class BIOMASSStackProductReader:
             temp_product.data_statistics_list.append(metadata_ds)
 
             # - DopplerCentroidVector
-            dcest_count = main_annotation_model.doppler_parameters.dc_estimate_list.count
-            dcest_method = main_annotation_model.processing_parameters.dc_method.value
+            dcest_count = len(main_annotation.doppler_parameters.dc_estimate_list)
+            dcest_method = main_annotation.processing_parameters.dc_method.value
             metadata_dcl = []
             for dc in range(dcest_count):
-                dcest = main_annotation_model.doppler_parameters.dc_estimate_list.dc_estimate[dc]
-                ref_az = translate_datetime(dcest.azimuth_time)
-                ref_rg = dcest.t0.value
-                if dcest_method == common_types.DcMethodType.GEOMETRY.value:
-                    coefficients = dcest.geometry_dcpolynomial.value.split(" ")
+                dcest = main_annotation.doppler_parameters.dc_estimate_list[dc]
+                ref_az = dcest.azimuth_time
+                ref_rg = dcest.t0
+                if dcest_method == common.DcMethodType.GEOMETRY.value:
+                    coefficients = dcest.geometry_dcpolynomial
                 elif (
-                    dcest_method == common_types.DcMethodType.COMBINED.value
-                    or dcest_method == common_types.DcMethodType.FIXED.value
+                    dcest_method == common.DcMethodType.COMBINED.value
+                    or dcest_method == common.DcMethodType.FIXED.value
                 ):
-                    coefficients = dcest.combined_dcpolynomial.value.split(" ")
+                    coefficients = dcest.combined_dcpolynomial
                 coefficients = [float(i) for i in coefficients]
                 if len(coefficients) < 7:
                     coefficients = coefficients[0:2] + [0.0, 0.0] + coefficients[2:]
@@ -628,13 +605,13 @@ class BIOMASSStackProductReader:
             temp_product.dc_vector_list.append(metadata_dcv)
 
             # - DopplerRateVector
-            fmest_count = main_annotation_model.doppler_parameters.fm_rate_estimate_list.count
+            fmest_count = len(main_annotation.doppler_parameters.fm_rate_estimate_list)
             metadata_fml = []
             for fm in range(fmest_count):
-                fmest = main_annotation_model.doppler_parameters.fm_rate_estimate_list.fm_rate_estimate[fm]
-                ref_az = translate_datetime(fmest.azimuth_time)
-                ref_rg = fmest.t0.value
-                coefficients = fmest.polynomial.value.split(" ")
+                fmest = main_annotation.doppler_parameters.fm_rate_estimate_list[fm]
+                ref_az = fmest.azimuth_time
+                ref_rg = fmest.t0
+                coefficients = fmest.polynomial
                 coefficients = [float(i) for i in coefficients]
                 if len(coefficients) < 7:
                     coefficients = coefficients[0:2] + [0.0, 0.0] + coefficients[2:]
@@ -645,27 +622,25 @@ class BIOMASSStackProductReader:
 
             # - Slant2Ground
             # - Ground2Slant
-            cc_count = main_annotation_model.sar_image.range_coordinate_conversion.count
+            cc_count = len(main_annotation.sar_image.range_coordinate_conversion)
             metadata_fml = []
             metadata_sgl = []
             metadata_gsl = []
             for cc in range(cc_count):
-                coordinate_conversion = (
-                    main_annotation_model.sar_image.range_coordinate_conversion.coordinate_conversion[cc]
-                )
-                ref_az = translate_datetime(coordinate_conversion.azimuth_time)
-                ref_grrg = coordinate_conversion.gr0.value
-                grcoefficients = coordinate_conversion.ground_to_slant_coefficients.value.split(" ")
+                coordinate_conversion = main_annotation.sar_image.range_coordinate_conversion[cc]
+                ref_az = coordinate_conversion.azimuth_time
+                ref_grrg = coordinate_conversion.gr0
+                grcoefficients = coordinate_conversion.ground_to_slant_coefficients
                 grcoefficients = [float(i) for i in grcoefficients]
                 grcoefficients = grcoefficients[0:2] + [0.0, 0.0] + grcoefficients[2:]
                 metadata_gs = metadata.GroundToSlant(ref_az, ref_grrg, grcoefficients)
                 metadata_gsl.append(metadata_gs)
-                ref_slrg = coordinate_conversion.t0.value
-                srcoefficients = coordinate_conversion.slant_to_ground_coefficients.value.split(" ")
-                if srcoefficients[0] == "":
+                ref_slrg = coordinate_conversion.t0
+                srcoefficients = coordinate_conversion.slant_to_ground_coefficients
+                if not srcoefficients:
                     srcoefficients = [0.0] * len(grcoefficients)
                 else:
-                    srcoefficients = [float(i) for i in srcoefficients] / (LIGHT_SPEED / 2)
+                    srcoefficients = [float(i) / (LIGHT_SPEED / 2) for i in srcoefficients]
                     srcoefficients = srcoefficients[0:2] + [0.0, 0.0] + srcoefficients[2:]
                 metadata_sg = metadata.SlantToGround(ref_az, ref_slrg, srcoefficients)
                 metadata_sgl.append(metadata_sg)
@@ -675,15 +650,13 @@ class BIOMASSStackProductReader:
             temp_product.ground_to_slant_list.append(metadata_gsv)
 
             # - Pulse
-            tx_pulse = main_annotation_model.instrument_parameters.tx_pulse_list.tx_pulse[0]
-            pulse_length = tx_pulse.tx_pulse_length.value
-            pulse_bandwidth = (
-                main_annotation_model.processing_parameters.range_processing_parameters.processing_bandwidth.value
-            )
-            pulse_sampling_rate = 1 / main_annotation_model.sar_image.range_time_interval.value
+            tx_pulse = main_annotation.instrument_parameters.tx_pulse_list[0]
+            pulse_length = tx_pulse.tx_pulse_length
+            pulse_bandwidth = main_annotation.processing_parameters.range_processing_parameters.processing_bandwidth
+            pulse_sampling_rate = 1 / main_annotation.sar_image.range_time_interval
             pulse_energy = 1.0
-            pulse_start_frequency = tx_pulse.tx_pulse_start_frequency.value
-            pulse_start_phase = tx_pulse.tx_pulse_start_phase.value
+            pulse_start_frequency = tx_pulse.tx_pulse_start_frequency
+            pulse_start_phase = tx_pulse.tx_pulse_start_phase
             pulse_direction = "UP"
             metadata_p = metadata.Pulse(
                 pulse_length,
@@ -700,23 +673,19 @@ class BIOMASSStackProductReader:
             self.product_primary = temp_product
         else:
             self.product = temp_product
-            assert isinstance(main_annotation_model, main_annotation_models_l1c.MainAnnotation)
-            self.stack_processing_parameters = BIOMASSStackProcessingParameters.from_l1c_main_annotation(
-                main_annotation_model
-            )
-            self.stack_coregistration_parameters = BIOMASSStackCoregistrationParameters.from_l1c_main_annotation(
-                main_annotation_model
-            )
-            self.stack_in_sarparameters = BIOMASSStackInSARParameters.from_l1c_main_annotation(main_annotation_model)
-            self.stack_quality = BIOMASSStackQuality.from_l1c_main_annotation(main_annotation_model)
+            assert isinstance(main_annotation, main_annotation_l1c.MainAnnotationL1c)
+            self.stack_processing_parameters = main_annotation.sta_processing_parameters
+            self.stack_coregistration_parameters = main_annotation.sta_coregistration_parameters
+            self.stack_in_sarparameters = main_annotation.sta_in_sarparameters
+            self.stack_quality = main_annotation.sta_quality
 
-        self.mission_phase_id = main_annotation_model.acquisition_information.mission_phase_id.value
-        self.datatake_id = main_annotation_model.acquisition_information.data_take_id
-        self.orbit_number = main_annotation_model.acquisition_information.absolute_orbit_number
-        self.frame_status = main_annotation_model.acquisition_information.product_composition.value.upper()
-        self.platform_heading = main_annotation_model.acquisition_information.platform_heading.value
-        self.first_sample_sr_time = main_annotation_model.sar_image.first_sample_slant_range_time.value
-        self.first_line_az_time = translate_datetime(main_annotation_model.sar_image.first_line_azimuth_time)
+        self.mission_phase_id = main_annotation.acquisition_information.mission_phase_id.value
+        self.datatake_id = main_annotation.acquisition_information.data_take_id
+        self.orbit_number = main_annotation.acquisition_information.absolute_orbit_number
+        self.frame_status = main_annotation.acquisition_information.product_composition.value.upper()
+        self.platform_heading = main_annotation.acquisition_information.platform_heading
+        self.first_sample_sr_time = main_annotation.sar_image.first_sample_slant_range_time
+        self.first_line_az_time = main_annotation.sar_image.first_line_azimuth_time
         if self.first_line_az_time < temp_product.start_time:
             raise InvalidBIOMASSStackProductError(
                 "First azm time and start time mismatch: first azm={}, start time={}".format(
@@ -724,12 +693,12 @@ class BIOMASSStackProductReader:
                 )
             )
 
-        self.rg_time_interval = main_annotation_model.sar_image.range_time_interval.value
-        self.az_time_interval = main_annotation_model.sar_image.azimuth_time_interval.value
-        self.number_of_samples = main_annotation_model.sar_image.number_of_samples
-        self.number_of_lines = main_annotation_model.sar_image.number_of_lines
-        self.product_pixel_type = main_annotation_model.sar_image.pixel_type
-        self.product_nodata_value = main_annotation_model.sar_image.no_data_value
+        self.rg_time_interval = main_annotation.sar_image.range_time_interval
+        self.az_time_interval = main_annotation.sar_image.azimuth_time_interval
+        self.number_of_samples = main_annotation.sar_image.number_of_samples
+        self.number_of_lines = main_annotation.sar_image.number_of_lines
+        self.product_pixel_type = main_annotation.sar_image.pixel_type
+        self.product_nodata_value = main_annotation.sar_image.no_data_value
 
     def __read_processing_parameters(self, is_primary_image: bool = True):
         """Read the processing parameters."""
@@ -737,22 +706,15 @@ class BIOMASSStackProductReader:
         # If is_primary_immage is True, then read main_annotation1_file,
         # otherwise read main_annotation2_file for coregistered image.
         if is_primary_image:
-            main_annotation_path = Path(self.product_structure.main_annotation1_file)
+            main_annotation = read_main_annotation_l1ab(Path(self.product_structure.main_annotation1_file))
         else:
-            main_annotation_path = Path(self.product_structure.main_annotation2_file)
-        main_annotation_model: main_annotation_models_l1c.MainAnnotation = parse(
-            main_annotation_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1c.MainAnnotation,
-        )
+            main_annotation = read_main_annotation_l1c(Path(self.product_structure.main_annotation2_file))
 
-        processing_parameters = translate_common_annotation_l1.translate_processing_parameters(
-            main_annotation_model.processing_parameters
-        )
-        rg_params = processing_parameters.range_processing_parameters
-        az_params = processing_parameters.azimuth_processing_parameters
+        rg_params = main_annotation.processing_parameters.range_processing_parameters
+        az_params = main_annotation.processing_parameters.azimuth_processing_parameters
 
         # Read processing parameters.
-        parameters_dict = {}
+        parameters_dict: dict[str, str | float] = {}
 
         parameters_dict["range_window_type"] = rg_params.window_type.value
         parameters_dict["range_window_coefficient"] = rg_params.window_coefficient

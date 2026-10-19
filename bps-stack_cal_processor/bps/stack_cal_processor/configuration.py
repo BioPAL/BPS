@@ -19,6 +19,7 @@ from arepytools.io import read_metadata
 from arepytools.io.productfolder2 import ProductFolder2
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
+from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.stack_cal_processor.core.filtering import ConvolutionWindowType
 from bps.stack_cal_processor.core.utils import (
@@ -66,14 +67,6 @@ UNITS_CAL_CONFIG = {
     "postprocessing_filter_window_size": " [m]",
     "goldstein_filter_window_size": " [px]",
 }
-
-
-# The single-baseline and multi-baseline approach for IOB and IOS.
-class BaselineMethodType(Enum):
-    """Baseline selection for some of the calibration modules."""
-
-    SINGLE_BASELINE = "SINGLE_BASELINE"
-    MULTI_BASELINE = "MULTI_BASELINE"
 
 
 # The post-processing supported for SKP.
@@ -165,7 +158,7 @@ class StackCalConf:
         ionosphere_latitude_threshold: float = np.deg2rad(0.0)  # [rad}
         """Skip when satellite latitude is below this threshold."""
 
-        baseline_method: BaselineMethodType = BaselineMethodType.MULTI_BASELINE
+        baseline_method: common.BaselineMethodType = common.BaselineMethodType.MULTI_BASELINE
         """As to whether multi-baseline or single-baseline should be used."""
 
         multi_baseline_uniform_weighting: bool = False

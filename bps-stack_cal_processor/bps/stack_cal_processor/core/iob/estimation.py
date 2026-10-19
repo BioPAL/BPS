@@ -17,8 +17,8 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from bps.common import bps_logger
+from bps.common.io import common
 from bps.stack_cal_processor.configuration import (
-    BaselineMethodType,
     StackCalConf,
     StackDataSpecs,
 )
@@ -550,7 +550,7 @@ def combine_pairwise_ionosphere_estimations(
     ):
         raise IobRuntimeError("Not enough valid pairwise estimations.")
 
-    if iob_conf.baseline_method == BaselineMethodType.SINGLE_BASELINE:
+    if iob_conf.baseline_method == common.BaselineMethodType.SINGLE_BASELINE:
         sb_output = _single_baseline_estimation(
             iob_estimations,
             calib_reference_index=calib_reference_index,
@@ -558,7 +558,7 @@ def combine_pairwise_ionosphere_estimations(
         )
         return *sb_output, interferometric_pair_indices
 
-    if iob_conf.baseline_method == BaselineMethodType.MULTI_BASELINE:
+    if iob_conf.baseline_method == common.BaselineMethodType.MULTI_BASELINE:
         mb_output = _multi_baseline_combine(
             iob_estimations,
             uniform_weighting=iob_conf.multi_baseline_uniform_weighting,

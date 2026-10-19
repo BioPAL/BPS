@@ -20,11 +20,7 @@ import scipy as sp
 from arepytools.io.metadata import EPolarization, RasterInfo
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, translate_common
-from bps.common.io.common_types.models import (
-    HeightModelType,
-    PrimaryImageSelectionMethodType,
-)
+from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest
 from bps.stack_cal_processor.configuration import (
     AZF_NAME,
@@ -60,16 +56,16 @@ from bps.stack_processor.interface.external.utils import (
 from bps.stack_processor.interface.internal.intermediates import (
     CoregistrationOutputProducts,
 )
-from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
-from bps.transcoder.sarproduct.biomass_stackproduct import (
+from bps.transcoder.io.main_annotation_l1c import (
     BIOMASSStackCoregistrationParameters,
     BIOMASSStackInSARParameters,
     BIOMASSStackProcessingParameters,
-    BIOMASSStackProduct,
-    BIOMASSStackProductConfiguration,
     BIOMASSStackQuality,
     BIOMASSStackQualityParameters,
+    CoherenceHistogram,
 )
+from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
+from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct, BIOMASSStackProductConfiguration
 from bps.transcoder.sarproduct.biomass_stackproduct_writer import (
     BIOMASSStackProductWriter,
     IonosphereAxes,
@@ -941,9 +937,9 @@ def _fill_stack_quality(
                 coherence_max=np.nanmax(coherence),
                 coherence_median=np.nanmedian(coherence),
                 coherence_histogram=(
-                    BIOMASSStackQualityParameters.CoherenceHistogram.from_coherence_abs(coherence)
+                    CoherenceHistogram.from_coherence_abs(coherence)
                     if coherence.size > 1
-                    else BIOMASSStackQualityParameters.CoherenceHistogram(
+                    else CoherenceHistogram(
                         bins=np.array([], dtype=np.float64),
                         pdf_values=np.array([], dtype=np.float64),
                     )
@@ -967,19 +963,19 @@ def _fill_stack_processing_parameters(
 
     def _map_selection_info_to_selection_method(
         info: common.PrimaryImageSelectionInformationType,
-    ) -> PrimaryImageSelectionMethodType:
+    ) -> common.PrimaryImageSelectionMethodType:
         if info == common.PrimaryImageSelectionInformationType.GEOMETRY:
-            return PrimaryImageSelectionMethodType.GEOMETRY
+            return common.PrimaryImageSelectionMethodType.GEOMETRY
 
         if info in (
             common.PrimaryImageSelectionInformationType.GEOMETRY_AND_RFI_CORRECTION,
             common.PrimaryImageSelectionInformationType.GEOMETRY_AND_FR_CORRECTION,
             common.PrimaryImageSelectionInformationType.GEOMETRY_AND_RFI_FR_CORRECTIONS,
         ):
-            return PrimaryImageSelectionMethodType.GEOMETRY_AND_QUALITY
+            return common.PrimaryImageSelectionMethodType.GEOMETRY_AND_QUALITY
 
         if info == common.PrimaryImageSelectionInformationType.TEMPORAL_BASELINE:
-            return PrimaryImageSelectionMethodType.TEMPORAL_BASELINE
+            return common.PrimaryImageSelectionMethodType.TEMPORAL_BASELINE
 
         raise RuntimeError(f"Unknown primary image selection information type: {info}")
 
@@ -987,15 +983,10 @@ def _fill_stack_processing_parameters(
         processor_version=VERSION,
         product_generation_time=PreciseDateTime.now(),
         polarizations_used=len(processed_polarizations),
-        polarization_combination_method=translate_common.translate_polarisation_combination_method_to_model(
-            cross_pol_method
-        ),
+        polarization_combination_method=cross_pol_method,
         primary_image_selection_method=_map_selection_info_to_selection_method(primary_image_info),
         coregistration_method=actualized_coregistration_parameters["coregistration_method"],
-        height_model=HeightModelType(
-            value=l1a_product.height_model.value,
-            version=l1a_product.height_model.version,
-        ),
+        height_model=l1a_product.height_model,
         rfi_degradation_estimation_flag=aux_pps.rfi_degradation_estimation.rfi_degradation_estimation_flag,
         azimuth_spectral_filtering_flag=aux_pps.azimuth_spectral_filtering.azimuth_spectral_filtering_flag,
         calibration_primary_image_flag=aux_pps.slow_ionosphere_removal.primary_image_flag,
@@ -1023,7 +1014,9 @@ def _fill_stack_processing_parameters(
             aux_pps.skp_phase_calibration
         ),
         skp_estimation_window_size=aux_pps.skp_phase_calibration.estimation_window_size,
-        skp_calibration_phase_postprocessing=aux_pps.skp_phase_calibration.calibration_phase_postprocessing,
+        skp_calibration_phase_postprocessing=common.SkpPhaseCalibrationPostprocessingType[
+            aux_pps.skp_phase_calibration.calibration_phase_postprocessing.upper()
+        ],
         skp_postprocessing_filter_window_size=aux_pps.skp_phase_calibration.postprocessing_filter_window_size,
         skp_goldstein_filter_window_size=aux_pps.skp_phase_calibration.goldstein_filter_window_size,
         slow_ionosphere_removal_multi_baseline_threshold=(
@@ -1089,12 +1082,10 @@ def _fill_stack_coregistration_parameters(
         average_range_coreg_shifts = np.nanmean(range_coreg_shifts)
 
     return BIOMASSStackCoregistrationParameters(
-        datum=translate_common.translate_datum_to_model(l1a_product.datum),
+        datum=l1a_product.datum,
         primary_image=primary_image,
         secondary_image=secondary_image,
-        primary_image_selection_information=translate_common.translate_primary_image_selection_information_to_model(
-            primary_image_info
-        ),
+        primary_image_selection_information=primary_image_info,
         average_azimuth_coregistration_shift=average_azimuth_coreg_shifts,
         average_range_coregistration_shift=average_range_coreg_shifts,
         normal_baseline=normal_baseline,
