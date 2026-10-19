@@ -569,6 +569,7 @@
 			<xsd:enumeration value="SKP calibration phase screen quality"/>
 			<xsd:enumeration value="Interferogram [rad]"/>
 			<xsd:enumeration value="Coherence"/>
+			<xsd:enumeration value="Local Incidence angle [deg]"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="uomType">
