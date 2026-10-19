@@ -104,6 +104,12 @@ class CoherenceHistogram:
     bins: np.ndarray
     pdf_values: np.ndarray
 
+    def __eq__(self, other):
+        if not isinstance(other, CoherenceHistogram):
+            return NotImplemented
+
+        return np.array_equal(self.bins, other.bins) and np.array_equal(self.pdf_values, other.pdf_values)
+
     @classmethod
     def from_coherence_abs(cls, coherence: np.ndarray) -> Self:
         """Compute bins and pdf of the coherence"""
