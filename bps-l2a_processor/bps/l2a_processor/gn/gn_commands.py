@@ -10,7 +10,6 @@ GN commands
 -----------
 """
 
-from copy import deepcopy
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
