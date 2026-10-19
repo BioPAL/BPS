@@ -24,7 +24,7 @@ from arepytools.io.productfolder2 import ProductFolder2, is_product_folder
 from arepytools.math.genericpoly import GenericPoly
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io.common_types.models import CoregistrationMethodType
+from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.stack_cal_processor.core.utils import (
     read_productfolder_data,
@@ -387,7 +387,7 @@ class StackCalProcessorInputManager:
         # remove biases.
         rng_shifts_bias = defaultdict(float)
         if bias_compensation:
-            rng_shifts_bias[CoregistrationMethodType.GEOMETRY] = (
+            rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY] = (
                 read_productfolder_data(
                     self._range_coreg_shifts_products[self._coreg_primary_image_index],
                     roi=self.roi,
@@ -395,8 +395,8 @@ class StackCalProcessorInputManager:
                 if not has_coreg_primary
                 else coreg_rng_shifts[self._coreg_primary_image_index]
             )
-            rng_shifts_bias[CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
-                rng_shifts_bias[CoregistrationMethodType.GEOMETRY].shape
+            rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
+                rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY].shape
             )
 
         # Possibly, apply the bias.
@@ -464,7 +464,7 @@ class StackCalProcessorInputManager:
         # remove biases.
         azm_shifts_bias = defaultdict(float)
         if bias_compensation:
-            azm_shifts_bias[CoregistrationMethodType.GEOMETRY] = (
+            azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY] = (
                 read_productfolder_data(
                     self._range_coreg_shifts_products[self._coreg_primary_image_index],
                     roi=self.roi,
@@ -472,8 +472,8 @@ class StackCalProcessorInputManager:
                 if not has_coreg_primary
                 else coreg_azm_shifts[self._coreg_primary_image_index]
             )
-            azm_shifts_bias[CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
-                azm_shifts_bias[CoregistrationMethodType.GEOMETRY].shape
+            azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
+                azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY].shape
             )
 
         # Possibly, apply the bias.
@@ -521,9 +521,9 @@ class StackCalProcessorInputManager:
             _select_by_indices(self._azimuth_coreg_shifts_geo_products, image_indices),
         ):
             num_lines, num_samples = _get_raster_shape(cor_az_pf, roi=self.roi)
-            if coreg_method is CoregistrationMethodType.GEOMETRY:
+            if coreg_method is common.CoregistrationMethodType.GEOMETRY:
                 azimuth_residual_shifts.append(np.zeros((num_lines, num_samples)))
-            elif coreg_method is CoregistrationMethodType.GEOMETRY_AND_DATA:
+            elif coreg_method is common.CoregistrationMethodType.GEOMETRY_AND_DATA:
                 azimuth_residual_shifts.append(
                     read_productfolder_data(cor_az_pf, roi=self.roi)
                     - read_productfolder_data(cor_geo_az_pf, roi=self.roi)

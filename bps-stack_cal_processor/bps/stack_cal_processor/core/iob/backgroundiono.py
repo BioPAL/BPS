@@ -18,9 +18,9 @@ import numpy as np
 import numpy.typing as npt
 from arepytools.geometry.conversions import xyz2llh
 from bps.common import bps_logger
+from bps.common.io import common
 from bps.stack_cal_processor.configuration import (
     IOB_NAME,
-    BaselineMethodType,
     StackCalConf,
     StackDataSpecs,
     log_calibration_params,
@@ -236,11 +236,11 @@ def remove_background_ionosphere(
 
     # Cache all interferometric pairs, defined according to the baseline method
     # employed for calibration.
-    if conf.baseline_method == BaselineMethodType.SINGLE_BASELINE:
+    if conf.baseline_method == common.BaselineMethodType.SINGLE_BASELINE:
         interferometric_pair_indices = single_baseline_interferometric_pair_indices(
             num_images, reference_image_index=calib_reference_image_index
         )
-    elif conf.baseline_method == BaselineMethodType.MULTI_BASELINE:
+    elif conf.baseline_method == common.BaselineMethodType.MULTI_BASELINE:
         interferometric_pair_indices = multi_baseline_interferometric_pair_indices(
             num_images,
             vertical_wavenumbers=vertical_wavenumbers,

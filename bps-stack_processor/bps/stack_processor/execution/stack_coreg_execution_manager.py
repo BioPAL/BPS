@@ -30,7 +30,6 @@ from arepytools.io.productfolder2 import (
 from bps.common import bps_logger
 from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
 from bps.common.io import common
-from bps.common.io.common_types.models import CoregistrationMethodType
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.common.runner_helper import run_application
 from bps.common.toi_utils import TimeOfInterest, toi_to_axis_slice
@@ -326,7 +325,7 @@ class StackCoregProcessorExecutionManager:
         # The possible bias in the coregistration due to small DEM errors when
         # upsampling.
         any_coregistration_from_geometry = any(
-            p["coregistration_method"] is CoregistrationMethodType.GEOMETRY
+            p["coregistration_method"] is common.CoregistrationMethodType.GEOMETRY
             for p in stack_coreg_proc_exec_products["actualized_coregistration_parameters"]
         )
 
@@ -785,7 +784,7 @@ class StackCoregProcessorExecutionManager:
         # Under 'Geometry'. There's no actualize coregistration parameters.
         if aux_pps_coreg_method is common.CoregistrationMethodType.GEOMETRY or is_coreg_primary_image_index:
             return {
-                "coregistration_method": CoregistrationMethodType.GEOMETRY,
+                "coregistration_method": common.CoregistrationMethodType.GEOMETRY,
                 "quality_coregistration_azimuth": 1.0,
                 "quality_coregistration_range": 1.0,
                 "quality_coregistration": 1.0,
@@ -866,7 +865,7 @@ class StackCoregProcessorExecutionManager:
         # as noDataValue.
         coreg_shifts_quality = np.full((lut_azm_indices.size, lut_rng_indices.size), np.nan)
 
-        if coregistration_method is CoregistrationMethodType.GEOMETRY_AND_DATA:
+        if coregistration_method is common.CoregistrationMethodType.GEOMETRY_AND_DATA:
             if not is_product_folder(coreg_shifts_quality_product):
                 raise StackCoregProcessorRuntimeError(
                     f"Intermediate {coreg_shifts_quality_product} is not a product folder"

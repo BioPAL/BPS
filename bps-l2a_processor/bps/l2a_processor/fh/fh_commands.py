@@ -663,7 +663,7 @@ class FH:
                         invalid_ground_phases_screen_estimates_fraction=param.invalid_skp_calibration_phase_screen_ratio,
                         ground_phases_screen_quality_threshold=param.skp_calibration_phase_screen_quality_threshold,
                         skp_decomposition_index=param.skp_decomposition_index,
-                        polarisation=common_annotation_models_l2.PolarisationType(param.polarization),
+                        polarisation=common_annotation_models_l2.PolarisationType(param.polarization.value),
                     )
                 )
 
