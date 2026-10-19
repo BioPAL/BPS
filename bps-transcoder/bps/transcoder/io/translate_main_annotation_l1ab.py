@@ -7,7 +7,10 @@
 
 """Main annotation L1ab translation"""
 
+from pathlib import Path
+
 from bps.common.io import translate_common
+from bps.common.io.parsing import parse, serialize
 from bps.transcoder.io import (
     main_annotation_l1ab,
     main_annotation_models_l1ab,
@@ -89,3 +92,25 @@ def translate_main_annotation_l1ab_to_model(
         quality=translate_common_annotation_l1.translate_quality_to_model(annotation.quality),
         annotation_lut=translate_common.translate_layer_list_to_model(annotation.annotation_lut),
     )
+
+
+def read_main_annotation_l1ab(
+    file: Path,
+) -> main_annotation_l1ab.MainAnnotationL1ab:
+    """Read main annotation of l1ab products"""
+    main_annotation_model: main_annotation_models_l1ab.MainAnnotation = parse(
+        file.read_text(encoding="utf-8"),
+        main_annotation_models_l1ab.MainAnnotation,
+    )
+
+    return translate_main_annotation_l1ab(main_annotation_model)
+
+
+def write_main_annotation_l1ab(
+    file: Path,
+    annotation: main_annotation_l1ab.MainAnnotationL1ab,
+):
+    """Write main annotation of l1ab products"""
+    main_annotation_model = translate_main_annotation_l1ab_to_model(annotation)
+    main_annotation_text = serialize(main_annotation_model)
+    file.write_text(main_annotation_text, encoding="utf-8")

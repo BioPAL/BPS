@@ -17,14 +17,9 @@ from arepytools.constants import LIGHT_SPEED
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
-from bps.common.io.parsing import parse
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file
-from bps.transcoder.io import (
-    common_annotation_l1,
-    main_annotation_l1ab,
-    main_annotation_models_l1ab,
-    translate_main_annotation_l1ab,
-)
+from bps.transcoder.io import common_annotation_l1
+from bps.transcoder.io.translate_main_annotation_l1ab import read_main_annotation_l1ab
 from bps.transcoder.orbit.eoorbit import EOOrbit
 from bps.transcoder.sarproduct import l1_annotations
 from bps.transcoder.sarproduct.biomass_l1product import (
@@ -46,18 +41,6 @@ from bps.transcoder.utils.product_name import parse_l1product_name
 from osgeo import gdal
 
 gdal.UseExceptions()
-
-
-def _read_main_annotation_l1ab(
-    file: Path,
-) -> main_annotation_l1ab.MainAnnotationL1ab:
-    """Read main annotation of l1ab products"""
-    main_annotation_model: main_annotation_models_l1ab.MainAnnotation = parse(
-        file.read_text(encoding="utf-8"),
-        main_annotation_models_l1ab.MainAnnotation,
-    )
-
-    return translate_main_annotation_l1ab.translate_main_annotation_l1ab(main_annotation_model)
 
 
 class BIOMASSL1ProductReader:
@@ -132,7 +115,7 @@ class BIOMASSL1ProductReader:
         """Read annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         self.product.name = os.path.basename(self.product_path)
         self.product.mission = annotation.acquisition_information.mission.value
@@ -437,7 +420,7 @@ class BIOMASSL1ProductReader:
         """Read ionosphere correction from main annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         return annotation.ionosphere_correction
 
@@ -445,7 +428,7 @@ class BIOMASSL1ProductReader:
         """Read processing parameters from main annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         rg_params = annotation.processing_parameters.range_processing_parameters
         az_params = annotation.processing_parameters.azimuth_processing_parameters
