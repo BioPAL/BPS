@@ -44,7 +44,6 @@ ruff:
     - cd $SUBPROJECT
     - python3.12 -m pip install nox
     - python3.12 -m nox -s ruff
-  allow_failure: true
 
 fawlty_deps:
   stage: analysis
