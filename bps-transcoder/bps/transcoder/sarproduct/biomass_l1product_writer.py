@@ -20,14 +20,10 @@ from arepytools.math import genericpoly
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
-from bps.common.io.parsing import serialize
 from bps.transcoder import BPS_ATBD_L1_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
-from bps.transcoder.io import (
-    common_annotation_l1,
-    main_annotation_l1ab,
-    translate_main_annotation_l1ab,
-)
+from bps.transcoder.io import common_annotation_l1, main_annotation_l1ab
 from bps.transcoder.io.preprocessor_report import BAQCompressionLevel
+from bps.transcoder.io.translate_main_annotation_l1ab import write_main_annotation_l1ab
 from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.generic_product import GenericProduct
 from bps.transcoder.sarproduct.l1.product_content import L1ProductContent
@@ -1257,12 +1253,9 @@ class BIOMASSL1ProductWriter:
             quality=quality,
             annotation_lut=layers,
         )
-        main_annotation_model = translate_main_annotation_l1ab.translate_main_annotation_l1ab_to_model(annotation_l1ab)
 
-        # Write main annotation file
-        main_annotation_text = serialize(main_annotation_model)
         main_annotation_path = self.product_path.joinpath(self.content.main_annotation)
-        main_annotation_path.write_text(main_annotation_text, encoding="utf-8")
+        write_main_annotation_l1ab(main_annotation_path, annotation_l1ab)
 
     def write(
         self,
