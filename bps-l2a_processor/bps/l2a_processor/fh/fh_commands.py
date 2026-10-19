@@ -1696,6 +1696,9 @@ def forest_height_inversion(
             0
         ]
 
+        # New, update nan_mask considering also vertical_wavenumber_min_mat and vertical_wavenumber_max_mat
+        nan_mask = nan_mask | (vertical_wavenumber_min_mat == 0) | (vertical_wavenumber_max_mat == 0)
+
         # ratio between wavenumbers
         wavenumbers_ratio_mat = vertical_wavenumber_min_mat / vertical_wavenumber_max_mat
         # put no data values to nan here, to avoid carring the no data mask
@@ -1715,6 +1718,11 @@ def forest_height_inversion(
 
         kh_mat = lut_kh_axis[min_pos_mat]
         forest_height = kh_mat / np.abs(vertical_wavenumber_max_mat)
+
+        # new, mask also final estimation
+        forest_height[nan_mask] = np.nan
+        forest_height_quality[nan_mask] = np.nan
+
         forest_height_debug = None
 
     elif model_inversion == "single":
