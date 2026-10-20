@@ -11,7 +11,7 @@
   script:
     - cd ${BPSPROJECT}
     - python -m build --sdist
-    - conda build recipe --output-folder conda_build_dir
+    - conda-build recipe --output-folder conda_build_dir
     - |
         for file in conda_build_dir/*/*.conda; do
           cp $file dist
@@ -42,7 +42,7 @@
     - conda config --prepend channels ${PWD}/local_channel
   script:
     - cd ${BPSPROJECT}
-    - conda build recipe --output-folder conda_build_dir
+    - conda-build recipe --output-folder conda_build_dir
     - ls conda_build_dir/*/*.conda
     - |
         for file in conda_build_dir/*/*.conda; do
