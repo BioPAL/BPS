@@ -190,7 +190,6 @@ class FH:
             resolution_rg,
             axis_az_subsampling_indexes,
             axis_rg_subsampling_indexes,
-            _,
         ) = coherence_estimation(
             self.scs_pol_list_calibrated,
             self.scs_axes_dict["scs_axis_sr_s"],
@@ -909,7 +908,6 @@ def coherence_estimation(
     float,
     np.ndarray,
     np.ndarray,
-    np.ndarray,
 ]:
     """
     Coherence estimation
@@ -996,10 +994,6 @@ def coherence_estimation(
     axis_rg_subsampling_indexes: np.ndarray
         Range indices to be applied to the input_data_list axis of dimensions [N_az x N_rg],
         to get the decimated mpmb_covariance sampling of dimensions [Naz_subsampled x Nrg_subsampled]
-    mbmp_coherence: np.ndarray
-        coherence is an intermediate calculation, returned for UT testing
-        same dimensions of the Multi Baseline Multi Polarimetric coherence matrix
-        [(PxM) x (PxM) x N_az x N_rg]
     """
 
     start_time = datetime.now()
@@ -1197,7 +1191,6 @@ def coherence_estimation(
         resolution_rg,
         axis_az_subsampling_indexes,
         axis_rg_subsampling_indexes,
-        mbmp_coherence,
     )
 
 
@@ -1687,12 +1680,12 @@ def forest_height_inversion(
             vertical_wavenumbers_stacked, (idx_sort[0, :, :])[np.newaxis, :], axis=0
         )[0]
         vertical_wavenumber_max_mat = np.take_along_axis(
-            vertical_wavenumbers_stacked, (idx_sort[2, :, :])[np.newaxis, :], axis=0
+            vertical_wavenumbers_stacked, (idx_sort[-1, :, :])[np.newaxis, :], axis=0
         )[0]
         coherence_kz_min_mat = np.take_along_axis(optimized_coherence_mat, (idx_sort[0, :, :])[np.newaxis, :], axis=0)[
             0
         ]
-        coherence_kz_max_mat = np.take_along_axis(optimized_coherence_mat, (idx_sort[2, :, :])[np.newaxis, :], axis=0)[
+        coherence_kz_max_mat = np.take_along_axis(optimized_coherence_mat, (idx_sort[-1, :, :])[np.newaxis, :], axis=0)[
             0
         ]
 
