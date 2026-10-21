@@ -269,30 +269,6 @@ XSD_FILES_TRANSCODER_L2 = [
         description="XSD Main annotation models L2a TOMO FH",
     ),
     XSDInfo(
-        xsd_path=BIOMASS_XSD.joinpath("bio-l2l3-fd-proc-annotations.xsd"),
-        namespace="transcoder",
-        subpackage="proc_params_annotation_models_l2_fd",
-        description="XSD processing parameters annotation models L2 FD",
-    ),
-    XSDInfo(
-        xsd_path=BIOMASS_XSD.joinpath("bio-l2l3-fh-proc-annotations.xsd"),
-        namespace="transcoder",
-        subpackage="proc_params_annotation_models_l2_fh",
-        description="XSD processing parameters annotation models L2 FH",
-    ),
-    XSDInfo(
-        xsd_path=BIOMASS_XSD.joinpath("bio-l2l3-tfh-proc-annotations.xsd"),
-        namespace="transcoder",
-        subpackage="proc_params_annotation_models_l2_tomo_fh",
-        description="XSD processing parameters annotation models L2 TOMO FH",
-    ),
-    XSDInfo(
-        xsd_path=BIOMASS_XSD.joinpath("bio-l2l3-agb-proc-annotations.xsd"),
-        namespace="transcoder",
-        subpackage="proc_params_annotation_models_l2_agb",
-        description="XSD processing parameters annotation models L2 AGB",
-    ),
-    XSDInfo(
         xsd_path=BIOMASS_XSD.joinpath("bio-l2b-fd-main-annotation.xsd"),
         namespace="transcoder",
         subpackage="main_annotation_models_l2b_fd",
