@@ -21,7 +21,7 @@ from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
 from bps.common.io import common, translate_common
 from bps.common.l2_joborder_tags import L2A_OUTPUT_PRODUCT_FD
-from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
+from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A, OperationalModeType
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.fd import BPS_L2A_FD_PROCESSOR_NAME
 from bps.l2a_processor.ground_cancellation import ground_cancellation
@@ -756,6 +756,30 @@ class FD:
             ads_block_size=self.aux_pp2_2a.fd.compression_options.ads_block_size,
         )
 
+        # imagesPairSelection: the AUX contains AuxppacquisitionListType.AcquisitionFolderName objects,
+        # the annotation needs AcquisitionType: pick them from the stack acquisition list
+        images_pair_selection = None
+        if self.aux_pp2_2a.fd.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
+            pair_from_aux_pp2 = {
+                Path(acq.value).name: acq
+                for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection.acquisition_folder_name
+            }
+            images_pair_selection = [
+                common_annotation_l2l3.AcquisitionType(
+                    folder_name=acq.folder_name,
+                    sta_quality=acq.sta_quality,
+                    reference_image=pair_from_aux_pp2[acq.folder_name].reference_image == "true",
+                    average_wavenumber=pair_from_aux_pp2[acq.folder_name].average_wavenumber,
+                )
+                for acq in acquisition_list
+                if acq.folder_name in pair_from_aux_pp2
+            ]
+            if len(images_pair_selection) != 2:
+                raise RuntimeError(
+                    f"INSAR_PAIR: expected 2 acquisitions from AUX PP2 2A images pair selection "
+                    f"{list(pair_from_aux_pp2)} in the stack, found {len(images_pair_selection)}"
+                )
+
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFD(
             bps.l2a_processor.__version__,
             self.start_time,
@@ -767,7 +791,9 @@ class FD:
             self.aux_pp2_2a.fd.product_resolution,
             self.aux_pp2_2a.fd.numerical_determinant_limit,
             self.aux_pp2_2a.fd.upsampling_factor,
-            self.aux_pp2_2a.fd.ground_cancellaton.images_pair_selection,
+            translate_common_annotation_l2l3.translate_acquisition_list_to_model(images_pair_selection)
+            if images_pair_selection is not None
+            else None,
             self.aux_pp2_2a.fd.ground_cancellaton.disable_ground_cancellation_flag,
         )
 

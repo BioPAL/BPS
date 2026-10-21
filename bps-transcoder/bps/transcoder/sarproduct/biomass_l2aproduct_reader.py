@@ -348,8 +348,7 @@ class BIOMASSL2aProductReader:
             assert upsampling_factor is not None
 
         if self.product_type == "FP_FD__L2A":
-            assert main_annotation_model.processing_parameters.emphasized_forest_height is not None
-            assert main_annotation_model.processing_parameters.operational_mode is not None
+            assert isinstance(main_annotation_model, main_annotation_models_l2a_fd.MainAnnotation)
 
             emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
             operational_mode = main_annotation_model.processing_parameters.operational_mode.value
@@ -448,11 +447,7 @@ class BIOMASSL2aProductReader:
             )
 
         elif self.product_type == "FP_GN__L2A":
-            assert main_annotation_model.processing_parameters.emphasized_forest_height is not None
-            assert main_annotation_model.processing_parameters.operational_mode is not None
-            assert main_annotation_model.processing_parameters.radiometric_calibration_flag is not None
-            assert main_annotation_model.processing_parameters.disable_ground_cancellation_flag is not None
-            assert main_annotation_model.processing_parameters.compression_options.ads.geometric_luts is not None
+            assert isinstance(main_annotation_model, main_annotation_models_l2a_gn.MainAnnotation)
             least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.geometric_luts.least_significant_digit
             emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
             operational_mode = main_annotation_model.processing_parameters.operational_mode.value
