@@ -42,6 +42,7 @@ from bps.transcoder.io import (
     vrt,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
+    BIOMASSL2aMainADSProcessingParametersFH,
     BIOMASSL2aProductFD,
     BIOMASSL2aProductFH,
     BIOMASSL2aProductGN,
@@ -1540,15 +1541,16 @@ class BIOMASSL2aProductWriter:
             )
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
+            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersFH)
             vertical_reflectivity_option = main_annotation_models_l2a_fh.VerticalProfileOptionType(
                 self.product.main_ads_processing_parameters.vertical_reflectivity_option
             )
             vertical_reflectivity_default_profile = main_annotation_models_l2a_fh.VerticalReflectivityProfileType(
                 val=[
                     float(value)
-                    for value in self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile
+                    for value in self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile.val
                 ],
-                count=len(self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile),
+                count=len(self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile.val),
             )
             model_inversion = main_annotation_models_l2a_fh.ModelInversionType(
                 self.product.main_ads_processing_parameters.model_inversion
