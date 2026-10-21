@@ -18,7 +18,7 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common_types
+from bps.common.io import common, common_types
 from bps.l2b_fh_processor.core.aux_pp2_2b_fh import AuxProcessingParametersL2BFH
 from bps.l2b_fh_processor.core.joborder_l2b_fh import L2bFHJobOrder
 from bps.l2b_fh_processor.core.translate_job_order import (
@@ -31,7 +31,11 @@ from bps.l2b_fh_processor.l2b_common_functionalities import (
     dgg_tiling,
     sort_footprints,
 )
-from bps.transcoder.io import common_annotation_models_l2, main_annotation_models_l2b_fh
+from bps.transcoder.io import (
+    common_annotation_models_l2,
+    main_annotation_models_l2b_fh,
+    translate_common_annotation_l2l3,
+)
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFH
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
 from bps.transcoder.sarproduct.biomass_l2bfhproduct import (
@@ -86,40 +90,30 @@ class FHL2B:
         self.l2b_fd_product = l2b_fd_product
         self.output_baseline = 0
 
-    def _get_l2a_inputs_information(self):
+    def _get_l2a_inputs_information(
+        self,
+    ) -> tuple[
+        list[common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs],
+        common.MissionPhaseIdtype,
+        int,
+        list[str],
+    ]:
         # Precompute here the info to construct main_ads_input_information_l2b:
 
         mission_phase_id = None
         global_coverage_id = None
         l2a_inputs_list = []
         basin_id_list = []
-        counter = 0
+        mission_phase_id = self.l2a_fh_products_list[0].main_ads_product.mission_phase_id
+        global_coverage_id = self.l2a_fh_products_list[0].main_ads_product.global_coverage_id
         for idx, l2a_product in enumerate(self.l2a_fh_products_list):
             if self.job_order.processing_parameters.tile_id in l2a_product.main_ads_product.tile_id_list:
                 # Only the used L2A products (see dgg_tiling)
 
                 basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-                footprint = main_annotation_models_l2b_fh.FloatArrayWithUnits(
-                    value=l2a_product.main_ads_input_information.footprint,
-                    count=8,
-                    units=common_types.UomType.DEG,
-                )
-
-                l1_inputs = common_annotation_models_l2.InputInformationL2AType(
-                    product_type=common_annotation_models_l2.ProductType(
-                        l2a_product.main_ads_input_information.product_type
-                    ),
-                    overall_products_quality_index=l2a_product.main_ads_input_information.overall_products_quality_index,
-                    nominal_stack=str(l2a_product.main_ads_input_information.nominal_stack).lower(),
-                    polarisation_list=l2a_product.main_ads_input_information.polarisation_list,
-                    projection=common_annotation_models_l2.ProjectionType(
-                        l2a_product.main_ads_input_information.projection
-                    ),
-                    footprint=footprint,
-                    vertical_wavenumbers=l2a_product.main_ads_input_information.vertical_wavenumbers,
-                    height_of_ambiguity=l2a_product.main_ads_input_information.height_of_ambiguity,
-                    acquisition_list=l2a_product.main_ads_input_information.acquisition_list,
+                l1_inputs = translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
+                    l2a_product.main_ads_input_information
                 )
 
                 l2a_inputs_list.append(
@@ -130,15 +124,10 @@ class FHL2B:
                     )
                 )
 
-                if counter == 0:
-                    mission_phase_id = l2a_product.main_ads_product.mission_phase_id
-                    global_coverage_id = l2a_product.main_ads_product.global_coverage_id
-                else:
-                    if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
-                        raise ValueError(
-                            "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
-                        )
-                counter += 1
+                if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
+                    raise ValueError(
+                        "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
+                    )
 
         return (
             l2a_inputs_list,
@@ -167,7 +156,21 @@ class FHL2B:
             L2B_OUTPUT_PRODUCT_FH if self.job_order.output_product == L2B_OUTPUT_PRODUCT_FH else L2B_OUTPUT_PRODUCT_TFH
         )
 
-    def _core_processing(self):
+    def _core_processing(
+        self,
+    ) -> tuple[
+        dict | None,
+        str,
+        common.MissionPhaseIdtype | None,
+        int | None,
+        list[float] | None,
+        BIOMASSL2bFHMainADSInputInformation | None,
+        main_annotation_models_l2b_fh.BpsFnfType,
+        bool,
+        PreciseDateTime,
+        PreciseDateTime,
+        np.ndarray,
+    ]:
         """Execute core FH L2b processing"""
 
         bps_logger.info("L2a products fusion into L2b")
@@ -340,16 +343,16 @@ class FHL2B:
 
     def _write_to_output(
         self,
-        processed_data_dict,
-        tile_id,
-        mission_phase_id,
-        global_coverage_id,
-        footprint,
-        main_ads_input_information,
-        bps_fnf_type,
-        start_time_l2a,
-        stop_time_l2a,
-        footprint_mask_for_quicklooks,
+        processed_data_dict: dict,
+        tile_id: str,
+        mission_phase_id: common.MissionPhaseIdtype,
+        global_coverage_id: int,
+        footprint: list[float],
+        main_ads_input_information: BIOMASSL2bFHMainADSInputInformation,
+        bps_fnf_type: main_annotation_models_l2b_fh.BpsFnfType,
+        start_time_l2a: PreciseDateTime,
+        stop_time_l2a: PreciseDateTime,
+        footprint_mask_for_quicklooks: np.ndarray,
     ):
         """Write output FH L2b products"""
 
@@ -390,7 +393,7 @@ class FHL2B:
             self.start_time,
             self.stop_time,
             radar_carrier_frequency,
-            mission_phase_id,
+            mission_phase_id.value,
             sensor_mode,
             global_coverage_id,
             self.output_baseline,
@@ -408,7 +411,7 @@ class FHL2B:
             "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
             "quality": common_types.PixelRepresentationType.FOREST_HEIGHT_QUALITY,
             "bps_fnf": common_types.PixelRepresentationType.COMPUTED_FOREST_MASK,
-            "heat_map": [common_types.PixelRepresentationType.HEAT_MAP],
+            "heat_map": common_types.PixelRepresentationType.HEAT_MAP,
             "acquisition_id_image": common_types.PixelRepresentationType.ACQUISITION_ID_IMAGE,
         }
         pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
@@ -533,6 +536,11 @@ class FHL2B:
 
         if not skip_fh_computation:
             assert l2b_data_final_d is not None
+            assert mission_phase_id is not None
+            assert global_coverage_id is not None
+            assert footprint is not None
+            assert main_ads_input_information is not None
+            assert footprint_mask_for_quicklooks is not None
 
             self._write_to_output(
                 l2b_data_final_d,

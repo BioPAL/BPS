@@ -18,7 +18,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common, translate_common
+from bps.common.io import common
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_aux_pp2_2a import OperationalModeType
@@ -36,18 +36,9 @@ from bps.l2a_processor.l2a_common_functionalities import (
     parallel_reinterpolate,
     refine_dgg_search_tiles,
 )
-from bps.transcoder.io import (
-    common_annotation_l2l3,
-    main_annotation_l2a_gn,
-    translate_common_annotation_l2l3,
-    translate_main_annotation_l2a_gn,
-)
+from bps.transcoder.io import common_annotation_l2l3, main_annotation_l2a_gn
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
     BIOMASSL2aLutAdsGN,
-    BIOMASSL2aMainADSInputInformation,
-    BIOMASSL2aMainADSProcessingParametersGN,
-    BIOMASSL2aMainADSproduct,
-    BIOMASSL2aMainADSRasterImage,
     BIOMASSL2aProductGN,
     BIOMASSL2aProductMeasurement,
 )
@@ -495,11 +486,11 @@ class GN:
         )
 
         # main_ads_product
-        mission = common.MissionType.BIOMASS.value
-        sensor_mode = common.SensorModeType.MEASUREMENT.value
+        orbit_direction_str = self.stack_products_list[self.primary_image_index].orbit_direction
+        if orbit_direction_str not in ["ASCENDING", "DESCENDING"]:
+            raise ValueError(f"Invalid orbit direction: {orbit_direction_str}")
         orbit_direction = (
-            self.stack_products_list[self.primary_image_index].orbit_direction[0]
-            + self.stack_products_list[self.primary_image_index].orbit_direction[1:].lower()
+            common.OrbitPassType.ASCENDING if orbit_direction_str == "ASCENDING" else common.OrbitPassType.DESCENDING
         )
 
         start_time_l1c = self.stack_products_list[0].start_time
@@ -507,29 +498,49 @@ class GN:
         for l1c_product in self.stack_products_list:
             start_time_l1c = min(start_time_l1c, l1c_product.start_time)
             stop_time_l1c = max(stop_time_l1c, l1c_product.stop_time)
-        main_ads_product = BIOMASSL2aMainADSproduct(
-            mission,
+        assert start_time_l1c is not None
+        assert stop_time_l1c is not None
+
+        primary_product = self.stack_products_list[self.primary_image_index]
+        swath_name = primary_product.swath_list[0]
+        swath = common.SwathType(swath_name)
+
+        assert primary_product.global_coverage_id is not None
+        assert primary_product.major_cycle_id is not None
+        assert primary_product.track_number is not None
+        assert primary_product.frame_number is not None
+        assert primary_product.platform_heading is not None
+
+        absolute_orbit_numbers = []
+        datatake_ids = []
+        for product in self.stack_products_list:
+            assert product.orbit_number is not None
+            assert product.datatake_id is not None
+            absolute_orbit_numbers.append(product.orbit_number)
+            datatake_ids.append(product.datatake_id)
+
+        main_ads_product = common_annotation_l2l3.BIOMASSL2aMainADSproduct(
+            common.MissionType.BIOMASS,
             self.tile_id_list,
             self.basin_id_list,
-            self.product_type,
+            common.ProductType.from_l2_joborder_tag(self.product_type),
             start_time_l1c,
             stop_time_l1c,
             self.radar_carrier_frequency,
-            self.mission_phase_id,
-            sensor_mode,
-            self.stack_products_list[self.primary_image_index].global_coverage_id,
-            self.stack_products_list[self.primary_image_index].swath_list[0],
-            self.stack_products_list[self.primary_image_index].major_cycle_id,
-            [product.orbit_number for product in self.stack_products_list],
-            self.stack_products_list[self.primary_image_index].track_number,
+            common.MissionPhaseIdtype(self.mission_phase_id),
+            common.SensorModeType.MEASUREMENT,
+            primary_product.global_coverage_id,
+            swath,
+            primary_product.major_cycle_id,
+            absolute_orbit_numbers,
+            primary_product.track_number,
             orbit_direction,
-            [product.datatake_id for product in self.stack_products_list],
-            self.stack_products_list[self.primary_image_index].frame_number,
-            self.stack_products_list[self.primary_image_index].platform_heading,
+            datatake_ids,
+            primary_product.frame_number,
+            primary_product.platform_heading,
             self.output_baseline,
             forest_coverage_percentage=self.forest_coverage_percentage,
             selected_reference_image=idx_selected_reference,
-            acquisition_id_reference_image=acquisition_id_reference_image,
         )
 
         # main_ads_raster_image
@@ -545,19 +556,19 @@ class GN:
             float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT
         )
         no_data_value = common_annotation_l2l3.NoDataValueChoiceType(float_no_data_value=FLOAT_NODATA_VALUE)
-        main_ads_raster_image = BIOMASSL2aMainADSRasterImage(
+        main_ads_raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
             footprint,
-            dgg_latitude_axis[0],
-            dgg_longitude_axis[0],
-            dgg_latitude_axis[1] - dgg_latitude_axis[0],
-            dgg_longitude_axis[1] - dgg_longitude_axis[0],
+            float(dgg_latitude_axis[0]),
+            float(dgg_longitude_axis[0]),
+            float(dgg_latitude_axis[1] - dgg_latitude_axis[0]),
+            float(dgg_longitude_axis[1] - dgg_longitude_axis[0]),
             len(dgg_latitude_axis),
             len(dgg_longitude_axis),
-            projection.value,
-            translate_common.translate_datum_to_model(datum),
-            translate_common_annotation_l2l3.translate_pixel_representation_choice_to_model(pixel_representation),
-            translate_common_annotation_l2l3.translate_pixel_type_choice_to_model(pixel_type),
-            translate_common_annotation_l2l3.translate_no_data_value_choice_to_model(no_data_value),
+            projection,
+            datum,
+            pixel_representation,
+            pixel_type,
+            no_data_value,
         )
 
         # main_ads_input_information
@@ -566,9 +577,9 @@ class GN:
         acquisition_list = []
         overall_product_quality_indices = []
         for idx, acq_folder_name in enumerate(self.acquisition_paths_selected_not_sorted):
-            overall_product_quality_indices.append(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index
-            )
+            quality = self.stack_products_list[idx].stack_quality
+            assert quality is not None
+            overall_product_quality_indices.append(quality.overall_product_quality_index)
             reference_image = (
                 idx == self.primary_image_index
             )  # primary image index is ordered as the acquisitions (not sorted)
@@ -594,7 +605,7 @@ class GN:
                 )
 
             sta_quality = common_annotation_l2l3.StaQualityType(
-                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+                overall_product_quality_index=quality.overall_product_quality_index,
                 sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
@@ -631,16 +642,16 @@ class GN:
             units=common.UomType.M,
         )
 
-        main_ads_input_information = BIOMASSL2aMainADSInputInformation(
-            self.product_type,
+        main_ads_input_information = common_annotation_l2l3.BIOMASSL2aMainADSInputInformation(
+            common.ProductType.from_l2_joborder_tag(self.product_type),
             overall_products_quality_index=(0 if sum(overall_product_quality_indices) == 0 else 1),
             nominal_stack=str(np.logical_or(is_int_and_nominal, is_tom_and_nominal)).lower(),
-            polarisation_list=translate_common_annotation_l2l3.translate_polarisation_list_to_model(polarisation_list),
-            projection=projection.value,
+            polarisation_list=polarisation_list,
+            projection=projection,
             footprint=footprint,
-            vertical_wavenumbers=translate_common.translate_min_max_type_with_unit_to_model(vertical_wavenumbers_info),
-            height_of_ambiguity=translate_common.translate_min_max_type_with_unit_to_model(height_of_ambiguity_info),
-            acquisition_list=translate_common_annotation_l2l3.translate_acquisition_list_to_model(acquisition_list),
+            vertical_wavenumbers=vertical_wavenumbers_info,
+            height_of_ambiguity=height_of_ambiguity_info,
+            acquisition_list=acquisition_list,
         )
 
         # main_ads_processing_parameters
@@ -698,21 +709,18 @@ class GN:
                     f"{list(pair_from_aux_pp2)} in the stack, found {len(images_pair_selection)}"
                 )
 
-        main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersGN(
-            bps.l2a_processor.__version__,
-            self.start_time,
-            translate_common_annotation_l2l3.translate_general_configuration_to_model(general_configuration),
-            translate_main_annotation_l2a_gn.translate_compression_options_l2a_gn_to_model(compression_options_gn),
-            self.aux_pp2_2a.agb.compression_options.ads.geometric_luts.least_significant_digit,
-            self.aux_pp2_2a.agb.ground_cancellaton.emphasized_forest_height,
-            self.aux_pp2_2a.agb.ground_cancellaton.operational_mode.value,
-            self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
-            self.aux_pp2_2a.agb.product_resolution,
-            self.aux_pp2_2a.agb.upsampling_factor,
-            translate_common_annotation_l2l3.translate_acquisition_list_to_model(images_pair_selection)
-            if images_pair_selection is not None
-            else None,
-            self.aux_pp2_2a.agb.ground_cancellaton.disable_ground_cancellation_flag,
+        main_ads_processing_parameters = main_annotation_l2a_gn.BIOMASSL2aMainADSProcessingParametersGN(
+            processor_version=bps.l2a_processor.__version__,
+            product_generation_time=self.start_time,
+            general_configuration=general_configuration,
+            compression_options=compression_options_gn,
+            emphasized_forest_height=self.aux_pp2_2a.agb.ground_cancellaton.emphasized_forest_height,
+            operational_mode=self.aux_pp2_2a.agb.ground_cancellaton.operational_mode.value,
+            radiometric_calibration_flag=self.aux_pp2_2a.agb.ground_cancellaton.radiometric_calibration_flag,
+            product_resolution=self.aux_pp2_2a.agb.product_resolution,
+            upsampling_factor=self.aux_pp2_2a.agb.upsampling_factor,
+            images_pair_selection=images_pair_selection,
+            disable_ground_cancellation_flag=self.aux_pp2_2a.agb.ground_cancellaton.disable_ground_cancellation_flag,
         )
 
         # lut_ads

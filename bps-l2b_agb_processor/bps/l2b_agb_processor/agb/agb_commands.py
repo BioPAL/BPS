@@ -23,7 +23,7 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common_types
+from bps.common.io import common, common_types
 from bps.common.io.common_types import IntArray, MinMaxType, MinMaxTypeWithUnit
 from bps.common.lcm_utils import LCMMask
 from bps.l2b_agb_processor.agb import BPS_L2B_AGB_PROCESSOR_NAME
@@ -32,7 +32,11 @@ from bps.l2b_agb_processor.core.joborder_l2b_agb import L2bAGBJobOrder
 from bps.l2b_agb_processor.core.translate_job_order import L2B_OUTPUT_PRODUCT_AGB
 from bps.l2b_agb_processor.io.aux_pp2_2b_agb_models import AgbIndexingType
 from bps.l2b_agb_processor.l2b_common_functionalities import _check_coverage, _get_l2a_cumulative_footprint, dgg_tiling
-from bps.transcoder.io import common_annotation_models_l2, main_annotation_models_l2b_agb
+from bps.transcoder.io import (
+    common_annotation_models_l2,
+    main_annotation_models_l2b_agb,
+    translate_common_annotation_l2l3,
+)
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductGN
 from bps.transcoder.sarproduct.biomass_l2bagbproduct import (
     BIOMASSL2bAGBMainADSInputInformation,
@@ -109,37 +113,29 @@ class AGBL2B:
         self.l2b_fd_product_list = l2b_fd_product_list
         self.output_baseline = 0
 
-    def _get_l2a_inputs_information(self):
+    def _get_l2a_inputs_information(
+        self,
+    ) -> tuple[
+        list[common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs],
+        common.MissionPhaseIdtype,
+        int,
+        dict[str, int],
+        list[str],
+    ]:
         # Precompute here the info to construct main_ads_input_information_l2b:
 
         l2a_tile_id_dict = {}  # {Tile: number of L2a contributing}
         mission_phase_id = None
         global_coverage_id = None
         l2a_inputs_list = []
-        basin_id_list = []
+        basin_id_list: list[str] = []
+        mission_phase_id = self.l2a_gn_products_list[0].main_ads_product.mission_phase_id
+        global_coverage_id = self.l2a_gn_products_list[0].main_ads_product.global_coverage_id
         for idx, l2a_product in enumerate(self.l2a_gn_products_list):
             basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-            footprint = main_annotation_models_l2b_agb.FloatArrayWithUnits(
-                value=l2a_product.main_ads_input_information.footprint,
-                count=8,
-                units=common_types.UomType.DEG,
-            )
-
-            l1_inputs = common_annotation_models_l2.InputInformationL2AType(
-                product_type=common_annotation_models_l2.ProductType(
-                    l2a_product.main_ads_input_information.product_type
-                ),
-                overall_products_quality_index=l2a_product.main_ads_input_information.overall_products_quality_index,
-                nominal_stack=str(l2a_product.main_ads_input_information.nominal_stack).lower(),
-                polarisation_list=l2a_product.main_ads_input_information.polarisation_list,
-                projection=common_annotation_models_l2.ProjectionType(
-                    l2a_product.main_ads_input_information.projection
-                ),
-                footprint=footprint,
-                vertical_wavenumbers=l2a_product.main_ads_input_information.vertical_wavenumbers,
-                height_of_ambiguity=l2a_product.main_ads_input_information.height_of_ambiguity,
-                acquisition_list=l2a_product.main_ads_input_information.acquisition_list,
+            l1_inputs = translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
+                l2a_product.main_ads_input_information
             )
 
             l2a_inputs_list.append(
@@ -150,14 +146,10 @@ class AGBL2B:
                 )
             )
 
-            if idx == 0:
-                mission_phase_id = l2a_product.main_ads_product.mission_phase_id
-                global_coverage_id = l2a_product.main_ads_product.global_coverage_id
-            else:
-                if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
-                    raise ValueError(
-                        "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
-                    )
+            if not mission_phase_id == l2a_product.main_ads_product.mission_phase_id:
+                raise ValueError(
+                    "Input L2a products should be of the same phase: found some INT and some TOM phase L2a products."
+                )
 
             for tile_id in l2a_product.main_ads_product.tile_id_list:
                 if tile_id not in l2a_tile_id_dict.keys():

@@ -9,27 +9,15 @@ from pathlib import Path
 
 import numpy as np
 from bps.common import bps_logger
-from bps.common.io import common_types, translate_common
-from bps.common.io.parsing import parse
-from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2a_fd,
-    main_annotation_models_l2a_fh,
-    main_annotation_models_l2a_gn,
-    main_annotation_models_l2a_tfh,
-)
+from bps.transcoder.io.translate_main_annotation_l2a_fd import read_main_annotation_l2a_fd
+from bps.transcoder.io.translate_main_annotation_l2a_fh import read_main_annotation_l2a_fh
+from bps.transcoder.io.translate_main_annotation_l2a_gn import read_main_annotation_l2a_gn
+from bps.transcoder.io.translate_main_annotation_l2a_tfh import read_main_annotation_l2a_tfh
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
     BIOMASSL2aLutAdsFD,
     BIOMASSL2aLutAdsFH,
     BIOMASSL2aLutAdsGN,
     BIOMASSL2aLutAdsTOMOFH,
-    BIOMASSL2aMainADSInputInformation,
-    BIOMASSL2aMainADSProcessingParametersFD,
-    BIOMASSL2aMainADSProcessingParametersFH,
-    BIOMASSL2aMainADSProcessingParametersGN,
-    BIOMASSL2aMainADSProcessingParametersTOMOFH,
-    BIOMASSL2aMainADSproduct,
-    BIOMASSL2aMainADSRasterImage,
     BIOMASSL2aProduct,
     BIOMASSL2aProductFD,
     BIOMASSL2aProductFH,
@@ -156,341 +144,24 @@ class BIOMASSL2aProductReader:
         )
 
     def _read_main_annotation_file(self):
-        # Read main annotation file
         assert self.product_structure.main_annotation_file is not None
+        main_annotation_path = Path(self.product_structure.main_annotation_file)
 
-        selected_reference_image = None  # only used in FD where more than two acquisitions have been used
         if self.product_type == "FP_FD__L2A":
-            main_annotation_path = Path(self.product_structure.main_annotation_file)
-            main_annotation_model: main_annotation_models_l2a_fd.MainAnnotation = parse(  # type: ignore
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l2a_fd.MainAnnotation,
-            )
-            selected_reference_image = main_annotation_model.product.selected_reference_image
-
+            main_annotation = read_main_annotation_l2a_fd(main_annotation_path)
         elif self.product_type == "FP_FH__L2A":
-            main_annotation_path = Path(self.product_structure.main_annotation_file)
-            main_annotation_model: main_annotation_models_l2a_fh.MainAnnotation = parse(  # type: ignore
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l2a_fh.MainAnnotation,
-            )
+            main_annotation = read_main_annotation_l2a_fh(main_annotation_path)
         elif self.product_type == "FP_GN__L2A":
-            main_annotation_path = Path(self.product_structure.main_annotation_file)
-            main_annotation_model: main_annotation_models_l2a_gn.MainAnnotation = parse(
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l2a_gn.MainAnnotation,
-            )
+            main_annotation = read_main_annotation_l2a_gn(main_annotation_path)
         elif self.product_type == "FP_TFH_L2A":
-            main_annotation_path = Path(self.product_structure.main_annotation_file)
-            main_annotation_model: main_annotation_models_l2a_tfh.MainAnnotation = parse(  # type: ignore
-                main_annotation_path.read_text(encoding="utf-8"),
-                main_annotation_models_l2a_tfh.MainAnnotation,
-            )
+            main_annotation = read_main_annotation_l2a_tfh(main_annotation_path)
         else:
             raise ValueError(f"Invalid product L2a: {self.product_type}")
 
-        assert main_annotation_model is not None
-        assert main_annotation_model.product is not None
-
-        assert main_annotation_model.product.mission is not None
-        assert main_annotation_model.product.tile_id is not None
-        assert main_annotation_model.product.basin_id is not None
-        assert main_annotation_model.product.product_type is not None
-        assert main_annotation_model.product.start_time is not None
-        assert main_annotation_model.product.stop_time is not None
-        assert main_annotation_model.product.radar_carrier_frequency is not None
-        assert main_annotation_model.product.mission_phase_id is not None
-        assert main_annotation_model.product.sensor_mode is not None
-        assert main_annotation_model.product.global_coverage_id is not None
-        assert main_annotation_model.product.swath is not None
-        assert main_annotation_model.product.major_cycle_id is not None
-        assert main_annotation_model.product.absolute_orbit_number is not None
-        assert main_annotation_model.product.relative_orbit_number is not None
-        assert main_annotation_model.product.orbit_pass is not None
-        assert main_annotation_model.product.data_take_id is not None
-        assert main_annotation_model.product.frame is not None
-        assert main_annotation_model.product.platform_heading is not None
-
-        mission = main_annotation_model.product.mission.value
-        tile_id_list = main_annotation_model.product.tile_id.id
-        basin_id_list = main_annotation_model.product.basin_id.id
-        product_type = main_annotation_model.product.product_type.value
-        start_time = translate_common.translate_datetime(main_annotation_model.product.start_time)
-        stop_time = translate_common.translate_datetime(main_annotation_model.product.stop_time)
-        radar_carrier_frequency = main_annotation_model.product.radar_carrier_frequency.value
-        mission_phase_id = main_annotation_model.product.mission_phase_id.value
-        sensor_mode = main_annotation_model.product.sensor_mode.value
-        global_coverage_id = self.parsed_product_name.coverage
-        swath = main_annotation_model.product.swath.value
-        major_cycle_id = self.parsed_product_name.major_cycle
-        absolute_orbit_number = [tmp for tmp in main_annotation_model.product.absolute_orbit_number.val]
-        relative_orbit_number = main_annotation_model.product.relative_orbit_number
-        orbit_pass = main_annotation_model.product.orbit_pass.value
-        datatake_id = [tmp for tmp in main_annotation_model.product.data_take_id.val]
-        frame = self.parsed_product_name.frame_number
-        platform_heading = main_annotation_model.product.platform_heading.value
-
-        # retro compatibility
-        if main_annotation_model.product.forest_coverage_percentage is None:
-            forest_coverage_percentage = 100.0
-        else:
-            forest_coverage_percentage = main_annotation_model.product.forest_coverage_percentage
-
-        assert self.product_structure.main_annotation_file is not None
-        baseline_string = str(Path(self.product_structure.main_annotation_file).parent.parent)[-9:-7:1]
-        if baseline_string == "__":
-            baseline = 0
-        else:
-            baseline = int(baseline_string)
-
-        assert global_coverage_id is not None
-        assert major_cycle_id is not None
-        assert frame is not None
-
-        self.main_ads_product = BIOMASSL2aMainADSproduct(
-            mission,
-            tile_id_list,
-            basin_id_list,
-            product_type,
-            start_time,
-            stop_time,
-            radar_carrier_frequency,
-            mission_phase_id,
-            sensor_mode,
-            global_coverage_id,
-            swath,
-            major_cycle_id,
-            absolute_orbit_number,
-            relative_orbit_number,
-            orbit_pass,
-            datatake_id,
-            frame,
-            platform_heading,
-            baseline,
-            forest_coverage_percentage,
-            selected_reference_image,
-        )
-
-        first_latitude_value = main_annotation_model.raster_image.first_latitude_value.value
-        first_longitude_value = main_annotation_model.raster_image.first_longitude_value.value
-        latitude_spacing = main_annotation_model.raster_image.latitude_spacing.value
-        longitude_spacing = main_annotation_model.raster_image.longitude_spacing.value
-        number_of_samples = main_annotation_model.raster_image.number_of_samples
-        number_of_lines = main_annotation_model.raster_image.number_of_lines
-        projection = main_annotation_model.raster_image.projection.value
-        datum = main_annotation_model.raster_image.datum
-
-        pixel_representation = main_annotation_model.raster_image.pixel_representation
-        pixel_type = main_annotation_model.raster_image.pixel_type
-        no_data_value = main_annotation_model.raster_image.no_data_value
-
-        footprint = main_annotation_model.raster_image.footprint.value.split(" ")
-        footprint = [float(v) for v in footprint]
-
-        self.main_ads_raster_image = BIOMASSL2aMainADSRasterImage(
-            footprint,
-            first_latitude_value,
-            first_longitude_value,
-            latitude_spacing,
-            longitude_spacing,
-            number_of_samples,
-            number_of_lines,
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
-        )
-
-        # retro compatibility
-        if main_annotation_model.input_information.vertical_wavenumbers is None:
-            vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-                min=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
-                max=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.RAD_M),
-            )
-        else:
-            vertical_wavenumbers_info = main_annotation_model.input_information.vertical_wavenumbers
-        if main_annotation_model.input_information.height_of_ambiguity is None:
-            height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-                min=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
-                max=common_annotation_models_l2.FloatWithUnit(value=0.0, units=common_types.UomType.M),
-            )
-        else:
-            height_of_ambiguity_info = main_annotation_model.input_information.height_of_ambiguity
-
-        self.main_ads_input_information = BIOMASSL2aMainADSInputInformation(
-            product_type=main_annotation_model.input_information.product_type.value,
-            overall_products_quality_index=main_annotation_model.input_information.overall_products_quality_index,
-            nominal_stack=main_annotation_model.input_information.nominal_stack,
-            polarisation_list=main_annotation_model.input_information.polarisation_list,
-            projection=main_annotation_model.input_information.projection.value,
-            footprint=[float(string) for string in main_annotation_model.input_information.footprint.value.split()],
-            vertical_wavenumbers=vertical_wavenumbers_info,
-            height_of_ambiguity=height_of_ambiguity_info,
-            acquisition_list=main_annotation_model.input_information.acquisition_list,
-        )
-
-        if not self.product_type == "FP_TFH_L2A":
-            assert main_annotation_model.processing_parameters.upsampling_factor is not None
-
-        processor_version = main_annotation_model.processing_parameters.processor_version
-        product_generation_time = main_annotation_model.processing_parameters.product_generation_time
-        general_configuration = main_annotation_model.processing_parameters.general_configuration_parameters
-
-        compression_options = main_annotation_model.processing_parameters.compression_options
-
-        product_resolution = main_annotation_model.processing_parameters.product_resolution.value
-
-        if not self.product_type == "FP_TFH_L2A":
-            upsampling_factor = main_annotation_model.processing_parameters.upsampling_factor
-
-        if not self.product_type == "FP_TFH_L2A":
-            assert upsampling_factor is not None
-
-        if self.product_type == "FP_FD__L2A":
-            assert isinstance(main_annotation_model, main_annotation_models_l2a_fd.MainAnnotation)
-
-            emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
-            operational_mode = main_annotation_model.processing_parameters.operational_mode.value
-            images_pair_selection = main_annotation_model.processing_parameters.images_pair_selection
-            assert main_annotation_model.processing_parameters.disable_ground_cancellation_flag is not None
-            disable_ground_cancellation_flag = str_to_bool(
-                main_annotation_model.processing_parameters.disable_ground_cancellation_flag
-            )
-            significance_level = main_annotation_model.processing_parameters.significance_level
-            numerical_determinant_limit = main_annotation_model.processing_parameters.numerical_determinant_limit
-
-            assert emphasized_forest_height is not None
-            assert disable_ground_cancellation_flag is not None
-
-            self.main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFD(
-                processor_version,
-                product_generation_time,
-                general_configuration,
-                compression_options,
-                emphasized_forest_height,
-                operational_mode,
-                significance_level,
-                product_resolution,
-                numerical_determinant_limit,
-                upsampling_factor,
-                images_pair_selection,
-                disable_ground_cancellation_flag,
-            )
-
-        elif self.product_type == "FP_FH__L2A":
-            vertical_reflectivity_option = (
-                main_annotation_model.processing_parameters.vertical_reflectivity_option.value
-            )
-            model_inversion = main_annotation_model.processing_parameters.model_inversion.value
-            spectral_decorrelation_compensation_flag = str_to_bool(
-                main_annotation_model.processing_parameters.spectral_decorrelation_compensation_flag
-            )
-            snr_decorrelation_compensation_flag = str_to_bool(
-                main_annotation_model.processing_parameters.snrdecorrelation_compensation
-            )
-            if main_annotation_model.processing_parameters.correct_terrain_slopes_flag is None:
-                bps_logger.warning(
-                    "Missing 'correct_terrain_slopes_flag' in L2A FH product Main Annotation, this will become an error in future releases"
-                )
-                correct_terrain_slopes_flag = True
-            else:
-                correct_terrain_slopes_flag = str_to_bool(
-                    main_annotation_model.processing_parameters.correct_terrain_slopes_flag
-                )
-            normalised_height_estimation_range = (
-                main_annotation_model.processing_parameters.normalised_height_estimation_range
-            )
-
-            normalised_wavenumber_estimation_range = (
-                main_annotation_model.processing_parameters.normalised_wavenumber_estimation_range
-            )
-            ground_to_volume_ratio_range = main_annotation_model.processing_parameters.ground_to_volume_ratio_range
-            temporal_decorrelation_estimation_range = (
-                main_annotation_model.processing_parameters.temporal_decorrelation_estimation_range
-            )
-            temporal_decorrelation_ground_to_volume_ratio = (
-                main_annotation_model.processing_parameters.temporal_decorrelation_ground_to_volume_ratio
-            )
-            residual_decorrelation = main_annotation_model.processing_parameters.residual_decorrelation
-
-            uncertainty_valid_values_limits = main_annotation_model.processing_parameters.uncertainty_validvalues_limits
-            vertical_wavenumber_valid_values_limits = (
-                main_annotation_model.processing_parameters.vertical_wavenumber_validvalues_limits
-            )
-            lower_height_limit = main_annotation_model.processing_parameters.lower_height_limit
-            vertical_reflectivity_default_profile = (
-                main_annotation_model.processing_parameters.vertical_reflectivity_default_profile
-            )
-            self.main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFH(
-                processor_version,
-                product_generation_time,
-                general_configuration,
-                compression_options,
-                vertical_reflectivity_option,
-                model_inversion,
-                spectral_decorrelation_compensation_flag,
-                snr_decorrelation_compensation_flag,
-                correct_terrain_slopes_flag,
-                normalised_height_estimation_range,
-                normalised_wavenumber_estimation_range,
-                ground_to_volume_ratio_range,
-                temporal_decorrelation_estimation_range,
-                temporal_decorrelation_ground_to_volume_ratio,
-                residual_decorrelation,
-                product_resolution,
-                uncertainty_valid_values_limits,
-                vertical_wavenumber_valid_values_limits,
-                lower_height_limit,
-                upsampling_factor,
-                vertical_reflectivity_default_profile,
-            )
-
-        elif self.product_type == "FP_GN__L2A":
-            assert isinstance(main_annotation_model, main_annotation_models_l2a_gn.MainAnnotation)
-            least_significant_digit = main_annotation_model.processing_parameters.compression_options.ads.geometric_luts.least_significant_digit
-            emphasized_forest_height = main_annotation_model.processing_parameters.emphasized_forest_height.value
-            operational_mode = main_annotation_model.processing_parameters.operational_mode.value
-            radiometric_calibration_flag = str_to_bool(
-                main_annotation_model.processing_parameters.radiometric_calibration_flag
-            )
-            images_pair_selection = main_annotation_model.processing_parameters.images_pair_selection
-            disable_ground_cancellation_flag = str_to_bool(
-                main_annotation_model.processing_parameters.disable_ground_cancellation_flag
-            )
-
-            assert least_significant_digit is not None
-            assert emphasized_forest_height is not None
-            self.main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersGN(
-                processor_version,
-                product_generation_time,
-                general_configuration,
-                compression_options,
-                least_significant_digit,
-                emphasized_forest_height,
-                operational_mode,
-                radiometric_calibration_flag,
-                product_resolution,
-                upsampling_factor,
-                images_pair_selection,
-                disable_ground_cancellation_flag,
-            )
-
-        elif self.product_type == "FP_TFH_L2A":
-            enable_super_resolution = str_to_bool(main_annotation_model.processing_parameters.enable_super_resolution)
-
-            self.main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersTOMOFH(
-                processor_version,
-                product_generation_time,
-                general_configuration,
-                compression_options,
-                enable_super_resolution,
-                product_resolution,
-                main_annotation_model.processing_parameters.regularization_noise_factor,
-                main_annotation_model.processing_parameters.power_threshold,
-                main_annotation_model.processing_parameters.median_factor,
-                main_annotation_model.processing_parameters.estimation_valid_values_limits,
-            )
+        self.main_ads_product = main_annotation.product
+        self.main_ads_raster_image = main_annotation.raster_image
+        self.main_ads_input_information = main_annotation.input_information
+        self.main_ads_processing_parameters = main_annotation.processing_parameters
 
     def _read_lut_annotation_file(self):
         if self.product_type == "FP_FD__L2A":
