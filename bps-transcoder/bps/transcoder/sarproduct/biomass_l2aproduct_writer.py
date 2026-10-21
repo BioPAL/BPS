@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 import pystac
 from bps.common import bps_logger
-from bps.common.io import common_types
+from bps.common.io import common, common_types
 from bps.common.io.parsing import serialize
 from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_FD,
@@ -34,17 +34,17 @@ from bps.transcoder import (
     BPS_PPD_VERSION,
 )
 from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2a_fd,
-    main_annotation_models_l2a_fh,
-    main_annotation_models_l2a_gn,
-    main_annotation_models_l2a_tfh,
+    main_annotation_l2a_fd,
+    main_annotation_l2a_fh,
+    main_annotation_l2a_gn,
+    main_annotation_l2a_tfh,
+    translate_main_annotation_l2a_fd,
+    translate_main_annotation_l2a_fh,
+    translate_main_annotation_l2a_gn,
+    translate_main_annotation_l2a_tfh,
     vrt,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
-    BIOMASSL2aMainADSProcessingParametersFD,
-    BIOMASSL2aMainADSProcessingParametersFH,
-    BIOMASSL2aMainADSProcessingParametersGN,
     BIOMASSL2aProductFD,
     BIOMASSL2aProductFH,
     BIOMASSL2aProductGN,
@@ -259,11 +259,11 @@ class BIOMASSL2aProductWriter:
             "{" + MPH_NAMESPACES["eop"] + "}swathIdentifier",
             attrib={"codeSpace": "urn:esa:eop:Biomass:P-SAR:swathIdentifier"},
         )
-        xml6.text = self.product.main_ads_product.swath
+        xml6.text = self.product.main_ads_product.swath.value
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["eop"] + "}acquisitionParameters")
         xml5 = ET.SubElement(xml4, "{" + MPH_NAMESPACES["bio"] + "}Acquisition")
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}orbitDirection")
-        xml6.text = self.product.main_ads_product.orbit_pass.upper()
+        xml6.text = self.product.main_ads_product.orbit_pass.value.upper()
         xml6 = ET.SubElement(
             xml5,
             "{" + MPH_NAMESPACES["eop"] + "}wrsLongitudeGrid",
@@ -290,7 +290,7 @@ class BIOMASSL2aProductWriter:
             "TOM": "TOMOGRAPHIC",
             "COM": "COMMISSIONING",
         }
-        xml6.text = mission_phases_dict[str(self.product.main_ads_product.mission_phase_id)]
+        xml6.text = mission_phases_dict[self.product.main_ads_product.mission_phase_id.value]
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.main_ads_product.global_coverage_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}majorCycleID")
@@ -298,10 +298,10 @@ class BIOMASSL2aProductWriter:
 
         for tile_id in self.product.main_ads_product.tile_id_list:
             xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}tileID")
-            xml6.text = str(tile_id)
+            xml6.text = tile_id
 
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}basinID")
-        xml6.text = str(self.product.main_ads_product.basin_id_list[0])
+        xml6.text = self.product.main_ads_product.basin_id_list[0]
 
         xml2 = ET.SubElement(
             xml1,
@@ -974,6 +974,10 @@ class BIOMASSL2aProductWriter:
         assert self.product_structure.measurement_files is not None
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
+            assert isinstance(
+                self.product.main_ads_processing_parameters,
+                main_annotation_l2a_gn.BIOMASSL2aMainADSProcessingParametersGN,
+            )
             for key in self.product.measurement.data_dict.keys():
                 if key not in "gn":
                     raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
@@ -1238,522 +1242,124 @@ class BIOMASSL2aProductWriter:
         # Fill main annotation model
 
         # - product
-        mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
 
         assert self.product_structure.schema_files is not None
         if L2A_OUTPUT_PRODUCT_FD in self.product_structure.schema_files[0]:
-            product_type = common_annotation_models_l2.ProductType.FD_L2_A
+            self.product.main_ads_product.product_type = common.ProductType.FD_L2_A
         if L2A_OUTPUT_PRODUCT_FH in self.product_structure.schema_files[0]:
-            product_type = common_annotation_models_l2.ProductType.FH_L2_A
+            self.product.main_ads_product.product_type = common.ProductType.FH_L2_A
         if L2A_OUTPUT_PRODUCT_GN in self.product_structure.schema_files[0]:
-            product_type = common_annotation_models_l2.ProductType.GN_L2_A
+            self.product.main_ads_product.product_type = common.ProductType.GN_L2_A
         if L2A_OUTPUT_PRODUCT_TFH in self.product_structure.schema_files[0]:
-            product_type = common_annotation_models_l2.ProductType.TFH_L2_A
+            self.product.main_ads_product.product_type = common.ProductType.TFH_L2_A
 
-        start_time = self.product.main_ads_product.start_time.isoformat(timespec="microseconds")[:-1]
-        stop_time = self.product.main_ads_product.stop_time.isoformat(timespec="microseconds")[:-1]
-        radar_carrier_frequency = common_annotation_models_l2.DoubleWithUnit(
-            value=self.product.main_ads_product.radar_carrier_frequency,
-            units=common_types.UomType.HZ,
+        self.product.main_ads_product.global_coverage_id = translate_global_coverage_id(
+            self.product.main_ads_product.global_coverage_id
         )
-        mission_phase_id = common_annotation_models_l2.MissionPhaseIdtype(
-            self.product.main_ads_product.mission_phase_id
+        self.product.main_ads_product.major_cycle_id = translate_major_cycle_id(
+            self.product.main_ads_product.major_cycle_id
         )
-        sensor_mode = common_annotation_models_l2.SensorModeType(self.product.main_ads_product.sensor_mode)
-        global_coverage_id = translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
-        swath = common_annotation_models_l2.SwathType(self.product.main_ads_product.swath)
-        major_cycle_id = translate_major_cycle_id(self.product.main_ads_product.major_cycle_id)
-        absolute_orbit_number = common_annotation_models_l2.IntegerListType(
-            val=[
-                translate_com_phase_negative_values(absolute_orbit_number)
-                for absolute_orbit_number in self.product.main_ads_product.absolute_orbit_number
-            ]
-        )
-        relative_orbit_number = translate_com_phase_negative_values(self.product.main_ads_product.relative_orbit_number)
-        orbit_pass = common_annotation_models_l2.OrbitPassType(self.product.main_ads_product.orbit_pass)
-        datatake_id = common_annotation_models_l2.IntegerListType(val=self.product.main_ads_product.datatake_id)
-        frame = translate_frame_id(self.product.main_ads_product.frame)
-        platform_heading = common_annotation_models_l2.DoubleWithUnit(
-            value=self.product.main_ads_product.platform_heading,
-            units=common_types.UomType.DEG,
-        )
-        forest_coverage_percentage = self.product.main_ads_product.forest_coverage_percentage
+        self.product.main_ads_product.absolute_orbit_number = [
+            translate_com_phase_negative_values(absolute_orbit_number)
+            for absolute_orbit_number in self.product.main_ads_product.absolute_orbit_number
+        ]
 
-        if self.product.main_ads_product.selected_reference_image is not None:
-            selected_reference_image = common_annotation_models_l2.SelectedReferenceImageType(
-                value=self.product.main_ads_product.selected_reference_image,
-                acquisition_id=self.product.main_ads_product.acquisition_id_reference_image,
-            )
-        else:
-            selected_reference_image = None
-
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
-            product = main_annotation_models_l2a_fd.ProductL2AType(
-                mission=mission,
-                tile_id=tile_id_list,
-                basin_id=basin_id_list,
-                product_type=product_type,
-                start_time=start_time,
-                stop_time=stop_time,
-                radar_carrier_frequency=radar_carrier_frequency,
-                mission_phase_id=mission_phase_id,
-                sensor_mode=sensor_mode,
-                global_coverage_id=global_coverage_id,
-                swath=swath,
-                major_cycle_id=major_cycle_id,
-                absolute_orbit_number=absolute_orbit_number,
-                relative_orbit_number=relative_orbit_number,
-                orbit_pass=orbit_pass,
-                data_take_id=datatake_id,
-                frame=frame,
-                platform_heading=platform_heading,
-                forest_coverage_percentage=forest_coverage_percentage,
-                selected_reference_image=selected_reference_image,
-            )
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
-            product = main_annotation_models_l2a_fh.ProductL2AType(
-                mission=mission,
-                tile_id=tile_id_list,
-                basin_id=basin_id_list,
-                product_type=product_type,
-                start_time=start_time,
-                stop_time=stop_time,
-                radar_carrier_frequency=radar_carrier_frequency,
-                mission_phase_id=mission_phase_id,
-                sensor_mode=sensor_mode,
-                global_coverage_id=global_coverage_id,
-                swath=swath,
-                major_cycle_id=major_cycle_id,
-                absolute_orbit_number=absolute_orbit_number,
-                relative_orbit_number=relative_orbit_number,
-                orbit_pass=orbit_pass,
-                data_take_id=datatake_id,
-                frame=frame,
-                platform_heading=platform_heading,
-                forest_coverage_percentage=forest_coverage_percentage,
-                selected_reference_image=selected_reference_image,
-            )
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
-            product = main_annotation_models_l2a_gn.ProductL2AType(
-                mission=mission,
-                tile_id=tile_id_list,
-                basin_id=basin_id_list,
-                product_type=product_type,
-                start_time=start_time,
-                stop_time=stop_time,
-                radar_carrier_frequency=radar_carrier_frequency,
-                mission_phase_id=mission_phase_id,
-                sensor_mode=sensor_mode,
-                global_coverage_id=global_coverage_id,
-                swath=swath,
-                major_cycle_id=major_cycle_id,
-                absolute_orbit_number=absolute_orbit_number,
-                relative_orbit_number=relative_orbit_number,
-                orbit_pass=orbit_pass,
-                data_take_id=datatake_id,
-                frame=frame,
-                platform_heading=platform_heading,
-                forest_coverage_percentage=forest_coverage_percentage,
-                selected_reference_image=selected_reference_image,
-            )
-        if self.product.product_type == L2A_OUTPUT_PRODUCT_TFH:
-            product = main_annotation_models_l2a_tfh.ProductL2AType(
-                mission=mission,
-                tile_id=tile_id_list,
-                basin_id=basin_id_list,
-                product_type=product_type,
-                start_time=start_time,
-                stop_time=stop_time,
-                radar_carrier_frequency=radar_carrier_frequency,
-                mission_phase_id=mission_phase_id,
-                sensor_mode=sensor_mode,
-                global_coverage_id=global_coverage_id,
-                swath=swath,
-                major_cycle_id=major_cycle_id,
-                absolute_orbit_number=absolute_orbit_number,
-                relative_orbit_number=relative_orbit_number,
-                orbit_pass=orbit_pass,
-                data_take_id=datatake_id,
-                frame=frame,
-                platform_heading=platform_heading,
-                forest_coverage_percentage=forest_coverage_percentage,
-                selected_reference_image=selected_reference_image,
-            )
-
-        footprint = ""
-        for num in self.product.main_ads_input_information.footprint:
-            footprint = footprint + str(num) + " "
-        footprint = footprint[0:-1]
-        footprint = common_annotation_models_l2.FloatArrayWithUnits(
-            value=footprint,
-            count=len(self.product.main_ads_input_information.footprint),
-            units=common_types.UomType.DEG,
+        self.product.main_ads_product.relative_orbit_number = translate_com_phase_negative_values(
+            self.product.main_ads_product.relative_orbit_number
         )
-
-        first_latitude_value = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.first_latitude_value),
-            units=common_types.UomType.DEG,
-        )
-        first_longitude_value = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.first_longitude_value),
-            units=common_types.UomType.DEG,
-        )
-        latitude_spacing = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.latitude_spacing),
-            units=common_types.UomType.DEG,
-        )
-        longitude_spacing = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.longitude_spacing),
-            units=common_types.UomType.DEG,
-        )
-        number_of_samples = self.product.main_ads_raster_image.number_of_samples
-        number_of_lines = self.product.main_ads_raster_image.number_of_lines
-        projection = common_annotation_models_l2.ProjectionType(self.product.main_ads_raster_image.projection)
-        datum = self.product.main_ads_raster_image.datum
-        pixel_representation = self.product.main_ads_raster_image.pixel_representation
-        pixel_type = self.product.main_ads_raster_image.pixel_type
-        no_data_value = self.product.main_ads_raster_image.no_data_value
-        raster_image = common_annotation_models_l2.RasterImageType(
-            footprint=footprint,
-            first_latitude_value=first_latitude_value,
-            first_longitude_value=first_longitude_value,
-            latitude_spacing=latitude_spacing,
-            longitude_spacing=longitude_spacing,
-            number_of_samples=number_of_samples,
-            number_of_lines=number_of_lines,
-            projection=projection,
-            datum=datum,
-            pixel_representation=pixel_representation,
-            pixel_type=pixel_type,
-            no_data_value=no_data_value,
-        )
+        self.product.main_ads_product.frame = translate_frame_id(self.product.main_ads_product.frame)
 
         # # - inputInformation
-        polarisation_list = self.product.main_ads_input_information.polarisation_list
-
-        list_acq = []
-        for acquisition_type in self.product.main_ads_input_information.acquisition_list.acquisition:
-            list_acq.append(
-                common_annotation_models_l2.AcquisitionType(
-                    folder_name=acquisition_type.folder_name,
-                    sta_quality=acquisition_type.sta_quality,
-                    reference_image=acquisition_type.reference_image,
-                    average_wavenumber=(
-                        float(acquisition_type.average_wavenumber)
-                        if acquisition_type.average_wavenumber is not None
-                        else None
-                    ),
-                )
-            )
-        acquisition_list = common_annotation_models_l2.AcquisitionListType(
-            acquisition=list_acq,
-            count=len(list_acq),
-        )
-
-        input_information = common_annotation_models_l2.InputInformationL2AType(
-            product_type=common_types.ProductType.STA,
-            overall_products_quality_index=self.product.main_ads_input_information.overall_products_quality_index,
-            nominal_stack=self.product.main_ads_input_information.nominal_stack,
-            polarisation_list=polarisation_list,
-            projection=common_types.ProjectionType.SLANT_RANGE,
-            footprint=footprint,
-            vertical_wavenumbers=self.product.main_ads_input_information.vertical_wavenumbers,
-            height_of_ambiguity=self.product.main_ads_input_information.height_of_ambiguity,
-            acquisition_list=acquisition_list,
-        )
+        input_information = self.product.main_ads_input_information
+        input_information.product_type = common.ProductType.STA
+        input_information.projection = common.ProjectionType.SLANT_RANGE
 
         # # - processing parameters
-        general_configuration_parameters = common_annotation_models_l2.GeneralConfigurationParametersType(
-            apply_calibration_screen=self.product.main_ads_processing_parameters.general_configuration.apply_calibration_screen,
-            forest_coverage_threshold=self.product.main_ads_processing_parameters.general_configuration.forest_coverage_threshold,
-            forest_mask_interpolation_threshold=self.product.main_ads_processing_parameters.general_configuration.forest_mask_interpolation_threshold,
-            subsetting_rule=self.product.main_ads_processing_parameters.general_configuration.subsetting_rule,
-            polarisation_combination_method=self.product.main_ads_processing_parameters.general_configuration.polarisation_combination_method,
-        )
-        processor_version = self.product.main_ads_processing_parameters.processor_version
-        PRODUCT_GENERATION_TIME_MS = self.product.main_ads_processing_parameters.product_generation_time.isoformat(
-            timespec="microseconds"
-        )[:-1]
+        assert self.product_structure.main_annotation_file is not None
+        annotation_file = Path(self.product_structure.main_annotation_file)
 
-        compression_options = self.product.main_ads_processing_parameters.compression_options
+        layers = [
+            common.LayerType.FNF,
+            common.LayerType.HEIGHT_M,
+            common.LayerType.LATITUDE_DEG,
+            common.LayerType.LONGITUDE_DEG,
+            common.LayerType.INCIDENCE_ANGLE_DEG,
+            common.LayerType.ELEVATION_ANGLE_DEG,
+            common.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+            common.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
+        ]
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
-            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersFD)
-            emphasized_forest_height = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.emphasized_forest_height,
-                units="m",
-            )
-            operational_mode = main_annotation_models_l2a_fd.OperationalModeType(
-                self.product.main_ads_processing_parameters.operational_mode
-            )
-            disable_ground_cancellation_flag = str(
-                self.product.main_ads_processing_parameters.disable_ground_cancellation_flag
-            ).lower()
-            significance_level = float(self.product.main_ads_processing_parameters.significance_level)
-
-            product_resolution = common_annotation_models_l2.FloatWithUnit(
-                value=float(self.product.main_ads_processing_parameters.product_resolution),
-                units="m",
-            )
-            numerical_determinant_limit = float(self.product.main_ads_processing_parameters.numerical_determinant_limit)
-
-            upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
-
-            processing_parameters = main_annotation_models_l2a_fd.ProcessingParametersL2AType(
-                processor_version=processor_version,
-                product_generation_time=PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters=general_configuration_parameters,
-                emphasized_forest_height=emphasized_forest_height,
-                operational_mode=operational_mode,
-                images_pair_selection=(
-                    self.product.main_ads_processing_parameters.images_pair_selection
-                    if operational_mode == common_annotation_models_l2.OperationalModeType.INSAR_PAIR
-                    else None
-                ),
-                disable_ground_cancellation_flag=disable_ground_cancellation_flag,
-                significance_level=significance_level,
-                product_resolution=product_resolution,
-                numerical_determinant_limit=numerical_determinant_limit,
-                upsampling_factor=upsampling_factor,
-                compression_options=compression_options,
-            )
-
-            # - annotationLUT
-            layer = [
-                main_annotation_models_l2a_fd.LayerType.FNF,
-                main_annotation_models_l2a_fd.LayerType.ACM,
-                main_annotation_models_l2a_fd.LayerType.NUMBER_OF_AVERAGES,
-                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
-                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
+            layers = layers + [
+                common.LayerType.ACM,
+                common.LayerType.NUMBER_OF_AVERAGES,
             ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
+        elif self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
+            layers = layers + [common.LayerType.LOCAL_INCIDENCE_ANGLE_DEG]
 
-            main_annotation_model = main_annotation_models_l2a_fd.MainAnnotation(
-                product=product,
-                raster_image=raster_image,
-                input_information=input_information,
-                processing_parameters=processing_parameters,
-                annotation_lut=annotation_lut,
+        if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
+            assert isinstance(
+                self.product.main_ads_processing_parameters,
+                main_annotation_l2a_fd.BIOMASSL2aMainADSProcessingParametersFD,
             )
+
+            main_annotation_model = main_annotation_l2a_fd.MainAnnotationL2aFD(
+                product=self.product.main_ads_product,
+                raster_image=self.product.main_ads_raster_image,
+                input_information=input_information,
+                processing_parameters=self.product.main_ads_processing_parameters,
+                annotation_lut=layers,
+            )
+
+            translate_main_annotation_l2a_fd.write_main_annotation_l2a_fd(annotation_file, main_annotation_model)
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
-            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersFH)
-            vertical_reflectivity_option = main_annotation_models_l2a_fh.VerticalProfileOptionType(
-                self.product.main_ads_processing_parameters.vertical_reflectivity_option
-            )
-            vertical_reflectivity_default_profile = main_annotation_models_l2a_fh.VerticalReflectivityProfileType(
-                val=[
-                    float(value)
-                    for value in self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile.val
-                ],
-                count=len(self.product.main_ads_processing_parameters.vertical_reflectivity_default_profile.val),
-            )
-            model_inversion = main_annotation_models_l2a_fh.ModelInversionType(
-                self.product.main_ads_processing_parameters.model_inversion
-            )
-            spectral_decorrelation_compensation_flag = str(
-                self.product.main_ads_processing_parameters.spectral_decorrelation_compensation_flag
-            ).lower()
-            snr_decorrelation_compensation_flag = str(
-                self.product.main_ads_processing_parameters.snr_decorrelation_compensation_flag
-            ).lower()
-            correct_terrain_slopes_flag = str(
-                self.product.main_ads_processing_parameters.correct_terrain_slopes_flag
-            ).lower()
-            normalised_height_estimation_range = (
-                self.product.main_ads_processing_parameters.normalised_height_estimation_range
-            )
-            normalised_wavenumber_estimation_range = (
-                self.product.main_ads_processing_parameters.normalised_wavenumber_estimation_range
-            )
-            ground_to_volume_ratio_range = self.product.main_ads_processing_parameters.ground_to_volume_ratio_range
-            temporal_decorrelation_estimation_range = (
-                self.product.main_ads_processing_parameters.temporal_decorrelation_estimation_range
-            )
-            temporal_decorrelation_ground_to_volume_ratio = (
-                self.product.main_ads_processing_parameters.temporal_decorrelation_ground_to_volume_ratio
-            )
-            residual_decorrelation = self.product.main_ads_processing_parameters.residual_decorrelation
-
-            product_resolution = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.product_resolution,
-                units="m",
-            )
-            uncertainty_valid_values_limits = (
-                self.product.main_ads_processing_parameters.uncertainty_valid_values_limits
+            assert isinstance(
+                self.product.main_ads_processing_parameters,
+                main_annotation_l2a_fh.BIOMASSL2aMainADSProcessingParametersFH,
             )
 
-            vertical_wavenumber_valid_values_limits = (
-                self.product.main_ads_processing_parameters.vertical_wavenumber_valid_values_limits
-            )
-
-            lower_height_limit = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.lower_height_limit,
-                units=common_types.UomType.M,
-            )
-            upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
-
-            processing_parameters = main_annotation_models_l2a_fh.ProcessingParametersL2AType(
-                processor_version=processor_version,
-                product_generation_time=PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters=general_configuration_parameters,
-                vertical_reflectivity_option=vertical_reflectivity_option,
-                vertical_reflectivity_default_profile=vertical_reflectivity_default_profile,
-                model_inversion=model_inversion,
-                spectral_decorrelation_compensation_flag=spectral_decorrelation_compensation_flag,
-                snrdecorrelation_compensation=snr_decorrelation_compensation_flag,
-                correct_terrain_slopes_flag=correct_terrain_slopes_flag,
-                normalised_height_estimation_range=normalised_height_estimation_range,
-                normalised_wavenumber_estimation_range=normalised_wavenumber_estimation_range,
-                ground_to_volume_ratio_range=ground_to_volume_ratio_range,
-                temporal_decorrelation_estimation_range=temporal_decorrelation_estimation_range,
-                temporal_decorrelation_ground_to_volume_ratio=temporal_decorrelation_ground_to_volume_ratio,
-                residual_decorrelation=residual_decorrelation,
-                product_resolution=product_resolution,
-                uncertainty_validvalues_limits=uncertainty_valid_values_limits,
-                vertical_wavenumber_validvalues_limits=vertical_wavenumber_valid_values_limits,
-                lower_height_limit=lower_height_limit,
-                upsampling_factor=upsampling_factor,
-                compression_options=compression_options,
-            )
-
-            # - annotationLUT
-            layer = [
-                main_annotation_models_l2a_fh.LayerType.FNF,
-                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
-                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
-            ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
-
-            main_annotation_model = main_annotation_models_l2a_fh.MainAnnotation(
-                product=product,
-                raster_image=raster_image,
+            main_annotation_model = main_annotation_l2a_fh.MainAnnotationL2aFH(
+                product=self.product.main_ads_product,
+                raster_image=self.product.main_ads_raster_image,
                 input_information=input_information,
-                processing_parameters=processing_parameters,
-                annotation_lut=annotation_lut,
+                processing_parameters=self.product.main_ads_processing_parameters,
+                annotation_lut=layers,
             )
+
+            translate_main_annotation_l2a_fh.write_main_annotation_l2a_fh(annotation_file, main_annotation_model)
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
-            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersGN)
-            emphasized_forest_height = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.emphasized_forest_height,
-                units="m",
-            )
-            operational_mode = main_annotation_models_l2a_gn.OperationalModeType(
-                self.product.main_ads_processing_parameters.operational_mode
-            )
-            radiometric_calibration_flag = str(
-                self.product.main_ads_processing_parameters.radiometric_calibration_flag
-            ).lower()
-            disable_ground_cancellation_flag = str(
-                self.product.main_ads_processing_parameters.disable_ground_cancellation_flag
-            ).lower()
-            product_resolution = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.product_resolution,
-                units="m",
-            )
-            upsampling_factor = self.product.main_ads_processing_parameters.upsampling_factor
-
-            processing_parameters = main_annotation_models_l2a_gn.ProcessingParametersL2AType(
-                processor_version=processor_version,
-                product_generation_time=PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters=general_configuration_parameters,
-                emphasized_forest_height=emphasized_forest_height,
-                operational_mode=operational_mode,
-                radiometric_calibration_flag=radiometric_calibration_flag,
-                images_pair_selection=(
-                    self.product.main_ads_processing_parameters.images_pair_selection
-                    if operational_mode == common_annotation_models_l2.OperationalModeType.INSAR_PAIR
-                    else None
-                ),
-                disable_ground_cancellation_flag=disable_ground_cancellation_flag,
-                product_resolution=product_resolution,
-                upsampling_factor=upsampling_factor,
-                compression_options=compression_options,
+            assert isinstance(
+                self.product.main_ads_processing_parameters,
+                main_annotation_l2a_gn.BIOMASSL2aMainADSProcessingParametersGN,
             )
 
-            # - annotationLUT
-            layer = [
-                main_annotation_models_l2a_gn.LayerType.FNF,
-                main_annotation_models_l2a_gn.LayerType.LOCAL_INCIDENCE_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
-                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
-            ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
-
-            main_annotation_model = main_annotation_models_l2a_gn.MainAnnotation(
-                product=product,
-                raster_image=raster_image,
+            main_annotation_model = main_annotation_l2a_gn.MainAnnotationL2aGN(
+                product=self.product.main_ads_product,
+                raster_image=self.product.main_ads_raster_image,
                 input_information=input_information,
-                processing_parameters=processing_parameters,
-                annotation_lut=annotation_lut,
+                processing_parameters=self.product.main_ads_processing_parameters,
+                annotation_lut=layers,
             )
+
+            translate_main_annotation_l2a_gn.write_main_annotation_l2a_gn(annotation_file, main_annotation_model)
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_TFH:
-            enable_super_resolution = str(self.product.main_ads_processing_parameters.enable_super_resolution).lower()
-
-            product_resolution = common_annotation_models_l2.FloatWithUnit(
-                value=self.product.main_ads_processing_parameters.product_resolution,
-                units="m",
+            assert isinstance(
+                self.product.main_ads_processing_parameters,
+                main_annotation_l2a_tfh.BIOMASSL2aMainADSProcessingParametersTOMOFH,
             )
 
-            processing_parameters = main_annotation_models_l2a_tfh.ProcessingParametersL2AType(
-                processor_version=processor_version,
-                product_generation_time=PRODUCT_GENERATION_TIME_MS,
-                general_configuration_parameters=general_configuration_parameters,
-                enable_super_resolution=enable_super_resolution,
-                product_resolution=product_resolution,
-                regularization_noise_factor=self.product.main_ads_processing_parameters.regularization_noise_factor,
-                power_threshold=self.product.main_ads_processing_parameters.power_threshold,
-                median_factor=self.product.main_ads_processing_parameters.median_factor,
-                estimation_valid_values_limits=self.product.main_ads_processing_parameters.estimation_valid_values_limits,
-                compression_options=compression_options,
-            )
-
-            # - annotationLUT
-            layer = [
-                main_annotation_models_l2a_fh.LayerType.FNF,
-                main_annotation_models_l2a_fd.LayerType.HEIGHT_M,
-                main_annotation_models_l2a_fd.LayerType.LATITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.LONGITUDE_DEG,
-                main_annotation_models_l2a_fd.LayerType.INCIDENCE_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.ELEVATION_ANGLE_DEG,
-                main_annotation_models_l2a_fd.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-                main_annotation_models_l2a_fd.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
-            ]
-            annotation_lut = common_annotation_models_l2.LayerListType(layer=layer, count=len(layer))
-
-            main_annotation_model = main_annotation_models_l2a_tfh.MainAnnotation(
-                product=product,
-                raster_image=raster_image,
+            main_annotation = main_annotation_l2a_tfh.MainAnnotationL2aTFH(
+                product=self.product.main_ads_product,
+                raster_image=self.product.main_ads_raster_image,
                 input_information=input_information,
-                processing_parameters=processing_parameters,
-                annotation_lut=annotation_lut,
+                processing_parameters=self.product.main_ads_processing_parameters,
+                annotation_lut=layers,
             )
 
-        # Write main annotation file
-        assert self.product_structure.main_annotation_file is not None
-
-        main_annotation_text = serialize(main_annotation_model)
-        main_annotation_path = Path(self.product_structure.main_annotation_file)
-        main_annotation_path.write_text(main_annotation_text, encoding="utf-8")
+            translate_main_annotation_l2a_tfh.write_main_annotation_l2a_tfh(annotation_file, main_annotation)
 
     def _write_lut_annotation_file(self):
         """_summary_
@@ -1785,12 +1391,12 @@ class BIOMASSL2aProductWriter:
         ncfile.startTime = self.product.main_ads_product.start_time.isoformat(timespec="milliseconds")
         ncfile.stopTime = self.product.main_ads_product.stop_time.isoformat(timespec="milliseconds")
         ncfile.radarCarrierFrequency = np.float32(self.product.main_ads_product.radar_carrier_frequency)
-        ncfile.missionPhaseID = self.product.main_ads_product.mission_phase_id
+        ncfile.missionPhaseID = self.product.main_ads_product.mission_phase_id.value
         ncfile.sensorMode = common_types.SensorModeType.MEASUREMENT.value
         ncfile.globalCoverageID = np.uint16(
             translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
         )
-        ncfile.swath = self.product.main_ads_product.swath
+        ncfile.swath = self.product.main_ads_product.swath.value
         ncfile.majorCycleID = np.uint16(translate_major_cycle_id(self.product.main_ads_product.major_cycle_id))
 
         ncfile.absoluteOrbitNumber = [
@@ -1800,14 +1406,16 @@ class BIOMASSL2aProductWriter:
         ncfile.relativeOrbitNumber = np.uint16(
             translate_com_phase_negative_values(self.product.main_ads_product.relative_orbit_number)
         )
-        ncfile.orbitPass = self.product.main_ads_product.orbit_pass
+        ncfile.orbitPass = self.product.main_ads_product.orbit_pass.value
         ncfile.dataTakeID = json.dumps([str(dt_id) for dt_id in self.product.main_ads_product.datatake_id])
         ncfile.frame = np.uint16(translate_frame_id(self.product.main_ads_product.frame))
         ncfile.platform_heading = np.float32(self.product.main_ads_product.platform_heading)
         ncfile.forest_coverage_percentage = np.float32(self.product.main_ads_product.forest_coverage_percentage)
         if self.product.main_ads_product.selected_reference_image is not None:
-            ncfile.selected_reference_image = np.uint16(self.product.main_ads_product.selected_reference_image)
-            ncfile.acquisition_id_reference_image = self.product.main_ads_product.acquisition_id_reference_image
+            ncfile.selected_reference_image = np.uint16(self.product.main_ads_product.selected_reference_image.value)
+            ncfile.acquisition_id_reference_image = (
+                self.product.main_ads_product.selected_reference_image.acquisition_id
+            )
 
         # DIMENSIONS:
         ncfile.createDimension("Latitude", len(self.product.measurement.latitude_vec))

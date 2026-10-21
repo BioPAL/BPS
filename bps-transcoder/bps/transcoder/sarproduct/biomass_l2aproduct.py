@@ -15,13 +15,15 @@ from pathlib import Path
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.mph import get_mph_path
-from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2a_fd,
-    main_annotation_models_l2a_fh,
-    main_annotation_models_l2a_gn,
-    main_annotation_models_l2a_tfh,
+from bps.transcoder.io.common_annotation_l2l3 import (
+    BIOMASSL2aMainADSInputInformation,
+    BIOMASSL2aMainADSproduct,
+    BIOMASSL2aMainADSRasterImage,
 )
+from bps.transcoder.io.main_annotation_l2a_fd import BIOMASSL2aMainADSProcessingParametersFD
+from bps.transcoder.io.main_annotation_l2a_fh import BIOMASSL2aMainADSProcessingParametersFH
+from bps.transcoder.io.main_annotation_l2a_gn import BIOMASSL2aMainADSProcessingParametersGN
+from bps.transcoder.io.main_annotation_l2a_tfh import BIOMASSL2aMainADSProcessingParametersTOMOFH
 from bps.transcoder.utils.production_model_utils import (
     encode_product_name_id_value,
     translate_com_phase_negative_values,
@@ -249,121 +251,6 @@ class BIOMASSL2aProductMeasurement:
 
 
 @dataclass
-class BIOMASSL2aMainADSproduct:
-    mission: str
-    tile_id_list: list[str]
-    basin_id_list: list[str]
-    product_type: str
-    start_time: PreciseDateTime
-    stop_time: PreciseDateTime
-    radar_carrier_frequency: float
-    mission_phase_id: str
-    sensor_mode: str
-    global_coverage_id: int
-    swath: str
-    major_cycle_id: int
-    absolute_orbit_number: list[int]
-    relative_orbit_number: int
-    orbit_pass: str
-    datatake_id: list[int]
-    frame: int
-    platform_heading: float
-    baseline: int
-    forest_coverage_percentage: float
-    selected_reference_image: int | None = None
-    acquisition_id_reference_image: str | None = None
-
-
-@dataclass
-class BIOMASSL2aMainADSRasterImage:
-    footprint: list[float]
-    first_latitude_value: float
-    first_longitude_value: float
-    latitude_spacing: float
-    longitude_spacing: float
-    number_of_samples: int
-    number_of_lines: int
-    projection: str
-    datum: common_annotation_models_l2.DatumType
-    pixel_representation: common_annotation_models_l2.PixelRepresentationChoiceType
-    pixel_type: common_annotation_models_l2.PixelTypeChoiceType
-    no_data_value: common_annotation_models_l2.NoDataValueChoiceType
-
-
-@dataclass
-class BIOMASSL2aMainADSInputInformation:
-    product_type: str
-    overall_products_quality_index: int
-    nominal_stack: str
-    polarisation_list: common_annotation_models_l2.PolarisationListType
-    projection: str
-    footprint: list[float]
-    vertical_wavenumbers: common_annotation_models_l2.MinMaxTypeWithUnit
-    height_of_ambiguity: common_annotation_models_l2.MinMaxTypeWithUnit
-    acquisition_list: common_annotation_models_l2.AcquisitionListType
-
-
-@dataclass
-class BIOMASSL2aMainADSProcessingParametersFD:
-    processor_version: str
-    product_generation_time: PreciseDateTime
-    general_configuration: common_annotation_models_l2.GeneralConfigurationParametersType
-    compression_options: main_annotation_models_l2a_fd.CompressionOptionsL2A
-
-    emphasized_forest_height: float
-    operational_mode: str
-    significance_level: float
-    product_resolution: float
-    numerical_determinant_limit: float
-    upsampling_factor: int
-    images_pair_selection: common_annotation_models_l2.AcquisitionListType | None = None
-    disable_ground_cancellation_flag: bool | None = False
-
-
-@dataclass
-class BIOMASSL2aMainADSProcessingParametersFH:
-    processor_version: str
-    product_generation_time: PreciseDateTime
-    general_configuration: common_annotation_models_l2.GeneralConfigurationParametersType
-    compression_options: main_annotation_models_l2a_fh.CompressionOptionsL2A
-
-    vertical_reflectivity_option: str
-    model_inversion: str
-    spectral_decorrelation_compensation_flag: bool
-    snr_decorrelation_compensation_flag: bool
-    correct_terrain_slopes_flag: bool
-    normalised_height_estimation_range: main_annotation_models_l2a_fh.MinMaxType
-    normalised_wavenumber_estimation_range: main_annotation_models_l2a_fh.MinMaxType
-    ground_to_volume_ratio_range: main_annotation_models_l2a_fh.MinMaxNumType
-    temporal_decorrelation_estimation_range: main_annotation_models_l2a_fh.MinMaxNumType
-    temporal_decorrelation_ground_to_volume_ratio: float
-    residual_decorrelation: float
-    product_resolution: float
-    uncertainty_valid_values_limits: main_annotation_models_l2a_fh.MinMaxType
-    vertical_wavenumber_valid_values_limits: main_annotation_models_l2a_fh.MinMaxType
-    lower_height_limit: float
-    upsampling_factor: int
-    vertical_reflectivity_default_profile: main_annotation_models_l2a_fh.VerticalReflectivityProfileType
-
-
-@dataclass
-class BIOMASSL2aMainADSProcessingParametersGN:
-    processor_version: str
-    product_generation_time: PreciseDateTime
-    general_configuration: common_annotation_models_l2.GeneralConfigurationParametersType
-    compression_options: main_annotation_models_l2a_gn.CompressionOptionsL2A
-
-    least_significant_digit_inc_angle: int
-    emphasized_forest_height: float
-    operational_mode: str
-    radiometric_calibration_flag: bool
-    product_resolution: float
-    upsampling_factor: int
-    images_pair_selection: common_annotation_models_l2.AcquisitionListType | None = None
-    disable_ground_cancellation_flag: bool | None = False
-
-
-@dataclass
 class BIOMASSL2aLutAdsFD:
     @dataclass
     class LutMetadata:
@@ -394,21 +281,6 @@ class BIOMASSL2aLutAdsFD:
     lut_acm_metadata: LutMetadata
     lut_number_of_averages_metadata: LutMetadata
     lut_geometric_metadata: LutMetadata
-
-
-@dataclass
-class BIOMASSL2aMainADSProcessingParametersTOMOFH:
-    processor_version: str
-    product_generation_time: PreciseDateTime
-    general_configuration: common_annotation_models_l2.GeneralConfigurationParametersType
-    compression_options: main_annotation_models_l2a_tfh.CompressionOptionsL2A
-
-    enable_super_resolution: bool
-    product_resolution: float
-    regularization_noise_factor: float
-    power_threshold: float
-    median_factor: int
-    estimation_valid_values_limits: main_annotation_models_l2a_tfh.MinMaxTypeWithUnit
 
 
 @dataclass
@@ -541,13 +413,13 @@ class BIOMASSL2aProduct:
                 pdt_to_compact_string(self.main_ads_product.start_time),
                 pdt_to_compact_string(self.main_ads_product.stop_time),
                 str(self.main_ads_product.mission_phase_id)[0],
-                "G" + ("__" if self.main_ads_product.mission_phase_id[0] == "C" else global_coverage_id_str),
-                "M" + ("__" if self.main_ads_product.mission_phase_id[0] == "C" else major_cycle_id_str),
+                "G" + ("__" if self.main_ads_product.mission_phase_id.value[0] == "C" else global_coverage_id_str),
+                "M" + ("__" if self.main_ads_product.mission_phase_id.value[0] == "C" else major_cycle_id_str),
                 "C__",
                 "T"
                 + (
                     "___"
-                    if self.main_ads_product.mission_phase_id[0] == "C"
+                    if self.main_ads_product.mission_phase_id.value[0] == "C"
                     else f"{translate_com_phase_negative_values(self.main_ads_product.relative_orbit_number):03d}"
                 ),
                 "F" + ("___" if self.main_ads_product.frame == 0 else f"{self.main_ads_product.frame:03d}"),
