@@ -42,7 +42,9 @@ from bps.transcoder.io import (
     vrt,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
+    BIOMASSL2aMainADSProcessingParametersFD,
     BIOMASSL2aMainADSProcessingParametersFH,
+    BIOMASSL2aMainADSProcessingParametersGN,
     BIOMASSL2aProductFD,
     BIOMASSL2aProductFH,
     BIOMASSL2aProductGN,
@@ -1478,6 +1480,7 @@ class BIOMASSL2aProductWriter:
         compression_options = self.product.main_ads_processing_parameters.compression_options
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
+            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersFD)
             emphasized_forest_height = common_annotation_models_l2.FloatWithUnit(
                 value=self.product.main_ads_processing_parameters.emphasized_forest_height,
                 units="m",
@@ -1643,6 +1646,7 @@ class BIOMASSL2aProductWriter:
             )
 
         if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
+            assert isinstance(self.product.main_ads_processing_parameters, BIOMASSL2aMainADSProcessingParametersGN)
             emphasized_forest_height = common_annotation_models_l2.FloatWithUnit(
                 value=self.product.main_ads_processing_parameters.emphasized_forest_height,
                 units="m",

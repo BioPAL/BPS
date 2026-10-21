@@ -678,19 +678,24 @@ class GN:
         # the annotation needs AcquisitionType: pick them from the stack acquisition list
         images_pair_selection = None
         if self.aux_pp2_2a.agb.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
-            pair_from_aux = {
-                Path(acq.folder_name).name: acq
-                for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection.acquisition
+            pair_from_aux_pp2 = {
+                Path(acq.value).name: acq
+                for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection.acquisition_folder_name
             }
             images_pair_selection = [
-                translate_common_annotation_l2l3.translate_acquisition_list_to_model(pair_from_aux[acq.folder_name])
+                common_annotation_l2l3.AcquisitionType(
+                    folder_name=acq.folder_name,
+                    sta_quality=acq.sta_quality,
+                    reference_image=pair_from_aux_pp2[acq.folder_name].reference_image == "true",
+                    average_wavenumber=pair_from_aux_pp2[acq.folder_name].average_wavenumber,
+                )
                 for acq in acquisition_list
-                if acq.folder_name in pair_from_aux
+                if acq.folder_name in pair_from_aux_pp2
             ]
             if len(images_pair_selection) != 2:
                 raise RuntimeError(
                     f"INSAR_PAIR: expected 2 acquisitions from AUX PP2 2A images pair selection "
-                    f"{list(pair_from_aux)} in the stack, found {len(images_pair_selection)}"
+                    f"{list(pair_from_aux_pp2)} in the stack, found {len(images_pair_selection)}"
                 )
 
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersGN(

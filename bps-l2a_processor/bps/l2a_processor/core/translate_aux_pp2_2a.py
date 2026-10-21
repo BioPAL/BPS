@@ -29,7 +29,6 @@ from bps.l2a_processor.core.aux_pp2_2a import (
     OperationalModeType,
 )
 from bps.l2a_processor.io import aux_pp2_2a_models
-from bps.transcoder.io import common_annotation_models_l2
 
 
 class InvalidAuxPP2_2A(RuntimeError):
@@ -178,8 +177,8 @@ def translate_model_to_gn_conf(
                 ),
             )
         assert len(list_temp) == 2
-        images_pair_selection = common_annotation_models_l2.AcquisitionListType(
-            acquisition=list_temp,
+        images_pair_selection = aux_pp2_2a_models.AuxppacquisitionListType(
+            acquisition_folder_name=list_temp,
             count=len(list_temp),
         )
     if conf.disable_ground_cancellation_flag is None:

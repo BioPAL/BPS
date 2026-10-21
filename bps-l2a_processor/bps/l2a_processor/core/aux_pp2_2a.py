@@ -15,8 +15,7 @@ from enum import Enum
 
 import numpy as np
 from bps.common.io import common
-from bps.l2a_processor.io.aux_pp2_2a_models import CalibrationScreenType
-from bps.transcoder.io import common_annotation_models_l2
+from bps.l2a_processor.io import aux_pp2_2a_models
 
 
 @dataclass
@@ -29,7 +28,7 @@ class GeneralConf:
         GEOMETRY = "geometry"
         MAINTAIN_ALL = "maintain all"
 
-    apply_calibration_screen: CalibrationScreenType
+    apply_calibration_screen: aux_pp2_2a_models.CalibrationScreenType
     forest_coverage_threshold: float
     forest_mask_interpolation_threshold: float
     subsetting_rule: SubsettingRules
@@ -50,7 +49,7 @@ class GroundCancellationConfFD:
 
     emphasized_forest_height: float
     operational_mode: OperationalModeType
-    images_pair_selection: common_annotation_models_l2.AcquisitionListType
+    images_pair_selection: aux_pp2_2a_models.AuxppacquisitionListType
     disable_ground_cancellation_flag: bool
 
 

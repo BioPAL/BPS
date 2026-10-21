@@ -108,8 +108,8 @@ def ground_cancellation(
         bps_logger.info(f"    using AUX PP2 2A operational mode: {aux_pp2_conf_gn.operational_mode.value}")
         if aux_pp2_conf_gn.operational_mode == OperationalModeType.INSAR_PAIR:
             # In case of "insar pair", read here the two images specified in "images_pair_selection"
-            path_1 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)  # type: ignore
-            path_2 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[1].value)  # type: ignore
+            path_1 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition_folder_name[0].value)
+            path_2 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition_folder_name[1].value)
             bps_logger.info(
                 f"    reading now following insar pair acquisitions, from AUX PP2 2A: \r\n{path_1} \r\n{path_2}"
             )
