@@ -20,7 +20,7 @@ import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types, translate_common
+from bps.common.io import common, translate_common
 from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A, MinMaxNumType, MinMaxType
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_job_order import L2A_OUTPUT_PRODUCT_FH
@@ -37,7 +37,12 @@ from bps.l2a_processor.l2a_common_functionalities import (
     parallel_reinterpolate,
     refine_dgg_search_tiles,
 )
-from bps.transcoder.io import common_annotation_models_l2
+from bps.transcoder.io import (
+    common_annotation_l2l3,
+    main_annotation_l2a_fh,
+    translate_common_annotation_l2l3,
+    translate_main_annotation_l2a_fh,
+)
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
     BIOMASSL2aLutAdsFH,
     BIOMASSL2aMainADSInputInformation,
@@ -46,7 +51,6 @@ from bps.transcoder.sarproduct.biomass_l2aproduct import (
     BIOMASSL2aMainADSRasterImage,
     BIOMASSL2aProductFH,
     BIOMASSL2aProductMeasurement,
-    main_annotation_models_l2a_fh,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct_writer import (
     AVERAGING_FACTOR_QUICKLOOKS,
@@ -461,9 +465,9 @@ class FH:
             lines_interval=1,
             pixelType="8 bit Unsigned Integer",
             no_data_value=INT_NODATA_VALUE,
-            projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
+            projection=common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value,
             coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
-            geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
+            geodeticReferenceFrame=common.GeodeticReferenceFrameType.WGS84.value,
         )
 
         lut_dict["geometric_metadata"] = BIOMASSL2aLutAdsFH.LutMetadata(
@@ -473,9 +477,9 @@ class FH:
             lines_interval=1,
             pixelType="32 bit Float",
             no_data_value=FLOAT_NODATA_VALUE,
-            projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
+            projection=common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value,
             coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
-            geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
+            geodeticReferenceFrame=common.GeodeticReferenceFrameType.WGS84.value,
         )
         lut_dict["geometric_metadata"].least_significant_digit = np.uint8(
             self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit
@@ -485,7 +489,7 @@ class FH:
         # fill common fileds for FH and quality
         meta_data_temp = [
             BIOMASSL2aProductMeasurement.MetadataCOG(
-                swath=common_annotation_models_l2.SwathType.S1.value,
+                swath=common.SwathType.S1.value,
                 tile_id_list=self.tile_id_list,
                 basin_id_list=self.basin_id_list,
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
@@ -503,11 +507,11 @@ class FH:
         }
 
         meta_data["fh"].image_description = (
-            f"BIOMASS L2a {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_HEIGHT_M.value
+            f"BIOMASS L2a {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_HEIGHT_M.value
         )
 
         meta_data["quality"].image_description = (
-            f"BIOMASS L2a {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_HEIGHT_QUALITY.value
+            f"BIOMASS L2a {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_HEIGHT_QUALITY.value
         )
 
         return lut_dict, meta_data
@@ -555,8 +559,8 @@ class FH:
         )
 
         # main_ads_product
-        mission = common_annotation_models_l2.MissionType.BIOMASS.value
-        sensor_mode = common_annotation_models_l2.SensorModeType.MEASUREMENT.value
+        mission = common.MissionType.BIOMASS.value
+        sensor_mode = common.SensorModeType.MEASUREMENT.value
         orbit_direction = (
             self.stack_products_list[self.primary_image_index].orbit_direction[0]
             + self.stack_products_list[self.primary_image_index].orbit_direction[1:].lower()
@@ -591,26 +595,20 @@ class FH:
         )
 
         # main_ads_raster_image
-        projection = common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value
-        coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
-        geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
-        datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system=coordinate_reference_system,
-            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+        projection = common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG
+        datum = common.DatumType(
+            coordinate_reference_system=COORDINATE_REFERENCE_SYSTEM,
+            geodetic_reference_frame=common.GeodeticReferenceFrameType.WGS84,
         )
-        pixel_representation_dict = {
-            "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
-            "quality": common_types.PixelRepresentationType.FOREST_HEIGHT_QUALITY,
-        }
-        pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
-            fh=pixel_representation_dict["fh"],
-            quality=pixel_representation_dict["quality"],
+        pixel_representation = common_annotation_l2l3.PixelRepresentationChoiceType(
+            fh=common.PixelRepresentationType.FOREST_HEIGHT_M,
+            quality=common.PixelRepresentationType.FOREST_HEIGHT_QUALITY,
         )
-        pixel_type = common_annotation_models_l2.PixelTypeChoiceType(
-            float_pixel_type=main_annotation_models_l2a_fh.PixelTypeType("32 bit Float")
+        pixel_type = common_annotation_l2l3.PixelTypeChoiceType(
+            float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT
         )
 
-        no_data_value = common_annotation_models_l2.NoDataValueChoiceType(float_no_data_value=FLOAT_NODATA_VALUE)
+        no_data_value = common_annotation_l2l3.NoDataValueChoiceType(float_no_data_value=FLOAT_NODATA_VALUE)
         main_ads_raster_image = BIOMASSL2aMainADSRasterImage(
             footprint,
             dgg_latitude_axis[0],
@@ -619,40 +617,31 @@ class FH:
             dgg_longitude_axis[1] - dgg_longitude_axis[0],
             len(dgg_latitude_axis),
             len(dgg_longitude_axis),
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+            projection.value,
+            translate_common.translate_datum_to_model(datum),
+            translate_common_annotation_l2l3.translate_pixel_representation_choice_to_model(pixel_representation),
+            translate_common_annotation_l2l3.translate_pixel_type_choice_to_model(pixel_type),
+            translate_common_annotation_l2l3.translate_no_data_value_choice_to_model(no_data_value),
         )
 
         # main_ads_input_information
-        polarisation_list = common_annotation_models_l2.PolarisationListType(
-            polarisation=[
-                common_annotation_models_l2.PolarisationType("HH"),
-                common_annotation_models_l2.PolarisationType("VH"),
-                common_annotation_models_l2.PolarisationType("VV"),
-            ],
-            count=int(3),
-        )
-
+        polarisation_list = [common.PolarisationType.HH, common.PolarisationType.VH, common.PolarisationType.VV]
         acquisition_list = []
         overall_product_quality_indices = []
         for idx, acq_folder_name in enumerate(self.acquisition_paths_selected_not_sorted):
             overall_product_quality_indices.append(
                 self.stack_products_list[idx].stack_quality.overall_product_quality_index
             )
-            if idx == self.primary_image_index:  # primary image index is ordered as the acquisitions (not sorted)
-                reference_image = "true"
-            else:
-                reference_image = "false"
+            reference_image = (
+                idx == self.primary_image_index
+            )  # primary image index is ordered as the acquisitions (not sorted)
 
             sta_quality_parameters_list = []
             assert self.stack_products_list[0].stack_quality is not None
             assert self.stack_products_list[0].stack_quality.sta_quality_parameters_list is not None
             for param in self.stack_products_list[0].stack_quality.sta_quality_parameters_list:
                 sta_quality_parameters_list.append(
-                    common_annotation_models_l2.StaQualityParametersType(
+                    common_annotation_l2l3.StaQualityParametersType(
                         invalid_l1a_data_samples=param.invalid_l1a_data_samples,
                         rfi_decorrelation=param.rfi_decorrelation,
                         rfi_decorrelation_threshold=param.rfi_decorrelation_threshold,
@@ -663,23 +652,18 @@ class FH:
                         invalid_ground_phases_screen_estimates_fraction=param.invalid_skp_calibration_phase_screen_ratio,
                         ground_phases_screen_quality_threshold=param.skp_calibration_phase_screen_quality_threshold,
                         skp_decomposition_index=param.skp_decomposition_index,
-                        polarisation=common_annotation_models_l2.PolarisationType(param.polarization.value),
+                        polarisation=param.polarization,
                     )
                 )
 
-            sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters=sta_quality_parameters_list,
-                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
-            )
-
-            sta_quality = common_annotation_models_l2.StaQualityType(
+            sta_quality = common_annotation_l2l3.StaQualityType(
                 overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
                 sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
-                common_annotation_models_l2.AcquisitionType(
-                    folder_name=str(acq_folder_name.name),
+                common_annotation_l2l3.AcquisitionType(
+                    folder_name=acq_folder_name.name,
                     sta_quality=sta_quality,
                     reference_image=reference_image,
                 )
@@ -698,69 +682,60 @@ class FH:
         vertical_wavenumbers = [lut["waveNumbers"].astype(np.float64) for lut in self.stack_lut_list]
         average_wavenumbers = [np.nanmean(vw) for vw in vertical_wavenumbers]
 
-        vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            min=common_annotation_models_l2.FloatWithUnit(
-                value=float(min(average_wavenumbers)),
-                units=common_types.UomType.RAD_M,
-            ),
-            max=common_annotation_models_l2.FloatWithUnit(
-                value=float(max(average_wavenumbers)),
-                units=common_types.UomType.RAD_M,
-            ),
+        vertical_wavenumbers_info = common.MinMaxTypeWithUnit(
+            min=float(min(average_wavenumbers)),
+            max=float(max(average_wavenumbers)),
+            units=common.UomType.RAD_M,
         )
 
         wavenumber_spacings = np.abs(np.diff(average_wavenumbers))
         hoa_max = 2 * np.pi / min(wavenumber_spacings)
         hoa_min = 2 * np.pi / max(wavenumber_spacings)
-        height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+        height_of_ambiguity_info = common.MinMaxTypeWithUnit(
+            min=float(hoa_min),
+            max=float(hoa_max),
+            units=common.UomType.M,
         )
 
         main_ads_input_information = BIOMASSL2aMainADSInputInformation(
             self.product_type,
             overall_products_quality_index=(0 if sum(overall_product_quality_indices) == 0 else 1),
             nominal_stack=str(np.logical_or(is_int_and_nominal, is_tom_and_nominal)).lower(),
-            polarisation_list=polarisation_list,
-            projection=projection,
+            polarisation_list=translate_common_annotation_l2l3.translate_polarisation_list_to_model(polarisation_list),
+            projection=projection.value,
             footprint=footprint,
-            vertical_wavenumbers=vertical_wavenumbers_info,
-            height_of_ambiguity=height_of_ambiguity_info,
-            acquisition_list=common_annotation_models_l2.AcquisitionListType(
-                acquisition=acquisition_list,
-                count=len(acquisition_list),
-            ),
+            vertical_wavenumbers=translate_common.translate_min_max_type_with_unit_to_model(vertical_wavenumbers_info),
+            height_of_ambiguity=translate_common.translate_min_max_type_with_unit_to_model(height_of_ambiguity_info),
+            acquisition_list=translate_common_annotation_l2l3.translate_acquisition_list_to_model(acquisition_list),
         )
 
         # main_ads_processing_parameters
-        general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            apply_calibration_screen=self.aux_pp2_2a.general.apply_calibration_screen.value,
+        general_configuration = common_annotation_l2l3.GeneralConfigurationParametersType(
+            apply_calibration_screen=common_annotation_l2l3.CalibrationScreenType(
+                self.aux_pp2_2a.general.apply_calibration_screen.value
+            ),
             forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
             forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
-                self.aux_pp2_2a.general.subsetting_rule.value
-            ),
-            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
-                self.aux_pp2_2a.general.polarisation_combination_method
-            ),
+            subsetting_rule=common_annotation_l2l3.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            polarisation_combination_method=self.aux_pp2_2a.general.polarisation_combination_method,
         )
 
-        compression_options_fh = main_annotation_models_l2a_fh.CompressionOptionsL2A(
-            mds=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds(
-                fh=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Fh(
+        compression_options_fh = main_annotation_l2a_fh.CompressionOptionsL2AFH(
+            mds=main_annotation_l2a_fh.CompressionOptionsL2AFH.Mds(
+                fh=main_annotation_l2a_fh.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_2a.fh.compression_options.mds.fh.compression_factor,
                     max_z_error=self.aux_pp2_2a.fh.compression_options.mds.fh.max_z_error,
                 ),
-                quality=main_annotation_models_l2a_fh.CompressionOptionsL2A.Mds.Quality(
+                quality=main_annotation_l2a_fh.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_2a.fh.compression_options.mds.quality.compression_factor,
                     max_z_error=self.aux_pp2_2a.fh.compression_options.mds.quality.max_z_error,
                 ),
             ),
-            ads=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads(
-                fnf=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.Fnf(
+            ads=main_annotation_l2a_fh.CompressionOptionsL2AFH.Ads(
+                fnf=main_annotation_l2a_fh.CompressionFactorType(
                     compression_factor=self.aux_pp2_2a.fh.compression_options.ads.fnf.compression_factor
                 ),
-                geometric_luts=main_annotation_models_l2a_fh.CompressionOptionsL2A.Ads.GeometricLuts(
+                geometric_luts=main_annotation_l2a_fh.CompressionFactorLeastSignificantDigitType(
                     compression_factor=self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.compression_factor,
                     least_significant_digit=self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit,
                 ),
@@ -769,31 +744,31 @@ class FH:
             ads_block_size=self.aux_pp2_2a.fh.compression_options.ads_block_size,
         )
 
-        normalised_height_estimation_range = main_annotation_models_l2a_fh.MinMaxType(
+        normalised_height_estimation_range = common.MinMaxType(
             min=self.aux_pp2_2a.fh.normalised_height_estimation_range.min,
             max=self.aux_pp2_2a.fh.normalised_height_estimation_range.max,
         )
-        normalised_wavenumber_estimation_range = main_annotation_models_l2a_fh.MinMaxNumType(
+        normalised_wavenumber_estimation_range = common_annotation_l2l3.MinMaxNumType(
             min=self.aux_pp2_2a.fh.normalised_wavenumber_estimation_range.min,
             max=self.aux_pp2_2a.fh.normalised_wavenumber_estimation_range.max,
             num=self.aux_pp2_2a.fh.normalised_wavenumber_estimation_range.num,
         )
-        ground_to_volume_ratio_range = main_annotation_models_l2a_fh.MinMaxNumType(
+        ground_to_volume_ratio_range = common_annotation_l2l3.MinMaxNumType(
             min=self.aux_pp2_2a.fh.ground_to_volume_ratio_range.min,
             max=self.aux_pp2_2a.fh.ground_to_volume_ratio_range.max,
             num=self.aux_pp2_2a.fh.ground_to_volume_ratio_range.num,
         )
-        temporal_decorrelation_estimation_range = main_annotation_models_l2a_fh.MinMaxNumType(
+        temporal_decorrelation_estimation_range = common_annotation_l2l3.MinMaxNumType(
             min=self.aux_pp2_2a.fh.temporal_decorrelation_estimation_range.min,
             max=self.aux_pp2_2a.fh.temporal_decorrelation_estimation_range.max,
             num=self.aux_pp2_2a.fh.temporal_decorrelation_estimation_range.num,
         )
 
-        uncertainty_valid_values_limits = main_annotation_models_l2a_fh.MinMaxType(
+        uncertainty_valid_values_limits = common.MinMaxType(
             min=self.aux_pp2_2a.fh.uncertainty_valid_values_limits.min,
             max=self.aux_pp2_2a.fh.uncertainty_valid_values_limits.max,
         )
-        vertical_wavenumber_valid_values_limits = main_annotation_models_l2a_fh.MinMaxType(
+        vertical_wavenumber_valid_values_limits = common.MinMaxType(
             min=self.aux_pp2_2a.fh.vertical_wavenumber_valid_values_limits.min,
             max=self.aux_pp2_2a.fh.vertical_wavenumber_valid_values_limits.max,
         )
@@ -801,25 +776,31 @@ class FH:
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFH(
             bps.l2a_processor.__version__,
             self.start_time,
-            general_configuration,
-            compression_options_fh,
+            translate_common_annotation_l2l3.translate_general_configuration_to_model(general_configuration),
+            translate_main_annotation_l2a_fh.translate_compression_options_l2a_fh_to_model(compression_options_fh),
             self.aux_pp2_2a.fh.vertical_reflectivity_option.value,
             self.aux_pp2_2a.fh.model_inversion.value,
             self.aux_pp2_2a.fh.spectral_decorrelation_compensation_flag,
             self.aux_pp2_2a.fh.snr_decorrelation_compensation_flag,
             self.aux_pp2_2a.fh.correct_terrain_slopes_flag,
-            normalised_height_estimation_range,
-            normalised_wavenumber_estimation_range,
-            ground_to_volume_ratio_range,
-            temporal_decorrelation_estimation_range,
+            translate_common.translate_min_max_type_to_model(normalised_height_estimation_range),
+            translate_common_annotation_l2l3.translate_min_max_num_type_to_model(
+                normalised_wavenumber_estimation_range
+            ),
+            translate_common_annotation_l2l3.translate_min_max_num_type_to_model(ground_to_volume_ratio_range),
+            translate_common_annotation_l2l3.translate_min_max_num_type_to_model(
+                temporal_decorrelation_estimation_range
+            ),
             self.aux_pp2_2a.fh.temporal_decorrelation_ground_to_volume_ratio,
             self.aux_pp2_2a.fh.residual_decorrelation,
             self.aux_pp2_2a.fh.product_resolution,
-            uncertainty_valid_values_limits,
-            vertical_wavenumber_valid_values_limits,
+            translate_common.translate_min_max_type_to_model(uncertainty_valid_values_limits),
+            translate_common.translate_min_max_type_to_model(vertical_wavenumber_valid_values_limits),
             self.aux_pp2_2a.fh.lower_height_limit,
             self.aux_pp2_2a.fh.upsampling_factor,
-            self.aux_pp2_2a.fh.vertical_reflectivity_default_profile,
+            translate_main_annotation_l2a_fh.translate_vertical_reflectivity_profile_to_model(
+                self.aux_pp2_2a.fh.vertical_reflectivity_default_profile.tolist()
+            ),
         )
 
         # lut_ads
