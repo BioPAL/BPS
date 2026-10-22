@@ -12,8 +12,10 @@ Common
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import Self, get_args
 
 from arepytools.timing.precisedatetime import PreciseDateTime
+from bps.common import l2_joborder_tags
 
 
 class ProcessingModeType(Enum):
@@ -276,6 +278,21 @@ class ProductType(Enum):
     GN_L2_A = "GN_L2A"
     TFH_L2_A = "TFH_L2A"
     AGB_L2_B = "AGB_L2B"
+
+    @classmethod
+    def from_l2_joborder_tag(cls, tag: l2_joborder_tags.L2Tags) -> Self:
+        if tag not in get_args(l2_joborder_tags.L2Tags):
+            raise ValueError(f"Tag: {tag} is not a valid l2 tag")
+        mapping = {
+            l2_joborder_tags.L2A_OUTPUT_PRODUCT_FD: cls.FD_L2_A,
+            l2_joborder_tags.L2A_OUTPUT_PRODUCT_FH: cls.FH_L2_A,
+            l2_joborder_tags.L2A_OUTPUT_PRODUCT_TFH: cls.TFH_L2_A,
+            l2_joborder_tags.L2A_OUTPUT_PRODUCT_GN: cls.GN_L2_A,
+            l2_joborder_tags.L2B_OUTPUT_PRODUCT_FD: cls.FD_L2_B,
+            l2_joborder_tags.L2B_OUTPUT_PRODUCT_FH: cls.FH_L2_B,
+            l2_joborder_tags.L2B_OUTPUT_PRODUCT_AGB: cls.AGB_L2_B,
+        }
+        return mapping[tag]
 
 
 class BaselineMethodType(Enum):
