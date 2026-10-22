@@ -18,6 +18,60 @@ from bps.transcoder.io import (
 )
 
 
+def translate_compression_options_l2b_fh(
+    compression_options: main_annotation_models_l2b_fh.CompressionOptionsL2B,
+) -> main_annotation_l2b_fh.CompressionOptionsL2B:
+    return main_annotation_l2b_fh.CompressionOptionsL2B(
+        mds=main_annotation_l2b_fh.CompressionOptionsL2B.Mds(
+            fh=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
+                compression_options.mds.fh.compression_factor,
+                compression_options.mds.fh.max_z_error,
+            ),
+            quality=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
+                compression_options.mds.quality.compression_factor,
+                compression_options.mds.quality.max_z_error,
+            ),
+            bps_fnf=main_annotation_l2b_fh.CompressionFactorType(compression_options.mds.bps_fnf.compression_factor),
+            heat_map=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
+                compression_options.mds.heat_map.compression_factor,
+                compression_options.mds.heat_map.max_z_error,
+            ),
+            acquisition_id_image=main_annotation_l2b_fh.CompressionFactorType(
+                compression_options.mds.acquisition_id_image.compression_factor
+            ),
+        ),
+        mds_block_size=compression_options.mds_block_size,
+    )
+
+
+def translate_compression_options_l2b_fh_to_model(
+    compression_options: main_annotation_l2b_fh.CompressionOptionsL2B,
+) -> main_annotation_models_l2b_fh.CompressionOptionsL2B:
+    return main_annotation_models_l2b_fh.CompressionOptionsL2B(
+        mds=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
+            fh=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
+                compression_factor=compression_options.mds.fh.compression_factor,
+                max_z_error=compression_options.mds.fh.max_z_error,
+            ),
+            quality=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
+                compression_factor=compression_options.mds.quality.compression_factor,
+                max_z_error=compression_options.mds.quality.max_z_error,
+            ),
+            bps_fnf=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
+                compression_factor=compression_options.mds.bps_fnf.compression_factor
+            ),
+            heat_map=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
+                compression_factor=compression_options.mds.heat_map.compression_factor,
+                max_z_error=compression_options.mds.heat_map.max_z_error,
+            ),
+            acquisition_id_image=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                compression_factor=compression_options.mds.acquisition_id_image.compression_factor
+            ),
+        ),
+        mds_block_size=compression_options.mds_block_size,
+    )
+
+
 def translate_processing_parameters_l2b_fh(
     params: main_annotation_models_l2b_fh.ProcessingParametersL2BType,
 ) -> main_annotation_l2b_fh.ProcessingParametersAnnotation:
@@ -25,33 +79,11 @@ def translate_processing_parameters_l2b_fh(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime(params.product_generation_time),
         forest_masking_flag=translate_common.translate_bool(params.forest_masking_flag),
-        bps_fnf=main_annotation_l2b_fh.BpsFnfType(params.bps_fnf.value),
+        bps_fnf=translate_common_annotation_l2l3.translate_bps_fnf_type(params.bps_fnf),
         minimum_l2a_coverage=params.minimum_l2a_coverage,
         roll_off_factor_azimuth=params.roll_off_factor_azimuth,
         roll_off_factor_range=params.roll_off_factor_range,
-        compression_options=main_annotation_l2b_fh.CompressionOptionsL2B(
-            mds=main_annotation_l2b_fh.CompressionOptionsL2B.Mds(
-                fh=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
-                    params.compression_options.mds.fh.compression_factor,
-                    params.compression_options.mds.fh.max_z_error,
-                ),
-                quality=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
-                    params.compression_options.mds.quality.compression_factor,
-                    params.compression_options.mds.quality.max_z_error,
-                ),
-                bps_fnf=main_annotation_l2b_fh.CompressionFactorType(
-                    params.compression_options.mds.bps_fnf.compression_factor
-                ),
-                heat_map=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
-                    params.compression_options.mds.heat_map.compression_factor,
-                    params.compression_options.mds.heat_map.max_z_error,
-                ),
-                acquisition_id_image=main_annotation_l2b_fh.CompressionFactorType(
-                    params.compression_options.mds.acquisition_id_image.compression_factor
-                ),
-            ),
-            mds_block_size=params.compression_options.mds_block_size,
-        ),
+        compression_options=translate_compression_options_l2b_fh(params.compression_options),
     )
 
 
@@ -62,33 +94,11 @@ def translate_processing_parameters_l2b_fh_to_model(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime_to_model(params.product_generation_time),
         forest_masking_flag=translate_common.translate_bool_to_model(params.forest_masking_flag),
-        bps_fnf=main_annotation_models_l2b_fh.BpsFnfType(params.bps_fnf.value),
+        bps_fnf=translate_common_annotation_l2l3.translate_bps_fnf_type_to_model(params.bps_fnf),
         minimum_l2a_coverage=params.minimum_l2a_coverage,
         roll_off_factor_azimuth=params.roll_off_factor_azimuth,
         roll_off_factor_range=params.roll_off_factor_range,
-        compression_options=main_annotation_models_l2b_fh.CompressionOptionsL2B(
-            mds=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
-                fh=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
-                    compression_factor=params.compression_options.mds.fh.compression_factor,
-                    max_z_error=params.compression_options.mds.fh.max_z_error,
-                ),
-                quality=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
-                    compression_factor=params.compression_options.mds.quality.compression_factor,
-                    max_z_error=params.compression_options.mds.quality.max_z_error,
-                ),
-                bps_fnf=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
-                    compression_factor=params.compression_options.mds.bps_fnf.compression_factor
-                ),
-                heat_map=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
-                    compression_factor=params.compression_options.mds.heat_map.compression_factor,
-                    max_z_error=params.compression_options.mds.heat_map.max_z_error,
-                ),
-                acquisition_id_image=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
-                    compression_factor=params.compression_options.mds.acquisition_id_image.compression_factor
-                ),
-            ),
-            mds_block_size=params.compression_options.mds_block_size,
-        ),
+        compression_options=translate_compression_options_l2b_fh_to_model(params.compression_options),
     )
 
 
