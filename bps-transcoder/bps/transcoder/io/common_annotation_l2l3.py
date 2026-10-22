@@ -19,6 +19,11 @@ from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 
 
+class BpsFnfType(Enum):
+    FNF = "FNF"
+    CFM = "CFM"
+
+
 @dataclass
 class PixelRepresentationChoiceType:
     fd: common.PixelRepresentationType | None = None
@@ -49,25 +54,12 @@ class NoDataValueChoiceType:
 
 
 @dataclass
-class InputInformationL2AType:
-    product_type: common.ProductType
-    overall_products_quality_index: int
-    nominal_stack: str
-    polarisation_list: list[common.PolarisationType]
-    projection: common.ProjectionType
-    footprint: list[float]
-    vertical_wavenumbers: common.MinMaxTypeWithUnit
-    height_of_ambiguity: common.MinMaxTypeWithUnit
-    acquisition_list: AcquisitionListType
-
-
-@dataclass
 class InputInformationL2BL3ListType:
     @dataclass
     class L2AInputs:
         l2a_product_folder_name: str
         l2a_product_date: str
-        l1_inputs: InputInformationL2AType
+        l1_inputs: BIOMASSL2aMainADSInputInformation
         significance_level: float | None = None
 
     l2a_inputs: list[InputInformationL2BL3ListType.L2AInputs]

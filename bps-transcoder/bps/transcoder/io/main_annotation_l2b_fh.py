@@ -8,15 +8,9 @@
 """In-memory representation of the BIOMASS L2B FH main annotation."""
 
 from dataclasses import dataclass
-from enum import Enum
 
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.io import common_annotation_l2l3
-
-
-class BpsFnfType(Enum):
-    FNF = "FNF"
-    CFM = "CFM"
 
 
 @dataclass
@@ -49,7 +43,7 @@ class ProcessingParametersAnnotation:
     processor_version: str
     product_generation_time: PreciseDateTime
     forest_masking_flag: bool
-    bps_fnf: BpsFnfType
+    bps_fnf: common_annotation_l2l3.BpsFnfType
     compression_options: CompressionOptionsL2B
     minimum_l2a_coverage: float
     roll_off_factor_azimuth: float

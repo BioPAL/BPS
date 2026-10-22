@@ -17,6 +17,18 @@ from bps.transcoder.io import (
 )
 
 
+def translate_bps_fnf_type(
+    bps_fnf: common_annotation_models_l2.BpsFnfType,
+) -> common_annotation_l2l3.BpsFnfType:
+    return common_annotation_l2l3.BpsFnfType(bps_fnf.value)
+
+
+def translate_bps_fnf_type_to_model(
+    bps_fnf: common_annotation_l2l3.BpsFnfType,
+) -> common_annotation_models_l2.BpsFnfType:
+    return common_annotation_models_l2.BpsFnfType(bps_fnf.value)
+
+
 def translate_stringlist(value: common_annotation_models_l2.StringListType) -> list[str]:
     return value.id
 
@@ -429,22 +441,11 @@ def translate_input_information_l2bl3_list(
     """Translate an L2B/L3 input-information list to its in-memory representation."""
     l2a_inputs = []
     for input_item in input_information.l2a_inputs:
-        l1_inputs = translate_input_information_l2a(input_item.l1_inputs)
         l2a_inputs.append(
             common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs(
                 l2a_product_folder_name=input_item.l2a_product_folder_name,
                 l2a_product_date=input_item.l2a_product_date,
-                l1_inputs=common_annotation_l2l3.InputInformationL2AType(
-                    product_type=l1_inputs.product_type,
-                    overall_products_quality_index=l1_inputs.overall_products_quality_index,
-                    nominal_stack=l1_inputs.nominal_stack,
-                    polarisation_list=l1_inputs.polarisation_list,
-                    projection=l1_inputs.projection,
-                    footprint=l1_inputs.footprint,
-                    vertical_wavenumbers=l1_inputs.vertical_wavenumbers,
-                    height_of_ambiguity=l1_inputs.height_of_ambiguity,
-                    acquisition_list=l1_inputs.acquisition_list,
-                ),
+                l1_inputs=translate_input_information_l2a(input_item.l1_inputs),
                 significance_level=input_item.significance_level,
             )
         )
@@ -457,23 +458,11 @@ def translate_input_information_l2bl3_list_to_model(
     """Translate an in-memory L2B/L3 input-information list to its model."""
     l2a_inputs = []
     for input_item in input_information.l2a_inputs:
-        l1_inputs = input_item.l1_inputs
-        l2a_input_information = common_annotation_l2l3.BIOMASSL2aMainADSInputInformation(
-            product_type=l1_inputs.product_type,
-            overall_products_quality_index=l1_inputs.overall_products_quality_index,
-            nominal_stack=l1_inputs.nominal_stack,
-            polarisation_list=l1_inputs.polarisation_list,
-            projection=l1_inputs.projection,
-            footprint=l1_inputs.footprint,
-            vertical_wavenumbers=l1_inputs.vertical_wavenumbers,
-            height_of_ambiguity=l1_inputs.height_of_ambiguity,
-            acquisition_list=l1_inputs.acquisition_list,
-        )
         l2a_inputs.append(
             common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
                 l2a_product_folder_name=input_item.l2a_product_folder_name,
                 l2a_product_date=input_item.l2a_product_date,
-                l1_inputs=translate_input_information_l2a_to_model(l2a_input_information),
+                l1_inputs=translate_input_information_l2a_to_model(input_item.l1_inputs),
                 significance_level=input_item.significance_level,
             )
         )
@@ -638,9 +627,7 @@ def translate_productl2bl3_to_model(
         mission_phase_id=translate_common.translate_mission_phase_id_to_model(annotation.mission_phase_id),
         sensor_mode=translate_common.translate_sensor_mode_to_model(annotation.sensor_mode),
         global_coverage_id=annotation.global_coverage_id,
-        contributing_tiles=translate_optional_stringlist_to_model(annotation.contributing_tiles)
-        if annotation.contributing_tiles
-        else None,
+        contributing_tiles=translate_optional_stringlist_to_model(annotation.contributing_tiles),
         cal_abcoverage_per_tile=translate_optional_cal_ab_coverage_per_tile_to_model(
             annotation.cal_ab_coverage_per_tile
         ),

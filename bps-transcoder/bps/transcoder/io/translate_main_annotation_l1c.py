@@ -18,6 +18,7 @@ from bps.common.io.translate_common import (
     translate_coregistration_method,
     translate_coregistration_method_to_model,
     translate_datetime,
+    translate_datetime_to_model,
     translate_datum,
     translate_datum_to_model,
     translate_float_array,
@@ -46,7 +47,6 @@ from bps.transcoder.io import (
     main_annotation_models_l1c,
     translate_common_annotation_l1,
 )
-from bps.transcoder.utils.time_conversions import no_zulu_isoformat
 
 
 def translate_sta_processing_parameters(
@@ -166,7 +166,7 @@ def translate_sta_processing_parameters_to_model(
     """Marshall to related L1c annotation."""
     return main_annotation_models_l1c.StaProcessingParametersType(
         processor_version=params.processor_version,
-        product_generation_time=no_zulu_isoformat(params.product_generation_time, timespec="microseconds"),
+        product_generation_time=translate_datetime_to_model(params.product_generation_time),
         polarisations_used=params.polarizations_used,
         polarisation_combination_method=translate_polarisation_combination_method_to_model(
             params.polarization_combination_method
