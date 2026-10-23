@@ -33,12 +33,11 @@ from bps.common.translate_job_order import get_bps_logger_level
 from bps.common.utils import cross_pol_merging
 from bps.l2a_processor import BPS_L2A_PROCESSOR_NAME
 from bps.l2a_processor.basins import BASINS
-from bps.l2a_processor.core.aux_pp2_2a import GeneralConf
+from bps.l2a_processor.core.aux_pp2_2a import CalibrationScreenType, GeneralConf
 from bps.l2a_processor.core.parsing import parse_aux_pp2_2a, parse_l2a_job_order
 from bps.l2a_processor.fd.fd_commands import FD
 from bps.l2a_processor.fh.fh_commands import FH
 from bps.l2a_processor.gn.gn_commands import GN
-from bps.l2a_processor.io.aux_pp2_2a_models.models import CalibrationScreenType
 from bps.l2a_processor.l2a_common_functionalities import (
     calibration,
     fast_read_baseline_ordering_index,

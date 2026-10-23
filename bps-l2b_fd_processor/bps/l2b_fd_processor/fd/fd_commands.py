@@ -18,7 +18,7 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, common_types
+from bps.common.io import common
 from bps.l2b_fd_processor.core.aux_pp2_2b_fd import AuxProcessingParametersL2BFD
 from bps.l2b_fd_processor.core.joborder_l2b_fd import L2bFDJobOrder
 from bps.l2b_fd_processor.core.translate_job_order import L2B_OUTPUT_PRODUCT_FD
@@ -292,20 +292,20 @@ class FDL2B:
             "acquisition_id_image": meta_data_temp[4],
         }
         meta_data_d["fd"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_DISTURBANCE.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_DISTURBANCE.value
         )
         meta_data_d["fd"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
         meta_data_d["probability_ofchange"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.PROBABILITY_OF_CHANGE.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.PROBABILITY_OF_CHANGE.value
         )
         meta_data_d["cfm"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.COMPUTED_FOREST_MASK.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.COMPUTED_FOREST_MASK.value
         )
         meta_data_d["cfm"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
         meta_data_d["heat_map"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.HEAT_MAP.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.HEAT_MAP.value
         )
         meta_data_d["heat_map"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 

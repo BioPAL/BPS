@@ -15,7 +15,12 @@ from enum import Enum
 
 import numpy as np
 from bps.common.io import common
-from bps.l2a_processor.io import aux_pp2_2a_models
+
+
+class CalibrationScreenType(Enum):
+    NONE = "none"
+    GEOMETRY = "geometry"
+    SKP = "skp"
 
 
 @dataclass
@@ -28,7 +33,7 @@ class GeneralConf:
         GEOMETRY = "geometry"
         MAINTAIN_ALL = "maintain all"
 
-    apply_calibration_screen: aux_pp2_2a_models.CalibrationScreenType
+    apply_calibration_screen: CalibrationScreenType
     forest_coverage_threshold: float
     forest_mask_interpolation_threshold: float
     subsetting_rule: SubsettingRules
@@ -44,12 +49,19 @@ class OperationalModeType(Enum):
 
 
 @dataclass
+class AcquisitionFolderName:
+    value: str
+    reference_image: bool
+    average_wavenumber: None | float
+
+
+@dataclass
 class GroundCancellationConfFD:
     """Ground Cancellation configurations for FD"""
 
     emphasized_forest_height: float
     operational_mode: OperationalModeType
-    images_pair_selection: aux_pp2_2a_models.AuxppacquisitionListType
+    images_pair_selection: list[AcquisitionFolderName]
     disable_ground_cancellation_flag: bool
 
 

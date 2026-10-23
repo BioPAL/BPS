@@ -18,7 +18,7 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, common_types
+from bps.common.io import common
 from bps.l2b_fh_processor.core.aux_pp2_2b_fh import AuxProcessingParametersL2BFH
 from bps.l2b_fh_processor.core.joborder_l2b_fh import L2bFHJobOrder
 from bps.l2b_fh_processor.core.translate_job_order import (
@@ -305,21 +305,21 @@ class FHL2B:
             "acquisition_id_image": meta_data_temp[4],
         }
         meta_data_dict["fh"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_HEIGHT_M.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_HEIGHT_M.value
         )
 
         meta_data_dict["quality"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_HEIGHT_QUALITY.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_HEIGHT_QUALITY.value
         )
 
         meta_data_dict["bps_fnf"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_MASK.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_MASK.value
         )
 
         meta_data_dict["bps_fnf"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
         meta_data_dict["heat_map"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.HEAT_MAP.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.HEAT_MAP.value
         )
 
         meta_data_dict["acquisition_id_image"].image_description = (
