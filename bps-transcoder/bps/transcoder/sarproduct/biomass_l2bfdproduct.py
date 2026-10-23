@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.mph import get_mph_path
-from bps.transcoder.io import common_annotation_models_l2, main_annotation_models_l2b_fd
+from bps.transcoder.io import common_annotation_l2l3, main_annotation_l2b_fd
 from bps.transcoder.utils.production_model_utils import encode_product_name_id_value
 from bps.transcoder.utils.time_conversions import pdt_to_compact_date
 
@@ -183,59 +183,16 @@ class BIOMASSL2bFDProductMeasurement:
     metadata_dict: dict[str, MetadataCOG]
 
 
-@dataclass
-class BIOMASSL2bFDMainADSproduct:
-    mission: str
-    tile_id_list: list[str]
-    basin_id_list: list[str]
-    product_type: str
-    start_time: PreciseDateTime
-    stop_time: PreciseDateTime
-    radar_carrier_frequency: float
-    mission_phase_id: str
-    sensor_mode: str
-    global_coverage_id: int
-
-
-@dataclass
-class BIOMASSL2bFDMainADSRasterImage:
-    footprint: list[float]
-    first_latitude_value: float
-    first_longitude_value: float
-    latitude_spacing: float
-    longitude_spacing: float
-    number_of_samples: int
-    number_of_lines: int
-    projection: str
-    datum: common_annotation_models_l2.DatumType
-    pixel_representation: common_annotation_models_l2.PixelRepresentationChoiceType
-    pixel_type: common_annotation_models_l2.PixelTypeChoiceType
-    no_data_value: common_annotation_models_l2.NoDataValueChoiceType
-
-
-@dataclass
-class BIOMASSL2bFDMainADSInputInformation:
-    input_information: common_annotation_models_l2.InputInformationL2BL3ListType
-
-
-@dataclass
-class BIOMASSL2bMainADSProcessingParametersFD:
-    processor_version: str
-    product_generation_time: PreciseDateTime
-    compression_options: main_annotation_models_l2b_fd.CompressionOptionsL2B
-    minumum_l2a_coverage: float
-
-
 class BIOMASSL2bFDProduct:
     """_summary_"""
 
     def __init__(
         self,
         measurement: BIOMASSL2bFDProductMeasurement,
-        main_ads_product: BIOMASSL2bFDMainADSproduct,
-        main_ads_raster_image: BIOMASSL2bFDMainADSRasterImage,
-        main_ads_input_information: BIOMASSL2bFDMainADSInputInformation,
-        main_ads_processing_parameters: BIOMASSL2bMainADSProcessingParametersFD,
+        main_ads_product: common_annotation_l2l3.ProductL2bL3Type,
+        main_ads_raster_image: common_annotation_l2l3.BIOMASSL2aMainADSRasterImage,
+        main_ads_input_information: common_annotation_l2l3.InputInformationL2BL3ListType,
+        main_ads_processing_parameters: main_annotation_l2b_fd.ProcessingParametersAnnotation,
         baseline: int,
         product_doi: str,
     ) -> None:
@@ -245,11 +202,11 @@ class BIOMASSL2bFDProduct:
         self.main_ads_product = main_ads_product
         self.main_ads_raster_image = main_ads_raster_image
         self.main_ads_input_information = main_ads_input_information
+        self.main_ads_processing_parameters = main_ads_processing_parameters
         self.baseline = baseline
         self.product_doi = product_doi
         self.product_type = "FP_FD__L2B"
 
-        self.main_ads_processing_parameters = main_ads_processing_parameters
         self._set_product_name()
 
     def _set_product_name(self):
@@ -268,10 +225,10 @@ class BIOMASSL2bFDProduct:
             [
                 "BIO",
                 self.product_type,
-                str(self.main_ads_product.mission_phase_id)[0],
-                "G" + ("__" if self.main_ads_product.mission_phase_id[0] == "C" else global_coverage_id_str),
-                "T" + f"{self.main_ads_product.tile_id_list[0]}",
-                "B" + f"{self.main_ads_product.basin_id_list[0][1:4]}",
+                self.main_ads_product.mission_phase_id.value[0],
+                "G" + ("__" if self.main_ads_product.mission_phase_id.value[0] == "C" else global_coverage_id_str),
+                "T" + f"{self.main_ads_product.tile_id}",
+                "B" + f"{self.main_ads_product.basin_id[0][1:4]}",
                 ("__" if self.baseline == 0 else f"{self.baseline:02d}"),
                 pdt_to_compact_date(self.creation_date),
             ]

@@ -286,11 +286,11 @@ class BIOMASSL2aProductWriter:
         xml6.text = "LEFT"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}missionPhase")
         mission_phases_dict = {
-            "INT": "INTERFEROMETRIC",
-            "TOM": "TOMOGRAPHIC",
-            "COM": "COMMISSIONING",
+            common.MissionPhaseIdtype.INT: "INTERFEROMETRIC",
+            common.MissionPhaseIdtype.TOM: "TOMOGRAPHIC",
+            common.MissionPhaseIdtype.COM: "COMMISSIONING",
         }
-        xml6.text = mission_phases_dict[self.product.main_ads_product.mission_phase_id.value]
+        xml6.text = mission_phases_dict[self.product.main_ads_product.mission_phase_id]
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.main_ads_product.global_coverage_id)
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}majorCycleID")

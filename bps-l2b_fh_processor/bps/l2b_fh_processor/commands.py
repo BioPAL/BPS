@@ -110,9 +110,9 @@ def run_l2b_fh_processing(
         )
 
         l2b_fd_product = BIOMASSL2bFDProductReader(job_order.input_l2b_fd_product).read()
-        if job_order.processing_parameters.tile_id not in l2b_fd_product.main_ads_product.tile_id_list:
+        if job_order.processing_parameters.tile_id != l2b_fd_product.main_ads_product.tile_id:
             raise ValueError(
-                f"L2b FD specified in job order covers {l2b_fd_product.main_ads_product.tile_id_list[0]} tile ID, while job order specifies to process '{job_order.processing_parameters.tile_id}' tile ID instead."
+                f"L2b FD specified in job order covers {l2b_fd_product.main_ads_product.tile_id} tile ID, while job order specifies to process '{job_order.processing_parameters.tile_id}' tile ID instead."
             )
 
     else:
