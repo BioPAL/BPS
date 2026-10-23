@@ -45,20 +45,6 @@ class InvalidAuxPP1(RuntimeError):
     """Raised when input aux pp1 is invalid"""
 
 
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
-
-
 def translate_parameters_per_swath(swath_based_params: Any, translator: Callable) -> dict[Swath, Any]:
     """Translate swath-based parameter section"""
     assert swath_based_params.processing_parameters is not None
@@ -82,11 +68,11 @@ def translate_model_to_general_conf(
         requested_height_model_version=conf.height_model.version,
         height_model=GeneralConf.EarthModel(conf.height_model.value.name),
         height_model_version=conf.height_model.version,
-        height_model_fallback_flag=str_to_bool(conf.height_model_fallback_flag),
+        height_model_fallback_flag=translate_common.translate_bool(conf.height_model_fallback_flag),
         height_model_margin=conf.height_model_margin.value,
         parc_roi_samples=conf.parc_processing.parc_roisamples,
         parc_roi_lines=conf.parc_processing.parc_roilines,
-        dual_polarisation_processing_flag=str_to_bool(conf.dual_polarisation_processing_flag),
+        dual_polarisation_processing_flag=translate_common.translate_bool(conf.dual_polarisation_processing_flag),
     )
 
 
@@ -101,7 +87,7 @@ def translate_model_to_l0_import_conf(
         raw_mean_threshold=conf.raw_mean_threshold,
         raw_std_expected=conf.raw_std_expected,
         raw_std_threshold=conf.raw_std_threshold,
-        internal_calibration_estimation_flag=str_to_bool(conf.internal_calibration_estimation_flag),
+        internal_calibration_estimation_flag=translate_common.translate_bool(conf.internal_calibration_estimation_flag),
     )
 
 
@@ -110,10 +96,10 @@ def translate_model_to_raw_data_correction_conf(
 ) -> RawDataCorrectionConf:
     """Translate raw data correction section to the corresponding conf"""
     return RawDataCorrectionConf(
-        bias_correction_flag=str_to_bool(conf.bias_correction_flag),
-        gain_imbalance_correction_flag=str_to_bool(conf.gain_imbalance_correction_flag),
-        non_orthogonality_correction_flag=str_to_bool(conf.non_orthogonality_correction_flag),
-        raw_data_correction_flag=str_to_bool(conf.raw_data_correction_flag),
+        bias_correction_flag=translate_common.translate_bool(conf.bias_correction_flag),
+        gain_imbalance_correction_flag=translate_common.translate_bool(conf.gain_imbalance_correction_flag),
+        non_orthogonality_correction_flag=translate_common.translate_bool(conf.non_orthogonality_correction_flag),
+        raw_data_correction_flag=translate_common.translate_bool(conf.raw_data_correction_flag),
     )
 
 
@@ -122,10 +108,10 @@ def translate_model_to_internal_calibration_conf(
 ) -> InternalCalibrationConf:
     """Translate internal calibration section to the corresponding conf"""
     return InternalCalibrationConf(
-        internal_calibration_correction_flag=str_to_bool(conf.internal_calibration_correction_flag),
-        drift_correction_flag=str_to_bool(conf.drift_correction_flag),
-        delay_correction_flag=str_to_bool(conf.delay_correction_flag),
-        channel_imbalance_correction_flag=str_to_bool(conf.channel_imbalance_correction_flag),
+        internal_calibration_correction_flag=translate_common.translate_bool(conf.internal_calibration_correction_flag),
+        drift_correction_flag=translate_common.translate_bool(conf.drift_correction_flag),
+        delay_correction_flag=translate_common.translate_bool(conf.delay_correction_flag),
+        channel_imbalance_correction_flag=translate_common.translate_bool(conf.channel_imbalance_correction_flag),
         internal_calibration_source=InternalCalibrationConf.Source(conf.internal_calibration_source.name),
         max_drift_amplitude_std_fraction=conf.max_drift_amplitude_std_fraction,
         max_drift_phase_std_fraction=conf.max_drift_phase_std_fraction,
@@ -140,7 +126,7 @@ def translate_model_to_rfi_mitigation_conf(
 ) -> RFIMitigationConf:
     """Translate rfi mitigation section to the corresponding conf"""
     return RFIMitigationConf(
-        detection_flag=str_to_bool(conf.rfi_detection_flag),
+        detection_flag=translate_common.translate_bool(conf.rfi_detection_flag),
         activation_mode=conf.rfi_mitigation_mode.value,
         activation_mask_threshold=conf.rfi_activation_mask_threshold,
         mitigation_method=RFIMitigationConf.MitigationMethod(conf.rfi_mitigation_method.name),
@@ -198,7 +184,7 @@ def translate_model_to_range_compression_conf(
     return RangeCompressionConf(
         range_reference_function_source=ChirpSource(conf.range_reference_function_source.name),
         range_compression_method=RangeCompressionConf.Method(conf.range_compression_method.name),
-        extended_swath_processing=str_to_bool(conf.extended_swath_processing_flag),
+        extended_swath_processing=translate_common.translate_bool(conf.extended_swath_processing_flag),
         parameters=swath_to_parameters,
     )
 
@@ -222,9 +208,9 @@ def translate_model_to_antenna_pattern_correction_conf(
 ) -> AntennaPatternCorrectionConf:
     """Translate antenna pattern compensation section to the corresponding conf"""
     return AntennaPatternCorrectionConf(
-        antenna_pattern_correction1_flag=str_to_bool(conf.antenna_pattern_correction1_flag),
-        antenna_pattern_correction2_flag=str_to_bool(conf.antenna_pattern_correction2_flag),
-        antenna_cross_talk_correction_flag=str_to_bool(conf.antenna_cross_talk_correction_flag),
+        antenna_pattern_correction1_flag=translate_common.translate_bool(conf.antenna_pattern_correction1_flag),
+        antenna_pattern_correction2_flag=translate_common.translate_bool(conf.antenna_pattern_correction2_flag),
+        antenna_cross_talk_correction_flag=translate_common.translate_bool(conf.antenna_cross_talk_correction_flag),
         elevation_mispointing_bias=conf.elevation_mispointing_bias.value,
         azimuth_mispointing_bias=conf.azimuth_mispointing_bias.value,
     )
@@ -257,12 +243,14 @@ def translate_model_to_azimuth_compression_conf(
         block_overlap_samples=conf.block_overlap_samples,
         block_overlap_lines=conf.block_overlap_lines,
         parameters=swath_to_parameters,
-        bistatic_delay_correction=str_to_bool(conf.bistatic_delay_correction_flag),
+        bistatic_delay_correction=translate_common.translate_bool(conf.bistatic_delay_correction_flag),
         bistatic_delay_correction_method=AzimuthCompressionConf.Method(conf.bistatic_delay_correction_method.name),
-        azimuth_resampling=str_to_bool(conf.azimuth_resampling_flag),
+        azimuth_resampling=translate_common.translate_bool(conf.azimuth_resampling_flag),
         azimuth_resampling_frequency=conf.azimuth_resampling_frequency.value,
-        azimuth_focusing_margins_removal_flag=str_to_bool(conf.azimuth_focusing_margins_removal_flag),
-        azimuth_coregistration_flag=str_to_bool(conf.azimuth_coregistration_flag),
+        azimuth_focusing_margins_removal_flag=translate_common.translate_bool(
+            conf.azimuth_focusing_margins_removal_flag
+        ),
+        azimuth_coregistration_flag=translate_common.translate_bool(conf.azimuth_coregistration_flag),
         filter_type=conf.filter_type.name,
         filter_bandwidth=conf.filter_bandwidth.value,
         filter_length=conf.filter_length,
@@ -301,7 +289,9 @@ def translate_model_to_radiometric_calibration_conf(
         absolute_calibration_constant=polarization_to_cal_const,
         processing_gain=polarization_to_gain,
         reference_range=conf.reference_range.value,
-        range_spreading_loss_compensation_enabled=str_to_bool(conf.range_spreading_loss_compensation_flag),
+        range_spreading_loss_compensation_enabled=translate_common.translate_bool(
+            conf.range_spreading_loss_compensation_flag
+        ),
     )
 
 
@@ -335,7 +325,7 @@ def translate_model_to_multilook_conf(
     )
 
     return MultilookConf(
-        apply_detection=str_to_bool(conf.detection_flag),
+        apply_detection=translate_common.translate_bool(conf.detection_flag),
         range_parameters=rg_params,
         azimuth_parameters=az_params,
     )
@@ -346,12 +336,12 @@ def translate_model_to_polarimetric_calibration_conf(
 ) -> PolarimetricCalibrationConf:
     """Translate aux pp1 polarimetric calibration to the corresponding conf"""
     return PolarimetricCalibrationConf(
-        polarimetric_correction_flag=str_to_bool(conf.polarimetric_correction_flag),
-        tx_distortion_matrix_correction_flag=str_to_bool(conf.tx_distortion_matrix_correction_flag),
-        rx_distortion_matrix_correction_flag=str_to_bool(conf.rx_distortion_matrix_correction_flag),
-        cross_talk_correction_flag=str_to_bool(conf.cross_talk_correction_flag),
+        polarimetric_correction_flag=translate_common.translate_bool(conf.polarimetric_correction_flag),
+        tx_distortion_matrix_correction_flag=translate_common.translate_bool(conf.tx_distortion_matrix_correction_flag),
+        rx_distortion_matrix_correction_flag=translate_common.translate_bool(conf.rx_distortion_matrix_correction_flag),
+        cross_talk_correction_flag=translate_common.translate_bool(conf.cross_talk_correction_flag),
         cross_talk=translate_common.translate_cross_talk_list(conf.cross_talk_list),
-        channel_imbalance_correction_flag=str_to_bool(conf.channel_imbalance_correction_flag),
+        channel_imbalance_correction_flag=translate_common.translate_bool(conf.channel_imbalance_correction_flag),
         channel_imbalance=translate_common.translate_channel_imbalance_list(conf.channel_imbalance_list),
     )
 
@@ -363,7 +353,7 @@ def translate_model_to_ionospheric_calibration_conf(
     return IonosphereCalibrationConf(
         block_lines=conf.block_lines,
         block_overlap_lines=conf.block_overlap_lines,
-        ionosphere_height_defocusing_flag=str_to_bool(conf.ionosphere_height_defocusing_flag),
+        ionosphere_height_defocusing_flag=translate_common.translate_bool(conf.ionosphere_height_defocusing_flag),
         ionosphere_height_estimation_method=IonosphereCalibrationConf.Method(
             conf.ionosphere_height_estimation_method.name
         ),
@@ -379,9 +369,11 @@ def translate_model_to_ionospheric_calibration_conf(
         gaussian_filter_major_axis_length=conf.gaussian_filter_major_axis_length,
         gaussian_filter_minor_axis_length=conf.gaussian_filter_minor_axis_length,
         gaussian_filter_slope=conf.gaussian_filter_slope,
-        faraday_rotation_correction_flag=str_to_bool(conf.faraday_rotation_correction_flag),
-        ionospheric_phase_screen_correction_flag=str_to_bool(conf.ionospheric_phase_screen_correction_flag),
-        group_delay_correction_flag=str_to_bool(conf.group_delay_correction_flag),
+        faraday_rotation_correction_flag=translate_common.translate_bool(conf.faraday_rotation_correction_flag),
+        ionospheric_phase_screen_correction_flag=translate_common.translate_bool(
+            conf.ionospheric_phase_screen_correction_flag
+        ),
+        group_delay_correction_flag=translate_common.translate_bool(conf.group_delay_correction_flag),
     )
 
 
@@ -390,7 +382,7 @@ def translate_model_to_autofocus_conf(
 ) -> AutofocusConf:
     """Translate autofocus configuration to the corresponding conf"""
     return AutofocusConf(
-        autofocus_flag=str_to_bool(conf.autofocus_flag),
+        autofocus_flag=translate_common.translate_bool(conf.autofocus_flag),
         autofocus_method=AutofocusConf.Method(conf.autofocus_method.name),
         map_drift_azimuth_sub_bands=conf.map_drift_azimuth_sub_bands,
         map_drift_correlation_window_width=conf.map_drift_correlation_window_width,
@@ -418,9 +410,9 @@ def translate_model_to_thermal_denoising_conf(
         polarization_to_gain[polarization] = processing_gain.value
 
     return ThermalDenoisingConf(
-        thermal_denoising_flag=str_to_bool(conf.thermal_denoising_flag),
+        thermal_denoising_flag=translate_common.translate_bool(conf.thermal_denoising_flag),
         noise_parameters_source=ThermalDenoisingConf.Source(conf.noise_parameters_source.name),
-        noise_equivalent_echoes_flag=str_to_bool(conf.noise_equivalent_echoes_flag),
+        noise_equivalent_echoes_flag=translate_common.translate_bool(conf.noise_equivalent_echoes_flag),
         noise_gain_list=polarization_to_gain,
     )
 
@@ -430,7 +422,7 @@ def translate_model_to_ground_projection(
 ) -> GroundProjectionConf:
     """Translate ground projection configuration to the corresponding conf"""
     return GroundProjectionConf(
-        ground_projection_flag=str_to_bool(conf.ground_projection_flag),
+        ground_projection_flag=translate_common.translate_bool(conf.ground_projection_flag),
         range_pixel_spacing=conf.range_pixel_spacing.value,
         filter_type=GroundProjectionConf.FilterType(conf.filter_type.upper()),
         filter_bandwidth=conf.filter_bandwidth.value,
@@ -484,7 +476,7 @@ def translate_model_to_l1_product_export_conf(
         lut_range_decimation_factor=translate_lut_decimation_factors(conf.lut_range_decimation_factor_list),
         lut_azimuth_decimation_factor=translate_lut_decimation_factors(conf.lut_azimuth_decimation_factor_list),
         lut_block_size=conf.lut_block_size,
-        lut_layers_completeness_flag=str_to_bool(conf.lut_layers_completeness_flag),
+        lut_layers_completeness_flag=translate_common.translate_bool(conf.lut_layers_completeness_flag),
         l1a_ql_colour_coding_method=translate_common.translate_l1ac_ql_colour_coding_method_type(
             conf.l1a_ql_colour_coding_method
         ),

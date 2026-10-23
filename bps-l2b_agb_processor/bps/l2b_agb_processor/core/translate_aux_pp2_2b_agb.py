@@ -23,20 +23,6 @@ class InvalidAuxPP2_2B_AGB(RuntimeError):
     """Raised when input aux pp2 agb is invalid"""
 
 
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
-
-
 def translate_model_to_comp_agb_conf(
     conf: aux_pp2_2b_agb_models.CompressionOptionsL2BAb,
 ) -> AuxProcessingParametersL2BAGB.CompressionConf:
@@ -69,7 +55,7 @@ def translate_model_to_aux_processing_parameters_l2b_agb(
     """Translate aux pp2 2b fd to the corresponding structure"""
     return AuxProcessingParametersL2BAGB(
         model.l2b_agbproduct_doi,
-        forest_masking_flag=str_to_bool(model.forest_masking_flag),
+        forest_masking_flag=translate_common.translate_bool(model.forest_masking_flag),
         minimumL2acoverage=model.minimum_l2a_coverage,
         rejected_landcover_classes=translate_common.translate_int_array(model.rejected_landcover_classes),
         backscatterLimits={
@@ -85,7 +71,7 @@ def translate_model_to_aux_processing_parameters_l2b_agb(
         indexingL=model.indexing_l.value,
         indexingA=model.indexing_a.value,
         indexingN=model.indexing_n.value,
-        useConstantN=str_to_bool(model.use_constant_n),
+        useConstantN=translate_common.translate_bool(model.use_constant_n),
         valuesConstantN=translate_common.translate_float_array(model.values_constant_n),
         regressionSolver=model.regression_solver,
         minimumPercentageOfFillableVoids=model.minimum_percentage_of_fillable_voids,

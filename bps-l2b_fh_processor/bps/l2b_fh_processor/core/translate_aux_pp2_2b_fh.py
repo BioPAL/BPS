@@ -10,6 +10,7 @@ AUX PP2 2A FH Translation
 -------------------------
 """
 
+from bps.common.io import translate_common
 from bps.l2b_fh_processor.core.aux_pp2_2b_fh import (
     AuxProcessingParametersL2BFH,
     IntCompressionType,
@@ -20,20 +21,6 @@ from bps.l2b_fh_processor.io import aux_pp2_2b_fh_models
 
 class InvalidAuxPP2_2B_FH(RuntimeError):
     """Raised when input aux pp2 fh is invalid"""
-
-
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
 
 
 def translate_model_to_comp_fh_conf(
@@ -71,7 +58,7 @@ def translate_model_to_aux_processing_parameters_l2b_fh(
     """Translate aux pp2 2b fh to the corresponding structure"""
     return AuxProcessingParametersL2BFH(
         model.l2b_fhproduct_doi,
-        forest_masking_flag=str_to_bool(model.forest_masking_flag),
+        forest_masking_flag=translate_common.translate_bool(model.forest_masking_flag),
         minimumL2acoverage=model.minimum_l2a_coverage,
         compression_options=translate_model_to_comp_fh_conf(model.compression_options),
         rollOffFactorAzimuth=model.roll_off_factor_azimuth,

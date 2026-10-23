@@ -37,10 +37,6 @@ class UnsupportedAuxPPSConfError(ValueError):
     """Handle unsupported AUX-PPS configurations."""
 
 
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false."""
-
-
 def translate_model_to_general_conf(
     conf: aux_pps_models.GeneralType,
 ) -> GeneralConf:
