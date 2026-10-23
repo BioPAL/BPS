@@ -15,6 +15,7 @@ from bps.common.io import translate_common
 from bps.l2a_processor.core.aux_pp2_2a import (
     ADSfloatCompressionType,
     AuxProcessingParametersL2A,
+    CalibrationScreenType,
     GeneralConf,
     GroundCancellationConfAGB,
     GroundCancellationConfFD,
@@ -55,7 +56,7 @@ def translate_model_to_general_conf(
     """Translate general configuration section to the corresponding conf"""
     pol_method = translate_common.translate_polarisation_combination_method(conf.polarisation_combination_method)
     return GeneralConf(
-        apply_calibration_screen=conf.apply_calibration_screen,
+        apply_calibration_screen=CalibrationScreenType(conf.apply_calibration_screen.value),
         forest_coverage_threshold=conf.forest_coverage_threshold,
         forest_mask_interpolation_threshold=conf.forest_mask_interpolation_threshold,
         subsetting_rule=GeneralConf.SubsettingRules(conf.subsetting_rule.value),

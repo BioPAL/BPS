@@ -690,14 +690,13 @@ class GN:
         images_pair_selection = None
         if self.aux_pp2_2a.agb.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
             pair_from_aux_pp2 = {
-                Path(acq.value).name: acq
-                for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection.acquisition_folder_name
+                Path(acq.value).name: acq for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection
             }
             images_pair_selection = [
                 common_annotation_l2l3.AcquisitionType(
                     folder_name=acq.folder_name,
                     sta_quality=acq.sta_quality,
-                    reference_image=pair_from_aux_pp2[acq.folder_name].reference_image == "true",
+                    reference_image=pair_from_aux_pp2[acq.folder_name].reference_image,
                     average_wavenumber=pair_from_aux_pp2[acq.folder_name].average_wavenumber,
                 )
                 for acq in acquisition_list

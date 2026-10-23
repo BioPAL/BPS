@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 import pystac
 from bps.common import bps_logger
-from bps.common.io import common, common_types
+from bps.common.io import common
 from bps.common.io.parsing import serialize
 from bps.common.l2_joborder_tags import (
     L2A_OUTPUT_PRODUCT_FD,
@@ -1383,7 +1383,7 @@ class BIOMASSL2aProductWriter:
         )
 
         # ATTRIBUTES: global, common for all the LUT elements
-        ncfile.mission = common_types.MissionType.BIOMASS.value
+        ncfile.mission = common.MissionType.BIOMASS.value
         ncfile.tileID = json.dumps(self.product.main_ads_product.tile_id_list)
         ncfile.basinID = json.dumps(self.product.main_ads_product.basin_id_list)
         ncfile.productType = self.product.product_type
@@ -1392,7 +1392,7 @@ class BIOMASSL2aProductWriter:
         ncfile.stopTime = self.product.main_ads_product.stop_time.isoformat(timespec="milliseconds")
         ncfile.radarCarrierFrequency = np.float32(self.product.main_ads_product.radar_carrier_frequency)
         ncfile.missionPhaseID = self.product.main_ads_product.mission_phase_id.value
-        ncfile.sensorMode = common_types.SensorModeType.MEASUREMENT.value
+        ncfile.sensorMode = common.SensorModeType.MEASUREMENT.value
         ncfile.globalCoverageID = np.uint16(
             translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
         )

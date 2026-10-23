@@ -23,20 +23,14 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, common_types, translate_common
-from bps.common.io.common_types import IntArray, MinMaxType, MinMaxTypeWithUnit
+from bps.common.io import common
 from bps.common.lcm_utils import LCMMask
 from bps.l2b_agb_processor.agb import BPS_L2B_AGB_PROCESSOR_NAME
 from bps.l2b_agb_processor.core.aux_pp2_2b_agb import AuxProcessingParametersL2BAGB
 from bps.l2b_agb_processor.core.joborder_l2b_agb import L2bAGBJobOrder
 from bps.l2b_agb_processor.core.translate_job_order import L2B_OUTPUT_PRODUCT_AGB
-from bps.l2b_agb_processor.io.aux_pp2_2b_agb_models import AgbIndexingType
 from bps.l2b_agb_processor.l2b_common_functionalities import _check_coverage, _get_l2a_cumulative_footprint, dgg_tiling
-from bps.transcoder.io import (
-    common_annotation_l2l3,
-    main_annotation_l2b_agb,
-    main_annotation_models_l2b_agb,
-)
+from bps.transcoder.io import common_annotation_l2l3, main_annotation_l2b_agb
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductGN
 from bps.transcoder.sarproduct.biomass_l2bagbproduct import (
     BIOMASSL2bAGBProduct,
@@ -474,7 +468,7 @@ class AGBL2B:
                     bps_logger.info(
                         f"    indexingN modified from {self.aux_pp2_ab.indexingN} to 'p', since use constant N is {self.aux_pp2_ab.useConstantN}"
                     )
-                    self.aux_pp2_ab.indexingN = AgbIndexingType.P.value
+                    self.aux_pp2_ab.indexingN = main_annotation_l2b_agb.AgbIndexingType.P.value
 
                 bps_logger.info(
                     f"    parameter L depends on: {'polarization (p)' if 'p' in self.aux_pp2_ab.indexingL else ''}{', date (j)' if 'j' in self.aux_pp2_ab.indexingL else ''} {', forest class (k)' if 'k' in self.aux_pp2_ab.indexingL else ''}"
@@ -1027,9 +1021,7 @@ class AGBL2B:
             "bps_fnf": meta_data_temp[4],
         }
         meta_data_dict["agb"].image_description = (
-            f"BIOMASS L2b {self.product_type}"
-            + ": "
-            + common_types.PixelRepresentationType.ABOVE_GROUND_BIOMASS_T_HA.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.ABOVE_GROUND_BIOMASS_T_HA.value
         )
         meta_data_dict["agb"].bits_per_sample = 32
         meta_data_dict["agb"].max_z_error = self.aux_pp2_ab.compression_options.mds.AGB.max_z_error
@@ -1039,7 +1031,7 @@ class AGBL2B:
         meta_data_dict["agbstandard_deviation"].image_description = (
             f"BIOMASS L2b {self.product_type}"
             + ": "
-            + common_types.PixelRepresentationType.ABOVE_GROUND_BIOMASS_QUALITY_T_HA.value
+            + common.PixelRepresentationType.ABOVE_GROUND_BIOMASS_QUALITY_T_HA.value
         )
         meta_data_dict["agbstandard_deviation"].bits_per_sample = 32
         meta_data_dict[
@@ -1049,7 +1041,7 @@ class AGBL2B:
         meta_data_dict["agbstandard_deviation"].gdal_nodata = FLOAT_NODATA_VALUE
 
         meta_data_dict["heat_map"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.HEAT_MAP.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.HEAT_MAP.value
         )
         meta_data_dict["heat_map"].bits_per_sample = 8
         meta_data_dict["heat_map"].max_z_error = 0
@@ -1067,7 +1059,7 @@ class AGBL2B:
         meta_data_dict["acquisition_id_image"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
         meta_data_dict["bps_fnf"].image_description = (
-            f"BIOMASS L2b {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_MASK.value
+            f"BIOMASS L2b {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_MASK.value
         )
         meta_data_dict["bps_fnf"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
@@ -1322,27 +1314,23 @@ class AGBL2B:
             mds_block_size=self.aux_pp2_ab.compression_options.mds_block_size,
         )
 
-        back_scatter_limits = {
-            common.PolarisationType(pol): translate_common.translate_min_max_type(minmax)
-            for pol, minmax in self.aux_pp2_ab.backscatterLimits.items()
-        }
         main_ads_processing_parameters = main_annotation_l2b_agb.ProcessingParametersAnnotation(
             processor_version=bps.l2b_agb_processor.__version__,
             product_generation_time=self.start_time,  # TODO
             forest_masking_flag=self.aux_pp2_ab.forest_masking_flag,
             minimum_l2a_coverage=self.aux_pp2_ab.minimumL2acoverage,
-            rejected_landcover_classes=translate_common.translate_int_array(self.aux_pp2_ab.rejected_landcover_classes),
-            backscatter_limits=back_scatter_limits,
-            angle_limits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.angleLimits),
-            mean_agblimits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.meanAGBLimits),
-            std_agblimits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.stdAGBLimits),
-            relative_agblimits=translate_common.translate_min_max_type(self.aux_pp2_ab.relativeAGBLimits),
+            rejected_landcover_classes=self.aux_pp2_ab.rejected_landcover_classes,
+            backscatter_limits=self.aux_pp2_ab.backscatterLimits,
+            angle_limits=self.aux_pp2_ab.angleLimits,
+            mean_agblimits=self.aux_pp2_ab.meanAGBLimits,
+            std_agblimits=self.aux_pp2_ab.stdAGBLimits,
+            relative_agblimits=self.aux_pp2_ab.relativeAGBLimits,
             reference_selection=main_annotation_l2b_agb.ReferenceSelectionType(self.aux_pp2_ab.referenceSelection),
             indexing_l=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingL),
             indexing_a=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingA),
             indexing_n=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingN),
             use_constant_n=self.aux_pp2_ab.useConstantN,
-            values_constant_n=translate_common.translate_float_array(self.aux_pp2_ab.valuesConstantN),
+            values_constant_n=self.aux_pp2_ab.valuesConstantN,
             regression_solver=self.aux_pp2_ab.regressionSolver,
             regression_matrix_subsampling_factor=self.regression_matrix_subsampling_factor,
             minimum_percentage_of_fillable_voids=self.aux_pp2_ab.minimumPercentageOfFillableVoids,
@@ -1449,13 +1437,13 @@ class AGBL2B:
         if "p" in self.aux_pp2_ab.indexingL + self.aux_pp2_ab.indexingA + self.aux_pp2_ab.indexingN:
             # At least one parameter depends on polarization
             return [
-                main_annotation_models_l2b_agb.EstimatedParametersPolarisationTypePolarisations.HH.value,
-                main_annotation_models_l2b_agb.EstimatedParametersPolarisationTypePolarisations.VH.value,
-                main_annotation_models_l2b_agb.EstimatedParametersPolarisationTypePolarisations.VV.value,
+                main_annotation_l2b_agb.EstimatedParametersPolarisationType.HH.value,
+                main_annotation_l2b_agb.EstimatedParametersPolarisationType.VH.value,
+                main_annotation_l2b_agb.EstimatedParametersPolarisationType.VV.value,
             ]
         else:
             # No parameters depend on class, so write all in a single element attribute
-            return [main_annotation_models_l2b_agb.EstimatedParametersPolarisationTypePolarisations.HH_VH_VV.value]
+            return [main_annotation_l2b_agb.EstimatedParametersPolarisationType.HH_VH_VV.value]
 
 
 def construct_5x5_data_object(
@@ -1712,12 +1700,12 @@ def construct_5x5_data_object(
 def consolidate_5x5_data_block(
     data_object_5x5: dict,
     referenceSelection: str,
-    rejected_landcover_classes: IntArray,
-    backscatterLimits: dict[str, MinMaxType],
-    angleLimits: MinMaxTypeWithUnit,
-    meanAGBLimits: MinMaxTypeWithUnit,
-    stdAGBLimits: MinMaxTypeWithUnit,
-    relativeAGBLimits: MinMaxType,
+    rejected_landcover_classes: list[int],
+    backscatterLimits: dict[common.PolarisationType, common.MinMaxType],
+    angleLimits: common.MinMaxTypeWithUnit,
+    meanAGBLimits: common.MinMaxTypeWithUnit,
+    stdAGBLimits: common.MinMaxTypeWithUnit,
+    relativeAGBLimits: common.MinMaxType,
     forest_masking_flag: bool,
 ) -> tuple[dict, list[PreciseDateTime], dict, dict]:
     """
@@ -1735,10 +1723,10 @@ def consolidate_5x5_data_block(
     ### 1/3) Reference consolidation (CAL_AB with L2B AGB)
     bps_logger.info("    Reference data consolidation (filtering and mixing)")
     bps_logger.info(
-        f"    using mean AGB limits min={meanAGBLimits.min.value}, max={meanAGBLimits.max.value} as specified in AUX PP2 AB"
+        f"    using mean AGB limits min={meanAGBLimits.min}, max={meanAGBLimits.max} as specified in AUX PP2 AB"
     )
     bps_logger.info(
-        f"    using std AGB limits min={stdAGBLimits.min.value}, max={stdAGBLimits.max.value} as specified in AUX PP2 AB"
+        f"    using std AGB limits min={stdAGBLimits.min}, max={stdAGBLimits.max} as specified in AUX PP2 AB"
     )
     bps_logger.info(
         f"    using relative AGB limits limits min={relativeAGBLimits.min}, max={relativeAGBLimits.max} as specified in AUX PP2 AB"
@@ -1772,10 +1760,10 @@ def consolidate_5x5_data_block(
             cal_ab_mean, cal_ab_std = filter_agb_reference_global(
                 agb_mean=data_object_1x1["cal_ab"][:, :, 0],
                 agb_std=data_object_1x1["cal_ab"][:, :, 1],
-                mean_min=meanAGBLimits.min.value,
-                mean_max=meanAGBLimits.max.value,
-                std_min=stdAGBLimits.min.value,
-                std_max=stdAGBLimits.max.value,
+                mean_min=meanAGBLimits.min,
+                mean_max=meanAGBLimits.max,
+                std_min=stdAGBLimits.min,
+                std_max=stdAGBLimits.max,
                 rel_std_min=relativeAGBLimits.min,
                 rel_std_max=relativeAGBLimits.max,
             )
@@ -1814,10 +1802,10 @@ def consolidate_5x5_data_block(
             l2b_agb_mean, l2b_agb_std = filter_agb_reference_global(
                 agb_mean=data_object_1x1["l2b_agb"][:, :, 0],
                 agb_std=data_object_1x1["l2b_agb"][:, :, 1],
-                mean_min=meanAGBLimits.min.value,
-                mean_max=meanAGBLimits.max.value,
-                std_min=stdAGBLimits.min.value,
-                std_max=stdAGBLimits.max.value,
+                mean_min=meanAGBLimits.min,
+                mean_max=meanAGBLimits.max,
+                std_min=stdAGBLimits.min,
+                std_max=stdAGBLimits.max,
                 rel_std_min=relativeAGBLimits.min,
                 rel_std_max=relativeAGBLimits.max,
             )
@@ -1872,11 +1860,12 @@ def consolidate_5x5_data_block(
         f"    rejecting following landcover classes {rejected_landcover_classes} as specified in AUX PP2 AB"
     )
     bps_logger.info(
-        f"    using backscatter limits min_hh={backscatterLimits['HH'].min}, max_hh={backscatterLimits['HH'].max} min_vh={backscatterLimits['HV'].min}, max_vh={backscatterLimits['HV'].max} min_vv={backscatterLimits['VV'].min}, max_vv={backscatterLimits['VV'].max} as specified in AUX PP2 AB"
+        f"    using backscatter limits min_hh={backscatterLimits[common.PolarisationType.HH].min}, "
+        f"max_hh={backscatterLimits[common.PolarisationType.HH].max} min_vh={backscatterLimits[common.PolarisationType.HV].min}, "
+        f"max_vh={backscatterLimits[common.PolarisationType.HV].max} min_vv={backscatterLimits[common.PolarisationType.VV].min}, "
+        f"max_vv={backscatterLimits[common.PolarisationType.VV].max} as specified in AUX PP2 AB"
     )
-    bps_logger.info(
-        f"    using angles limits min={angleLimits.min.value}, max={angleLimits.max.value} as specified in AUX PP2 AB"
-    )
+    bps_logger.info(f"    using angles limits min={angleLimits.min}, max={angleLimits.max} as specified in AUX PP2 AB")
     bps_logger.info(f"    FNF masking flag set to {forest_masking_flag} as specified in AUX PP2 AB")
 
     # Computation of filtered coverage for the GN, external initialization
@@ -1915,8 +1904,8 @@ def consolidate_5x5_data_block(
                 gn_temp[:, :, pol_idx] = filter_gn_core(
                     gn_temp[:, :, pol_idx],
                     list_entry["incidence_angle"],
-                    np.rad2deg(angleLimits.min.value),
-                    np.rad2deg(angleLimits.max.value),
+                    np.rad2deg(angleLimits.min),
+                    np.rad2deg(angleLimits.max),
                 )
 
             gn_after_angle_filtering_per_tile[tile_id][list_entry["acquisition_id"]] = (
@@ -1941,14 +1930,14 @@ def consolidate_5x5_data_block(
                 list_entry["data"][:, :, pol_idx] = filter_gn_core(
                     list_entry["data"][:, :, pol_idx],
                     list_entry["incidence_angle"],
-                    np.rad2deg(angleLimits.min.value),
-                    np.rad2deg(angleLimits.max.value),
+                    np.rad2deg(angleLimits.min),
+                    np.rad2deg(angleLimits.max),
                 )
 
                 list_entry["data"][:, :, pol_idx] = filter_for_lcm_class(
                     list_entry["data"][:, :, pol_idx],
                     data_object_1x1["lcm"],
-                    list(rejected_landcover_classes),
+                    rejected_landcover_classes,
                 )
 
                 bps_logger.info(
@@ -2296,7 +2285,7 @@ def _build_neighborhood(central_tile, radius):
     return neighborhood
 
 
-def filter_for_lcm_class(data, lcm, rejected_landcover_classes: list):
+def filter_for_lcm_class(data, lcm, rejected_landcover_classes: list[int]):
     for rejected_landcover_class in rejected_landcover_classes:
         data = np.where(
             lcm == rejected_landcover_class,
@@ -2408,7 +2397,7 @@ def _filter_agb_reference_for_agb_relative_std_values(agb_mean, agb_std, rel_std
 
 def compute_filtered_coverage_cal_ab(
     data_object_5x5,
-    rejected_landcover_classes,
+    rejected_landcover_classes: list[int],
     meanAGBLimits,
     stdAGBLimits,
     relativeAGBLimits,
@@ -2458,7 +2447,7 @@ def compute_filtered_coverage_cal_ab(
             cal_ab_filtered_temp = filter_for_lcm_class(
                 cal_ab_filtered_temp,
                 data_object_1x1["lcm"],
-                list(rejected_landcover_classes),
+                rejected_landcover_classes,
             )
             cal_ab_after_lcmclass_filtering_per_tile[tile_id] = _compute_coverage_percentage_and_pixels(
                 cal_ab_filtered_temp

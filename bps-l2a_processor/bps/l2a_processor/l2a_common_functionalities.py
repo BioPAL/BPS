@@ -26,8 +26,7 @@ from arepytools.io.metadata import StateVectors
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.l2a_processor.core.aux_pp2_2a import GeneralConf
-from bps.l2a_processor.io.aux_pp2_2a_models.models import CalibrationScreenType
+from bps.l2a_processor.core.aux_pp2_2a import CalibrationScreenType, GeneralConf
 from bps.transcoder.sarproduct.biomass_l2aproduct_writer import COMPRESSION_SCHEMA_MDS_ZSTD, INT_NODATA_VALUE
 from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
 from bps.transcoder.utils.time_conversions import pdt_to_compact_date
