@@ -1,0 +1,1 @@
+GitHub Jira integration test for DA-43
