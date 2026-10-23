@@ -454,17 +454,3 @@ class BIOMASSL2aProductReader:
         # Restore read product name (BIOMASSL2aProductXX constructors set a new name)
         l2a_product.name = self.product_path.name
         return l2a_product
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
-
-
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""

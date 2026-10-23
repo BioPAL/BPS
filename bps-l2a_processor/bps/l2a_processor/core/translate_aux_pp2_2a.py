@@ -36,20 +36,6 @@ class InvalidAuxPP2_2A(RuntimeError):
     """Raised when input aux pp2 2a is invalid"""
 
 
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
-
-
 def translate_model_to_general_conf(
     conf: aux_pp2_2a_models.GeneralType,
 ) -> GeneralConf:
@@ -71,7 +57,7 @@ def translate_model_to_agb_conf(
     return L2aAGBConf(
         l2aAGBProductDOI=conf.l2a_agbproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         ground_cancellaton=translate_model_to_gn_conf(conf.ground_cancellation, "AGB"),
         product_resolution=conf.product_resolution.value,
         upsampling_factor=conf.upsampling_factor,
@@ -86,7 +72,7 @@ def translate_model_to_fd_conf(
     return L2aFDConf(
         l2aFDProductDOI=conf.l2a_fdproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         ground_cancellaton=translate_model_to_gn_conf(conf.ground_cancellation, "FD"),
         significance_level=conf.significance_level,
         product_resolution=conf.product_resolution.value,
@@ -107,13 +93,15 @@ def translate_model_to_fh_conf(
     return L2aFHConf(
         l2aFHProductDOI=conf.l2a_fhproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         vertical_reflectivity_option=L2aFHConf.verticalReflectivityOptions(conf.vertical_reflectivity_option.value),
         vertical_reflectivity_default_profile=np.array([val for val in conf.vertical_reflectivity_default_profile.val]),
         model_inversion=L2aFHConf.ModelInversionOptions(conf.model_inversion.value),
-        spectral_decorrelation_compensation_flag=str_to_bool(conf.spectral_decorrelation_compensation_flag),
-        correct_terrain_slopes_flag=str_to_bool(conf.correct_terrain_slopes_flag),
-        snr_decorrelation_compensation_flag=str_to_bool(conf.snrdecorrelation_compensation_flag),
+        spectral_decorrelation_compensation_flag=translate_common.translate_bool(
+            conf.spectral_decorrelation_compensation_flag
+        ),
+        correct_terrain_slopes_flag=translate_common.translate_bool(conf.correct_terrain_slopes_flag),
+        snr_decorrelation_compensation_flag=translate_common.translate_bool(conf.snrdecorrelation_compensation_flag),
         normalised_height_estimation_range=MinMaxType(
             min=conf.normalised_height_estimation_range.min,
             max=conf.normalised_height_estimation_range.max,
@@ -185,11 +173,11 @@ def translate_model_to_gn_conf(
     if conf.disable_ground_cancellation_flag is None:
         disable_ground_cancellation_flag = False
     else:
-        disable_ground_cancellation_flag = str_to_bool(conf.disable_ground_cancellation_flag)
+        disable_ground_cancellation_flag = translate_common.translate_bool(conf.disable_ground_cancellation_flag)
 
     if gn_type == "AGB":
         return GroundCancellationConfAGB(
-            radiometric_calibration_flag=str_to_bool(conf.radiometric_calibration_flag),
+            radiometric_calibration_flag=translate_common.translate_bool(conf.radiometric_calibration_flag),
             emphasized_forest_height=conf.emphasized_forest_height.value,
             operational_mode=OperationalModeType(conf.operational_mode.value),
             images_pair_selection=images_pair_selection,
@@ -211,8 +199,8 @@ def translate_model_to_tfh_conf(
     return L2aTFHConf(
         l2aTOMOFHProductDOI=conf.l2a_tfhproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
-        enable_super_resolution=str_to_bool(conf.enable_super_resolution),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
+        enable_super_resolution=translate_common.translate_bool(conf.enable_super_resolution),
         product_resolution=conf.product_resolution.value,
         regularization_noise_factor=conf.regularization_noise_factor,
         power_threshold=conf.power_threshold,
