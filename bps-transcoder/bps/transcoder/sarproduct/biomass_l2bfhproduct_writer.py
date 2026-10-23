@@ -16,12 +16,14 @@ import numpy as np
 import pystac
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common_types
+from bps.common.io import common, translate_common
 from bps.common.io.parsing import serialize
 from bps.transcoder import BPS_ATBD_FH_VERSION, BPS_PFD_FH_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2b_fh,
+    common_annotation_l2l3,
+    main_annotation_l2b_fh,
+    translate_common_annotation_l2l3,
+    translate_main_annotation_l2b_fh,
     vrt,
 )
 from bps.transcoder.sarproduct.biomass_l2bfhproduct import (
@@ -858,142 +860,73 @@ class BIOMASSL2bFHProductWriter:
         vrt_path.write_text(vrt_text, encoding="utf-8")
 
     def _write_main_annotation_file(self):
-        """_summary_
-
-        Returns
-        -------
-        _type_
-            _description_
-        """
-        # Fill main annotation model
-
-        # - product
-        mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
-        product_type = common_annotation_models_l2.ProductType.FH_L2_B
-
-        start_time = self.start_time_l2a.isoformat(timespec="microseconds")[:-1]
-
-        stop_time = self.stop_time_l2a.isoformat(timespec="microseconds")[:-1]
-
-        radar_carrier_frequency = common_annotation_models_l2.DoubleWithUnit(
-            value=self.product.main_ads_product.radar_carrier_frequency,
-            units=common_types.UomType.HZ,
-        )
-        mission_phase_id = common_annotation_models_l2.MissionPhaseIdtype(
-            self.product.main_ads_product.mission_phase_id
-        )
-        sensor_mode = common_annotation_models_l2.SensorModeType(self.product.main_ads_product.sensor_mode)
-        global_coverage_id = translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
-        product = main_annotation_models_l2b_fh.ProductL2BL3Type(
-            mission=mission,
-            tile_id=tile_id.id[0],
-            basin_id=basin_id_list,
-            product_type=product_type,
-            start_time=start_time,
-            stop_time=stop_time,
-            radar_carrier_frequency=radar_carrier_frequency,
-            mission_phase_id=mission_phase_id,
-            sensor_mode=sensor_mode,
-            global_coverage_id=global_coverage_id,
+        """Write the main annotation file."""
+        product = common_annotation_l2l3.ProductL2bL3Type(
+            mission=common.MissionType.BIOMASS,
+            tile_id=self.product.main_ads_product.tile_id_list[0],
+            basin_id=self.product.main_ads_product.basin_id_list,
+            product_type=common.ProductType.FH_L2_B,
+            start_time=self.start_time_l2a,
+            stop_time=self.stop_time_l2a,
+            radar_carrier_frequency=self.product.main_ads_product.radar_carrier_frequency,
+            mission_phase_id=common.MissionPhaseIdtype(self.product.main_ads_product.mission_phase_id),
+            sensor_mode=common.SensorModeType(self.product.main_ads_product.sensor_mode),
+            global_coverage_id=translate_global_coverage_id(self.product.main_ads_product.global_coverage_id),
+            contributing_tiles=[],
+            cal_ab_coverage_per_tile=[],
+            gncoverage_per_tile=[],
         )
 
-        dgg_tile_footprint = ""
-        for num in self.footprint:
-            dgg_tile_footprint = dgg_tile_footprint + str(num) + " "
-        dgg_tile_footprint = dgg_tile_footprint[0:-1]
-        dgg_tile_footprint = common_annotation_models_l2.FloatArrayWithUnits(
-            value=dgg_tile_footprint,
-            count=len(self.footprint),
-            units=common_types.UomType.DEG,
+        raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
+            footprint=self.footprint,
+            first_latitude_value=float(self.product.main_ads_raster_image.first_latitude_value),
+            first_longitude_value=float(self.product.main_ads_raster_image.first_longitude_value),
+            latitude_spacing=float(self.product.main_ads_raster_image.latitude_spacing),
+            longitude_spacing=float(self.product.main_ads_raster_image.longitude_spacing),
+            number_of_samples=self.product.main_ads_raster_image.number_of_samples,
+            number_of_lines=self.product.main_ads_raster_image.number_of_lines,
+            projection=common.ProjectionType(self.product.main_ads_raster_image.projection),
+            datum=translate_common.translate_datum(self.product.main_ads_raster_image.datum),
+            pixel_representation=translate_common_annotation_l2l3.translate_pixel_representation_choice(
+                self.product.main_ads_raster_image.pixel_representation
+            ),
+            pixel_type=translate_common_annotation_l2l3.translate_pixel_type_choice(
+                self.product.main_ads_raster_image.pixel_type
+            ),
+            no_data_value=translate_common_annotation_l2l3.translate_no_data_value_choice(
+                self.product.main_ads_raster_image.no_data_value
+            ),
         )
 
-        first_latitude_value = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.first_latitude_value),
-            units=common_types.UomType.DEG,
-        )
-        first_longitude_value = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.first_longitude_value),
-            units=common_types.UomType.DEG,
-        )
-        latitude_spacing = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.latitude_spacing),
-            units=common_types.UomType.DEG,
-        )
-        longitude_spacing = common_annotation_models_l2.FloatWithUnit(
-            value=float(self.product.main_ads_raster_image.longitude_spacing),
-            units=common_types.UomType.DEG,
-        )
-        number_of_samples = self.product.main_ads_raster_image.number_of_samples
-        number_of_lines = self.product.main_ads_raster_image.number_of_lines
-        projection = common_annotation_models_l2.ProjectionType(self.product.main_ads_raster_image.projection)
-        datum = self.product.main_ads_raster_image.datum
-        pixel_representation = self.product.main_ads_raster_image.pixel_representation
-        pixel_type = self.product.main_ads_raster_image.pixel_type
-        no_data_value = self.product.main_ads_raster_image.no_data_value
-        raster_image = common_annotation_models_l2.RasterImageType(
-            footprint=dgg_tile_footprint,
-            first_latitude_value=first_latitude_value,
-            first_longitude_value=first_longitude_value,
-            latitude_spacing=latitude_spacing,
-            longitude_spacing=longitude_spacing,
-            number_of_samples=number_of_samples,
-            number_of_lines=number_of_lines,
-            projection=projection,
-            datum=datum,
-            pixel_representation=pixel_representation,
-            pixel_type=pixel_type,
-            no_data_value=no_data_value,
+        processing_parameters = main_annotation_l2b_fh.ProcessingParametersAnnotation(
+            processor_version=self.product.main_ads_processing_parameters.processor_version,
+            product_generation_time=self.product.main_ads_processing_parameters.product_generation_time,
+            minimum_l2a_coverage=self.product.main_ads_processing_parameters.minumum_l2a_coverage,
+            forest_masking_flag=self.product.main_ads_processing_parameters.forest_masking_flag,
+            bps_fnf=translate_common_annotation_l2l3.translate_bps_fnf_type(
+                self.product.main_ads_processing_parameters.bps_fnf
+            ),
+            roll_off_factor_azimuth=self.product.main_ads_processing_parameters.roll_off_factor_azimuth,
+            roll_off_factor_range=self.product.main_ads_processing_parameters.roll_off_factor_range,
+            compression_options=translate_main_annotation_l2b_fh.translate_compression_options_l2b_fh(
+                self.product.main_ads_processing_parameters.compression_options
+            ),
         )
 
-        # # - inputInformation
-        input_information_l2b = common_annotation_models_l2.InputInformationL2BL3ListType(
-            l2a_inputs=self.product.main_ads_input_information.input_information.l2a_inputs,
-            count=len(self.product.main_ads_input_information.input_information.l2a_inputs),
-        )
-        # # - processing parameters
-        processor_version = self.product.main_ads_processing_parameters.processor_version
-        PRODUCT_GENERATION_TIME_MS = self.product.main_ads_processing_parameters.product_generation_time.isoformat(
-            timespec="microseconds"
-        )[:-1]
-
-        compression_options_fh = self.product.main_ads_processing_parameters.compression_options
-
-        minimum_l2acoverage = self.product.main_ads_processing_parameters.minumum_l2a_coverage
-        assert minimum_l2acoverage is not None
-
-        forest_masking_flag = str(self.product.main_ads_processing_parameters.forest_masking_flag).lower()
-
-        bps_fnf_type = self.product.main_ads_processing_parameters.bps_fnf
-
-        roll_off_factor_azimuth = self.product.main_ads_processing_parameters.roll_off_factor_azimuth
-        roll_off_factor_range = self.product.main_ads_processing_parameters.roll_off_factor_range
-
-        processing_parameters = main_annotation_models_l2b_fh.ProcessingParametersL2BType(
-            processor_version=processor_version,
-            product_generation_time=PRODUCT_GENERATION_TIME_MS,
-            minimum_l2a_coverage=minimum_l2acoverage,
-            forest_masking_flag=forest_masking_flag,
-            bps_fnf=bps_fnf_type,
-            roll_off_factor_azimuth=roll_off_factor_azimuth,
-            roll_off_factor_range=roll_off_factor_range,
-            compression_options=compression_options_fh,
-        )
-
-        main_annotation_model = main_annotation_models_l2b_fh.MainAnnotation(
+        main_annotation = main_annotation_l2b_fh.MainAnnotationL2bFH(
             product=product,
             raster_image=raster_image,
-            input_information=input_information_l2b,
+            input_information=translate_common_annotation_l2l3.translate_input_information_l2bl3_list(
+                self.product.main_ads_input_information.input_information
+            ),
             processing_parameters=processing_parameters,
         )
 
-        # Write main annotation file
         assert self.product_structure.main_annotation_file is not None
-
-        main_annotation_text = serialize(main_annotation_model)
-        main_annotation_path = Path(self.product_structure.main_annotation_file)
-        main_annotation_path.write_text(main_annotation_text, encoding="utf-8")
+        translate_main_annotation_l2b_fh.write_main_annotation_l2b_fh(
+            Path(self.product_structure.main_annotation_file),
+            main_annotation,
+        )
 
     def _write_quicklook_files(self):
         """_summary_
