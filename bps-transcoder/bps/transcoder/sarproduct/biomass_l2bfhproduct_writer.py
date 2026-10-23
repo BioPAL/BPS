@@ -321,7 +321,7 @@ class BIOMASSL2bFHProductWriter:
         )
         xml8 = ET.SubElement(xml7, "{" + MPH_NAMESPACES["ows"] + "}RequestMessage")
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}version")
-        xml6.text = f"{self.product.main_ads_product.baseline:02d}"
+        xml6.text = f"{self.product.baseline:02d}"
 
         def add_file_to_mph(
             base_element: ET.Element,

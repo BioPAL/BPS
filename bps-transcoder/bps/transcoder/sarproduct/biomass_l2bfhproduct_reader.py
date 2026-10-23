@@ -162,12 +162,6 @@ class BIOMASSL2bFHProductReader:
         sensor_mode = main_annotation_model.product.sensor_mode.value
         global_coverage_id = self.parsed_product_name.coverage
 
-        baseline_string = str(Path(self.product_structure.main_annotation_file).parent.parent)[-9:-7:1]
-        if baseline_string == "__":
-            baseline = 0
-        else:
-            baseline = int(baseline_string)
-
         assert global_coverage_id is not None
         self.main_ads_product = BIOMASSL2bFHMainADSproduct(
             mission,
@@ -180,7 +174,6 @@ class BIOMASSL2bFHProductReader:
             mission_phase_id,
             sensor_mode,
             global_coverage_id,
-            baseline,
         )
 
         first_latitude_value = main_annotation_model.raster_image.first_latitude_value.value
@@ -248,6 +241,9 @@ class BIOMASSL2bFHProductReader:
         assert self.product_structure.mph_file is not None
         self.product_doi = read_product_doi(Path(self.product_structure.mph_file))
 
+        baseline_string = self.product_structure.product_path.name[-9:-7:1]
+        baseline = 0 if baseline_string == "__" else int(baseline_string)
+
         # # Read STAC file
         # bps_logger.info("..STAC file")
         # self._read_stac_file()
@@ -268,6 +264,7 @@ class BIOMASSL2bFHProductReader:
             self.main_ads_raster_image,
             self.main_ads_input_information,
             self.main_ads_processing_parameters,
+            baseline,
             self.product_doi,
         )
 
