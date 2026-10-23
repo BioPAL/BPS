@@ -204,12 +204,6 @@ class BIOMASSL2bAGBProductReader:
         sensor_mode = main_annotation_model.product.sensor_mode.value
         global_coverage_id = self.parsed_product_name.coverage
 
-        baseline_string = str(Path(self.product_structure.main_annotation_file).parent.parent)[-9:-7:1]
-        if baseline_string == "__":
-            baseline = 0
-        else:
-            baseline = int(baseline_string)
-
         contributing_tiles = main_annotation_model.product.contributing_tiles
         cal_ab_coverage_per_tile = main_annotation_model.product.cal_abcoverage_per_tile
         gncoverage_per_tile = main_annotation_model.product.gncoverage_per_tile
@@ -229,7 +223,6 @@ class BIOMASSL2bAGBProductReader:
             mission_phase_id,
             sensor_mode,
             global_coverage_id,
-            baseline,
             contributing_tiles,
             cal_ab_coverage_per_tile,
             gncoverage_per_tile,
@@ -329,6 +322,9 @@ class BIOMASSL2bAGBProductReader:
         bps_logger.debug("..MPH file")
         self._read_mph_file()
 
+        baseline_string = self.product_structure.product_path.name[-9:-7:1]
+        baseline = 0 if baseline_string == "__" else int(baseline_string)
+
         # # Read STAC file
         # bps_logger.debug("..STAC file")
         # self._read_stac_file()
@@ -349,6 +345,7 @@ class BIOMASSL2bAGBProductReader:
             self.main_ads_raster_image,
             self.main_ads_input_information,
             self.main_ads_processing_parameters,
+            baseline,
             self.product_doi,
             self.agb_tile_iteration,
             self.agb_tile_status,

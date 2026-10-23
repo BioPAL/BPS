@@ -384,7 +384,6 @@ class FDL2B:
             mission_phase_id.value,
             sensor_mode,
             global_coverage_id,
-            self.output_baseline,
         )
 
         # main_ads_raster_image
@@ -469,6 +468,7 @@ class FDL2B:
             main_ads_raster_image,
             main_ads_input_information,
             main_ads_processing_parameters,
+            self.output_baseline,
             self.aux_pp2_fd.l2bFDProductDOI,
         )
 

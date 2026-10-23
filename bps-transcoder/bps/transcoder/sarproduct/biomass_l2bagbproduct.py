@@ -215,7 +215,6 @@ class BIOMASSL2bAGBMainADSproduct:
     mission_phase_id: str
     sensor_mode: str
     global_coverage_id: int
-    baseline: int
     contributing_tiles: list[str]
     cal_ab_coverage_per_tile: common_annotation_models_l2.CalAbcoverageTilesListType
     gncoverage_per_tile: common_annotation_models_l2.GncoverageTilesListType
@@ -277,6 +276,7 @@ class BIOMASSL2bAGBProduct:
         main_ads_raster_image: BIOMASSL2bAGBMainADSRasterImage,
         main_ads_input_information: BIOMASSL2bAGBMainADSInputInformation,
         main_ads_processing_parameters: BIOMASSL2bMainADSProcessingParametersAGB,
+        baseline: int,
         product_doi: str,
         agb_tile_iteration: np.uint8 = np.uint8(1),
         agb_tile_status: agbTileStatus | None = None,
@@ -287,6 +287,7 @@ class BIOMASSL2bAGBProduct:
         self.main_ads_product = main_ads_product
         self.main_ads_raster_image = main_ads_raster_image
         self.main_ads_input_information = main_ads_input_information
+        self.baseline = baseline
         self.product_doi = product_doi
         self.agb_tile_iteration = agb_tile_iteration
         self.agb_tile_status = agb_tile_status
@@ -312,9 +313,6 @@ class BIOMASSL2bAGBProduct:
         """
 
         self.creation_date = PreciseDateTime.now()
-        baseline_id = 0
-        if self.main_ads_product.baseline is not None:
-            baseline_id = self.main_ads_product.baseline
         global_coverage_id_str = encode_product_name_id_value(self.main_ads_product.global_coverage_id, npad=2)
 
         self.name = "_".join(
@@ -325,7 +323,7 @@ class BIOMASSL2bAGBProduct:
                 "G" + ("__" if self.main_ads_product.mission_phase_id[0] == "C" else global_coverage_id_str),
                 "T" + f"{self.main_ads_product.tile_id_list[0]}",
                 "B" + f"{self.main_ads_product.basin_id_list[0][1:4]}",
-                ("__" if baseline_id == 0 else f"{baseline_id:02d}"),
+                ("__" if self.baseline == 0 else f"{self.baseline:02d}"),
                 pdt_to_compact_date(self.creation_date),
             ]
         )
