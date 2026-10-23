@@ -28,19 +28,11 @@ from bps.l2b_fd_processor.l2b_common_functionalities import (
     dgg_tiling,
 )
 from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2b_fd,
-    translate_common_annotation_l2l3,
+    common_annotation_l2l3,
+    main_annotation_l2b_fd,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFD
-from bps.transcoder.sarproduct.biomass_l2bfdproduct import (
-    BIOMASSL2bFDMainADSInputInformation,
-    BIOMASSL2bFDMainADSproduct,
-    BIOMASSL2bFDMainADSRasterImage,
-    BIOMASSL2bFDProduct,
-    BIOMASSL2bFDProductMeasurement,
-    BIOMASSL2bMainADSProcessingParametersFD,
-)
+from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct, BIOMASSL2bFDProductMeasurement
 from bps.transcoder.sarproduct.biomass_l2bfdproduct_writer import (
     AVERAGING_FACTOR_QUICKLOOKS,
     COMPRESSION_EXIF_CODES_LERC_ZSTD,  # LERC, ZSTD
@@ -84,7 +76,7 @@ class FDL2B:
     def _get_l2a_inputs_information(
         self,
     ) -> tuple[
-        list[common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs],
+        list[common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs],
         common.MissionPhaseIdtype,
         int,
         list[str],
@@ -103,15 +95,11 @@ class FDL2B:
 
                 basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-                l1_inputs = translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
-                    l2a_product.main_ads_input_information
-                )
-
                 l2a_inputs_list.append(
-                    common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
+                    common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs(
                         l2a_product_folder_name=str(self.job_order.input_l2a_products[idx]),
                         l2a_product_date=l2a_product.main_ads_product.start_time.isoformat(timespec="microseconds"),
-                        l1_inputs=l1_inputs,
+                        l1_inputs=l2a_product.main_ads_input_information,
                         significance_level=l2a_product.main_ads_processing_parameters.significance_level,
                     )
                 )
@@ -151,7 +139,7 @@ class FDL2B:
         common.MissionPhaseIdtype | None,
         int | None,
         list[float] | None,
-        BIOMASSL2bFDMainADSInputInformation | None,
+        common_annotation_l2l3.InputInformationL2BL3ListType | None,
         bool,
         PreciseDateTime | None,
         PreciseDateTime | None,
@@ -223,11 +211,9 @@ class FDL2B:
                 self.basin_id_list,
             ) = self._get_l2a_inputs_information()
 
-            main_ads_input_information_l2b = BIOMASSL2bFDMainADSInputInformation(
-                common_annotation_models_l2.InputInformationL2BL3ListType(
-                    l2a_inputs=l2a_inputs_list,
-                    count=len(l2a_inputs_list),
-                ),
+            main_ads_input_information_l2b = common_annotation_l2l3.InputInformationL2BL3ListType(
+                l2a_inputs=l2a_inputs_list,
+                count=len(l2a_inputs_list),
             )
 
         else:
@@ -337,7 +323,7 @@ class FDL2B:
         mission_phase_id: common.MissionPhaseIdtype,
         global_coverage_id: int,
         footprint: list[float],
-        main_ads_input_information: BIOMASSL2bFDMainADSInputInformation,
+        main_ads_input_information: common_annotation_l2l3.InputInformationL2BL3ListType,
         start_time_l2a: PreciseDateTime,
         stop_time_l2a: PreciseDateTime,
         footprint_masks_for_quicklooks: dict,
@@ -371,94 +357,82 @@ class FDL2B:
         )
 
         # main_ads_product
-        mission = common_annotation_models_l2.MissionType.BIOMASS.value
-        sensor_mode = common_annotation_models_l2.SensorModeType.MEASUREMENT.value
-        main_ads_product = BIOMASSL2bFDMainADSproduct(
-            mission,
-            [tile_id],
-            self.basin_id_list,
-            self.product_type,
-            self.start_time,
-            self.stop_time,
-            radar_carrier_frequency,
-            mission_phase_id.value,
-            sensor_mode,
-            global_coverage_id,
+        main_ads_product = common_annotation_l2l3.ProductL2bL3Type(
+            mission=common.MissionType.BIOMASS,
+            tile_id=tile_id,
+            basin_id=self.basin_id_list,
+            product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
+            start_time=self.start_time,
+            stop_time=self.stop_time,
+            radar_carrier_frequency=radar_carrier_frequency,
+            mission_phase_id=mission_phase_id,
+            sensor_mode=common.SensorModeType.MEASUREMENT,
+            global_coverage_id=global_coverage_id,
+            contributing_tiles=[],
+            gncoverage_per_tile=[],
+            cal_ab_coverage_per_tile=[],
         )
 
         # main_ads_raster_image
-        projection = common_annotation_models_l2.ProjectionType.DGG.value
-        coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
-        geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
-        datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system=coordinate_reference_system,
-            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
-        )
-        pixel_representation_d = {
-            "fd": common_types.PixelRepresentationType.FOREST_DISTURBANCE,
-            "probability_of_change": common_types.PixelRepresentationType.PROBABILITY_OF_CHANGE,
-            "cfm": common_types.PixelRepresentationType.COMPUTED_FOREST_MASK,
-            "heat_map": common_types.PixelRepresentationType.HEAT_MAP,
-            "acquisition_id_image": common_types.PixelRepresentationType.ACQUISITION_ID_IMAGE,
-        }
-        pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
-            fd=pixel_representation_d["fd"],
-            cfm=pixel_representation_d["cfm"],
-            probability_of_change=pixel_representation_d["probability_of_change"],
-            fd_heat_map=pixel_representation_d["heat_map"],
-            acquisition_id_image=pixel_representation_d["acquisition_id_image"],
-        )
-        pixel_type = common_annotation_models_l2.PixelTypeChoiceType(
-            float_pixel_type=main_annotation_models_l2b_fd.PixelTypeType("32 bit Float"),
-            int_pixel_type=main_annotation_models_l2b_fd.PixelTypeType("8 bit Unsigned Integer"),
-        )
+        projection = common.ProjectionType.DGG
 
-        no_data_value = common_annotation_models_l2.NoDataValueChoiceType(
-            float_no_data_value=FLOAT_NODATA_VALUE, int_no_data_value=INT_NODATA_VALUE
-        )
-        main_ads_raster_image = BIOMASSL2bFDMainADSRasterImage(
-            footprint,
-            dgg_tile_latitude_axis[0],
-            dgg_tile_longitude_axis[0],
-            dgg_tile_latitude_axis[1] - dgg_tile_latitude_axis[0],
-            dgg_tile_longitude_axis[1] - dgg_tile_longitude_axis[0],
-            len(dgg_tile_latitude_axis),
-            len(dgg_tile_longitude_axis),
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+        main_ads_raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
+            footprint=footprint,
+            first_latitude_value=float(dgg_tile_latitude_axis[0]),
+            first_longitude_value=float(dgg_tile_longitude_axis[0]),
+            latitude_spacing=float(dgg_tile_latitude_axis[1] - dgg_tile_latitude_axis[0]),
+            longitude_spacing=float(dgg_tile_longitude_axis[1] - dgg_tile_longitude_axis[0]),
+            number_of_samples=len(dgg_tile_latitude_axis),
+            number_of_lines=len(dgg_tile_longitude_axis),
+            projection=projection,
+            datum=common.DatumType(
+                coordinate_reference_system=COORDINATE_REFERENCE_SYSTEM,
+                geodetic_reference_frame=common.GeodeticReferenceFrameType.WGS84,
+            ),
+            pixel_representation=common_annotation_l2l3.PixelRepresentationChoiceType(
+                fd=common.PixelRepresentationType.FOREST_DISTURBANCE,
+                cfm=common.PixelRepresentationType.COMPUTED_FOREST_MASK,
+                probability_of_change=common.PixelRepresentationType.PROBABILITY_OF_CHANGE,
+                fd_heat_map=common.PixelRepresentationType.HEAT_MAP,
+                acquisition_id_image=common.PixelRepresentationType.ACQUISITION_ID_IMAGE,
+            ),
+            pixel_type=common_annotation_l2l3.PixelTypeChoiceType(
+                float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+                int_pixel_type=common.PixelTypeType.VALUE_8_BIT_UNSIGNED_INTEGER,
+            ),
+            no_data_value=common_annotation_l2l3.NoDataValueChoiceType(
+                float_no_data_value=FLOAT_NODATA_VALUE, int_no_data_value=INT_NODATA_VALUE
+            ),
         )
 
         # main_ads_processing_parameters
-        compression_options_fd = main_annotation_models_l2b_fd.CompressionOptionsL2B(
-            mds=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds(
-                fd=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Fd(
+        compression_options_fd = main_annotation_l2b_fd.CompressionOptionsL2B(
+            mds=main_annotation_l2b_fd.CompressionOptionsL2B.Mds(
+                fd=main_annotation_l2b_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_fd.compression_options.mds.fd.compression_factor
                 ),
-                probability_of_change=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.ProbabilityOfChange(
+                probability_of_change=main_annotation_l2b_fd.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_fd.compression_options.mds.probability_of_change.compression_factor,
                     max_z_error=self.aux_pp2_fd.compression_options.mds.probability_of_change.max_z_error,
                 ),
-                cfm=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.Cfm(
+                cfm=main_annotation_l2b_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_fd.compression_options.mds.cfm.compression_factor
                 ),
-                heat_map=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.HeatMap(
+                heat_map=main_annotation_l2b_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_fd.compression_options.mds.heatmap.compression_factor
                 ),
-                acquisition_id_image=main_annotation_models_l2b_fd.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                acquisition_id_image=main_annotation_l2b_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_fd.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
             mds_block_size=self.aux_pp2_fd.compression_options.mds_block_size,
         )
 
-        main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFD(
-            bps.l2b_fd_processor.__version__,
-            self.start_time,
-            compression_options_fd,
-            minumum_l2a_coverage=self.aux_pp2_fd.minimumL2acoverage,
+        main_ads_processing_parameters = main_annotation_l2b_fd.ProcessingParametersAnnotation(
+            processor_version=bps.l2b_fd_processor.__version__,
+            product_generation_time=self.start_time,  # TODO
+            compression_options=compression_options_fd,
+            minimum_l2a_coverage=self.aux_pp2_fd.minimumL2acoverage,
         )
 
         # Initialize FD Product

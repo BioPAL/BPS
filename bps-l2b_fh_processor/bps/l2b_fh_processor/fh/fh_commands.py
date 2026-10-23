@@ -32,19 +32,14 @@ from bps.l2b_fh_processor.l2b_common_functionalities import (
     sort_footprints,
 )
 from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2b_fh,
-    translate_common_annotation_l2l3,
+    common_annotation_l2l3,
+    main_annotation_l2b_fh,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFH
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
 from bps.transcoder.sarproduct.biomass_l2bfhproduct import (
-    BIOMASSL2bFHMainADSInputInformation,
-    BIOMASSL2bFHMainADSproduct,
-    BIOMASSL2bFHMainADSRasterImage,
     BIOMASSL2bFHProduct,
     BIOMASSL2bFHProductMeasurement,
-    BIOMASSL2bMainADSProcessingParametersFH,
 )
 from bps.transcoder.sarproduct.biomass_l2bfhproduct_writer import (
     AVERAGING_FACTOR_QUICKLOOKS,
@@ -93,7 +88,7 @@ class FHL2B:
     def _get_l2a_inputs_information(
         self,
     ) -> tuple[
-        list[common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs],
+        list[common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs],
         common.MissionPhaseIdtype,
         int,
         list[str],
@@ -112,15 +107,11 @@ class FHL2B:
 
                 basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-                l1_inputs = translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
-                    l2a_product.main_ads_input_information
-                )
-
                 l2a_inputs_list.append(
-                    common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
+                    common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs(
                         l2a_product_folder_name=str(self.job_order.input_l2a_products[idx]),
                         l2a_product_date=l2a_product.main_ads_product.start_time.isoformat(timespec="microseconds"),
-                        l1_inputs=l1_inputs,
+                        l1_inputs=l2a_product.main_ads_input_information,
                     )
                 )
 
@@ -164,8 +155,8 @@ class FHL2B:
         common.MissionPhaseIdtype | None,
         int | None,
         list[float] | None,
-        BIOMASSL2bFHMainADSInputInformation | None,
-        main_annotation_models_l2b_fh.BpsFnfType,
+        common_annotation_l2l3.InputInformationL2BL3ListType | None,
+        common_annotation_l2l3.BpsFnfType,
         bool,
         PreciseDateTime,
         PreciseDateTime,
@@ -239,11 +230,9 @@ class FHL2B:
                 self.basin_id_list,
             ) = self._get_l2a_inputs_information()
 
-            main_ads_input_information_l2b = BIOMASSL2bFHMainADSInputInformation(
-                common_annotation_models_l2.InputInformationL2BL3ListType(
-                    l2a_inputs=l2a_inputs_list,
-                    count=len(l2a_inputs_list),
-                ),
+            main_ads_input_information_l2b = common_annotation_l2l3.InputInformationL2BL3ListType(
+                l2a_inputs=l2a_inputs_list,
+                count=len(l2a_inputs_list),
             )
 
             # Compute additional heat map:
@@ -258,9 +247,9 @@ class FHL2B:
             bps_logger.info("L2b FH processor: nothing to compute, exiting.")
 
         if self.l2b_fd_product:
-            bps_fnf_type = main_annotation_models_l2b_fh.BpsFnfType.CFM
+            bps_fnf_type = common_annotation_l2l3.BpsFnfType.CFM
         else:
-            bps_fnf_type = main_annotation_models_l2b_fh.BpsFnfType.FNF
+            bps_fnf_type = common_annotation_l2l3.BpsFnfType.FNF
 
         start_time_l2a = self.l2a_fh_products_list[0].main_ads_product.start_time
         stop_time_l2a = self.l2a_fh_products_list[0].main_ads_product.stop_time
@@ -348,8 +337,8 @@ class FHL2B:
         mission_phase_id: common.MissionPhaseIdtype,
         global_coverage_id: int,
         footprint: list[float],
-        main_ads_input_information: BIOMASSL2bFHMainADSInputInformation,
-        bps_fnf_type: main_annotation_models_l2b_fh.BpsFnfType,
+        main_ads_input_information: common_annotation_l2l3.InputInformationL2BL3ListType,
+        bps_fnf_type: common_annotation_l2l3.BpsFnfType,
         start_time_l2a: PreciseDateTime,
         stop_time_l2a: PreciseDateTime,
         footprint_mask_for_quicklooks: np.ndarray,
@@ -383,99 +372,91 @@ class FHL2B:
         )
 
         # main_ads_product
-        mission = common_annotation_models_l2.MissionType.BIOMASS.value
-        sensor_mode = common_annotation_models_l2.SensorModeType.MEASUREMENT.value
-        main_ads_product = BIOMASSL2bFHMainADSproduct(
-            mission,
-            [tile_id],
-            self.basin_id_list,
-            self.product_type,
-            self.start_time,
-            self.stop_time,
-            radar_carrier_frequency,
-            mission_phase_id.value,
-            sensor_mode,
-            global_coverage_id,
+        main_ads_product = common_annotation_l2l3.ProductL2bL3Type(
+            mission=common.MissionType.BIOMASS,
+            tile_id=tile_id,
+            basin_id=self.basin_id_list,
+            product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
+            start_time=self.start_time,
+            stop_time=self.stop_time,
+            radar_carrier_frequency=radar_carrier_frequency,
+            mission_phase_id=mission_phase_id,
+            sensor_mode=common.SensorModeType.MEASUREMENT,
+            global_coverage_id=global_coverage_id,
+            contributing_tiles=[],
+            cal_ab_coverage_per_tile=[],
+            gncoverage_per_tile=[],
         )
 
         # main_ads_raster_image
-        projection = common_annotation_models_l2.ProjectionType.DGG.value
-        coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
-        geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
-        datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system=coordinate_reference_system,
-            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+        projection = common.ProjectionType.DGG
+        datum = common.DatumType(
+            coordinate_reference_system=COORDINATE_REFERENCE_SYSTEM,
+            geodetic_reference_frame=common.GeodeticReferenceFrameType.WGS84,
         )
-        pixel_representation_dict = {
-            "fh": common_types.PixelRepresentationType.FOREST_HEIGHT_M,
-            "quality": common_types.PixelRepresentationType.FOREST_HEIGHT_QUALITY,
-            "bps_fnf": common_types.PixelRepresentationType.COMPUTED_FOREST_MASK,
-            "heat_map": common_types.PixelRepresentationType.HEAT_MAP,
-            "acquisition_id_image": common_types.PixelRepresentationType.ACQUISITION_ID_IMAGE,
-        }
-        pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
-            fh=pixel_representation_dict["fh"],
-            quality=pixel_representation_dict["quality"],
-            bps_fnf=pixel_representation_dict["bps_fnf"],
-            fh_heat_map=pixel_representation_dict["heat_map"],
-            acquisition_id_image=pixel_representation_dict["acquisition_id_image"],
+        pixel_representation = common_annotation_l2l3.PixelRepresentationChoiceType(
+            fh=common.PixelRepresentationType.FOREST_HEIGHT_M,
+            quality=common.PixelRepresentationType.FOREST_HEIGHT_QUALITY,
+            bps_fnf=common.PixelRepresentationType.COMPUTED_FOREST_MASK,
+            fh_heat_map=common.PixelRepresentationType.HEAT_MAP,
+            acquisition_id_image=common.PixelRepresentationType.ACQUISITION_ID_IMAGE,
         )
-        pixel_type = common_annotation_models_l2.PixelTypeChoiceType(
-            float_pixel_type=main_annotation_models_l2b_fh.PixelTypeType("32 bit Float"),
-            int_pixel_type=main_annotation_models_l2b_fh.PixelTypeType("8 bit Unsigned Integer"),
+        pixel_type = common_annotation_l2l3.PixelTypeChoiceType(
+            float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+            int_pixel_type=common.PixelTypeType.VALUE_8_BIT_UNSIGNED_INTEGER,
         )
 
-        no_data_value = common_annotation_models_l2.NoDataValueChoiceType(
+        no_data_value = common_annotation_l2l3.NoDataValueChoiceType(
             float_no_data_value=FLOAT_NODATA_VALUE,
             int_no_data_value=INT_NODATA_VALUE,
         )
-        main_ads_raster_image = BIOMASSL2bFHMainADSRasterImage(
-            footprint,
-            dgg_latitude_axis[0],
-            dgg_longitude_axis[0],
-            dgg_latitude_axis[1] - dgg_latitude_axis[0],
-            dgg_longitude_axis[1] - dgg_longitude_axis[0],
-            len(dgg_latitude_axis),
-            len(dgg_longitude_axis),
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+        main_ads_raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
+            footprint=footprint,
+            first_latitude_value=float(dgg_latitude_axis[0]),
+            first_longitude_value=float(dgg_longitude_axis[0]),
+            latitude_spacing=float(dgg_latitude_axis[1] - dgg_latitude_axis[0]),
+            longitude_spacing=float(dgg_longitude_axis[1] - dgg_longitude_axis[0]),
+            number_of_samples=len(dgg_latitude_axis),
+            number_of_lines=len(dgg_longitude_axis),
+            projection=projection,
+            datum=datum,
+            pixel_representation=pixel_representation,
+            pixel_type=pixel_type,
+            no_data_value=no_data_value,
         )
 
         # main_ads_processing_parameters
-        compression_options_fh = main_annotation_models_l2b_fh.CompressionOptionsL2B(
-            mds=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
-                fh=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
+        compression_options_fh = main_annotation_l2b_fh.CompressionOptionsL2B(
+            mds=main_annotation_l2b_fh.CompressionOptionsL2B.Mds(
+                fh=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_fh.compression_options.mds.fh.compression_factor,
                     max_z_error=self.aux_pp2_fh.compression_options.mds.fh.max_z_error,
                 ),
-                quality=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
+                quality=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_fh.compression_options.mds.fhquality.compression_factor,
                     max_z_error=self.aux_pp2_fh.compression_options.mds.fhquality.max_z_error,
                 ),
-                bps_fnf=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
+                bps_fnf=main_annotation_l2b_fh.CompressionFactorType(
                     compression_factor=self.aux_pp2_fh.compression_options.mds.bps_fnf.compression_factor
                 ),
-                heat_map=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
+                heat_map=main_annotation_l2b_fh.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_fh.compression_options.mds.heatmap.compression_factor,
                     max_z_error=self.aux_pp2_fh.compression_options.mds.heatmap.max_z_error,
                 ),
-                acquisition_id_image=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                acquisition_id_image=main_annotation_l2b_fh.CompressionFactorType(
                     compression_factor=self.aux_pp2_fh.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
             mds_block_size=self.aux_pp2_fh.compression_options.mds_block_size,
         )
 
-        main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFH(
-            bps.l2b_fh_processor.__version__,
-            self.start_time,
+        main_ads_processing_parameters = main_annotation_l2b_fh.ProcessingParametersAnnotation(
+            processor_version=bps.l2b_fh_processor.__version__,
+            product_generation_time=self.start_time,  # TODO
             forest_masking_flag=self.aux_pp2_fh.forest_masking_flag,
             bps_fnf=bps_fnf_type,
             compression_options=compression_options_fh,
-            minumum_l2a_coverage=self.aux_pp2_fh.minimumL2acoverage,
+            minimum_l2a_coverage=self.aux_pp2_fh.minimumL2acoverage,
             roll_off_factor_azimuth=self.aux_pp2_fh.rollOffFactorAzimuth,
             roll_off_factor_range=self.aux_pp2_fh.rollOffFactorRange,
         )

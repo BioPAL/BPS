@@ -23,7 +23,7 @@ import numba as nb
 import numpy as np
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, common_types
+from bps.common.io import common, common_types, translate_common
 from bps.common.io.common_types import IntArray, MinMaxType, MinMaxTypeWithUnit
 from bps.common.lcm_utils import LCMMask
 from bps.l2b_agb_processor.agb import BPS_L2B_AGB_PROCESSOR_NAME
@@ -33,18 +33,14 @@ from bps.l2b_agb_processor.core.translate_job_order import L2B_OUTPUT_PRODUCT_AG
 from bps.l2b_agb_processor.io.aux_pp2_2b_agb_models import AgbIndexingType
 from bps.l2b_agb_processor.l2b_common_functionalities import _check_coverage, _get_l2a_cumulative_footprint, dgg_tiling
 from bps.transcoder.io import (
-    common_annotation_models_l2,
+    common_annotation_l2l3,
+    main_annotation_l2b_agb,
     main_annotation_models_l2b_agb,
-    translate_common_annotation_l2l3,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductGN
 from bps.transcoder.sarproduct.biomass_l2bagbproduct import (
-    BIOMASSL2bAGBMainADSInputInformation,
-    BIOMASSL2bAGBMainADSproduct,
-    BIOMASSL2bAGBMainADSRasterImage,
     BIOMASSL2bAGBProduct,
     BIOMASSL2bAGBProductMeasurement,
-    BIOMASSL2bMainADSProcessingParametersAGB,
     agbTileStatus,
 )
 from bps.transcoder.sarproduct.biomass_l2bagbproduct_writer import (
@@ -116,7 +112,7 @@ class AGBL2B:
     def _get_l2a_inputs_information(
         self,
     ) -> tuple[
-        list[common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs],
+        list[common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs],
         common.MissionPhaseIdtype,
         int,
         dict[str, int],
@@ -134,15 +130,11 @@ class AGBL2B:
         for idx, l2a_product in enumerate(self.l2a_gn_products_list):
             basin_id_list = basin_id_list + l2a_product.main_ads_product.basin_id_list
 
-            l1_inputs = translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
-                l2a_product.main_ads_input_information
-            )
-
             l2a_inputs_list.append(
-                common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
+                common_annotation_l2l3.InputInformationL2BL3ListType.L2AInputs(
                     l2a_product_folder_name=str(self.job_order.input_l2a_products[idx]),
                     l2a_product_date=l2a_product.main_ads_product.start_time.isoformat(timespec="microseconds"),
-                    l1_inputs=l1_inputs,
+                    l1_inputs=l2a_product.main_ads_input_information,
                 )
             )
 
@@ -197,11 +189,9 @@ class AGBL2B:
         l2a_input_tiles_id = list(l2a_input_tiles_dict.keys())
 
         # AGBMainADSInputInformation: same for all outpuit tiles in the 3x3
-        main_ads_input_information_l2b = BIOMASSL2bAGBMainADSInputInformation(
-            common_annotation_models_l2.InputInformationL2BL3ListType(
-                l2a_inputs=l2a_inputs_list,
-                count=len(l2a_inputs_list),
-            ),
+        main_ads_input_information_l2b = common_annotation_l2l3.InputInformationL2BL3ListType(
+            l2a_inputs=l2a_inputs_list,
+            count=len(l2a_inputs_list),
         )
 
         # Get the 5x5 and 3x3 grid of Tlie ID names surrounding job order central tile id
@@ -215,12 +205,12 @@ class AGBL2B:
         if self.l2b_agb_product_list:
             new_list = []
             bps_logger.info(
-                f"    The {len(self.l2b_agb_product_list)} optional L2B AGB products specified in job order, cover following Tiles: {[l2b_agb_product.main_ads_product.tile_id_list[0] for l2b_agb_product in self.l2b_agb_product_list]}"
+                f"    The {len(self.l2b_agb_product_list)} optional L2B AGB products specified in job order, cover following Tiles: {[l2b_agb_product.main_ads_product.tile_id for l2b_agb_product in self.l2b_agb_product_list]}"
             )
             for l2b_agb_product in self.l2b_agb_product_list:
-                if l2b_agb_product.main_ads_product.tile_id_list[0] not in tiles_ids_5x5_list:
+                if l2b_agb_product.main_ads_product.tile_id not in tiles_ids_5x5_list:
                     bps_logger.warning(
-                        f"        optional L2B AGB covering Tile {l2b_agb_product.main_ads_product.tile_id_list[0]} is not part of the 5x5 tiles neighborhood"
+                        f"        optional L2B AGB covering Tile {l2b_agb_product.main_ads_product.tile_id} is not part of the 5x5 tiles neighborhood"
                     )
                 else:
                     new_list.append(l2b_agb_product)
@@ -232,7 +222,7 @@ class AGBL2B:
                 self.l2b_agb_product_list = new_list
 
                 bps_logger.info(
-                    f"    using {len(self.l2b_agb_product_list)} optional L2B AGB products specified in job order, covering following Tiles: {[l2b_agb_product.main_ads_product.tile_id_list[0] for l2b_agb_product in self.l2b_agb_product_list]}"
+                    f"    using {len(self.l2b_agb_product_list)} optional L2B AGB products specified in job order, covering following Tiles: {[l2b_agb_product.main_ads_product.tile_id for l2b_agb_product in self.l2b_agb_product_list]}"
                 )
 
         else:
@@ -240,7 +230,7 @@ class AGBL2B:
 
         if self.l2b_fd_product_list:
             bps_logger.info(
-                f"    using {len(self.l2b_fd_product_list)} optional L2B FD products specified in job order, covering following Tiles: {[l2b_fd_product.main_ads_product.tile_id_list[0] for l2b_fd_product in self.l2b_fd_product_list]}"
+                f"    using {len(self.l2b_fd_product_list)} optional L2B FD products specified in job order, covering following Tiles: {[l2b_fd_product.main_ads_product.tile_id for l2b_fd_product in self.l2b_fd_product_list]}"
             )
         else:
             bps_logger.info("    No optional L2B FD products specified in job order")
@@ -267,13 +257,13 @@ class AGBL2B:
             num_l2b_fd_contributing_for_this_tile = 0
             if self.l2b_fd_product_list is not None:
                 for l2b_fd_product in self.l2b_fd_product_list:
-                    if tile_id in l2b_fd_product.main_ads_product.tile_id_list:
+                    if tile_id == l2b_fd_product.main_ads_product.tile_id:
                         num_l2b_fd_contributing_for_this_tile += 1
 
             num_l2b_agb_contributing_for_this_tile = 0
             if self.l2b_agb_product_list is not None:
                 for l2b_agb_product in self.l2b_agb_product_list:
-                    if tile_id in l2b_agb_product.main_ads_product.tile_id_list:
+                    if tile_id == l2b_agb_product.main_ads_product.tile_id:
                         num_l2b_agb_contributing_for_this_tile += 1
 
             if self.l2b_agb_product_list is not None:
@@ -1133,44 +1123,41 @@ class AGBL2B:
         # Fill the cal_ab_coverage_per_tile object with proper types
         list_cal_ab_coverage_per_tile = []
         for cal_ab_tile_id in list(cal_ab_coverage_per_tile):
-            cal_ab_original_coverage = common_annotation_models_l2.PercentPixelsType(
+            cal_ab_original_coverage = common_annotation_l2l3.PercentPixelsType(
                 percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["original_coverage"][0],
                 pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["original_coverage"][1],
             )
 
-            cal_ab_filtered_coverage = common_annotation_models_l2.CalAbfilteredCoverageType(
-                after_global_filtering=common_annotation_models_l2.PercentPixelsType(
+            cal_ab_filtered_coverage = common_annotation_l2l3.CalAbfilteredCoverageType(
+                after_global_filtering=common_annotation_l2l3.PercentPixelsType(
                     percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_global_filtering"][0],
                     pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_global_filtering"][1],
                 ),
-                after_agbvalue_filtering=common_annotation_models_l2.PercentPixelsType(
+                after_agbvalue_filtering=common_annotation_l2l3.PercentPixelsType(
                     percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbvalue_filtering"][0],
                     pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbvalue_filtering"][1],
                 ),
-                after_agbstd_filtering=common_annotation_models_l2.PercentPixelsType(
+                after_agbstd_filtering=common_annotation_l2l3.PercentPixelsType(
                     percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbstd_filtering"][0],
                     pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbstd_filtering"][1],
                 ),
-                after_agbrelative_std_filtering=common_annotation_models_l2.PercentPixelsType(
+                after_agbrelative_std_filtering=common_annotation_l2l3.PercentPixelsType(
                     percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbrelative_std_filtering"][0],
                     pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_agbrelative_std_filtering"][1],
                 ),
-                after_lcmclass_filtering=common_annotation_models_l2.PercentPixelsType(
+                after_lcmclass_filtering=common_annotation_l2l3.PercentPixelsType(
                     percentage=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_lcmclass_filtering"][0],
                     pixels=cal_ab_coverage_per_tile[cal_ab_tile_id]["after_lcmclass_filtering"][1],
                 ),
             )
 
             list_cal_ab_coverage_per_tile.append(
-                common_annotation_models_l2.CalAbcoverageType(
+                common_annotation_l2l3.CalAbcoverageType(
                     original_coverage=cal_ab_original_coverage,
                     filtered_coverage=cal_ab_filtered_coverage,
                     id=cal_ab_tile_id,
                 )
             )
-        cal_ab_coverage_per_tile_obj = common_annotation_models_l2.CalAbcoverageTilesListType(
-            tile=list_cal_ab_coverage_per_tile
-        )
 
         # Fill the gn_coverage_per_tile object with proper types
         list_gn_coverage_per_tile = []
@@ -1179,101 +1166,88 @@ class AGBL2B:
             for gn_product in self.l2a_gn_products_list:
                 name = gn_product.name
 
-                gn_original_coverage = common_annotation_models_l2.PercentPixelsType(
+                gn_original_coverage = common_annotation_l2l3.PercentPixelsType(
                     percentage=gn_coverage_per_tile[gn_coverage_tile_id]["original_coverage"][name][0],
                     pixels=gn_coverage_per_tile[gn_coverage_tile_id]["original_coverage"][name][1],
                 )
 
-                gn_filtered_coverage = common_annotation_models_l2.GnfilteredCoverageType(
-                    after_global_filtering=common_annotation_models_l2.PercentPixelsType(
+                gn_filtered_coverage = common_annotation_l2l3.GnfilteredCoverageType(
+                    after_global_filtering=common_annotation_l2l3.PercentPixelsType(
                         percentage=gn_coverage_per_tile[gn_coverage_tile_id]["after_global_filtering"][name][0],
                         pixels=gn_coverage_per_tile[gn_coverage_tile_id]["after_global_filtering"][name][1],
                     ),
-                    after_sigma_filtering=common_annotation_models_l2.PercentPixelsType(
+                    after_sigma_filtering=common_annotation_l2l3.PercentPixelsType(
                         percentage=gn_coverage_per_tile[gn_coverage_tile_id]["after_sigma_filtering"][name][0],
                         pixels=gn_coverage_per_tile[gn_coverage_tile_id]["after_sigma_filtering"][name][1],
                     ),
-                    after_angle_filtering=common_annotation_models_l2.PercentPixelsType(
+                    after_angle_filtering=common_annotation_l2l3.PercentPixelsType(
                         percentage=gn_coverage_per_tile[gn_coverage_tile_id]["after_angle_filtering"][name][0],
                         pixels=gn_coverage_per_tile[gn_coverage_tile_id]["after_angle_filtering"][name][1],
                     ),
                 )
 
                 list_gn_coverage_one_tile.append(
-                    common_annotation_models_l2.GncoverageType(
+                    common_annotation_l2l3.GncoverageType(
                         original_coverage=gn_original_coverage,
                         filtered_coverage=gn_filtered_coverage,
                         acquisition_id=name,
                     )
                 )
             list_gn_coverage_per_tile.append(
-                common_annotation_models_l2.GncoverageListType(gn=list_gn_coverage_one_tile, id=gn_coverage_tile_id)
+                common_annotation_l2l3.GncoverageListType(gn=list_gn_coverage_one_tile, id=gn_coverage_tile_id)
             )
 
-        gn_coverage_per_tile_obj = common_annotation_models_l2.GncoverageTilesListType(tile=list_gn_coverage_per_tile)
-
-        mission = common_annotation_models_l2.MissionType.BIOMASS.value
-        sensor_mode = common_annotation_models_l2.SensorModeType.MEASUREMENT.value
-        main_ads_product = BIOMASSL2bAGBMainADSproduct(
-            mission,
-            [tile_id],
-            self.basin_id_list,
-            self.product_type,
-            self.start_time,
-            self.stop_time,
-            radar_carrier_frequency,
-            mission_phase_id,
-            sensor_mode,
-            global_coverage_id,
-            contributing_tiles,
-            cal_ab_coverage_per_tile_obj,
-            gn_coverage_per_tile_obj,
+        main_ads_product = common_annotation_l2l3.ProductL2bL3Type(
+            mission=common.MissionType.BIOMASS,
+            tile_id=tile_id,
+            basin_id=self.basin_id_list,
+            product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
+            start_time=self.start_time,
+            stop_time=self.stop_time,
+            radar_carrier_frequency=radar_carrier_frequency,
+            mission_phase_id=mission_phase_id,
+            sensor_mode=common.SensorModeType.MEASUREMENT,
+            global_coverage_id=global_coverage_id,
+            contributing_tiles=contributing_tiles,
+            cal_ab_coverage_per_tile=list_cal_ab_coverage_per_tile,
+            gncoverage_per_tile=list_gn_coverage_per_tile,
         )
 
         # main_ads_raster_image
-        projection = common_annotation_models_l2.ProjectionType.DGG.value
-        coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
-        geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
-        datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system=coordinate_reference_system,
-            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
+        projection = common.ProjectionType.DGG
+        datum = common.DatumType(
+            coordinate_reference_system=COORDINATE_REFERENCE_SYSTEM,
+            geodetic_reference_frame=common.GeodeticReferenceFrameType.WGS84,
         )
-        pixel_representation_d = {
-            "agb": common_types.PixelRepresentationType.ABOVE_GROUND_BIOMASS_T_HA,
-            "agb_standard_deviation": common_types.PixelRepresentationType.ABOVE_GROUND_BIOMASS_QUALITY_T_HA,
-            "heat_map": [common_types.PixelRepresentationType.HEAT_MAP],
-            "bps_fnf": common_types.PixelRepresentationType.COMPUTED_FOREST_MASK,
-            "acquisition_id_image": common_types.PixelRepresentationType.ACQUISITION_ID_IMAGE,
-        }
-        pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
-            agb=pixel_representation_d["agb"],
-            agb_standard_deviation=pixel_representation_d["agb_standard_deviation"],
-            agb_heat_map=pixel_representation_d["heat_map"],
-            bps_fnf=pixel_representation_d["bps_fnf"],
-            acquisition_id_image=pixel_representation_d["acquisition_id_image"],
+        pixel_representation = common_annotation_l2l3.PixelRepresentationChoiceType(
+            agb=common.PixelRepresentationType.ABOVE_GROUND_BIOMASS_T_HA,
+            agb_standard_deviation=common.PixelRepresentationType.ABOVE_GROUND_BIOMASS_QUALITY_T_HA,
+            agb_heat_map=common.PixelRepresentationType.HEAT_MAP,
+            bps_fnf=common.PixelRepresentationType.COMPUTED_FOREST_MASK,
+            acquisition_id_image=common.PixelRepresentationType.ACQUISITION_ID_IMAGE,
         )
-        pixel_type = common_annotation_models_l2.PixelTypeChoiceType(
-            float_pixel_type=main_annotation_models_l2b_agb.PixelTypeType("32 bit Float"),
-            int_pixel_type=main_annotation_models_l2b_agb.PixelTypeType("8 bit Unsigned Integer"),
+        pixel_type = common_annotation_l2l3.PixelTypeChoiceType(
+            float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+            int_pixel_type=common.PixelTypeType.VALUE_8_BIT_UNSIGNED_INTEGER,
         )
 
-        no_data_value = common_annotation_models_l2.NoDataValueChoiceType(
+        no_data_value = common_annotation_l2l3.NoDataValueChoiceType(
             float_no_data_value=FLOAT_NODATA_VALUE,
             int_no_data_value=INT_NODATA_VALUE,
         )
-        main_ads_raster_image = BIOMASSL2bAGBMainADSRasterImage(
-            footprint,
-            dgg_tile_latitude_axis[0],
-            dgg_tile_longitude_axis[0],
-            dgg_tile_latitude_axis[1] - dgg_tile_latitude_axis[0],
-            dgg_tile_longitude_axis[1] - dgg_tile_longitude_axis[0],
-            len(dgg_tile_latitude_axis),
-            len(dgg_tile_longitude_axis),
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
+        main_ads_raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
+            footprint=footprint,
+            first_latitude_value=float(dgg_tile_latitude_axis[0]),
+            first_longitude_value=float(dgg_tile_longitude_axis[0]),
+            latitude_spacing=float(dgg_tile_latitude_axis[1] - dgg_tile_latitude_axis[0]),
+            longitude_spacing=float(dgg_tile_longitude_axis[1] - dgg_tile_longitude_axis[0]),
+            number_of_samples=len(dgg_tile_latitude_axis),
+            number_of_lines=len(dgg_tile_longitude_axis),
+            projection=projection,
+            datum=datum,
+            pixel_representation=pixel_representation,
+            pixel_type=pixel_type,
+            no_data_value=no_data_value,
         )
 
         # main_ads_processing_parameters
@@ -1290,16 +1264,16 @@ class AGBL2B:
                 date_list = []
                 for date_idx in range(num_dates):
                     date_list.append(
-                        main_annotation_models_l2b_agb.EstimatedParametersPolarisationType.Lcm.Date(
-                            n=main_annotation_models_l2b_agb.EstimatedParametersPolarisationType.Lcm.Date.N(
+                        main_annotation_l2b_agb.EstimatedParametersDate(
+                            n=main_annotation_l2b_agb.PercentEstimate(
                                 mean=float(estimated_parameters["n_unknowns"][pol_idx, date_idx, class_idx]),
                                 std=float(estimated_parameters["n_stddev"][pol_idx, date_idx, class_idx]),
                             ),
-                            a=main_annotation_models_l2b_agb.EstimatedParametersPolarisationType.Lcm.Date.A(
+                            a=main_annotation_l2b_agb.PercentEstimate(
                                 mean=float(estimated_parameters["alfa_unknowns"][pol_idx, date_idx, class_idx]),
                                 std=float(estimated_parameters["alfa_stddev"][pol_idx, date_idx, class_idx]),
                             ),
-                            l=main_annotation_models_l2b_agb.EstimatedParametersPolarisationType.Lcm.Date.L(
+                            l=main_annotation_l2b_agb.PercentEstimate(
                                 mean=float(estimated_parameters["L_unknowns"][pol_idx, date_idx, class_idx]),
                                 std=float(estimated_parameters["L_stddev"][pol_idx, date_idx, class_idx]),
                             ),
@@ -1308,63 +1282,67 @@ class AGBL2B:
                     )
 
                 lcm_list.append(
-                    main_annotation_models_l2b_agb.EstimatedParametersPolarisationType.Lcm(
+                    main_annotation_l2b_agb.EstimatedParametersLcm(
                         date=date_list,
                         classes=estimated_parameters["classes_values"][class_idx],
                     )
                 )
             polarization_list.append(
-                main_annotation_models_l2b_agb.EstimatedParametersPolarisationType(
+                main_annotation_l2b_agb.EstimatedParametersPolarisation(
                     lcm=lcm_list,
                     polarisations=estimated_parameters["polarization_names"][pol_idx],
                 )
             )
 
-        estimated_parameters = main_annotation_models_l2b_agb.EstimatedParametersL2BAgb(
+        estimated_parameters = main_annotation_l2b_agb.EstimatedParametersL2BAgb(
             rho=self.rho,
             polarisation=polarization_list,
         )
 
-        compression_options_agb = main_annotation_models_l2b_agb.CompressionOptionsL2B(
-            mds=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds(
-                agb=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.Agb(
+        compression_options_agb = main_annotation_l2b_agb.CompressionOptionsL2B(
+            mds=main_annotation_l2b_agb.CompressionOptionsL2B.Mds(
+                agb=main_annotation_l2b_agb.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_ab.compression_options.mds.AGB.compression_factor,
                     max_z_error=self.aux_pp2_ab.compression_options.mds.AGB.max_z_error,
                 ),
-                agbstandard_deviation=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AgbstandardDeviation(
+                agbstandard_deviation=main_annotation_l2b_agb.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.compression_factor,
                     max_z_error=self.aux_pp2_ab.compression_options.mds.AGBstandardDeviation.max_z_error,
                 ),
-                bps_fnf=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.BpsFnf(
+                bps_fnf=main_annotation_l2b_agb.CompressionFactorType(
                     compression_factor=self.aux_pp2_ab.compression_options.mds.bps_fnf.compression_factor
                 ),
-                heat_map=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.HeatMap(
+                heat_map=main_annotation_l2b_agb.CompressionFactorType(
                     compression_factor=self.aux_pp2_ab.compression_options.mds.heatmap.compression_factor
                 ),
-                acquisition_id_image=main_annotation_models_l2b_agb.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+                acquisition_id_image=main_annotation_l2b_agb.CompressionFactorType(
                     compression_factor=self.aux_pp2_ab.compression_options.mds.acquisition_id_image.compression_factor
                 ),
             ),
             mds_block_size=self.aux_pp2_ab.compression_options.mds_block_size,
         )
 
-        main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersAGB(
-            bps.l2b_agb_processor.__version__,
-            self.start_time,
+        back_scatter_limits = {
+            common.PolarisationType(pol): translate_common.translate_min_max_type(minmax)
+            for pol, minmax in self.aux_pp2_ab.backscatterLimits.items()
+        }
+        main_ads_processing_parameters = main_annotation_l2b_agb.ProcessingParametersAnnotation(
+            processor_version=bps.l2b_agb_processor.__version__,
+            product_generation_time=self.start_time,  # TODO
             forest_masking_flag=self.aux_pp2_ab.forest_masking_flag,
-            minumum_l2a_coverage=self.aux_pp2_ab.minimumL2acoverage,
-            rejected_landcover_classes=self.aux_pp2_ab.rejected_landcover_classes,
-            backscatter_limits=self.aux_pp2_ab.backscatterLimits,
-            angle_limits=self.aux_pp2_ab.angleLimits,
-            mean_agblimits=self.aux_pp2_ab.meanAGBLimits,
-            std_agblimits=self.aux_pp2_ab.stdAGBLimits,
-            relative_agblimits=self.aux_pp2_ab.relativeAGBLimits,
-            reference_selection=self.aux_pp2_ab.referenceSelection,
-            indexing_l=self.aux_pp2_ab.indexingL,
-            indexing_a=self.aux_pp2_ab.indexingA,
-            indexing_n=self.aux_pp2_ab.indexingN,
+            minimum_l2a_coverage=self.aux_pp2_ab.minimumL2acoverage,
+            rejected_landcover_classes=translate_common.translate_int_array(self.aux_pp2_ab.rejected_landcover_classes),
+            backscatter_limits=back_scatter_limits,
+            angle_limits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.angleLimits),
+            mean_agblimits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.meanAGBLimits),
+            std_agblimits=translate_common.translate_min_max_type_with_unit(self.aux_pp2_ab.stdAGBLimits),
+            relative_agblimits=translate_common.translate_min_max_type(self.aux_pp2_ab.relativeAGBLimits),
+            reference_selection=main_annotation_l2b_agb.ReferenceSelectionType(self.aux_pp2_ab.referenceSelection),
+            indexing_l=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingL),
+            indexing_a=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingA),
+            indexing_n=main_annotation_l2b_agb.AgbIndexingType(self.aux_pp2_ab.indexingN),
             use_constant_n=self.aux_pp2_ab.useConstantN,
-            values_constant_n=self.aux_pp2_ab.valuesConstantN,
+            values_constant_n=translate_common.translate_float_array(self.aux_pp2_ab.valuesConstantN),
             regression_solver=self.aux_pp2_ab.regressionSolver,
             regression_matrix_subsampling_factor=self.regression_matrix_subsampling_factor,
             minimum_percentage_of_fillable_voids=self.aux_pp2_ab.minimumPercentageOfFillableVoids,
@@ -1379,10 +1357,10 @@ class AGBL2B:
             main_ads_raster_image,
             main_ads_input_information,
             main_ads_processing_parameters,
-            self.output_baseline,
-            self.aux_pp2_ab.l2bAGBProductDOI,
-            agb_tile_iteration,
-            agb_tile_status,
+            baseline=self.output_baseline,
+            product_doi=self.aux_pp2_ab.l2bAGBProductDOI,
+            agb_tile_iteration=agb_tile_iteration,
+            agb_tile_status=agb_tile_status,
         )
 
         # Write to file the AGB Product
@@ -1626,7 +1604,7 @@ def construct_5x5_data_object(
                 [
                     l2b_agb_product
                     for l2b_agb_product in l2b_agb_product_list
-                    if l2b_agb_product.main_ads_product.tile_id_list[0] == tile_id
+                    if l2b_agb_product.main_ads_product.tile_id == tile_id
                 ]
                 if l2b_agb_product_list is not None
                 else None
@@ -1675,7 +1653,7 @@ def construct_5x5_data_object(
                         ::2, ::2
                     ]  # FD is more doubled samples than the other processors
                     for l2b_fd_product in l2b_fd_product_list
-                    if l2b_fd_product.main_ads_product.tile_id_list[0] == tile_id
+                    if l2b_fd_product.main_ads_product.tile_id == tile_id
                 ]
                 if l2b_fd_product_list is not None
                 else None

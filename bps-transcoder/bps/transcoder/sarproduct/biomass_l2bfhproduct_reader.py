@@ -9,17 +9,11 @@ from pathlib import Path
 
 import numpy as np
 from bps.common import bps_logger
-from bps.common.io import translate_common
-from bps.common.io.parsing import parse
-from bps.transcoder.io import common_annotation_models_l2, main_annotation_models_l2b_fh
+from bps.transcoder.io.translate_main_annotation_l2b_fh import read_main_annotation_l2b_fh
 from bps.transcoder.sarproduct.biomass_l2bfhproduct import (
-    BIOMASSL2bFHMainADSInputInformation,
-    BIOMASSL2bFHMainADSproduct,
-    BIOMASSL2bFHMainADSRasterImage,
     BIOMASSL2bFHProduct,
     BIOMASSL2bFHProductMeasurement,
     BIOMASSL2bFHProductStructure,
-    BIOMASSL2bMainADSProcessingParametersFH,
 )
 from bps.transcoder.sarproduct.mph import read_product_doi
 from bps.transcoder.utils.product_name import parse_l2bproduct_name
@@ -143,95 +137,14 @@ class BIOMASSL2bFHProductReader:
         )
 
     def _read_main_annotation_file(self):
-        # Read main annotation file
         assert self.product_structure.main_annotation_file is not None
         main_annotation_path = Path(self.product_structure.main_annotation_file)
-        main_annotation_model: main_annotation_models_l2b_fh.MainAnnotation = parse(
-            main_annotation_path.read_text(encoding="utf-8"),
-            main_annotation_models_l2b_fh.MainAnnotation,
-        )
+        main_annotation = read_main_annotation_l2b_fh(main_annotation_path)
 
-        mission = main_annotation_model.product.mission.value
-        tile_id_list = [main_annotation_model.product.tile_id]  # one element list
-        basin_id_list = main_annotation_model.product.basin_id.id
-        product_type = main_annotation_model.product.product_type.value
-        start_time = translate_common.translate_datetime(main_annotation_model.product.start_time)
-        stop_time = translate_common.translate_datetime(main_annotation_model.product.stop_time)
-        radar_carrier_frequency = main_annotation_model.product.radar_carrier_frequency.value
-        mission_phase_id = main_annotation_model.product.mission_phase_id.value
-        sensor_mode = main_annotation_model.product.sensor_mode.value
-        global_coverage_id = self.parsed_product_name.coverage
-
-        assert global_coverage_id is not None
-        self.main_ads_product = BIOMASSL2bFHMainADSproduct(
-            mission,
-            tile_id_list,  # one element list
-            basin_id_list,
-            product_type,
-            start_time,
-            stop_time,
-            radar_carrier_frequency,
-            mission_phase_id,
-            sensor_mode,
-            global_coverage_id,
-        )
-
-        first_latitude_value = main_annotation_model.raster_image.first_latitude_value.value
-        first_longitude_value = main_annotation_model.raster_image.first_longitude_value.value
-        latitude_spacing = main_annotation_model.raster_image.latitude_spacing.value
-        longitude_spacing = main_annotation_model.raster_image.longitude_spacing.value
-        number_of_samples = main_annotation_model.raster_image.number_of_samples
-        number_of_lines = main_annotation_model.raster_image.number_of_lines
-        projection = main_annotation_model.raster_image.projection.value
-        datum = main_annotation_model.raster_image.datum
-        pixel_representation = main_annotation_model.raster_image.pixel_representation
-        pixel_type = main_annotation_model.raster_image.pixel_type
-        no_data_value = main_annotation_model.raster_image.no_data_value
-
-        footprint = main_annotation_model.raster_image.footprint.value.split(" ")
-        footprint = [float(v) for v in footprint]
-
-        self.main_ads_raster_image = BIOMASSL2bFHMainADSRasterImage(
-            footprint,
-            first_latitude_value,
-            first_longitude_value,
-            latitude_spacing,
-            longitude_spacing,
-            number_of_samples,
-            number_of_lines,
-            projection,
-            datum,
-            pixel_representation,
-            pixel_type,
-            no_data_value,
-        )
-
-        self.main_ads_input_information = BIOMASSL2bFHMainADSInputInformation(
-            common_annotation_models_l2.InputInformationL2BL3ListType(
-                l2a_inputs=main_annotation_model.input_information.l2a_inputs,
-                count=len(main_annotation_model.input_information.l2a_inputs),
-            )
-        )
-
-        processor_version = main_annotation_model.processing_parameters.processor_version
-        product_generation_time = main_annotation_model.processing_parameters.product_generation_time
-        forest_masking_flag = str_to_bool(main_annotation_model.processing_parameters.forest_masking_flag)
-        bps_fnf = main_annotation_model.processing_parameters.bps_fnf
-        compression_options = main_annotation_model.processing_parameters.compression_options
-        minumum_l2a_coverage = main_annotation_model.processing_parameters.minimum_l2a_coverage
-        roll_off_factor_azimuth = main_annotation_model.processing_parameters.roll_off_factor_azimuth
-        roll_off_factor_range = main_annotation_model.processing_parameters.roll_off_factor_range
-
-        self.main_ads_processing_parameters = BIOMASSL2bMainADSProcessingParametersFH(
-            processor_version,
-            product_generation_time,  # type: ignore
-            forest_masking_flag,
-            bps_fnf,
-            compression_options,
-            minumum_l2a_coverage,
-            roll_off_factor_azimuth,
-            roll_off_factor_range,
-        )
+        self.main_ads_product = main_annotation.product
+        self.main_ads_raster_image = main_annotation.raster_image
+        self.main_ads_input_information = main_annotation.input_information
+        self.main_ads_processing_parameters = main_annotation.processing_parameters
 
     def read(self):
         bps_logger.info(f"Reading BIOMASS L2b FH product {self.product_path.name}")
