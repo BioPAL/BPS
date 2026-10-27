@@ -316,20 +316,18 @@ class BIOMASSL1Product(SARProduct):
 
         self.sensor_mode = "MEASUREMENT"
         self.source_name = source.name if source is not None else "L0S"
-        self.anx_time = source.anx_time if source is not None else None
+        self.mission_phase_id = source.mission_phase_id if source is not None else "INTERFEROMETRIC"
+        self.instrument_configuration_id = source.instrument_configuration_id if source is not None else 1
+        self.datatake_id = source.datatake_id if source is not None else 1
         self.orbit_number = source.orbit_number if source is not None else 1
+        self.orbit_drift_flag = source.orbit_drift_flag if source is not None else False
+        self.global_coverage_id = source.global_coverage_id if source is not None else 1
+        self.major_cycle_id = source.major_cycle_id if source is not None else 1
+        self.repeat_cycle_id = source.repeat_cycle_id if source is not None else 1
+        self.track_number = source.track_number if source is not None else 1
+        self.anx_time = source.anx_time if source is not None else None
         input_is_l0 = source is not None and isinstance(source, BIOMASSL0Product)
-
-        self.mission_phase_id = source.mission_phase_id if input_is_l0 else "INTERFEROMETRIC"
-        self.instrument_configuration_id = source.instrument_configuration_id if input_is_l0 else 1
-        self.datatake_id = source.datatake_id if input_is_l0 else 1
-        self.orbit_drift_flag = source.orbit_drift_flag if input_is_l0 else False
-        self.global_coverage_id = source.global_coverage_id if input_is_l0 else 1
-        self.major_cycle_id = source.major_cycle_id if input_is_l0 else 1
-        self.repeat_cycle_id = source.repeat_cycle_id if input_is_l0 else 1
-        self.track_number = source.track_number if input_is_l0 else 1
         self.source_bit_rate = source.bit_rate if input_is_l0 else 0.0
-        self.slice_number = source.slice_number if input_is_l0 else 1
 
         if source_monitoring is not None:
             self.source_monitoring_name = source_monitoring.name
