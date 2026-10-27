@@ -712,15 +712,17 @@ class BistaticDelayCorrectionMethodType(Enum):
     FULL = "Full"
 
 
-class DataFormatModeType(Enum):
+class CompressionMethodType(Enum):
     """
-    Enumeration of compression method names.
+    Enumeration of TIFF compression methods.
     """
 
-    BAQ_4_BIT = "BAQ 4 Bit"
-    BAQ_5_BIT = "BAQ 5 Bit"
-    BAQ_6_BIT = "BAQ 6 Bit"
-    BYPASS = "Bypass"
+    NONE = "NONE"
+    DEFLATE = "DEFLATE"
+    ZSTD = "ZSTD"
+    LERC = "LERC"
+    LERC_DEFLATE = "LERC_DEFLATE"
+    LERC_ZSTD = "LERC_ZSTD"
 
 
 class DcMethodType(Enum):
@@ -755,40 +757,22 @@ class IonosphereHeightEstimationMethodType(Enum):
     NA = "NA"
 
 
-class MissionPhaseIdtype(Enum):
+class L1AcQlColourCodingMethodType(Enum):
     """
-    Enumeration of all valid BIOMASS mission phases.
-    """
-
-    COM = "COM"
-    TOM = "TOM"
-    INT = "INT"
-
-
-class MissionType(Enum):
-    """
-    Enumeration of valid BIOMASS mission names.
+    Enumeration of L1a and L1c products quick-looks colour coding methods.
     """
 
-    BIOMASS = "BIOMASS"
+    PAULI = "Pauli"
+    HSV = "HSV"
+    PAULI_AND_HSV = "Pauli and HSV"
 
 
-class OrbitAttitudeSourceType(Enum):
+class L1BQlColourCodingMethodType(Enum):
     """
-    Enumeration of value sources of orbit and attitude data. "Downlink" or "Auxiliary".
-    """
-
-    DOWNLINK = "Downlink"
-    AUXILIARY = "Auxiliary"
-
-
-class OrbitPassType(Enum):
-    """
-    Enumeration of the orbit pass direction values.
+    Enumeration of L1b products quick-looks colour coding methods.
     """
 
-    ASCENDING = "Ascending"
-    DESCENDING = "Descending"
+    LEXICOGRAPHIC = "Lexicographic"
 
 
 class PixelQuantityType(Enum):
@@ -820,72 +804,6 @@ class PixelRepresentationType(Enum):
     ABOVE_GROUND_BIOMASS_T_HA = "Above Ground Biomass [t/ha]"
     ABOVE_GROUND_BIOMASS_QUALITY_T_HA = "Above Ground Biomass quality [t/ha]"
     ACQUISITION_ID_IMAGE = "Acquisition ID image"
-
-
-class PixelTypeType(Enum):
-    """
-    Enumeration of image pixel data types.
-    """
-
-    VALUE_32_BIT_FLOAT = "32 bit Float"
-    VALUE_16_BIT_SIGNED_INTEGER = "16 bit Signed Integer"
-    VALUE_16_BIT_UNSIGNED_INTEGER = "16 bit Unsigned Integer"
-    VALUE_8_BIT_UNSIGNED_INTEGER = "8 bit Unsigned Integer"
-
-
-class ProcessingModeType(Enum):
-    """
-    Enumeration of processing modes.
-    """
-
-    NOMINAL = "Nominal"
-    PARC = "PARC"
-
-
-class ProductCompositionType(Enum):
-    """
-    Enumeration of product composition indicators.
-
-    The valid values are: “Nominal”, to indicate a framed product of nominal length; “Merged”, if the product is
-    resulting from the merging of a “short” frame with the contiguous one; “Partial”, if the product length is not
-    nominal, but it is not merged to a contiguous one since it is “long enough”; “Incomplete”, if the product
-    length is not nominal due to contingency (e.g., data loss); “Not Framed”, if the product is not framed, i.e.,
-    as long as input L0 one.
-    """
-
-    NOMINAL = "Nominal"
-    MERGED = "Merged"
-    PARTIAL = "Partial"
-    INCOMPLETE = "Incomplete"
-    NOT_FRAMED = "Not Framed"
-
-
-class ProductType(Enum):
-    """
-    Enumeration of valid product types.
-    """
-
-    SCS = "SCS"
-    DGM = "DGM"
-    STA = "STA"
-    FH_L2_A = "FH_L2A"
-    FH_L2_B = "FH_L2B"
-    FD_L2_A = "FD_L2A"
-    FD_L2_B = "FD_L2B"
-    GN_L2_A = "GN_L2A"
-    AGB_L2_B = "AGB_L2B"
-    TFH_L2_A = "TFH_L2A"
-
-
-class ProjectionType(Enum):
-    """
-    Enumeration of the image projection.
-    """
-
-    SLANT_RANGE = "Slant Range"
-    GROUND_RANGE = "Ground Range"
-    LATITUDE_LONGITUDE_BASED_ON_DGG = "Latitude-Longitude based on DGG"
-    DGG = "DGG"
 
 
 class RangeCompressionMethodType(Enum):
@@ -941,16 +859,6 @@ class RfiMitigationMethodType(Enum):
     FREQUENCY_AND_TIME = "Frequency and Time"
 
 
-class SensorModeType(Enum):
-    """
-    Enumeration of valid sensor mode abbreviations.
-    """
-
-    MEASUREMENT = "Measurement"
-    RX_ONLY = "RX Only"
-    EXTERNAL_CALIBRATION = "External Calibration"
-
-
 class SwathType(Enum):
     """
     Enumeration of all valid swath identifiers.
@@ -969,48 +877,6 @@ class WeightingWindowType(Enum):
     KAISER = "Kaiser"
     HAMMING = "Hamming"
     NONE = "None"
-
-
-class PolarisationCombinationMethodType(Enum):
-    """
-    Enumeration of polarisations combination methods.
-    """
-
-    HV = "HV"
-    VH = "VH"
-    AVERAGE = "Average"
-    NONE = "None"
-
-
-class CompressionMethodType(Enum):
-    """
-    Enumeration of TIFF compression methods.
-    """
-
-    NONE = "NONE"
-    DEFLATE = "DEFLATE"
-    ZSTD = "ZSTD"
-    LERC = "LERC"
-    LERC_DEFLATE = "LERC_DEFLATE"
-    LERC_ZSTD = "LERC_ZSTD"
-
-
-class L1AcQlColourCodingMethodType(Enum):
-    """
-    Enumeration of L1a and L1c products quick-looks colour coding methods.
-    """
-
-    PAULI = "Pauli"
-    HSV = "HSV"
-    PAULI_AND_HSV = "Pauli and HSV"
-
-
-class L1BQlColourCodingMethodType(Enum):
-    """
-    Enumeration of L1b products quick-looks colour coding methods.
-    """
-
-    LEXICOGRAPHIC = "Lexicographic"
 
 
 class BaselineMethodType(Enum):
@@ -1042,6 +908,17 @@ class CoregistrationMethodType(Enum):
     GEOMETRY = "Geometry"
     GEOMETRY_AND_DATA = "Geometry and Data"
     AUTOMATIC = "Automatic"
+
+
+class PolarisationCombinationMethodType(Enum):
+    """
+    Enumeration of polarisations combination methods.
+    """
+
+    HV = "HV"
+    VH = "VH"
+    AVERAGE = "Average"
+    NONE = "None"
 
 
 class PrimaryImageSelectionInformationType(Enum):
@@ -1077,16 +954,6 @@ class SkpPhaseCorrectionType(Enum):
     GROUND_PHASE_SCREEN = "Ground Phase Screen"
 
 
-class PrimaryImageSelectionMethodType(Enum):
-    """
-    Enumeration of coregistration primary image selection methods.
-    """
-
-    GEOMETRY = "Geometry"
-    GEOMETRY_AND_QUALITY = "Geometry and Quality"
-    TEMPORAL_BASELINE = "Temporal Baseline"
-
-
 class AcquisitionModeIdtype(Enum):
     """
     Enumeration of all valid acquisition modes.
@@ -1099,6 +966,17 @@ class AcquisitionModeIdtype(Enum):
     S2_TOM = "S2 TOM"
     S3_TOM = "S3 TOM"
     RX_ONLY = "RX Only"
+
+
+class DataFormatModeType(Enum):
+    """
+    Enumeration of compression method names.
+    """
+
+    BAQ_4_BIT = "BAQ 4 Bit"
+    BAQ_5_BIT = "BAQ 5 Bit"
+    BAQ_6_BIT = "BAQ 6 Bit"
+    BYPASS = "Bypass"
 
 
 class SignalType(Enum):

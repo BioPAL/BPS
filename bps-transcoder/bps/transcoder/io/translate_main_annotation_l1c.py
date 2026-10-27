@@ -10,9 +10,14 @@
 from pathlib import Path
 
 import numpy as np
-from bps.common.io import common, translate_common
+from bps.common.io import common
 from bps.common.io.parsing import parse, serialize
-from bps.common.io.translate_common import (
+from bps.transcoder.io import (
+    main_annotation_l1c,
+    translate_common,
+    translate_common_annotation_l1,
+)
+from bps.transcoder.io.translate_common import (
     translate_bool,
     translate_bool_to_model,
     translate_coregistration_method,
@@ -42,11 +47,7 @@ from bps.common.io.translate_common import (
     translate_skp_phase_calibration_postprocessing_type,
     translate_skp_phase_calibration_postprocessing_type_to_model,
 )
-from bps.transcoder.io import (
-    main_annotation_l1c,
-    main_annotation_models_l1c,
-    translate_common_annotation_l1,
-)
+from bps.transcoder.io.v450 import main_annotation_models_l1c
 
 
 def translate_sta_processing_parameters(

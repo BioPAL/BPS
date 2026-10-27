@@ -48,34 +48,6 @@ def translate_min_max_type_with_unit_to_model(
     )
 
 
-def translate_processing_mode(
-    mode: common_types.ProcessingModeType,
-) -> common.ProcessingModeType:
-    """Translate nominal/parc enum"""
-    return common.ProcessingModeType[mode.name]
-
-
-def translate_processing_mode_to_model(
-    mode: common.ProcessingModeType,
-) -> common_types.ProcessingModeType:
-    """Translate nominal/parc enum"""
-    return common_types.ProcessingModeType[mode.name]
-
-
-def translate_orbit_attitude_source(
-    source: common_types.OrbitAttitudeSourceType,
-) -> common.OrbitAttitudeSourceType:
-    """Translate downling/auxiliary enum"""
-    return common.OrbitAttitudeSourceType[source.name]
-
-
-def translate_orbit_attitude_source_to_model(
-    source: common.OrbitAttitudeSourceType,
-) -> common_types.OrbitAttitudeSourceType:
-    """Translate downling/auxiliary enum"""
-    return common_types.OrbitAttitudeSourceType[source.name]
-
-
 def translate_rfi_mask_type(mask_type: common_types.RfiMaskType) -> common.RfiMaskType:
     """Translate single/mutliple rfi mask enum"""
     return common.RfiMaskType[mask_type.name]
@@ -488,20 +460,6 @@ def translate_interferometric_pair_list_to_model(
     )
 
 
-def translate_projection_type(
-    projection: common_types.ProjectionType,
-) -> common.ProjectionType:
-    """Translate projection"""
-    return common.ProjectionType[projection.name]
-
-
-def translate_projection_type_to_model(
-    projection: common.ProjectionType,
-) -> common_types.ProjectionType:
-    """Translate projection"""
-    return common_types.ProjectionType[projection.name]
-
-
 def translate_baseline_method_type(
     baseline_method: common_types.BaselineMethodType,
 ) -> common.BaselineMethodType:
@@ -560,20 +518,6 @@ def translate_pixel_representation_type_to_model(
     return common_types.PixelRepresentationType[representation.name]
 
 
-def translate_pixel_type_type(
-    pixel_type: common_types.PixelTypeType,
-) -> common.PixelTypeType:
-    """Translate pixel type"""
-    return common.PixelTypeType[pixel_type.name]
-
-
-def translate_pixel_type_type_to_model(
-    pixel_type: common.PixelTypeType,
-) -> common_types.PixelTypeType:
-    """Translate pixel type"""
-    return common_types.PixelTypeType[pixel_type.name]
-
-
 def translate_pixel_quantity_type(
     quantity: common_types.PixelQuantityType,
 ) -> common.PixelQuantityType:
@@ -616,20 +560,6 @@ def translate_l1b_ql_colour_coding_method_type_to_model(
     return common_types.L1BQlColourCodingMethodType[quantity.name]
 
 
-def translate_mission_type(
-    mission: common_types.MissionType,
-) -> common.MissionType:
-    """Translate mission type"""
-    return common.MissionType[mission.name]
-
-
-def translate_mission_type_to_model(
-    mission: common.MissionType,
-) -> common_types.MissionType:
-    """Translate  mission type"""
-    return common_types.MissionType[mission.name]
-
-
 def translate_swath_type(
     swath: common_types.SwathType,
 ) -> common.SwathType:
@@ -642,76 +572,6 @@ def translate_swath_type_to_model(
 ) -> common_types.SwathType:
     """Translate swath"""
     return common_types.SwathType[swath.name]
-
-
-def translate_product_type(
-    product_type: common_types.ProductType,
-) -> common.ProductType:
-    """Translate product type"""
-    return common.ProductType[product_type.name]
-
-
-def translate_product_type_to_model(
-    product_type: common.ProductType,
-) -> common_types.ProductType:
-    """Translate product type"""
-    return common_types.ProductType[product_type.name]
-
-
-def translate_mission_phase_id(
-    phase: common_types.MissionPhaseIdtype,
-) -> common.MissionPhaseIdtype:
-    """Translate mission phase type"""
-    return common.MissionPhaseIdtype[phase.name]
-
-
-def translate_mission_phase_id_to_model(
-    phase: common.MissionPhaseIdtype,
-) -> common_types.MissionPhaseIdtype:
-    """Translate mission phase"""
-    return common_types.MissionPhaseIdtype[phase.name]
-
-
-def translate_sensor_mode(
-    mode: common_types.SensorModeType,
-) -> common.SensorModeType:
-    """Translate sensor mode"""
-    return common.SensorModeType[mode.name]
-
-
-def translate_sensor_mode_to_model(
-    mode: common.SensorModeType,
-) -> common_types.SensorModeType:
-    """Translate sensor mode"""
-    return common_types.SensorModeType[mode.name]
-
-
-def translate_orbit_pass(
-    direction: common_types.OrbitPassType,
-) -> common.OrbitPassType:
-    """Translate orbit pass"""
-    return common.OrbitPassType[direction.name]
-
-
-def translate_orbit_pass_to_model(
-    direction: common.OrbitPassType,
-) -> common_types.OrbitPassType:
-    """Translate orbit pass"""
-    return common_types.OrbitPassType[direction.name]
-
-
-def translate_product_composition(
-    composition: common_types.ProductCompositionType,
-) -> common.ProductCompositionType:
-    """Translate product composition"""
-    return common.ProductCompositionType[composition.name]
-
-
-def translate_product_composition_to_model(
-    composition: common.ProductCompositionType,
-) -> common_types.ProductCompositionType:
-    """Translate product composition"""
-    return common_types.ProductCompositionType[composition.name]
 
 
 def translate_state_type(
@@ -895,20 +755,6 @@ def translate_primary_image_selection_information_to_model(
 ) -> common_types.PrimaryImageSelectionInformationType:
     """Translate the primary image selection information"""
     return common_types.PrimaryImageSelectionInformationType[info.name]
-
-
-def translate_primary_image_selection_method(
-    method: common_types.PrimaryImageSelectionMethodType,
-) -> common.PrimaryImageSelectionMethodType:
-    """Translate the primary image selection method"""
-    return common.PrimaryImageSelectionMethodType[method.name]
-
-
-def translate_primary_image_selection_method_to_model(
-    method: common.PrimaryImageSelectionMethodType,
-) -> common_types.PrimaryImageSelectionMethodType:
-    """Translate the primary image selection method"""
-    return common_types.PrimaryImageSelectionMethodType[method.name]
 
 
 def translate_skp_phase_calibration_postprocessing_type(
