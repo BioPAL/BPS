@@ -156,7 +156,7 @@ def run_check_xsd(session: nox.Session, package: str, file_list: list[str]):
     fail = False
     for xsd in file_list:
         reference_xsd = reference_xsd_dir / xsd
-        package_xsd = package_xsd_dir / xsd
+        package_xsd = package_xsd_dir / reference_xsd.name
         if not package_xsd.exists():
             session.warn(f"xsd: {xsd} is not in the package folder")
             fail = True
@@ -179,7 +179,7 @@ def run_align_xsd(session: nox.Session, package: str, file_list: list[str]):
 
     for xsd in file_list:
         reference_xsd = reference_xsd_dir / xsd
-        package_xsd = package_xsd_dir / xsd
+        package_xsd = package_xsd_dir / reference_xsd.name
 
         session.log(f"Copy {reference_xsd} onto {package_xsd}")
         shutil.copyfile(reference_xsd, package_xsd)

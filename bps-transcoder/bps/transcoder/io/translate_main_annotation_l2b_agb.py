@@ -9,13 +9,14 @@
 
 from pathlib import Path
 
-from bps.common.io import common, translate_common
+from bps.common.io import common
 from bps.common.io.parsing import parse, serialize
 from bps.transcoder.io import (
     main_annotation_l2b_agb,
-    main_annotation_models_l2b_agb,
+    translate_common,
     translate_common_annotation_l2l3,
 )
+from bps.transcoder.io.v450 import main_annotation_models_l2b_agb
 
 
 def translate_reference_selection_type(

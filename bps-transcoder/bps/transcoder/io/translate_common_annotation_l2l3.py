@@ -10,11 +10,9 @@ Common annotations l2l3 translate
 ---------------------------------
 """
 
-from bps.common.io import common, translate_common
-from bps.transcoder.io import (
-    common_annotation_l2l3,
-    common_annotation_models_l2,
-)
+from bps.common.io import common
+from bps.transcoder.io import common_annotation_l2l3, translate_common
+from bps.transcoder.io.v450 import common_annotation_models_l2
 
 
 def translate_bps_fnf_type(

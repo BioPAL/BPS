@@ -19,7 +19,12 @@ from enum import Enum
 @dataclass(kw_only=True)
 class AlgorithmOptionsType:
     any_element: list[object] = field(
-        default_factory=list, metadata={"type": "Wildcard", "namespace": "##any", "process_contents": "skip"}
+        default_factory=list,
+        metadata={
+            "type": "Wildcard",
+            "namespace": "##any",
+            "process_contents": "skip",
+        },
     )
 
 
@@ -29,7 +34,7 @@ class AttributeType:
         metadata={
             "name": "DataType",
             "type": "Element",
-        },
+        }
     )
     value: list[str] = field(
         default_factory=list,
@@ -41,7 +46,7 @@ class AttributeType:
     name: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -81,17 +86,17 @@ class ColorTableEntryType:
     c1: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     c2: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     c3: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     c4: None | int = field(
         default=None,
@@ -149,7 +154,7 @@ class DimensionRefType:
     ref: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -158,7 +163,7 @@ class DimensionType:
     name: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     type_value: None | str = field(
         default=None,
@@ -176,7 +181,7 @@ class DimensionType:
     size: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     indexing_variable: None | str = field(
         default=None,
@@ -193,24 +198,24 @@ class FieldDefnType:
         metadata={
             "name": "Name",
             "type": "Element",
-        },
+        }
     )
     type_value: int = field(
         metadata={
             "name": "Type",
             "type": "Element",
-        },
+        }
     )
     usage: int = field(
         metadata={
             "name": "Usage",
             "type": "Element",
-        },
+        }
     )
     index: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -237,25 +242,25 @@ class Gcptype:
         metadata={
             "name": "Pixel",
             "type": "Attribute",
-        },
+        }
     )
     line: float = field(
         metadata={
             "name": "Line",
             "type": "Attribute",
-        },
+        }
     )
     x: float = field(
         metadata={
             "name": "X",
             "type": "Attribute",
-        },
+        }
     )
     y: float = field(
         metadata={
             "name": "Y",
             "type": "Attribute",
-        },
+        }
     )
     z: None | float = field(
         default=None,
@@ -279,7 +284,12 @@ class GdalwarpOptionsType:
         name = "GDALWarpOptionsType"
 
     any_element: list[object] = field(
-        default_factory=list, metadata={"type": "Wildcard", "namespace": "##any", "process_contents": "skip"}
+        default_factory=list,
+        metadata={
+            "type": "Wildcard",
+            "namespace": "##any",
+            "process_contents": "skip",
+        },
     )
 
 
@@ -333,14 +343,19 @@ class Mditype:
     key: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
 @dataclass(kw_only=True)
 class MetadataType:
     any_element: list[object] = field(
-        default_factory=list, metadata={"type": "Wildcard", "namespace": "##any", "process_contents": "skip"}
+        default_factory=list,
+        metadata={
+            "type": "Wildcard",
+            "namespace": "##any",
+            "process_contents": "skip",
+        },
     )
     domain: None | str = field(
         default=None,
@@ -389,13 +404,18 @@ class Ooitype:
     key: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
 @dataclass(kw_only=True)
 class OverviewListType:
-    value: list[int] = field(default_factory=list, metadata={"tokens": True})
+    value: list[int] = field(
+        default_factory=list,
+        metadata={
+            "tokens": True,
+        },
+    )
     resampling: None | str = field(
         default=None,
         metadata={
@@ -420,8 +440,22 @@ class RectType:
             "type": "Attribute",
         },
     )
-    x_size: None | float = field(default=None, metadata={"name": "xSize", "type": "Attribute", "min_exclusive": 0.0})
-    y_size: None | float = field(default=None, metadata={"name": "ySize", "type": "Attribute", "min_exclusive": 0.0})
+    x_size: None | float = field(
+        default=None,
+        metadata={
+            "name": "xSize",
+            "type": "Attribute",
+            "min_exclusive": 0.0,
+        },
+    )
+    y_size: None | float = field(
+        default=None,
+        metadata={
+            "name": "ySize",
+            "type": "Attribute",
+            "min_exclusive": 0.0,
+        },
+    )
 
 
 @dataclass(kw_only=True)
@@ -429,12 +463,12 @@ class RegularlySpacedValuesType:
     start: float = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
     increment: float = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -450,7 +484,7 @@ class RowType:
     index: int = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -622,13 +656,13 @@ class KernelType:
         metadata={
             "name": "Size",
             "type": "Element",
-        },
+        }
     )
     coefs: str = field(
         metadata={
             "name": "Coefs",
             "type": "Element",
-        },
+        }
     )
     normalized: None | ZeroOrOne = field(
         default=None,
@@ -677,10 +711,20 @@ class SourceFilenameType:
 @dataclass(kw_only=True)
 class SourcePropertiesType:
     raster_xsize: None | int = field(
-        default=None, metadata={"name": "RasterXSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "RasterXSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     raster_ysize: None | int = field(
-        default=None, metadata={"name": "RasterYSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "RasterYSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     data_type: None | DataTypeType = field(
         default=None,
@@ -690,10 +734,20 @@ class SourcePropertiesType:
         },
     )
     block_xsize: None | int = field(
-        default=None, metadata={"name": "BlockXSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "BlockXSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     block_ysize: None | int = field(
-        default=None, metadata={"name": "BlockYSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "BlockYSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
 
 
@@ -997,13 +1051,13 @@ class PanchroBandType:
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-        },
+        }
     )
     source_band: str = field(
         metadata={
             "name": "SourceBand",
             "type": "Element",
-        },
+        }
     )
 
 
@@ -1065,7 +1119,7 @@ class SourceType:
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-        },
+        }
     )
     source_array: None | str = field(
         default=None,
@@ -1117,13 +1171,13 @@ class SpectralBandType:
         metadata={
             "name": "SourceFilename",
             "type": "Element",
-        },
+        }
     )
     source_band: str = field(
         metadata={
             "name": "SourceBand",
             "type": "Element",
-        },
+        }
     )
     dst_band: None | int = field(
         default=None,
@@ -1140,7 +1194,7 @@ class ArrayType:
         metadata={
             "name": "DataType",
             "type": "Element",
-        },
+        }
     )
     dimension: list[DimensionType] = field(
         default_factory=list,
@@ -1236,7 +1290,7 @@ class ArrayType:
     name: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -1295,7 +1349,7 @@ class PansharpeningOptionsType:
         metadata={
             "name": "PanchroBand",
             "type": "Element",
-        },
+        }
     )
     spectral_band: list[SpectralBandType] = field(
         default_factory=list,
@@ -1536,10 +1590,20 @@ class VrtrasterBandType:
         },
     )
     block_xsize: None | int = field(
-        default=None, metadata={"name": "blockXSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "blockXSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     block_ysize: None | int = field(
-        default=None, metadata={"name": "blockYSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "blockYSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     sub_class: None | VrtrasterBandSubTypeType = field(
         default=None,
@@ -1552,7 +1616,11 @@ class VrtrasterBandType:
     @dataclass(kw_only=True)
     class PixelFunctionArguments:
         any_attributes: dict[str, str] = field(
-            default_factory=dict, metadata={"type": "Attributes", "namespace": "##any"}
+            default_factory=dict,
+            metadata={
+                "type": "Attributes",
+                "namespace": "##any",
+            },
         )
 
 
@@ -1589,7 +1657,7 @@ class GroupType:
     name: str = field(
         metadata={
             "type": "Attribute",
-        },
+        }
     )
 
 
@@ -1599,7 +1667,7 @@ class MaskBandType:
         metadata={
             "name": "VRTRasterBand",
             "type": "Element",
-        },
+        }
     )
 
 
@@ -1630,10 +1698,20 @@ class Vrtdataset:
         },
     )
     block_xsize: list[int] = field(
-        default_factory=list, metadata={"name": "BlockXSize", "type": "Element", "max_inclusive": 2147483647}
+        default_factory=list,
+        metadata={
+            "name": "BlockXSize",
+            "type": "Element",
+            "max_inclusive": 2147483647,
+        },
     )
     block_ysize: list[int] = field(
-        default_factory=list, metadata={"name": "BlockYSize", "type": "Element", "max_inclusive": 2147483647}
+        default_factory=list,
+        metadata={
+            "name": "BlockYSize",
+            "type": "Element",
+            "max_inclusive": 2147483647,
+        },
     )
     metadata: list[MetadataType] = field(
         default_factory=list,
@@ -1692,8 +1770,18 @@ class Vrtdataset:
         },
     )
     raster_xsize: None | int = field(
-        default=None, metadata={"name": "rasterXSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "rasterXSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )
     raster_ysize: None | int = field(
-        default=None, metadata={"name": "rasterYSize", "type": "Attribute", "max_inclusive": 2147483647}
+        default=None,
+        metadata={
+            "name": "rasterYSize",
+            "type": "Attribute",
+            "max_inclusive": 2147483647,
+        },
     )

@@ -14,8 +14,10 @@ import copy
 import unittest
 
 from arepytools.timing.precisedatetime import PreciseDateTime
-from bps.common.io import common, common_types
-from bps.transcoder.io import common_annotation_l1, common_annotation_models_l1, translate_common_annotation_l1
+from bps.common.io import common
+from bps.transcoder.io import common_annotation_l1, translate_common_annotation_l1
+from bps.transcoder.io.v450 import common as common_types
+from bps.transcoder.io.v450 import common_annotation_models_l1
 
 
 class CommonAnnotationL1TranslateTestCase(unittest.TestCase):
