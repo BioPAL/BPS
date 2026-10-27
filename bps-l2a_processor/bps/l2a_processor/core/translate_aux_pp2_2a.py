@@ -28,6 +28,7 @@ from bps.l2a_processor.core.aux_pp2_2a import (
     MinMaxNumType,
     MinMaxType,
     OperationalModeType,
+    verticalRangeWithUnitsType,
 )
 from bps.l2a_processor.io import aux_pp2_2a_models
 
@@ -205,8 +206,12 @@ def translate_model_to_tfh_conf(
         regularization_noise_factor=conf.regularization_noise_factor,
         power_threshold=conf.power_threshold,
         median_factor=conf.median_factor,
-        estimation_valid_values_limits=conf.estimation_valid_values_limits,
-        vertical_range=conf.vertical_range,
+        estimation_valid_values_limits=MinMaxType(
+            min=conf.estimation_valid_values_limits.min.value, max=conf.estimation_valid_values_limits.max.value
+        ),
+        vertical_range=verticalRangeWithUnitsType(
+            min=conf.vertical_range.min.value, max=conf.vertical_range.max.value, sampling=conf.vertical_range.sampling
+        ),
         compression_options=translate_model_to_comp_tfh_conf(conf.compression_options),
     )
 

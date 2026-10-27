@@ -1282,7 +1282,9 @@ class AGBL2B:
             polarization_list.append(
                 main_annotation_l2b_agb.EstimatedParametersPolarisation(
                     lcm=lcm_list,
-                    polarisations=estimated_parameters["polarization_names"][pol_idx],
+                    polarisations=main_annotation_l2b_agb.EstimatedParametersPolarisationType(
+                        estimated_parameters["polarization_names"][pol_idx]
+                    ),
                 )
             )
 
@@ -2416,8 +2418,8 @@ def compute_filtered_coverage_cal_ab(
             # Partial computation filtered coverage for main annotation
             cal_ab_filtered_temp = _filter_agb_reference_for_agb_values(
                 agb_mean=data_object_1x1["cal_ab"][:, :, 0],
-                mean_min=meanAGBLimits.min.value,
-                mean_max=meanAGBLimits.max.value,
+                mean_min=meanAGBLimits.min,
+                mean_max=meanAGBLimits.max,
             )
             cal_ab_after_agbvalue_filtering_per_tile[tile_id] = _compute_coverage_percentage_and_pixels(
                 cal_ab_filtered_temp
@@ -2426,8 +2428,8 @@ def compute_filtered_coverage_cal_ab(
             cal_ab_filtered_temp = _filter_agb_reference_for_agb_std_values(
                 agb_mean=data_object_1x1["cal_ab"][:, :, 0],
                 agb_std=data_object_1x1["cal_ab"][:, :, 1],
-                std_min=stdAGBLimits.min.value,
-                std_max=stdAGBLimits.max.value,
+                std_min=stdAGBLimits.min,
+                std_max=stdAGBLimits.max,
             )
             cal_ab_after_agbstd_filtering_per_tile[tile_id] = _compute_coverage_percentage_and_pixels(
                 cal_ab_filtered_temp
@@ -2457,10 +2459,10 @@ def compute_filtered_coverage_cal_ab(
             cal_ab_filtered_temp, _ = filter_agb_reference_global(
                 agb_mean=data_object_1x1["cal_ab"][:, :, 0],
                 agb_std=data_object_1x1["cal_ab"][:, :, 1],
-                mean_min=meanAGBLimits.min.value,
-                mean_max=meanAGBLimits.max.value,
-                std_min=stdAGBLimits.min.value,
-                std_max=stdAGBLimits.max.value,
+                mean_min=meanAGBLimits.min,
+                mean_max=meanAGBLimits.max,
+                std_min=stdAGBLimits.min,
+                std_max=stdAGBLimits.max,
                 rel_std_min=relativeAGBLimits.min,
                 rel_std_max=relativeAGBLimits.max,
             )

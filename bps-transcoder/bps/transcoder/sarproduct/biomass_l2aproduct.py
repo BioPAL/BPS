@@ -412,7 +412,7 @@ class BIOMASSL2aProduct:
                 self.product_type,
                 pdt_to_compact_string(self.main_ads_product.start_time),
                 pdt_to_compact_string(self.main_ads_product.stop_time),
-                str(self.main_ads_product.mission_phase_id)[0],
+                self.main_ads_product.mission_phase_id.value[0],
                 "G" + ("__" if self.main_ads_product.mission_phase_id.value[0] == "C" else global_coverage_id_str),
                 "M" + ("__" if self.main_ads_product.mission_phase_id.value[0] == "C" else major_cycle_id_str),
                 "C__",
