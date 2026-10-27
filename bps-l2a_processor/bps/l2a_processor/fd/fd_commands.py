@@ -580,6 +580,13 @@ class FD:
             absolute_orbit_numbers.append(product.orbit_number)
             datatake_ids.append(product.datatake_id)
 
+        selected_reference_image = None
+        if idx_selected_reference is not None:
+            assert acquisition_id_reference_image is not None
+            selected_reference_image = common_annotation_l2l3.SelectedReferenceImageType(
+                value=idx_selected_reference, acquisition_id=acquisition_id_reference_image
+            )
+
         main_ads_product = common_annotation_l2l3.BIOMASSL2aMainADSproduct(
             mission=common.MissionType.BIOMASS,
             tile_id_list=self.tile_id_list,
@@ -601,7 +608,7 @@ class FD:
             platform_heading=primary_product.platform_heading,
             baseline=self.output_baseline,
             forest_coverage_percentage=self.forest_coverage_percentage,
-            selected_reference_image=idx_selected_reference,
+            selected_reference_image=selected_reference_image,
         )
 
         # main_ads_raster_image

@@ -209,8 +209,8 @@ class TOMO_FH:
         )
 
         vertical_vector = np.arange(
-            self.aux_pp2_2a.tfh.vertical_range.min.value,
-            self.aux_pp2_2a.tfh.vertical_range.max.value + self.aux_pp2_2a.tfh.vertical_range.sampling,
+            self.aux_pp2_2a.tfh.vertical_range.min,
+            self.aux_pp2_2a.tfh.vertical_range.max + self.aux_pp2_2a.tfh.vertical_range.sampling,
             self.aux_pp2_2a.tfh.vertical_range.sampling,
         )
 
@@ -437,13 +437,13 @@ class TOMO_FH:
 
         # Discard values
         bps_logger.info(
-            f"    discarding estimations out of AUX PP2 2A estimation valid values limits [m] [{self.aux_pp2_2a.tfh.estimation_valid_values_limits.min.value}, {self.aux_pp2_2a.tfh.estimation_valid_values_limits.max.value}]:"
+            f"    discarding estimations out of AUX PP2 2A estimation valid values limits [m] [{self.aux_pp2_2a.tfh.estimation_valid_values_limits.min}, {self.aux_pp2_2a.tfh.estimation_valid_values_limits.max}]:"
         )
 
         float_no_data_values_mask = processed_data_dict["quality"][0] == FLOAT_NODATA_VALUE
         valid_values_mask = np.logical_or(
-            processed_data_dict["fh"][0] < self.aux_pp2_2a.tfh.estimation_valid_values_limits.min.value,
-            processed_data_dict["fh"][0] > self.aux_pp2_2a.tfh.estimation_valid_values_limits.max.value,
+            processed_data_dict["fh"][0] < self.aux_pp2_2a.tfh.estimation_valid_values_limits.min,
+            processed_data_dict["fh"][0] > self.aux_pp2_2a.tfh.estimation_valid_values_limits.max,
         )
         num_nans_before_removal = np.sum(float_no_data_values_mask)
 

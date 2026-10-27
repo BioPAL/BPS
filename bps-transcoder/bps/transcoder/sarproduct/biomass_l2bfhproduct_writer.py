@@ -237,9 +237,8 @@ class BIOMASSL2bFHProductWriter:
         xml6.text = mission_phases_dict[self.product.main_ads_product.mission_phase_id]
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.main_ads_product.global_coverage_id)
-        for tile_id in self.product.main_ads_product.tile_id:
-            xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}tileID")
-            xml6.text = str(tile_id)
+        xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}tileID")
+        xml6.text = self.product.main_ads_product.tile_id
 
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}basinID")
         xml6.text = self.product.main_ads_product.basin_id[0]
