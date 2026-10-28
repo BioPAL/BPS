@@ -21,7 +21,7 @@ class BIOMASSStackProcessingParameters:
     """Data struct for the BIOMASS Stack Processor parameters."""
 
     processor_version: str
-    product_generation_time: PreciseDateTime | str
+    product_generation_time: PreciseDateTime
     polarizations_used: int
     polarization_combination_method: common.PolarisationCombinationMethodType | None
     primary_image_selection_method: common.PrimaryImageSelectionMethodType

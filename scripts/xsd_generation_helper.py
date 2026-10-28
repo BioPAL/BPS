@@ -65,7 +65,7 @@ class XSDInfo:
 XSD_SOURCE_DIR = Path("xsd").absolute()
 BRICKSAR_XSD = XSD_SOURCE_DIR.joinpath("bricksar-xsd")
 BIOMASS_XSD = XSD_SOURCE_DIR.joinpath("biomass-xsd")
-ANNOTATION_XSD_V450 = BIOMASS_XSD.joinpath("annotation", "v4.5.0")
+ANNOTATION_XSD = BIOMASS_XSD.joinpath("annotation")
 ICD_XSD = XSD_SOURCE_DIR.joinpath("icd-xsd")
 
 XSD_FILES_BRICKSAR = [
@@ -211,93 +211,110 @@ XSD_AUX_INS = (
     ),
 )
 
-XSD_BIO_COMMON_TYPES_V450 = XSDInfo(
-    xsd_path=ANNOTATION_XSD_V450.joinpath("bio-common-types.xsd"),
-    namespace="transcoder",
-    subpackage="v450.common",
-    description="XSD common types",
-)
+VERSIONS = ["v4.5.0", "v4.4.5"]
+XSD_BIO_COMMON_TYPES_ANNOTATIONS = {
+    version: XSDInfo(
+        xsd_path=ANNOTATION_XSD / version / "bio-common-types.xsd",
+        namespace="transcoder",
+        subpackage=f"{version.replace('.', '')}.common",
+        description="XSD common types",
+    )
+    for version in VERSIONS
+}
 
-XSD_BIO_L1_ANNOTATIONS_COMMON_V450 = XSDInfo(
-    xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l1-annotations.xsd"),
-    namespace="transcoder",
-    subpackage="v450.common_annotation_models_l1",
-    description="XSD common annotation models L1",
-)
+XSD_BIO_L1_ANNOTATIONS_COMMON = {
+    version: XSDInfo(
+        xsd_path=ANNOTATION_XSD / version / "bio-l1-annotations.xsd",
+        namespace="transcoder",
+        subpackage=f"{version.replace('.', '')}.common_annotation_models_l1",
+        description="XSD common annotation models L1",
+    )
+    for version in VERSIONS
+}
 
-XSD_BIO_L2_ANNOTATIONS_COMMON_V450 = XSDInfo(
-    xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2l3-common-annotations.xsd"),
-    namespace="transcoder",
-    subpackage="v450.common_annotation_models_l2",
-    description="XSD common annotation models L2",
-)
+XSD_BIO_L2_ANNOTATIONS_COMMON = {
+    version: XSDInfo(
+        xsd_path=ANNOTATION_XSD / version / "bio-l2l3-common-annotations.xsd",
+        namespace="transcoder",
+        subpackage=f"{version.replace('.', '')}.common_annotation_models_l2",
+        description="XSD common annotation models L2",
+    )
+    for version in VERSIONS
+}
 
-XSD_ANNOTATION_L1_V450 = [
-    XSD_BIO_L1_ANNOTATIONS_COMMON_V450,
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l1ab-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l1ab",
-        description="XSD Main annotation models l1ab",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l1c-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l1c",
-        description="XSD Main annotation models l1c",
-    ),
-]
+XSD_ANNOTATION_L1 = {
+    version: [
+        XSD_BIO_L1_ANNOTATIONS_COMMON[version],
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l1ab-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l1ab",
+            description="XSD Main annotation models l1ab",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l1c-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l1c",
+            description="XSD Main annotation models l1c",
+        ),
+    ]
+    for version in VERSIONS
+}
 
-XSD_ANNOTATION_L2_V450 = [
-    XSD_BIO_L2_ANNOTATIONS_COMMON_V450,
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2a-fd-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2a_fd",
-        description="XSD Main annotation models L2a FD",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2a-fh-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2a_fh",
-        description="XSD Main annotation models L2a FH",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2a-gn-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2a_gn",
-        description="XSD Main annotation models L2a GN",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2a-tfh-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2a_tfh",
-        description="XSD Main annotation models L2a TOMO FH",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2b-fd-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2b_fd",
-        description="XSD Main annotation models L2b FD",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2b-fh-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2b_fh",
-        description="XSD Main annotation models L2b FH",
-    ),
-    XSDInfo(
-        xsd_path=ANNOTATION_XSD_V450.joinpath("bio-l2b-agb-main-annotation.xsd"),
-        namespace="transcoder",
-        subpackage="v450.main_annotation_models_l2b_agb",
-        description="XSD Main annotation models L2b AGB",
-    ),
-]
+XSD_ANNOTATION_L2 = {
+    version: [
+        XSD_BIO_L2_ANNOTATIONS_COMMON[version],
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2a-fd-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2a_fd",
+            description="XSD Main annotation models L2a FD",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2a-fh-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2a_fh",
+            description="XSD Main annotation models L2a FH",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2a-gn-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2a_gn",
+            description="XSD Main annotation models L2a GN",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2a-tfh-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2a_tfh",
+            description="XSD Main annotation models L2a TOMO FH",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2b-fd-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2b_fd",
+            description="XSD Main annotation models L2b FD",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2b-fh-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2b_fh",
+            description="XSD Main annotation models L2b FH",
+        ),
+        XSDInfo(
+            xsd_path=ANNOTATION_XSD / version / "bio-l2b-agb-main-annotation.xsd",
+            namespace="transcoder",
+            subpackage=f"{version.replace('.', '')}.main_annotation_models_l2b_agb",
+            description="XSD Main annotation models L2b AGB",
+        ),
+    ]
+    for version in VERSIONS
+}
 
 
-XSD_ANNOTATION_V450 = [XSD_BIO_COMMON_TYPES_V450]
-XSD_ANNOTATION_V450 += XSD_ANNOTATION_L1_V450
-XSD_ANNOTATION_V450 += XSD_ANNOTATION_L2_V450
+XSD_ANNOTATION = {
+    version: [XSD_BIO_COMMON_TYPES_ANNOTATIONS[version]] + XSD_ANNOTATION_L1[version] + XSD_ANNOTATION_L2[version]
+    for version in VERSIONS
+}
 
 XSDATA_CONFIG_FILE = XSD_SOURCE_DIR.joinpath(".xsdata.xml")
 XSD_FILES_BIOMASS = [XSD_BIO_COMMON_TYPES]
@@ -315,7 +332,8 @@ XSD_FILES: list[XSDInfo] = []
 XSD_FILES += XSD_FILES_BIOMASS
 # XSD_FILES += XSD_FILES_BRICKSAR
 # XSD_FILES += XSD_FILES_ICD
-XSD_FILES += XSD_ANNOTATION_V450
+for version in VERSIONS:
+    XSD_FILES += XSD_ANNOTATION[version]
 
 
 def drop_all_list_from_init_file(init_file: Path):
@@ -379,20 +397,21 @@ def generate_xsd_models(session: nox.Session):
         exclude(XSD_FILES_BIOMASS, {"common_types", "vrt"}),
     )
 
-    move_types_to_common_models(
-        XSD_BIO_COMMON_TYPES_V450,
-        exclude(XSD_ANNOTATION_V450, {"v450.common"}),
-    )
+    for version in VERSIONS:
+        move_types_to_common_models(
+            XSD_BIO_COMMON_TYPES_ANNOTATIONS[version],
+            exclude(XSD_ANNOTATION[version], {f"{version.replace('.', '')}.common"}),
+        )
 
-    move_types_to_common_models(
-        XSD_BIO_L1_ANNOTATIONS_COMMON_V450,
-        exclude(XSD_ANNOTATION_L1_V450, {"v450.common_annotation_models_l1"}),
-    )
+        move_types_to_common_models(
+            XSD_BIO_L1_ANNOTATIONS_COMMON[version],
+            exclude(XSD_ANNOTATION_L1[version], {f"{version.replace('.', '')}.common_annotation_models_l1"}),
+        )
 
-    move_types_to_common_models(
-        XSD_BIO_L2_ANNOTATIONS_COMMON_V450,
-        exclude(XSD_ANNOTATION_L2_V450, {"v450.common_annotation_models_l2"}),
-    )
+        move_types_to_common_models(
+            XSD_BIO_L2_ANNOTATIONS_COMMON[version],
+            exclude(XSD_ANNOTATION_L2[version], {f"{version.replace('.', '')}.common_annotation_models_l2"}),
+        )
 
     prepend_license(XSD_FILES)
 

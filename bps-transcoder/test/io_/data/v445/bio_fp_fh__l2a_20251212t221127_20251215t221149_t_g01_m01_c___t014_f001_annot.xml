@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mainAnnotation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\xsd\biomass-xsd\annotation\v4.4.5\bio-l2a-fh-main-annotation.xsd">
+  <product>
+    <mission>BIOMASS</mission>
+    <tileID>
+      <ID>S04W061</ID>
+      <ID>S03W061</ID>
+      <ID>S03W060</ID>
+      <ID>S02W061</ID>
+      <ID>S02W060</ID>
+    </tileID>
+    <basinID>
+      <ID>B100</ID>
+    </basinID>
+    <productType>FH_L2A</productType>
+    <startTime>2025-12-12T22:11:27.538326</startTime>
+    <stopTime>2025-12-15T22:11:49.746652</stopTime>
+    <radarCarrierFrequency units="Hz">435000000.0</radarCarrierFrequency>
+    <missionPhaseID>TOM</missionPhaseID>
+    <sensorMode>Measurement</sensorMode>
+    <globalCoverageID>1</globalCoverageID>
+    <swath>S2</swath>
+    <majorCycleID>1</majorCycleID>
+    <absoluteOrbitNumber>
+      <val>3338</val>
+      <val>3382</val>
+    </absoluteOrbitNumber>
+    <relativeOrbitNumber>14</relativeOrbitNumber>
+    <orbitPass>Descending</orbitPass>
+    <dataTakeID>
+      <val>27347702</val>
+      <val>27708150</val>
+    </dataTakeID>
+    <frame>1</frame>
+    <platformHeading units="deg">-168.08086878974356</platformHeading>
+    <forestCoveragePercentage>96.68481202700356</forestCoveragePercentage>
+  </product>
+  <rasterImage>
+    <footprint count="8" units="deg">-2.98876950131231 -60.62609570190595 -3.1075493985741094 -60.0589510713189 -1.8440916889921755 -59.79269244110628 -1.7248105923161927 -60.3586977341829</footprint>
+    <firstLatitudeValue units="deg">-1.721666693687439</firstLatitudeValue>
+    <firstLongitudeValue units="deg">-60.63083267211914</firstLongitudeValue>
+    <latitudeSpacing units="deg">-0.0008332729339599609</latitudeSpacing>
+    <longitudeSpacing units="deg">0.00083160400390625</longitudeSpacing>
+    <numberOfSamples>1670</numberOfSamples>
+    <numberOfLines>1010</numberOfLines>
+    <projection>Latitude-Longitude based on DGG</projection>
+    <datum>
+      <coordinateReferenceSystem>GEOGCRS[WGS 84,DATUM[World Geodetic System 1984,ELLIPSOID[WGS 84,6378137,298.257223563,LENGTHUNIT[metre,1]]],PRIMEM[Greenwich,0,ANGLEUNIT[degree,0.0174532925199433]],CS[ellipsoidal,2],AXIS[geodetic latitude (Lat),north,ORDER[1],ANGLEUNIT[degree,0.0174532925199433]],AXIS[geodetic longitude (Lon),east,ORDER[2],ANGLEUNIT[degree,0.0174532925199433]],ID[EPSG,4326]]</coordinateReferenceSystem>
+      <geodeticReferenceFrame>WGS84</geodeticReferenceFrame>
+    </datum>
+    <pixelRepresentation>
+      <FH>Forest Height [m]</FH>
+      <Quality>Forest height quality</Quality>
+    </pixelRepresentation>
+    <pixelType>
+      <floatPixelType>32 bit Float</floatPixelType>
+    </pixelType>
+    <noDataValue>
+      <floatNoDataValue>-9999.0</floatNoDataValue>
+    </noDataValue>
+  </rasterImage>
+  <inputInformation>
+    <productType>STA</productType>
+    <overallProductsQualityIndex>1</overallProductsQualityIndex>
+    <nominalStack>false</nominalStack>
+    <polarisationList count="3">
+      <polarisation>HH</polarisation>
+      <polarisation>VH</polarisation>
+      <polarisation>VV</polarisation>
+    </polarisationList>
+    <projection>Slant Range</projection>
+    <footprint count="8" units="deg">-2.98876950131231 -60.62609570190595 -3.1075493985741094 -60.0589510713189 -1.8440916889921755 -59.79269244110628 -1.7248105923161927 -60.3586977341829</footprint>
+    <verticalWavenumbers>
+      <min units="rad/m">0.0</min>
+      <max units="rad/m">0.036995904523738334</max>
+    </verticalWavenumbers>
+    <heightOfAmbiguity>
+      <min units="m">169.83461786014706</min>
+      <max units="m">169.83461786014706</max>
+    </heightOfAmbiguity>
+    <acquisitionList count="2">
+      <acquisition referenceImage="true">
+        <FolderName>BIO_S2_STA__1S_20251212T221127_20251212T221148_T_G01_M01_C01_T014_F001_01_DQ0HJZ</FolderName>
+        <staQuality>
+          <overallProductQualityIndex>3758096385</overallProductQualityIndex>
+          <staQualityParametersList count="4">
+            <staQualityParameters polarisation="HH">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="HV">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="VH">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="VV">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+          </staQualityParametersList>
+        </staQuality>
+      </acquisition>
+      <acquisition referenceImage="false">
+        <FolderName>BIO_S2_STA__1S_20251215T221128_20251215T221149_T_G01_M01_C02_T014_F001_01_DQ0HKY</FolderName>
+        <staQuality>
+          <overallProductQualityIndex>3758096385</overallProductQualityIndex>
+          <staQualityParametersList count="4">
+            <staQualityParameters polarisation="HH">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="HV">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="VH">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+            <staQualityParameters polarisation="VV">
+              <invalidL1aDataSamples>0.0</invalidL1aDataSamples>
+              <rfiDecorrelation>1.0</rfiDecorrelation>
+              <rfiDecorrelationThreshold>1.0</rfiDecorrelationThreshold>
+              <faradayDecorrelation>0.9996011270943095</faradayDecorrelation>
+              <faradayDecorrelationThreshold>1.0</faradayDecorrelationThreshold>
+              <invalidResidualShiftsFraction>0.0</invalidResidualShiftsFraction>
+              <residualShiftsQualityThreshold>0.0</residualShiftsQualityThreshold>
+              <invalidGroundPhasesScreenEstimatesFraction>0.0</invalidGroundPhasesScreenEstimatesFraction>
+              <groundPhasesScreenQualityThreshold>0.0</groundPhasesScreenQualityThreshold>
+              <skpDecompositionIndex>0</skpDecompositionIndex>
+            </staQualityParameters>
+          </staQualityParametersList>
+        </staQuality>
+      </acquisition>
+    </acquisitionList>
+  </inputInformation>
+  <processingParameters>
+    <processorVersion>4.5.0.dev0</processorVersion>
+    <productGenerationTime>2026-10-14T12:58:00.734586</productGenerationTime>
+    <generalConfigurationParameters>
+      <applyCalibrationScreen>skp</applyCalibrationScreen>
+      <forestCoverageThreshold>0.0</forestCoverageThreshold>
+      <forestMaskInterpolationThreshold>0.5</forestMaskInterpolationThreshold>
+      <subsettingRule>geometry</subsettingRule>
+      <polarisationCombinationMethod>Average</polarisationCombinationMethod>
+    </generalConfigurationParameters>
+    <verticalReflectivityOption>default profile</verticalReflectivityOption>
+    <verticalReflectivityDefaultProfile count="70">
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.0</val>
+      <val>0.00707279</val>
+      <val>0.00943741</val>
+      <val>0.01248407</val>
+      <val>0.01637197</val>
+      <val>0.02128567</val>
+      <val>0.02743564</val>
+      <val>0.03505776</val>
+      <val>0.04441143</val>
+      <val>0.05577593</val>
+      <val>0.06944488</val>
+      <val>0.08571862</val>
+      <val>0.10489421</val>
+      <val>0.12725336</val>
+      <val>0.15304829</val>
+      <val>0.18248582</val>
+      <val>0.21571047</val>
+      <val>0.252787</val>
+      <val>0.2936836</val>
+      <val>0.33825645</val>
+      <val>0.38623704</val>
+      <val>0.43722319</val>
+      <val>0.49067496</val>
+      <val>0.54591627</val>
+      <val>0.60214297</val>
+      <val>0.65843762</val>
+      <val>0.71379103</val>
+      <val>0.76713002</val>
+      <val>0.81735044</val>
+      <val>0.86335432</val>
+      <val>0.90408916</val>
+      <val>0.93858779</val>
+      <val>0.96600633</val>
+      <val>0.98565853</val>
+      <val>0.99704424</val>
+      <val>0.99987063</val>
+      <val>0.99406466</val>
+      <val>0.97977621</val>
+      <val>0.95737169</val>
+      <val>0.92741841</val>
+      <val>0.89066068</val>
+      <val>0.84798913</val>
+      <val>0.80040487</val>
+      <val>0.74898066</val>
+      <val>0.69482097</val>
+      <val>0.63902326</val>
+      <val>0.58264209</val>
+      <val>0.52665775</val>
+      <val>0.4719506</val>
+      <val>0.41928183</val>
+      <val>0.36928101</val>
+    </verticalReflectivityDefaultProfile>
+    <modelInversion>dual</modelInversion>
+    <spectralDecorrelationCompensationFlag>true</spectralDecorrelationCompensationFlag>
+    <SNRDecorrelationCompensation>false</SNRDecorrelationCompensation>
+    <correctTerrainSlopesFlag>true</correctTerrainSlopesFlag>
+    <normalisedHeightEstimationRange>
+      <min>0.0</min>
+      <max>1.0</max>
+    </normalisedHeightEstimationRange>
+    <normalisedWavenumberEstimationRange>
+      <min>0.0</min>
+      <max>6.283185307179586</max>
+      <num>100</num>
+    </normalisedWavenumberEstimationRange>
+    <groundToVolumeRatioRange>
+      <min>0.0</min>
+      <max>3.0</max>
+      <num>40</num>
+    </groundToVolumeRatioRange>
+    <temporalDecorrelationEstimationRange>
+      <min>0.4</min>
+      <max>1.0</max>
+      <num>20</num>
+    </temporalDecorrelationEstimationRange>
+    <temporalDecorrelationGroundToVolumeRatio>0.0</temporalDecorrelationGroundToVolumeRatio>
+    <residualDecorrelation>0.97</residualDecorrelation>
+    <productResolution units="m">200.0</productResolution>
+    <uncertaintyValidvaluesLimits>
+      <min>0.0</min>
+      <max>100.0</max>
+    </uncertaintyValidvaluesLimits>
+    <verticalWavenumberValidvaluesLimits>
+      <min>0.0</min>
+      <max>0.2</max>
+    </verticalWavenumberValidvaluesLimits>
+    <lowerHeightLimit units="m">0.0</lowerHeightLimit>
+    <upsamplingFactor>1</upsamplingFactor>
+    <compressionOptions>
+      <MDS>
+        <FH>
+          <compressionFactor>5</compressionFactor>
+          <MAX_Z_ERROR>0.0001</MAX_Z_ERROR>
+        </FH>
+        <Quality>
+          <compressionFactor>5</compressionFactor>
+          <MAX_Z_ERROR>0.0001</MAX_Z_ERROR>
+        </Quality>
+      </MDS>
+      <ADS>
+        <FNF>
+          <compressionFactor>5</compressionFactor>
+        </FNF>
+      </ADS>
+      <MDS_blockSize>128</MDS_blockSize>
+      <ADS_blockSize>128</ADS_blockSize>
+    </compressionOptions>
+  </processingParameters>
+  <annotationLUT count="8">
+    <layer>FNF</layer>
+    <layer>Height [m]</layer>
+    <layer>Latitude [deg]</layer>
+    <layer>Longitude [deg]</layer>
+    <layer>Incidence angle [deg]</layer>
+    <layer>Elevation angle [deg]</layer>
+    <layer>Range terrain slope [deg]</layer>
+    <layer>Azimuth terrain slope [deg]</layer>
+  </annotationLUT>
+</mainAnnotation>

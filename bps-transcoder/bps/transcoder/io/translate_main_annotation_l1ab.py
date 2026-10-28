@@ -9,17 +9,22 @@
 
 from pathlib import Path
 
-from bps.common.io.parsing import parse, serialize
+from bps.common.io.parsing import serialize
 from bps.transcoder.io import (
     main_annotation_l1ab,
+    reader_core,
     translate_common,
     translate_common_annotation_l1,
 )
-from bps.transcoder.io.v450 import main_annotation_models_l1ab
+from bps.transcoder.io.v445 import main_annotation_models_l1ab as v445
+from bps.transcoder.io.v450 import main_annotation_models_l1ab as v450
+
+MainAnnotation = v450.MainAnnotation | v445.MainAnnotation
+LATEST_VERSION = v450
 
 
 def translate_main_annotation_l1ab(
-    annotation: main_annotation_models_l1ab.MainAnnotation,
+    annotation: MainAnnotation,
 ) -> main_annotation_l1ab.MainAnnotationL1ab:
     """Translate L1ab main annotation file"""
     return main_annotation_l1ab.MainAnnotationL1ab(
@@ -56,9 +61,9 @@ def translate_main_annotation_l1ab(
 
 def translate_main_annotation_l1ab_to_model(
     annotation: main_annotation_l1ab.MainAnnotationL1ab,
-) -> main_annotation_models_l1ab.MainAnnotation:
+) -> LATEST_VERSION.MainAnnotation:
     """Translate L1ab main annotation file"""
-    return main_annotation_models_l1ab.MainAnnotation(
+    return LATEST_VERSION.MainAnnotation(
         acquisition_information=translate_common_annotation_l1.translate_acquisition_information_to_model(
             annotation.acquisition_information
         ),
@@ -98,11 +103,14 @@ def read_main_annotation_l1ab(
     file: Path,
 ) -> main_annotation_l1ab.MainAnnotationL1ab:
     """Read main annotation of l1ab products"""
-    main_annotation_model: main_annotation_models_l1ab.MainAnnotation = parse(
-        file.read_text(encoding="utf-8"),
-        main_annotation_models_l1ab.MainAnnotation,
+    main_annotation_model = reader_core.reader(
+        file,
+        "l1ab",
+        [
+            ("v450", v450.MainAnnotation),
+            ("v445", v445.MainAnnotation),
+        ],
     )
-
     return translate_main_annotation_l1ab(main_annotation_model)
 
 

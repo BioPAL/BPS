@@ -87,6 +87,22 @@ products = [
     ("v450/bio_s3_scs__1s_20260114t050037_20260114t050058_t_g01_m01_c05_t004_f001_annot.xml", "L1A"),
     ("v450/bio_s3_sta__1s_20260126t050044_20260126t050104_t_g01_m01_c09_t004_f001_annot_secondary.xml", "L1C"),
     ("v450/bio_s3_sta__1s_20260126t050044_20260126t050104_t_g01_m01_c09_t004_f001_annot.xml", "L1A"),
+    ("v445/bio_fp_agb_l2b_t_g01_tn00e011_b300_annot.xml", "L2B_AGB"),
+    ("v445/bio_fp_fd__l2a_20251212t221127_20251218t221151_t_g01_m01_c___t014_f001_annot.xml", "L2A_FD"),
+    ("v445/bio_fp_fd__l2a_20260114t050037_20260126t050104_t_g01_m01_c___t004_f001_annot.xml", "L2A_FD"),
+    ("v445/bio_fp_fd__l2b_t_g01_tn00e011_b300_annot.xml", "L2B_FD"),
+    ("v445/bio_fp_fd__l2b_t_g01_ts03w060_b100_annot.xml", "L2B_FD"),
+    ("v445/bio_fp_fh__l2a_20251212t221127_20251215t221149_t_g01_m01_c___t014_f001_annot.xml", "L2A_FH"),
+    ("v445/bio_fp_fh__l2a_20260114t050037_20260126t050104_t_g01_m01_c___t004_f001_annot.xml", "L2A_FH"),
+    ("v445/bio_fp_fh__l2b_t_g01_tn00e011_b300_annot.xml", "L2B_FH"),
+    ("v445/bio_fp_fh__l2b_t_g01_ts03w061_b100_annot.xml", "L2B_FH"),
+    ("v445/bio_fp_gn__l2a_20251215t221128_20251227t221156_t_g01_m01_c___t014_f001_annot.xml", "L2A_GN"),
+    ("v445/bio_fp_gn__l2a_20260114t050037_20260126t050104_t_g01_m01_c___t004_f001_annot.xml", "L2A_GN"),
+    ("v445/bio_fp_tfh_l2a_20260114t050037_20260126t050104_t_g01_m01_c___t004_f001_annot.xml", "L2A_TFH"),
+    ("v445/bio_s3_dgm__1s_20260114t050037_20260114t050058_t_g01_m01_c05_t004_f001_annot.xml", "L1B"),
+    ("v445/bio_s3_scs__1s_20260114t050037_20260114t050058_t_g01_m01_c05_t004_f001_annot.xml", "L1A"),
+    ("v445/bio_s3_sta__1s_20260126t050044_20260126t050104_t_g01_m01_c09_t004_f001_annot_secondary.xml", "L1C"),
+    ("v445/bio_s3_sta__1s_20260126t050044_20260126t050104_t_g01_m01_c09_t004_f001_annot.xml", "L1A"),
 ]
 tests = [(file, readers[file_type][0], readers[file_type][1]) for file, file_type in products]
 
