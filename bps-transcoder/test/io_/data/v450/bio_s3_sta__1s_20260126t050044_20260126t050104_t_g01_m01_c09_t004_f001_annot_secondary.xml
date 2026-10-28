@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mainAnnotation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\xsd\biomass-xsd\annotation\v4.5.0\bio-l1c-main-annotation.xsd">
+<mainAnnotation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\xsd\biomass-xsd\annotation\v4.5.0\bio-l1c-main-annotation.xsd" schemaVersion="1.7.0">
   <acquisitionInformation>
     <mission>BIOMASS</mission>
     <swath>S3</swath>

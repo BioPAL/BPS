@@ -1406,6 +1406,7 @@ class AuxiliaryStaprocessingParametersType:
     sta_product_list
         List of stack processing parameters for each product the Stack Processor is capable of generating (i.e.,
         SM_STA__1S, ...).
+    schema_version
     """
 
     class Meta:
@@ -1416,6 +1417,15 @@ class AuxiliaryStaprocessingParametersType:
             "name": "staProductList",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

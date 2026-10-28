@@ -18,17 +18,14 @@ from bps.stack_processor.interface.external.aux_pps import (
     AuxPPSInvalidSchema,
     validate_aux_pps_xsd_schema,
 )
-
-# NOTE: This must be updated at each AUX_FMT release.
-AUX_FMT_VERSION = "3.6.0"
-
+from bps.transcoder import BPS_AUX_FMT_VERSION
 
 # NOTE: This must be updated at each AUX_FTM update. This runs the *Nominal*
 # (i.e. w/ IOS) stack execution w/ default parameters. Note that
 # polarizationCombinationMethod cannot be None otherwise the L2 processor
 # stops.
-__AUX_PPS_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
-<auxiliarySTAProcessingParameters  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../support/bio-aux-pps.xsd">
+__AUX_PPS_CONTENT = f"""<?xml version="1.0" encoding="UTF-8"?>
+<auxiliarySTAProcessingParameters  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../support/bio-aux-pps.xsd" schemaVersion="{BPS_AUX_FMT_VERSION[1:]}">
   <staProductList count="1">
     <staProduct>
       <productID>Sx_STA__1S</productID>
@@ -175,7 +172,7 @@ __AUX_PPS_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
-def initialize_aux_pps(aux_pps_path: str | Path):
+def initialize_aux_pps(aux_pps_path: Path):
     """Write the AUX_PPS file to path."""
     # Write to disk.
     with Path(aux_pps_path).open(mode="w", encoding="utf-8") as f:
@@ -186,7 +183,7 @@ def initialize_aux_pps(aux_pps_path: str | Path):
         validate_aux_pps_xsd_schema(aux_pps_path)
     except AuxPPSInvalidSchema as exc:
         print(exc)
-        print(f"\n\nInvalid AUX-PPS template (AUX_FMT v{AUX_FMT_VERSION}). Update the template in {__file__}\n\n")
+        print(f"\n\nInvalid AUX-PPS template (AUX_FMT {BPS_AUX_FMT_VERSION}). Update the template in {__file__}\n\n")
         sys.exit(1)
 
 

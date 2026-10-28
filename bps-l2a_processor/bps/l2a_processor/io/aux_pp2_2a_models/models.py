@@ -1668,6 +1668,7 @@ class AuxiliaryL2AProcessingParametersType:
         L2a processing parameters for the FH product.
     tfh
         L2a processing parameters for the TOMO FH product.
+    schema_version
     """
 
     class Meta:
@@ -1705,6 +1706,15 @@ class AuxiliaryL2AProcessingParametersType:
             "name": "TFH",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 
