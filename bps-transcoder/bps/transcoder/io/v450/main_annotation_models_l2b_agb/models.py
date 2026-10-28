@@ -896,6 +896,7 @@ class MainAnnotationType:
         products.
     processing_parameters
         Processing parameters DSR. This DSR contains the description of L2b/L3 processing parameters.
+    schema_version
     """
 
     class Meta:
@@ -926,6 +927,15 @@ class MainAnnotationType:
             "name": "processingParameters",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.5.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
-	<xsd:include schemaLocation="./bio-l2l3-common-annotations.xsd"/>
-	<xsd:include schemaLocation="./bio-l2l3-tfh-proc-annotations.xsd"/>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="3.5.0">
+	<xsd:include schemaLocation="./bio-l2l3-common-annotations.xsd" />
+	<xsd:include schemaLocation="./bio-l2l3-tfh-proc-annotations.xsd" />
 	<xsd:complexType name="mainAnnotationType">
 		<xsd:sequence>
 			<xsd:element name="product" type="productL2aType">
@@ -30,6 +30,7 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
+		<xsd:attribute name="schemaVersion" type="xsd:token" use="required" fixed="3.5.0" />
 	</xsd:complexType>
 	<xsd:element name="mainAnnotation" type="mainAnnotationType">
 		<xsd:annotation>

@@ -176,6 +176,7 @@ class MainAnnotationType:
     annotation_lut
         Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main
         annotations.
+    schema_version
     """
 
     class Meta:
@@ -275,6 +276,15 @@ class MainAnnotationType:
             "name": "annotationLUT",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="1.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

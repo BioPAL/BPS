@@ -270,6 +270,7 @@ class AuxiliaryCalSiteInformationType:
     ----------
     parc_list
         List of calibration targets (PARC) parameters.
+    schema_version
     """
 
     class Meta:
@@ -280,6 +281,15 @@ class AuxiliaryCalSiteInformationType:
             "name": "parcList",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

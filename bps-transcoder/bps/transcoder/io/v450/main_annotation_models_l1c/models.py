@@ -1073,6 +1073,7 @@ class StaMainAnnotationType:
     sta_quality
         Stack quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality
         assessment done at processing level.
+    schema_version
     """
 
     class Meta:
@@ -1200,6 +1201,15 @@ class StaMainAnnotationType:
             "name": "staQuality",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="1.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 
