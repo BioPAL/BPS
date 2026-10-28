@@ -13,17 +13,65 @@ Common annotations l1 translate
 from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1, translate_common
-from bps.transcoder.io.v450 import common as common_types
-from bps.transcoder.io.v450 import common_annotation_models_l1 as common_annotation_models_l1
+from bps.transcoder.io.v445 import common as common_v445
+from bps.transcoder.io.v445 import common_annotation_models_l1 as v445
+from bps.transcoder.io.v450 import common as common_v450
+from bps.transcoder.io.v450 import common_annotation_models_l1 as v450
 from bps.transcoder.utils.production_model_utils import (
     translate_global_coverage_id,
     translate_major_cycle_id,
     translate_repeat_cycle_id,
 )
 
+NoiseGainListType = v450.NoiseGainListType | v445.NoiseGainListType
+ProcessingGainListType = v450.ProcessingGainListType | v445.ProcessingGainListType
+SpectrumProcessingParametersType = v450.SpectrumProcessingParametersType | v445.SpectrumProcessingParametersType
+ProcessingParametersType = v450.ProcessingParametersType | v445.ProcessingParametersType
+DcEstimateType = v450.DcEstimateType | v445.DcEstimateType
+DcEstimateListType = v450.DcEstimateListType | v445.DcEstimateListType
+CoordinateConversionType = v450.CoordinateConversionType | v445.CoordinateConversionType
+CoordinateConversionListType = v450.CoordinateConversionListType | v445.CoordinateConversionListType
+SarImageType = v450.SarImageType | v445.SarImageType
+PolarisationListType = v450.PolarisationListType | v445.PolarisationListType
+AcquisitionInformationType = v450.AcquisitionInformationType | v445.AcquisitionInformationType
+TxPulseType = v450.TxPulseType | v445.TxPulseType
+DataFormatType = v450.DataFormatType | v445.DataFormatType
+TxPulseListType = v450.TxPulseListType | v445.TxPulseListType
+InstrumentParametersType = v450.InstrumentParametersType | v445.InstrumentParametersType
+IonosphereCorrectionType = v450.IonosphereCorrectionType | v445.IonosphereCorrectionType
+FmRateEstimatesListType = v450.FmRateEstimatesListType | v445.FmRateEstimatesListType
+DopplerParametersType = v450.DopplerParametersType | v445.DopplerParametersType
+ErrorCountersType = v450.ErrorCountersType | v445.ErrorCountersType
+RawDataStatisticsType = v450.RawDataStatisticsType | v445.RawDataStatisticsType
+RawDataStatisticsListType = v450.RawDataStatisticsListType | v445.RawDataStatisticsListType
+PowerRatioType = v450.PowerRatioType | v445.PowerRatioType
+PowerRatioListType = v450.PowerRatioListType | v445.PowerRatioListType
+RawDataAnalysisType = v450.RawDataAnalysisType | v445.RawDataAnalysisType
+InternalCalibrationSequenceType = v450.InternalCalibrationSequenceType | v445.InternalCalibrationSequenceType
+InternalCalibrationSequenceListType = (
+    v450.InternalCalibrationSequenceListType | v445.InternalCalibrationSequenceListType
+)
+NoiseSequenceType = v450.NoiseSequenceType | v445.NoiseSequenceType
+NoiseSequenceListType = v450.NoiseSequenceListType | v445.NoiseSequenceListType
+InternalCalibrationType = v450.InternalCalibrationType | v445.InternalCalibrationType
+RfiTmreportType = v450.RfiTmreportType | v445.RfiTmreportType
+RfiTmreportListType = v450.RfiTmreportListType | v445.RfiTmreportListType
+RfiIsolatedFmreportType = v450.RfiIsolatedFmreportType | v445.RfiIsolatedFmreportType
+RfiIsolatedFmreportListType = v450.RfiIsolatedFmreportListType | v445.RfiIsolatedFmreportListType
+RfiPersistentFmreportType = v450.RfiPersistentFmreportType | v445.RfiPersistentFmreportType
+RfiPersistentFmreportListType = v450.RfiPersistentFmreportListType | v445.RfiPersistentFmreportListType
+RfiMitigationType = v450.RfiMitigationType | v445.RfiMitigationType
+RadiometricCalibrationType = v450.RadiometricCalibrationType | v445.RadiometricCalibrationType
+GeometryType = v450.GeometryType | v445.GeometryType
+QualityParametersType = v450.QualityParametersType | v445.QualityParametersType
+QualityType = v450.QualityType | v445.QualityType
+PolarimetricDistortionType = v450.PolarimetricDistortionType | v445.PolarimetricDistortionType
+
+LATEST_VERSION = v450
+
 
 def translate_noise_gain_list(
-    noise_gain_list: common_annotation_models_l1.NoiseGainListType,
+    noise_gain_list: NoiseGainListType,
 ) -> common_annotation_l1.NoiseGainList:
     """Translate noise gain list"""
     assert noise_gain_list.count == len(noise_gain_list.noise_gain)
@@ -32,16 +80,16 @@ def translate_noise_gain_list(
 
 def translate_noise_gain_list_to_model(
     noise_gain_list: common_annotation_l1.NoiseGainList,
-) -> common_annotation_models_l1.NoiseGainListType:
+) -> LATEST_VERSION.NoiseGainListType:
     """Translate noise gain list"""
-    return common_annotation_models_l1.NoiseGainListType(
+    return LATEST_VERSION.NoiseGainListType(
         noise_gain=[translate_common.translate_float_with_polarisation_to_model(gain) for gain in noise_gain_list],
         count=len(noise_gain_list),
     )
 
 
 def translate_processing_gain_list(
-    processing_gain_list: common_annotation_models_l1.ProcessingGainListType,
+    processing_gain_list: ProcessingGainListType,
 ) -> common_annotation_l1.ProcessingGainList:
     """Translate processing gain list"""
     assert processing_gain_list.count == len(processing_gain_list.processing_gain)
@@ -50,9 +98,9 @@ def translate_processing_gain_list(
 
 def translate_processing_gain_list_to_model(
     processing_gain_list: common_annotation_l1.ProcessingGainList,
-) -> common_annotation_models_l1.ProcessingGainListType:
+) -> LATEST_VERSION.ProcessingGainListType:
     """Translate processing gain list"""
-    return common_annotation_models_l1.ProcessingGainListType(
+    return LATEST_VERSION.ProcessingGainListType(
         processing_gain=[
             translate_common.translate_float_with_polarisation_to_model(gain) for gain in processing_gain_list
         ],
@@ -61,7 +109,7 @@ def translate_processing_gain_list_to_model(
 
 
 def translate_spectrum_processing_parameters_type(
-    params: common_annotation_models_l1.SpectrumProcessingParametersType,
+    params: SpectrumProcessingParametersType,
 ) -> common_annotation_l1.SpectrumProcessingParametersType:
     """Translate spectrum proc params"""
     return common_annotation_l1.SpectrumProcessingParametersType(
@@ -77,9 +125,9 @@ def translate_spectrum_processing_parameters_type(
 
 def translate_spectrum_processing_parameters_type_to_model(
     params: common_annotation_l1.SpectrumProcessingParametersType,
-) -> common_annotation_models_l1.SpectrumProcessingParametersType:
+) -> LATEST_VERSION.SpectrumProcessingParametersType:
     """Translate spectrum proc params"""
-    return common_annotation_models_l1.SpectrumProcessingParametersType(
+    return LATEST_VERSION.SpectrumProcessingParametersType(
         window_type=translate_common.translate_weighting_window_type_to_model(params.window_type),
         window_coefficient=float(params.window_coefficient),
         total_bandwidth=translate_common.translate_double_with_unit_to_model(
@@ -97,7 +145,7 @@ def translate_spectrum_processing_parameters_type_to_model(
 
 
 def translate_processing_parameters(
-    params: common_annotation_models_l1.ProcessingParametersType,
+    params: ProcessingParametersType,
 ) -> common_annotation_l1.ProcessingParameters:
     return common_annotation_l1.ProcessingParameters(
         processor_version=params.processor_version,
@@ -169,9 +217,9 @@ def translate_processing_parameters(
 
 def translate_processing_parameters_to_model(
     params: common_annotation_l1.ProcessingParameters,
-) -> common_annotation_models_l1.ProcessingParametersType:
+) -> LATEST_VERSION.ProcessingParametersType:
     """Translate processing parameters"""
-    return common_annotation_models_l1.ProcessingParametersType(
+    return LATEST_VERSION.ProcessingParametersType(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime_to_model(params.product_generation_time),
         processing_mode=translate_common.translate_processing_mode_to_model(params.processing_mode),
@@ -258,7 +306,7 @@ def translate_processing_parameters_to_model(
 
 
 def translate_dc_estimate_type(
-    section: common_annotation_models_l1.DcEstimateType,
+    section: DcEstimateType,
 ) -> common_annotation_l1.DcEstimateType:
     """Translate dc annotatoin section"""
     return common_annotation_l1.DcEstimateType(
@@ -279,9 +327,9 @@ def translate_dc_estimate_type(
 
 def translate_dc_estimate_type_to_model(
     section: common_annotation_l1.DcEstimateType,
-) -> common_annotation_models_l1.DcEstimateType:
+) -> LATEST_VERSION.DcEstimateType:
     """Translate dc annotatoin section"""
-    return common_annotation_models_l1.DcEstimateType(
+    return LATEST_VERSION.DcEstimateType(
         azimuth_time=translate_common.translate_datetime_to_model(section.azimuth_time),
         t0=translate_common.translate_double_with_unit_to_model(section.t0, units=common.UomType.S),
         geometry_dcpolynomial=translate_common.translate_float_array_to_model(section.geometry_dcpolynomial),
@@ -302,7 +350,7 @@ def translate_dc_estimate_type_to_model(
 
 
 def translate_dc_estimate_list_type(
-    dc_estimates: common_annotation_models_l1.DcEstimateListType,
+    dc_estimates: DcEstimateListType,
 ) -> list[common_annotation_l1.DcEstimateType]:
     """Translate list of dc estimate"""
     if len(dc_estimates.dc_estimate) != dc_estimates.count:
@@ -316,16 +364,16 @@ def translate_dc_estimate_list_type(
 
 def translate_dc_estimate_list_type_to_model(
     dc_estimates: list[common_annotation_l1.DcEstimateType],
-) -> common_annotation_models_l1.DcEstimateListType:
+) -> LATEST_VERSION.DcEstimateListType:
     """Translate list of dc estimate"""
-    return common_annotation_models_l1.DcEstimateListType(
+    return LATEST_VERSION.DcEstimateListType(
         dc_estimate=[translate_dc_estimate_type_to_model(dc_estimate) for dc_estimate in dc_estimates],
         count=len(dc_estimates),
     )
 
 
 def translate_coordinate_conversion_type(
-    conversion: common_annotation_models_l1.CoordinateConversionType,
+    conversion: CoordinateConversionType,
 ) -> common_annotation_l1.CoordinateConversionType:
     """Translate coordinate conversion section"""
     return common_annotation_l1.CoordinateConversionType(
@@ -340,9 +388,9 @@ def translate_coordinate_conversion_type(
 
 def translate_coordinate_conversion_type_to_model(
     conversion: common_annotation_l1.CoordinateConversionType,
-) -> common_annotation_models_l1.CoordinateConversionType:
+) -> LATEST_VERSION.CoordinateConversionType:
     """Translate coordinate conversion section"""
-    return common_annotation_models_l1.CoordinateConversionType(
+    return LATEST_VERSION.CoordinateConversionType(
         azimuth_time=translate_common.translate_datetime_to_model(conversion.azimuth_time),
         t0=translate_common.translate_double_with_unit_to_model(conversion.t0, common.UomType.S),
         sr0=translate_common.translate_double_with_unit_to_model(conversion.sr0, common.UomType.M),
@@ -357,7 +405,7 @@ def translate_coordinate_conversion_type_to_model(
 
 
 def translate_coordinate_conversion_list_type(
-    conversions: common_annotation_models_l1.CoordinateConversionListType,
+    conversions: CoordinateConversionListType,
 ) -> list[common_annotation_l1.CoordinateConversionType]:
     """Translate list of coordinate conversions"""
     if len(conversions.coordinate_conversion) != conversions.count:
@@ -371,16 +419,16 @@ def translate_coordinate_conversion_list_type(
 
 def translate_coordinate_conversion_list_type_to_model(
     conversions: list[common_annotation_l1.CoordinateConversionType],
-) -> common_annotation_models_l1.CoordinateConversionListType:
+) -> LATEST_VERSION.CoordinateConversionListType:
     """Translate list of coordinate conversions"""
-    return common_annotation_models_l1.CoordinateConversionListType(
+    return LATEST_VERSION.CoordinateConversionListType(
         coordinate_conversion=[translate_coordinate_conversion_type_to_model(conversion) for conversion in conversions],
         count=len(conversions),
     )
 
 
 def translate_sar_image(
-    image: common_annotation_models_l1.SarImageType,
+    image: SarImageType,
 ) -> common_annotation_l1.SarImageType:
     """Translate SAR Image section"""
     return common_annotation_l1.SarImageType(
@@ -407,9 +455,9 @@ def translate_sar_image(
 
 def translate_sar_image_to_model(
     image: common_annotation_l1.SarImageType,
-) -> common_annotation_models_l1.SarImageType:
+) -> LATEST_VERSION.SarImageType:
     """Translate SAR Image section"""
-    return common_annotation_models_l1.SarImageType(
+    return LATEST_VERSION.SarImageType(
         first_sample_slant_range_time=translate_common.translate_double_with_unit_to_model(
             image.first_sample_slant_range_time, common.UomType.S
         ),
@@ -446,7 +494,7 @@ def translate_sar_image_to_model(
 
 
 def translate_polarisation_list(
-    polarisations: common_annotation_models_l1.PolarisationListType,
+    polarisations: PolarisationListType,
 ) -> list[common.PolarisationType]:
     """Translate polarisation list"""
     if len(polarisations.polarisation) != polarisations.count:
@@ -460,9 +508,9 @@ def translate_polarisation_list(
 
 def translate_polarisation_list_to_model(
     polarisations: list[common.PolarisationType],
-) -> common_annotation_models_l1.PolarisationListType:
+) -> LATEST_VERSION.PolarisationListType:
     """Translate polarisation list"""
-    return common_annotation_models_l1.PolarisationListType(
+    return LATEST_VERSION.PolarisationListType(
         polarisation=[translate_common.translate_polarisation_type_to_model(pol) for pol in polarisations],
         count=len(polarisations),
     )
@@ -470,9 +518,9 @@ def translate_polarisation_list_to_model(
 
 def translate_acquisition_information_to_model(
     info: common_annotation_l1.AcquisitionInformationType,
-) -> common_annotation_models_l1.AcquisitionInformationType:
+) -> LATEST_VERSION.AcquisitionInformationType:
     """Translate acquisition information"""
-    return common_annotation_models_l1.AcquisitionInformationType(
+    return LATEST_VERSION.AcquisitionInformationType(
         mission=translate_common.translate_mission_type_to_model(info.mission),
         swath=translate_common.translate_swath_type_to_model(info.swath),
         product_type=translate_common.translate_product_type_to_model(info.product_type),
@@ -498,7 +546,7 @@ def translate_acquisition_information_to_model(
 
 
 def translate_acquisition_information(
-    info: common_annotation_models_l1.AcquisitionInformationType,
+    info: AcquisitionInformationType,
 ) -> common_annotation_l1.AcquisitionInformationType:
     """Translate acquisition information"""
     return common_annotation_l1.AcquisitionInformationType(
@@ -525,7 +573,7 @@ def translate_acquisition_information(
 
 
 def translate_tx_pulse(
-    pulse: common_annotation_models_l1.TxPulseType,
+    pulse: TxPulseType,
 ) -> common_annotation_l1.TxPulseType:
     """Translate TX pulse"""
     return common_annotation_l1.TxPulseType(
@@ -539,9 +587,9 @@ def translate_tx_pulse(
 
 def translate_tx_pulse_to_model(
     pulse: common_annotation_l1.TxPulseType,
-) -> common_annotation_models_l1.TxPulseType:
+) -> LATEST_VERSION.TxPulseType:
     """Translate TX pulse"""
-    return common_annotation_models_l1.TxPulseType(
+    return LATEST_VERSION.TxPulseType(
         azimuth_time=translate_common.translate_datetime_to_model(pulse.azimuth_time),
         tx_pulse_length=translate_common.translate_double_with_unit_to_model(
             pulse.tx_pulse_length, units=common.UomType.S
@@ -559,7 +607,7 @@ def translate_tx_pulse_to_model(
 
 
 def translate_data_format_type(
-    data_format: common_annotation_models_l1.DataFormatType,
+    data_format: DataFormatType,
 ) -> common_annotation_l1.DataFormatType:
     """Translate data format"""
     return common_annotation_l1.DataFormatType(
@@ -572,9 +620,9 @@ def translate_data_format_type(
 
 def translate_data_format_type_to_model(
     data_format: common_annotation_l1.DataFormatType,
-) -> common_annotation_models_l1.DataFormatType:
+) -> LATEST_VERSION.DataFormatType:
     """Translate data format"""
-    return common_annotation_models_l1.DataFormatType(
+    return LATEST_VERSION.DataFormatType(
         echo_format=translate_common.translate_data_format_mode_to_model(data_format.echo_format),
         calibration_format=translate_common.translate_data_format_mode_to_model(data_format.calibration_format),
         noise_format=translate_common.translate_data_format_mode_to_model(data_format.noise_format),
@@ -585,7 +633,7 @@ def translate_data_format_type_to_model(
 
 
 def _translate_list_time_with_pol(
-    pol_list: list[common_types.TimeTypeWithPolarisation],
+    pol_list: list[common_v450.TimeTypeWithPolarisation] | list[common_v445.TimeTypeWithPolarisation],
 ) -> dict[common.PolarisationType, PreciseDateTime]:
     output = {}
     for item in pol_list:
@@ -596,12 +644,12 @@ def _translate_list_time_with_pol(
 
 def _translate_list_time_with_pol_to_model(
     pol_list: dict[common.PolarisationType, PreciseDateTime],
-) -> list[common_types.TimeTypeWithPolarisation]:
+) -> list[translate_common.LATEST_VERSION.TimeTypeWithPolarisation]:
     return [translate_common.translate_time_with_pol_to_model(item) for item in pol_list.items()]
 
 
 def _translate_list_float_with_pol(
-    pol_list: list[common_types.FloatWithPolarisation],
+    pol_list: list[common_v450.FloatWithPolarisation] | list[common_v445.FloatWithPolarisation],
 ) -> dict[common.PolarisationType, float]:
     output = {}
     for item in pol_list:
@@ -612,41 +660,41 @@ def _translate_list_float_with_pol(
 
 def _translate_list_float_with_pol_to_model(
     pol_list: dict[common.PolarisationType, float],
-) -> list[common_types.FloatWithPolarisation]:
+) -> list[translate_common.LATEST_VERSION.FloatWithPolarisation]:
     return [
         translate_common.translate_float_with_polarisation_to_model((value, pol)) for pol, value in pol_list.items()
     ]
 
 
 def _translate_list_state(
-    states: list[common_types.StateType],
+    states: list[common_v450.StateType] | list[common_v445.StateType],
 ) -> list[tuple[PreciseDateTime, float]]:
     return [translate_common.translate_state_type(state) for state in states]
 
 
 def _translate_list_state_to_model(
     states: list[tuple[PreciseDateTime, float]], unit: common.UomType
-) -> list[common_types.StateType]:
+) -> list[translate_common.LATEST_VERSION.StateType]:
     return [translate_common.translate_state_type_to_model(state, unit) for state in states]
 
 
 def _translate_tx_pulse_list(
-    pulses: common_annotation_models_l1.TxPulseListType,
+    pulses: TxPulseListType,
 ) -> list[common_annotation_l1.TxPulseType]:
     return [translate_tx_pulse(pulse) for pulse in pulses.tx_pulse]
 
 
 def _translate_tx_pulse_list_to_model(
     pulses: list[common_annotation_l1.TxPulseType],
-) -> common_annotation_models_l1.TxPulseListType:
-    return common_annotation_models_l1.TxPulseListType(
+) -> LATEST_VERSION.TxPulseListType:
+    return LATEST_VERSION.TxPulseListType(
         tx_pulse=[translate_tx_pulse_to_model(pulse) for pulse in pulses],
         count=len(pulses),
     )
 
 
 def translate_instrument_parameters(
-    params: common_annotation_models_l1.InstrumentParametersType,
+    params: InstrumentParametersType,
 ) -> common_annotation_l1.InstrumentParametersType:
     """Translate instrument parameters"""
     return common_annotation_l1.InstrumentParametersType(
@@ -675,7 +723,7 @@ def translate_instrument_parameters(
 
 def translate_instrument_parameters_to_model(
     params: common_annotation_l1.InstrumentParametersType,
-) -> common_annotation_models_l1.InstrumentParametersType:
+) -> LATEST_VERSION.InstrumentParametersType:
     """Translate instrument parameters"""
     first_line_sensing_time_list = _translate_list_time_with_pol_to_model(params.first_line_sensing_time_list)
     last_line_sensing_time_list = _translate_list_time_with_pol_to_model(params.last_line_sensing_time_list)
@@ -684,25 +732,25 @@ def translate_instrument_parameters_to_model(
     prf_list = _translate_list_state_to_model(params.prf_list, unit=common.UomType.HZ)
     rx_gain_list = _translate_list_float_with_pol_to_model(params.rx_gain_list)
 
-    return common_annotation_models_l1.InstrumentParametersType(
-        first_line_sensing_time_list=common_annotation_models_l1.FirstLineSensingTimeListType(
+    return LATEST_VERSION.InstrumentParametersType(
+        first_line_sensing_time_list=LATEST_VERSION.FirstLineSensingTimeListType(
             first_line_sensing_time=first_line_sensing_time_list, count=len(first_line_sensing_time_list)
         ),
-        last_line_sensing_time_list=common_annotation_models_l1.LastLineSensingTimeListType(
+        last_line_sensing_time_list=LATEST_VERSION.LastLineSensingTimeListType(
             last_line_sensing_time=last_line_sensing_time_list, count=len(last_line_sensing_time_list)
         ),
         number_of_input_samples=params.number_of_input_samples,
         number_of_input_lines=params.number_of_input_lines,
-        swp_list=common_annotation_models_l1.SwpListType(swp=swp_list, count=len(swp_list)),
-        swl_list=common_annotation_models_l1.SwlListType(swl=swl_list, count=len(swl_list)),
-        prf_list=common_annotation_models_l1.PrfListType(prf=prf_list, count=len(prf_list)),
+        swp_list=LATEST_VERSION.SwpListType(swp=swp_list, count=len(swp_list)),
+        swl_list=LATEST_VERSION.SwlListType(swl=swl_list, count=len(swl_list)),
+        prf_list=LATEST_VERSION.PrfListType(prf=prf_list, count=len(prf_list)),
         rank=params.rank,
         tx_pulse_list=_translate_tx_pulse_list_to_model(params.tx_pulse_list),
         instrument_configuration_id=params.instrument_configuration_id,
         radar_carrier_frequency=translate_common.translate_double_with_unit_to_model(
             params.radar_carrier_frequency, units=common.UomType.HZ
         ),
-        rx_gain_list=common_annotation_models_l1.RxGainListType(rx_gain=rx_gain_list, count=len(rx_gain_list)),
+        rx_gain_list=LATEST_VERSION.RxGainListType(rx_gain=rx_gain_list, count=len(rx_gain_list)),
         preamble_flag=translate_common.translate_bool_to_model(params.preamble_flag),
         postamble_flag=translate_common.translate_bool_to_model(params.postamble_flag),
         interleaved_calibration_flag=translate_common.translate_bool_to_model(params.interleaved_calibration_flag),
@@ -711,7 +759,7 @@ def translate_instrument_parameters_to_model(
 
 
 def translate_ionosphere_correction(
-    info: common_annotation_models_l1.IonosphereCorrectionType,
+    info: IonosphereCorrectionType,
 ) -> common_annotation_l1.IonosphereCorrection:
     """Translate ionosphere correction section"""
     return common_annotation_l1.IonosphereCorrection(
@@ -735,9 +783,9 @@ def translate_ionosphere_correction(
 
 def translate_ionosphere_correction_to_model(
     info: common_annotation_l1.IonosphereCorrection,
-) -> common_annotation_models_l1.IonosphereCorrectionType:
+) -> LATEST_VERSION.IonosphereCorrectionType:
     """Translate ionosphere correction section"""
-    return common_annotation_models_l1.IonosphereCorrectionType(
+    return LATEST_VERSION.IonosphereCorrectionType(
         ionosphere_height_used=translate_common.translate_float_with_unit_to_model(
             info.ionosphere_height_used, units=common.UomType.M
         ),
@@ -767,7 +815,7 @@ def translate_ionosphere_correction_to_model(
 
 
 def translate_fm_rate_estimate_list(
-    fm_rate_estimates: common_annotation_models_l1.FmRateEstimatesListType,
+    fm_rate_estimates: FmRateEstimatesListType,
 ) -> list[common.SlantRangePolynomialType]:
     """Translate list of fm rate estimate"""
     if len(fm_rate_estimates.fm_rate_estimate) != fm_rate_estimates.count:
@@ -784,9 +832,9 @@ def translate_fm_rate_estimate_list(
 
 def translate_fm_rate_estimate_list_to_model(
     fm_rate_estimates: list[common.SlantRangePolynomialType],
-) -> common_annotation_models_l1.FmRateEstimatesListType:
+) -> LATEST_VERSION.FmRateEstimatesListType:
     """Translate list of fm rate estimate"""
-    return common_annotation_models_l1.FmRateEstimatesListType(
+    return LATEST_VERSION.FmRateEstimatesListType(
         fm_rate_estimate=[
             translate_common.translate_slant_range_polynomial_to_model(fm_rate_estimate)
             for fm_rate_estimate in fm_rate_estimates
@@ -796,7 +844,7 @@ def translate_fm_rate_estimate_list_to_model(
 
 
 def translate_doppler_parameters(
-    params: common_annotation_models_l1.DopplerParametersType,
+    params: DopplerParametersType,
 ) -> common_annotation_l1.DopplerParametersType:
     """Translate doppler parameters section"""
     return common_annotation_l1.DopplerParametersType(
@@ -807,16 +855,16 @@ def translate_doppler_parameters(
 
 def translate_doppler_parameters_to_model(
     params: common_annotation_l1.DopplerParametersType,
-) -> common_annotation_models_l1.DopplerParametersType:
+) -> LATEST_VERSION.DopplerParametersType:
     """Translate doppler parameters section"""
-    return common_annotation_models_l1.DopplerParametersType(
+    return LATEST_VERSION.DopplerParametersType(
         dc_estimate_list=translate_dc_estimate_list_type_to_model(params.dc_estimate_list),
         fm_rate_estimate_list=translate_fm_rate_estimate_list_to_model(params.fm_rate_estimate_list),
     )
 
 
 def translate_error_counters(
-    counters: common_annotation_models_l1.ErrorCountersType,
+    counters: ErrorCountersType,
 ) -> common_annotation_l1.ErrorCountersType:
     """Translate error counters"""
     return common_annotation_l1.ErrorCountersType(
@@ -827,16 +875,16 @@ def translate_error_counters(
 
 def translate_error_counters_to_model(
     counters: common_annotation_l1.ErrorCountersType,
-) -> common_annotation_models_l1.ErrorCountersType:
+) -> LATEST_VERSION.ErrorCountersType:
     """Translate error counters"""
-    return common_annotation_models_l1.ErrorCountersType(
+    return LATEST_VERSION.ErrorCountersType(
         num_isp_header_errors=counters.num_isp_header_errors,
         num_isp_missing=counters.num_isp_missing,
     )
 
 
 def translate_raw_data_statistics(
-    stats: common_annotation_models_l1.RawDataStatisticsType,
+    stats: RawDataStatisticsType,
 ) -> common_annotation_l1.RawDataStatisticsType:
     """Translate raw data statistics"""
     return common_annotation_l1.RawDataStatisticsType(
@@ -850,9 +898,9 @@ def translate_raw_data_statistics(
 
 def translate_raw_data_statistics_to_model(
     stats: common_annotation_l1.RawDataStatisticsType,
-) -> common_annotation_models_l1.RawDataStatisticsType:
+) -> LATEST_VERSION.RawDataStatisticsType:
     """Translate raw data statistics"""
-    return common_annotation_models_l1.RawDataStatisticsType(
+    return LATEST_VERSION.RawDataStatisticsType(
         i_bias=float(stats.i_bias),
         q_bias=float(stats.q_bias),
         iq_quadrature_departure=float(stats.iq_quadrature_departure),
@@ -862,7 +910,7 @@ def translate_raw_data_statistics_to_model(
 
 
 def translate_raw_data_statistics_list(
-    stat_list: common_annotation_models_l1.RawDataStatisticsListType,
+    stat_list: RawDataStatisticsListType,
 ) -> list[common_annotation_l1.RawDataStatisticsType]:
     """Translate raw data statistics list"""
     if len(stat_list.raw_data_statistics) != stat_list.count:
@@ -876,16 +924,16 @@ def translate_raw_data_statistics_list(
 
 def translate_raw_data_statistics_list_to_model(
     stat_list: list[common_annotation_l1.RawDataStatisticsType],
-) -> common_annotation_models_l1.RawDataStatisticsListType:
+) -> LATEST_VERSION.RawDataStatisticsListType:
     """Translate raw data statistics list"""
-    return common_annotation_models_l1.RawDataStatisticsListType(
+    return LATEST_VERSION.RawDataStatisticsListType(
         raw_data_statistics=[translate_raw_data_statistics_to_model(stat) for stat in stat_list],
         count=len(stat_list),
     )
 
 
 def translate_power_ratio(
-    power_ratio: common_annotation_models_l1.PowerRatioType,
+    power_ratio: PowerRatioType,
 ) -> common_annotation_l1.PowerRatioType:
     """Translate in/out-of-band power ratio"""
     return common_annotation_l1.PowerRatioType(
@@ -896,16 +944,16 @@ def translate_power_ratio(
 
 def translate_power_ratio_to_model(
     power_ratio: common_annotation_l1.PowerRatioType,
-) -> common_annotation_models_l1.PowerRatioType:
+) -> LATEST_VERSION.PowerRatioType:
     """Translate in/out-of-band power ratio"""
-    return common_annotation_models_l1.PowerRatioType(
+    return LATEST_VERSION.PowerRatioType(
         azimuth_time=translate_common.translate_datetime_to_model(power_ratio.azimuth_time),
         value=power_ratio.value,
     )
 
 
 def translate_power_ratio_list(
-    power_ratios: common_annotation_models_l1.PowerRatioListType,
+    power_ratios: PowerRatioListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.PowerRatioType]]:
     """Translate in/out-of-band power ratio list"""
     if len(power_ratios.power_ratio) != power_ratios.count:
@@ -922,9 +970,9 @@ def translate_power_ratio_list(
 def translate_power_ratio_list_to_model(
     polarisation: common.PolarisationType,
     power_ratios: list[common_annotation_l1.PowerRatioType],
-) -> common_annotation_models_l1.PowerRatioListType:
+) -> LATEST_VERSION.PowerRatioListType:
     """Translate in/out-of-band power ratio list"""
-    return common_annotation_models_l1.PowerRatioListType(
+    return LATEST_VERSION.PowerRatioListType(
         power_ratio=[translate_power_ratio_to_model(power_ratio) for power_ratio in power_ratios],
         count=len(power_ratios),
         polarisation=translate_common.translate_polarisation_type_to_model(polarisation),
@@ -932,7 +980,7 @@ def translate_power_ratio_list_to_model(
 
 
 def translate_raw_data_analysis(
-    analysis: common_annotation_models_l1.RawDataAnalysisType,
+    analysis: RawDataAnalysisType,
 ) -> common_annotation_l1.RawDataAnalysisType:
     """Translate raw data analysis"""
     power_ratios = {}
@@ -949,16 +997,16 @@ def translate_raw_data_analysis(
 
 def translate_raw_data_analysis_to_model(
     analysis: common_annotation_l1.RawDataAnalysisType,
-) -> common_annotation_models_l1.RawDataAnalysisType:
+) -> LATEST_VERSION.RawDataAnalysisType:
     """Translate raw data analysis"""
-    power_ratios = common_annotation_models_l1.InOutBandPowerRatioListType(
+    power_ratios = LATEST_VERSION.InOutBandPowerRatioListType(
         power_ratio_list=[
             translate_power_ratio_list_to_model(pol, power_ratio) for pol, power_ratio in analysis.iobpr_list.items()
         ],
         count=len(analysis.iobpr_list),
     )
 
-    return common_annotation_models_l1.RawDataAnalysisType(
+    return LATEST_VERSION.RawDataAnalysisType(
         error_counters=translate_error_counters_to_model(analysis.error_counters),
         raw_data_statistics_list=translate_raw_data_statistics_list_to_model(analysis.raw_data_statistics_list),
         in_out_band_power_ratio_list=power_ratios,
@@ -966,7 +1014,7 @@ def translate_raw_data_analysis_to_model(
 
 
 def translate_internal_calibration_sequence(
-    sequence: common_annotation_models_l1.InternalCalibrationSequenceType,
+    sequence: InternalCalibrationSequenceType,
 ) -> common_annotation_l1.InternalCalibrationSequenceType:
     """Translate internal calibration sequence"""
     return common_annotation_l1.InternalCalibrationSequenceType(
@@ -1014,9 +1062,9 @@ def translate_internal_calibration_sequence(
 
 def translate_internal_calibration_sequence_to_model(
     sequence: common_annotation_l1.InternalCalibrationSequenceType,
-) -> common_annotation_models_l1.InternalCalibrationSequenceType:
+) -> LATEST_VERSION.InternalCalibrationSequenceType:
     """Translate internal calibration sequence"""
-    return common_annotation_models_l1.InternalCalibrationSequenceType(
+    return LATEST_VERSION.InternalCalibrationSequenceType(
         azimuth_time=translate_common.translate_datetime_to_model(sequence.azimuth_time),
         drift_amplitude=sequence.drift_amplitude,
         drift_phase=translate_common.translate_float_with_unit_to_model(sequence.drift_phase, units=common.UomType.RAD),
@@ -1072,7 +1120,7 @@ def translate_internal_calibration_sequence_to_model(
 
 
 def translate_internal_calibration_sequence_list(
-    sequences: common_annotation_models_l1.InternalCalibrationSequenceListType,
+    sequences: InternalCalibrationSequenceListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.InternalCalibrationSequenceType]]:
     """Translate internal calibration sequence list"""
     if len(sequences.internal_calibration_sequence) != sequences.count:
@@ -1089,9 +1137,9 @@ def translate_internal_calibration_sequence_list(
 def translate_internal_calibration_sequence_list_to_model(
     polarisation: common.PolarisationType,
     sequences: list[common_annotation_l1.InternalCalibrationSequenceType],
-) -> common_annotation_models_l1.InternalCalibrationSequenceListType:
+) -> LATEST_VERSION.InternalCalibrationSequenceListType:
     """Translate raw data statistics list"""
-    return common_annotation_models_l1.InternalCalibrationSequenceListType(
+    return LATEST_VERSION.InternalCalibrationSequenceListType(
         internal_calibration_sequence=[
             translate_internal_calibration_sequence_to_model(sequence) for sequence in sequences
         ],
@@ -1101,7 +1149,7 @@ def translate_internal_calibration_sequence_list_to_model(
 
 
 def translate_noise_sequence(
-    sequence: common_annotation_models_l1.NoiseSequenceType,
+    sequence: NoiseSequenceType,
 ) -> common_annotation_l1.NoiseSequenceType:
     """Translate noise sequence"""
     return common_annotation_l1.NoiseSequenceType(
@@ -1113,9 +1161,9 @@ def translate_noise_sequence(
 
 def translate_noise_sequence_to_model(
     sequence: common_annotation_l1.NoiseSequenceType,
-) -> common_annotation_models_l1.NoiseSequenceType:
+) -> LATEST_VERSION.NoiseSequenceType:
     """Translate noise sequence"""
-    return common_annotation_models_l1.NoiseSequenceType(
+    return LATEST_VERSION.NoiseSequenceType(
         azimuth_time=translate_common.translate_datetime_to_model(sequence.azimuth_time),
         noise_power_correction_factor=sequence.noise_power_correction_factor,
         number_of_noise_lines=sequence.number_of_noise_lines,
@@ -1123,7 +1171,7 @@ def translate_noise_sequence_to_model(
 
 
 def translate_noise_sequence_list(
-    sequences: common_annotation_models_l1.NoiseSequenceListType,
+    sequences: NoiseSequenceListType,
 ) -> tuple[common.PolarisationType, list[common_annotation_l1.NoiseSequenceType]]:
     """Translate internal calibration sequence list"""
     if len(sequences.noise_sequence) != sequences.count:
@@ -1140,9 +1188,9 @@ def translate_noise_sequence_list(
 def translate_noise_sequence_list_to_model(
     polarisation: common.PolarisationType,
     sequences: list[common_annotation_l1.NoiseSequenceType],
-) -> common_annotation_models_l1.NoiseSequenceListType:
+) -> LATEST_VERSION.NoiseSequenceListType:
     """Translate raw data statistics list"""
-    return common_annotation_models_l1.NoiseSequenceListType(
+    return LATEST_VERSION.NoiseSequenceListType(
         noise_sequence=[translate_noise_sequence_to_model(sequence) for sequence in sequences],
         count=len(sequences),
         polarisation=translate_common.translate_polarisation_type_to_model(polarisation),
@@ -1150,7 +1198,7 @@ def translate_noise_sequence_list_to_model(
 
 
 def translate_internal_calibration(
-    cal: common_annotation_models_l1.InternalCalibrationType,
+    cal: InternalCalibrationType,
 ) -> common_annotation_l1.InternalCalibrationType:
     """Translate internal calibration"""
     int_cal_sequences = {}
@@ -1178,24 +1226,24 @@ def translate_internal_calibration(
 
 def translate_internal_calibration_to_model(
     cal: common_annotation_l1.InternalCalibrationType,
-) -> common_annotation_models_l1.InternalCalibrationType:
+) -> LATEST_VERSION.InternalCalibrationType:
     """Translate internal calibration"""
 
-    int_cal_sequences = common_annotation_models_l1.InternalCalibrationParametersListType(
+    int_cal_sequences = LATEST_VERSION.InternalCalibrationParametersListType(
         internal_calibration_sequence_list=[
             translate_internal_calibration_sequence_list_to_model(pol, sequence)
             for pol, sequence in cal.internal_calibration_parameters_list.items()
         ],
         count=len(cal.internal_calibration_parameters_list),
     )
-    noise_sequences = common_annotation_models_l1.NoiseListType(
+    noise_sequences = LATEST_VERSION.NoiseListType(
         noise_sequence_list=[
             translate_noise_sequence_list_to_model(pol, sequence) for pol, sequence in cal.noise_list.items()
         ],
         count=len(cal.noise_list),
     )
 
-    return common_annotation_models_l1.InternalCalibrationType(
+    return LATEST_VERSION.InternalCalibrationType(
         internal_calibration_parameters_used=translate_common.translate_internal_calibration_source_to_model(
             cal.internal_calibration_parameters_used
         ),
@@ -1211,7 +1259,7 @@ def translate_internal_calibration_to_model(
 
 
 def translate_rfi_tmreport_type(
-    report: common_annotation_models_l1.RfiTmreportType,
+    report: RfiTmreportType,
 ) -> common_annotation_l1.RfiTmreportType:
     """Translate time domain report item"""
     return common_annotation_l1.RfiTmreportType(
@@ -1224,9 +1272,9 @@ def translate_rfi_tmreport_type(
 
 def translate_rfi_tmreport_type_to_model(
     report: common_annotation_l1.RfiTmreportType,
-) -> common_annotation_models_l1.RfiTmreportType:
+) -> LATEST_VERSION.RfiTmreportType:
     """Translate time domain report item"""
-    return common_annotation_models_l1.RfiTmreportType(
+    return LATEST_VERSION.RfiTmreportType(
         polarisation=translate_common.translate_polarisation_type_to_model(report.polarisation),
         percentage_affected_lines=float(report.percentage_affected_lines),
         avg_percentage_affected_samples=float(report.avg_percentage_affected_samples),
@@ -1235,7 +1283,7 @@ def translate_rfi_tmreport_type_to_model(
 
 
 def translate_rfi_tmreport_list_type(
-    reports: common_annotation_models_l1.RfiTmreportListType,
+    reports: RfiTmreportListType,
 ) -> list[common_annotation_l1.RfiTmreportType]:
     """Translate list of rfi tm report"""
     if len(reports.rfi_tmreport) != reports.count:
@@ -1249,16 +1297,16 @@ def translate_rfi_tmreport_list_type(
 
 def translate_rfi_tmreport_list_type_to_model(
     reports: list[common_annotation_l1.RfiTmreportType],
-) -> common_annotation_models_l1.RfiTmreportListType:
+) -> LATEST_VERSION.RfiTmreportListType:
     """Translate list of rfi tm report"""
-    return common_annotation_models_l1.RfiTmreportListType(
+    return LATEST_VERSION.RfiTmreportListType(
         rfi_tmreport=[translate_rfi_tmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
 
 def translate_rfi_isolated_fmreport_type(
-    report: common_annotation_models_l1.RfiIsolatedFmreportType,
+    report: RfiIsolatedFmreportType,
 ) -> common_annotation_l1.RfiIsolatedFmreportType:
     """Translate isolated RI report item"""
     return common_annotation_l1.RfiIsolatedFmreportType(
@@ -1271,9 +1319,9 @@ def translate_rfi_isolated_fmreport_type(
 
 def translate_rfi_isolated_fmreport_type_to_model(
     report: common_annotation_l1.RfiIsolatedFmreportType,
-) -> common_annotation_models_l1.RfiIsolatedFmreportType:
+) -> LATEST_VERSION.RfiIsolatedFmreportType:
     """Translate isolated RI report item"""
-    return common_annotation_models_l1.RfiIsolatedFmreportType(
+    return LATEST_VERSION.RfiIsolatedFmreportType(
         polarisation=translate_common.translate_polarisation_type_to_model(report.polarisation),
         percentage_affected_lines=float(report.percentage_affected_lines),
         max_percentage_affected_bw=float(report.max_percentage_affected_bw),
@@ -1282,7 +1330,7 @@ def translate_rfi_isolated_fmreport_type_to_model(
 
 
 def translate_rfi_isolated_fmreport_list_type(
-    reports: common_annotation_models_l1.RfiIsolatedFmreportListType,
+    reports: RfiIsolatedFmreportListType,
 ) -> list[common_annotation_l1.RfiIsolatedFmreportType]:
     """Translate list of  rfi isolated fm report"""
     if len(reports.rfi_isolated_fmreport) != reports.count:
@@ -1296,16 +1344,16 @@ def translate_rfi_isolated_fmreport_list_type(
 
 def translate_rfi_isolated_fmreport_list_type_to_model(
     reports: list[common_annotation_l1.RfiIsolatedFmreportType],
-) -> common_annotation_models_l1.RfiIsolatedFmreportListType:
+) -> LATEST_VERSION.RfiIsolatedFmreportListType:
     """Translate list of  rfi isolated fm report"""
-    return common_annotation_models_l1.RfiIsolatedFmreportListType(
+    return LATEST_VERSION.RfiIsolatedFmreportListType(
         rfi_isolated_fmreport=[translate_rfi_isolated_fmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
 
 def translate_rfi_persistent_fmreport_type(
-    report: common_annotation_models_l1.RfiPersistentFmreportType,
+    report: RfiPersistentFmreportType,
 ) -> common_annotation_l1.RfiPersistentFmreportType:
     """Translate persistent frequency domain report item"""
     return common_annotation_l1.RfiPersistentFmreportType(
@@ -1318,9 +1366,9 @@ def translate_rfi_persistent_fmreport_type(
 
 def translate_rfi_persistent_fmreport_type_to_model(
     report: common_annotation_l1.RfiPersistentFmreportType,
-) -> common_annotation_models_l1.RfiPersistentFmreportType:
+) -> LATEST_VERSION.RfiPersistentFmreportType:
     """Translate persistent frequency domain report item"""
-    return common_annotation_models_l1.RfiPersistentFmreportType(
+    return LATEST_VERSION.RfiPersistentFmreportType(
         polarisation=translate_common.translate_polarisation_type_to_model(report.polarisation),
         percentage_affected_lines=float(report.percentage_affected_lines),
         max_percentage_affected_bw=float(report.max_percentage_affected_bw),
@@ -1329,7 +1377,7 @@ def translate_rfi_persistent_fmreport_type_to_model(
 
 
 def translate_rfi_persistent_fmreport_list(
-    reports: common_annotation_models_l1.RfiPersistentFmreportListType,
+    reports: RfiPersistentFmreportListType,
 ) -> list[common_annotation_l1.RfiPersistentFmreportType]:
     """Translate persistent frequency domain report item list"""
     if len(reports.rfi_persistent_fmreport) != reports.count:
@@ -1343,16 +1391,16 @@ def translate_rfi_persistent_fmreport_list(
 
 def translate_rfi_persistent_fmreport_list_type_to_model(
     reports: list[common_annotation_l1.RfiPersistentFmreportType],
-) -> common_annotation_models_l1.RfiPersistentFmreportListType:
+) -> LATEST_VERSION.RfiPersistentFmreportListType:
     """Translate persistent frequency domain report item list"""
-    return common_annotation_models_l1.RfiPersistentFmreportListType(
+    return LATEST_VERSION.RfiPersistentFmreportListType(
         rfi_persistent_fmreport=[translate_rfi_persistent_fmreport_type_to_model(report) for report in reports],
         count=len(reports),
     )
 
 
 def translate_rfi_mitigation(
-    info: common_annotation_models_l1.RfiMitigationType,
+    info: RfiMitigationType,
 ) -> common_annotation_l1.RfiMitigationType:
     """Translate RFI mitigation"""
     return common_annotation_l1.RfiMitigationType(
@@ -1372,9 +1420,9 @@ def translate_rfi_mitigation(
 
 def translate_rfi_mitigation_to_model(
     info: common_annotation_l1.RfiMitigationType,
-) -> common_annotation_models_l1.RfiMitigationType:
+) -> LATEST_VERSION.RfiMitigationType:
     """Translate RFI mitigation"""
-    return common_annotation_models_l1.RfiMitigationType(
+    return LATEST_VERSION.RfiMitigationType(
         rfi_tmreport_list=(
             translate_rfi_tmreport_list_type_to_model(info.rfi_tmreport_list) if info.rfi_tmreport_list else None
         ),
@@ -1392,7 +1440,7 @@ def translate_rfi_mitigation_to_model(
 
 
 def translate_radiometric_calibration(
-    info: common_annotation_models_l1.RadiometricCalibrationType,
+    info: RadiometricCalibrationType,
 ) -> common_annotation_l1.RadiometricCalibrationType:
     """Translate radiometric calibration section"""
     calibrations = [
@@ -1407,22 +1455,22 @@ def translate_radiometric_calibration(
 
 def translate_radiometric_calibration_to_model(
     info: common_annotation_l1.RadiometricCalibrationType,
-) -> common_annotation_models_l1.RadiometricCalibrationType:
+) -> LATEST_VERSION.RadiometricCalibrationType:
     """Translate radiometric calibration section"""
     calibrations = [
         translate_common.translate_float_with_polarisation_to_model((value, pol))
         for pol, value in info.absolute_calibration_constant_list.items()
     ]
 
-    return common_annotation_models_l1.RadiometricCalibrationType(
-        absolute_calibration_constant_list=common_annotation_models_l1.CalibrationConstantListType(
+    return LATEST_VERSION.RadiometricCalibrationType(
+        absolute_calibration_constant_list=LATEST_VERSION.CalibrationConstantListType(
             absolute_calibration_constant=calibrations, count=len(calibrations)
         ),
     )
 
 
 def translate_geometry(
-    geometry: common_annotation_models_l1.GeometryType,
+    geometry: GeometryType,
 ) -> common_annotation_l1.GeometryType:
     """Translate geometry"""
     return common_annotation_l1.GeometryType(
@@ -1434,9 +1482,9 @@ def translate_geometry(
 
 def translate_geometry_to_model(
     geometry: common_annotation_l1.GeometryType,
-) -> common_annotation_models_l1.GeometryType:
+) -> LATEST_VERSION.GeometryType:
     """Translate geometry"""
-    return common_annotation_models_l1.GeometryType(
+    return LATEST_VERSION.GeometryType(
         height_model=translate_common.translate_height_model_to_model(geometry.height_model),
         height_model_used_flag=translate_common.translate_bool_to_model(geometry.height_model_used_flag),
         roll_bias=translate_common.translate_float_with_unit_to_model(geometry.roll_bias, units=common.UomType.DEG),
@@ -1444,7 +1492,7 @@ def translate_geometry_to_model(
 
 
 def translate_quality_parameters(
-    params: common_annotation_models_l1.QualityParametersType,
+    params: QualityParametersType,
 ) -> common_annotation_l1.QualityParametersType:
     """Translate quality parameters"""
     return common_annotation_l1.QualityParametersType(
@@ -1476,9 +1524,9 @@ def translate_quality_parameters(
 
 def translate_quality_parameters_to_model(
     params: common_annotation_l1.QualityParametersType,
-) -> common_annotation_models_l1.QualityParametersType:
+) -> LATEST_VERSION.QualityParametersType:
     """Translate quality parameters"""
-    return common_annotation_models_l1.QualityParametersType(
+    return LATEST_VERSION.QualityParametersType(
         missing_ispfraction=float(params.missing_ispfraction),
         max_ispgap=params.max_ispgap,
         max_ispgap_threshold=params.max_ispgap_threshold,
@@ -1508,7 +1556,7 @@ def translate_quality_parameters_to_model(
 
 
 def translate_quality(
-    quality: common_annotation_models_l1.QualityType,
+    quality: QualityType,
 ) -> common_annotation_l1.QualityType:
     """Translate quality"""
     return common_annotation_l1.QualityType(
@@ -1521,19 +1569,19 @@ def translate_quality(
 
 def translate_quality_to_model(
     quality: common_annotation_l1.QualityType,
-) -> common_annotation_models_l1.QualityType:
+) -> LATEST_VERSION.QualityType:
     """Translate quality"""
     params_list = [translate_quality_parameters_to_model(params) for params in quality.quality_parameters_list]
-    return common_annotation_models_l1.QualityType(
+    return LATEST_VERSION.QualityType(
         overall_product_quality_index=quality.overall_product_quality_index,
-        quality_parameters_list=common_annotation_models_l1.QualityParametersListType(
+        quality_parameters_list=LATEST_VERSION.QualityParametersListType(
             quality_parameters=params_list, count=len(params_list)
         ),
     )
 
 
 def translate_polarimetric_distortion(
-    distortion: common_annotation_models_l1.PolarimetricDistortionType,
+    distortion: PolarimetricDistortionType,
 ) -> common_annotation_l1.PolarimetricDistortionType:
     """Polarimetric distortion type"""
     return common_annotation_l1.PolarimetricDistortionType(
@@ -1544,9 +1592,9 @@ def translate_polarimetric_distortion(
 
 def translate_polarimetric_distortion_to_model(
     distortion: common_annotation_l1.PolarimetricDistortionType,
-) -> common_annotation_models_l1.PolarimetricDistortionType:
+) -> LATEST_VERSION.PolarimetricDistortionType:
     """Polarimetric distortion type"""
-    return common_annotation_models_l1.PolarimetricDistortionType(
+    return LATEST_VERSION.PolarimetricDistortionType(
         cross_talk_list=translate_common.translate_cross_talk_list_to_model(distortion.cross_talk),
         channel_imbalance_list=translate_common.translate_channel_imbalance_list_to_model(distortion.channel_imbalance),
     )
