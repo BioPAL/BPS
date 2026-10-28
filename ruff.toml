@@ -4,6 +4,7 @@ target-version = "py312"
 
 [format]
 docstring-code-format = true
+line-ending = "lf"
 
 [lint.per-file-ignores]
 "models.py" = ["F401", "F811", "E741"]
