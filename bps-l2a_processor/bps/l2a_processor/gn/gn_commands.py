@@ -150,8 +150,7 @@ class GN:
     def _initialize_processing(self):
         """Initialize the FD L2a processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2A_GN_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -428,7 +427,7 @@ class GN:
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="microseconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="microseconds")[:-1],
             )
         }
         metadata["gn"].image_description = (
@@ -466,8 +465,7 @@ class GN:
 
         lut_dict, metadata_dict = self._fill_product_for_writing(lut_dict)
 
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFD initialization:
         # measurement,
@@ -717,7 +715,7 @@ class GN:
 
         main_ads_processing_parameters = main_annotation_l2a_gn.BIOMASSL2aMainADSProcessingParametersGN(
             processor_version=bps.l2a_processor.__version__,
-            product_generation_time=self.start_time,
+            product_generation_time=self.processing_start_time,
             general_configuration=general_configuration,
             compression_options=compression_options_gn,
             emphasized_forest_height=self.aux_pp2_2a.agb.ground_cancellaton.emphasized_forest_height,
@@ -803,12 +801,12 @@ class GN:
             footprint_mask_for_quicklooks,
         )
 
-        processing_stop_time = datetime.now()
+        processing_stop_time = PreciseDateTime.now()
         elapsed_time = processing_stop_time - self.processing_start_time
         bps_logger.info(
             "%s total processing time: %.3f s",
             BPS_L2A_GN_PROCESSOR_NAME,
-            elapsed_time.total_seconds(),
+            elapsed_time,
         )
 
 

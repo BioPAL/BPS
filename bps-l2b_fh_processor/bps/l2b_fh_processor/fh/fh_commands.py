@@ -10,7 +10,6 @@ L2B FH commands
 ---------------
 """
 
-from datetime import datetime
 from pathlib import Path
 
 import bps.l2b_fh_processor
@@ -130,8 +129,7 @@ class FHL2B:
     def _initialize_processing(self):
         """Initialize the FH L2b processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2B_FH_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -291,7 +289,7 @@ class FHL2B:
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="microseconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="microseconds")[:-1],
             )
             for idx in range(5)
         ]
@@ -352,8 +350,7 @@ class FHL2B:
 
         metadata_dict = self._fill_product_for_writing(tile_id)
 
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFH initialization:
         # measurement,
@@ -377,8 +374,8 @@ class FHL2B:
             tile_id=tile_id,
             basin_id=self.basin_id_list,
             product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
-            start_time=self.start_time,
-            stop_time=self.stop_time,
+            start_time=start_time_l2a,
+            stop_time=stop_time_l2a,
             radar_carrier_frequency=radar_carrier_frequency,
             mission_phase_id=mission_phase_id,
             sensor_mode=common.SensorModeType.MEASUREMENT,
@@ -452,7 +449,7 @@ class FHL2B:
 
         main_ads_processing_parameters = main_annotation_l2b_fh.ProcessingParametersAnnotation(
             processor_version=bps.l2b_fh_processor.__version__,
-            product_generation_time=self.start_time,  # TODO
+            product_generation_time=self.processing_start_time,
             forest_masking_flag=self.aux_pp2_fh.forest_masking_flag,
             bps_fnf=bps_fnf_type,
             compression_options=compression_options_fh,

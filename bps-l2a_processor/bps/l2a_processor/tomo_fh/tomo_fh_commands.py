@@ -12,7 +12,6 @@ TOMO FH commands
 
 from collections import namedtuple
 from copy import deepcopy
-from datetime import datetime
 from pathlib import Path
 
 import bps.l2a_processor
@@ -154,8 +153,7 @@ class TOMO_FH:
     def _initialize_processing(self):
         """Initialize the FH L2a processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2A_TFH_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -542,7 +540,7 @@ class TOMO_FH:
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="microseconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="microseconds")[:-1],
             )
             for idx in range(2)
         ]
@@ -587,8 +585,7 @@ class TOMO_FH:
         ]
 
         lut_dict, metadata_dict = self._fill_product_for_writing(lut_dict)
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFD initialization:
         # measurement,
@@ -812,7 +809,7 @@ class TOMO_FH:
 
         main_ads_processing_parameters = main_annotation_l2a_tfh.BIOMASSL2aMainADSProcessingParametersTOMOFH(
             processor_version=bps.l2a_processor.__version__,
-            product_generation_time=self.start_time,
+            product_generation_time=self.processing_start_time,
             general_configuration=general_configuration,
             compression_options=compression_options_tomo_fh,
             enable_super_resolution=self.aux_pp2_2a.tfh.enable_super_resolution,
@@ -896,12 +893,12 @@ class TOMO_FH:
             footprint_mask_for_quicklooks,
         )
 
-        processing_stop_time = datetime.now()
+        processing_stop_time = PreciseDateTime.now()
         elapsed_time = processing_stop_time - self.processing_start_time
         bps_logger.info(
             "%s total processing time: %.3f s",
             BPS_L2A_TFH_PROCESSOR_NAME,
-            elapsed_time.total_seconds(),
+            elapsed_time,
         )
 
 

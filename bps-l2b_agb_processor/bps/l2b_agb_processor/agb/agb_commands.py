@@ -154,8 +154,7 @@ class AGBL2B:
     def _initialize_processing(self):
         """Initialize the AGB L2b processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2B_AGB_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -1007,7 +1006,7 @@ class AGBL2B:
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="seconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="seconds")[:-1],
             )
             for idx in range(5)
         ]
@@ -1092,8 +1091,7 @@ class AGBL2B:
 
         metadata_d = self._fill_product_for_writing(tile_id)
 
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFD initialization:
         # measurement,
@@ -1194,8 +1192,8 @@ class AGBL2B:
             tile_id=tile_id,
             basin_id=self.basin_id_list,
             product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
-            start_time=self.start_time,
-            stop_time=self.stop_time,
+            start_time=start_time_l2a,
+            stop_time=stop_time_l2a,
             radar_carrier_frequency=radar_carrier_frequency,
             mission_phase_id=mission_phase_id,
             sensor_mode=common.SensorModeType.MEASUREMENT,
@@ -1318,7 +1316,7 @@ class AGBL2B:
 
         main_ads_processing_parameters = main_annotation_l2b_agb.ProcessingParametersAnnotation(
             processor_version=bps.l2b_agb_processor.__version__,
-            product_generation_time=self.start_time,  # TODO
+            product_generation_time=self.processing_start_time,
             forest_masking_flag=self.aux_pp2_ab.forest_masking_flag,
             minimum_l2a_coverage=self.aux_pp2_ab.minimumL2acoverage,
             rejected_landcover_classes=self.aux_pp2_ab.rejected_landcover_classes,
