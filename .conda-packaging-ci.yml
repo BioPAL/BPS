@@ -126,6 +126,24 @@ bps-stack_binaries-conda:
   variables:
     BPSPROJECT: bps-stack_binaries
 
+bps-l1-framing-processor-libs-conda:
+  stage: conda-packaging
+  needs: []
+  extends:
+    - .conda_packaging_rules
+    - .conda_build_binaries_setup
+  before_script:
+    - !reference [ .conda_build_binaries_setup, before_script ]
+    - mkdir $HOME/EOCFI_LIBS
+    - cd $HOME/EOCFI_LIBS
+    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
+    - cd -
+    - mkdir -p bps-l1_framing_processor_libs/lib
+    - cp $HOME/EOCFI_LIBS/* bps-l1_framing_processor_libs/lib/
+  variables:
+    BPSPROJECT: bps-l1_framing_processor_libs
+
+
 #Conda Packaging Stage 2
 
 bps-transcoder-conda:
@@ -221,14 +239,10 @@ bps-l1_framing_processor-conda:
   extends:
     - .conda_packaging_rules
     - .conda_build_setup
-  before_script:
-    - !reference [ .conda_build_setup, before_script ]
-    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
-    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
-    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
   needs:
     - job: bps-common-conda
     - job: bps-transcoder-conda
+    - job: bps-l1-framing-processor-libs-conda
   variables:
     BPSPROJECT: bps-l1_framing_processor
 

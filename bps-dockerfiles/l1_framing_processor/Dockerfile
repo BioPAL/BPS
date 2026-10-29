@@ -1,9 +1,8 @@
 FROM bps-prereq:latest
 
-COPY lib/* /usr/local/lib/
 COPY pkgs /tmp/python-packages
 
-ENV LD_LIBRARY_PATH /usr/local/lib
+ENV LD_LIBRARY_PATH=/opt/conda_folder/envs/env/lib/bps-l1-framing-processor-libs
 
 USER root
 RUN microdnf install libgomp && \

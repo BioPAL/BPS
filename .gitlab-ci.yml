@@ -453,9 +453,6 @@ stack_win10_py312:
     - .tags_rocky8_conda
     - .full_build
   script:
-    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
-    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
-    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
     - conda create --name test python=${PYTHON} conda-build
     - conda activate test
     - python -m conda_index ./local_channel

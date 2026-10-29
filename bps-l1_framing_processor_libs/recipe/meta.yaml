@@ -1,0 +1,29 @@
+{% set name = "bps-l1-framing-processor-libs" %}
+{% set version = "4.5.0.dev0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ../lib
+
+build:
+  number: 0
+  skip: true  # [not linux]
+  binary_relocation: false
+
+requirements:
+  build:
+    - patchelf=0.15.0
+  run:
+    - _openmp_mutex
+    - libgcc-ng
+
+about:
+  summary: "Biomass L1 framing processor libraries"
+  license: "Custom license"
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

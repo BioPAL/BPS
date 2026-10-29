@@ -4,7 +4,6 @@
 
 #### Package content
 - `pkgs`: conda packages
-- `lib`: eo-cfi shared libraries
 
 #### Prerequisites
 - internet connection is required
