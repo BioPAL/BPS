@@ -10,7 +10,6 @@ L2B FD commands
 ---------------
 """
 
-from datetime import datetime
 from pathlib import Path
 
 import bps.l2b_fd_processor
@@ -119,8 +118,7 @@ class FDL2B:
     def _initialize_processing(self):
         """Initialize the FD L2b processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2B_FD_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -278,7 +276,7 @@ class FDL2B:
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="microseconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="microseconds")[:-1],
             )
             for idx in range(5)
         ]
@@ -337,8 +335,7 @@ class FDL2B:
 
         metadata_d = self._fill_product_for_writing(tile_id)
 
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFD initialization:
         # measurement,
@@ -362,8 +359,8 @@ class FDL2B:
             tile_id=tile_id,
             basin_id=self.basin_id_list,
             product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
-            start_time=self.start_time,
-            stop_time=self.stop_time,
+            start_time=start_time_l2a,
+            stop_time=stop_time_l2a,
             radar_carrier_frequency=radar_carrier_frequency,
             mission_phase_id=mission_phase_id,
             sensor_mode=common.SensorModeType.MEASUREMENT,
@@ -430,7 +427,7 @@ class FDL2B:
 
         main_ads_processing_parameters = main_annotation_l2b_fd.ProcessingParametersAnnotation(
             processor_version=bps.l2b_fd_processor.__version__,
-            product_generation_time=self.start_time,  # TODO
+            product_generation_time=self.processing_start_time,
             compression_options=compression_options_fd,
             minimum_l2a_coverage=self.aux_pp2_fd.minimumL2acoverage,
         )
