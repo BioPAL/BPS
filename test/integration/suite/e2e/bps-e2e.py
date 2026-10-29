@@ -230,7 +230,7 @@ def test_003_l1(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_003_sta(session: TestSession, env: Environment, data: DataRepository):
+def test_004_sta(session: TestSession, env: Environment, data: DataRepository):
     """Run stack processor."""
     # Setup the job order and AUX-PPS.
     job_order_path = data.pull("input/e2e/joborder_sta")
@@ -270,7 +270,7 @@ def test_003_sta(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
+def test_005_l2a(session: TestSession, env: Environment, data: DataRepository):
     """Run L2a processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2a")
@@ -364,7 +364,7 @@ def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository):
+def test_006_l2b_fh(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FH processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2b_1")
@@ -426,7 +426,7 @@ def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository
     )
 
 
-def test_005_l2b_fd(session: TestSession, env: Environment, data: DataRepository):
+def test_007_l2b_fd(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FD processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2b_2")
@@ -798,4 +798,4 @@ if __name__ == "__main__":
     settings = Settings.load_toml(config_file)
     runner = TestRunner.from_settings(settings)
 
-    runner.run_test(Test(test_002_sta.__name__, test_002_sta))
+    runner.run_test(Test(test_001_l1.__name__, test_001_l1))
