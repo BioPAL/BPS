@@ -9,6 +9,7 @@ source:
   url: file://{{ RECIPE_DIR }}/../dist/bps_l1_framing_processor-{{ version }}.tar.gz
 
 build:
+  noarch: python
   entry_points:
     - bps_l1_framing_processor = bps.l1_framing_processor.__main__:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -16,13 +17,11 @@ build:
 
 requirements:
   host:
-    - python {{ python }}
+    - python >=3.12
     - hatchling
     - pip
   run:
-    - _openmp_mutex
-    - libgcc-ng
-    - python {{ python }}
+    - python >=3.12
     - numpy
     - arepytools
     - click
@@ -30,6 +29,7 @@ requirements:
     - scipy
     - bps-common =={{ version }}
     - bps-transcoder =={{ version }}
+    - bps-l1-framing-processor-libs =={{ version }}
 
 test:
   imports:

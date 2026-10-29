@@ -1,10 +1,9 @@
 FROM bps-prereq:latest
 
-COPY lib/* /usr/local/lib/
 COPY pkgs /tmp/python-packages
 COPY environment.yml /tmp/environment.yml
 
-ENV LD_LIBRARY_PATH /usr/local/lib
+LD_LIBRARY_PATH=/opt/conda_folder/envs/env/lib/bps-l1-framing-processor-libs
 
 USER root
 RUN bash -c "conda index --verbose /tmp/python-packages && \
