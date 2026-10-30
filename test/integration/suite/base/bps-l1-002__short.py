@@ -12,10 +12,12 @@ L1 002 (short) test
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
-from bps.common import __version__
+from bps.common import __version__, retrieve_aux_product_data_single_content
 from bps.common.bps_logger import get_version_in_logger_format
+from bps.transcoder import BPS_AUX_FMT_VERSION
 
 CURRENT_VERSION = get_version_in_logger_format(__version__)
+AUX_FMT_VERSION_STR = BPS_AUX_FMT_VERSION[1:]
 
 
 def test_bps_l1_002__short(session: TestSession, env: Environment, data: DataRepository):
@@ -28,6 +30,8 @@ def test_bps_l1_002__short(session: TestSession, env: Environment, data: DataRep
     aux_ins_path = data.pull("configurations/l1p/CONF-BPS-INS-002")
 
     aux_pp1_path = data.pull("configurations/l1p/CONF-BPS-PP1-002")
+    aux_pp1 = xml.Document(retrieve_aux_product_data_single_content(aux_pp1_path))
+    aux_pp1.set("//auxiliaryL1ProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     joborder = xml.Document(job_order_filename)
     joborder.set(

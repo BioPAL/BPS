@@ -10,47 +10,70 @@ Common annotations l2l3 translate
 ---------------------------------
 """
 
-from bps.common.io import common, translate_common
-from bps.transcoder.io import (
-    common_annotation_l2l3,
-    common_annotation_models_l2,
-)
+from bps.common.io import common
+from bps.transcoder.io import common_annotation_l2l3, translate_common
+from bps.transcoder.io.v445 import common_annotation_models_l2 as v445
+from bps.transcoder.io.v450 import common_annotation_models_l2 as v450
+
+BpsFnfType = v450.BpsFnfType | v445.BpsFnfType
+StringListType = v450.StringListType | v445.StringListType
+PixelRepresentationChoiceType = v450.PixelRepresentationChoiceType | v445.PixelRepresentationChoiceType
+PixelTypeChoiceType = v450.PixelTypeChoiceType | v445.PixelTypeChoiceType
+NoDataValueChoiceType = v450.NoDataValueChoiceType | v445.NoDataValueChoiceType
+PolarisationListType = v450.PolarisationListType | v445.PolarisationListType
+AcquisitionType = v450.AcquisitionType | v445.AcquisitionType
+AcquisitionListType = v450.AcquisitionListType | v445.AcquisitionListType
+GeneralConfigurationParametersType = v450.GeneralConfigurationParametersType | v445.GeneralConfigurationParametersType
+ProductL2AType = v450.ProductL2AType | v445.ProductL2AType
+RasterImageType = v450.RasterImageType | v445.RasterImageType
+InputInformationL2AType = v450.InputInformationL2AType | v445.InputInformationL2AType
+InputInformationL2BL3ListType = v450.InputInformationL2BL3ListType | v445.InputInformationL2BL3ListType
+CalAbcoverageType = v450.CalAbcoverageType | v445.CalAbcoverageType
+PercentPixelsType = v450.PercentPixelsType | v445.PercentPixelsType
+CalAbfilteredCoverageType = v450.CalAbfilteredCoverageType | v445.CalAbfilteredCoverageType
+GncoverageListType = v450.GncoverageListType | v445.GncoverageListType
+MinMaxNumType = v450.MinMaxNumType | v445.MinMaxNumType
+ProductL2BL3Type = v450.ProductL2BL3Type | v445.ProductL2BL3Type
+GncoverageTilesListType = v450.GncoverageTilesListType | v445.GncoverageTilesListType
+CalAbcoverageTilesListType = v450.CalAbcoverageTilesListType | v445.CalAbcoverageTilesListType
+
+LATEST_VERSION = v450
 
 
 def translate_bps_fnf_type(
-    bps_fnf: common_annotation_models_l2.BpsFnfType,
+    bps_fnf: BpsFnfType,
 ) -> common_annotation_l2l3.BpsFnfType:
     return common_annotation_l2l3.BpsFnfType(bps_fnf.value)
 
 
 def translate_bps_fnf_type_to_model(
     bps_fnf: common_annotation_l2l3.BpsFnfType,
-) -> common_annotation_models_l2.BpsFnfType:
-    return common_annotation_models_l2.BpsFnfType(bps_fnf.value)
+) -> LATEST_VERSION.BpsFnfType:
+    return LATEST_VERSION.BpsFnfType(bps_fnf.value)
 
 
-def translate_stringlist(value: common_annotation_models_l2.StringListType) -> list[str]:
+def translate_stringlist(value: StringListType) -> list[str]:
     return value.id
 
 
-def translate_stringlist_to_model(value: list[str]) -> common_annotation_models_l2.StringListType:
-    return common_annotation_models_l2.StringListType(id=value)
+def translate_stringlist_to_model(value: list[str]) -> LATEST_VERSION.StringListType:
+    return LATEST_VERSION.StringListType(id=value)
 
 
-def translate_optional_stringlist(value: common_annotation_models_l2.StringListType | None) -> list[str]:
+def translate_optional_stringlist(value: StringListType | None) -> list[str]:
     if value is None:
         return []
     return translate_stringlist(value)
 
 
-def translate_optional_stringlist_to_model(value: list[str]) -> common_annotation_models_l2.StringListType | None:
+def translate_optional_stringlist_to_model(value: list[str]) -> LATEST_VERSION.StringListType | None:
     if not value:
         return None
     return translate_stringlist_to_model(value)
 
 
 def translate_pixel_representation_choice(
-    choice: common_annotation_models_l2.PixelRepresentationChoiceType,
+    choice: PixelRepresentationChoiceType,
 ) -> common_annotation_l2l3.PixelRepresentationChoiceType:
     return common_annotation_l2l3.PixelRepresentationChoiceType(
         **{
@@ -62,8 +85,8 @@ def translate_pixel_representation_choice(
 
 def translate_pixel_representation_choice_to_model(
     choice: common_annotation_l2l3.PixelRepresentationChoiceType,
-) -> common_annotation_models_l2.PixelRepresentationChoiceType:
-    return common_annotation_models_l2.PixelRepresentationChoiceType(
+) -> LATEST_VERSION.PixelRepresentationChoiceType:
+    return LATEST_VERSION.PixelRepresentationChoiceType(
         **{
             field_name: (
                 translate_common.translate_pixel_representation_type_to_model(value) if value is not None else None
@@ -74,7 +97,7 @@ def translate_pixel_representation_choice_to_model(
 
 
 def translate_pixel_type_choice(
-    choice: common_annotation_models_l2.PixelTypeChoiceType,
+    choice: PixelTypeChoiceType,
 ) -> common_annotation_l2l3.PixelTypeChoiceType:
     return common_annotation_l2l3.PixelTypeChoiceType(
         **{
@@ -86,8 +109,8 @@ def translate_pixel_type_choice(
 
 def translate_pixel_type_choice_to_model(
     choice: common_annotation_l2l3.PixelTypeChoiceType,
-) -> common_annotation_models_l2.PixelTypeChoiceType:
-    return common_annotation_models_l2.PixelTypeChoiceType(
+) -> LATEST_VERSION.PixelTypeChoiceType:
+    return LATEST_VERSION.PixelTypeChoiceType(
         **{
             field_name: translate_common.translate_pixel_type_type_to_model(value) if value is not None else None
             for field_name, value in vars(choice).items()
@@ -96,7 +119,7 @@ def translate_pixel_type_choice_to_model(
 
 
 def translate_no_data_value_choice(
-    choice: common_annotation_models_l2.NoDataValueChoiceType,
+    choice: NoDataValueChoiceType,
 ) -> common_annotation_l2l3.NoDataValueChoiceType:
     return common_annotation_l2l3.NoDataValueChoiceType(
         float_no_data_value=choice.float_no_data_value,
@@ -106,15 +129,15 @@ def translate_no_data_value_choice(
 
 def translate_no_data_value_choice_to_model(
     choice: common_annotation_l2l3.NoDataValueChoiceType,
-) -> common_annotation_models_l2.NoDataValueChoiceType:
-    return common_annotation_models_l2.NoDataValueChoiceType(
+) -> LATEST_VERSION.NoDataValueChoiceType:
+    return LATEST_VERSION.NoDataValueChoiceType(
         float_no_data_value=choice.float_no_data_value,
         int_no_data_value=choice.int_no_data_value,
     )
 
 
 def translate_polarisation_list(
-    polarisation_list: common_annotation_models_l2.PolarisationListType,
+    polarisation_list: PolarisationListType,
 ) -> list[common.PolarisationType]:
     if len(polarisation_list.polarisation) != polarisation_list.count:
         raise RuntimeError(
@@ -126,16 +149,16 @@ def translate_polarisation_list(
 
 def translate_polarisation_list_to_model(
     polarisation_list: list[common.PolarisationType],
-) -> common_annotation_models_l2.PolarisationListType:
+) -> LATEST_VERSION.PolarisationListType:
     model_polarisations = [translate_common.translate_polarisation_type_to_model(value) for value in polarisation_list]
-    return common_annotation_models_l2.PolarisationListType(
+    return LATEST_VERSION.PolarisationListType(
         polarisation=model_polarisations,
         count=len(model_polarisations),
     )
 
 
 def translate_acquisition_type(
-    acquisition: common_annotation_models_l2.AcquisitionType,
+    acquisition: AcquisitionType,
 ) -> common_annotation_l2l3.AcquisitionType:
     quality_parameters_list = acquisition.sta_quality.sta_quality_parameters_list
     if len(quality_parameters_list.sta_quality_parameters) != quality_parameters_list.count:
@@ -175,9 +198,9 @@ def translate_acquisition_type(
 
 def translate_acquisition_type_to_model(
     acquisition: common_annotation_l2l3.AcquisitionType,
-) -> common_annotation_models_l2.AcquisitionType:
+) -> LATEST_VERSION.AcquisitionType:
     quality_parameters = [
-        common_annotation_models_l2.StaQualityParametersType(
+        LATEST_VERSION.StaQualityParametersType(
             invalid_l1a_data_samples=parameters.invalid_l1a_data_samples,
             rfi_decorrelation=parameters.rfi_decorrelation,
             rfi_decorrelation_threshold=parameters.rfi_decorrelation_threshold,
@@ -194,13 +217,13 @@ def translate_acquisition_type_to_model(
         )
         for parameters in acquisition.sta_quality.sta_quality_parameters_list
     ]
-    model_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
+    model_quality_parameters_list = LATEST_VERSION.StaQualityParametersListType(
         sta_quality_parameters=quality_parameters,
         count=len(quality_parameters),
     )
-    return common_annotation_models_l2.AcquisitionType(
+    return LATEST_VERSION.AcquisitionType(
         folder_name=acquisition.folder_name,
-        sta_quality=common_annotation_models_l2.StaQualityType(
+        sta_quality=LATEST_VERSION.StaQualityType(
             overall_product_quality_index=acquisition.sta_quality.overall_product_quality_index,
             sta_quality_parameters_list=model_quality_parameters_list,
         ),
@@ -210,7 +233,7 @@ def translate_acquisition_type_to_model(
 
 
 def translate_acquisition_list(
-    acquisition_list: common_annotation_models_l2.AcquisitionListType,
+    acquisition_list: AcquisitionListType,
 ) -> list[common_annotation_l2l3.AcquisitionType]:
     if len(acquisition_list.acquisition) != acquisition_list.count:
         raise RuntimeError(
@@ -223,17 +246,17 @@ def translate_acquisition_list(
 
 def translate_acquisition_list_to_model(
     acquisition_list: list[common_annotation_l2l3.AcquisitionType],
-) -> common_annotation_models_l2.AcquisitionListType:
+) -> LATEST_VERSION.AcquisitionListType:
     model_acquisitions = [translate_acquisition_type_to_model(acquisition) for acquisition in acquisition_list]
 
-    return common_annotation_models_l2.AcquisitionListType(
+    return LATEST_VERSION.AcquisitionListType(
         acquisition=model_acquisitions,
         count=len(model_acquisitions),
     )
 
 
 def translate_general_configuration(
-    configuration: common_annotation_models_l2.GeneralConfigurationParametersType,
+    configuration: GeneralConfigurationParametersType,
 ) -> common_annotation_l2l3.GeneralConfigurationParametersType:
     """Translate shared L2 processing configuration to its in-memory type."""
     return common_annotation_l2l3.GeneralConfigurationParametersType(
@@ -251,15 +274,13 @@ def translate_general_configuration(
 
 def translate_general_configuration_to_model(
     configuration: common_annotation_l2l3.GeneralConfigurationParametersType,
-) -> common_annotation_models_l2.GeneralConfigurationParametersType:
+) -> LATEST_VERSION.GeneralConfigurationParametersType:
     """Translate shared in-memory L2 processing configuration to its model."""
-    return common_annotation_models_l2.GeneralConfigurationParametersType(
-        apply_calibration_screen=common_annotation_models_l2.CalibrationScreenType(
-            configuration.apply_calibration_screen.value
-        ),
+    return LATEST_VERSION.GeneralConfigurationParametersType(
+        apply_calibration_screen=LATEST_VERSION.CalibrationScreenType(configuration.apply_calibration_screen.value),
         forest_coverage_threshold=configuration.forest_coverage_threshold,
         forest_mask_interpolation_threshold=configuration.forest_mask_interpolation_threshold,
-        subsetting_rule=common_annotation_models_l2.SubsettingRuleType(configuration.subsetting_rule.value),
+        subsetting_rule=LATEST_VERSION.SubsettingRuleType(configuration.subsetting_rule.value),
         polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
             configuration.polarisation_combination_method
         ),
@@ -267,7 +288,7 @@ def translate_general_configuration_to_model(
 
 
 def translate_product_l2a(
-    product: common_annotation_models_l2.ProductL2AType,
+    product: ProductL2AType,
     baseline: int,
 ) -> common_annotation_l2l3.BIOMASSL2aMainADSproduct:
     """Translate the L2A product model to its in-memory representation."""
@@ -306,10 +327,10 @@ def translate_product_l2a(
 
 def translate_product_l2a_to_model(
     product: common_annotation_l2l3.BIOMASSL2aMainADSproduct,
-) -> common_annotation_models_l2.ProductL2AType:
+) -> LATEST_VERSION.ProductL2AType:
     """Translate the in-memory L2A product representation to its model."""
     selected_reference_image = (
-        common_annotation_models_l2.SelectedReferenceImageType(
+        LATEST_VERSION.SelectedReferenceImageType(
             value=product.selected_reference_image.value,
             acquisition_id=product.selected_reference_image.acquisition_id,
         )
@@ -317,7 +338,7 @@ def translate_product_l2a_to_model(
         else None
     )
 
-    return common_annotation_models_l2.ProductL2AType(
+    return LATEST_VERSION.ProductL2AType(
         mission=translate_common.translate_mission_type_to_model(product.mission),
         tile_id=translate_stringlist_to_model(product.tile_id_list),
         basin_id=translate_stringlist_to_model(product.basin_id_list),
@@ -332,10 +353,10 @@ def translate_product_l2a_to_model(
         global_coverage_id=product.global_coverage_id,
         swath=translate_common.translate_swath_type_to_model(product.swath),
         major_cycle_id=product.major_cycle_id,
-        absolute_orbit_number=common_annotation_models_l2.IntegerListType(val=product.absolute_orbit_number),
+        absolute_orbit_number=LATEST_VERSION.IntegerListType(val=product.absolute_orbit_number),
         relative_orbit_number=product.relative_orbit_number,
         orbit_pass=translate_common.translate_orbit_pass_to_model(product.orbit_pass),
-        data_take_id=common_annotation_models_l2.IntegerListType(val=product.datatake_id),
+        data_take_id=LATEST_VERSION.IntegerListType(val=product.datatake_id),
         frame=product.frame,
         platform_heading=translate_common.translate_double_with_unit_to_model(
             product.platform_heading, common.UomType.DEG
@@ -346,7 +367,7 @@ def translate_product_l2a_to_model(
 
 
 def translate_raster_image_l2a(
-    raster_image: common_annotation_models_l2.RasterImageType,
+    raster_image: RasterImageType,
 ) -> common_annotation_l2l3.BIOMASSL2aMainADSRasterImage:
     """Translate the L2A raster-image model to its in-memory representation."""
     return common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
@@ -367,9 +388,9 @@ def translate_raster_image_l2a(
 
 def translate_raster_image_l2a_to_model(
     raster_image: common_annotation_l2l3.BIOMASSL2aMainADSRasterImage,
-) -> common_annotation_models_l2.RasterImageType:
+) -> LATEST_VERSION.RasterImageType:
     """Translate the in-memory L2A raster-image representation to its model."""
-    return common_annotation_models_l2.RasterImageType(
+    return LATEST_VERSION.RasterImageType(
         footprint=translate_common.translate_float_array_with_units_to_model(
             raster_image.footprint, common.UomType.DEG
         ),
@@ -396,7 +417,7 @@ def translate_raster_image_l2a_to_model(
 
 
 def translate_input_information_l2a(
-    input_information: common_annotation_models_l2.InputInformationL2AType,
+    input_information: InputInformationL2AType,
 ) -> common_annotation_l2l3.BIOMASSL2aMainADSInputInformation:
     """Translate the L2A input-information model to its in-memory representation."""
     return common_annotation_l2l3.BIOMASSL2aMainADSInputInformation(
@@ -414,9 +435,9 @@ def translate_input_information_l2a(
 
 def translate_input_information_l2a_to_model(
     input_information: common_annotation_l2l3.BIOMASSL2aMainADSInputInformation,
-) -> common_annotation_models_l2.InputInformationL2AType:
+) -> LATEST_VERSION.InputInformationL2AType:
     """Translate the in-memory L2A input-information representation to its model."""
-    return common_annotation_models_l2.InputInformationL2AType(
+    return LATEST_VERSION.InputInformationL2AType(
         product_type=translate_common.translate_product_type_to_model(input_information.product_type),
         overall_products_quality_index=input_information.overall_products_quality_index,
         nominal_stack=input_information.nominal_stack,
@@ -436,7 +457,7 @@ def translate_input_information_l2a_to_model(
 
 
 def translate_input_information_l2bl3_list(
-    input_information: common_annotation_models_l2.InputInformationL2BL3ListType,
+    input_information: InputInformationL2BL3ListType,
 ) -> common_annotation_l2l3.InputInformationL2BL3ListType:
     """Translate an L2B/L3 input-information list to its in-memory representation."""
     l2a_inputs = []
@@ -454,32 +475,32 @@ def translate_input_information_l2bl3_list(
 
 def translate_input_information_l2bl3_list_to_model(
     input_information: common_annotation_l2l3.InputInformationL2BL3ListType,
-) -> common_annotation_models_l2.InputInformationL2BL3ListType:
+) -> LATEST_VERSION.InputInformationL2BL3ListType:
     """Translate an in-memory L2B/L3 input-information list to its model."""
     l2a_inputs = []
     for input_item in input_information.l2a_inputs:
         l2a_inputs.append(
-            common_annotation_models_l2.InputInformationL2BL3ListType.L2AInputs(
+            LATEST_VERSION.InputInformationL2BL3ListType.L2AInputs(
                 l2a_product_folder_name=input_item.l2a_product_folder_name,
                 l2a_product_date=input_item.l2a_product_date,
                 l1_inputs=translate_input_information_l2a_to_model(input_item.l1_inputs),
                 significance_level=input_item.significance_level,
             )
         )
-    return common_annotation_models_l2.InputInformationL2BL3ListType(l2a_inputs=l2a_inputs, count=len(l2a_inputs))
+    return LATEST_VERSION.InputInformationL2BL3ListType(l2a_inputs=l2a_inputs, count=len(l2a_inputs))
 
 
 def translate_cal_ab_coverage_to_model(
     coverage: common_annotation_l2l3.CalAbcoverageType,
-) -> common_annotation_models_l2.CalAbcoverageType:
+) -> LATEST_VERSION.CalAbcoverageType:
     def translate_percent(
         value: common_annotation_l2l3.PercentPixelsType,
-    ) -> common_annotation_models_l2.PercentPixelsType:
-        return common_annotation_models_l2.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
+    ) -> LATEST_VERSION.PercentPixelsType:
+        return LATEST_VERSION.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
 
-    return common_annotation_models_l2.CalAbcoverageType(
+    return LATEST_VERSION.CalAbcoverageType(
         original_coverage=translate_percent(coverage.original_coverage),
-        filtered_coverage=common_annotation_models_l2.CalAbfilteredCoverageType(
+        filtered_coverage=LATEST_VERSION.CalAbfilteredCoverageType(
             after_global_filtering=translate_percent(coverage.filtered_coverage.after_global_filtering),
             after_agbvalue_filtering=translate_percent(coverage.filtered_coverage.after_agbvalue_filtering),
             after_agbstd_filtering=translate_percent(coverage.filtered_coverage.after_agbstd_filtering),
@@ -493,10 +514,10 @@ def translate_cal_ab_coverage_to_model(
 
 
 def translate_cal_ab_coverage(
-    coverage: common_annotation_models_l2.CalAbcoverageType,
+    coverage: CalAbcoverageType,
 ) -> common_annotation_l2l3.CalAbcoverageType:
     def translate_percent(
-        value: common_annotation_models_l2.PercentPixelsType,
+        value: PercentPixelsType,
     ) -> common_annotation_l2l3.PercentPixelsType:
         return common_annotation_l2l3.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
 
@@ -517,17 +538,17 @@ def translate_cal_ab_coverage(
 
 def translate_gn_coverage_to_model(
     coverage: common_annotation_l2l3.GncoverageListType,
-) -> common_annotation_models_l2.GncoverageListType:
+) -> LATEST_VERSION.GncoverageListType:
     def translate_percent(
         value: common_annotation_l2l3.PercentPixelsType,
-    ) -> common_annotation_models_l2.PercentPixelsType:
-        return common_annotation_models_l2.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
+    ) -> LATEST_VERSION.PercentPixelsType:
+        return LATEST_VERSION.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
 
-    return common_annotation_models_l2.GncoverageListType(
+    return LATEST_VERSION.GncoverageListType(
         gn=[
-            common_annotation_models_l2.GncoverageType(
+            LATEST_VERSION.GncoverageType(
                 original_coverage=translate_percent(item.original_coverage),
-                filtered_coverage=common_annotation_models_l2.GnfilteredCoverageType(
+                filtered_coverage=LATEST_VERSION.GnfilteredCoverageType(
                     after_global_filtering=translate_percent(item.filtered_coverage.after_global_filtering),
                     after_sigma_filtering=translate_percent(item.filtered_coverage.after_sigma_filtering),
                     after_angle_filtering=translate_percent(item.filtered_coverage.after_angle_filtering),
@@ -541,10 +562,10 @@ def translate_gn_coverage_to_model(
 
 
 def translate_gn_coverage(
-    coverage: common_annotation_models_l2.GncoverageListType,
+    coverage: GncoverageListType,
 ) -> common_annotation_l2l3.GncoverageListType:
     def translate_percent(
-        value: common_annotation_models_l2.PercentPixelsType,
+        value: PercentPixelsType,
     ) -> common_annotation_l2l3.PercentPixelsType:
         return common_annotation_l2l3.PercentPixelsType(percentage=value.percentage, pixels=value.pixels)
 
@@ -567,8 +588,8 @@ def translate_gn_coverage(
 
 def translate_min_max_num_type_to_model(
     value: common_annotation_l2l3.MinMaxNumType,
-) -> common_annotation_models_l2.MinMaxNumType:
-    return common_annotation_models_l2.MinMaxNumType(
+) -> LATEST_VERSION.MinMaxNumType:
+    return LATEST_VERSION.MinMaxNumType(
         min=value.min,
         max=value.max,
         num=value.num,
@@ -576,7 +597,7 @@ def translate_min_max_num_type_to_model(
 
 
 def translate_min_max_num_type(
-    value: common_annotation_models_l2.MinMaxNumType,
+    value: MinMaxNumType,
 ) -> common_annotation_l2l3.MinMaxNumType:
     return common_annotation_l2l3.MinMaxNumType(
         min=value.min,
@@ -586,7 +607,7 @@ def translate_min_max_num_type(
 
 
 def translate_productl2bl3(
-    annotation: common_annotation_models_l2.ProductL2BL3Type,
+    annotation: ProductL2BL3Type,
 ) -> common_annotation_l2l3.ProductL2bL3Type:
     """Translate a ProductL2BL3Type annotation from the model representation to the in-memory representation."""
     return common_annotation_l2l3.ProductL2bL3Type(
@@ -612,9 +633,9 @@ def translate_productl2bl3(
 
 def translate_productl2bl3_to_model(
     annotation: common_annotation_l2l3.ProductL2bL3Type,
-) -> common_annotation_models_l2.ProductL2BL3Type:
+) -> LATEST_VERSION.ProductL2BL3Type:
     """Translate a ProductL2bL3Type annotation from the in-memory representation to the model representation."""
-    return common_annotation_models_l2.ProductL2BL3Type(
+    return LATEST_VERSION.ProductL2BL3Type(
         mission=translate_common.translate_mission_type_to_model(annotation.mission),
         tile_id=annotation.tile_id,
         basin_id=translate_stringlist_to_model(annotation.basin_id),
@@ -636,7 +657,7 @@ def translate_productl2bl3_to_model(
 
 
 def translate_optional_gn_coverage_per_tile(
-    annotation: common_annotation_models_l2.GncoverageTilesListType | None,
+    annotation: GncoverageTilesListType | None,
 ) -> list[common_annotation_l2l3.GncoverageListType]:
     if annotation is None:
         return []
@@ -645,16 +666,14 @@ def translate_optional_gn_coverage_per_tile(
 
 def translate_optional_gn_coverage_per_tile_to_model(
     annotation: list[common_annotation_l2l3.GncoverageListType],
-) -> common_annotation_models_l2.GncoverageTilesListType | None:
+) -> LATEST_VERSION.GncoverageTilesListType | None:
     if not annotation:
         return None
-    return common_annotation_models_l2.GncoverageTilesListType(
-        tile=[translate_gn_coverage_to_model(item) for item in annotation]
-    )
+    return LATEST_VERSION.GncoverageTilesListType(tile=[translate_gn_coverage_to_model(item) for item in annotation])
 
 
 def translate_optional_cal_ab_coverage_per_tile(
-    annotation: common_annotation_models_l2.CalAbcoverageTilesListType | None,
+    annotation: CalAbcoverageTilesListType | None,
 ) -> list[common_annotation_l2l3.CalAbcoverageType]:
     if annotation is None:
         return []
@@ -663,9 +682,9 @@ def translate_optional_cal_ab_coverage_per_tile(
 
 def translate_optional_cal_ab_coverage_per_tile_to_model(
     annotation: list[common_annotation_l2l3.CalAbcoverageType],
-) -> common_annotation_models_l2.CalAbcoverageTilesListType | None:
+) -> LATEST_VERSION.CalAbcoverageTilesListType | None:
     if not annotation:
         return None
-    return common_annotation_models_l2.CalAbcoverageTilesListType(
+    return LATEST_VERSION.CalAbcoverageTilesListType(
         tile=[translate_cal_ab_coverage_to_model(item) for item in annotation]
     )

@@ -10,9 +10,15 @@
 from pathlib import Path
 
 import numpy as np
-from bps.common.io import common, translate_common
-from bps.common.io.parsing import parse, serialize
-from bps.common.io.translate_common import (
+from bps.common.io import common
+from bps.common.io.parsing import serialize
+from bps.transcoder.io import (
+    main_annotation_l1c,
+    reader_core,
+    translate_common,
+    translate_common_annotation_l1,
+)
+from bps.transcoder.io.translate_common import (
     translate_bool,
     translate_bool_to_model,
     translate_coregistration_method,
@@ -42,15 +48,22 @@ from bps.common.io.translate_common import (
     translate_skp_phase_calibration_postprocessing_type,
     translate_skp_phase_calibration_postprocessing_type_to_model,
 )
-from bps.transcoder.io import (
-    main_annotation_l1c,
-    main_annotation_models_l1c,
-    translate_common_annotation_l1,
-)
+from bps.transcoder.io.v445 import main_annotation_models_l1c as v445
+from bps.transcoder.io.v450 import main_annotation_models_l1c as v450
+
+StaProcessingParametersType = v450.StaProcessingParametersType | v445.StaProcessingParametersType
+StaCoregistrationParametersType = v450.StaCoregistrationParametersType | v445.StaCoregistrationParametersType
+StaInSarparametersType = v450.StaInSarparametersType | v445.StaInSarparametersType
+CoherenceHistogram = v450.StaQualityParametersType.CoherenceHistogram | v445.StaQualityParametersType.CoherenceHistogram
+StaQualityParametersType = v450.StaQualityParametersType | v445.StaQualityParametersType
+StaQualityType = v450.StaQualityType | v445.StaQualityType
+MainAnnotation = v450.MainAnnotation | v445.MainAnnotation
+
+LATEST_VERSION = v450
 
 
 def translate_sta_processing_parameters(
-    params: main_annotation_models_l1c.StaProcessingParametersType,
+    params: StaProcessingParametersType,
 ) -> main_annotation_l1c.BIOMASSStackProcessingParameters:
     """Translate from a L1c main annotation StaProcessingParametersType object."""
     return main_annotation_l1c.BIOMASSStackProcessingParameters(
@@ -121,7 +134,7 @@ def translate_sta_processing_parameters(
 
 
 def translate_sta_coregistration_parameters(
-    params: main_annotation_models_l1c.StaCoregistrationParametersType,
+    params: StaCoregistrationParametersType,
 ) -> main_annotation_l1c.BIOMASSStackCoregistrationParameters:
     """Translate L1c StaCoregistrationParametersType to BIOMASSStackCoregistrationParameters."""
     return main_annotation_l1c.BIOMASSStackCoregistrationParameters(
@@ -140,9 +153,9 @@ def translate_sta_coregistration_parameters(
 
 def translate_sta_coregistration_parameters_to_model(
     annot: main_annotation_l1c.BIOMASSStackCoregistrationParameters,
-) -> main_annotation_models_l1c.StaCoregistrationParametersType:
+) -> LATEST_VERSION.StaCoregistrationParametersType:
     """Translate BIOMASSStackCoregistrationParameters to L1c StaCoregistrationParametersType."""
-    return main_annotation_models_l1c.StaCoregistrationParametersType(
+    return LATEST_VERSION.StaCoregistrationParametersType(
         datum=translate_datum_to_model(annot.datum),
         primary_image=annot.primary_image,
         secondary_image=annot.secondary_image,
@@ -162,9 +175,9 @@ def translate_sta_coregistration_parameters_to_model(
 
 def translate_sta_processing_parameters_to_model(
     params: main_annotation_l1c.BIOMASSStackProcessingParameters,
-) -> main_annotation_models_l1c.StaProcessingParametersType:
+) -> LATEST_VERSION.StaProcessingParametersType:
     """Marshall to related L1c annotation."""
-    return main_annotation_models_l1c.StaProcessingParametersType(
+    return LATEST_VERSION.StaProcessingParametersType(
         processor_version=params.processor_version,
         product_generation_time=translate_datetime_to_model(params.product_generation_time),
         polarisations_used=params.polarizations_used,
@@ -242,7 +255,7 @@ def translate_sta_processing_parameters_to_model(
 
 
 def translate_sta_in_sarparameters(
-    params: main_annotation_models_l1c.StaInSarparametersType,
+    params: StaInSarparametersType,
 ) -> main_annotation_l1c.BIOMASSStackInSARParameters:
     """Translate from L1c StaInSarparametersType to BIOMASSStackInSARParameters."""
     return main_annotation_l1c.BIOMASSStackInSARParameters(
@@ -285,9 +298,9 @@ def translate_sta_in_sarparameters(
 
 def translate_sta_in_sarparameters_to_model(
     params: main_annotation_l1c.BIOMASSStackInSARParameters,
-) -> main_annotation_models_l1c.StaInSarparametersType:
+) -> LATEST_VERSION.StaInSarparametersType:
     """Translate to L1c StaInSarparametersType annotation."""
-    return main_annotation_models_l1c.StaInSarparametersType(
+    return LATEST_VERSION.StaInSarparametersType(
         calibration_primary_image=params.calibration_primary_image,
         azimuth_common_bandwidth=translate_float_with_unit_to_model(
             float(params.azimuth_common_bandwidth), common.UomType.HZ
@@ -341,7 +354,7 @@ def translate_sta_in_sarparameters_to_model(
 
 
 def translate_coherence_histogram(
-    histogram: main_annotation_models_l1c.StaQualityParametersType.CoherenceHistogram,
+    histogram: CoherenceHistogram,
 ) -> main_annotation_l1c.CoherenceHistogram:
     """Translate a coherence histogram from the L1c annotation model."""
     return main_annotation_l1c.CoherenceHistogram(
@@ -352,16 +365,16 @@ def translate_coherence_histogram(
 
 def translate_coherence_histogram_to_model(
     histogram: main_annotation_l1c.CoherenceHistogram,
-) -> main_annotation_models_l1c.StaQualityParametersType.CoherenceHistogram:
+) -> LATEST_VERSION.StaQualityParametersType.CoherenceHistogram:
     """Translate a coherence histogram to the L1c annotation model."""
-    return main_annotation_models_l1c.StaQualityParametersType.CoherenceHistogram(
+    return LATEST_VERSION.StaQualityParametersType.CoherenceHistogram(
         bins=translate_float_array_to_model(histogram.bins.tolist()),
         pdf_values=translate_float_array_to_model(histogram.pdf_values.tolist()),
     )
 
 
 def translate_sta_quality_parameters(
-    params: main_annotation_models_l1c.StaQualityParametersType,
+    params: StaQualityParametersType,
 ) -> main_annotation_l1c.BIOMASSStackQualityParameters:
     """Translate stack-quality parameters from the L1c annotation model."""
     return main_annotation_l1c.BIOMASSStackQualityParameters(
@@ -387,9 +400,9 @@ def translate_sta_quality_parameters(
 
 def translate_sta_quality_parameters_to_model(
     params: main_annotation_l1c.BIOMASSStackQualityParameters,
-) -> main_annotation_models_l1c.StaQualityParametersType:
+) -> LATEST_VERSION.StaQualityParametersType:
     """Translate stack-quality parameters to the L1c annotation model."""
-    return main_annotation_models_l1c.StaQualityParametersType(
+    return LATEST_VERSION.StaQualityParametersType(
         polarisation=translate_polarisation_type_to_model(params.polarization),
         invalid_l1a_data_samples=float(params.invalid_l1a_data_samples),
         rfi_decorrelation=float(params.rfi_decorrelation),
@@ -411,7 +424,7 @@ def translate_sta_quality_parameters_to_model(
 
 
 def translate_sta_quality(
-    quality: main_annotation_models_l1c.StaQualityType,
+    quality: StaQualityType,
 ) -> main_annotation_l1c.BIOMASSStackQuality:
     """Translate stack quality from the L1c annotation model."""
     return main_annotation_l1c.BIOMASSStackQuality(
@@ -425,11 +438,11 @@ def translate_sta_quality(
 
 def translate_sta_quality_to_model(
     quality: main_annotation_l1c.BIOMASSStackQuality,
-) -> main_annotation_models_l1c.StaQualityType:
+) -> LATEST_VERSION.StaQualityType:
     """Translate stack quality to the L1c annotation model."""
-    return main_annotation_models_l1c.StaQualityType(
+    return LATEST_VERSION.StaQualityType(
         overall_product_quality_index=int(quality.overall_product_quality_index),
-        sta_quality_parameters_list=main_annotation_models_l1c.StaQualityParametersListType(
+        sta_quality_parameters_list=v450.StaQualityParametersListType(
             sta_quality_parameters=[
                 translate_sta_quality_parameters_to_model(params) for params in quality.sta_quality_parameters_list
             ],
@@ -439,7 +452,7 @@ def translate_sta_quality_to_model(
 
 
 def translate_main_annotation_l1c(
-    annotation: main_annotation_models_l1c.MainAnnotation,
+    annotation: MainAnnotation,
 ) -> main_annotation_l1c.MainAnnotationL1c:
     """Translate L1c main annotation file"""
     return main_annotation_l1c.MainAnnotationL1c(
@@ -480,9 +493,9 @@ def translate_main_annotation_l1c(
 
 def translate_main_annotation_l1c_to_model(
     annotation: main_annotation_l1c.MainAnnotationL1c,
-) -> main_annotation_models_l1c.MainAnnotation:
+) -> LATEST_VERSION.MainAnnotation:
     """Translate L1c main annotation file"""
-    return main_annotation_models_l1c.MainAnnotation(
+    return LATEST_VERSION.MainAnnotation(
         acquisition_information=translate_common_annotation_l1.translate_acquisition_information_to_model(
             annotation.acquisition_information
         ),
@@ -528,11 +541,14 @@ def read_main_annotation_l1c(
     file: Path,
 ) -> main_annotation_l1c.MainAnnotationL1c:
     """Read main annotation of l1c products"""
-    main_annotation_model: main_annotation_models_l1c.MainAnnotation = parse(
-        file.read_text(encoding="utf-8"),
-        main_annotation_models_l1c.MainAnnotation,
+    main_annotation_model = reader_core.reader(
+        file,
+        "l1c",
+        [
+            ("v450", v450.MainAnnotation),
+            ("v445", v445.MainAnnotation),
+        ],
     )
-
     return translate_main_annotation_l1c(main_annotation_model)
 
 

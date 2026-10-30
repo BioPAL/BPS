@@ -32,18 +32,6 @@ class CommonTranslateTestCase(unittest.TestCase):
     def test_translate_all_enums(self):
         enum_translations = (
             (
-                common_types.ProcessingModeType,
-                common.ProcessingModeType,
-                translate_common.translate_processing_mode,
-                translate_common.translate_processing_mode_to_model,
-            ),
-            (
-                common_types.OrbitAttitudeSourceType,
-                common.OrbitAttitudeSourceType,
-                translate_common.translate_orbit_attitude_source,
-                translate_common.translate_orbit_attitude_source_to_model,
-            ),
-            (
                 common_types.RfiMaskType,
                 common.RfiMaskType,
                 translate_common.translate_rfi_mask_type,
@@ -128,12 +116,6 @@ class CommonTranslateTestCase(unittest.TestCase):
                 translate_common.translate_uom_type_to_model,
             ),
             (
-                common_types.ProjectionType,
-                common.ProjectionType,
-                translate_common.translate_projection_type,
-                translate_common.translate_projection_type_to_model,
-            ),
-            (
                 common_types.GeodeticReferenceFrameType,
                 common.GeodeticReferenceFrameType,
                 translate_common.translate_geodetic_reference_frame_type,
@@ -146,22 +128,10 @@ class CommonTranslateTestCase(unittest.TestCase):
                 translate_common.translate_pixel_representation_type_to_model,
             ),
             (
-                common_types.PixelTypeType,
-                common.PixelTypeType,
-                translate_common.translate_pixel_type_type,
-                translate_common.translate_pixel_type_type_to_model,
-            ),
-            (
                 common_types.PixelQuantityType,
                 common.PixelQuantityType,
                 translate_common.translate_pixel_quantity_type,
                 translate_common.translate_pixel_quantity_type_to_model,
-            ),
-            (
-                common_types.MissionType,
-                common.MissionType,
-                translate_common.translate_mission_type,
-                translate_common.translate_mission_type_to_model,
             ),
             (
                 common_types.SwathType,
@@ -170,40 +140,10 @@ class CommonTranslateTestCase(unittest.TestCase):
                 translate_common.translate_swath_type_to_model,
             ),
             (
-                common_types.ProductType,
-                common.ProductType,
-                translate_common.translate_product_type,
-                translate_common.translate_product_type_to_model,
-            ),
-            (
                 common_types.BaselineMethodType,
                 common.BaselineMethodType,
                 translate_common.translate_baseline_method_type,
                 translate_common.translate_baseline_method_type_to_model,
-            ),
-            (
-                common_types.MissionPhaseIdtype,
-                common.MissionPhaseIdtype,
-                translate_common.translate_mission_phase_id,
-                translate_common.translate_mission_phase_id_to_model,
-            ),
-            (
-                common_types.SensorModeType,
-                common.SensorModeType,
-                translate_common.translate_sensor_mode,
-                translate_common.translate_sensor_mode_to_model,
-            ),
-            (
-                common_types.OrbitPassType,
-                common.OrbitPassType,
-                translate_common.translate_orbit_pass,
-                translate_common.translate_orbit_pass_to_model,
-            ),
-            (
-                common_types.ProductCompositionType,
-                common.ProductCompositionType,
-                translate_common.translate_product_composition,
-                translate_common.translate_product_composition_to_model,
             ),
             (
                 common_types.DataFormatModeType,
@@ -234,12 +174,6 @@ class CommonTranslateTestCase(unittest.TestCase):
                 common.PrimaryImageSelectionInformationType,
                 translate_common.translate_primary_image_selection_information,
                 translate_common.translate_primary_image_selection_information_to_model,
-            ),
-            (
-                common_types.PrimaryImageSelectionMethodType,
-                common.PrimaryImageSelectionMethodType,
-                translate_common.translate_primary_image_selection_method,
-                translate_common.translate_primary_image_selection_method_to_model,
             ),
             (
                 common_types.SkpPhaseCalibrationPostprocessingType,

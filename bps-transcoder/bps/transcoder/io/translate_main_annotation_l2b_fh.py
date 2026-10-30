@@ -9,17 +9,19 @@
 
 from pathlib import Path
 
-from bps.common.io import translate_common
 from bps.common.io.parsing import parse, serialize
-from bps.transcoder.io import (
-    main_annotation_l2b_fh,
-    main_annotation_models_l2b_fh,
-    translate_common_annotation_l2l3,
-)
+from bps.transcoder.io import main_annotation_l2b_fh, reader_core, translate_common, translate_common_annotation_l2l3
+from bps.transcoder.io.v445 import main_annotation_models_l2b_fh as v445
+from bps.transcoder.io.v450 import main_annotation_models_l2b_fh as v450
+
+CompressionOptionsL2B = v450.CompressionOptionsL2B | v445.CompressionOptionsL2B
+ProcessingParametersL2BType = v450.ProcessingParametersL2BType | v445.ProcessingParametersL2BType
+MainAnnotation = v450.MainAnnotation | v445.MainAnnotation
+LATEST_VERSION = v450
 
 
 def translate_compression_options_l2b_fh(
-    compression_options: main_annotation_models_l2b_fh.CompressionOptionsL2B,
+    compression_options: CompressionOptionsL2B,
 ) -> main_annotation_l2b_fh.CompressionOptionsL2B:
     return main_annotation_l2b_fh.CompressionOptionsL2B(
         mds=main_annotation_l2b_fh.CompressionOptionsL2B.Mds(
@@ -46,25 +48,25 @@ def translate_compression_options_l2b_fh(
 
 def translate_compression_options_l2b_fh_to_model(
     compression_options: main_annotation_l2b_fh.CompressionOptionsL2B,
-) -> main_annotation_models_l2b_fh.CompressionOptionsL2B:
-    return main_annotation_models_l2b_fh.CompressionOptionsL2B(
-        mds=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds(
-            fh=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Fh(
+) -> LATEST_VERSION.CompressionOptionsL2B:
+    return LATEST_VERSION.CompressionOptionsL2B(
+        mds=LATEST_VERSION.CompressionOptionsL2B.Mds(
+            fh=LATEST_VERSION.CompressionOptionsL2B.Mds.Fh(
                 compression_factor=compression_options.mds.fh.compression_factor,
                 max_z_error=compression_options.mds.fh.max_z_error,
             ),
-            quality=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.Quality(
+            quality=LATEST_VERSION.CompressionOptionsL2B.Mds.Quality(
                 compression_factor=compression_options.mds.quality.compression_factor,
                 max_z_error=compression_options.mds.quality.max_z_error,
             ),
-            bps_fnf=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.BpsFnf(
+            bps_fnf=LATEST_VERSION.CompressionOptionsL2B.Mds.BpsFnf(
                 compression_factor=compression_options.mds.bps_fnf.compression_factor
             ),
-            heat_map=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.HeatMap(
+            heat_map=LATEST_VERSION.CompressionOptionsL2B.Mds.HeatMap(
                 compression_factor=compression_options.mds.heat_map.compression_factor,
                 max_z_error=compression_options.mds.heat_map.max_z_error,
             ),
-            acquisition_id_image=main_annotation_models_l2b_fh.CompressionOptionsL2B.Mds.AcquisitionIdImage(
+            acquisition_id_image=LATEST_VERSION.CompressionOptionsL2B.Mds.AcquisitionIdImage(
                 compression_factor=compression_options.mds.acquisition_id_image.compression_factor
             ),
         ),
@@ -73,7 +75,7 @@ def translate_compression_options_l2b_fh_to_model(
 
 
 def translate_processing_parameters_l2b_fh(
-    params: main_annotation_models_l2b_fh.ProcessingParametersL2BType,
+    params: ProcessingParametersL2BType,
 ) -> main_annotation_l2b_fh.ProcessingParametersAnnotation:
     return main_annotation_l2b_fh.ProcessingParametersAnnotation(
         processor_version=params.processor_version,
@@ -89,8 +91,8 @@ def translate_processing_parameters_l2b_fh(
 
 def translate_processing_parameters_l2b_fh_to_model(
     params: main_annotation_l2b_fh.ProcessingParametersAnnotation,
-) -> main_annotation_models_l2b_fh.ProcessingParametersL2BType:
-    return main_annotation_models_l2b_fh.ProcessingParametersL2BType(
+) -> LATEST_VERSION.ProcessingParametersL2BType:
+    return LATEST_VERSION.ProcessingParametersL2BType(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime_to_model(params.product_generation_time),
         forest_masking_flag=translate_common.translate_bool_to_model(params.forest_masking_flag),
@@ -103,7 +105,7 @@ def translate_processing_parameters_l2b_fh_to_model(
 
 
 def translate_main_annotation_l2b_fh(
-    annotation: main_annotation_models_l2b_fh.MainAnnotation,
+    annotation: MainAnnotation,
 ) -> main_annotation_l2b_fh.MainAnnotationL2bFH:
     return main_annotation_l2b_fh.MainAnnotationL2bFH(
         product=translate_common_annotation_l2l3.translate_productl2bl3(annotation.product),
@@ -117,8 +119,8 @@ def translate_main_annotation_l2b_fh(
 
 def translate_main_annotation_l2b_fh_to_model(
     annotation: main_annotation_l2b_fh.MainAnnotationL2bFH,
-) -> main_annotation_models_l2b_fh.MainAnnotation:
-    return main_annotation_models_l2b_fh.MainAnnotation(
+) -> LATEST_VERSION.MainAnnotation:
+    return LATEST_VERSION.MainAnnotation(
         product=translate_common_annotation_l2l3.translate_productl2bl3_to_model(annotation.product),
         raster_image=translate_common_annotation_l2l3.translate_raster_image_l2a_to_model(annotation.raster_image),
         input_information=translate_common_annotation_l2l3.translate_input_information_l2bl3_list_to_model(
@@ -128,9 +130,25 @@ def translate_main_annotation_l2b_fh_to_model(
     )
 
 
-def read_main_annotation_l2b_fh(annotation_path: Path) -> main_annotation_l2b_fh.MainAnnotationL2bFH:
-    main_annotation_model: main_annotation_models_l2b_fh.MainAnnotation = parse(
-        annotation_path.read_text(encoding="utf-8"), main_annotation_models_l2b_fh.MainAnnotation
+def parse_v445(content: str) -> v445.MainAnnotation:
+    return parse(content, v445.MainAnnotation)
+
+
+def parse_v450(content: str) -> v450.MainAnnotation:
+    return parse(content, v450.MainAnnotation)
+
+
+def read_main_annotation_l2b_fh(
+    file: Path,
+) -> main_annotation_l2b_fh.MainAnnotationL2bFH:
+    """Read main annotation of l2b fh products"""
+    main_annotation_model = reader_core.reader(
+        file,
+        "l2b fh",
+        [
+            ("v450", v450.MainAnnotation),
+            ("v445", v445.MainAnnotation),
+        ],
     )
     return translate_main_annotation_l2b_fh(main_annotation_model)
 

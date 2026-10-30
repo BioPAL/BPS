@@ -12,18 +12,40 @@ L2A variant-specific annotation translation
 
 from pathlib import Path
 
-from bps.common.io import common, translate_common
-from bps.common.io.parsing import parse, serialize
+from bps.common import bps_logger
+from bps.common.io import common
+from bps.common.io.parsing import serialize
 from bps.transcoder.io import (
     main_annotation_l2a_fd,
-    main_annotation_models_l2a_fd,
+    reader_core,
+    translate_common,
     translate_common_annotation_l2l3,
 )
+from bps.transcoder.io.v445 import main_annotation_models_l2a_fd as v445
+from bps.transcoder.io.v450 import main_annotation_models_l2a_fd as v450
+
+CompressionOptionsL2A = v450.CompressionOptionsL2A | v445.CompressionOptionsL2A
+ProcessingParametersL2AType = v450.ProcessingParametersL2AType | v445.ProcessingParametersL2AType
+MainAnnotation = v450.MainAnnotation | v445.MainAnnotation
+
+LATEST_VERSION = v450
 
 
 def translate_compression_options_l2a_fd(
-    options: main_annotation_models_l2a_fd.CompressionOptionsL2A,
+    options: CompressionOptionsL2A,
 ) -> main_annotation_l2a_fd.CompressionOptionsL2AFD:
+    if isinstance(options, v450.CompressionOptionsL2A):
+        geometric_lut_options = main_annotation_l2a_fd.CompressionFactorLeastSignificantDigitType(
+            options.ads.geometric_luts.compression_factor,
+            options.ads.geometric_luts.least_significant_digit,
+        )
+    else:
+        assert isinstance(options, v445.CompressionOptionsL2A)
+        bps_logger.warning("Geometric LUT options are not available for older versions; using default values.")
+        geometric_lut_options = main_annotation_l2a_fd.CompressionFactorLeastSignificantDigitType(
+            compression_factor=5, least_significant_digit=5
+        )
+
     return main_annotation_l2a_fd.CompressionOptionsL2AFD(
         mds=main_annotation_l2a_fd.CompressionOptionsL2AFD.Mds(
             fd=main_annotation_l2a_fd.CompressionFactorType(options.mds.fd.compression_factor),
@@ -42,10 +64,7 @@ def translate_compression_options_l2a_fd(
             number_of_averages=main_annotation_l2a_fd.CompressionFactorType(
                 options.ads.number_of_averages.compression_factor
             ),
-            geometric_luts=main_annotation_l2a_fd.CompressionFactorLeastSignificantDigitType(
-                options.ads.geometric_luts.compression_factor,
-                options.ads.geometric_luts.least_significant_digit,
-            ),
+            geometric_luts=geometric_lut_options,
         ),
         mds_block_size=options.mds_block_size,
         ads_block_size=options.ads_block_size,
@@ -54,8 +73,8 @@ def translate_compression_options_l2a_fd(
 
 def translate_compression_options_l2a_fd_to_model(
     options: main_annotation_l2a_fd.CompressionOptionsL2AFD,
-) -> main_annotation_models_l2a_fd.CompressionOptionsL2A:
-    model = main_annotation_models_l2a_fd.CompressionOptionsL2A
+) -> LATEST_VERSION.CompressionOptionsL2A:
+    model = LATEST_VERSION.CompressionOptionsL2A
     return model(
         mds=model.Mds(
             fd=model.Mds.Fd(compression_factor=options.mds.fd.compression_factor),
@@ -85,7 +104,7 @@ def translate_compression_options_l2a_fd_to_model(
 
 
 def translate_processing_parameters_l2a_fd(
-    params: main_annotation_models_l2a_fd.ProcessingParametersL2AType,
+    params: ProcessingParametersL2AType,
 ) -> main_annotation_l2a_fd.BIOMASSL2aMainADSProcessingParametersFD:
     """Translate FD L2A processing parameters from their model."""
     return main_annotation_l2a_fd.BIOMASSL2aMainADSProcessingParametersFD(
@@ -116,10 +135,10 @@ def translate_processing_parameters_l2a_fd(
 
 def translate_processing_parameters_l2a_fd_to_model(
     params: main_annotation_l2a_fd.BIOMASSL2aMainADSProcessingParametersFD,
-) -> main_annotation_models_l2a_fd.ProcessingParametersL2AType:
+) -> LATEST_VERSION.ProcessingParametersL2AType:
     """Translate FD L2A processing parameters to their model."""
-    operational_mode = main_annotation_models_l2a_fd.OperationalModeType(params.operational_mode)
-    return main_annotation_models_l2a_fd.ProcessingParametersL2AType(
+    operational_mode = LATEST_VERSION.OperationalModeType(params.operational_mode)
+    return LATEST_VERSION.ProcessingParametersL2AType(
         processor_version=params.processor_version,
         product_generation_time=translate_common.translate_datetime_to_model(params.product_generation_time),
         general_configuration_parameters=translate_common_annotation_l2l3.translate_general_configuration_to_model(
@@ -149,8 +168,8 @@ def translate_processing_parameters_l2a_fd_to_model(
     )
 
 
-def translate_main_annotation_l2a_fd_fd(
-    annotation: main_annotation_models_l2a_fd.MainAnnotation,
+def translate_main_annotation_l2a_fd(
+    annotation: MainAnnotation,
 ) -> main_annotation_l2a_fd.MainAnnotationL2aFD:
     """Translate an FD L2A main annotation model to its in-memory representation."""
     return main_annotation_l2a_fd.MainAnnotationL2aFD(
@@ -164,11 +183,11 @@ def translate_main_annotation_l2a_fd_fd(
     )
 
 
-def translate_main_annotation_l2a_fd_fd_to_model(
+def translate_main_annotation_l2a_fd_to_model(
     annotation: main_annotation_l2a_fd.MainAnnotationL2aFD,
-) -> main_annotation_models_l2a_fd.MainAnnotation:
+) -> LATEST_VERSION.MainAnnotation:
     """Translate an FD L2A main annotation to its generated model."""
-    return main_annotation_models_l2a_fd.MainAnnotation(
+    return LATEST_VERSION.MainAnnotation(
         product=translate_common_annotation_l2l3.translate_product_l2a_to_model(annotation.product),
         raster_image=translate_common_annotation_l2l3.translate_raster_image_l2a_to_model(annotation.raster_image),
         input_information=translate_common_annotation_l2l3.translate_input_information_l2a_to_model(
@@ -182,13 +201,16 @@ def translate_main_annotation_l2a_fd_fd_to_model(
 def read_main_annotation_l2a_fd(
     file: Path,
 ) -> main_annotation_l2a_fd.MainAnnotationL2aFD:
-    """Read main annotation of l2a products"""
-    main_annotation_model: main_annotation_models_l2a_fd.MainAnnotation = parse(
-        file.read_text(encoding="utf-8"),
-        main_annotation_models_l2a_fd.MainAnnotation,
+    """Read main annotation of l2a fd products"""
+    main_annotation_model = reader_core.reader(
+        file,
+        "l2a fd",
+        [
+            ("v450", v450.MainAnnotation),
+            ("v445", v445.MainAnnotation),
+        ],
     )
-
-    return translate_main_annotation_l2a_fd_fd(main_annotation_model)
+    return translate_main_annotation_l2a_fd(main_annotation_model)
 
 
 def write_main_annotation_l2a_fd(
@@ -196,6 +218,6 @@ def write_main_annotation_l2a_fd(
     annotation: main_annotation_l2a_fd.MainAnnotationL2aFD,
 ):
     """Write main annotation of l2a products"""
-    main_annotation_model = translate_main_annotation_l2a_fd_fd_to_model(annotation)
+    main_annotation_model = translate_main_annotation_l2a_fd_to_model(annotation)
     main_annotation_text = serialize(main_annotation_model)
     file.write_text(main_annotation_text, encoding="utf-8")

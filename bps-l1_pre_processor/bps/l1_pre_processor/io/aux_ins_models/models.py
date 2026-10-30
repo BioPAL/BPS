@@ -1836,6 +1836,7 @@ class AuxiliaryInstrumentParametersType:
         Characterization data.
     attenuators_settings
         Attenuators settings.
+    schema_version
     """
 
     class Meta:
@@ -1895,6 +1896,15 @@ class AuxiliaryInstrumentParametersType:
             "name": "attenuatorsSettings",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

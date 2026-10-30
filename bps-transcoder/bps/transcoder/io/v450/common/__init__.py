@@ -1,0 +1,77 @@
+# Project: BIOMASS Processing Suite (BPS)
+#
+# Copyright (c) 2025, ARESYS S.r.l.
+# Developed under contract with the European Space Agency (ESA)
+#
+# SPDX-License-Identifier: MIT
+
+"""
+XSD common types
+----------------
+"""
+
+from bps.transcoder.io.v450.common.models import (
+    AutofocusMethodType,
+    AzimuthPolynomialType,
+    BistaticDelayCorrectionMethodType,
+    ChannelImbalanceList,
+    ChannelType,
+    Complex,
+    ComplexArray,
+    CoregistrationMethodType,
+    CrossTalkList,
+    DataFormatModeType,
+    DatumType,
+    DcMethodType,
+    DoubleArray,
+    DoubleArrayWithUnits,
+    DoubleWithUnit,
+    FloatArray,
+    FloatArrayWithUnits,
+    FloatWithChannel,
+    FloatWithPolarisation,
+    FloatWithUnit,
+    GeodeticReferenceFrameType,
+    GroupType,
+    HeightModelBaseType,
+    HeightModelType,
+    IntArray,
+    InterferometricPairListType,
+    InterferometricPairType,
+    InternalCalibrationSourceType,
+    IonosphereHeightEstimationMethodType,
+    LayerListType,
+    LayerType,
+    MinMaxType,
+    MinMaxTypeWithUnit,
+    MissionPhaseIdtype,
+    MissionType,
+    OrbitAttitudeSourceType,
+    OrbitPassType,
+    PixelQuantityType,
+    PixelRepresentationType,
+    PixelTypeType,
+    PolarisationCombinationMethodType,
+    PolarisationType,
+    PrimaryImageSelectionInformationType,
+    PrimaryImageSelectionMethodType,
+    ProcessingModeType,
+    ProductCompositionType,
+    ProductType,
+    ProjectionType,
+    RangeCompressionMethodType,
+    RangeReferenceFunctionType,
+    RfiFmmitigationMethodType,
+    RfiMaskGenerationMethodType,
+    RfiMaskType,
+    RfiMitigationMethodType,
+    SensorModeType,
+    SkpPhaseCalibrationPostprocessingType,
+    SlantRangePolynomialType,
+    StateType,
+    SwathType,
+    TimeTypeWithPolarisation,
+    UnsignedIntWithGroup,
+    UomType,
+    WeightingWindowType,
+)

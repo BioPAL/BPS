@@ -2260,6 +2260,7 @@ class AuxiliaryL1ProcessingParametersType:
     l1_product_list
         List of L1 processing parameters for each product the L1 Processor is capable of generating (i.e.,
         SM_SCS__1S, SM_DGM__1S, RO_SCS__1S, ...).
+    schema_version
     """
 
     class Meta:
@@ -2270,6 +2271,15 @@ class AuxiliaryL1ProcessingParametersType:
             "name": "l1ProductList",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

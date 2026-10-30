@@ -323,6 +323,7 @@ class AuxiliaryL2BAbprocessingParametersType:
         The minimum [%] of invalid pixels that triggers a new iteration.Default value is 5.0
     compression_options
         Configurable compression options for all the ABG L2B MDS variables.
+    schema_version
     """
 
     class Meta:
@@ -444,6 +445,15 @@ class AuxiliaryL2BAbprocessingParametersType:
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

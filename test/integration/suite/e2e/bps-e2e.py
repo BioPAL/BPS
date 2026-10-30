@@ -24,6 +24,7 @@ from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
 from bps.common import __version__, retrieve_aux_product_data_single_content
 from bps.common.bps_logger import get_version_in_logger_format
+from bps.transcoder import BPS_AUX_FMT_VERSION
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.biomass_l2aproduct_reader import BIOMASSL2aProductReader
 from bps.transcoder.sarproduct.biomass_l2bfdproduct_reader import (
@@ -55,6 +56,8 @@ L1_TOI_START = "2017-01-11T05:06:14.232204000000"
 L1_TOI_STOP = "2017-01-11T05:06:24.425897302191"
 BLOCK_OVERLAP = 4076
 
+AUX_FMT_VERSION_STR = BPS_AUX_FMT_VERSION[1:]
+
 
 def test_001_l1(session: TestSession, env: Environment, data: DataRepository):
     """Run L1 Processing using ROI."""
@@ -70,6 +73,7 @@ def test_001_l1(session: TestSession, env: Environment, data: DataRepository):
     aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
     aux_pp1_doc = xml.Document(aux_pp1_xml)
     aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+    aux_pp1_doc.set("//auxiliaryL1ProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     _update_l1_job_order(
         job_order,
@@ -126,6 +130,7 @@ def test_002_l1(session: TestSession, env: Environment, data: DataRepository):
     aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
     aux_pp1_doc = xml.Document(aux_pp1_xml)
     aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+    aux_pp1_doc.set("//auxiliaryL1ProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     _update_l1_job_order(
         job_order,
@@ -182,6 +187,7 @@ def test_003_l1(session: TestSession, env: Environment, data: DataRepository):
     aux_pp1_xml = retrieve_aux_product_data_single_content(aux_pp1)
     aux_pp1_doc = xml.Document(aux_pp1_xml)
     aux_pp1_doc.set("//heightModelFallbackFlag/text()", "true")
+    aux_pp1_doc.set("//auxiliaryL1ProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     _update_l1_job_order(
         job_order,
@@ -224,7 +230,7 @@ def test_003_l1(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_003_sta(session: TestSession, env: Environment, data: DataRepository):
+def test_004_sta(session: TestSession, env: Environment, data: DataRepository):
     """Run stack processor."""
     # Setup the job order and AUX-PPS.
     job_order_path = data.pull("input/e2e/joborder_sta")
@@ -264,7 +270,7 @@ def test_003_sta(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
+def test_005_l2a(session: TestSession, env: Environment, data: DataRepository):
     """Run L2a processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2a")
@@ -358,7 +364,7 @@ def test_004_l2a(session: TestSession, env: Environment, data: DataRepository):
     )
 
 
-def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository):
+def test_006_l2b_fh(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FH processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2b_1")
@@ -367,6 +373,7 @@ def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository
     aux_pp2_fh_path = data.pull("configurations/e2e/CONF-BPS-PP2-FH-001")
     aux_pp2_fh = xml.Document(retrieve_aux_product_data_single_content(aux_pp2_fh_path))
     aux_pp2_fh.set("//minimumL2aCoverage/text()", 4.0)
+    aux_pp2_fh.set("//auxiliaryL2bFHProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     # Get L2a FH products. Raise if amount does not match expected.
     l2a_fh_list = _find_products(
@@ -419,7 +426,7 @@ def test_004_l2b_fh(session: TestSession, env: Environment, data: DataRepository
     )
 
 
-def test_005_l2b_fd(session: TestSession, env: Environment, data: DataRepository):
+def test_007_l2b_fd(session: TestSession, env: Environment, data: DataRepository):
     """Run L2b FD processor."""
     # Setup the job order and configuration file.
     job_order_path = data.pull("input/e2e/joborder_l2b_2")
@@ -428,6 +435,7 @@ def test_005_l2b_fd(session: TestSession, env: Environment, data: DataRepository
     aux_pp2_fd_path = data.pull("configurations/e2e/CONF-BPS-PP2-FD-001")
     aux_pp2_fd = xml.Document(retrieve_aux_product_data_single_content(aux_pp2_fd_path))
     aux_pp2_fd.set("//minimumL2aCoverage/text()", 4.0)
+    aux_pp2_fd.set("//auxiliaryL2bFDProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
 
     # Get L2a FD products. Raise if amount does not match expected.
     l2a_fd_list = _find_products(
@@ -765,6 +773,7 @@ def _update_aux_pp2_2a(aux_pp2_2a: xml.Document):
     - AGB/compressionOptions/ADS: localIncidenceAngle renamed to geometricLUTs.
     - FD, FH, TFH compressionOptions/ADS: added geometricLUTs.
     """
+    aux_pp2_2a.set("//auxiliaryL2aProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
     # AGB: flag no longer present in the schema.
     aux_pp2_2a.remove("//AGB/groundCancellation/computeGNPowerFlag")
 
@@ -789,4 +798,4 @@ if __name__ == "__main__":
     settings = Settings.load_toml(config_file)
     runner = TestRunner.from_settings(settings)
 
-    runner.run_test(Test(test_002_sta.__name__, test_002_sta))
+    runner.run_test(Test(test_001_l1.__name__, test_001_l1))

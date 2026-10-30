@@ -224,6 +224,7 @@ class AuxiliaryL2BFdprocessingParametersType:
         Minimum coverage in percentage of the output tile to enable L2b processing.
     compression_options
         Configurable compression options for all the FD L2B MDS variables.
+    schema_version
     """
 
     class Meta:
@@ -248,6 +249,15 @@ class AuxiliaryL2BFdprocessingParametersType:
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 
