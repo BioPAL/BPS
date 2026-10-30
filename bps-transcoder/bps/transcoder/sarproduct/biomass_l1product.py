@@ -87,6 +87,8 @@ class BIOMASSL1ProcessingParameters:
     requested_height_model_used: bool
     absolute_calibration_constants: dict[common.PolarisationType, float]
     polarimetric_distortion: common_annotation_l1.PolarimetricDistortionType
+    processing_gain: list[tuple[float, common.PolarisationType]]
+    noise_gain: list[tuple[float, common.PolarisationType]]
 
     @classmethod
     def from_l1_annotation(cls, params: common_annotation_l1.ProcessingParameters) -> BIOMASSL1ProcessingParameters:
@@ -162,6 +164,8 @@ class BIOMASSL1ProcessingParameters:
             requested_height_model_used=default_params.requested_height_model_used,
             absolute_calibration_constants=default_params.absolute_calibration_constants,
             polarimetric_distortion=default_params.polarimetric_distortion,
+            processing_gain=default_params.processing_gain,
+            noise_gain=default_params.noise_gain,
         )
 
 
@@ -504,6 +508,18 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
             ),
             channel_imbalance=common.ChannelImbalanceList(hv_rx=complex(0, 0), hv_tx=complex(0, 0)),
         ),
+        processing_gain=[
+            (1.0, common.PolarisationType.HH),
+            (1.0, common.PolarisationType.HV),
+            (1.0, common.PolarisationType.VH),
+            (1.0, common.PolarisationType.VV),
+        ],
+        noise_gain=[
+            (1.0, common.PolarisationType.HH),
+            (1.0, common.PolarisationType.HV),
+            (1.0, common.PolarisationType.VH),
+            (1.0, common.PolarisationType.VV),
+        ],
     )
 
 

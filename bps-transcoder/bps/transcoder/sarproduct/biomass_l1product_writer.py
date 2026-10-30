@@ -835,9 +835,7 @@ class BIOMASSL1ProductWriter:
                 self.product.processing_parameters.range_spreading_loss_compensation_flag
             ),
             reference_range=self.product.processing_parameters.reference_range,  # M
-            processing_gain_list=[
-                (1, common.PolarisationType(p.replace("/", ""))) for p in self.product.polarization_list
-            ],
+            processing_gain_list=self.product.processing_parameters.processing_gain,
             polarimetric_correction_flag=(self.product.processing_parameters.polarimetric_correction_flag),
             ionosphere_height_defocusing_flag=(self.product.processing_parameters.ionosphere_height_defocusing_flag),
             ionosphere_height_estimation_method=(
@@ -857,7 +855,7 @@ class BIOMASSL1ProductWriter:
             ground_projection_flag=(
                 False if self.product.type == "SCS" else self.product.processing_parameters.ground_projection_flag
             ),
-            noise_gain_list=[(1, common.PolarisationType(p.replace("/", ""))) for p in self.product.polarization_list],
+            noise_gain_list=self.product.processing_parameters.noise_gain,
         )
 
         # - internalCalibration

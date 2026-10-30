@@ -191,6 +191,14 @@ def fill_bps_l1_processing_parameters(
             aux_pp1.polarimetric_calibration.cross_talk,
             aux_pp1.polarimetric_calibration.channel_imbalance,
         ),
+        processing_gain=[
+            (value, common.PolarisationType(pol.name))
+            for pol, value in aux_pp1.radiometric_calibration.processing_gain.items()
+        ],
+        noise_gain=[
+            (value, common.PolarisationType(pol.name))
+            for pol, value in aux_pp1.thermal_denoising.noise_gain_list.items()
+        ],
     )
     return processing_parameters
 
