@@ -84,8 +84,8 @@ def serialize_footprint(footprint: list[list[float]]) -> str:
     return " ".join([" ".join(str(value) for value in corner) for corner in footprint])
 
 
-DEFAULT_GCP_RANGE_SAMPLING = 500
-DEFAULT_GCP_AZIMUTH_SAMPLING = 2000
+DEFAULT_GCP_RANGE_SAMPLING = 125
+DEFAULT_GCP_AZIMUTH_SAMPLING = 750
 
 
 def gcp_axis_sampling(
