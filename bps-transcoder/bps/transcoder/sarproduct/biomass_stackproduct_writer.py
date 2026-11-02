@@ -865,6 +865,7 @@ class BIOMASSStackProductWriter:
         ncfile.frame = np.uint16(self.product.frame_number)
         ncfile.productComposition = self.product.frame_status.title()
         ncfile.noDataValue = self.product.product_nodata_value
+        ncfile.formatVersion = BPS_PFD_L1_VERSION
 
         if len(self.product_lut) == 0:
             # Write LUT annotation file: Finalize Dataset.
