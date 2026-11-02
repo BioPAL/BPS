@@ -18,7 +18,7 @@
                 <Amount>58440</Amount>
                 <Scalable>No</Scalable>
             </RAM>
-            <Disk_Space>56320</Disk_Space>
+            <Disk_Space>62000</Disk_Space>
             <Timeout>0</Timeout>
             <Killing_Signal>9</Killing_Signal>
             <Critical>Yes</Critical>
