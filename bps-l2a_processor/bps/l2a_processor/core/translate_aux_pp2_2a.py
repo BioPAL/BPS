@@ -13,6 +13,7 @@ AUX PP1 Translation
 import numpy as np
 from bps.common.io import translate_common
 from bps.l2a_processor.core.aux_pp2_2a import (
+    AcquisitionFolderName,
     ADSfloatCompressionType,
     AuxProcessingParametersL2A,
     CalibrationScreenType,
@@ -144,21 +145,18 @@ def translate_model_to_gn_conf(
     gn_type,
 ) -> GroundCancellationConfAGB | GroundCancellationConfFD:
     """Translate AGB or FD Ground Cancellation configuration section to the corresponding conf"""
+    images_pair_selection = []
     if conf.images_pair_selection is None:
-        images_pair_selection = aux_pp2_2a_models.AuxppacquisitionListType(
-            acquisition_folder_name=[
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(value="", reference_image=""),
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(value="", reference_image=""),
-            ],
-            count=2,
-        )
+        images_pair_selection = [
+            AcquisitionFolderName(value="", reference_image=False, average_wavenumber=None),
+            AcquisitionFolderName(value="", reference_image=False, average_wavenumber=None),
+        ]
     else:
-        list_temp = []
         for acq_folder_name in conf.images_pair_selection.acquisition_folder_name:
-            list_temp.append(
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(
+            images_pair_selection.append(
+                AcquisitionFolderName(
                     value=acq_folder_name.value,
-                    reference_image=acq_folder_name.reference_image.lower(),
+                    reference_image=translate_common.translate_bool(acq_folder_name.reference_image),
                     average_wavenumber=(
                         float(acq_folder_name.average_wavenumber)
                         if acq_folder_name.average_wavenumber is not None
@@ -166,11 +164,8 @@ def translate_model_to_gn_conf(
                     ),
                 ),
             )
-        assert len(list_temp) == 2
-        images_pair_selection = aux_pp2_2a_models.AuxppacquisitionListType(
-            acquisition_folder_name=list_temp,
-            count=len(list_temp),
-        )
+        assert len(images_pair_selection) == 2
+
     if conf.disable_ground_cancellation_flag is None:
         disable_ground_cancellation_flag = False
     else:
