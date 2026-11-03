@@ -69,7 +69,7 @@ Both installation and usage procedures make use of the open-source package manag
     conda install biomass-bps::bps-l2b_agb_processor      # only for BPS L2B AGB Processor
     ```
 
-3. Check proper installation runnin help command:
+3. Check proper installation running help command:
 
     ```bash
     bps_l1_processor --help
