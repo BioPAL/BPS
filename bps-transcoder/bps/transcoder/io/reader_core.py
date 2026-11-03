@@ -47,6 +47,8 @@ def reader(
             break
 
     if model is None:
-        raise ValueError(f"Failed to parse {file} assuming PFD versions {all_pfd_versions} for {level_tag}")
+        raise ValueError(
+            f"Failed to parse {file} considering PFD versions {' and '.join(all_pfd_versions.values())} for {level_tag}"
+        )
 
     return model
