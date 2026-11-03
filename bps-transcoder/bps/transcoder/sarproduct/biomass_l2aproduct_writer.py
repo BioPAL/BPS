@@ -31,6 +31,7 @@ from bps.transcoder import (
     BPS_PFD_AGB_VERSION,
     BPS_PFD_FD_VERSION,
     BPS_PFD_FH_VERSION,
+    BPS_PFD_TFH_VERSION,
     BPS_PPD_VERSION,
 )
 from bps.transcoder.io import (
@@ -533,8 +534,8 @@ class BIOMASSL2aProductWriter:
             )
             atbd_doc_string = f"BIOMASS Above Ground Biomass Algorithms Theoretical Baseline Document (BPS_AGB_ATBD) {BPS_ATBD_AGB_VERSION}"
         if L2A_OUTPUT_PRODUCT_TFH in self.product_structure.schema_files[0]:
-            pfd_doc_string = "not provided"
-            ppd_doc_string = "not provided"
+            pfd_doc_string = BPS_PFD_TFH_VERSION
+            ppd_doc_string = "not available"
 
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
         xml4.text = pfd_doc_string
@@ -1416,6 +1417,17 @@ class BIOMASSL2aProductWriter:
             ncfile.acquisition_id_reference_image = (
                 self.product.main_ads_product.selected_reference_image.acquisition_id
             )
+        if self.product.product_type == L2A_OUTPUT_PRODUCT_FD:
+            ncfile.formatVersion = BPS_PFD_FD_VERSION
+
+        if self.product.product_type == L2A_OUTPUT_PRODUCT_FH:
+            ncfile.formatVersion = BPS_PFD_FH_VERSION
+
+        if self.product.product_type == L2A_OUTPUT_PRODUCT_GN:
+            ncfile.formatVersion = BPS_PFD_AGB_VERSION
+
+        if self.product.product_type == L2A_OUTPUT_PRODUCT_TFH:
+            ncfile.formatVersion = BPS_PFD_TFH_VERSION
 
         # DIMENSIONS:
         ncfile.createDimension("Latitude", len(self.product.measurement.latitude_vec))

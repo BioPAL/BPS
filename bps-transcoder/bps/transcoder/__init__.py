@@ -27,6 +27,7 @@ BPS_ATBD_AGB_VERSION = "V3.1.4"
 
 BPS_PFD_L1_VERSION = "V1.7.0"
 BPS_PFD_FH_VERSION = "V3.5.0"
+BPS_PFD_TFH_VERSION = "not available"
 BPS_PFD_FD_VERSION = "V3.5.0"
 BPS_PFD_AGB_VERSION = "V3.5.0"
 
@@ -41,7 +42,7 @@ PFD_VERSION_MAPPING: dict[ANNOTATION_VERSION, dict[ANNOTATION_LEVEL, str]] = {
         "l2a fh": BPS_PFD_FH_VERSION,
         "l2a fd": BPS_PFD_FD_VERSION,
         "l2a gn": BPS_PFD_AGB_VERSION,
-        "l2a tfh": BPS_PFD_FH_VERSION,
+        "l2a tfh": BPS_PFD_TFH_VERSION,
         "l2b fh": BPS_PFD_FH_VERSION,
         "l2b fd": BPS_PFD_FD_VERSION,
         "l2b agb": BPS_PFD_AGB_VERSION,
