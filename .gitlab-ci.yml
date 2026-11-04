@@ -36,10 +36,10 @@ workflow:
     - when: always
 
 variables:
-  L1_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/L1_executables_lnx_2026-0911-8f417634-c159c2e3.tgz"
-  L1_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/L1_executables_win_2026-0911-8f417634-c159c2e3.zip"
-  STACK_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/Stack_executables_lnx_2026-0911-8f417634.tgz"
-  STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-0911-8f417634.zip"
+  L1_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/L1_executables_lnx_2026-1103-d936c9cb-c159c2e3.tgz"
+  L1_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/L1_executables_win_2026-1103-d936c9cb-c159c2e3.zip"
+  STACK_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/Stack_executables_lnx_2026-1103-d936c9cb.tgz"
+  STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-1103-d936c9cb.zip"
 
 include:
   - project: "biomass/bps/ci-variables"
