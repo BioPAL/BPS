@@ -12,7 +12,7 @@ BPS Transcoder package
 
 from typing import Literal
 
-__version__ = "4.5.0.dev0"
+__version__ = "4.5.0"
 
 BPS_PPD_VERSION = "V3.1.0"
 

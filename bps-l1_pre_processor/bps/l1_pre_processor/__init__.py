@@ -10,4 +10,4 @@ Aresys L1 PreProcessor package
 ------------------------------
 """
 
-__version__ = "4.5.0.dev0"
+__version__ = "4.5.0"

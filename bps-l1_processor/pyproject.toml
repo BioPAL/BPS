@@ -15,10 +15,10 @@ dependencies = [
     "shapely",
     "pyproj",
     "netCDF4",
-    "bps-common==4.5.0.dev0",
-    "bps-l1_pre_processor==4.5.0.dev0",
-    "bps-l1_core_processor==4.5.0.dev0",
-    "bps-transcoder==4.5.0.dev0",
+    "bps-common==4.5.0",
+    "bps-l1_pre_processor==4.5.0",
+    "bps-l1_core_processor==4.5.0",
+    "bps-transcoder==4.5.0",
 ]
 dynamic = ["version"]
 classifiers = [

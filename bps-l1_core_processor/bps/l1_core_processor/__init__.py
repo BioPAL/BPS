@@ -10,4 +10,4 @@ Biomass L1 core processor
 -------------------------
 """
 
-__version__ = "4.5.0.dev0"
+__version__ = "4.5.0"
