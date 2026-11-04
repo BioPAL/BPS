@@ -90,10 +90,11 @@ test_installation:
   parallel:
     matrix:
       - TEST_NAME:
-          - L1-001
-          - L1F-001
-          - L2A-001
-          - STA-001
+          - L1F-001   # L1 Framing Processor installation and setup
+          - L1-001    # L1 Processor installation and setup
+          - STA-001   # Stack Processor installation and setup
+          - L2A-001   # L2a Processor installation and setup
+          # TODO: to be added those for L2B
   before_script:
     - !reference [.get_test_plan, before_script]
   extends:
@@ -105,7 +106,50 @@ test_installation:
     - job: bundle
       optional: true
 
-TEST-BPS-L1-003-009-010-011-024:
+ALL:
+  parallel:
+    matrix:
+      - TEST_NAME:
+          - ALL-001   # BPS processing chain execution (functional validation)
+          - ALL-002   # BPS processing chain execution (scientific validation)
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .variables_testplan
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+L1F_P:
+  parallel:
+    matrix:
+      - TEST_NAME:
+          - L1F-002   # Nominal L1 Framing Processor execution
+          - L1F-003   # Processing of data containing gaps
+  before_script:
+    - !reference [.get_test_plan, before_script]
+  extends:
+    - .testplan_enabled
+    - .variables_testplan
+    - .get_test_plan
+    - .tags_bps_ci_rocky8
+    - .run_test
+  needs:
+    - job: create_env
+    - job: bundle
+      optional: true
+
+L1_P__TEST-BPS-L1-003-009-010-011-024:
+          # - L1-003   # Nominal L1 Processor execution (Stripmap mode)
+          # - L1-009   # Analysis of L1 Pre-Processing step outputs
+          # - L1-010   # Analysis of L1 Core-Processing step outputs
+          # - L1-011   # Analysis of L1 Post-Processing step outputs
+          # - L1-024   # Processing time performances verification
   extends:
     - .testplan_enabled
     - .variables_testplan
@@ -138,36 +182,34 @@ TEST-BPS-L1-003-009-010-011-024:
     - job: bundle
       optional: true
 
-L1P:
+L1_P:
   parallel:
     matrix:
       - TEST_NAME:
-          - L1-002
-          - L1-005
-          - L1-006
-          - L1-007
-          - L1-012
-          - L1-013
-          - L1-014
-          - L1-015
-          - L1-016
-          - L1-018
-          - L1-019
-          - L1-020
-          - L1-021
-          - L1-022
-          - L1-023
-          - L1-025
-          - L1-026
-          - L1-027
-          - L1-028
-          - L1-029
-          - L1-031
-          - L1-032
-          - L1F-002
-          - L1F-003
-          - ALL-001
-          - ALL-002
+          - L1-002   # Minimal L1 Processor execution (Stripmap mode)
+          - L1-005   # Nominal L1 Processor execution (PARC mode)
+          - L1-006   # Processing of whole input L0 slice
+          - L1-007   # Processing of a selected ROI
+          - L1-012   # RFI mitigation (Time and Frequency domain approaches) verification
+          - L1-013   # Range compression (with various chirp sources) verification
+          - L1-014   # Extended swath processing verification
+          - L1-015   # Doppler Centroid estimation (Predefined, Geometry and Combined)
+          - L1-016   # Azimuth resampling (including PRF changes management) verification
+          - L1-017   # Ionosphere mitigation (slow- and high-varying cases) verification
+          # - L1-018   # Autofocus verification --> skipped, autofocus not activated in operations
+          - L1-019   # IRF analysis (on L1a and L1b) verification (ideal conditions)
+          - L1-020   # IRF analysis (on L1a and L1b) verification (in presence of RFI
+          - L1-021   # Phase preservation verification (ideal conditions)
+          - L1-022   # NESN verification (ideal conditions)
+          - L1-023   # NESN verification (in presence of RFI)
+          - L1-025   # Processing of degraded/corrupted input L0 slice
+          - L1-026   # Processing of incomplete input L0 slice/output L1 frame
+          - L1-027   # Processing without input L0 Monitoring product
+          - L1-028   # Processing with not-nominal input acquisition timeline and timing parameters
+          - L1-029   # Processing with not-nominal input auxiliary files and internal resources
+          - L1-031   # Processing of input L0 slice containing missing lines
+          - L1-032   # Processing of input L0 slice containing strong artefacts
+          # - L1-033   # Cross validation with GPP --> skipped, replaced by a dedicated TN
   before_script:
     - !reference [.get_test_plan, before_script]
   extends:
@@ -181,13 +223,25 @@ L1P:
     - job: bundle
       optional: true
 
-L1P_known_failure:
+STA_P:
   parallel:
     matrix:
       - TEST_NAME:
-          - L1-017
-          - L1-033
-  allow_failure: true
+          - STA-002   # Minimal Stack Processor execution (INT phase)
+          # - STA-003   # Nominal Stack Processor execution (TOM phase) --> skipped, requires manual execution for stop-and-resume check step
+          # - STA-004   # Multiple processing instances --> skipped, requires manual execution
+          - STA-005   # Primary image selection verification
+          - STA-006   # Coregistration (from geometry and from data) verification
+          - STA-010   # IRF analysis verification (ideal conditions)
+          # - STA-011   # Processing time performances verification --> skipped, hardware specific
+          - STA-012   # Processing of degraded/corrupted input L1 frame
+          - STA-013   # Processing of partial input L1 frame
+          - STA-014   # Processing of incomplete set of input L1 frames
+          # - STA-016   # IRF analysis verification (in presence of RFI and ionosphere and of baseline errors, independently) --> skipped, not expected to pass even in L1_P
+          - STA-017   # Processing of not-nominal set of input L1 frames
+          - STA-018   # Phase calibration by SKP verification
+          - STA-020   # DEM LUTs Upsampling
+          - STA-021   # Saving of SKP and IoS phase screen in NetCDF files
   before_script:
     - !reference [.get_test_plan, before_script]
   extends:
@@ -201,35 +255,8 @@ L1P_known_failure:
     - job: bundle
       optional: true
 
-STA:
-  parallel:
-    matrix:
-      # These STA tests are intentionally excluded:
-      #   TEST-BPS-STA-003: Stop-and-resume test, requires manual execution.
-      #   TEST-BPS-STA-004: Multiple instance test, requires manual execution.
-      #   TEST-BPS-STA-011: The runtime test, hardware specific.
-      #   TEST-BPS-STA-016: IRF test is not expected to pass due to L1_P.
-      - TEST_NAME:
-          - STA-002
-          - STA-005
-          - STA-006
-          - STA-010
-          - STA-012
-          - STA-013
-          - STA-014
-          - STA-017
-          - STA-018
-          - STA-020
-          - STA-021
-  before_script:
-    - !reference [.get_test_plan, before_script]
-  extends:
-    - .testplan_enabled
-    - .variables_testplan
-    - .get_test_plan
-    - .tags_bps_ci_rocky8
-    - .run_test
-  needs:
-    - job: create_env
-    - job: bundle
-      optional: true
+# L2A_P
+# TODO: to be added
+
+# L2B_*_P
+# TODO: to be added
