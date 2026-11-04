@@ -1,9 +1,16 @@
 # SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
 # SPDX-License-Identifier: Apache-2.0
-"""Collapsible PDF-style sidebar TOC and web-export PDF helpers for ATBD drafts."""
+"""Collapsible PDF-style sidebar TOC and web-export PDF helpers for ATBD drafts.
+
+Every ``science-guide/<folder>/`` with an ``index`` page is a web document: its
+chapters are the entries of the index toctree (the AGB keeps its historical
+``ATBD_CHAPTERS`` order when the toctree is unavailable). The authoritative PDF
+link comes from ``<folder>/targets.json`` (``pdf_url``) when present.
+"""
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -55,9 +62,35 @@ def _chapter_sections(doctree: nodes.document) -> list[dict[str, Any]]:
     return []
 
 
-def _build_atbd_sidebar_toc(env: Any) -> list[dict[str, Any]]:
+ATBD_PDF_URL = (
+    "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_ATBD_v3_1_4.pdf"
+)
+
+
+def _atbd_root(pagename: str) -> str | None:
+    parts = pagename.split("/")
+    if len(parts) >= 3 and parts[0] == "science-guide":
+        return "/".join(parts[:2])
+    return None
+
+
+def _root_meta(srcdir: str, root: str) -> dict[str, Any]:
+    path = Path(srcdir) / root / "targets.json"
+    if path.is_file():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {}
+
+
+def _chapters_of(env: Any, root: str) -> list[str]:
+    included = list(env.toctree_includes.get(f"{root}/index", []))
+    if included:
+        return included
+    return list(ATBD_CHAPTERS) if root == ATBD_ROOT else []
+
+
+def _build_atbd_sidebar_toc(env: Any, root: str = ATBD_ROOT) -> list[dict[str, Any]]:
     toc: list[dict[str, Any]] = []
-    for docname in ATBD_CHAPTERS:
+    for docname in _chapters_of(env, root):
         if docname not in env.titles:
             continue
         doctree = env.get_doctree(docname)
@@ -71,8 +104,12 @@ def _build_atbd_sidebar_toc(env: Any) -> list[dict[str, Any]]:
     return toc
 
 
-def _atbd_pdf_path(app: Any) -> Path:
-    return Path(app.srcdir) / "_static" / "pdf" / ATBD_PDF_FILENAME
+def _pdf_filename(root: str) -> str:
+    return f"{root.rsplit('/', 1)[-1]}.pdf"
+
+
+def _atbd_pdf_path(app: Any, root: str = ATBD_ROOT) -> Path:
+    return Path(app.srcdir) / "_static" / "pdf" / _pdf_filename(root)
 
 
 class atbd_pdf_export(nodes.General, nodes.Element):
@@ -89,10 +126,13 @@ class AtbdPdfExportDirective(SphinxDirective):
 
 
 def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
-    pdf_path = _atbd_pdf_path(self.builder.app)
+    root = _atbd_root(self.builder.current_docname) or ATBD_ROOT
+    pdf_name = _pdf_filename(root)
+    official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
+    pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
         url = self.builder.get_relative_uri(
-            self.builder.current_docname, f"_static/pdf/{ATBD_PDF_FILENAME}"
+            self.builder.current_docname, f"_static/pdf/{pdf_name}"
         )
         self.body.append(
             '<div class="admonition tip">'
@@ -103,7 +143,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             "(generated from the same MyST source as this website).</p>"
             "<p>The "
             '<a class="reference external" '
-            'href="https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_ATBD_v3_1_4.pdf">'
+            f'href="{official}">'
             "official archival PDF</a> on biomass-disc.info remains authoritative "
             "until Aresys and ESA approve this web conversion.</p>"
             "</div>"
@@ -114,7 +154,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             '<p class="admonition-title">PDF export</p>'
             f"<p>Build the web-export PDF from the <code>docs/</code> directory with "
             f"<code>{ATBD_PDF_BUILD_CMD}</code> (requires TeX Live or MacTeX). "
-            f"The file is written to <code>_static/pdf/{ATBD_PDF_FILENAME}</code> "
+            f"The file is written to <code>_static/pdf/{pdf_name}</code> "
             "and linked here once generated.</p>"
             "</div>"
         )
@@ -132,31 +172,30 @@ def _inject_atbd_sidebar_toc(
     context: dict[str, Any],
     doctree: nodes.document,
 ) -> None:
-    if not pagename.startswith(ATBD_ROOT):
+    root = _atbd_root(pagename)
+    if root is None:
         return
-    cache_key = "_atbd_sidebar_toc_cache"
-    if not hasattr(app.env, cache_key):
-        setattr(app.env, cache_key, _build_atbd_sidebar_toc(app.env))
-    context["atbd_sidebar_toc"] = getattr(app.env, cache_key)
+    # rebuilt per page from the current environment (cheap; never pickled stale)
+    context["atbd_sidebar_toc"] = _build_atbd_sidebar_toc(app.env, root)
     context["atbd_sidebar_current"] = pagename
-    index_doc = f"{ATBD_ROOT}/index"
+    index_doc = f"{root}/index"
     context["atbd_index_docname"] = index_doc
     context["atbd_index_title"] = (
         app.env.titles[index_doc].astext()
         if index_doc in app.env.titles
         else "Above-Ground Biomass Product ATBD"
     )
-    pdf_path = _atbd_pdf_path(app)
+    pdf_path = _atbd_pdf_path(app, root)
     if pdf_path.is_file():
         context["atbd_pdf_url"] = app.builder.get_relative_uri(
-            pagename, f"_static/pdf/{ATBD_PDF_FILENAME}"
+            pagename, f"_static/pdf/{_pdf_filename(root)}"
         )
     else:
         context["atbd_pdf_url"] = None
 
 
 def _silence_sidebar_wildcard_warnings(_app: Any, _config: Any) -> None:
-    """ATBD pages intentionally match both ** and science-guide/atbd-l2-agb/*."""
+    """ATBD pages intentionally match both ** and science-guide/*/*."""
     import logging
 
     class _Filter(logging.Filter):
