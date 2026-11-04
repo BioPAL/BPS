@@ -115,7 +115,15 @@ def version_update(session: nox.Session) -> None:
     session.log(f"Bumping version from {current_version} to {new_version}")
 
     def relevant_file(path: Path) -> bool:
-        return path.suffix in [".py", ".toml", ".yaml"]
+        if any(path.parts[index : index + 2] == ("transcoder", "io") for index in range(len(path.parts) - 1)):
+            return False
+        if path.name == "__init__.py":
+            return True
+        if path.name == "pyproject.toml":
+            return True
+        if path.name == "meta.yaml":
+            return True
+        return False
 
     def relevant_dir(path: Path) -> bool:
         name = path.resolve().name
@@ -125,9 +133,13 @@ def version_update(session: nox.Session) -> None:
     for file in walk_with_filter(Path.cwd(), relevant_file=relevant_file, relevant_dir=relevant_dir):
         text = file.read_text(encoding="utf-8")
         if current_version in text:
+            new_text = text.replace(current_version, new_version)
+            if new_text == text:
+                session.log(f"No version update needed in {file}")
+                continue
             updated_files += 1
             session.log(f"Updating version in {file}")
-            file.write_text(text.replace(current_version, new_version), encoding="utf-8")
+            file.write_text(new_text, encoding="utf-8")
     session.log(f"{updated_files} files updated")
 
     new_version_bps = get_version_in_bps_format(new_version)
@@ -142,8 +154,12 @@ def version_update(session: nox.Session) -> None:
         text = file.read_text(encoding="utf-8")
         if current_version_bps in text:
             updated_files += 1
+            new_text = text.replace(current_version_bps, new_version_bps)
+            if text == new_text:
+                session.log(f"No BPS version update needed in {file}")
+                continue
             session.log(f"Updating BPS version in {file}")
-            file.write_text(text.replace(current_version_bps, new_version_bps), encoding="utf-8")
+            file.write_text(new_text, encoding="utf-8")
     session.log(f"{updated_files} files updated")
 
     with session.chdir("bps-task-tables"):
