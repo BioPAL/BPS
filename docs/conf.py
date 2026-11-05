@@ -5,9 +5,11 @@
 # Theme: PyData Sphinx Theme (same family as docs.xarray.dev).
 # Source: Markdown via MyST parser.
 
+import importlib.util
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, os.path.abspath("_ext"))
 
@@ -33,7 +35,12 @@ extensions = [
     "science_guide_nav",  # Science Guide hub: ATBD list sidebar (not chapter tree)
     "bps_version",  # Latest bps-v* tag for homepage version badge
     "meeting_status",  # Status badge from presentations/<deck>/meeting.yaml
+    "atbd_pdf_layout",  # PDF export: front matter of the ATBD/PFD (LaTeX only)
 ]
+# LaTeX rendering of ATBD/PFD content (figures, tables, cross-references):
+# optional, the build works without it.
+if importlib.util.find_spec("atbd_latex_content") is not None:
+    extensions.append("atbd_latex_content")
 
 # Tell Sphinx that .md files exist alongside .rst
 source_suffix = {
@@ -238,42 +245,15 @@ html_css_files = [
 
 templates_path = ["_templates"]
 
-# Single-ATBD PDF export (make atbd-pdf ATBD=atbd-l2-agb).
+# Single-document PDF export of the Science Guide (ATBD / PFD), e.g.
+# SPHINX_ATBD_PDF=atbd-l2-agb (make atbd-pdf ATBD=atbd-l2-agb).
+# Cover page, header/footer and front matter mimic the ESA / Aresys originals:
+# see _ext/atbd_pdf_layout.py and _templates/latex/atbdlayout.sty.
 _sphinx_atbd_pdf = os.environ.get("SPHINX_ATBD_PDF")
 if _sphinx_atbd_pdf:
-    _atbd_doc = _sphinx_atbd_pdf.removesuffix("/index").removesuffix("/")
-    if _atbd_doc.startswith("science-guide/"):
-        _atbd_doc = _atbd_doc.removeprefix("science-guide/")
-    _atbd_latex_stem = _atbd_doc.split("/")[-1]
-    _atbd_latex_titles = {
-        "atbd-l2-agb": "Above-Ground Biomass Product ATBD (BioPAL web export)",
-    }
-    _atbd_latex_title = _atbd_latex_titles.get(_atbd_latex_stem, "BioPAL ATBD")
-    latex_documents = [
-        (
-            f"science-guide/{_atbd_doc}/index",
-            f"{_atbd_latex_stem}.tex",
-            _atbd_latex_title,
-            author,
-            "manual",
-        ),
-    ]
-    latex_engine = "xelatex"
-    latex_elements = {
-        "papersize": "a4paper",
-        "pointsize": "11pt",
-        # XeLaTeX + DejaVu handles Unicode math symbols in ATBD body text.
-        "fontpkg": "",
-        "preamble": r"""
-\usepackage{fontspec}
-\setmainfont{DejaVu Serif}[Scale=0.95]
-\setmonofont{DejaVu Sans Mono}[Scale=0.85]
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{hyperref}
-""",
-    }
-    # Mermaid diagrams need mermaid-cli (mmdc) and a headless browser; they are
-    # skipped with a warning when unavailable. Re-run `make atbd-pdf` after
-    # installing mmdc for complete figure coverage.
-    mermaid_output_format = "png"
+    from atbd_pdf_layout import latex_config
+    from bps_version import resolve_bps_release
+
+    _docs_dir = Path(__file__).resolve().parent
+    _bps_display_version, _ = resolve_bps_release(docs_dir=_docs_dir)
+    globals().update(latex_config(_docs_dir, _sphinx_atbd_pdf, _bps_display_version))
