@@ -1,0 +1,39 @@
+{
+ "slug": "agb-pfd",
+ "family": "pfd",
+ "doc_code": "BIO-BPS-AGBPFD-ARE-010257",
+ "flavor": "bps",
+ "bps_slug": "pfd-l2-agb",
+ "manifest": null,
+ "version": "3.4.0",
+ "title": "BIOMASS Above Ground Biomass Products Format Specification",
+ "source": "BPS_AGB_PFD_v3_4_0.docx",
+ "source_sha256": "6d7997d1ff636524acc3c6f641b480c69a430bd3242adcbf55195ac9c95993ca",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "PASS",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 42,
+  "paragraphs": 341,
+  "list_items": 155,
+  "tables": 68,
+  "figures": 23,
+  "equations": 0,
+  "captions": 91
+ }
+}

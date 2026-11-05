@@ -1,0 +1,39 @@
+{
+ "slug": "fd-pfd",
+ "family": "pfd",
+ "doc_code": "BIO-BPS- FDPFD-ARE-010258",
+ "flavor": "bps",
+ "bps_slug": "pfd-l2-fd",
+ "manifest": null,
+ "version": "3.4.0",
+ "title": "BIOMASS Forest Disturbance Products Format Specification",
+ "source": "BPS_FD_PFD_v3_4_0.docx",
+ "source_sha256": "8287bdd97138aa52c761d13795f69ca90d559608913c9dde9de4e74070c6d95d",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "PASS",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 41,
+  "paragraphs": 417,
+  "list_items": 163,
+  "tables": 53,
+  "figures": 22,
+  "equations": 0,
+  "captions": 75
+ }
+}

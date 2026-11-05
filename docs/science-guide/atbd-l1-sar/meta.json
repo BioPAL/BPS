@@ -1,0 +1,39 @@
+{
+ "slug": "l1-sar-atbd",
+ "family": "atbd",
+ "doc_code": "BIO-BPS-L1-SAR-ATBD-ARE-010165",
+ "flavor": "bps",
+ "bps_slug": "atbd-l1-sar",
+ "manifest": null,
+ "version": "1.2.4",
+ "title": "BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document",
+ "source": "BPS_L1_SAR_ATBD_v1_2_4.docx",
+ "source_sha256": "b84379a9befde0623f6bd537aced849b4e2118871134a55c90065fe755287c93",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "FAIL",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "FAIL",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 111,
+  "paragraphs": 676,
+  "list_items": 581,
+  "tables": 88,
+  "figures": 43,
+  "equations": 210,
+  "captions": 42
+ }
+}

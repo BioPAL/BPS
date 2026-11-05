@@ -1,0 +1,1625 @@
+{
+ "doc": "science-guide/atbd-l1-sar",
+ "title": "BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document",
+ "short_title": "L1 SAR ATBD",
+ "doc_code": "BIO-BPS-L1-SAR-ATBD-ARE-010165",
+ "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_SAR_ATBD_v1_2_4.pdf",
+ "targets": {
+  "ad:1": {
+   "file": "01-introduction",
+   "anchor": "ad1"
+  },
+  "ad:2": {
+   "file": "01-introduction",
+   "anchor": "ad2"
+  },
+  "ad:3": {
+   "file": "01-introduction",
+   "anchor": "ad3"
+  },
+  "ad:4": {
+   "file": "01-introduction",
+   "anchor": "ad4"
+  },
+  "ad:5": {
+   "file": "01-introduction",
+   "anchor": "ad5"
+  },
+  "ad:6": {
+   "file": "01-introduction",
+   "anchor": "ad6"
+  },
+  "eq:3.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-1"
+  },
+  "eq:3.10": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-10"
+  },
+  "eq:3.11": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-11"
+  },
+  "eq:3.12": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-12"
+  },
+  "eq:3.13": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-13"
+  },
+  "eq:3.14": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-14"
+  },
+  "eq:3.15": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-15"
+  },
+  "eq:3.16": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-16"
+  },
+  "eq:3.17": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-17"
+  },
+  "eq:3.18": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-18"
+  },
+  "eq:3.19": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-19"
+  },
+  "eq:3.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-2"
+  },
+  "eq:3.20": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-20"
+  },
+  "eq:3.21": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-21"
+  },
+  "eq:3.22": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-22"
+  },
+  "eq:3.23": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-23"
+  },
+  "eq:3.24": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-24"
+  },
+  "eq:3.25": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-25"
+  },
+  "eq:3.26": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-26"
+  },
+  "eq:3.27": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-27"
+  },
+  "eq:3.28": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-28"
+  },
+  "eq:3.29": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-29"
+  },
+  "eq:3.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-3"
+  },
+  "eq:3.30": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-30"
+  },
+  "eq:3.31": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-31"
+  },
+  "eq:3.32": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-32"
+  },
+  "eq:3.33": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-33"
+  },
+  "eq:3.34": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-34"
+  },
+  "eq:3.35": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-35"
+  },
+  "eq:3.36": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-36"
+  },
+  "eq:3.37": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-37"
+  },
+  "eq:3.38": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-38"
+  },
+  "eq:3.39": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-39"
+  },
+  "eq:3.4": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-4"
+  },
+  "eq:3.40": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-40"
+  },
+  "eq:3.41": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-41"
+  },
+  "eq:3.42": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-42"
+  },
+  "eq:3.43": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-43"
+  },
+  "eq:3.44": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-44"
+  },
+  "eq:3.45": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-45"
+  },
+  "eq:3.46": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-46"
+  },
+  "eq:3.47": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-47"
+  },
+  "eq:3.48": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-48"
+  },
+  "eq:3.49": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-49"
+  },
+  "eq:3.5": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-5"
+  },
+  "eq:3.6": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-6"
+  },
+  "eq:3.7": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-7"
+  },
+  "eq:3.8": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-8"
+  },
+  "eq:3.9": {
+   "file": "03-l1-pre-processing",
+   "anchor": "equation-eq-atbd-l1-sar-3-9"
+  },
+  "eq:4.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-1"
+  },
+  "eq:4.10": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-10"
+  },
+  "eq:4.100": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-100"
+  },
+  "eq:4.101": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-101"
+  },
+  "eq:4.102": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-102"
+  },
+  "eq:4.103": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-103"
+  },
+  "eq:4.104": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-104"
+  },
+  "eq:4.105": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-105"
+  },
+  "eq:4.106": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-106"
+  },
+  "eq:4.107": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-107"
+  },
+  "eq:4.108": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-108"
+  },
+  "eq:4.109": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-109"
+  },
+  "eq:4.11": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-11"
+  },
+  "eq:4.110": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-110"
+  },
+  "eq:4.111": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-111"
+  },
+  "eq:4.112": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-112"
+  },
+  "eq:4.113": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-113"
+  },
+  "eq:4.114": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-114"
+  },
+  "eq:4.115": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-115"
+  },
+  "eq:4.116": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-116"
+  },
+  "eq:4.117": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-117"
+  },
+  "eq:4.118": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-118"
+  },
+  "eq:4.119": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-119"
+  },
+  "eq:4.12": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-12"
+  },
+  "eq:4.120": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-120"
+  },
+  "eq:4.121": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-121"
+  },
+  "eq:4.122": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-122"
+  },
+  "eq:4.123": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-123"
+  },
+  "eq:4.124": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-124"
+  },
+  "eq:4.125": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-125"
+  },
+  "eq:4.126": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-126"
+  },
+  "eq:4.127": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-127"
+  },
+  "eq:4.128": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-128"
+  },
+  "eq:4.129": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-129"
+  },
+  "eq:4.13": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-13"
+  },
+  "eq:4.130": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-130"
+  },
+  "eq:4.131": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-131"
+  },
+  "eq:4.132": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-132"
+  },
+  "eq:4.133": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-133"
+  },
+  "eq:4.134": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-134"
+  },
+  "eq:4.135": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-135"
+  },
+  "eq:4.136": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-136"
+  },
+  "eq:4.137": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-137"
+  },
+  "eq:4.138": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-138"
+  },
+  "eq:4.139": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-139"
+  },
+  "eq:4.14": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-14"
+  },
+  "eq:4.140": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-140"
+  },
+  "eq:4.141": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-141"
+  },
+  "eq:4.142": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-142"
+  },
+  "eq:4.143": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-143"
+  },
+  "eq:4.144": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-144"
+  },
+  "eq:4.145": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-145"
+  },
+  "eq:4.146": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-146"
+  },
+  "eq:4.147": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-147"
+  },
+  "eq:4.148": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-148"
+  },
+  "eq:4.149": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-149"
+  },
+  "eq:4.15": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-15"
+  },
+  "eq:4.150": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-150"
+  },
+  "eq:4.151": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-151"
+  },
+  "eq:4.152": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-152"
+  },
+  "eq:4.153": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-153"
+  },
+  "eq:4.16": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-16"
+  },
+  "eq:4.17": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-17"
+  },
+  "eq:4.18": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-18"
+  },
+  "eq:4.19": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-19"
+  },
+  "eq:4.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-2"
+  },
+  "eq:4.20": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-20"
+  },
+  "eq:4.21": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-21"
+  },
+  "eq:4.22": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-22"
+  },
+  "eq:4.23": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-23"
+  },
+  "eq:4.24": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-24"
+  },
+  "eq:4.25": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-25"
+  },
+  "eq:4.26": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-26"
+  },
+  "eq:4.27": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-27"
+  },
+  "eq:4.28": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-28"
+  },
+  "eq:4.29": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-29"
+  },
+  "eq:4.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-3"
+  },
+  "eq:4.30": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-30"
+  },
+  "eq:4.31": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-31"
+  },
+  "eq:4.32": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-32"
+  },
+  "eq:4.33": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-33"
+  },
+  "eq:4.34": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-34"
+  },
+  "eq:4.35": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-35"
+  },
+  "eq:4.36": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-36"
+  },
+  "eq:4.37": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-37"
+  },
+  "eq:4.38": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-38"
+  },
+  "eq:4.39": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-39"
+  },
+  "eq:4.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-4"
+  },
+  "eq:4.40": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-40"
+  },
+  "eq:4.41": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-41"
+  },
+  "eq:4.42": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-42"
+  },
+  "eq:4.43": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-43"
+  },
+  "eq:4.44": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-44"
+  },
+  "eq:4.45": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-45"
+  },
+  "eq:4.46": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-46"
+  },
+  "eq:4.47": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-47"
+  },
+  "eq:4.48": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-48"
+  },
+  "eq:4.49": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-49"
+  },
+  "eq:4.5": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-5"
+  },
+  "eq:4.50": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-50"
+  },
+  "eq:4.51": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-51"
+  },
+  "eq:4.52": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-52"
+  },
+  "eq:4.53": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-53"
+  },
+  "eq:4.54": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-54"
+  },
+  "eq:4.55": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-55"
+  },
+  "eq:4.56": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-56"
+  },
+  "eq:4.57": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-57"
+  },
+  "eq:4.58": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-58"
+  },
+  "eq:4.59": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-59"
+  },
+  "eq:4.6": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-6"
+  },
+  "eq:4.60": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-60"
+  },
+  "eq:4.61": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-61"
+  },
+  "eq:4.62": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-62"
+  },
+  "eq:4.63": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-63"
+  },
+  "eq:4.64": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-64"
+  },
+  "eq:4.65": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-65"
+  },
+  "eq:4.66": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-66"
+  },
+  "eq:4.67": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-67"
+  },
+  "eq:4.68": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-68"
+  },
+  "eq:4.69": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-69"
+  },
+  "eq:4.7": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-7"
+  },
+  "eq:4.70": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-70"
+  },
+  "eq:4.71": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-71"
+  },
+  "eq:4.72": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-72"
+  },
+  "eq:4.73": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-73"
+  },
+  "eq:4.74": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-74"
+  },
+  "eq:4.75": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-75"
+  },
+  "eq:4.76": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-76"
+  },
+  "eq:4.77": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-77"
+  },
+  "eq:4.78": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-78"
+  },
+  "eq:4.79": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-79"
+  },
+  "eq:4.8": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-8"
+  },
+  "eq:4.80": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-80"
+  },
+  "eq:4.81": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-81"
+  },
+  "eq:4.82": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-82"
+  },
+  "eq:4.83": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-83"
+  },
+  "eq:4.84": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-84"
+  },
+  "eq:4.85": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-85"
+  },
+  "eq:4.86": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-86"
+  },
+  "eq:4.87": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-87"
+  },
+  "eq:4.88": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-88"
+  },
+  "eq:4.89": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-89"
+  },
+  "eq:4.9": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-9"
+  },
+  "eq:4.90": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-90"
+  },
+  "eq:4.91": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-91"
+  },
+  "eq:4.92": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-92"
+  },
+  "eq:4.93": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-93"
+  },
+  "eq:4.94": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-94"
+  },
+  "eq:4.95": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-95"
+  },
+  "eq:4.96": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-96"
+  },
+  "eq:4.97": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-97"
+  },
+  "eq:4.98": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-98"
+  },
+  "eq:4.99": {
+   "file": "04-l1-core-processing",
+   "anchor": "equation-eq-atbd-l1-sar-4-99"
+  },
+  "eq:6.1": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "equation-eq-atbd-l1-sar-6-1"
+  },
+  "eq:6.2": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "equation-eq-atbd-l1-sar-6-2"
+  },
+  "eq:6.3": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "equation-eq-atbd-l1-sar-6-3"
+  },
+  "fig:1": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "fig-atbd-l1-sar-1"
+  },
+  "fig:10": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-10"
+  },
+  "fig:11": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-11"
+  },
+  "fig:12": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-12"
+  },
+  "fig:13": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-13"
+  },
+  "fig:14": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-14"
+  },
+  "fig:15": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-15"
+  },
+  "fig:16": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-16"
+  },
+  "fig:17": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-17"
+  },
+  "fig:18": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-18"
+  },
+  "fig:19": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-19"
+  },
+  "fig:2": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "fig-atbd-l1-sar-2"
+  },
+  "fig:20": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-20"
+  },
+  "fig:21": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-21"
+  },
+  "fig:22": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-22"
+  },
+  "fig:23": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-23"
+  },
+  "fig:24": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-24"
+  },
+  "fig:25": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-25"
+  },
+  "fig:26": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-26"
+  },
+  "fig:27": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-27"
+  },
+  "fig:28": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-28"
+  },
+  "fig:29": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-29"
+  },
+  "fig:3": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "fig-atbd-l1-sar-3"
+  },
+  "fig:30": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-30"
+  },
+  "fig:31": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-31"
+  },
+  "fig:32": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-32"
+  },
+  "fig:33": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-33"
+  },
+  "fig:34": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-34"
+  },
+  "fig:35": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-35"
+  },
+  "fig:36": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-36"
+  },
+  "fig:37": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-37"
+  },
+  "fig:38": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-38"
+  },
+  "fig:39": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-39"
+  },
+  "fig:4": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "fig-atbd-l1-sar-4"
+  },
+  "fig:5": {
+   "file": "03-l1-pre-processing",
+   "anchor": "fig-atbd-l1-sar-5"
+  },
+  "fig:6": {
+   "file": "03-l1-pre-processing",
+   "anchor": "fig-atbd-l1-sar-6"
+  },
+  "fig:7": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-7"
+  },
+  "fig:8": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-8"
+  },
+  "fig:9": {
+   "file": "04-l1-core-processing",
+   "anchor": "fig-atbd-l1-sar-9"
+  },
+  "rd:1": {
+   "file": "01-introduction",
+   "anchor": "rd1"
+  },
+  "rd:10": {
+   "file": "01-introduction",
+   "anchor": "rd10"
+  },
+  "rd:11": {
+   "file": "01-introduction",
+   "anchor": "rd11"
+  },
+  "rd:12": {
+   "file": "01-introduction",
+   "anchor": "rd12"
+  },
+  "rd:13": {
+   "file": "01-introduction",
+   "anchor": "rd13"
+  },
+  "rd:14": {
+   "file": "01-introduction",
+   "anchor": "rd14"
+  },
+  "rd:15": {
+   "file": "01-introduction",
+   "anchor": "rd15"
+  },
+  "rd:16": {
+   "file": "01-introduction",
+   "anchor": "rd16"
+  },
+  "rd:17": {
+   "file": "01-introduction",
+   "anchor": "rd17"
+  },
+  "rd:18": {
+   "file": "01-introduction",
+   "anchor": "rd18"
+  },
+  "rd:19": {
+   "file": "01-introduction",
+   "anchor": "rd19"
+  },
+  "rd:2": {
+   "file": "01-introduction",
+   "anchor": "rd2"
+  },
+  "rd:20": {
+   "file": "01-introduction",
+   "anchor": "rd20"
+  },
+  "rd:21": {
+   "file": "01-introduction",
+   "anchor": "rd21"
+  },
+  "rd:22": {
+   "file": "01-introduction",
+   "anchor": "rd22"
+  },
+  "rd:23": {
+   "file": "01-introduction",
+   "anchor": "rd23"
+  },
+  "rd:24": {
+   "file": "01-introduction",
+   "anchor": "rd24"
+  },
+  "rd:25": {
+   "file": "01-introduction",
+   "anchor": "rd25"
+  },
+  "rd:26": {
+   "file": "01-introduction",
+   "anchor": "rd26"
+  },
+  "rd:27": {
+   "file": "01-introduction",
+   "anchor": "rd27"
+  },
+  "rd:28": {
+   "file": "01-introduction",
+   "anchor": "rd28"
+  },
+  "rd:29": {
+   "file": "01-introduction",
+   "anchor": "rd29"
+  },
+  "rd:3": {
+   "file": "01-introduction",
+   "anchor": "rd3"
+  },
+  "rd:30": {
+   "file": "01-introduction",
+   "anchor": "rd30"
+  },
+  "rd:31": {
+   "file": "01-introduction",
+   "anchor": "rd31"
+  },
+  "rd:32": {
+   "file": "01-introduction",
+   "anchor": "rd32"
+  },
+  "rd:33": {
+   "file": "01-introduction",
+   "anchor": "rd33"
+  },
+  "rd:34": {
+   "file": "01-introduction",
+   "anchor": "rd34"
+  },
+  "rd:35": {
+   "file": "01-introduction",
+   "anchor": "rd35"
+  },
+  "rd:36": {
+   "file": "01-introduction",
+   "anchor": "rd36"
+  },
+  "rd:37": {
+   "file": "01-introduction",
+   "anchor": "rd37"
+  },
+  "rd:38": {
+   "file": "01-introduction",
+   "anchor": "rd38"
+  },
+  "rd:39": {
+   "file": "01-introduction",
+   "anchor": "rd39"
+  },
+  "rd:4": {
+   "file": "01-introduction",
+   "anchor": "rd4"
+  },
+  "rd:40": {
+   "file": "01-introduction",
+   "anchor": "rd40"
+  },
+  "rd:5": {
+   "file": "01-introduction",
+   "anchor": "rd5"
+  },
+  "rd:6": {
+   "file": "01-introduction",
+   "anchor": "rd6"
+  },
+  "rd:7": {
+   "file": "01-introduction",
+   "anchor": "rd7"
+  },
+  "rd:8": {
+   "file": "01-introduction",
+   "anchor": "rd8"
+  },
+  "rd:9": {
+   "file": "01-introduction",
+   "anchor": "rd9"
+  },
+  "sec:1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1"
+  },
+  "sec:1.1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-1"
+  },
+  "sec:1.2": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-2"
+  },
+  "sec:1.3": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-3"
+  },
+  "sec:1.4": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-4"
+  },
+  "sec:1.5": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-5"
+  },
+  "sec:1.6": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-sar-1-6"
+  },
+  "sec:2": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2"
+  },
+  "sec:2.1": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-1"
+  },
+  "sec:2.2": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-2"
+  },
+  "sec:2.3": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3"
+  },
+  "sec:2.3.1": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-1"
+  },
+  "sec:2.3.2": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2"
+  },
+  "sec:2.3.2.1": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2-1"
+  },
+  "sec:2.3.2.2": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2-2"
+  },
+  "sec:2.3.2.3": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2-3"
+  },
+  "sec:2.3.2.4": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2-4"
+  },
+  "sec:2.3.2.5": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-2-5"
+  },
+  "sec:2.3.3": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-3-3"
+  },
+  "sec:2.4": {
+   "file": "02-bps-and-l1-processor-overview",
+   "anchor": "sec-atbd-l1-sar-2-4"
+  },
+  "sec:3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3"
+  },
+  "sec:3.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-1"
+  },
+  "sec:3.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2"
+  },
+  "sec:3.2.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2-1"
+  },
+  "sec:3.2.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2-2"
+  },
+  "sec:3.2.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2-3"
+  },
+  "sec:3.2.4": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2-4"
+  },
+  "sec:3.2.5": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-2-5"
+  },
+  "sec:3.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3"
+  },
+  "sec:3.3.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-1"
+  },
+  "sec:3.3.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-2"
+  },
+  "sec:3.3.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-3"
+  },
+  "sec:3.3.4": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-4"
+  },
+  "sec:3.3.5": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-5"
+  },
+  "sec:3.3.6": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-6"
+  },
+  "sec:3.3.7": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-3-7"
+  },
+  "sec:3.4": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-4"
+  },
+  "sec:3.5": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-5"
+  },
+  "sec:3.6": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6"
+  },
+  "sec:3.6.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-1"
+  },
+  "sec:3.6.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-2"
+  },
+  "sec:3.6.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-3"
+  },
+  "sec:3.6.4": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-4"
+  },
+  "sec:3.6.4.1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-4-1"
+  },
+  "sec:3.6.4.2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-4-2"
+  },
+  "sec:3.6.4.3": {
+   "file": "03-l1-pre-processing",
+   "anchor": "sec-atbd-l1-sar-3-6-4-3"
+  },
+  "sec:4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4"
+  },
+  "sec:4.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-1"
+  },
+  "sec:4.1.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-1-1"
+  },
+  "sec:4.1.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-1-2"
+  },
+  "sec:4.1.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-1-3"
+  },
+  "sec:4.10": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10"
+  },
+  "sec:4.10.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-1"
+  },
+  "sec:4.10.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2"
+  },
+  "sec:4.10.2.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-1"
+  },
+  "sec:4.10.2.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-2"
+  },
+  "sec:4.10.2.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-3"
+  },
+  "sec:4.10.2.3.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-3-1"
+  },
+  "sec:4.10.2.3.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-3-2"
+  },
+  "sec:4.10.2.3.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-2-3-3"
+  },
+  "sec:4.10.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3"
+  },
+  "sec:4.10.3.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-1"
+  },
+  "sec:4.10.3.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-2"
+  },
+  "sec:4.10.3.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-3"
+  },
+  "sec:4.10.3.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-4"
+  },
+  "sec:4.10.3.5": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-5"
+  },
+  "sec:4.10.3.6": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-6"
+  },
+  "sec:4.10.3.7": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-3-7"
+  },
+  "sec:4.10.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-4"
+  },
+  "sec:4.10.5": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-5"
+  },
+  "sec:4.10.6": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-10-6"
+  },
+  "sec:4.11": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-11"
+  },
+  "sec:4.11.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-11-1"
+  },
+  "sec:4.11.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-11-2"
+  },
+  "sec:4.12": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-12"
+  },
+  "sec:4.13": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-13"
+  },
+  "sec:4.14": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-14"
+  },
+  "sec:4.15": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-15"
+  },
+  "sec:4.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2"
+  },
+  "sec:4.2.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-1"
+  },
+  "sec:4.2.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-2"
+  },
+  "sec:4.2.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-3"
+  },
+  "sec:4.2.3.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-3-1"
+  },
+  "sec:4.2.3.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-3-2"
+  },
+  "sec:4.2.3.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-3-3"
+  },
+  "sec:4.2.3.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-3-4"
+  },
+  "sec:4.2.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-2-4"
+  },
+  "sec:4.3": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-3"
+  },
+  "sec:4.3.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-3-1"
+  },
+  "sec:4.3.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-3-2"
+  },
+  "sec:4.4": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-4"
+  },
+  "sec:4.5": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-5"
+  },
+  "sec:4.6": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-6"
+  },
+  "sec:4.6.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-6-1"
+  },
+  "sec:4.6.2": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-6-2"
+  },
+  "sec:4.7": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-7"
+  },
+  "sec:4.7.1": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-7-1"
+  },
+  "sec:4.8": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-8"
+  },
+  "sec:4.9": {
+   "file": "04-l1-core-processing",
+   "anchor": "sec-atbd-l1-sar-4-9"
+  },
+  "sec:5": {
+   "file": "05-l1-post-processing",
+   "anchor": "sec-atbd-l1-sar-5"
+  },
+  "sec:5.1": {
+   "file": "05-l1-post-processing",
+   "anchor": "sec-atbd-l1-sar-5-1"
+  },
+  "sec:5.1.1": {
+   "file": "05-l1-post-processing",
+   "anchor": "sec-atbd-l1-sar-5-1-1"
+  },
+  "sec:6": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6"
+  },
+  "sec:6.1": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6-1"
+  },
+  "sec:6.2": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6-2"
+  },
+  "sec:6.3": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6-3"
+  },
+  "sec:6.4": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6-4"
+  },
+  "sec:6.5": {
+   "file": "06-ancillary-functions-and-parameters",
+   "anchor": "sec-atbd-l1-sar-6-5"
+  },
+  "sec:7": {
+   "file": "07-configurable-input-parameters",
+   "anchor": "sec-atbd-l1-sar-7"
+  },
+  "sec:8": {
+   "file": "08-open-points",
+   "anchor": "sec-atbd-l1-sar-8"
+  },
+  "sec:9": {
+   "file": "09-appendix-l1-framing-tool",
+   "anchor": "sec-atbd-l1-sar-9"
+  },
+  "tab:1": {
+   "file": "03-l1-pre-processing",
+   "anchor": "tab-atbd-l1-sar-1"
+  },
+  "tab:2": {
+   "file": "03-l1-pre-processing",
+   "anchor": "tab-atbd-l1-sar-2"
+  },
+  "tab:3": {
+   "file": "08-open-points",
+   "anchor": "tab-atbd-l1-sar-3"
+  }
+ }
+}
