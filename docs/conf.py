@@ -32,6 +32,7 @@ extensions = [
     "sphinxcontrib.bibtex",  # BibTeX bibliography (ATBD/PFD conversions)
     "atbd_sidebar_toc",  # PDF-style collapsible TOC in ATBD left sidebar
     "atbd_doc_refs",  # [ADn] / [RDn] / Fig.N / sec. / eq. links in the ATBD
+    "atbd_latex_content",  # Figures, tables, equations of the ATBDs in LaTeX/PDF
     "science_guide_nav",  # Science Guide hub: ATBD list sidebar (not chapter tree)
     "bps_version",  # Latest bps-v* tag for homepage version badge
     "meeting_status",  # Status badge from presentations/<deck>/meeting.yaml

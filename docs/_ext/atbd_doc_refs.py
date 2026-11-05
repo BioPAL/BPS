@@ -22,9 +22,14 @@ from typing import Any
 
 from docutils import nodes
 from sphinx.application import Sphinx
+from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.docutils import SphinxRole
 
 INTRO_DOC = "science-guide/atbd-l2-agb/01-introduction"
+
+# Node attributes holding the link target (ignored by the HTML writers).
+REFDOC_ATTR = "atbd_refdoc"
+REFANCHOR_ATTR = "atbd_refanchor"
 
 # PDF figure number -> (source document, HTML anchor id on the figure wrapper).
 FIGURE_TARGETS: dict[str, tuple[str, str]] = {
@@ -197,6 +202,40 @@ def _resolve(role: SphinxRole, kind: str, num: str,
     return table.get(num)
 
 
+def _reference(role: SphinxRole, label: str, target_doc: str, anchor: str) -> nodes.reference:
+    """Link to ``anchor`` in ``target_doc``.
+
+    The HTML ``refuri`` is kept as is; the target is also recorded on the node so
+    that non-HTML builders can turn it into an internal link (see
+    :class:`LatexInternalRefs`).
+    """
+    refuri = _doc_link_uri(role.env.docname, target_doc, anchor)
+    node = nodes.reference(role.rawtext, label, refuri=refuri, internal=True)
+    node[REFDOC_ATTR] = target_doc
+    node[REFANCHOR_ATTR] = anchor
+    return node
+
+
+class LatexInternalRefs(SphinxPostTransform):
+    """Point the role links at their in-document label for LaTeX/PDF builds.
+
+    The single LaTeX document labels every anchor as ``<docname>:<anchor>``;
+    the ``%<docname>#<anchor>`` URI form is the one the LaTeX writer turns into a
+    hyperref link. HTML builds keep their relative ``.html#anchor`` URIs.
+    """
+
+    default_priority = 50
+
+    def is_supported(self) -> bool:
+        return self.app.builder.format != "html"
+
+    def run(self, **kwargs: Any) -> None:
+        for node in self.document.findall(nodes.reference):
+            target_doc = node.get(REFDOC_ATTR)
+            if target_doc:
+                node["refuri"] = f"%{target_doc}#{node[REFANCHOR_ATTR]}"
+
+
 def _split_prefix(raw: str) -> tuple[str | None, str]:
     if "|" in raw:
         prefix, num = (part.strip() for part in raw.split("|", 1))
@@ -223,9 +262,7 @@ class _DocCodeRole(SphinxRole):
                 line=self.lineno,
             )
             return [], [msg]
-        refuri = _doc_link_uri(self.env.docname, *hit)
-        node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
-        return [node], []
+        return [_reference(self, label, *hit)], []
 
 
 class ADRole(_DocCodeRole):
@@ -248,9 +285,7 @@ class FigRole(SphinxRole):
             return [], [msg]
         target_doc, anchor = hit
         label = f"{prefix} {num}" if prefix else f"Fig.{num}"
-        refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
-        node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
-        return [node], []
+        return [_reference(self, label, target_doc, anchor)], []
 
 
 class SecRole(SphinxRole):
@@ -282,9 +317,7 @@ class SecRole(SphinxRole):
             return [], [msg]
 
         target_doc, anchor = hit
-        refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
-        node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
-        return [node], []
+        return [_reference(self, label, target_doc, anchor)], []
 
 
 class EqRole(SphinxRole):
@@ -314,9 +347,7 @@ class EqRole(SphinxRole):
             return [], [msg]
 
         target_doc, anchor = hit
-        refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
-        node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
-        return [node], []
+        return [_reference(self, label, target_doc, anchor)], []
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
@@ -325,6 +356,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_role("fig", FigRole())
     app.add_role("sec", SecRole())
     app.add_role("eq", EqRole(), override=True)
+    app.add_post_transform(LatexInternalRefs)
     return {
         "version": "1.0",
         "parallel_read_safe": True,
