@@ -1,11 +1,23 @@
 # SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
 # SPDX-License-Identifier: Apache-2.0
-"""Link [ADn] / [RDn] codes, Fig.N, sec. X.Y.Z, and eq. X.Y references in the ATBD."""
+"""Link [ADn] / [RDn] codes, Fig.N, sec. X.Y.Z, and eq. X.Y references in the ATBDs.
+
+Targets come from ``science-guide/<folder>/targets.json`` when the folder ships one
+(documents converted by esa-doc2open), otherwise from the hard-coded AGB tables
+below. ``targets.json``::
+
+    {"doc": "science-guide/atbd-l2-fh",
+     "targets": {"fig:3": {"file": "02-bps-fh-overview", "anchor": "fig-atbd-fh-3"},
+                 "rd:8": {"file": "01-introduction", "anchor": "rd8"}}}
+
+Every role also accepts an optional display prefix, ``{fig}`Figure|3```.
+"""
 
 from __future__ import annotations
 
+import json
 import os
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from docutils import nodes
@@ -140,6 +152,58 @@ def _intro_link_uri(from_docname: str, anchor: str) -> str:
     return _doc_link_uri(from_docname, INTRO_DOC, anchor)
 
 
+def _folder_of(docname: str) -> str | None:
+    parts = docname.split("/")
+    if len(parts) >= 3 and parts[0] == "science-guide":
+        return "/".join(parts[:2])
+    return None
+
+
+_TARGETS_CACHE: dict[str, tuple[float, dict[str, dict[str, str]] | None]] = {}
+
+
+def folder_targets(env: Any, docname: str) -> dict[str, dict[str, str]] | None:
+    """``targets`` of the document folder holding ``docname``, or None (AGB tables).
+
+    Cached per file modification time in a module dict (not in the pickled build
+    environment), so an incremental build always sees a regenerated targets.json.
+    """
+    folder = _folder_of(docname)
+    if folder is None:
+        return None
+    path = Path(env.srcdir) / folder / "targets.json"
+    if not path.is_file():
+        return None
+    env.note_dependency(str(path))
+    mtime = path.stat().st_mtime
+    hit = _TARGETS_CACHE.get(str(path))
+    if hit is None or hit[0] != mtime:
+        data = json.loads(path.read_text(encoding="utf-8")).get("targets")
+        _TARGETS_CACHE[str(path)] = hit = (mtime, data)
+    return hit[1]
+
+
+def _resolve(role: SphinxRole, kind: str, num: str,
+             table: dict[str, tuple[str, str]] | None) -> tuple[str, str] | None:
+    """(target docname, anchor) for ``kind:num``, from targets.json or ``table``."""
+    targets = folder_targets(role.env, role.env.docname)
+    if targets is not None:
+        hit = targets.get(f"{kind}:{num}")
+        if hit is None:
+            return None
+        return f"{_folder_of(role.env.docname)}/{hit['file']}", hit["anchor"]
+    if table is None:  # RD/AD of the AGB: introduction page
+        return INTRO_DOC, f"{kind}{num}"
+    return table.get(num)
+
+
+def _split_prefix(raw: str) -> tuple[str | None, str]:
+    if "|" in raw:
+        prefix, num = (part.strip() for part in raw.split("|", 1))
+        return prefix, num
+    return None, raw.strip()
+
+
 class _DocCodeRole(SphinxRole):
     prefix: str
 
@@ -152,8 +216,14 @@ class _DocCodeRole(SphinxRole):
             )
             return [], [msg]
         label = f"[{self.prefix.upper()}{num}]"
-        anchor = f"{self.prefix}{num}"
-        refuri = _intro_link_uri(self.env.docname, anchor)
+        hit = _resolve(self, self.prefix, num, None)
+        if hit is None:
+            msg = self.inliner.reporter.error(
+                f"Unknown {self.prefix.upper()} number: {self.text!r}",
+                line=self.lineno,
+            )
+            return [], [msg]
+        refuri = _doc_link_uri(self.env.docname, *hit)
         node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
         return [node], []
 
@@ -168,15 +238,16 @@ class RDRole(_DocCodeRole):
 
 class FigRole(SphinxRole):
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        num = self.text.strip()
-        if num not in FIGURE_TARGETS:
+        prefix, num = _split_prefix(self.text)
+        hit = _resolve(self, "fig", num, FIGURE_TARGETS)
+        if hit is None:
             msg = self.inliner.reporter.error(
                 f"Unknown figure number: {self.text!r}",
                 line=self.lineno,
             )
             return [], [msg]
-        target_doc, anchor = FIGURE_TARGETS[num]
-        label = f"Fig.{num}"
+        target_doc, anchor = hit
+        label = f"{prefix} {num}" if prefix else f"Fig.{num}"
         refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
         node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
         return [node], []
@@ -202,14 +273,15 @@ class SecRole(SphinxRole):
         else:
             label = f"{prefix} {num}"
 
-        if num not in SECTION_TARGETS:
+        hit = _resolve(self, "sec", num, SECTION_TARGETS)
+        if hit is None:
             msg = self.inliner.reporter.error(
                 f"Unknown section number: {num!r}",
                 line=self.lineno,
             )
             return [], [msg]
 
-        target_doc, anchor = SECTION_TARGETS[num]
+        target_doc, anchor = hit
         refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
         node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
         return [node], []
@@ -233,14 +305,15 @@ class EqRole(SphinxRole):
         else:
             label = f"{prefix} {num}"
 
-        if num not in EQUATION_TARGETS:
+        hit = _resolve(self, "eq", num, EQUATION_TARGETS)
+        if hit is None:
             msg = self.inliner.reporter.error(
                 f"Unknown equation number: {num!r}",
                 line=self.lineno,
             )
             return [], [msg]
 
-        target_doc, anchor = EQUATION_TARGETS[num]
+        target_doc, anchor = hit
         refuri = _doc_link_uri(self.env.docname, target_doc, anchor)
         node = nodes.reference(self.rawtext, label, refuri=refuri, internal=True)
         return [node], []

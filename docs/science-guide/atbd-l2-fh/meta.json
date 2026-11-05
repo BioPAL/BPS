@@ -1,0 +1,39 @@
+{
+ "slug": "fh-atbd",
+ "family": "atbd",
+ "doc_code": "BIO-BPS-FH-ATBD-ARE-10343",
+ "flavor": "bps",
+ "bps_slug": "atbd-l2-fh",
+ "manifest": null,
+ "version": "2.2.0",
+ "title": "BPS FH ATBD - Algorithms Theoretical Baseline Document",
+ "source": "BPS_FH_ATBD_v2_2_0.docx",
+ "source_sha256": "67efaa2dea5518bc3149e6b17f51ddd0206999dbe43cf92aa8c5e9b189544dac",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "PASS",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 74,
+  "paragraphs": 105,
+  "list_items": 44,
+  "tables": 19,
+  "figures": 14,
+  "equations": 41,
+  "captions": 14
+ }
+}

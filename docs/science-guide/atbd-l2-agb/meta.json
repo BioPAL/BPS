@@ -1,0 +1,39 @@
+{
+ "slug": "agb-atbd",
+ "family": "atbd",
+ "doc_code": "BIO-BPS-AGB-ATBD-ARE-024912",
+ "flavor": "bps",
+ "bps_slug": "atbd-l2-agb",
+ "manifest": null,
+ "version": "3.1.4",
+ "title": "BPS AGB ATBD - Algorithms Theoretical Baseline Document",
+ "source": "BPS_AGB_ATBD_v3_1_4.docx",
+ "source_sha256": "d9055900c12833b4dfc7d81e28088dc169f2bbd1e084b802d1a2969ee7f4039c",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "PASS",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "PASS",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 71,
+  "paragraphs": 179,
+  "list_items": 75,
+  "tables": 18,
+  "figures": 16,
+  "equations": 75,
+  "captions": 15
+ }
+}

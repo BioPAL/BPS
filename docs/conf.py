@@ -142,7 +142,7 @@ html_logo = "_static/logos/BioPAL_textonright.png"
 _secondary_sidebar_items = {
     "index": [],
     "**": ["page-toc", "edit-this-page"],
-    "science-guide/atbd-l2-agb/*": [
+    "science-guide/*/*": [
         "page-toc",
         "atbd-download-pdf.html",
         "edit-this-page",
@@ -224,7 +224,7 @@ html_sidebars = {
         "sidebar-collapse",
         "science-guide-atbd-nav.html",
     ],
-    "science-guide/atbd-l2-agb/*": [
+    "science-guide/*/*": [
         "sidebar-collapse",
         "atbd-sidebar-toc.html",
     ],

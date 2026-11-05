@@ -1,0 +1,39 @@
+{
+ "slug": "l1-stack-atbd",
+ "family": "atbd",
+ "doc_code": "BIO-BPS-L1-STACK-ATBD-ARE-010166",
+ "flavor": "bps",
+ "bps_slug": "atbd-l1-stack",
+ "manifest": null,
+ "version": "1.4.0",
+ "title": "BPS L1c Stack ATBD - Algorithms Theoretical Baseline Document",
+ "source": "BPS_L1_STACK_ATBD_v1_4_0.docx",
+ "source_sha256": "9d87e31a8a0f7cf0a6838d25db2683b1ff55d37dfcc02eaee129c1ba07d6dfe4",
+ "backend": "docx",
+ "license": "Apache-2.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-05",
+ "checks": {
+  "V1": "PASS",
+  "V2": "REVIEW",
+  "V3": "PASS",
+  "V4": "PASS",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 108,
+  "paragraphs": 293,
+  "list_items": 187,
+  "tables": 28,
+  "figures": 15,
+  "equations": 125,
+  "captions": 14
+ }
+}

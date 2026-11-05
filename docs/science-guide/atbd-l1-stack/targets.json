@@ -1,0 +1,1057 @@
+{
+ "doc": "science-guide/atbd-l1-stack",
+ "title": "BPS L1c Stack ATBD - Algorithms Theoretical Baseline Document",
+ "short_title": "L1 Stack ATBD",
+ "doc_code": "BIO-BPS-L1-STACK-ATBD-ARE-010166",
+ "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_STACK_ATBD_v1_4_0.pdf",
+ "targets": {
+  "ad:1": {
+   "file": "01-introduction",
+   "anchor": "ad1"
+  },
+  "eq:3.1": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-1"
+  },
+  "eq:3.10": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-10"
+  },
+  "eq:3.11": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-11"
+  },
+  "eq:3.12": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-12"
+  },
+  "eq:3.13": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-13"
+  },
+  "eq:3.14": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-14"
+  },
+  "eq:3.15": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-15"
+  },
+  "eq:3.16": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-16"
+  },
+  "eq:3.17": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-17"
+  },
+  "eq:3.18": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-18"
+  },
+  "eq:3.19": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-19"
+  },
+  "eq:3.2": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-2"
+  },
+  "eq:3.20": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-20"
+  },
+  "eq:3.21": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-21"
+  },
+  "eq:3.22": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-22"
+  },
+  "eq:3.23": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-23"
+  },
+  "eq:3.24": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-24"
+  },
+  "eq:3.25": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-25"
+  },
+  "eq:3.26": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-26"
+  },
+  "eq:3.27": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-27"
+  },
+  "eq:3.28": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-28"
+  },
+  "eq:3.29": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-29"
+  },
+  "eq:3.3": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-3"
+  },
+  "eq:3.30": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-30"
+  },
+  "eq:3.31": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-31"
+  },
+  "eq:3.32": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-32"
+  },
+  "eq:3.33": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-33"
+  },
+  "eq:3.34": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-34"
+  },
+  "eq:3.35": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-35"
+  },
+  "eq:3.36": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-36"
+  },
+  "eq:3.4": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-4"
+  },
+  "eq:3.5": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-5"
+  },
+  "eq:3.6": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-6"
+  },
+  "eq:3.7": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-7"
+  },
+  "eq:3.8": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-8"
+  },
+  "eq:3.9": {
+   "file": "03-pre-processing",
+   "anchor": "equation-eq-atbd-l1-stack-3-9"
+  },
+  "eq:4.1": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-1"
+  },
+  "eq:4.10": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-10"
+  },
+  "eq:4.11": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-11"
+  },
+  "eq:4.12": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-12"
+  },
+  "eq:4.13": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-13"
+  },
+  "eq:4.2": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-2"
+  },
+  "eq:4.3": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-3"
+  },
+  "eq:4.4": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-4"
+  },
+  "eq:4.5": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-5"
+  },
+  "eq:4.6": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-6"
+  },
+  "eq:4.7": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-7"
+  },
+  "eq:4.8": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-8"
+  },
+  "eq:4.9": {
+   "file": "04-stacking",
+   "anchor": "equation-eq-atbd-l1-stack-4-9"
+  },
+  "eq:5.1": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-1"
+  },
+  "eq:5.10": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-10"
+  },
+  "eq:5.11": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-11"
+  },
+  "eq:5.13": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-13"
+  },
+  "eq:5.14": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-14"
+  },
+  "eq:5.15": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-15"
+  },
+  "eq:5.16": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-16"
+  },
+  "eq:5.17": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-17"
+  },
+  "eq:5.18": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-18"
+  },
+  "eq:5.19": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-19"
+  },
+  "eq:5.2": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-2"
+  },
+  "eq:5.20": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-20"
+  },
+  "eq:5.21": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-21"
+  },
+  "eq:5.22": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-22"
+  },
+  "eq:5.23": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-23"
+  },
+  "eq:5.24": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-24"
+  },
+  "eq:5.25": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-25"
+  },
+  "eq:5.26": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-26"
+  },
+  "eq:5.27": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-27"
+  },
+  "eq:5.28": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-28"
+  },
+  "eq:5.29": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-29"
+  },
+  "eq:5.3": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-3"
+  },
+  "eq:5.30": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-30"
+  },
+  "eq:5.31": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-31"
+  },
+  "eq:5.32": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-32"
+  },
+  "eq:5.34": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-34"
+  },
+  "eq:5.35": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-35"
+  },
+  "eq:5.36": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-36"
+  },
+  "eq:5.37": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-37"
+  },
+  "eq:5.38": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-38"
+  },
+  "eq:5.39": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-39"
+  },
+  "eq:5.4": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-4"
+  },
+  "eq:5.40": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-40"
+  },
+  "eq:5.41": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-41"
+  },
+  "eq:5.42": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-42"
+  },
+  "eq:5.43": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-43"
+  },
+  "eq:5.46": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-46"
+  },
+  "eq:5.47": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-47"
+  },
+  "eq:5.48": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-48"
+  },
+  "eq:5.49": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-49"
+  },
+  "eq:5.5": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-5"
+  },
+  "eq:5.50": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-50"
+  },
+  "eq:5.51": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-51"
+  },
+  "eq:5.52": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-52"
+  },
+  "eq:5.53": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-53"
+  },
+  "eq:5.54": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-54"
+  },
+  "eq:5.55": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-55"
+  },
+  "eq:5.56": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-56"
+  },
+  "eq:5.57": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-57"
+  },
+  "eq:5.58": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-58"
+  },
+  "eq:5.59": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-59"
+  },
+  "eq:5.6": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-6"
+  },
+  "eq:5.60": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-60"
+  },
+  "eq:5.61": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-61"
+  },
+  "eq:5.62": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-62"
+  },
+  "eq:5.63": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-63"
+  },
+  "eq:5.64": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-64"
+  },
+  "eq:5.65": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-65"
+  },
+  "eq:5.66": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-66"
+  },
+  "eq:5.67": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-67"
+  },
+  "eq:5.7": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-7"
+  },
+  "eq:5.8": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-8"
+  },
+  "eq:5.9": {
+   "file": "05-calibration",
+   "anchor": "equation-eq-atbd-l1-stack-5-9"
+  },
+  "fig:1": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "fig-atbd-l1-stack-1"
+  },
+  "fig:10": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-10"
+  },
+  "fig:11": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-11"
+  },
+  "fig:12": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-12"
+  },
+  "fig:13": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-13"
+  },
+  "fig:14": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-14"
+  },
+  "fig:2": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "fig-atbd-l1-stack-2"
+  },
+  "fig:3": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "fig-atbd-l1-stack-3"
+  },
+  "fig:4": {
+   "file": "03-pre-processing",
+   "anchor": "fig-atbd-l1-stack-4"
+  },
+  "fig:5": {
+   "file": "03-pre-processing",
+   "anchor": "fig-atbd-l1-stack-5"
+  },
+  "fig:6": {
+   "file": "03-pre-processing",
+   "anchor": "fig-atbd-l1-stack-6"
+  },
+  "fig:7": {
+   "file": "04-stacking",
+   "anchor": "fig-atbd-l1-stack-7"
+  },
+  "fig:8": {
+   "file": "04-stacking",
+   "anchor": "fig-atbd-l1-stack-8"
+  },
+  "fig:9": {
+   "file": "05-calibration",
+   "anchor": "fig-atbd-l1-stack-9"
+  },
+  "rd:1": {
+   "file": "01-introduction",
+   "anchor": "rd1"
+  },
+  "rd:10": {
+   "file": "01-introduction",
+   "anchor": "rd10"
+  },
+  "rd:11": {
+   "file": "01-introduction",
+   "anchor": "rd11"
+  },
+  "rd:12": {
+   "file": "01-introduction",
+   "anchor": "rd12"
+  },
+  "rd:13": {
+   "file": "01-introduction",
+   "anchor": "rd13"
+  },
+  "rd:14": {
+   "file": "01-introduction",
+   "anchor": "rd14"
+  },
+  "rd:15": {
+   "file": "01-introduction",
+   "anchor": "rd15"
+  },
+  "rd:16": {
+   "file": "01-introduction",
+   "anchor": "rd16"
+  },
+  "rd:17": {
+   "file": "01-introduction",
+   "anchor": "rd17"
+  },
+  "rd:18": {
+   "file": "01-introduction",
+   "anchor": "rd18"
+  },
+  "rd:19": {
+   "file": "01-introduction",
+   "anchor": "rd19"
+  },
+  "rd:2": {
+   "file": "01-introduction",
+   "anchor": "rd2"
+  },
+  "rd:20": {
+   "file": "01-introduction",
+   "anchor": "rd20"
+  },
+  "rd:21": {
+   "file": "01-introduction",
+   "anchor": "rd21"
+  },
+  "rd:22": {
+   "file": "01-introduction",
+   "anchor": "rd22"
+  },
+  "rd:23": {
+   "file": "01-introduction",
+   "anchor": "rd23"
+  },
+  "rd:24": {
+   "file": "01-introduction",
+   "anchor": "rd24"
+  },
+  "rd:25": {
+   "file": "01-introduction",
+   "anchor": "rd25"
+  },
+  "rd:26": {
+   "file": "01-introduction",
+   "anchor": "rd26"
+  },
+  "rd:27": {
+   "file": "01-introduction",
+   "anchor": "rd27"
+  },
+  "rd:3": {
+   "file": "01-introduction",
+   "anchor": "rd3"
+  },
+  "rd:4": {
+   "file": "01-introduction",
+   "anchor": "rd4"
+  },
+  "rd:5": {
+   "file": "01-introduction",
+   "anchor": "rd5"
+  },
+  "rd:6": {
+   "file": "01-introduction",
+   "anchor": "rd6"
+  },
+  "rd:7": {
+   "file": "01-introduction",
+   "anchor": "rd7"
+  },
+  "rd:8": {
+   "file": "01-introduction",
+   "anchor": "rd8"
+  },
+  "rd:9": {
+   "file": "01-introduction",
+   "anchor": "rd9"
+  },
+  "sec:1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1"
+  },
+  "sec:1.1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1-1"
+  },
+  "sec:1.2": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1-2"
+  },
+  "sec:1.3": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1-3"
+  },
+  "sec:1.4": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1-4"
+  },
+  "sec:1.5": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-l1-stack-1-5"
+  },
+  "sec:2": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2"
+  },
+  "sec:2.1": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-1"
+  },
+  "sec:2.2": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-2"
+  },
+  "sec:2.3": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-3"
+  },
+  "sec:2.3.1": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-3-1"
+  },
+  "sec:2.3.2": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-3-2"
+  },
+  "sec:2.3.3": {
+   "file": "02-bps-and-stack-processor-overview",
+   "anchor": "sec-atbd-l1-stack-2-3-3"
+  },
+  "sec:3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3"
+  },
+  "sec:3.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1"
+  },
+  "sec:3.1.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1-1"
+  },
+  "sec:3.1.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1-2"
+  },
+  "sec:3.1.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1-3"
+  },
+  "sec:3.1.3.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1-3-1"
+  },
+  "sec:3.1.3.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-1-3-2"
+  },
+  "sec:3.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-2"
+  },
+  "sec:3.2.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-2-1"
+  },
+  "sec:3.2.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-2-2"
+  },
+  "sec:3.2.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-2-3"
+  },
+  "sec:3.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3"
+  },
+  "sec:3.3.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-1"
+  },
+  "sec:3.3.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-2"
+  },
+  "sec:3.3.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-3"
+  },
+  "sec:3.3.3.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-3-1"
+  },
+  "sec:3.3.3.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-3-2"
+  },
+  "sec:3.3.3.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-3-3"
+  },
+  "sec:3.3.4": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-3-4"
+  },
+  "sec:3.4": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-4"
+  },
+  "sec:3.4.1": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-4-1"
+  },
+  "sec:3.4.2": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-4-2"
+  },
+  "sec:3.4.3": {
+   "file": "03-pre-processing",
+   "anchor": "sec-atbd-l1-stack-3-4-3"
+  },
+  "sec:4": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4"
+  },
+  "sec:4.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1"
+  },
+  "sec:4.1.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-1"
+  },
+  "sec:4.1.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-2"
+  },
+  "sec:4.1.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-3"
+  },
+  "sec:4.1.3.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-3-1"
+  },
+  "sec:4.1.3.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-3-2"
+  },
+  "sec:4.1.3.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-3-3"
+  },
+  "sec:4.1.3.4": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-1-3-4"
+  },
+  "sec:4.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2"
+  },
+  "sec:4.2.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-1"
+  },
+  "sec:4.2.1.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-1-1"
+  },
+  "sec:4.2.1.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-1-2"
+  },
+  "sec:4.2.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-2"
+  },
+  "sec:4.2.2.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-2-1"
+  },
+  "sec:4.2.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-3"
+  },
+  "sec:4.2.3.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-3-1"
+  },
+  "sec:4.2.3.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-3-2"
+  },
+  "sec:4.2.4": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-4"
+  },
+  "sec:4.2.4.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-4-1"
+  },
+  "sec:4.2.4.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-4-2"
+  },
+  "sec:4.2.4.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-2-4-3"
+  },
+  "sec:4.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-3"
+  },
+  "sec:4.3.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-3-1"
+  },
+  "sec:4.3.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-3-2"
+  },
+  "sec:4.3.3": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-3-3"
+  },
+  "sec:4.4": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-4"
+  },
+  "sec:4.5": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-5"
+  },
+  "sec:4.5.1": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-5-1"
+  },
+  "sec:4.5.2": {
+   "file": "04-stacking",
+   "anchor": "sec-atbd-l1-stack-4-5-2"
+  },
+  "sec:5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5"
+  },
+  "sec:5.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-1"
+  },
+  "sec:5.1.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-1-1"
+  },
+  "sec:5.1.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-1-2"
+  },
+  "sec:5.1.2.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-1-2-1"
+  },
+  "sec:5.1.2.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-1-2-2"
+  },
+  "sec:5.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2"
+  },
+  "sec:5.2.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-1"
+  },
+  "sec:5.2.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2"
+  },
+  "sec:5.2.2.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2-1"
+  },
+  "sec:5.2.2.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2-2"
+  },
+  "sec:5.2.2.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2-3"
+  },
+  "sec:5.2.2.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2-4"
+  },
+  "sec:5.2.2.5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-2-5"
+  },
+  "sec:5.2.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-3"
+  },
+  "sec:5.2.3.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-3-1"
+  },
+  "sec:5.2.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-4"
+  },
+  "sec:5.2.5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-2-5"
+  },
+  "sec:5.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3"
+  },
+  "sec:5.3.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-1"
+  },
+  "sec:5.3.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-2"
+  },
+  "sec:5.3.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-3"
+  },
+  "sec:5.3.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4"
+  },
+  "sec:5.3.4.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4-1"
+  },
+  "sec:5.3.4.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4-2"
+  },
+  "sec:5.3.4.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4-3"
+  },
+  "sec:5.3.4.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4-4"
+  },
+  "sec:5.3.4.5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-4-5"
+  },
+  "sec:5.3.5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-3-5"
+  },
+  "sec:5.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4"
+  },
+  "sec:5.4.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-1"
+  },
+  "sec:5.4.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2"
+  },
+  "sec:5.4.2.1": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-1"
+  },
+  "sec:5.4.2.2": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-2"
+  },
+  "sec:5.4.2.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-3"
+  },
+  "sec:5.4.2.4": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-4"
+  },
+  "sec:5.4.2.5": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-5"
+  },
+  "sec:5.4.2.6": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-6"
+  },
+  "sec:5.4.2.7": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-7"
+  },
+  "sec:5.4.2.8": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-2-8"
+  },
+  "sec:5.4.3": {
+   "file": "05-calibration",
+   "anchor": "sec-atbd-l1-stack-5-4-3"
+  },
+  "sec:6": {
+   "file": "06-configurable-input-parameters",
+   "anchor": "sec-atbd-l1-stack-6"
+  }
+ }
+}

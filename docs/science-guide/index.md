@@ -24,14 +24,14 @@ remains authoritative until then.
 
 ## Available web conversions
 
-| Product | Reference | Web |
-|---|---|---|
-| L2 Above-Ground Biomass (AGB) ATBD | `BIO-BPS-AGB-ATBD-ARE-024912` | [Open](atbd-l2-agb/index.md) |
+```{science-guide-conversions}
+```
 
 ```{toctree}
 :maxdepth: 1
 :hidden:
 :caption: Available ATBDs
+:glob:
 
-L2 AGB ATBD <atbd-l2-agb/index>
+*/index
 ```

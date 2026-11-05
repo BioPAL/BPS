@@ -1,0 +1,557 @@
+{
+ "doc": "science-guide/atbd-l2-fh",
+ "title": "BPS FH ATBD - Algorithms Theoretical Baseline Document",
+ "short_title": "L2 FH ATBD",
+ "doc_code": "BIO-BPS-FH-ATBD-ARE-10343",
+ "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FH_ATBD_v2_2_0.pdf",
+ "targets": {
+  "ad:1": {
+   "file": "01-introduction",
+   "anchor": "ad1"
+  },
+  "ad:2": {
+   "file": "01-introduction",
+   "anchor": "ad2"
+  },
+  "ad:3": {
+   "file": "01-introduction",
+   "anchor": "ad3"
+  },
+  "eq:3.1": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-1"
+  },
+  "eq:3.10": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-10"
+  },
+  "eq:3.11": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-11"
+  },
+  "eq:3.12": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-12"
+  },
+  "eq:3.13": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-13"
+  },
+  "eq:3.14": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-14"
+  },
+  "eq:3.15": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-15"
+  },
+  "eq:3.16": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-16"
+  },
+  "eq:3.17": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-17"
+  },
+  "eq:3.18": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-18"
+  },
+  "eq:3.19": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-19"
+  },
+  "eq:3.2": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-2"
+  },
+  "eq:3.20": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-20"
+  },
+  "eq:3.21": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-21"
+  },
+  "eq:3.22": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-22"
+  },
+  "eq:3.23": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-23"
+  },
+  "eq:3.24": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-24"
+  },
+  "eq:3.25": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-25"
+  },
+  "eq:3.26": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-26"
+  },
+  "eq:3.27": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-27"
+  },
+  "eq:3.28": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-28"
+  },
+  "eq:3.3": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-3"
+  },
+  "eq:3.4": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-4"
+  },
+  "eq:3.5": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-5"
+  },
+  "eq:3.6": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-6"
+  },
+  "eq:3.7": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-7"
+  },
+  "eq:3.8": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-8"
+  },
+  "eq:3.9": {
+   "file": "03-forest-height",
+   "anchor": "equation-eq-atbd-fh-3-9"
+  },
+  "eq:4.1": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "equation-eq-atbd-fh-4-1"
+  },
+  "eq:4.3": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "equation-eq-atbd-fh-4-3"
+  },
+  "eq:4.4": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "equation-eq-atbd-fh-4-4"
+  },
+  "fig:1": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "fig-atbd-fh-1"
+  },
+  "fig:10": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-10"
+  },
+  "fig:11": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-11"
+  },
+  "fig:12": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-12"
+  },
+  "fig:13": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "fig-atbd-fh-13"
+  },
+  "fig:14": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "fig-atbd-fh-14"
+  },
+  "fig:2": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "fig-atbd-fh-2"
+  },
+  "fig:3": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "fig-atbd-fh-3"
+  },
+  "fig:4": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-4"
+  },
+  "fig:5": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-5"
+  },
+  "fig:6": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-6"
+  },
+  "fig:7": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-7"
+  },
+  "fig:8": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-8"
+  },
+  "fig:9": {
+   "file": "03-forest-height",
+   "anchor": "fig-atbd-fh-9"
+  },
+  "rd:1": {
+   "file": "01-introduction",
+   "anchor": "rd1"
+  },
+  "rd:10": {
+   "file": "01-introduction",
+   "anchor": "rd10"
+  },
+  "rd:11": {
+   "file": "01-introduction",
+   "anchor": "rd11"
+  },
+  "rd:12": {
+   "file": "01-introduction",
+   "anchor": "rd12"
+  },
+  "rd:13": {
+   "file": "01-introduction",
+   "anchor": "rd13"
+  },
+  "rd:14": {
+   "file": "01-introduction",
+   "anchor": "rd14"
+  },
+  "rd:15": {
+   "file": "01-introduction",
+   "anchor": "rd15"
+  },
+  "rd:2": {
+   "file": "01-introduction",
+   "anchor": "rd2"
+  },
+  "rd:3": {
+   "file": "01-introduction",
+   "anchor": "rd3"
+  },
+  "rd:4": {
+   "file": "01-introduction",
+   "anchor": "rd4"
+  },
+  "rd:5": {
+   "file": "01-introduction",
+   "anchor": "rd5"
+  },
+  "rd:6": {
+   "file": "01-introduction",
+   "anchor": "rd6"
+  },
+  "rd:7": {
+   "file": "01-introduction",
+   "anchor": "rd7"
+  },
+  "rd:8": {
+   "file": "01-introduction",
+   "anchor": "rd8"
+  },
+  "rd:9": {
+   "file": "01-introduction",
+   "anchor": "rd9"
+  },
+  "sec:1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1"
+  },
+  "sec:1.1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-1"
+  },
+  "sec:1.2": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-2"
+  },
+  "sec:1.3": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-3"
+  },
+  "sec:1.4": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-4"
+  },
+  "sec:1.5": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-5"
+  },
+  "sec:1.6": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fh-1-6"
+  },
+  "sec:2": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2"
+  },
+  "sec:2.1": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-1"
+  },
+  "sec:2.2": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-2"
+  },
+  "sec:2.3": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-3"
+  },
+  "sec:2.3.1": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-3-1"
+  },
+  "sec:2.3.2": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-3-2"
+  },
+  "sec:2.3.3": {
+   "file": "02-bps-and-fh-processing-overview",
+   "anchor": "sec-atbd-fh-2-3-3"
+  },
+  "sec:3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3"
+  },
+  "sec:3.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1"
+  },
+  "sec:3.1.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1-1"
+  },
+  "sec:3.1.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1-2"
+  },
+  "sec:3.1.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1-3"
+  },
+  "sec:3.1.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1-4"
+  },
+  "sec:3.1.5": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-1-5"
+  },
+  "sec:3.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2"
+  },
+  "sec:3.2.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2-1"
+  },
+  "sec:3.2.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2-2"
+  },
+  "sec:3.2.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2-3"
+  },
+  "sec:3.2.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2-4"
+  },
+  "sec:3.2.4.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-2-4-1"
+  },
+  "sec:3.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-3"
+  },
+  "sec:3.3.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-3-1"
+  },
+  "sec:3.3.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-3-2"
+  },
+  "sec:3.3.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-3-3"
+  },
+  "sec:3.3.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-3-4"
+  },
+  "sec:3.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4"
+  },
+  "sec:3.4.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-1"
+  },
+  "sec:3.4.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-2"
+  },
+  "sec:3.4.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-3"
+  },
+  "sec:3.4.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-4"
+  },
+  "sec:3.4.4.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-4-1"
+  },
+  "sec:3.4.4.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-4-2"
+  },
+  "sec:3.4.4.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-4-3"
+  },
+  "sec:3.4.5": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-4-5"
+  },
+  "sec:3.5": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5"
+  },
+  "sec:3.5.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-1"
+  },
+  "sec:3.5.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-2"
+  },
+  "sec:3.5.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-3"
+  },
+  "sec:3.5.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4"
+  },
+  "sec:3.5.4.1.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-1"
+  },
+  "sec:3.5.4.1.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-2"
+  },
+  "sec:3.5.4.1.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-3"
+  },
+  "sec:3.5.4.1.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-4"
+  },
+  "sec:3.5.4.1.5": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-5"
+  },
+  "sec:3.5.4.1.6": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-6"
+  },
+  "sec:3.5.4.1.7": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-7"
+  },
+  "sec:3.5.4.1.8": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-5-4-1-8"
+  },
+  "sec:3.6": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6"
+  },
+  "sec:3.6.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-1"
+  },
+  "sec:3.6.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-2"
+  },
+  "sec:3.6.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-3"
+  },
+  "sec:3.6.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-4"
+  },
+  "sec:3.6.4.1.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-4-1-1"
+  },
+  "sec:3.6.4.1.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-6-4-1-2"
+  },
+  "sec:3.7": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-7"
+  },
+  "sec:3.7.1": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-7-1"
+  },
+  "sec:3.7.2": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-7-2"
+  },
+  "sec:3.7.3": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-7-3"
+  },
+  "sec:3.7.4": {
+   "file": "03-forest-height",
+   "anchor": "sec-atbd-fh-3-7-4"
+  },
+  "sec:4": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4"
+  },
+  "sec:4.1": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1"
+  },
+  "sec:4.1.1": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-1"
+  },
+  "sec:4.1.2": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-2"
+  },
+  "sec:4.1.3": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-3"
+  },
+  "sec:4.1.4": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-4"
+  },
+  "sec:4.1.4.1": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-4-1"
+  },
+  "sec:4.1.4.2": {
+   "file": "04-forest-height-aggregation",
+   "anchor": "sec-atbd-fh-4-1-4-2"
+  }
+ }
+}

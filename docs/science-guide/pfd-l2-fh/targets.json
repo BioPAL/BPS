@@ -1,0 +1,549 @@
+{
+ "doc": "science-guide/pfd-l2-fh",
+ "title": "BIOMASS Forest Height Products Format Specification",
+ "short_title": "L2 FH PFD",
+ "doc_code": "BIO-BPS-FH-PFD-ARE-010256",
+ "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FH_PFD_v3_4_0.pdf",
+ "targets": {
+  "ad:1": {
+   "file": "01-introduction",
+   "anchor": "ad1"
+  },
+  "ad:2": {
+   "file": "01-introduction",
+   "anchor": "ad2"
+  },
+  "ad:3": {
+   "file": "01-introduction",
+   "anchor": "ad3"
+  },
+  "ad:4": {
+   "file": "01-introduction",
+   "anchor": "ad4"
+  },
+  "ad:5": {
+   "file": "01-introduction",
+   "anchor": "ad5"
+  },
+  "ad:6": {
+   "file": "01-introduction",
+   "anchor": "ad6"
+  },
+  "ad:7": {
+   "file": "01-introduction",
+   "anchor": "ad7"
+  },
+  "ad:8": {
+   "file": "01-introduction",
+   "anchor": "ad8"
+  },
+  "ad:9": {
+   "file": "01-introduction",
+   "anchor": "ad9"
+  },
+  "fig:1": {
+   "file": "03-l2a-products-format-overview",
+   "anchor": "fig-pfd-fh-1"
+  },
+  "fig:10": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-10"
+  },
+  "fig:11": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-11"
+  },
+  "fig:12": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-12"
+  },
+  "fig:13": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-13"
+  },
+  "fig:14": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-14"
+  },
+  "fig:15": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-15"
+  },
+  "fig:16": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-16"
+  },
+  "fig:17": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-17"
+  },
+  "fig:18": {
+   "file": "05-l2b-products-format-overview",
+   "anchor": "fig-pfd-fh-18"
+  },
+  "fig:19": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "fig-pfd-fh-19"
+  },
+  "fig:20": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "fig-pfd-fh-20"
+  },
+  "fig:21": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "fig-pfd-fh-21"
+  },
+  "fig:22": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "fig-pfd-fh-22"
+  },
+  "fig:23": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "fig-pfd-fh-23"
+  },
+  "fig:3": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-3"
+  },
+  "fig:4": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-4"
+  },
+  "fig:5": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-5"
+  },
+  "fig:6": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-6"
+  },
+  "fig:7": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-7"
+  },
+  "fig:8": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-8"
+  },
+  "fig:9": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "fig-pfd-fh-9"
+  },
+  "rd:1": {
+   "file": "01-introduction",
+   "anchor": "rd1"
+  },
+  "rd:10": {
+   "file": "01-introduction",
+   "anchor": "rd10"
+  },
+  "rd:11": {
+   "file": "01-introduction",
+   "anchor": "rd11"
+  },
+  "rd:2": {
+   "file": "01-introduction",
+   "anchor": "rd2"
+  },
+  "rd:3": {
+   "file": "01-introduction",
+   "anchor": "rd3"
+  },
+  "rd:4": {
+   "file": "01-introduction",
+   "anchor": "rd4"
+  },
+  "rd:5": {
+   "file": "01-introduction",
+   "anchor": "rd5"
+  },
+  "rd:6": {
+   "file": "01-introduction",
+   "anchor": "rd6"
+  },
+  "rd:7": {
+   "file": "01-introduction",
+   "anchor": "rd7"
+  },
+  "rd:8": {
+   "file": "01-introduction",
+   "anchor": "rd8"
+  },
+  "rd:9": {
+   "file": "01-introduction",
+   "anchor": "rd9"
+  },
+  "sec:1": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1"
+  },
+  "sec:1.1": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1-1"
+  },
+  "sec:1.2": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1-2"
+  },
+  "sec:1.3": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1-3"
+  },
+  "sec:1.4": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1-4"
+  },
+  "sec:1.5": {
+   "file": "01-introduction",
+   "anchor": "sec-pfd-fh-1-5"
+  },
+  "sec:2": {
+   "file": "02-bps-and-forest-height-products-overview",
+   "anchor": "sec-pfd-fh-2"
+  },
+  "sec:3": {
+   "file": "03-l2a-products-format-overview",
+   "anchor": "sec-pfd-fh-3"
+  },
+  "sec:3.1": {
+   "file": "03-l2a-products-format-overview",
+   "anchor": "sec-pfd-fh-3-1"
+  },
+  "sec:3.2": {
+   "file": "03-l2a-products-format-overview",
+   "anchor": "sec-pfd-fh-3-2"
+  },
+  "sec:4": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4"
+  },
+  "sec:4.1": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-1"
+  },
+  "sec:4.2": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-2"
+  },
+  "sec:4.3": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3"
+  },
+  "sec:4.3.1": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1"
+  },
+  "sec:4.3.1.1": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1-1"
+  },
+  "sec:4.3.1.2": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1-2"
+  },
+  "sec:4.3.1.3": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1-3"
+  },
+  "sec:4.3.1.4": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1-4"
+  },
+  "sec:4.3.1.5": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-1-5"
+  },
+  "sec:4.3.2": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-2"
+  },
+  "sec:4.3.2.1": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-2-1"
+  },
+  "sec:4.3.3": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-3"
+  },
+  "sec:4.3.4": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "sec-pfd-fh-4-3-4"
+  },
+  "sec:5": {
+   "file": "05-l2b-products-format-overview",
+   "anchor": "sec-pfd-fh-5"
+  },
+  "sec:5.1": {
+   "file": "05-l2b-products-format-overview",
+   "anchor": "sec-pfd-fh-5-1"
+  },
+  "sec:5.2": {
+   "file": "05-l2b-products-format-overview",
+   "anchor": "sec-pfd-fh-5-2"
+  },
+  "sec:6": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6"
+  },
+  "sec:6.1": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-1"
+  },
+  "sec:6.2": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-2"
+  },
+  "sec:6.3": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3"
+  },
+  "sec:6.3.1": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1"
+  },
+  "sec:6.3.1.1": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1-1"
+  },
+  "sec:6.3.1.2": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1-2"
+  },
+  "sec:6.3.1.3": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1-3"
+  },
+  "sec:6.3.1.4": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1-4"
+  },
+  "sec:6.3.1.5": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-1-5"
+  },
+  "sec:6.3.2": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-2"
+  },
+  "sec:6.3.3": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "sec-pfd-fh-6-3-3"
+  },
+  "sec:7": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "sec-pfd-fh-7"
+  },
+  "sec:7.1": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "sec-pfd-fh-7-1"
+  },
+  "sec:7.1.1": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "sec-pfd-fh-7-1-1"
+  },
+  "tab:1": {
+   "file": "03-l2a-products-format-overview",
+   "anchor": "tab-pfd-fh-1"
+  },
+  "tab:10": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-10"
+  },
+  "tab:11": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-11"
+  },
+  "tab:12": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-12"
+  },
+  "tab:13": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-13"
+  },
+  "tab:14": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-14"
+  },
+  "tab:15": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-15"
+  },
+  "tab:16": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-16"
+  },
+  "tab:17": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-17"
+  },
+  "tab:18": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-18"
+  },
+  "tab:19": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-19"
+  },
+  "tab:2": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-2"
+  },
+  "tab:20": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-20"
+  },
+  "tab:21": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-21"
+  },
+  "tab:22": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-22"
+  },
+  "tab:23": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-23"
+  },
+  "tab:24": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-24"
+  },
+  "tab:25": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-25"
+  },
+  "tab:26": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-26"
+  },
+  "tab:27": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-27"
+  },
+  "tab:28": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-28"
+  },
+  "tab:29": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-29"
+  },
+  "tab:3": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-3"
+  },
+  "tab:30": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-30"
+  },
+  "tab:31": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-31"
+  },
+  "tab:32": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-32"
+  },
+  "tab:33": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-33"
+  },
+  "tab:34": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-34"
+  },
+  "tab:35": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-35"
+  },
+  "tab:36": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-36"
+  },
+  "tab:37": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-37"
+  },
+  "tab:38": {
+   "file": "05-l2b-products-format-overview",
+   "anchor": "tab-pfd-fh-38"
+  },
+  "tab:39": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-39"
+  },
+  "tab:4": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-4"
+  },
+  "tab:40": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-40"
+  },
+  "tab:41": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-41"
+  },
+  "tab:42": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-42"
+  },
+  "tab:43": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-43"
+  },
+  "tab:44": {
+   "file": "06-l2b-products-format-specification",
+   "anchor": "tab-pfd-fh-44"
+  },
+  "tab:45": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-45"
+  },
+  "tab:46": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-46"
+  },
+  "tab:47": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-47"
+  },
+  "tab:48": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-48"
+  },
+  "tab:49": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-49"
+  },
+  "tab:5": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-5"
+  },
+  "tab:50": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-50"
+  },
+  "tab:51": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-51"
+  },
+  "tab:6": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-6"
+  },
+  "tab:7": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-7"
+  },
+  "tab:8": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-8"
+  },
+  "tab:9": {
+   "file": "04-l2a-products-format-specification",
+   "anchor": "tab-pfd-fh-9"
+  }
+ }
+}
