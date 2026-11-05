@@ -62,7 +62,8 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-xetex \
-            fonts-dejavu
+            fonts-dejavu \
+            fonts-liberation
 
       # Mermaid diagrams are rendered to PNG in the PDFs (sphinxcontrib-mermaid);
       # puppeteer uses the Chrome preinstalled on the runner.
