@@ -32,8 +32,22 @@ _FRONT_HEADINGS = ("Document information", "Change history")
 # ``tabularcolumns``): Field | Value, Name | Organisation, Change history.
 _FRONT_TABLE_SPECS = {
     2: r"|\X{1}{3}|\X{2}{3}|",
-    4: r"|\X{6}{48}|\X{4}{48}|\X{26}{48}|\X{12}{48}|",
+    4: r"|\X{8}{48}|\X{4}{48}|\X{26}{48}|\X{10}{48}|",
 }
+# Cover titles of the originals when they differ from the document title
+# (the converted metadata has no cover title yet).
+_COVER_TITLES = {
+    "atbd-l2-agb": "BIOMASS Above Ground Biomass Product ATBD",
+    "atbd-l2-fd": "BIOMASS Forest Disturbance Product ATBD",
+    "atbd-l2-fh": "BIOMASS Forest Height Product ATBD",
+    "atbd-l1-sar": "BIOMASS L1 SAR Product ATBD",
+    "atbd-l1-stack": "BIOMASS L1c Stack Product ATBD",
+}
+# ATBDs whose tables use the left indent of the headings (all PFDs do).
+_WIDE_TABLE_DOCS = ("atbd-l1-sar",)
+# Table font of the originals: ATBD 9 pt, PFD 10 pt (single line spacing),
+# and the row padding of their Word tables (\arraystretch).
+_TABLE_FONTS = {"atbd": (9, 10.5, 2.0), "pfd": (10, 11.5, 2.0)}
 _WEB_ONLY_ADMONITIONS = ("draft", "authoritative document")
 _LATEX_SPECIALS = {
     "\\": r"\textbackslash{}",
@@ -81,22 +95,35 @@ def _info_table(index_text: str) -> dict[str, str]:
     return rows
 
 
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july",
+           "august", "september", "october", "november", "december")
+
+
 def _format_date(raw: str) -> str:
-    """Dates as printed in the originals: dd/mm/yyyy."""
-    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d %B %Y"):
+    """Dates as printed in the originals: dd/mm/yyyy.
+
+    English month names are parsed without ``%B`` (locale dependent: Sphinx
+    sets the user locale).
+    """
+    value = raw.strip()
+    match = re.fullmatch(r"(\d{1,2}) ([A-Za-z]+) (\d{4})", value)
+    if match and match.group(2).lower() in _MONTHS:
+        value = f"{match.group(1)}/{_MONTHS.index(match.group(2).lower()) + 1}/{match.group(3)}"
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
         try:
-            return datetime.strptime(raw.strip(), fmt).strftime("%d/%m/%Y")
+            return datetime.strptime(value, fmt).strftime("%d/%m/%Y")
         except ValueError:
             continue
-    return raw.strip()
+    return value
 
 
 def read_document_meta(docs_dir: Path, folder: str) -> dict[str, str]:
     """Title, code, issue and date of ``science-guide/<folder>``.
 
-    Title and code come from ``targets.json``; issue and date from the
-    pipeline metadata comment of ``index.md`` (or its Document information
-    table when the comment is missing).
+    Code from ``targets.json`` (then the Document information table and the
+    pipeline metadata comment of ``index.md``); title from the metadata
+    comment, ``targets.json`` or the ``index.md`` heading; issue and date
+    from the metadata comment or the Document information table.
     """
     doc_dir = docs_dir / "science-guide" / folder
     targets: dict[str, Any] = {}
@@ -107,8 +134,12 @@ def read_document_meta(docs_dir: Path, folder: str) -> dict[str, str]:
     index_text = index_path.read_text(encoding="utf-8") if index_path.is_file() else ""
     comment = _metadata_comment(index_text)
     table = _info_table(index_text)
+    heading = re.search(r"^# (.+)$", index_text, re.MULTILINE)
+    title = (comment.get("title") or targets.get("title") or table.get("title")
+             or (heading.group(1).strip() if heading else folder))
     return {
-        "title": targets.get("title") or comment.get("title") or table.get("title", folder),
+        "title": title,
+        "cover_title": _COVER_TITLES.get(folder, title),
         "code": targets.get("doc_code") or table.get("external reference") or comment.get("doc_code", ""),
         "issue": comment.get("version") or table.get("issue", ""),
         "date": _format_date(comment.get("date") or table.get("date", "")),
@@ -128,7 +159,14 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
             ("issue", meta["issue"]),
             ("date", meta["date"]),
             ("bpsversion", version),
+            ("covertitle", meta["cover_title"]),
         )
+    )
+    size, leading, stretch = _TABLE_FONTS["pfd" if folder.startswith("pfd-") else "atbd"]
+    definitions += (
+        "\n\\newcommand\\atbdtablefont{\\linespread{1}"
+        f"\\fontsize{{{size}}}{{{leading}}}\\selectfont"
+        f"\\renewcommand\\arraystretch{{{stretch}}}}}"
     )
     logos = [
         str(docs_dir / "_static" / "logos" / name)
@@ -136,6 +174,8 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
         if (docs_dir / "_static" / "logos" / name).is_file()
     ]
     return {
+        # Table template of the exports (longtable.tex.jinja) first.
+        "templates_path": ["_templates/latex", "_templates"],
         "latex_engine": "xelatex",
         "latex_documents": [
             (
@@ -150,6 +190,7 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
             *logos,
             str(docs_dir / "_templates" / "latex" / "atbdlayout.sty"),
         ],
+        "atbd_wide_tables": folder.startswith("pfd-") or folder in _WIDE_TABLE_DOCS,
         "latex_domain_indices": False,
         "latex_show_urls": "no",
         "latex_show_pagerefs": False,
@@ -215,6 +256,7 @@ def _set_front_table_spec(table: nodes.table) -> None:
 
     groups = list(table.findall(nodes.tgroup))
     cols = groups[0].get("cols", 0) if groups else 0
+    table["classes"].append("atbd-front")  # compact rows (longtable.tex.jinja)
     spec = _FRONT_TABLE_SPECS.get(cols)
     parent = table.parent
     if spec is None or parent is None:
@@ -227,6 +269,97 @@ def _set_front_table_spec(table: nodes.table) -> None:
     parent.insert(parent.index(table), colspec)
     if cols == 4 and "longtable" not in table["classes"]:
         table["classes"].append("longtable")
+
+
+def _front_nodes(top: nodes.Node):
+    """Nodes of the index document, without the included chapters."""
+    from sphinx import addnodes
+
+    stack = [top]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, addnodes.start_of_file):
+            continue
+        yield node
+        if isinstance(node, nodes.Element):
+            stack.extend(reversed(node.children))
+
+
+# Start of an item of a Change history entry: a ticket key ("BPSPDR3-61:",
+# "BPS-393 / BPS-392:", "BPS-FTO-BATCH4:") or an "Updated ..." line. The
+# conversion joins the bullet list of the original into one paragraph.
+_CHANGE_ITEM_RE = re.compile(
+    r"(?<=[^\s,/:])\s+(?=(?:[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+"
+    r"(?:\s*[,/]\s*[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+)*\s*:)"
+    r"|(?:Updated|Added|Renamed|Removed|Expanded|Separated|Fixed)\b)"
+)
+
+
+def _split_change_items(para: nodes.paragraph) -> None:
+    """Rebuild the bullet list of a Change history cell."""
+    segments: list[list[nodes.Node]] = [[]]
+    for child in list(para.children):
+        if not isinstance(child, nodes.Text):
+            segments[-1].append(child.deepcopy())
+            continue
+        text, pos = str(child), 0
+        for match in _CHANGE_ITEM_RE.finditer(text):
+            if text[pos:match.start()]:
+                segments[-1].append(nodes.Text(text[pos:match.start()]))
+            segments.append([])
+            pos = match.end()
+        if text[pos:]:
+            segments[-1].append(nodes.Text(text[pos:]))
+    if len(segments) < 3 or para.parent is None:
+        return  # a single change: keep the paragraph
+    intro, items = segments[0], segments[1:]
+    bullets = nodes.bullet_list(bullet="-")
+    for item in items:
+        bullets += nodes.list_item("", nodes.paragraph("", "", *item))
+    new: list[nodes.Node] = [nodes.paragraph("", "", *intro)] if intro else []
+    para.replace_self([*new, bullets])
+
+
+_ROW_ITEMS = 6  # bullets per table row (a longtable row cannot break)
+
+
+def _split_long_row(row: nodes.row) -> None:
+    """Continue a Change history entry longer than a page on more rows."""
+    cell = row.children[2]
+    bullets = next(iter(cell.findall(nodes.bullet_list)), None)
+    if bullets is None or len(bullets.children) <= _ROW_ITEMS:
+        return
+    items = list(bullets.children)
+    bullets.children = []
+    for item in items[:_ROW_ITEMS]:
+        bullets += item
+    parent, index = row.parent, row.parent.index(row)
+    for start in range(_ROW_ITEMS, len(items), _ROW_ITEMS):
+        chunk = nodes.bullet_list(bullet=bullets.get("bullet", "-"))
+        for item in items[start:start + _ROW_ITEMS]:
+            chunk += item
+        new = nodes.row("", nodes.entry(), nodes.entry(), nodes.entry("", chunk), nodes.entry())
+        index += 1
+        parent.insert(index, new)
+
+
+def _front_table_cells(table: nodes.table) -> None:
+    """Dates as dd/mm/yyyy; no "Field | Value" header (not in the originals);
+    bullet lists in the Change history."""
+    for tgroup in table.findall(nodes.tgroup):
+        if tgroup.get("cols") == 4:
+            for row in list(tgroup.findall(nodes.row)):
+                if len(row.children) == 4:
+                    for para in list(row.children[2].findall(nodes.paragraph)):
+                        _split_change_items(para)
+                    _split_long_row(row)
+        thead = next((c for c in tgroup.children if isinstance(c, nodes.thead)), None)
+        if thead is not None and [e.astext().strip() for e in thead.findall(nodes.entry)] == ["Field", "Value"]:
+            tgroup.remove(thead)
+    for entry in table.findall(nodes.entry):
+        for text in list(entry.findall(nodes.Text)):
+            if re.fullmatch(r"\s*(\d{4}-\d{2}-\d{2}|\d{1,2} [A-Z][a-z]+ \d{4})\s*", text):
+                text.parent.replace(text, nodes.Text(_format_date(text)))
 
 
 class AtbdLatexFrontMatter(SphinxPostTransform):
@@ -245,33 +378,30 @@ class AtbdLatexFrontMatter(SphinxPostTransform):
 
         top = self.document
         first_chapter = next(iter(top.findall(addnodes.start_of_file)), None)
+        # Nodes of index.md itself. The included chapters are not visited:
+        # ``node.parent`` cannot tell them apart (Sphinx moves their children
+        # under ``start_of_file`` without updating the parents).
+        front = list(_front_nodes(top))
 
-        def in_front(node: nodes.Node) -> bool:
-            parent = node.parent
-            while parent is not None:
-                if isinstance(parent, addnodes.start_of_file):
-                    return False
-                parent = parent.parent
-            return True
-
-        for para in list(top.findall(nodes.paragraph)):
-            if in_front(para) and _is_back_link(para):
+        for para in [n for n in front if isinstance(n, nodes.paragraph)]:
+            if _is_back_link(para) and para.parent is not None:
                 para.parent.remove(para)
-        for adm in list(top.findall(nodes.Admonition)):
-            if in_front(adm) and _is_web_admonition(adm):
+        for adm in [n for n in front if isinstance(n, nodes.Admonition)]:
+            if _is_web_admonition(adm) and adm.parent is not None:
                 adm.parent.remove(adm)
-        for rule in list(top.findall(nodes.transition)):
-            if in_front(rule):
+        for rule in [n for n in front if isinstance(n, nodes.transition)]:
+            if rule.parent is not None:
                 rule.parent.remove(rule)
 
         last_front: nodes.Element | None = None
-        for rubric in list(top.findall(nodes.rubric)):
+        for rubric in [n for n in front if isinstance(n, nodes.rubric)]:
             title = rubric.astext().strip()
-            if not in_front(rubric) or title not in _FRONT_HEADINGS:
+            if title not in _FRONT_HEADINGS:
                 continue
             last_front = rubric.parent
             for table in list(last_front.findall(nodes.table)):
                 _set_front_table_spec(table)
+                _front_table_cells(table)
             rubric.replace_self(_raw_latex(f"\\clearpage\n\\atbdfrontheading{{{latex_escape(title)}}}\n"))
 
         toc = _raw_latex("\n\\atbdtableofcontents\n")
