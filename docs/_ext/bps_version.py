@@ -15,6 +15,8 @@ from typing import Any
 
 _BPS_TAG_RE = re.compile(r"^bps-v(?P<version>.+)$", re.IGNORECASE)
 _GITHUB_TAGS_API = "https://api.github.com/repos/BioPAL/BPS/tags?per_page=100"
+# Stable releases only (4.4.5): pre-release tags such as bps-v4.5.0.dev0 are skipped.
+_STABLE_RE = re.compile(r"^\d+(?:\.\d+)*$")
 
 
 def _parse_bps_tag(tag: str) -> tuple[str, str] | None:
@@ -52,7 +54,7 @@ def _from_git(repo_root: Path) -> tuple[str, str] | None:
 
     for line in proc.stdout.splitlines():
         parsed = _parse_bps_tag(line)
-        if parsed:
+        if parsed and _STABLE_RE.match(parsed[0]):
             return parsed
     return None
 
@@ -76,7 +78,7 @@ def _from_github_api() -> tuple[str, str] | None:
         if not isinstance(item, dict):
             continue
         parsed = _parse_bps_tag(str(item.get("name", "")))
-        if not parsed:
+        if not parsed or not _STABLE_RE.match(parsed[0]):
             continue
         version, tag = parsed
         parts = tuple(int(part) for part in version.split("."))
