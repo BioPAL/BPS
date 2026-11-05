@@ -18,9 +18,10 @@ from docutils import nodes
 from sphinx.util.docutils import SphinxDirective
 
 ATBD_ROOT = "science-guide/atbd-l2-agb"
-# Web export built by `make atbd-pdf` → docs/_static/pdf/<stem>.pdf
+# Web export built by `make atbd-pdf ATBD=<folder>` (or `make atbd-pdf-all`)
+# → docs/_static/pdf/<folder>.pdf
 ATBD_PDF_FILENAME = "atbd-l2-agb.pdf"
-ATBD_PDF_BUILD_CMD = "make atbd-pdf"
+ATBD_PDF_BUILD_CMD = "make atbd-pdf ATBD={folder}"
 ATBD_CHAPTERS = (
     f"{ATBD_ROOT}/01-introduction",
     f"{ATBD_ROOT}/02-bps-agb-overview",
@@ -128,6 +129,7 @@ class AtbdPdfExportDirective(SphinxDirective):
 def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
     root = _atbd_root(self.builder.current_docname) or ATBD_ROOT
     pdf_name = _pdf_filename(root)
+    build_cmd = ATBD_PDF_BUILD_CMD.format(folder=pdf_name.removesuffix(".pdf"))
     official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
     pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
@@ -139,7 +141,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             '<p class="admonition-title">Download web export</p>'
             f'<p><a class="reference download internal" href="{url}" download>'
             f'<i class="fa-solid fa-file-pdf"></i> '
-            "Download this ATBD as PDF</a> "
+            "Download this document as PDF</a> "
             "(generated from the same MyST source as this website).</p>"
             "<p>The "
             '<a class="reference external" '
@@ -153,7 +155,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             '<div class="admonition note">'
             '<p class="admonition-title">PDF export</p>'
             f"<p>Build the web-export PDF from the <code>docs/</code> directory with "
-            f"<code>{ATBD_PDF_BUILD_CMD}</code> (requires TeX Live or MacTeX). "
+            f"<code>{build_cmd}</code> (requires TeX Live or MacTeX). "
             f"The file is written to <code>_static/pdf/{pdf_name}</code> "
             "and linked here once generated.</p>"
             "</div>"
@@ -183,7 +185,7 @@ def _inject_atbd_sidebar_toc(
     context["atbd_index_title"] = (
         app.env.titles[index_doc].astext()
         if index_doc in app.env.titles
-        else "Above-Ground Biomass Product ATBD"
+        else _root_meta(app.srcdir, root).get("title", "")
     )
     pdf_path = _atbd_pdf_path(app, root)
     if pdf_path.is_file():
