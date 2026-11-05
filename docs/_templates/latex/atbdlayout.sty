@@ -1,0 +1,248 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Page layout of the Science Guide PDF exports (ATBD / PFD), modelled on the
+% original ESA / Aresys documents: A4, Arial-like font, blue headings,
+% logo + reference box in the header, "page X/Y" footer, cover page.
+%
+% The document metadata is defined by conf.py before this package is loaded:
+%   \atbdtitle \atbdcode \atbdissue \atbddate \atbdbpsversion
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdlayout}[2026/11/05 BPS Science Guide PDF layout]
+
+\RequirePackage{fontspec}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{array}
+\RequirePackage{colortbl}
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+\RequirePackage{titlesec}
+\RequirePackage{tocloft}
+
+\providecommand\atbdtitle{}
+\providecommand\atbdcode{}
+\providecommand\atbdissue{}
+\providecommand\atbddate{}
+\providecommand\atbdbpsversion{}
+
+% ---------------------------------------------------------------------------
+% Colours (sampled from the original PDFs)
+% ---------------------------------------------------------------------------
+\definecolor{atbdblue}{HTML}{2F5496}     % headings
+\definecolor{atbdnavy}{HTML}{1F3864}     % page number
+\definecolor{atbdgrey}{HTML}{808080}     % header text
+\definecolor{atbdtitlegrey}{HTML}{595959}% cover title
+\definecolor{atbdrule}{HTML}{FFC000}     % header / footer rules
+\definecolor{atbdbox}{HTML}{D0CECE}      % header box borders
+\definecolor{atbdcover}{HTML}{7786A0}    % cover reference band
+
+% ---------------------------------------------------------------------------
+% Fonts: Arial in the original. Arial, Liberation Sans or Arimo (metric
+% compatible) when installed, otherwise IBM Plex Sans (shipped with TeX Live).
+% Characters missing from the text font (math italic letters, some symbols)
+% are taken from DejaVu Sans.
+% ---------------------------------------------------------------------------
+\newcommand\atbd@setfont[2]{% #1 = family / file stem, #2 = fontspec options
+  \setmainfont{#1}[#2]\setsansfont{#1}[#2]}
+\IfFontExistsTF{Arial}{\atbd@setfont{Arial}{}}{%
+\IfFontExistsTF{Liberation Sans}{\atbd@setfont{Liberation Sans}{}}{%
+\IfFontExistsTF{Arimo-Regular.ttf}{%
+  \atbd@setfont{Arimo}{Extension=.ttf,UprightFont=*-Regular,BoldFont=*-Bold,
+    ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic}}{%
+\IfFontExistsTF{IBMPlexSans-Regular.otf}{%
+  % IBM Plex Sans is a little wider than Arial: scale it to keep the pagination.
+  \atbd@setfont{IBMPlexSans}{Extension=.otf,Scale=0.95,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic}}{%
+  \atbd@setfont{DejaVu Sans}{Scale=0.9}}}}}
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+% Line spacing of the originals (Word "multiple 1.15").
+\linespread{1.12}
+\newfontfamily\atbdfallbackfont{DejaVu Sans}[Scale=0.92]
+\IfFontExistsTF{DejaVuMathTeXGyre.ttf}{%
+  \newfontfamily\atbdmathletterfont{DejaVuMathTeXGyre.ttf}[Scale=0.92]}{%
+  \let\atbdmathletterfont\atbdfallbackfont}
+
+% Route symbol blocks to the fallback font (XeTeX inter-character tokens).
+\ifdefined\XeTeXinterchartokenstate
+  \newXeTeXintercharclass\atbdfallbackclass
+  \newXeTeXintercharclass\atbdmathletterclass
+  \def\atbd@fallbackrange#1#2{%
+    \count@=#1\relax
+    \loop
+      \XeTeXcharclass\count@=\atbdfallbackclass
+    \ifnum\count@<#2\relax\advance\count@\@ne\repeat}
+  \atbd@fallbackrange{"2070}{"209F}% super/subscripts
+  \atbd@fallbackrange{"2190}{"22FF}% arrows, mathematical operators
+  \atbd@fallbackrange{"2600}{"26FF}% miscellaneous symbols
+  \XeTeXcharclass"03D1=\atbdfallbackclass % theta symbol
+  \XeTeXcharclass"FFFD=\atbdfallbackclass
+  \count@="1D400\relax
+  \loop
+    \XeTeXcharclass\count@=\atbdmathletterclass
+  \ifnum\count@<"1D7FF\relax\advance\count@\@ne\repeat
+  \XeTeXinterchartoks 0 \atbdfallbackclass = {\begingroup\atbdfallbackfont}
+  \XeTeXinterchartoks 4095 \atbdfallbackclass = {\begingroup\atbdfallbackfont}
+  \XeTeXinterchartoks \atbdfallbackclass 0 = {\endgroup}
+  \XeTeXinterchartoks \atbdfallbackclass 4095 = {\endgroup}
+  \XeTeXinterchartoks 0 \atbdmathletterclass = {\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks 4095 \atbdmathletterclass = {\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks \atbdmathletterclass 0 = {\endgroup}
+  \XeTeXinterchartoks \atbdmathletterclass 4095 = {\endgroup}
+  \XeTeXinterchartoks \atbdfallbackclass \atbdmathletterclass = {\endgroup\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks \atbdmathletterclass \atbdfallbackclass = {\endgroup\begingroup\atbdfallbackfont}
+  \AtBeginDocument{\XeTeXinterchartokenstate=1\relax}
+\fi
+
+% ---------------------------------------------------------------------------
+% Headings: numbers come from the source titles ("1. Introduction",
+% "1.1 Context"), so LaTeX numbering is switched off. Headings hang 1.25 cm
+% into the left margin, as in the original where the body text is indented.
+% ---------------------------------------------------------------------------
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{3}
+\newlength\atbdheadindent
+\setlength\atbdheadindent{1.25cm}
+
+\titleformat{\chapter}[block]
+  {\color{atbdblue}\fontsize{24}{28}\selectfont\bfseries}{}{0pt}{}
+\titlespacing*{\chapter}{-\atbdheadindent}{0pt}{18pt}
+\titleformat{\section}[block]
+  {\color{atbdblue}\fontsize{16}{19}\selectfont}{}{0pt}{}
+\titlespacing*{\section}{-\atbdheadindent}{16pt}{10pt}
+\titleformat{\subsection}[block]
+  {\color{atbdblue}\fontsize{13}{16}\selectfont}{}{0pt}{}
+\titlespacing*{\subsection}{-\atbdheadindent}{14pt}{8pt}
+\titleformat{\subsubsection}[block]
+  {\color{atbdblue}\fontsize{12}{14}\selectfont}{}{0pt}{}
+\titlespacing*{\subsubsection}{-\atbdheadindent}{12pt}{6pt}
+\titleformat{\paragraph}[block]
+  {\color{atbdblue}\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\paragraph}{-\atbdheadindent}{10pt}{4pt}
+\titleformat{\subparagraph}[block]
+  {\color{atbdblue}\normalsize\itshape}{}{0pt}{}
+\titlespacing*{\subparagraph}{-\atbdheadindent}{8pt}{4pt}
+
+% Front-matter headings (Document information, Change history, contents).
+\newcommand\atbdfrontheading[1]{%
+  \par\vspace*{0pt}%
+  {\noindent\hspace*{-\atbdheadindent}\color{atbdblue}%
+   \fontsize{16}{19}\selectfont #1\par}%
+  \vspace{12pt}}
+
+% ---------------------------------------------------------------------------
+% Table of contents: unnumbered entries carrying their source numbers.
+% ---------------------------------------------------------------------------
+\renewcommand\cftchapfont{\bfseries}
+\renewcommand\cftchappagefont{\bfseries}
+\renewcommand\cftchapleader{\cftdotfill{\cftdotsep}}
+\setlength\cftbeforechapskip{4pt}
+\setlength\cftchapindent{-\atbdheadindent}
+\setlength\cftsecindent{\dimexpr-\atbdheadindent+1.0em\relax}
+\setlength\cftsubsecindent{\dimexpr-\atbdheadindent+2.0em\relax}
+\setlength\cftsubsubsecindent{\dimexpr-\atbdheadindent+3.0em\relax}
+\renewcommand\cfttoctitlefont{\hspace*{-\atbdheadindent}\color{atbdblue}%
+  \fontsize{16}{19}\selectfont}
+\renewcommand\cftaftertoctitle{}
+\setlength\cftbeforetoctitleskip{0pt}
+\setlength\cftaftertoctitleskip{12pt}
+\renewcommand\cftpnumalign{r}
+
+\newcommand\atbdtableofcontents{%
+  \clearpage
+  \begingroup
+    \parskip\z@skip
+    \renewcommand\contentsname{Table of contents}%
+    \hypersetup{linkcolor=black}%
+    \tableofcontents
+  \endgroup
+  \clearpage}
+
+% ---------------------------------------------------------------------------
+% Header and footer
+% ---------------------------------------------------------------------------
+\newcommand\atbdheaderbox{%
+  {\fontsize{9.5}{11.5}\selectfont\color{atbdgrey}%
+   \arrayrulecolor{atbdbox}\setlength\arrayrulewidth{0.5pt}%
+   \renewcommand\arraystretch{1.15}%
+   \begin{tabular}[b]{|p{6.15cm}|p{1.2cm}|p{2.45cm}|}
+     \hline
+     \multicolumn{3}{|p{10.4cm}|}{\atbdtitle}\\
+     \hline
+     \atbdcode & \atbdissue & \atbddate\\
+     \hline
+   \end{tabular}}}
+% Typeset once: a tabular built inside the output routine can break a
+% tabulary being measured on the same page.
+\newsavebox\atbd@headerboxsaved
+\AtBeginDocument{\sbox\atbd@headerboxsaved{\atbdheaderbox}}
+
+\newcommand\atbdheaderlogo{%
+  \IfFileExists{Aresys_light.png}{%
+    \includegraphics[height=1.35cm]{Aresys_light.png}}{}}
+
+\newcommand\atbdfootline{%
+  \color{atbdgrey}\fontsize{8.5}{10}\selectfont
+  Issue \atbdissue\ifx\atbdbpsversion\@empty\else\ – BPS v\atbdbpsversion\fi}
+
+\newcommand\atbd@headfoot{%
+  \fancyhf{}%
+  \fancyhfoffset[L]{\atbdheadindent}%
+  \fancyhead[L]{\atbdheaderlogo}%
+  \fancyhead[R]{\usebox\atbd@headerboxsaved}%
+  \fancyfoot[L]{\atbdfootline}%
+  \fancyfoot[C]{\color{atbdnavy}page \thepage/\pageref*{LastPage}}%
+  \fancyfoot[R]{\color{atbdgrey}\fontsize{8.5}{10}\selectfont\atbdcode}%
+  \renewcommand\headrule{{\color{atbdrule}%
+    \hrule height 0.75pt width\headwidth\vskip-0.75pt}}%
+  \renewcommand\footrule{{\color{atbdrule}%
+    \hrule height 0.75pt width\headwidth\vskip 3pt}}%
+  \renewcommand\headrulewidth{0.75pt}%
+  \renewcommand\footrulewidth{0.75pt}}
+% Sphinx switches between "normal" and "plain" (chapter openings): both get
+% the document header and footer.
+\fancypagestyle{normal}{\atbd@headfoot}
+\fancypagestyle{plain}{\atbd@headfoot}
+
+% ---------------------------------------------------------------------------
+% Cover page
+% ---------------------------------------------------------------------------
+\newcommand\atbdmaketitle{%
+  \begingroup
+  \thispagestyle{empty}%
+  \hypersetup{pdftitle={\atbdtitle},pdfsubject={\atbdcode}}%
+  \noindent\hspace*{-\atbdheadindent}%
+  \begin{minipage}[t]{\dimexpr\textwidth+\atbdheadindent\relax}
+    \vspace*{-1.2cm}%
+    \IfFileExists{Aresys_light.png}{%
+      \includegraphics[height=1.9cm]{Aresys_light.png}}{}%
+    \hfill
+    \IfFileExists{ESA_light.png}{%
+      \includegraphics[height=1.9cm]{ESA_light.png}}{}%
+    \par\vspace*{3.2cm}%
+    \raggedright
+    {\color{atbdtitlegrey}\fontsize{40}{48}\selectfont\atbdtitle\par}%
+    \vspace*{0.35cm}%
+    {\color{atbdgrey}\rule{\linewidth}{0.8pt}\par}%
+  \end{minipage}%
+  \vfill
+  \noindent\hspace*{-\atbdheadindent}%
+  {\setlength\fboxsep{0pt}%
+   \colorbox{atbdbox}{\makebox[\dimexpr\textwidth+\atbdheadindent\relax]{%
+     \rule{0pt}{0.38cm}}}}\par\nointerlineskip
+  \noindent\hspace*{-\atbdheadindent}%
+  {\setlength\fboxsep{0pt}%
+   \colorbox{atbdcover}{%
+     \begin{minipage}[b][4.6cm][b]{\dimexpr\textwidth+\atbdheadindent\relax}
+       \raggedleft\fontsize{11}{15}\selectfont
+       \begin{tabular}{@{}l@{}}
+         \textbf{Ref}: \atbdcode\\
+         \textbf{Issue}: \atbdissue\\
+         \textbf{Date}: \atbddate\\[3pt]
+         Issue \atbdissue\ifx\atbdbpsversion\@empty\else\ – BPS v\atbdbpsversion\fi
+       \end{tabular}\hspace*{0.5cm}\par\vspace*{0.45cm}%
+     \end{minipage}}}\par
+  \clearpage
+  \endgroup}
+
+\endinput
