@@ -206,7 +206,7 @@ def _reference(role: SphinxRole, label: str, target_doc: str, anchor: str) -> no
     """Link to ``anchor`` in ``target_doc``.
 
     The HTML ``refuri`` is kept as is; the target is also recorded on the node so
-    that non-HTML builders can turn it into an internal link (see
+    that the LaTeX builder can turn it into an internal link (see
     :class:`LatexInternalRefs`).
     """
     refuri = _doc_link_uri(role.env.docname, target_doc, anchor)
@@ -227,7 +227,7 @@ class LatexInternalRefs(SphinxPostTransform):
     default_priority = 50
 
     def is_supported(self) -> bool:
-        return self.app.builder.format != "html"
+        return self.app.builder.format == "latex"
 
     def run(self, **kwargs: Any) -> None:
         for node in self.document.findall(nodes.reference):

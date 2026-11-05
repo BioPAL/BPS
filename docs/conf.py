@@ -5,7 +5,6 @@
 # Theme: PyData Sphinx Theme (same family as docs.xarray.dev).
 # Source: Markdown via MyST parser.
 
-import importlib.util
 import os
 import sys
 from datetime import datetime
@@ -38,10 +37,6 @@ extensions = [
     "meeting_status",  # Status badge from presentations/<deck>/meeting.yaml
     "atbd_pdf_layout",  # PDF export: front matter of the ATBD/PFD (LaTeX only)
 ]
-# LaTeX rendering of ATBD/PFD content (figures, tables, cross-references):
-# optional, the build works without it.
-if importlib.util.find_spec("atbd_latex_content") is not None:
-    extensions.append("atbd_latex_content")
 
 # Tell Sphinx that .md files exist alongside .rst
 source_suffix = {
