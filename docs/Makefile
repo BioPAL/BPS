@@ -113,8 +113,10 @@ ifneq ($(LATEX_IMAGE),)
 endif
 LATEXMK ?=
 # -f: go on past recoverable LaTeX errors (counted in the atbd-pdf-all summary)
-# so that one bad equation does not drop the whole PDF.
+# so that one bad equation does not drop the whole PDF. A fatal error (the
+# run stopped before the end of the document) still fails the build.
 LATEXMK_OPTS ?= -f
+ATBD_LATEX_FATAL = ^! Emergency stop|^!  ==> Fatal error|^! TeX capacity exceeded|^No pages of output
 
 MMDC ?= $(shell command -v mmdc 2>/dev/null)
 ifneq ($(MMDC),)
@@ -125,7 +127,7 @@ atbd-pdf:
 	@echo "Building web-export PDF for science-guide/$(ATBD)/ …"
 	@test -f "science-guide/$(ATBD)/index.md" || (echo "No science-guide/$(ATBD)/index.md"; exit 1)
 	@mkdir -p "$(ATBD_LATEX_DIR)"
-	@rm -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf"
+	@rm -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf" "$(ATBD_PDF)"
 	@printf '{"args": ["--no-sandbox"]}\n' > "$(ATBD_PDF_BUILDDIR)/puppeteer.json"
 	@SPHINX_ATBD_PDF=$(ATBD) $(SPHINXBUILD) -b latex -d "$(ATBD_PDF_BUILDDIR)/doctrees" \
 	  "$(SOURCEDIR)" "$(ATBD_LATEX_DIR)" $(ATBD_MERMAID_OPTS) $(SPHINXOPTS)
@@ -141,6 +143,15 @@ atbd-pdf:
 	    echo "No LaTeX engine found. Install TeX Live (latexmk + xelatex) or set LATEX_IMAGE."; \
 	    echo "LaTeX sources are in $(ATBD_LATEX_DIR)/"; exit 1; \
 	  fi || true
+	@log="$(ATBD_LATEX_DIR)/$(ATBD).log"; pdf="$(ATBD_LATEX_DIR)/$(ATBD).pdf"; \
+	if [ -f "$$log" ] && grep -Eq '$(ATBD_LATEX_FATAL)' "$$log"; then \
+	  grep -E -m3 '$(ATBD_LATEX_FATAL)' "$$log"; \
+	  echo "PDF build failed (fatal LaTeX error, the PDF would be truncated). Check $$log"; \
+	  rm -f "$$pdf"; exit 1; \
+	fi; \
+	if [ -f "$$pdf" ] && ! tail -c 1024 "$$pdf" | grep -q '%%EOF'; then \
+	  echo "PDF build failed (incomplete $$pdf)"; rm -f "$$pdf"; exit 1; \
+	fi
 	@if [ -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf" ]; then \
 	  mkdir -p _static/pdf; \
 	  cp "$(ATBD_LATEX_DIR)/$(ATBD).pdf" "$(ATBD_PDF)"; \
