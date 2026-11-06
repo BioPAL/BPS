@@ -30,6 +30,7 @@ HTML and the other builders (text, man, ...) are not touched.
 from __future__ import annotations
 
 import html
+import math
 import os
 import re
 import struct
@@ -167,6 +168,121 @@ def _header_texts(tgroup: nodes.tgroup) -> list[str]:
     return [" ".join(entry.astext().split()) for entry in row.children]
 
 
+def _cell_blocks(entry: nodes.Element) -> list[list[int]]:
+    """Word lengths of each paragraph (or line block) of a table cell."""
+    blocks = [p for p in entry.findall(nodes.TextElement)
+              if isinstance(p, (nodes.paragraph, nodes.line, nodes.literal_block))]
+    texts = [p.astext() for p in blocks] or [entry.astext()]
+    return [[len(w) for w in t.split()] or [0] for t in texts]
+
+
+def _cell_atom(entry: nodes.Element) -> int:
+    """Longest piece of a table cell that cannot wrap.
+
+    Long words and inline literals get break points (``_text`` and
+    ``_breakable_literal``), and formulas are scaled down to the column.
+    """
+    longest = 1
+    for text in entry.findall(nodes.Text):
+        parent = text.parent
+        literal = isinstance(parent, nodes.literal)
+        for word in str(text).split():
+            if isinstance(parent, nodes.math):
+                pieces = [word[:12]]
+            elif literal and len(word) > _LONG_TABLE_LITERAL:
+                pieces = _LITERAL_BREAK_RE.split(word)
+            elif not literal and len(word) > _LONG_TABLE_WORD:
+                pieces = _WORD_BREAK_RE.split(word)
+            else:
+                pieces = [word]
+            longest = max(longest, *(len(p) for p in pieces))
+    return longest
+
+
+def _wrapped_lines(blocks: list[list[int]], width: float) -> tuple[int, int]:
+    """Lines of a cell ``width`` characters wide (greedy word wrap), and the
+    number of words broken across lines."""
+    width = max(1.0, 0.95 * width)
+    lines = broken = 0
+    for block in blocks:
+        lines += 1
+        used = -1.0
+        for word in block:
+            if used >= 0 and used + 1 + word <= width:
+                used += 1 + word
+            elif word <= width:
+                lines += used >= 0
+                used = word
+            else:  # broken at its break points (identifiers, numbers)
+                lines += (used >= 0) + int((word - 1) // width)
+                used = word % width or width
+                broken += 1
+    return lines, broken
+
+
+# Cost of a word broken across lines, in table lines.
+_BROKEN_WORD_COST = 2.0
+
+
+def _fit_columns(rows: list[list[tuple[int, list[list[int]]]]], minimum: list[float],
+                 natural: list[int], budget: float) -> list[float]:
+    """Column widths (characters) that keep the table short (fewest lines)
+    without breaking words when a few characters avoid it."""
+    ncols = len(minimum)
+    nrows = len(rows)
+    widths = [math.ceil(m) for m in minimum]
+    spare = int(budget) - sum(widths)
+    by_col: list[list[tuple[int, list[list[int]]]]] = [[] for _ in range(ncols)]
+    for r, cells in enumerate(rows):
+        for col, blocks in cells:
+            by_col[col].append((r, blocks))
+
+    def layout(col: int, width: int) -> tuple[list[int], int]:
+        out = [0] * nrows
+        broken = 0
+        for r, blocks in by_col[col]:
+            out[r], b = _wrapped_lines(blocks, width)
+            broken += b
+        return out, broken
+
+    def cost(lines: list[list[int]], broken: list[int]) -> float:
+        height = sum(max(lines[c][r] for c in range(ncols)) for r in range(nrows))
+        return height + _BROKEN_WORD_COST * sum(broken)
+
+    cols = [layout(c, widths[c]) for c in range(ncols)]
+    lines = [c[0] for c in cols]
+    broken = [c[1] for c in cols]
+    current = cost(lines, broken)
+    while spare > 0:
+        best = None
+        for c in range(ncols):
+            for step in (1, 2, 3, 5, 8, 13, 21, 34):
+                if step > spare:
+                    break
+                trial, trial_broken = layout(c, widths[c] + step)
+                gain = current - cost(lines[:c] + [trial] + lines[c + 1:],
+                                      broken[:c] + [trial_broken] + broken[c + 1:])
+                if gain > 0 and (best is None or gain / step > best[0]):
+                    best = (gain / step, c, step, trial, trial_broken)
+        if best is None:
+            break
+        _, c, step, lines[c], broken[c] = best
+        widths[c] += step
+        spare -= step
+        current = cost(lines, broken)
+    scores = [float(w) for w in widths]
+    if spare > 0:
+        need = [max(0.0, n - w) for n, w in zip(natural, scores)]
+        if sum(need) > 0:
+            give = min(float(spare), sum(need))
+            scores = [w + give * n / sum(need) for w, n in zip(scores, need)]
+            spare -= give
+        if spare > 0:
+            total = sum(scores)
+            scores = [w + spare * w / total for w in scores]
+    return scores
+
+
 def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False) -> None:
     """Replace ``colwidths-auto`` by widths proportional to the cell contents.
 
@@ -191,36 +307,44 @@ def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False)
                 classes.remove("colwidths-auto")
             classes.append("colwidths-given")
             return
-        lengths: list[list[int]] = [[] for _ in range(ncols)]
-        words = [1] * ncols
+        # Cells of each row: blocks (paragraphs, list items) of word lengths.
+        rows: list[list[tuple[int, list[list[int]]]]] = []
+        words = [1.0] * ncols
+        atoms = [1.0] * ncols
+        natural = [3] * ncols
         for row in tgroup.findall(nodes.row):
+            # Bold header: wider characters.
+            scale = 1.2 if isinstance(row.parent, nodes.thead) else 1.0
+            cells = []
             col = 0
             for entry in row.children:
                 if col >= ncols:
                     break
-                text = " ".join(entry.astext().split())
                 span = 1 + entry.get("morecols", 0)
                 if span == 1:
-                    lengths[col].append(len(text))
-                    longest = max((len(w) for w in text.split()), default=1)
-                    words[col] = max(words[col], min(longest, 28))
+                    blocks = _cell_blocks(entry)
+                    cells.append((col, blocks))
+                    longest = max((w for b in blocks for w in b), default=1)
+                    words[col] = max(words[col], scale * min(longest, 28))
+                    atoms[col] = max(atoms[col], scale * min(_cell_atom(entry), 28))
+                    for b in blocks:
+                        natural[col] = max(natural[col], min(sum(b) + len(b) - 1, 80))
                 col += span
-        minimum = [w + 1.0 for w in words]
-        desired = []
-        for col in range(ncols):
-            vals = lengths[col] or [1]
-            mean = sum(vals) / len(vals)
-            top = min(max(vals), 80)
-            desired.append(max(minimum[col], 0.6 * top + 0.4 * mean, 3.0))
+            rows.append(cells)
         # Each column also pays its \tabcolsep padding. Keep every column
-        # wide enough for its longest word, then share what is left in
-        # proportion to the content.
+        # wide enough for its longest word (or, when these do not fit, for
+        # its longest unbreakable piece), then give the rest, a few
+        # characters at a time, to the column that saves the most wrapped
+        # lines and broken words; what no column can use goes to the columns
+        # not yet at their one-line width, then in proportion to the widths.
         budget = budget - 2.0 * ncols
-        if sum(desired) <= budget or sum(minimum) >= budget:
-            scores = desired if sum(desired) <= budget else minimum
+        minimum = [w + 1.0 for w in words]
+        if sum(minimum) >= budget:
+            minimum = [a + 1.0 for a in atoms]
+        if sum(minimum) >= budget:
+            scores = minimum
         else:
-            spare = (budget - sum(minimum)) / (sum(desired) - sum(minimum))
-            scores = [m + (d - m) * spare for m, d in zip(minimum, desired)]
+            scores = _fit_columns(rows, minimum, natural, budget)
         total = sum(scores)
         widths = [max(1, round(1000 * s / total)) for s in scores]
         for spec, width in zip(colspecs, widths):
