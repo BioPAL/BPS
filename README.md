@@ -3,7 +3,7 @@
 The BIOMASS Product Algorithm Laboratory hosts official tools for processing and analysing ESA\'s BIOMASS mission data.
 
 - Website: [www.biomass-disc.info](https://www.biomass-disc.info/)
-- Documentation: [www.biomass-disc.info/release_note](https://www.biomass-disc.info/release_note)
+- Documentation: [biomass-disc.info/docs](https://biomass-disc.info/docs/)
 - Repository: [github.com/BioPAL/BPS](https://github.com/BioPAL/BPS)
 - Bug reports: [github.com/BioPAL/BPS/issues](https://github.com/BioPAL/BPS/issues)
 
@@ -45,7 +45,7 @@ This repository is organized as follows:
 
 # Getting Started
 
-Here below are reported the instructions to install and use BPS processors starting from official conda packages (for those who may want to use BPS) or from source code repository (for those who may want to develop it). For more details refer to official [documentation](https://www.biomass-disc.info/release_note).
+Here below are reported the instructions to install and use BPS processors starting from official conda packages (for those who may want to use BPS) or from source code repository (for those who may want to develop it). For more details refer to official [documentation](https://biomass-disc.info/docs/).
 
 Both installation and usage procedures make use of the open-source package management system [conda](https://docs.conda.io/projects/conda/en/latest/), to be pre-installed.
 
@@ -131,7 +131,7 @@ In order to run a BPS processor you need:
 - the internal resources of the processor you want to use
 - a dedicated `JobOrder.xml` file
 
-Detailed information on how to recover internal resources and on how to create a Job Order file can be found in BPS [Software User Manual](https://www.biomass-disc.info/release_note).
+Detailed information on how to recover internal resources and on how to create a Job Order file can be found in BPS [Software User Manual](https://biomass-disc.info/docs/).
 
 Once ready, open a command window with *conda* available and run the desired BPS processor:
 
@@ -167,7 +167,7 @@ If you are interested in contributing, please not that a more complete and detai
 
 # Documentation
 
-Documentation, including BPS Software User Manual, can be found in [www.biomass-disc.info/release_note](https://www.biomass-disc.info/release_note)
+Documentation, including BPS Software User Manual, can be found in [biomass-disc.info/docs](https://biomass-disc.info/docs/)
 
 
 # History
