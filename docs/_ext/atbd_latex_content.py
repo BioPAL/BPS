@@ -84,8 +84,9 @@ def _tex_math(text: str) -> str:
 _LITERAL_BREAK_RE = re.compile(r"(?<=[_./:>,])(?=.)|(?<=[a-z])(?=[A-Z])|(?=<)")
 _LONG_LITERAL = 20
 _LONG_TABLE_LITERAL = 8  # table columns are narrow
-# Break opportunities in long words of running text (WKT strings, numbers).
-_WORD_BREAK_RE = re.compile(r"(?<=[,;:/_.\[\](=&])(?=\S)")
+# Break opportunities in long words of running text (WKT strings, numbers):
+# after punctuation, and inside long digit runs (high-precision constants).
+_WORD_BREAK_RE = re.compile(r"(?<=[,;:/_.\[\](=&])(?=\S)|(?<=\d{4})(?=\d)")
 _LONG_WORD = 40
 _LONG_TABLE_WORD = 15
 # C0 control characters left by the DOCX conversion (no glyph in any font).
