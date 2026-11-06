@@ -313,6 +313,46 @@
   \let\atbd@underscore\_%
   \def\_{\atbd@underscore\allowbreak}}
 
+% A caption below the table (\endlastfoot) is taller than the foot reserved
+% at each page break, and its depth (\parbox[t]) is not counted: when the
+% last rows fit but not the caption, longtable sets the caption alone at the
+% top of the next page. Carry
+% the last rows over with it instead (longtable.sty \LT@output, end branch).
+\newbox\atbd@ltrows
+\def\LT@output{%
+  \ifnum\outputpenalty <-\@Mi
+    \ifnum\outputpenalty > -\LT@end@pen
+      \LT@err{floats and marginpars not allowed in a longtable}\@ehc
+    \else
+      \setbox\z@\vbox{\unvbox\@cclv}%
+      \dimen@\dp\LT@lastfoot \advance\dimen@\ht\LT@lastfoot
+      \ifdim \dimen@>\ht\LT@foot
+        \dimen@\pagegoal
+        \advance\dimen@\ht\LT@foot
+        \advance\dimen@-\ht\LT@lastfoot
+        \advance\dimen@-\dp\LT@lastfoot
+        \ifdim\dimen@<\ht\z@
+          \begingroup
+            \vbadness\@M \vfuzz\maxdimen \splittopskip\z@ \splitmaxdepth\maxdimen
+            \global\setbox\atbd@ltrows\vsplit\z@ to \dimen@
+          \endgroup
+          \setbox\@cclv\vbox{\unvbox\atbd@ltrows\copy\LT@foot\vss}%
+          \@makecol
+          \@outputpage
+          \global\vsize\@colroom
+          \setbox\z@\vbox{\box\LT@head\nobreak\unvbox\z@}%
+        \fi
+      \fi
+        \unvbox\z@\nobreak\box\ifvoid\LT@lastfoot\LT@foot\else\LT@lastfoot\fi
+    \fi
+  \else
+    \setbox\@cclv\vbox{\unvbox\@cclv\copy\LT@foot\vss}%
+    \@makecol
+    \@outputpage
+      \global\vsize\@colroom
+    \copy\LT@head\nobreak
+  \fi}
+
 % ---------------------------------------------------------------------------
 % Notes: italic "NOTE: ..." paragraphs as in the originals (no frame). The
 % other admonitions keep the Sphinx boxes.
