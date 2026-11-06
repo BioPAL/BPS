@@ -2,7 +2,7 @@
  "doc": "science-guide/pfd-l2-fh",
  "title": "BIOMASS Forest Height Products Format Specification",
  "short_title": "L2 FH PFD",
- "doc_code": "BIO-BPS-FH-PFD-ARE-010256",
+ "doc_code": "BIO-BPS-FHPFD-ARE-010256",
  "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FH_PFD_v3_4_0.pdf",
  "targets": {
   "ad:1": {

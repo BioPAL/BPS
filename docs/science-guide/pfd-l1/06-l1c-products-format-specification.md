@@ -92,17 +92,74 @@ The content of the new DSR is described in the following sections.
 This DSR contains the exhaustive list of static stack processing parameters and of corrections applied.
 
 (fig:pfd-l1-35)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<style>.xsd-diagram pre.mermaid > svg { width: auto; }</style>
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 677px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class staProcessingParametersType {
+    <<complexType>>
+    processorVersion : string [1]
+    productGenerationTime : timeType [1]
+    polarisationsUsed : unsignedInt [1]
+    polarisationCombinationMethod : polarisationCombinationMethodType [1]
+    primaryImageSelectionMethod : primaryImageSelectionMethodType [1]
+    coregistrationMethod : coregistrationMethodType [1]
+    heightModel : heightModelType [1] @version
+    rfiDegradationEstimationFlag : bool [1]
+    azimuthSpectralFilteringFlag : bool [1]
+    polarisationUsedForSlowIonosphereRemoval : polarisationType [1]
+    polarisationUsedForMultiSquintCalibration : polarisationType [1]
+    calibrationPrimaryImageFlag : bool [1]
+    slowIonosphereRemovalFlag : bool [1]
+    multiSquintCalibrationFlag : bool [1]
+    multiSquintCalibrationForceIonosphereCorrectionFlag : bool [1]
+    multiSquintCalibrationDisableIonosphereCorrectionFlag : bool [1]
+    multiSquintCalibrationCoherenceImprovementThreshold : float [1]
+    multiSquintCalibrationCoherenceAzimuthWindowSize : floatWithUnit [1] @units
+    multiSquintCalibrationCoherenceRangeWindowSize : floatWithUnit [1] @units
+    multiSquintCalibrationMultiSquintCoherenceSubBandResolution : floatWithUnit [1] @units
+    multiSquintCalibrationMultiSquintHighResCoherenceAzimuthWindowSize : floatWithUnit [1] @units
+    multiSquintCalibrationMultiSquintHighResCoherenceRangeWindowSize : floatWithUnit [1] @units
+    multiSquintCalibrationMultiSquintLowResCoherenceAzimuthWindowSize : floatWithUnit [1] @units
+    multiSquintCalibrationMultiSquintLowResCoherenceRangeWindowSize : floatWithUnit [1] @units
+    skpPhaseCalibrationFlag : bool [1]
+    skpPhaseCorrectionFlag : bool [1]
+    skpPhaseCorrectionFlatteningOnlyFlag : bool [1]
+    skpEstimationWindowSize : floatWithUnit [1] @units
+    skpCalibrationPhasePostprocessing : skpPhaseCalibrationPostprocessingType [1]
+    skpPostprocessingFilterWindowSize : floatWithUnit [1] @units
+    skpGoldsteinFilterWindowSize : unsignedInt [1]
+    slowIonosphereRemovalMultiBaselineThreshold : float [1]
+    slowIonosphereRemovalUse32BitFlag : bool [1]
+    azimuthSpectralFilteringUse32BitFlag : bool [1]
+    multiSquintEstimationUse32BitFlag : bool [1]
+    multiSquintCorrectionUse32BitFlag : bool [1]
+    skpPhaseCalibrationUse32BitFlag : bool [1]
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staProcessingParametersType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staProcessingParametersType)](../../_static/figures/pfd-l1/figure_35_section_6.3.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 35</span><span class="caption-text"> — STA processing parameters DSR (staProcessingParametersType)</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-80)=
 :::{div} atbd-table
@@ -157,17 +214,44 @@ This DSR contains the exhaustive list of static stack processing parameters and 
 This DSR contains high-level information about data coregistration step.
 
 (fig:pfd-l1-36)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 562px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class staCoregistrationParametersType {
+    <<complexType>>
+    datum : datumType [1] ⊞
+    primaryImage : string [1]
+    secondaryImage : string [1]
+    primaryImageSelectionInformation : primaryImageSelectionInformationType [1]
+    normalBaseline : floatWithUnit [1] @units
+    averageRangeCoregistrationShift : floatWithUnit [1] @units
+    averageAzimuthCoregistrationShift : floatWithUnit [1] @units
+    polarisationUsed : polarisationType [1]
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staCoregistrationParametersType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staCoregistrationParametersType)](../../_static/figures/pfd-l1/figure_36_section_6.3.3.2.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 36</span><span class="caption-text"> — STA processing parameters DSR (staCoregistrationParametersType)</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-81)=
 :::{div} atbd-table
@@ -193,17 +277,56 @@ This DSR contains high-level information about data coregistration step.
 This DSR contains high-level information about calibration steps.
 
 (fig:pfd-l1-37)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 638px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class staInSARParametersType {
+    <<complexType>>
+    calibrationPrimaryImage : string [1]
+    azimuthCommonBandwidth : floatWithUnit [1] @units
+    azimuthCentralFrequency : floatWithUnit [1] @units
+    slowIonosphereRangePhaseScreen : floatWithUnit [1] @units
+    slowIonosphereAzimuthPhaseScreen : floatWithUnit [1] @units
+    slowIonosphereQuality : float [1]
+    slowIonosphereRemovalInterferometricPairs : interferometricPairListType [1] ⊞
+    multiSquintCalibrationLowResolutionFlag : bool [1]
+    multiSquintCalibrationRangePhaseSlope : floatWithUnit [1] @units
+    multiSquintCalibrationAzimuthPhaseSlope : floatWithUnit [1] @units
+    multiSquintCalibrationAzimuthShift : floatWithUnit [1] @units
+    multiSquintCalibrationAzimuthFrequencyCentroid : floatWithUnit [1] @units
+    multiSquintCalibrationIonosphericLayerAltitudes : floatArrayWithUnits [1] @count @units
+    multiSquintCalibrationCoherenceCheckValue : float [1]
+    multiSquintCalibrationIonosphereCorrectionFlag : bool [1]
+    baselineOrderingIndex : unsignedInt [1]
+    skpCalibrationPhaseScreenMean : floatWithUnit [1] @units
+    skpCalibrationPhaseScreenStd : float [1]
+    skpCalibrationPhaseScreenVar : float [1]
+    skpCalibrationPhaseScreenMAD : floatWithUnit [1] @units
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staInSARParametersType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staInSARParametersType)](../../_static/figures/pfd-l1/figure_37_section_6.3.3.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 37</span><span class="caption-text"> — STA processing parameters DSR (staInSARParametersType)</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-82)=
 :::{div} atbd-table
@@ -253,17 +376,38 @@ This DSR contains high-level information about calibration steps.
 This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.
 
 (fig:pfd-l1-38)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 472px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class staQualityType {
+    <<complexType>>
+    overallProductQualityIndex : unsignedInt [1]
+    staQualityParametersList : staQualityParametersListType [1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staQualityType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![STA quality DSR (staQualityType)](../../_static/figures/pfd-l1/figure_38_section_6.3.3.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 38</span><span class="caption-text"> — STA quality DSR (staQualityType)</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-84)=
 :::{div} atbd-table
@@ -290,17 +434,59 @@ This DSR contains in a single DSR quality flags and thresholds for basic quality
 :::
 
 (fig:pfd-l1-39)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 934px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class staQualityParametersType {
+    <<complexType>>
+    @polarisation : polarisationType [1]
+    invalidL1aDataSamples : float [1]
+    rfiDecorrelation : float [1]
+    rfiDecorrelationThreshold : float [1]
+    faradayDecorrelation : float [1]
+    faradayDecorrelationThreshold : float [1]
+    invalidResidualShiftsRatio : float [1]
+    residualShiftsQualityThreshold : float [1]
+    invalidSkpCalibrationPhaseScreenRatio : float [1]
+    skpCalibrationPhaseScreenQualityThreshold : float [1]
+    skpDecompositionIndex : unsignedInt [1]
+    coherenceMean : float [1]
+    coherenceStd : float [1]
+    coherenceMin : float [1]
+    coherenceMax : float [1]
+    coherenceMedian : float [1]
+    coherenceHistogram : «inline» [1]
+  }
+  class staQualityParametersType_coherenceHistogram["staQualityParametersType / coherenceHistogram"] {
+    <<anonymous>>
+    bins : floatArray [1] @count
+    pdfValues : floatArray [1] @count
+  }
+  staQualityParametersType --> staQualityParametersType_coherenceHistogram : coherenceHistogram
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staQualityParametersType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![STA quality DSR (staQualityParametersType)](../../_static/figures/pfd-l1/figure_39_section_6.3.3.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 39</span><span class="caption-text"> — STA quality DSR (staQualityParametersType)</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-86)=
 :::{div} atbd-table

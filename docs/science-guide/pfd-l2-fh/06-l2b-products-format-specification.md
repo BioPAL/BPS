@@ -72,17 +72,41 @@ This section describes in details the content of main ADS for L2b products. Diff
 An overview is provided by the two figures below and by the table which describes all the elements, both for L2b.
 
 (fig:pfd-fh-19)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<style>.xsd-diagram pre.mermaid > svg { width: auto; }</style>
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 440px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class mainAnnotationType {
+    <<complexType>>
+    product : productL2bL3Type [1] ⊞
+    rasterImage : rasterImageType [1] ⊞
+    inputInformation : InputInformationL2bL3ListType [1] ⊞
+    processingParameters : processingParametersL2bType [1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2b-fh-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![main L2b ADS](../../_static/figures/pfd-fh/figure_19_section_6.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 19</span><span class="caption-text"> — main L2b ADS</span></p>
 
-:::
+::::
 
 (tab:pfd-fh-39)=
 :::{div} atbd-table
@@ -107,17 +131,49 @@ This DSR contains the parameters to describe the L2b product.
 An overview is provided by figures and table below.
 
 (fig:pfd-fh-20)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 453px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class productL2bL3Type {
+    <<complexType>>
+    mission : missionType [1]
+    tileID : string [1]
+    basinID : stringListType [1] ⊞
+    productType : productType [1]
+    startTime : timeType [1]
+    stopTime : timeType [1]
+    radarCarrierFrequency : doubleWithUnit [1] @units
+    missionPhaseID : missionPhaseIDType [1]
+    sensorMode : sensorModeType [1]
+    globalCoverageID : unsignedShort [1]
+    contributingTiles : stringListType [0..1] ⊞
+    calABcoveragePerTile : calABcoverageTilesListType [0..1] ⊞
+    GNcoveragePerTile : GNcoverageTilesListType [0..1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![product L2b DSR](../../_static/figures/pfd-fh/figure_20_section_6.3.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 20</span><span class="caption-text"> — product L2b DSR</span></p>
 
-:::
+::::
 
 (tab:pfd-fh-40)=
 :::{div} atbd-table
@@ -158,17 +214,58 @@ This DSR contains, for each of the L2a Product in input to L2b processor:
 An overview is provided by figure below and in the table below for the L2inputs.
 
 (fig:pfd-fh-21)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 1162px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class InputInformationL2bL3ListType {
+    <<complexType>>
+    @count : unsignedInt [1]
+    L2aInputs : «inline» [1..∞]
+  }
+  class InputInformationL2bL3ListType_L2aInputs["InputInformationL2bL3ListType / L2aInputs"] {
+    <<anonymous>>
+    @significanceLevel : float [0..1]
+    all · L2aProductFolderName : string [1]
+    all · L2aProductDate : string [1]
+    all · L1Inputs : InputInformationL2aType [1]
+  }
+  class InputInformationL2aType {
+    productType : productType [1]
+    overallProductsQualityIndex : unsignedByte [1]
+    nominalStack : bool [1]
+    polarisationList : polarisationListType [1] ⊞
+    projection : projectionType [1]
+    footprint : floatArrayWithUnits [1] @count @units
+    verticalWavenumbers : minMaxTypeWithUnit [1] ⊞
+    heightOfAmbiguity : minMaxTypeWithUnit [1] ⊞
+    acquisitionList : acquisitionListType [1] ⊞
+  }
+  InputInformationL2bL3ListType --> InputInformationL2bL3ListType_L2aInputs : L2aInputs
+  InputInformationL2bL3ListType_L2aInputs --> InputInformationL2aType : L1Inputs
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Input information L2b DSR (InputInformationL2bL3ListType )](../../_static/figures/pfd-fh/figure_21_section_6.3.1.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 21</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType )</span></p>
 
-:::
+::::
 
 (tab:pfd-fh-41)=
 :::{div} atbd-table
@@ -201,17 +298,44 @@ An overview is provided by figure below and in the table below for the L2inputs.
 This DSR contains the list of L2b processing parameters applied. An overview is provided by figures and table below.
 
 (fig:pfd-fh-22)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 389px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class processingParametersL2bType {
+    <<complexType>>
+    processorVersion : string [1]
+    productGenerationTime : timeType [1]
+    minimumL2aCoverage : float [1]
+    forestMaskingFlag : bool [1]
+    BPS_FNF : bps_fnfType [1]
+    rollOffFactorAzimuth : float [1]
+    rollOffFactorRange : float [1]
+    compressionOptions : compressionOptionsL2b [1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![processing parameters L2b DSR (processingParametersL2bType)](../../_static/figures/pfd-fh/figure_22_section_6.3.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 22</span><span class="caption-text"> — processing parameters L2b DSR (processingParametersL2bType)</span></p>
 
-:::
+::::
 
 (tab:pfd-fh-43)=
 :::{div} atbd-table
@@ -232,17 +356,75 @@ This DSR contains the list of L2b processing parameters applied. An overview is 
 :::
 
 (fig:pfd-fh-23)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 1136px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class compressionOptionsL2b {
+    <<complexType>>
+    MDS : «inline» [1]
+    MDS_blockSize : unsignedByte [1]
+  }
+  class compressionOptionsL2b_MDS["compressionOptionsL2b / MDS"] {
+    <<anonymous>>
+    FH : «inline» [1]
+    Quality : «inline» [1]
+    BPS_FNF : «inline» [1]
+    HeatMap : «inline» [1]
+    acquisitionIdImage : «inline» [1]
+  }
+  class compressionOptionsL2b_MDS_FH["compressionOptionsL2b / MDS / FH"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    MAX_Z_ERROR : float [1]
+  }
+  class compressionOptionsL2b_MDS_Quality["compressionOptionsL2b / MDS / Quality"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    MAX_Z_ERROR : float [1]
+  }
+  class compressionOptionsL2b_MDS_BPS_FNF["compressionOptionsL2b / MDS / BPS_FNF"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+  }
+  class compressionOptionsL2b_MDS_HeatMap["compressionOptionsL2b / MDS / HeatMap"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    MAX_Z_ERROR : float [1]
+  }
+  class compressionOptionsL2b_MDS_acquisitionIdImage["compressionOptionsL2b / MDS / acquisitionIdImage"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+  }
+  compressionOptionsL2b --> compressionOptionsL2b_MDS : MDS
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_FH : FH
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_Quality : Quality
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_BPS_FNF : BPS_FNF
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_HeatMap : HeatMap
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_acquisitionIdImage : acquisitionIdImage
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Processing parameters L2b DSR (compressionOptionsL2bType)](../../_static/figures/pfd-fh/figure_23_section_6.3.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 23</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
 
-:::
+::::
 
 (tab:pfd-fh-44)=
 :::{div} atbd-table
