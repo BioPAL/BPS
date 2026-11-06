@@ -62,11 +62,48 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-xetex \
-            fonts-dejavu
+            fonts-dejavu \
+            fonts-liberation
 
-      - name: Build ATBD web export PDF
+      # Mermaid diagrams are rendered to PNG in the PDFs (sphinxcontrib-mermaid);
+      # puppeteer uses the Chrome preinstalled on the runner.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache mermaid-cli
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/mermaid-cli
+          key: mermaid-cli-11-${{ runner.os }}
+
+      - name: Install mermaid-cli
         continue-on-error: true
-        run: make -C docs atbd-pdf
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: |
+          npm install --prefix ~/.cache/mermaid-cli --no-audit --no-fund @mermaid-js/mermaid-cli@11
+          echo "$HOME/.cache/mermaid-cli/node_modules/.bin" >> "$GITHUB_PATH"
+
+      # Never blocks the site: a missing PDF only hides its download button.
+      - name: Build Science Guide web export PDFs
+        continue-on-error: true
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: make -C docs atbd-pdf-all
+
+      - name: Upload Science Guide PDFs
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: science-guide-pdfs
+          path: |
+            docs/_static/pdf/*.pdf
+            docs/_build/atbd-pdf/*/*.log
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Build HTML
         env:
