@@ -21,7 +21,7 @@ def interpolate_points_on_grid(
     query_points: tuple[npt.NDArray[float], npt.NDArray[float]],
     *,
     query_points_on_grid: bool = False,
-    fill_value: float = None,
+    fill_value: float | None = None,
 ) -> npt.NDArray:
     """
     Interpolate the grid values over a new grid.

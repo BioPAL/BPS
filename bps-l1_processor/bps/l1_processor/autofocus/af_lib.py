@@ -166,7 +166,15 @@ def read_data(product: Path, channel: int = 1) -> np.ndarray:
 
 
 class ImportFaraday:
-    def __init__(self, folder2operate, folder_bb, folder_bb_fullres, folder_plane, folder_bcos, folder_frcoh):
+    def __init__(
+        self,
+        folder2operate,
+        folder_bb,
+        folder_bb_fullres,
+        folder_plane,
+        folder_bcos,
+        folder_frcoh,
+    ):
         pf_in = io.open_product_folder(folder2operate)
         channel = io.read_metadata(pf_in.get_channel_metadata(1))
         sc = channel.get_sampling_constants()
@@ -292,14 +300,27 @@ class masterAutofocus:
 
         bps_logger.info("Autofocus - Initializing shift calculator...")
         self.shift_calculator = ShiftCalculator_C(
-            self.centers, [self.delta_aa, self.delta_rr], coh_flag=0, mode=1, usf=1024, Ca=8, Cr=8, sldist=1
+            self.centers,
+            [self.delta_aa, self.delta_rr],
+            coh_flag=0,
+            mode=1,
+            usf=1024,
+            Ca=8,
+            Cr=8,
+            sldist=1,
         )
 
         if self.phase_fr is not None:  # If phase_fr is available, resample it to the block centers
             self.__resampleFaraday__()
 
         self.integrator = Integrator2D(
-            self.dt, self.N_az_blocks, self.N_rg_blocks, self.npols_use, self.weighted, self.constrained, self.phase_fr
+            self.dt,
+            self.N_az_blocks,
+            self.N_rg_blocks,
+            self.npols_use,
+            self.weighted,
+            self.constrained,
+            self.phase_fr,
         )
         self.__run_iterations__()
 
@@ -312,12 +333,14 @@ class masterAutofocus:
         # Resample phase from FR and sigma2 to the block centers
         pha_fr_zp = np.zeros((self.Nax, self.Nrx), self.phase_fr.data.dtype)
         pha_fr_zp[
-            self.delta_aa // 2 : self.NaSLC + self.delta_aa // 2, self.delta_rr // 2 : self.NrSLC + self.delta_rr // 2
+            self.delta_aa // 2 : self.NaSLC + self.delta_aa // 2,
+            self.delta_rr // 2 : self.NrSLC + self.delta_rr // 2,
         ] = self.phase_fr.data
         self.phase_fr.data = pha_fr_zp[self.iterables[0], :][:, self.iterables[1]]
 
         pha_fr_zp[
-            self.delta_aa // 2 : self.NaSLC + self.delta_aa // 2, self.delta_rr // 2 : self.NrSLC + self.delta_rr // 2
+            self.delta_aa // 2 : self.NaSLC + self.delta_aa // 2,
+            self.delta_rr // 2 : self.NrSLC + self.delta_rr // 2,
         ] = self.phase_fr.sigma2_fr
         self.phase_fr.sigma2_fr = pha_fr_zp[self.iterables[0], :][:, self.iterables[1]]
 
@@ -330,8 +353,16 @@ class masterAutofocus:
         save_ph_acc_aresys(
             self.folder2operate,
             self.folderPhaseScreen,
-            np.pad(self.ph_int, [(self.NaSLCStart, self.NaSLCStart), (0, 0), (0, 0)], "edge"),
-            np.pad(self.acc_int, [(self.NaSLCStart, self.NaSLCStart), (0, 0), (0, 0)], "edge"),
+            np.pad(
+                self.ph_int,
+                [(self.NaSLCStart, self.NaSLCStart), (0, 0), (0, 0)],
+                "edge",
+            ),
+            np.pad(
+                self.acc_int,
+                [(self.NaSLCStart, self.NaSLCStart), (0, 0), (0, 0)],
+                "edge",
+            ),
             self.saveAllScreens,
         )
 
@@ -417,7 +448,11 @@ class masterAutofocus:
         # Extract Doppler rate for every range position at the middle of the image
         Ndr = len(self.drv._poly_list)
         self.Kt_g, self.ve_g = drv2ve(
-            self.drv, Ndr // 2, 1 / self.RSF * np.arange(self.NrSLC), self.wl, self.r0SLC
+            self.drv,
+            Ndr // 2,
+            1 / self.RSF * np.arange(self.NrSLC),
+            self.wl,
+            self.r0SLC,
         )  # ground velocity in middle
 
         # Solve iono geometry and effective velocity
@@ -600,9 +635,11 @@ class masterAutofocus:
 
         self.Kt_use = (
             np.ones((self.N_az_blocks, self.N_rg_blocks), np.float32)
-            * np.pad(Kt_use, (self.delta_rr // 2, self.Nrx - (self.delta_rr // 2 + self.NrSLC)), mode="edge")[
-                self.iterables[1]
-            ][np.newaxis, :]
+            * np.pad(
+                Kt_use,
+                (self.delta_rr // 2, self.Nrx - (self.delta_rr // 2 + self.NrSLC)),
+                mode="edge",
+            )[self.iterables[1]][np.newaxis, :]
         )
 
         bps_logger.info(
@@ -658,7 +695,11 @@ class masterAutofocus:
             if self.iteration == 0:
                 self.ph_int = (ph_int[: self.NaSLC, : self.NrSLC])[..., np.newaxis]
             else:
-                self.ph_int = np.append(self.ph_int, (ph_int[: self.NaSLC, : self.NrSLC])[..., np.newaxis], axis=2)
+                self.ph_int = np.append(
+                    self.ph_int,
+                    (ph_int[: self.NaSLC, : self.NrSLC])[..., np.newaxis],
+                    axis=2,
+                )
 
             try:
                 self.ph_int[..., self.iteration] += self.phase_fr.plane_phase
@@ -668,13 +709,21 @@ class masterAutofocus:
             # If self.acc exist then interpolate it to full resolution too
             try:
                 acc = interpolate_to_grid(
-                    self.acc[..., -1], np.arange(self.N_rg_blocks), np.arange(self.N_az_blocks), aux1, aux2
+                    self.acc[..., -1],
+                    np.arange(self.N_rg_blocks),
+                    np.arange(self.N_az_blocks),
+                    aux1,
+                    aux2,
                 )
 
                 if self.iteration == 0:
                     self.acc_int = (acc[: self.NaSLC, : self.NrSLC])[..., np.newaxis]
                 else:
-                    self.acc_int = np.append(self.acc_int, (acc[: self.NaSLC, : self.NrSLC])[..., np.newaxis], axis=2)
+                    self.acc_int = np.append(
+                        self.acc_int,
+                        (acc[: self.NaSLC, : self.NrSLC])[..., np.newaxis],
+                        axis=2,
+                    )
             except AttributeError:
                 pass
 
@@ -813,7 +862,16 @@ class masterAutofocus:
 
 
 class Integrator2D:
-    def __init__(self, dt, Na_blocks, Nr_blocks, nPol, weighted=False, constrained=True, phase_fr=None):
+    def __init__(
+        self,
+        dt,
+        Na_blocks,
+        Nr_blocks,
+        nPol,
+        weighted=False,
+        constrained=True,
+        phase_fr=None,
+    ):
         hl = time()
 
         bps_logger.info("Autofocus - Initializing integrator...")
@@ -850,7 +908,9 @@ class Integrator2D:
                     ).astype("float32")
                     # L = ((-np.eye(self.NN) + np.eye(self.NN, k=+self.Nr_blocks)) / self.dt).astype('float32')
                     self.LL = np.append(
-                        np.tile(L @ L, (self.nPol, 1)), (np.eye(self.NN) - np.eye(self.NN, k=+1)), axis=0
+                        np.tile(L @ L, (self.nPol, 1)),
+                        (np.eye(self.NN) - np.eye(self.NN, k=+1)),
+                        axis=0,
                     )
                 else:
                     bps_logger.info("Autofocus - Initializing linear transformation matrix...")
@@ -1032,7 +1092,18 @@ class ShiftCalculator_C:
     Upsampling method
     """
 
-    def __init__(self, centers, block_dims, usf=1024, Ca=32, Cr=32, coh_flag=1, mode=0, axis=0, sldist=1):
+    def __init__(
+        self,
+        centers,
+        block_dims,
+        usf=1024,
+        Ca=32,
+        Cr=32,
+        coh_flag=1,
+        mode=0,
+        axis=0,
+        sldist=1,
+    ):
         """
         :param centers: list of centers of blocks
         :param block_dims: [delta_a, delta_r] dimensions of block
@@ -1145,7 +1216,7 @@ def extract_polynomial_coefficients(drv, index):
 
 
 def drv2ve(drv, aidx, x2, wl, r0vec):
-    _, ss_ref_az, _, coeff = extract_polynomial_coefficients(drv, aidx)
+    _, _ss_ref_az, _, coeff = extract_polynomial_coefficients(drv, aidx)
 
     p = np.poly1d(coeff)
     Kt = p(x2)
@@ -1241,7 +1312,10 @@ def Cart2Ellip(xyz, r_eq=R_EQ_EARTH, r_pl=R_PL_EARTH, indeg=False):
     theta = np.arctan2(xyz[:, 2] * r_eq, s * r_pl)
     llh = np.empty([N, 3], np.float64)
     llh[:, 0] = np.arctan2(xyz[:, 1], xyz[:, 0])
-    llh[:, 1] = np.arctan2(xyz[:, 2] + e_prima_sq * r_pl * (np.sin(theta) ** 3), s - e_sq * r_eq * (np.cos(theta) ** 3))
+    llh[:, 1] = np.arctan2(
+        xyz[:, 2] + e_prima_sq * r_pl * (np.sin(theta) ** 3),
+        s - e_sq * r_eq * (np.cos(theta) ** 3),
+    )
     if indeg:
         llh[:, 0] *= 180.0 / np.pi
         llh[:, 1] *= 180.0 / np.pi
@@ -1306,10 +1380,10 @@ def ComputeEffectiveVelocityAnalytic(ptx, vtx, ta, xyz, wl, fdc, abw, refine=Tru
     # manipulates shapes
     M = len(xyz.shape)
     if M == 2:
-        Mr, aux = xyz.shape
+        Mr, _ = xyz.shape
         xyzl = xyz.reshape([1, 1, Mr, 3])
     elif M == 3:
-        Ma, Mr, aux = xyz.shape
+        Ma, Mr, _aux = xyz.shape
         xyzl = xyz.reshape([1, Ma, Mr, 3])
     else:
         xyzl = xyz.reshape([1, 1, 1, 3])
@@ -1509,7 +1583,14 @@ def wls_plane_coeffs(num_blocks, trg, taz, phase, coher, n_coeff):
     for m in range(num_blocks[0]):
         for n in range(num_blocks[1]):
             if n_coeff == 6:
-                A[count, :] = [1, trg[n], taz[m], trg[n] * trg[n], trg[n] * taz[m], taz[m] * taz[m]]
+                A[count, :] = [
+                    1,
+                    trg[n],
+                    taz[m],
+                    trg[n] * trg[n],
+                    trg[n] * taz[m],
+                    taz[m] * taz[m],
+                ]
             else:
                 A[count, :] = [1, trg[n], taz[m], trg[n] * taz[m]]
             B[count] = phase[m, n]
@@ -1590,7 +1671,7 @@ class PieceShiftCalculator_ups:
         :return: sub-pixel locations of cct peak in az and in range + coherence between sub-looks.
         """
 
-        ccf, cct, coh = self.cct_calc_rft_norm(img)
+        _ccf, cct, coh = self.cct_calc_rft_norm(img)
 
         shift = self.__dft_shift_log2__(cct)
 
@@ -1653,7 +1734,11 @@ class PieceShiftCalculator_ups:
 
             # Pad with zeros in each dimension before and after the data with
             # Ndim/2 zeros so that the shape is now (Na*2 , Nr*2).
-            SB[ii] = np.pad(SB[ii], ((int(Na / 2), int(Na / 2)), (int(Nr / 2), int(Nr / 2))), mode="constant")
+            SB[ii] = np.pad(
+                SB[ii],
+                ((int(Na / 2), int(Na / 2)), (int(Nr / 2), int(Nr / 2))),
+                mode="constant",
+            )
 
             # Bring back to frequency domain
             if self.axis == 0:

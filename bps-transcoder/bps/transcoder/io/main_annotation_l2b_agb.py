@@ -49,7 +49,7 @@ class PercentEstimate:
 class EstimatedParametersDate:
     n: PercentEstimate
     a: PercentEstimate
-    l: PercentEstimate  # noqa: E741
+    l: PercentEstimate
     dates: str
 
 

@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 import numpy as np
 from bps.common.io.parsing import parse
@@ -88,7 +89,7 @@ class EOOrbit(Orbit):
         Generic Orbit class
     """
 
-    orbit_type_dict = {
+    orbit_type_dict: ClassVar[dict[str, str]] = {
         "AUX_PREORB": EOrbitType.PREDICTED.value,
         "AUX_RESORB": EOrbitType.RESTITUTED.value,
         "AUX_POEORB": EOrbitType.PRECISE.value,

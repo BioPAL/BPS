@@ -247,9 +247,9 @@ class BIOMASSL1ProductReader:
             swath_info = metadata.SwathInfo(swath, polarization, acquisition_prf)
             swath_info.rank = annotation.instrument_parameters.rank
             swath_info.range_delay_bias = 0
-            swath_info.acquisition_start_time = list(
-                annotation.instrument_parameters.first_line_sensing_time_list.values()
-            )[0]
+            swath_info.acquisition_start_time = next(
+                iter(annotation.instrument_parameters.first_line_sensing_time_list.values())
+            )
 
             swath_info.azimuth_steering_rate_reference_time = 0
             swath_info.azimuth_steering_rate_pol = (0, 0, 0)

@@ -9,18 +9,14 @@ line-ending = "lf"
 
 [lint]
 ignore = [
-    "RUF046",  # unnecessary-cast-to-int
-    "RUF059",  # unused-unpacked-variable
     "BLE001",  # blind-except
     "PLR0402", # manual-from-import
     "B009",    # get-attr-with-constant
-    "RUF012",  # mutable-class-default
     "C408",    # unnecessary-collection-call
     "B010",    # set-attr-with-constant
     "PLR1711", # useless-return
     "C400",    # unnecessary-generator-list
     "C410",    # unnecessary-literal-within-list-call
-    "RUF022",  # unsorted-dunder-all
     "PLR2044", # empty-comment
     "D419",    # empty-docstring
     "B008",    # function-call-in-default-argument
@@ -31,20 +27,15 @@ ignore = [
     "S110",    # try-except-pass
     "TRY004",  # type-check-without-type-error
     "C401",    # unnecessary-generator-set
-    "RUF015",  # unnecessary-iterable-allocation-for-first-element
-    "RUF100",  # unused-noqa
     "PLC0206", # dict-index-missing-items
     "PYI013",  # ellipsis-in-non-empty-class-body
-    "RUF009",  # function-call-in-dataclass-default-argument
     "B023",    # function-uses-loop-variable
-    "RUF013",  # implicit-optional
     "B020",    # loop-variable-overrides-iterator
     "FURB192", # sorted-min-max
     "C414",    # unnecessary-double-cast-or-process
     "C417",    # unnecessary-map
     "PIE790",  # unnecessary-placeholder
     "PIE808",  # unnecessary-range-start
-    "RUF007",  # zip-instead-of-pairwise
 ]
 
 [lint.per-file-ignores]

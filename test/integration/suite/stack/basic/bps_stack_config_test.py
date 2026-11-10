@@ -562,7 +562,7 @@ def test_bps_sta_019_int_nondefault_l1c_config(session: TestSession, env: Enviro
     """4 Frames stack with duplicates not allowed."""
     no_data_value = -1234567.0
 
-    aux_pps, job_order_filename, l1a_frame_list = _initialize_stack_int_nominal_test(data, coreg_primary_index=0)
+    aux_pps, job_order_filename, _l1a_frame_list = _initialize_stack_int_nominal_test(data, coreg_primary_index=0)
     aux_pps.set("//azimuthSpectralFilteringFlag/text()", "false")
     aux_pps.set("//skpPhaseEstimationFlag/text()", "false")
     aux_pps.set("//noPixelValue/text()", no_data_value)
