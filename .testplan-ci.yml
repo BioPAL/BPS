@@ -78,7 +78,7 @@ create_env:
         conda index ./local_channel
         conda config --prepend channels conda-forge
         conda config --prepend channels ${PWD}/local_channel
-        conda create -y --prefix ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/pipeline-$CI_PIPELINE_ID python=3.12 bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fh_processor bps-l2b_fd_processor bps-l2b_agb_processor
+        conda create -y --prefix ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/pipeline-$CI_PIPELINE_ID python=3.14 bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fh_processor bps-l2b_fd_processor bps-l2b_agb_processor
         conda activate ${INTERNAL_PIPELINES_DATA_ROOT}/conda_envs/pipeline-$CI_PIPELINE_ID
         pip install -r ${INTERNAL_TEST_PLAN_ROOT}/test_plan/tools/scripts/requirements.txt
       fi
