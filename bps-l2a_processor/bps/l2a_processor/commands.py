@@ -211,16 +211,15 @@ def run_l2a_processing(
                 == 0  # this is to absure entering here, in case no reference is present (TBD for int subsetting)
                 or stack_product_obj.stack_coregistration_parameters.primary_image
                 == stack_product_obj.stack_coregistration_parameters.secondary_image
+            ) and (
+                stack_product_obj.stack_coregistration_parameters.primary_image
+                == stack_product_obj.stack_coregistration_parameters.secondary_image
             ):
-                if (
-                    stack_product_obj.stack_coregistration_parameters.primary_image
-                    == stack_product_obj.stack_coregistration_parameters.secondary_image
-                ):
-                    # There is not a specific flag telling which one is the primary image
-                    # this is the way to check for it.
-                    # Primary Image Index is a zero-based index of the primary image:
-                    # the index is respect the order as found in the job order (NOT baselines-sorted)
-                    primary_image_index = counter
+                # There is not a specific flag telling which one is the primary image
+                # this is the way to check for it.
+                # Primary Image Index is a zero-based index of the primary image:
+                # the index is respect the order as found in the job order (NOT baselines-sorted)
+                primary_image_index = counter
 
             # manually read the LUTs from the product
             (
@@ -717,7 +716,7 @@ def _basin_check_intersection(
         poly_tile = ogr.CreateGeometryFromWkt(wkt_tile)
 
         # Check if the Country intersects the STA footprint
-        if not poly_tile.Intersection(poly_stack).ExportToWkt() == "POLYGON EMPTY":
+        if poly_tile.Intersection(poly_stack).ExportToWkt() != "POLYGON EMPTY":
             is_in_this_country = True
             break
 

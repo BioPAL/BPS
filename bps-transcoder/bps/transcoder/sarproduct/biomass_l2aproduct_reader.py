@@ -104,13 +104,13 @@ class BIOMASSL2aProductReader:
             metadata_read["COMPRESSION"] = data_driver.GetMetadata("IMAGE_STRUCTURE")["COMPRESSION"]
 
             ### TO BE REMOVED, RETRO COMPATIBILITY for OLD GEOTIFF TAGS
-            if "TIFFTAG_IMAGEDESCRIPTION" not in metadata_read.keys():
+            if "TIFFTAG_IMAGEDESCRIPTION" not in metadata_read:
                 metadata_read["TIFFTAG_IMAGEDESCRIPTION"] = metadata_read["ImageDescription"]
                 metadata_read["TIFFTAG_SOFTWARE"] = metadata_read["Software"]
                 metadata_read["TIFFTAG_DATETIME"] = metadata_read["DateTime"]
             ###
 
-            if "GeographicTypeGeoKey" not in metadata_read.keys():
+            if "GeographicTypeGeoKey" not in metadata_read:
                 metadata_read["GeographicTypeGeoKey"] = 4030
 
             metadata_dict[key] = BIOMASSL2aProductMeasurement.MetadataCOG(

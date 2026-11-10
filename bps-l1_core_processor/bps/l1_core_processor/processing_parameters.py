@@ -404,9 +404,8 @@ class MultilookerConf:
             central_frequency: list[Quantity]
 
             def __setattr__(self, prop, value):
-                if prop == "central_frequency":
-                    if not self._is_central_frequency_unit_valid(value):
-                        raise ValueError("Invalid central frequency unit")
+                if prop == "central_frequency" and not self._is_central_frequency_unit_valid(value):
+                    raise ValueError("Invalid central frequency unit")
 
                 super().__setattr__(prop, value)
 

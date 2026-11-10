@@ -759,7 +759,7 @@ class BIOMASSStackProductReader:
             values[values == lut_nodata_value] = _value_or(self.nodata_fill_value, default_value=lut_nodata_value)
             return values.astype(dtype)
         except Exception as e:
-            if variable not in dataset.groups[group].__dict__.keys() and variable in REQUIRED_LUT_LAYERS:
+            if variable not in dataset.groups[group].__dict__ and variable in REQUIRED_LUT_LAYERS:
                 bps_logger.warning("%s is missing from %s/%s: %s", variable, self.product_path.name, group, str(e))
             return None
 

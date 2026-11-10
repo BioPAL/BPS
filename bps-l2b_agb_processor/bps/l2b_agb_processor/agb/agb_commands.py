@@ -28,7 +28,11 @@ from bps.l2b_agb_processor.agb import BPS_L2B_AGB_PROCESSOR_NAME
 from bps.l2b_agb_processor.core.aux_pp2_2b_agb import AuxProcessingParametersL2BAGB
 from bps.l2b_agb_processor.core.joborder_l2b_agb import L2bAGBJobOrder
 from bps.l2b_agb_processor.core.translate_job_order import L2B_OUTPUT_PRODUCT_AGB
-from bps.l2b_agb_processor.l2b_common_functionalities import _check_coverage, _get_l2a_cumulative_footprint, dgg_tiling
+from bps.l2b_agb_processor.l2b_common_functionalities import (
+    _check_coverage,
+    _get_l2a_cumulative_footprint,
+    dgg_tiling,
+)
 from bps.transcoder.io import common_annotation_l2l3, main_annotation_l2b_agb
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductGN
 from bps.transcoder.sarproduct.biomass_l2bagbproduct import (
@@ -45,7 +49,10 @@ from bps.transcoder.sarproduct.biomass_l2bagbproduct_writer import (
     BIOMASSL2bAGBProductWriter,
 )
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
-from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
+from bps.transcoder.sarproduct.l2_annotations import (
+    COORDINATE_REFERENCE_SYSTEM,
+    ground_corner_points,
+)
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
 from perseo_core.timing import PreciseDateTime
 
@@ -138,7 +145,7 @@ class AGBL2B:
                 )
 
             for tile_id in l2a_product.main_ads_product.tile_id_list:
-                if tile_id not in l2a_tile_id_dict.keys():
+                if tile_id not in l2a_tile_id_dict:
                     l2a_tile_id_dict[tile_id] = 1
                 else:
                     l2a_tile_id_dict[tile_id] += 1
@@ -159,9 +166,8 @@ class AGBL2B:
 
         self.product_path = self.job_order.output_directory
 
-        if self.job_order.output_baseline is not None:
-            if self.job_order.output_product == L2B_OUTPUT_PRODUCT_AGB:
-                self.output_baseline = self.job_order.output_baseline
+        if self.job_order.output_baseline is not None and self.job_order.output_product == L2B_OUTPUT_PRODUCT_AGB:
+            self.output_baseline = self.job_order.output_baseline
 
         self.product_type = L2B_OUTPUT_PRODUCT_AGB
 
@@ -238,12 +244,10 @@ class AGBL2B:
         )
         counter_3x3 = 0
         for tile_id in tiles_ids_5x5_list:
-            num_l2a_contributing_for_this_tile = [
-                (l2a_input_tiles_dict[tile_id] if tile_id in l2a_input_tiles_dict.keys() else 0)
-            ][0]
+            num_l2a_contributing_for_this_tile = [(l2a_input_tiles_dict.get(tile_id, 0))][0]
 
             num_cal_ab_contributing_for_this_tile = 0
-            for key in self.cal_agb_product_dict.keys():
+            for key in self.cal_agb_product_dict:
                 if key == tile_id:
                     num_cal_ab_contributing_for_this_tile += 1
 
@@ -353,7 +357,7 @@ class AGBL2B:
             # Complete filtered cal_ab_coverage_per_tile
             # Because data_object_5x5 does not contain cal_ab which are out of GN coverage
             tile_ids_cal_ab_discarted = []
-            for tile_id in self.cal_agb_product_dict.keys():
+            for tile_id in self.cal_agb_product_dict:
                 if tile_id not in list(data_object_5x5.keys()):
                     tile_ids_cal_ab_discarted.append(tile_id)
             data_object_with_added_cal_abs = _create_cal_ab_object(
@@ -375,7 +379,7 @@ class AGBL2B:
                 self.aux_pp2_ab.stdAGBLimits,
                 self.aux_pp2_ab.relativeAGBLimits,
             )
-            for tile_id in additional_cal_ab_after_global_filtering_per_tile.keys():
+            for tile_id in additional_cal_ab_after_global_filtering_per_tile:
                 cal_ab_coverage_per_tile[tile_id] = {}
                 cal_ab_coverage_per_tile[tile_id]["after_global_filtering"] = (
                     additional_cal_ab_after_global_filtering_per_tile[tile_id]
@@ -398,9 +402,9 @@ class AGBL2B:
             #       coverage in main annotation is mandatory for all 5x5 tiles and for all input GN
             assert cal_ab_original_coverage_per_tile is not None
             assert gn_coverage_per_tile is not None
-            for tile_id in cal_ab_original_coverage_per_tile.keys():
+            for tile_id in cal_ab_original_coverage_per_tile:
                 cal_ab_coverage_per_tile[tile_id]["original_coverage"] = cal_ab_original_coverage_per_tile[tile_id]
-            for tile_id in gn_coverage_per_tile.keys():
+            for tile_id in gn_coverage_per_tile:
                 gn_coverage_per_tile[tile_id]["original_coverage"] = gn_original_coverage_per_tile[tile_id]
 
             # Fill with zeros all the tiles not covered
@@ -463,7 +467,7 @@ class AGBL2B:
                 bps_logger.info(f"Using AUX PP use constant N: {self.aux_pp2_ab.useConstantN}")
                 if self.aux_pp2_ab.useConstantN:
                     bps_logger.info(f"Using AUX PP valuesConstantN: {self.aux_pp2_ab.valuesConstantN}")
-                if self.aux_pp2_ab.useConstantN and not self.aux_pp2_ab.indexingN == "p":
+                if self.aux_pp2_ab.useConstantN and self.aux_pp2_ab.indexingN != "p":
                     bps_logger.info(
                         f"    indexingN modified from {self.aux_pp2_ab.indexingN} to 'p', since use constant N is {self.aux_pp2_ab.useConstantN}"
                     )
@@ -610,7 +614,7 @@ class AGBL2B:
                 agb_tile_iteration = {}
                 agb_tile_status = {}
                 for tile_id in tiles_ids_3x3_list:
-                    if tile_id in data_object_5x5.keys():
+                    if tile_id in data_object_5x5:
                         bps_logger.info(f"    Computation for Tile {tile_id}:")
 
                         num_lat = len(data_object_5x5[tile_id]["latitude_axis"])
@@ -1586,7 +1590,7 @@ def construct_5x5_data_object(
                 )
 
             # References management (here, fill both CAL_AB and AGB, they are mergedf in consolidation function)
-            cal_ab = cal_agb_product_dict[tile_id]["cal_ab"] if tile_id in cal_agb_product_dict.keys() else None
+            cal_ab = cal_agb_product_dict[tile_id]["cal_ab"] if tile_id in cal_agb_product_dict else None
 
             l2b_agb = (
                 [
@@ -2053,7 +2057,7 @@ def consolidate_5x5_data_block(
     # for the cal_ab and gn filtered coverage (for main annotation)
     cal_ab_filtered_coverage_per_tile = {}
     gn_filtered_coverage_per_tile = {}
-    for tile_id in cal_ab_after_global_filtering_per_tile.keys():
+    for tile_id in cal_ab_after_global_filtering_per_tile:
         cal_ab_filtered_coverage_per_tile[tile_id] = {}
 
         cal_ab_filtered_coverage_per_tile[tile_id]["after_global_filtering"] = cal_ab_after_global_filtering_per_tile[
@@ -2073,7 +2077,7 @@ def consolidate_5x5_data_block(
             cal_ab_after_lcmclass_filtering_per_tile[tile_id]
         )
 
-    for tile_id in gn_after_global_filtering_per_tile.keys():
+    for tile_id in gn_after_global_filtering_per_tile:
         gn_filtered_coverage_per_tile[tile_id] = {}
 
         gn_filtered_coverage_per_tile[tile_id]["after_global_filtering"] = gn_after_global_filtering_per_tile[tile_id]
@@ -3198,7 +3202,7 @@ def get_size(obj, seen=None):
     seen.add(obj_id)
     if isinstance(obj, dict):
         size += sum([get_size(v, seen) for v in obj.values()])
-        size += sum([get_size(k, seen) for k in obj.keys()])
+        size += sum([get_size(k, seen) for k in obj])
     elif hasattr(obj, "__dict__"):
         size += get_size(obj.__dict__, seen)
     elif hasattr(obj, "__iter__") and not isinstance(obj, str | bytes | bytearray):
@@ -3436,7 +3440,7 @@ def _create_cal_ab_object(
         dgg_tile_longitude_axis_curr = cal_agb_product_dict[tile_id]["dgg_lon_axis_deg"]
 
         # References management (here, fill both CAL_AB and AGB, they are mergedf in consolidation function)
-        cal_ab = cal_agb_product_dict[tile_id]["cal_ab"] if tile_id in cal_agb_product_dict.keys() else None
+        cal_ab = cal_agb_product_dict[tile_id]["cal_ab"] if tile_id in cal_agb_product_dict else None
 
         # LCM is one for all the inputs, interpolation over the tile axis needed
         # interpolator Nearest Neigbour

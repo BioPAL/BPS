@@ -236,12 +236,10 @@ class InternalCalibrationParameters:
                     np.abs(np.angle(d) - drift_phase_mean) / drift_phase_std for d in drift
                 ]
                 drift_relative_check = [
-                    True
-                    if (
+                    bool(
                         a <= quality_parameters.max_drift_amplitude_std_fraction
                         and p <= quality_parameters.max_drift_phase_std_fraction
                     )
-                    else False
                     for a, p in zip(drift_amplitude_relative_deviation, drift_phase_relative_deviation)
                 ]
                 drift_amplitude_absolute_deviation = [
@@ -253,12 +251,10 @@ class InternalCalibrationParameters:
                     for d in drift
                 ]
                 drift_absolute_check = [
-                    True
-                    if (
+                    bool(
                         a <= quality_parameters.max_drift_amplitude_error
                         and p <= quality_parameters.max_drift_phase_error
                     )
-                    else False
                     for a, p in zip(drift_amplitude_absolute_deviation, drift_phase_absolute_deviation)
                 ]
             else:

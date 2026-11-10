@@ -979,7 +979,7 @@ class BIOMASSL2aProductWriter:
                 self.product.main_ads_processing_parameters,
                 main_annotation_l2a_gn.BIOMASSL2aMainADSProcessingParametersGN,
             )
-            for key in self.product.measurement.data_dict.keys():
+            for key in self.product.measurement.data_dict:
                 if key not in "gn":
                     raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
@@ -1003,7 +1003,7 @@ class BIOMASSL2aProductWriter:
             )
 
         else:
-            for key in self.product.measurement.data_dict.keys():
+            for key in self.product.measurement.data_dict:
                 if key not in [
                     "fd",
                     "cfm",
@@ -1876,7 +1876,7 @@ class BIOMASSL2aProductWriter:
         if not dirname.exists():
             dirname.mkdir(parents=True, exist_ok=True)
 
-        if "gn" in self.product.measurement.data_dict.keys():
+        if "gn" in self.product.measurement.data_dict:
             # For GN, genwerate an RGB image using the three polarizations
 
             # Assign input data (absolute values in linear scale) to RGB channels
@@ -1945,7 +1945,7 @@ class BIOMASSL2aProductWriter:
         else:
             # For all but not GN, generate a simple image (not RGB)
 
-            for key in self.product.measurement.data_dict.keys():
+            for key in self.product.measurement.data_dict:
                 (data_lines, data_samples) = self.product.measurement.data_dict[key][0].shape
 
                 imm_to_save = self.product.measurement.data_dict[key][0]

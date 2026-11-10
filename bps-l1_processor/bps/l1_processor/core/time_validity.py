@@ -28,12 +28,11 @@ def _raise_on_inconsistent_timings(
 ):
     """Check wether processing time in the job order, in the standard product
     and in the orbit and attitude files are consistent"""
-    if jo_interval is not None:
-        if not are_overlapping(jo_interval, data_interval):
-            raise RuntimeError(
-                f"Requested times [{jo_interval[0]}, {jo_interval[1]}] are incompatible"
-                + f" with input phenomenon times [{data_interval[0]}, {data_interval[1]}]"
-            )
+    if jo_interval is not None and not are_overlapping(jo_interval, data_interval):
+        raise RuntimeError(
+            f"Requested times [{jo_interval[0]}, {jo_interval[1]}] are incompatible"
+            + f" with input phenomenon times [{data_interval[0]}, {data_interval[1]}]"
+        )
 
     display_name = "requested times" if jo_interval else "phenomenon times"
     proc_interval = jo_interval if jo_interval else data_interval
