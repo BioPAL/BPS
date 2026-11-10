@@ -7,7 +7,7 @@ readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
     "click",
-    "gdal>=3.10,<3.11",
+    "gdal>=3.13,<3.14",
     "numba >= 0.57",
     "numpy",
     "scipy",

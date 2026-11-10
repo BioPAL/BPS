@@ -96,7 +96,7 @@ Open a command window with *conda* available and follow this procedure:
 3. Install GDAL library:
 
     ```bash
-    conda install -c conda-forge GDAL=3.10
+    conda install -c conda-forge GDAL=3.13
     ```
 
 4. Install BPS packages. Note that you don't have to install all the BPS processors to make it work, but only those that you are interested in. The installation order reported below ensures that inter-dependencies will be correctly resolved:

@@ -8,7 +8,7 @@ license = { file = "LICENSE.txt" }
 dependencies = [
     "arepytools>=1.9.0",
     "click",
-    "gdal>=3.10,<3.11",
+    "gdal>=3.13,<3.14",
     "numba >= 0.57",
     "numpy",
     "numexpr",
