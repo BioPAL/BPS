@@ -20,7 +20,7 @@ UNITTEST_PYVERSIONS = ["3.12"]
 CONDABUILD_BACKEND = "mamba"
 WIN32 = sys.platform == "win32"
 PLATFORM = "win" if WIN32 else "linux"
-GDAL_VERSION = "3.10.2"
+GDAL_VERSION = "3.13.3"
 RUFF_VERSION = "0.15.7"
 
 _LICENSE_HEADER_ARESYS = """# Project: BIOMASS Processing Suite (BPS)

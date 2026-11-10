@@ -337,7 +337,7 @@ bps-task-tables:
     - curl -s $STACK_EXECUTABLES_LNX -o Stack_Executables.tgz
     - tar -xzf Stack_Executables.tgz
     - export PATH=${PWD}/Stack_Executables:${PATH}
-    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda create --name test -y python=${PYTHON} gdal=3.13
     - conda activate test
     - python -m pip install -e ./bps-common -e ./bps-transcoder
     - python -m pip install -e ./bps-l1_framing_processor
@@ -408,7 +408,7 @@ stack_rocky8_py312:
     - Expand-Archive -Path "L1_executables.zip" -DestinationPath .
     - Invoke-WebRequest -UseBasicParsing -Uri "$env:STACK_EXECUTABLES_WIN" -OutFile "Stack_Executables.zip"
     - Expand-Archive -Path "Stack_Executables.zip" -DestinationPath .
-    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda create --name test -y python=${PYTHON} gdal=3.13
     - conda activate test
     - $L1_BIN_FOLDER = $("${pwd}" + "\L1_executables")
     - $env:PATH = $($env:PATH + ";" + $L1_BIN_FOLDER)

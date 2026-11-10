@@ -14,7 +14,7 @@ dependencies = [
     "bps-stack_cal_processor==4.6.0.dev0",
     "bps-transcoder==4.6.0.dev0",
     "click",
-    "gdal>=3.10,<3.11",
+    "gdal>=3.13,<3.14",
     "numpy",
     "scipy",
     "perseo_core>=1.0.0",
