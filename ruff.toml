@@ -9,10 +9,7 @@ line-ending = "lf"
 
 [lint]
 ignore = [
-    "UP045",   # non-pep604-annotation-optional
-    "UP032",   # f-string
     "SIM118",  # in-dict-keys
-    "UP018",   # native-literals
     "RUF046",  # unnecessary-cast-to-int
     "RUF059",  # unused-unpacked-variable
     "SIM102",  # collapsible-if
@@ -24,10 +21,8 @@ ignore = [
     "C408",    # unnecessary-collection-call
     "SIM114",  # if-with-same-arms
     "B010",    # set-attr-with-constant
-    "UP034",   # extraneous-parentheses
     "SIM210",  # if-expr-with-true-false
     "PLR1711", # useless-return
-    "UP035",   # deprecated-import
     "C400",    # unnecessary-generator-list
     "C410",    # unnecessary-literal-within-list-call
     "RUF022",  # unsorted-dunder-all
@@ -39,8 +34,6 @@ ignore = [
     "S102",    # exec-builtin
     "PERF102", # incorrect-dict-iterator
     "PLW0177", # nan-comparison
-    "UP006",   # non-pep585-annotation
-    "UP007",   # non-pep604-annotation-union
     "S110",    # try-except-pass
     "TRY004",  # type-check-without-type-error
     "C401",    # unnecessary-generator-set
@@ -53,7 +46,6 @@ ignore = [
     "RUF013",  # implicit-optional
     "B020",    # loop-variable-overrides-iterator
     "SIM103",  # needless-bool
-    "UP047",   # non-pep695-generic-function
     "FURB192", # sorted-min-max
     "C414",    # unnecessary-double-cast-or-process
     "C417",    # unnecessary-map
@@ -64,4 +56,5 @@ ignore = [
 
 [lint.per-file-ignores]
 "models.py" = ["F401", "F811", "E741"]
+"*l1_framing_processor/*/models.py" = ["UP"]
 "__init__.py" = ["F401"]

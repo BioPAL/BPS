@@ -893,7 +893,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{value}Nought",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Nought".format(value.capitalize()),
+                lut_description=f"{value.capitalize():s} Nought",
                 lut_unit=None,
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -936,7 +936,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{angle_type}Angle",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Angle".format(angle_type.capitalize()),
+                lut_description=f"{angle_type.capitalize():s} Angle",
                 lut_unit="deg",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -948,7 +948,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}TerrainSlope",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Terrain Slope".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Terrain Slope",
                 lut_unit="deg",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -962,7 +962,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}CoregistrationShifts",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Coregistration Shifts".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Coregistration Shifts",
                 lut_unit="m",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -973,7 +973,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}OrbitCoregistrationShifts",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Coregistration Shifts from Orbit".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Coregistration Shifts from Orbit",
                 lut_unit="m",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -1337,58 +1337,45 @@ class BIOMASSStackProductWriter:
         # Check that number of channels is consistent with polarizations.
         if self.product.channels != len(self.product.polarization_list):
             raise InvalidBIOMASSStackProductError(
-                "Channels and polarizations mismatch: num channels={}, num pols={}".format(
-                    self.product.channels, len(self.product.polarization_list)
-                )
+                f"Channels and polarizations mismatch: num channels={self.product.channels}, num pols={len(self.product.polarization_list)}"
             )
 
         # Check that number of channels is consistent with the number of rasters.
         if self.product.channels != len(self.product.raster_info_list):
             raise InvalidBIOMASSStackProductError(
-                "Channels and raster list mismatch: num channels={}, num rasters={}".format(
-                    self.product.channels, len(self.product.raster_info_list)
-                )
+                f"Channels and raster list mismatch: num channels={self.product.channels}, num rasters={len(self.product.raster_info_list)}"
             )
 
         # Check that number of channels is consistent with the data list.
         if self.product.channels != len(self.product.data_list) and not self.product.is_monitoring:
             raise InvalidBIOMASSStackProductError(
-                "Channels and data list mismatch: num channels: {}, num images: {}".format(
-                    self.product.channels, len(self.product.data_list)
-                )
+                f"Channels and data list mismatch: num channels: {self.product.channels}, num images: {len(self.product.data_list)}"
             )
 
         # Check that all data have same shape and are consistent with the rasters.
         data_shapes = [d.shape for d in self.product.data_list]
         if any(sh != self.product.data_list[0].shape for sh in data_shapes):
             raise InvalidBIOMASSStackProductError(
-                "Not all frames have same shape: {}".format(dict(zip(self.product.polarization_list, data_shapes)))
+                f"Not all frames have same shape: {dict(zip(self.product.polarization_list, data_shapes))}"
             )
 
         raster_shapes = [(r.lines, r.samples) for r in self.product.raster_info_list]
         if any(dsh != rsh for dsh, rsh in zip(data_shapes, raster_shapes)):
             raise InvalidBIOMASSStackProductError(
-                "Raster info and data have mismatching shapes: rasters={}, data={}".format(
-                    dict(zip(self.product.polarization_list, raster_shapes)),
-                    dict(zip(self.product.polarization_list, data_shapes)),
-                )
+                f"Raster info and data have mismatching shapes: rasters={dict(zip(self.product.polarization_list, raster_shapes))}, data={dict(zip(self.product.polarization_list, data_shapes))}"
             )
 
         # Check that the start/stop time makes sense.
         raster_start_times = [r.lines_start for r in self.product.raster_info_list]
         if any(rt != self.product.start_time for rt in raster_start_times):
             raise InvalidBIOMASSStackProductError(
-                "Annotated start time and raster are inconsistent: start={}, rasters={}".format(
-                    self.product.start_time, raster_start_times
-                )
+                f"Annotated start time and raster are inconsistent: start={self.product.start_time}, rasters={raster_start_times}"
             )
 
         raster_stop_times = [_stop_time(r) for r in self.product.raster_info_list]
         if any(rt != self.product.stop_time for rt in raster_stop_times):
             raise InvalidBIOMASSStackProductError(
-                "Annotated stop time and raster info are inconsistent: stop={}, rasters={}".format(
-                    self.product.stop_time, raster_stop_times
-                )
+                f"Annotated stop time and raster info are inconsistent: stop={self.product.stop_time}, rasters={raster_stop_times}"
             )
 
         # Check the sampling steps.
@@ -1397,34 +1384,26 @@ class BIOMASSStackProductWriter:
         azm_sampling_steps = [r.lines_step for r in self.product.raster_info_list]
         if not all(np.isclose(s, self.product.az_time_interval, atol=eps) for s in azm_sampling_steps):
             raise InvalidBIOMASSStackProductError(
-                "Annotated azimuth sampling step and rasters are inconsistent: rasters={}, annot={}".format(
-                    azm_sampling_steps, self.product.az_time_interval
-                )
+                f"Annotated azimuth sampling step and rasters are inconsistent: rasters={azm_sampling_steps}, annot={self.product.az_time_interval}"
             )
 
         rng_sampling_steps = [r.samples_step for r in self.product.raster_info_list]
         if not all(np.isclose(s, self.product.rg_time_interval, atol=eps) for s in rng_sampling_steps):
             raise InvalidBIOMASSStackProductError(
-                "Annotated range sampling step and rasters are inconsistent: rasters={}, annot={}".format(
-                    rng_sampling_steps, self.product.rg_time_interval
-                )
+                f"Annotated range sampling step and rasters are inconsistent: rasters={rng_sampling_steps}, annot={self.product.rg_time_interval}"
             )
 
         # Check consistency of number of lines/samples and raster info.
         num_azimuths = [r.lines for r in self.product.raster_info_list]
         if any(naz != self.product.number_of_lines for naz in num_azimuths):
             raise InvalidBIOMASSStackProductError(
-                "Annotated num of azimuths and rasters mismatch: rasters={}, annot={}".format(
-                    num_azimuths, self.product.number_of_lines
-                )
+                f"Annotated num of azimuths and rasters mismatch: rasters={num_azimuths}, annot={self.product.number_of_lines}"
             )
 
         num_ranges = [r.samples for r in self.product.raster_info_list]
         if any(nrg != self.product.number_of_samples for nrg in num_ranges):
             raise InvalidBIOMASSStackProductError(
-                "Annotated num of ranges and rasters mismatch: rasters={}, annot={}".format(
-                    num_ranges, self.product.number_of_samples
-                )
+                f"Annotated num of ranges and rasters mismatch: rasters={num_ranges}, annot={self.product.number_of_samples}"
             )
 
 
@@ -1459,7 +1438,7 @@ def _add_file_to_mph(
 
 def _relative_href_path(path: Path, *, root_dir: Path) -> str:
     """Create a relative path ./relative/path."""
-    return "./{}".format(path.relative_to(root_dir))
+    return f"./{path.relative_to(root_dir)}"
 
 
 def _closed_footprint(footprint: list[list[float]]) -> str:

@@ -107,7 +107,7 @@ def multi_baseline_interferometric_pair_indices(
     # estimation for images that are not covered by pairs.
     if not validate_interferometric_pairs(interferometric_pairs, num_images):
         raise MultiBaselineInterferometricPairingError(
-            "Selected MB thresh={} results in too few pairs {}".format(cb_ratio_threshold, interferometric_pairs)
+            f"Selected MB thresh={cb_ratio_threshold} results in too few pairs {interferometric_pairs}"
         )
 
     return interferometric_pairs

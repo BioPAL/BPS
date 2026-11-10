@@ -440,7 +440,7 @@ def percentage_completed_msg(partial: float, *, total: float) -> int:
     """
     if not 0 <= partial <= total:
         raise ValueError(f"{partial=} must be between 0 and {total=}")
-    return "Completed {:.1f} %".format(100 * partial / total)
+    return f"Completed {100 * partial / total:.1f} %"
 
 
 def percentage_valid(mask: npt.NDArray[bool]) -> float:
@@ -580,19 +580,9 @@ def interpolate_on_grid(
 
     """
     if axes_in[0].size != grid_values.shape[0]:
-        raise ValueError(
-            "x-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[0].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"x-axis and values have mismatching dimensions ({axes_in[0].size} vs {grid_values.shape})")
     if axes_in[1].size != grid_values.shape[1]:
-        raise ValueError(
-            "y-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[1].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"y-axis and values have mismatching dimensions ({axes_in[1].size} vs {grid_values.shape})")
     if phase_interpolation and not np.isrealobj(grid_values):
         raise ValueError("Phase interpolation requires phases (real) in input")
 
@@ -661,19 +651,9 @@ def interpolate_on_grid_nn(
 
     """
     if axes_in[0].size != grid_values.shape[0]:
-        raise ValueError(
-            "x-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[0].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"x-axis and values have mismatching dimensions ({axes_in[0].size} vs {grid_values.shape})")
     if axes_in[1].size != grid_values.shape[1]:
-        raise ValueError(
-            "y-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[1].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"y-axis and values have mismatching dimensions ({axes_in[1].size} vs {grid_values.shape})")
 
     # NOTE: NN interpolation on a grid can be computed by snapping the target
     # grid onto the reference grid, thus using two 1D interpolations. This is

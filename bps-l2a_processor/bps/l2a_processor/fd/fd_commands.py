@@ -1091,8 +1091,8 @@ def _covariance_matrix_mat2vec(matrix_in: np.ndarray) -> np.ndarray:
 
     else:
         # [3x3] case
-        matrix_out = abs(matrix_in.reshape((9))[extraction_indexes]).astype(np.float64)
-        matrix_out[angle_indexes_out] = np.angle(matrix_in.reshape((9))[angle_indexes_in]).astype(np.float64)
+        matrix_out = abs(matrix_in.reshape(9)[extraction_indexes]).astype(np.float64)
+        matrix_out[angle_indexes_out] = np.angle(matrix_in.reshape(9)[angle_indexes_in]).astype(np.float64)
 
     return matrix_out
 

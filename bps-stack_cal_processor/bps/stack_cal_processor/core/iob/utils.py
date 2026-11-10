@@ -11,7 +11,6 @@ Slow-varying Ionosphere Utilities
 """
 
 from dataclasses import dataclass
-from typing import Union
 
 import numpy as np
 import numpy.typing as npt
@@ -45,7 +44,7 @@ class SubLookConf:
     filter_type: SubLookFilterType = SubLookFilterType.GAUSSIAN
     """The filter type (i.e. 'gaussian' or 'FIR')."""
 
-    filter_param: Union[int, float] = 7.0
+    filter_param: int | float = 7.0
     """Parameter of filter (e.g. 7.0 for Gaussian or 17 for FIR). """
 
 

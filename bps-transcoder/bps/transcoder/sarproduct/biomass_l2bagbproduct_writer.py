@@ -47,8 +47,8 @@ for key, value in MPH_NAMESPACES.items():
 COMPRESSION_SCHEMA_MDS_LERC_ZSTD = "LERC_ZSTD"
 COMPRESSION_SCHEMA_MDS_ZSTD = "ZSTD"
 COMPRESSION_EXIF_CODES_LERC_ZSTD = [34887, 34926]  #  LERC, ZSTD
-FLOAT_NODATA_VALUE = float(-9999.0)
-INT_NODATA_VALUE = int(255)
+FLOAT_NODATA_VALUE = -9999.0
+INT_NODATA_VALUE = 255
 
 
 COORDINATE_REFERENCE_SYSTEM = 'GEOGCS["WGS 84",DATUM["WGS_1984",ELLIPSOID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]'
@@ -760,7 +760,7 @@ class BIOMASSL2bAGBProductWriter:
                 "acquisition_id_image",
                 "bps_fnf",
             ]:
-                raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
+                raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
             data = self.product.measurement.data_dict[key]
 

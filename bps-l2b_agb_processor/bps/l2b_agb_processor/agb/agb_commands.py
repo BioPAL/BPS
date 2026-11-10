@@ -416,8 +416,8 @@ class AGBL2B:
                         "original_coverage",
                     ]:
                         cal_ab_coverage_per_tile[tile_id][coverage_string] = [
-                            float(0.0),
-                            int(0),
+                            0.0,
+                            0,
                         ]
 
             for tile_id in tiles_ids_5x5_list:
@@ -439,8 +439,8 @@ class AGBL2B:
 
                         if name not in list(gn_coverage_per_tile[tile_id][coverage_string].keys()):
                             gn_coverage_per_tile[tile_id][coverage_string][name] = [
-                                float(0.0),
-                                int(0),
+                                0.0,
+                                0,
                             ]
 
             ################################################

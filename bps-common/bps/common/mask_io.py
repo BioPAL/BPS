@@ -11,9 +11,10 @@ Utilties to read LCM/FNF mask products
 """
 
 import re
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Literal, Sequence
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt

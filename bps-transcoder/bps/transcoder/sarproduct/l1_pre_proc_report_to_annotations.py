@@ -74,7 +74,7 @@ class RawDataAnalysis:
             power_ratios[polarization] = [
                 PowerRatio(
                     time=measurement.time,
-                    value=measurement.power_ratios.get(polarization, float(0.0)),
+                    value=measurement.power_ratios.get(polarization, 0.0),
                 )
                 for measurement in report.iobpr_measurements
             ]

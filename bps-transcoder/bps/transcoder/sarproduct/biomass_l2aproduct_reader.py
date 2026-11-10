@@ -42,9 +42,7 @@ class BIOMASSL2aProductReader:
         product_folder_name = product_path.name
         product_type = product_folder_name[4:14]
         if product_type not in ["FP_FD__L2A", "FP_FH__L2A", "FP_GN__L2A", "FP_TFH_L2A"]:
-            bps_logger.error(
-                "Not recognized input L2a Product from job order, file name not valid: {}".format(product_path)
-            )
+            bps_logger.error(f"Not recognized input L2a Product from job order, file name not valid: {product_path}")
 
         self.product_path = product_path
         self.parsed_product_name = parse_l2aproduct_name(self.product_path.name)

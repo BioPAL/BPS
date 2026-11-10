@@ -74,8 +74,8 @@ COMPRESSION_SCHEMA_MDS_LERC_ZSTD = "LERC_ZSTD"
 COMPRESSION_SCHEMA_MDS_ZSTD = "ZSTD"
 COMPRESSION_SCHEMA_ADS = "zlib"
 COMPRESSION_EXIF_CODES_LERC_ZSTD = [34887, 34926]  #  LERC, ZSTD
-FLOAT_NODATA_VALUE = float(-9999.0)
-INT_NODATA_VALUE = int(255)
+FLOAT_NODATA_VALUE = -9999.0
+INT_NODATA_VALUE = 255
 DECIMATION_FACTOR_QUICKLOOKS = 2
 AVERAGING_FACTOR_QUICKLOOKS = 2
 
@@ -981,7 +981,7 @@ class BIOMASSL2aProductWriter:
             )
             for key in self.product.measurement.data_dict.keys():
                 if key not in "gn":
-                    raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
+                    raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
             # write a single COG file containing three layers (three polarizations)
             file_path = self.product_structure.measurement_files[0]
@@ -1011,7 +1011,7 @@ class BIOMASSL2aProductWriter:
                     "fh",
                     "quality",
                 ]:
-                    raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
+                    raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
                 data_list = self.product.measurement.data_dict[key]
 

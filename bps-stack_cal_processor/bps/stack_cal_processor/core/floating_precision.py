@@ -87,8 +87,8 @@ def assert_numeric_types_equal(
     AssertionError
 
     """
-    assert variable.dtype == expected_dtype, "unexpected dtype (expected={}, got={})".format(
-        np.dtype(expected_dtype), variable.dtype
+    assert variable.dtype == expected_dtype, (
+        f"unexpected dtype (expected={np.dtype(expected_dtype)}, got={variable.dtype})"
     )
 
 
@@ -114,6 +114,6 @@ def assert_list_numeric_types_equal(
 
     """
     if len(variables) > 0:
-        assert all(v.dtype == expected_dtype for v in variables), "unexpected dtype (expected={}, got={})".format(
-            np.dtype(expected_dtype), variables[0].dtype
+        assert all(v.dtype == expected_dtype for v in variables), (
+            f"unexpected dtype (expected={np.dtype(expected_dtype)}, got={variables[0].dtype})"
         )

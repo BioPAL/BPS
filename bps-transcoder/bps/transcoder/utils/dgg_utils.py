@@ -58,8 +58,8 @@ def dgg_search_tiles(latlon_coverage: list[float], create_tiles_dict: bool | Non
     pixel_spacing_lon_list[latitude_vector >= 70] = 6 / 3600
     pixel_spacing_lon_list[latitude_vector <= -70] = 6 / 3600
 
-    lat_tiles_name = ["S{:02d}".format(90 - lat) for lat in range(0, 90, tile_extent_lat)] + [
-        "N{:02d}".format(lat) for lat in range(0, 90, tile_extent_lat)
+    lat_tiles_name = [f"S{90 - lat:02d}" for lat in range(0, 90, tile_extent_lat)] + [
+        f"N{lat:02d}" for lat in range(0, 90, tile_extent_lat)
     ]
 
     # extract input requested latitude vectors from the whole ones:
@@ -86,8 +86,8 @@ def dgg_search_tiles(latlon_coverage: list[float], create_tiles_dict: bool | Non
         # whole Copernicus longitude vector
         longitude_vector = np.arange(-180, 180, tile_extent_lon) - pixel_spacing_lon / 2
 
-        lon_tiles_name = ["W{:03d}".format(180 - lon) for lon in range(0, 180, tile_extent_lon)] + [
-            "E{:03d}".format(lon) for lon in range(0, 180, tile_extent_lon)
+        lon_tiles_name = [f"W{180 - lon:03d}" for lon in range(0, 180, tile_extent_lon)] + [
+            f"E{lon:03d}" for lon in range(0, 180, tile_extent_lon)
         ]
 
         # extract input requested longitude vectors from the whole ones

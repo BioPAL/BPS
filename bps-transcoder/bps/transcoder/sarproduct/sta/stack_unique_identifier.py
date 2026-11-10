@@ -54,30 +54,18 @@ class StackUniqueID:
 
     def to_id(self) -> str:
         """Create the Stack's UID."""
-        return "BIO_{:s}_STA__ID_{:s}_{:s}_{:s}_G{:s}_M{:s}_{:s}_{:s}_{:s}_{:02d}_{:s}".format(
-            self.swath,
-            pdt_to_compact_string(self.stack_start_time),
-            pdt_to_compact_string(self.stack_stop_time),
-            self.mission_phase[0],
-            encode_product_name_id_value(self.global_coverage_id, npad=2),
-            encode_product_name_id_value(self.major_cycle_id, npad=2),
-            _format_latitude_str(self.latitude_deg),
-            _format_longitude_str(self.longitude_deg),
-            self.orbit_direction[0],
-            self.version,
-            pdt_to_compact_date(self.creation_timestamp),
-        )
+        return f"BIO_{self.swath:s}_STA__ID_{pdt_to_compact_string(self.stack_start_time):s}_{pdt_to_compact_string(self.stack_stop_time):s}_{self.mission_phase[0]:s}_G{encode_product_name_id_value(self.global_coverage_id, npad=2):s}_M{encode_product_name_id_value(self.major_cycle_id, npad=2):s}_{_format_latitude_str(self.latitude_deg):s}_{_format_longitude_str(self.longitude_deg):s}_{self.orbit_direction[0]:s}_{self.version:02d}_{pdt_to_compact_date(self.creation_timestamp):s}"
 
 
 def _format_latitude_str(latitude_deg: float) -> str:
     """Convert a latitude (in degrees) to a latitude string."""
     if latitude_deg >= 0:
-        return "N{:04d}".format(round(latitude_deg * 10))
-    return "S{:04d}".format(round(-latitude_deg * 10))
+        return f"N{round(latitude_deg * 10):04d}"
+    return f"S{round(-latitude_deg * 10):04d}"
 
 
 def _format_longitude_str(longitude_deg: float) -> str:
     """Convert a longitude (in degrees) to a longitude string."""
     if longitude_deg >= 0:
-        return "E{:04d}".format(round(longitude_deg * 10))
-    return "W{:04d}".format(round(-longitude_deg * 10))
+        return f"E{round(longitude_deg * 10):04d}"
+    return f"W{round(-longitude_deg * 10):04d}"

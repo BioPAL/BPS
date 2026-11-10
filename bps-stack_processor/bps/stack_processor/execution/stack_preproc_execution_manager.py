@@ -85,12 +85,7 @@ class InvalidL1ProductLUTError(RuntimeError):
     """Handle missing or invalid LUTs in an L1a product."""
 
     def __init__(self, l1a_product_name: str, missing_luts: dict[str, str]):
-        super().__init__(
-            "LUT(s) in L1a product {} are missing or invalid: {}".format(
-                l1a_product_name,
-                missing_luts,
-            )
-        )
+        super().__init__(f"LUT(s) in L1a product {l1a_product_name} are missing or invalid: {missing_luts}")
 
 
 class StackPreProcessorExecutionManager:
@@ -226,9 +221,7 @@ class StackPreProcessorExecutionManager:
         )
         if len(usable_polarizations) == 0:
             raise StackPreProcessorRuntimeError(
-                "No common polarization available in the stack {:s}".format(
-                    {p.name: p.polarization_list for p in l1a_product_data}
-                )
+                f"No common polarization available in the stack { ({p.name: p.polarization_list for p in l1a_product_data}):s}"
             )
 
         bps_logger.info(
@@ -304,9 +297,7 @@ class StackPreProcessorExecutionManager:
         )
         if self.aux_pps.coregistration.polarization_used not in stack_polarizations:
             raise StackPreProcessorRuntimeError(
-                "Selected coreg reference polarization {:s} no longer available".format(
-                    self.aux_pps.coregistration.polarization_used.value
-                )
+                f"Selected coreg reference polarization {self.aux_pps.coregistration.polarization_used.value:s} no longer available"
             )
 
         # Compute the RFI and Faraday decorrelation indices. Setting all RFI

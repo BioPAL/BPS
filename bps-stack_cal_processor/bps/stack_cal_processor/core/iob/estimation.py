@@ -641,7 +641,7 @@ def _multi_baseline_combine(
     )
     mb_iono_azimuth_slopes -= mb_iono_azimuth_slopes[calib_reference_index]
     if mb_iono_azimuth_slopes.size != num_images:
-        raise IobRuntimeError("Invalid number of azimuth slope estimations: {:d}".format(mb_iono_azimuth_slopes.size))
+        raise IobRuntimeError(f"Invalid number of azimuth slope estimations: {mb_iono_azimuth_slopes.size:d}")
 
     # The range slopes for the multi-baseline estimation.
     if not uniform_weighting:
@@ -657,7 +657,7 @@ def _multi_baseline_combine(
     )
     mb_iono_range_slopes -= mb_iono_range_slopes[calib_reference_index]
     if mb_iono_range_slopes.size != num_images:
-        raise IobRuntimeError("Invalid number range slope estimations: {:d}".format(mb_iono_range_slopes.size))
+        raise IobRuntimeError(f"Invalid number range slope estimations: {mb_iono_range_slopes.size:d}")
 
     return (
         mb_iono_azimuth_slopes,
@@ -675,7 +675,7 @@ def _single_baseline_estimation(
     """Return the single-baseline estimation."""
     # We expect Nimg - 1 estimations.
     if len(iob_estimations) != num_images - 1:
-        raise IobRuntimeError("Invalid number of IOB estimations: {:d}".format(len(iob_estimations)))
+        raise IobRuntimeError(f"Invalid number of IOB estimations: {len(iob_estimations):d}")
 
     # Prepare the output.
     sb_iono_azimuth_slopes = np.zeros((num_images,))
