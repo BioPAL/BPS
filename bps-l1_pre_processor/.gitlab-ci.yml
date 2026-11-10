@@ -12,9 +12,6 @@ variables:
   GIT_DEPTH: 1
   PIP_EXTRA_INDEX_URL: "$INTERNAL_PYPI_URL"
 
-.tags_manylinux2014:
-  tags: ["manylinux2014"]
-
 .tags_win10_conda:
   tags: ["eo", "win10", "conda"]
 
@@ -28,32 +25,29 @@ variables:
 ruff:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s ruff
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s ruff
 
 fawlty_deps:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s fawlty_deps
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s fawlty_deps
 
 format:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s format_check
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s format_check
 
 .unittest_linux:
   stage: test
@@ -61,8 +55,8 @@ format:
   image: condaforge/miniforge3
   script:
     - cd $SUBPROJECT
-    - python3 -m pip install nox
-    - python3 -m nox -s unittest -p ${PYTHON}
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s unittest -p ${PYTHON}
   artifacts:
     reports:
       junit:
@@ -83,8 +77,8 @@ unittest_linux_py314:
   script:
     - cd $SUBPROJECT
     - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
-    - python -m pip install nox
-    - python -m nox -s unittest -p ${PYTHON}
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s unittest -p ${PYTHON}
   retry: 2
   artifacts:
     reports:
@@ -100,12 +94,11 @@ unittest_win10_py314:
 build:
   stage: build
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install build
-    - python3.12 -m build
+    - python3.14 -m pip install build
+    - python3.14 -m build
   artifacts:
     expire_in: 2 weeks
     paths:

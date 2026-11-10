@@ -6,21 +6,18 @@ workflow:
   rules:
     - when: always
 
-.tags_manylinux2014:
-  tags: ["manylinux2014"]
-
 .tags_deploy:
   tags: ["eo", "deploy"]
 
-
 TaskTable_and_PMM_xml_validation:
   stage: validation
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends libxml2-utils
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s validate_task_tables validate_product_metadata_mapping
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s validate_task_tables validate_product_metadata_mapping
 
 deploy:
   stage: deploy

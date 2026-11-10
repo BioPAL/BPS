@@ -11,51 +11,44 @@ workflow:
 variables:
   GIT_DEPTH: 1
 
-.tags_manylinux2014:
-  tags: ["manylinux2014"]
-
 .tags_eo_deploy:
   tags: ["eo", "deploy"]
 
 ruff:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s ruff
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s ruff
 
 fawlty_deps:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s fawlty_deps
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s fawlty_deps
 
 format:
   stage: analysis
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install nox
-    - python3.12 -m nox -s format_check
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s format_check
 
 build:
   stage: build
   needs: []
-  extends:
-    - .tags_manylinux2014
+  image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.12 -m pip install build
-    - python3.12 -m build
+    - python3.14 -m pip install build
+    - python3.14 -m build
   artifacts:
     expire_in: 2 weeks
     paths:
