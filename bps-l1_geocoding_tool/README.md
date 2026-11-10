@@ -125,7 +125,7 @@ group: platform_data {
 In order to install this tool, a Python environment shall be created and activated:
 
 ```bash
-conda create --name my-env-name python=3.12
+conda create --name my-env-name python=3.14
 conda activate my-env-name
 ```
 

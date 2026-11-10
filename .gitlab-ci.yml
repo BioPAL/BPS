@@ -348,11 +348,11 @@ bps-task-tables:
     - python -c "import os; f='test/integration/config/linux.toml'; content=open(f).read().replace('\${DATASET_PATH_LNX}', os.environ['DATASET_PATH_LNX']); open(f,'w').write(content)"
     - python -m arepyextras.test --config test/integration/config/linux.toml test run ${INTEGRATION_TEST}
 
-base_rocky8_py312:
+base_rocky8_py314:
   extends:
     - .integration_test_rocky8
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/base"
 
 e2e_rocky8_py312:
@@ -376,20 +376,20 @@ e2e_rocky8_py314:
     PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/e2e"
 
-l1_rocky8_py312:
+l1_rocky8_py314:
   extends:
     - .integration_test_rocky8
     - .enable_l1
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/l1"
 
-stack_rocky8_py312:
+stack_rocky8_py314:
   extends:
     - .integration_test_rocky8
     - .enable_stack
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/stack/basic"
 
 .integration_test_win10:
@@ -424,27 +424,27 @@ stack_rocky8_py312:
     - python -m arepyextras.test --config test/integration/config/win10.toml test run ${INTEGRATION_TEST}
   retry: 2
 
-base_win10_py312:
+base_win10_py314:
   extends:
     - .integration_test_win10
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/base"
 
-l1_win10_py312:
+l1_win10_py314:
   extends:
     - .integration_test_win10
     - .enable_l1
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/l1"
 
-stack_win10_py312:
+stack_win10_py314:
   extends:
     - .integration_test_win10
     - .enable_stack
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/stack/win_tests"
 
 .conda_integration_test_rocky8_base:
@@ -536,4 +536,4 @@ conda_deploy:
       done
     - ./.gitlab/ci/conda-forge-update.sh ${INTERNAL_CONDA_CHANNEL_PATH}
   needs:
-    - job: base_rocky8_conda_py312
+    - job: base_rocky8_conda_py314

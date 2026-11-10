@@ -78,11 +78,11 @@ format:
       junit:
         - $SUBPROJECT/_build/unittest-report-*.xml
 
-unittest_linux_py312:
+unittest_linux_py314:
   extends:
     - .unittest_linux
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
 
 .unittest_win10:
   stage: test
@@ -101,11 +101,11 @@ unittest_linux_py312:
       junit:
         - $SUBPROJECT/_build/unittest-report-*.xml
 
-unittest_win10_py312:
+unittest_win10_py314:
   extends:
     - .unittest_win10
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
 
 build:
   stage: build

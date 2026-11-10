@@ -16,7 +16,7 @@ from pathlib import Path
 
 import nox
 
-UNITTEST_PYVERSIONS = ["3.12"]
+UNITTEST_PYVERSIONS = ["3.12", "3.13", "3.14"]
 CONDABUILD_BACKEND = "mamba"
 WIN32 = sys.platform == "win32"
 PLATFORM = "win" if WIN32 else "linux"

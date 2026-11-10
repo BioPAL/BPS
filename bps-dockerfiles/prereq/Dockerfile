@@ -15,7 +15,7 @@ RUN cd /tmp && \
     /opt/conda_folder/bin/conda index --verbose /tmp/python-packages && \
     /opt/conda_folder/bin/conda config --prepend channels conda-forge && \
     /opt/conda_folder/bin/conda config --prepend channels /tmp/python-packages && \
-    /opt/conda_folder/bin/conda create -n env -y python=3.12 bps-common bps-transcoder && \
+    /opt/conda_folder/bin/conda create -n env -y python=3.14 bps-common bps-transcoder && \
     /opt/conda_folder/bin/conda clean -afy && \
     cp /opt/conda_folder/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo "conda activate env" >> /etc/profile.d/conda.sh && \
