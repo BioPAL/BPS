@@ -925,7 +925,7 @@ def BiomassForestHeightSKPD(
     first_acq_dict = data_stack[acq_names[0]]
     pol_names = list(first_acq_dict.keys())
     num_pols = len(pol_names)
-    Nrg, Naz = first_acq_dict[pol_names[0]].shape
+    _Nrg, _Naz = first_acq_dict[pol_names[0]].shape
     Nz = np.size(vertical_vector)
 
     # Covariance estimation
@@ -1066,7 +1066,7 @@ def UpperThresholdForestHeight(power_cube, opt_str):
 
     DEPENDENCIES
                 FindStep3"""
-    Nr, Na, Nz = power_cube.shape
+    Nr, Na, _Nz = power_cube.shape
     power_peak = np.max(power_cube, axis=2)
     greater_power_mask = power_cube > power_peak.reshape((Nr, Na, 1)) * opt_str.thr
 
@@ -1119,7 +1119,7 @@ def main_correlation_estimation_SR(
     )
 
     # Normalizing covariance matrix
-    MPMB_correlation, norm_diag = Covariance4D2Correlation4D(MPMB_covariance)
+    MPMB_correlation, _norm_diag = Covariance4D2Correlation4D(MPMB_covariance)
 
     return MPMB_correlation, rg_vec_subs, az_vec_subs, subs_F_r, subs_F_a
 
@@ -1417,7 +1417,7 @@ def Covariance4D2Correlation4D(Cov_MPMB):
           Corr_MPMB: [Nimm*Npol x Nimm*Npol x Nr x Na] normalized covariance
                      matrices
           varargout{1}: [Nr x Na x Nimm*Npol] diagonal entries of Cov_MPMB"""
-    temp, N, Nr, Na = Cov_MPMB.shape
+    _temp, N, Nr, Na = Cov_MPMB.shape
     diag_mask = np.tile((np.eye(N).reshape(N, N, 1, 1)) > 0, [1, 1, Nr, Na])
     norm_util = Cov_MPMB[diag_mask]
     norm_diag = np.moveaxis(norm_util.reshape((N, Nr, Na)), [1, 2, 0], [0, 1, 2])
@@ -1763,7 +1763,7 @@ def JointDiagonalization(C):
 
     OUTPUT
           U: diagonalizing matrix"""
-    A, V = np.linalg.eig(C[1] @ np.linalg.inv(C[0]))
+    _A, V = np.linalg.eig(C[1] @ np.linalg.inv(C[0]))
     U = np.linalg.inv(V.conj().transpose())
 
     return U

@@ -953,7 +953,7 @@ class BIOMASSL1ProductWriter:
         ):
             combined_dcpolynomial_list = self.product.dc_vector_list[0]
             if self.product.dc_annotations and combined_dcpolynomial_list.get_number_of_poly() > 0:
-                reference_pol = list(self.product.dc_annotations.geometric_dc.keys())[0]
+                reference_pol = next(iter(self.product.dc_annotations.geometric_dc.keys()))
                 geometry_dcpolynomial_list = self.product.dc_annotations.geometric_dc.get(reference_pol)
 
                 combined_stats_list = build_list_of_combined_dc_stats_from_annotations_and_poly(

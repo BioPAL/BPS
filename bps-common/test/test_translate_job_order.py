@@ -12,6 +12,7 @@ Unit Tests for translate_job_order module
 
 import logging
 import unittest
+from typing import ClassVar
 
 from bps.common import Swath
 from bps.common.io.joborder_models import (
@@ -295,7 +296,7 @@ class TestRetrieveDeviceResources(unittest.TestCase):
 
 
 class TestRetrieveSwathFromProductsIdentifiers(unittest.TestCase):
-    _map = {
+    _map: ClassVar[dict[Swath, str]] = {
         Swath.S1: "PROD_S1",
         Swath.S2: "PROD_S2",
         Swath.S3: "PROD_S3",
@@ -393,7 +394,10 @@ class TestFlattenInputProductsAllowMultiple(unittest.TestCase):
                     SelectedInputType(
                         file_type=FileType(value="TYPE_A"),
                         list_of_file_names=SelectedInputType.ListOfFileNames(
-                            file_name=[FileName(value="/path/a1"), FileName(value="/path/a2")]
+                            file_name=[
+                                FileName(value="/path/a1"),
+                                FileName(value="/path/a2"),
+                            ]
                         ),
                     )
                 ]
@@ -416,7 +420,7 @@ class TestFlattenOutputProducts(unittest.TestCase):
             _make_output("TYPE_A", "/out", "01"),
             _make_output("TYPE_B", "/out", "01"),
         ]
-        result_types, result_dir, result_baseline = flatten_output_products(outputs)
+        result_types, result_dir, _result_baseline = flatten_output_products(outputs)
         self.assertIn("TYPE_A", result_types)
         self.assertIn("TYPE_B", result_types)
         self.assertEqual(result_dir, "/out")
@@ -483,8 +487,14 @@ class TestFlattenIntermediateOutputs(unittest.TestCase):
 class TestTranslateLoggerLevel(unittest.TestCase):
     def test_all_levels(self):
         self.assertEqual(translate_logger_level(ProcessorConfiguration.LogLevel.ERROR), logging.ERROR)
-        self.assertEqual(translate_logger_level(ProcessorConfiguration.LogLevel.WARNING), logging.WARNING)
-        self.assertEqual(translate_logger_level(ProcessorConfiguration.LogLevel.PROGRESS), logging.INFO)
+        self.assertEqual(
+            translate_logger_level(ProcessorConfiguration.LogLevel.WARNING),
+            logging.WARNING,
+        )
+        self.assertEqual(
+            translate_logger_level(ProcessorConfiguration.LogLevel.PROGRESS),
+            logging.INFO,
+        )
         self.assertEqual(translate_logger_level(ProcessorConfiguration.LogLevel.INFO), logging.INFO)
         self.assertEqual(translate_logger_level(ProcessorConfiguration.LogLevel.DEBUG), logging.DEBUG)
 
@@ -518,7 +528,10 @@ class TestRetrieveSingleOutputProduct(unittest.TestCase):
             retrieve_single_output_product([], ["PROD_A"])
 
     def test_too_many_outputs_raises(self):
-        outputs = [_make_output("PROD_A", "/out", "01"), _make_output("PROD_B", "/out", "01")]
+        outputs = [
+            _make_output("PROD_A", "/out", "01"),
+            _make_output("PROD_B", "/out", "01"),
+        ]
         with self.assertRaises(InvalidJobOrder):
             retrieve_single_output_product(outputs, ["PROD_A", "PROD_B"])
 

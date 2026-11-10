@@ -49,12 +49,12 @@ BIOMASS_PROCESSOR_VERSION = get_version_in_bps_format(__version__)
 """Expected processor version for all BIOMASS CPF processor job orders"""
 
 __all__ = [
-    "__version__",
-    "Swath",
+    "STRIPMAP_SWATHS",
     "AcquisitionMode",
     "MissionPhaseID",
     "Polarization",
+    "Swath",
+    "__version__",
     "retrieve_aux_product_data_content",
     "retrieve_aux_product_data_single_content",
-    "STRIPMAP_SWATHS",
 ]

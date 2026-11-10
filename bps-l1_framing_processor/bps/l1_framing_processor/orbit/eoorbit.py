@@ -11,6 +11,7 @@ Earth Observation orbit module
 
 import os
 from pathlib import Path
+from typing import ClassVar
 
 import numpy as np
 from bps.l1_framing_processor.io import aux_orb_models
@@ -32,7 +33,7 @@ class EOOrbit(Orbit):
         Generic Orbit class
     """
 
-    orbit_type_dict = {
+    orbit_type_dict: ClassVar[dict[str, str]] = {
         "AUX_PREORB": EOrbitType.PREDICTED.value,
         "AUX_RESORB": EOrbitType.RESTITUTED.value,
         "AUX_POEORB": EOrbitType.PRECISE.value,

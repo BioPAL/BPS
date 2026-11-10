@@ -683,7 +683,7 @@ class AGBL2B:
                                 * np.sum(
                                     np.isnan(agb_current_tile[np.logical_not(data_object_5x5[tile_id]["NANMASK"])])
                                 )
-                                / np.sum(data_object_5x5[tile_id]["NANMASK"] == False)  # noqa: E712
+                                / np.sum(data_object_5x5[tile_id]["NANMASK"] == False)
                             )
 
                             # Compute agb_tile_status at first iteration
@@ -1397,7 +1397,7 @@ class AGBL2B:
 
         (
             l2b_data_final_per_tile,
-            l2a_input_tiles_id,
+            _l2a_input_tiles_id,
             mission_phase_id,
             global_coverage_id,
             footprint_per_tile,
