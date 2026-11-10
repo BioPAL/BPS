@@ -1,10 +1,66 @@
 line-length = 120
 output-format = "concise"
 target-version = "py312"
+required-version = "0.17.4"
 
 [format]
 docstring-code-format = true
 line-ending = "lf"
+
+[lint]
+ignore = [
+    "UP045",   # non-pep604-annotation-optional
+    "UP032",   # f-string
+    "SIM118",  # in-dict-keys
+    "UP018",   # native-literals
+    "RUF046",  # unnecessary-cast-to-int
+    "RUF059",  # unused-unpacked-variable
+    "SIM102",  # collapsible-if
+    "BLE001",  # blind-except
+    "PLR0402", # manual-from-import
+    "B009",    # get-attr-with-constant
+    "RUF012",  # mutable-class-default
+    "SIM201",  # negate-equal-op
+    "C408",    # unnecessary-collection-call
+    "SIM114",  # if-with-same-arms
+    "B010",    # set-attr-with-constant
+    "UP034",   # extraneous-parentheses
+    "SIM210",  # if-expr-with-true-false
+    "PLR1711", # useless-return
+    "UP035",   # deprecated-import
+    "C400",    # unnecessary-generator-list
+    "C410",    # unnecessary-literal-within-list-call
+    "RUF022",  # unsorted-dunder-all
+    "PLR2044", # empty-comment
+    "D419",    # empty-docstring
+    "B008",    # function-call-in-default-argument
+    "B018",    # useless-expression
+    "SIM113",  # enumerate-for-loop
+    "S102",    # exec-builtin
+    "PERF102", # incorrect-dict-iterator
+    "PLW0177", # nan-comparison
+    "UP006",   # non-pep585-annotation
+    "UP007",   # non-pep604-annotation-union
+    "S110",    # try-except-pass
+    "TRY004",  # type-check-without-type-error
+    "C401",    # unnecessary-generator-set
+    "RUF015",  # unnecessary-iterable-allocation-for-first-element
+    "RUF100",  # unused-noqa
+    "PLC0206", # dict-index-missing-items
+    "PYI013",  # ellipsis-in-non-empty-class-body
+    "RUF009",  # function-call-in-dataclass-default-argument
+    "B023",    # function-uses-loop-variable
+    "RUF013",  # implicit-optional
+    "B020",    # loop-variable-overrides-iterator
+    "SIM103",  # needless-bool
+    "UP047",   # non-pep695-generic-function
+    "FURB192", # sorted-min-max
+    "C414",    # unnecessary-double-cast-or-process
+    "C417",    # unnecessary-map
+    "PIE790",  # unnecessary-placeholder
+    "PIE808",  # unnecessary-range-start
+    "RUF007",  # zip-instead-of-pairwise
+]
 
 [lint.per-file-ignores]
 "models.py" = ["F401", "F811", "E741"]

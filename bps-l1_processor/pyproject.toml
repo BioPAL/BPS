@@ -40,7 +40,7 @@ classifiers = [
 bps_l1_processor = "bps.l1_processor.__main__:main"
 
 [project.optional-dependencies]
-dev = ["nox", "ruff==0.15.7"]
+dev = ["nox", "ruff==0.17.4"]
 test = ["unittest-xml-reporting", "coverage"]
 
 [build-system]
