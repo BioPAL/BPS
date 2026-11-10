@@ -358,7 +358,7 @@ class FH:
             dgg_latitude_mesh_rad,
             dgg_longitude_mesh_rad,
             dem_valid_values_mask,
-            fill_value=int(0),
+            fill_value=0,
         )[0].astype(bool)
 
         # Discard values

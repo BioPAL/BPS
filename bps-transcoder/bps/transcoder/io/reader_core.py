@@ -8,19 +8,24 @@
 """Reader core for annotations."""
 
 from pathlib import Path
-from typing import Type, TypeVar
+from typing import TypeVar
 
 from bps.common import bps_logger
 from bps.common.io.parsing import parse
-from bps.transcoder import ANNOTATION_LEVEL, ANNOTATION_VERSION, LATEST_VERSION_STR, PFD_VERSION_MAPPING
+from bps.transcoder import (
+    ANNOTATION_LEVEL,
+    ANNOTATION_VERSION,
+    LATEST_VERSION_STR,
+    PFD_VERSION_MAPPING,
+)
 
 AnnotationModel = TypeVar("AnnotationModel")
 
 
-def reader(
+def reader[AnnotationModel](
     file: Path,
     level_tag: ANNOTATION_LEVEL,
-    models: list[tuple[ANNOTATION_VERSION, Type[AnnotationModel]]],
+    models: list[tuple[ANNOTATION_VERSION, type[AnnotationModel]]],
 ) -> AnnotationModel:
     """Read main annotation of products
 

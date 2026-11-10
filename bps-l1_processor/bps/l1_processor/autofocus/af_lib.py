@@ -64,7 +64,7 @@ def LMSW_LU(ddy, sigmas2, LL, detrend_order=1):
     lu, piv = linalg.lu_factor(A)
 
     # Estimate
-    identity_matrix = np.eye((Nx * Ny))
+    identity_matrix = np.eye(Nx * Ny)
     A_inv = linalg.lu_solve((lu, piv), identity_matrix)
     yy = (A_inv @ b @ (ddy.transpose(2, 0, 1)).flatten()).reshape(Ny, Nx)
 
@@ -347,7 +347,7 @@ class masterAutofocus:
             save_SLC_aresys(self.folder2operate, self.folderOutputSLC, data_exp)
 
     def __run_iterations__(self):
-        bps_logger.info("Autofocus - Image to be corrected: {}".format(self.folder2operate))
+        bps_logger.info(f"Autofocus - Image to be corrected: {self.folder2operate}")
 
         self.abort = False
 
@@ -362,7 +362,7 @@ class masterAutofocus:
             # Loop so that the algorithm stops iterating when entropy has reached its minimum
             shifts_a = None
             while entropy_actual < entropy_prev:
-                bps_logger.info("Autofocus - Entered iteration {}".format(self.iteration + 1))
+                bps_logger.info(f"Autofocus - Entered iteration {self.iteration + 1}")
                 entropy_prev = entropy_actual
 
                 if self.iteration > 0:
@@ -390,7 +390,7 @@ class masterAutofocus:
         else:
             for self.iteration in range(self.Niter):
                 if not self.abort:
-                    bps_logger.info("Autofocus - Entered iteration {}".format(self.iteration + 1))
+                    bps_logger.info(f"Autofocus - Entered iteration {self.iteration + 1}")
 
                     if self.iteration > 0:
                         shifts_a = self.__routine_phase_extract__(shifts_a)
@@ -448,9 +448,7 @@ class masterAutofocus:
         # Comment this for the momment to save time and memory, but it's a nice to have line
         # self.phAC_dec_ground = (4 * np.pi / self.wl * (self.r0SLC[np.newaxis, :]) * (np.sqrt(1 - (self.wl * self.fa[:, np.newaxis] / 2 / self.ve_g[np.newaxis, :])**2)-1)).astype('float32')
 
-        bps_logger.info(
-            "Autofocus - Initialization of filter for hiono compression lasted {:.02f} [s]".format(time() - hl)
-        )
+        bps_logger.info(f"Autofocus - Initialization of filter for hiono compression lasted {time() - hl:.02f} [s]")
 
     def __apply_correction_2D_zp_iono__(self, ph_int, pad=True):
         hl = time()
@@ -466,7 +464,7 @@ class masterAutofocus:
             dataOut[..., jj] = np.fft.ifft(dataOut[..., jj], axis=0, norm="ortho")
 
         self.entr = np.append(self.entr, calc_entropy(dataOut[..., 0]))
-        bps_logger.info("Autofocus - Entropy {}: {:.05f}".format(self.iteration + 1, self.entr[-1]))
+        bps_logger.info(f"Autofocus - Entropy {self.iteration + 1}: {self.entr[-1]:.05f}")
 
         # Crop SLC and pad it
         self.data_SLC_zp = np.zeros((self.Nax, self.Nrx, self.nPol), self.data_SLC_hiono.dtype)
@@ -476,7 +474,7 @@ class masterAutofocus:
             :,
         ] = dataOut[self.NaSLCStart : self.NaSLCEnd, :, :]
 
-        bps_logger.info("Autofocus - Applying correction  lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - Applying correction  lasted: {time() - hl:.02f} [s]")
 
     def __compress_at_hiono__(self):
         bps_logger.info("Autofocus - Entered compression at hiono...")
@@ -488,7 +486,7 @@ class masterAutofocus:
             self.data_SLC_hiono[..., jj] *= self.phAC_dec_iono
             self.data_SLC_hiono[..., jj] = np.fft.ifft(self.data_SLC_hiono[..., jj], axis=0, norm="ortho")
 
-        bps_logger.info("Autofocus - Compression at hiono lasted {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - Compression at hiono lasted {time() - hl:.02f} [s]")
 
     def __import_images_geometry__(self):
         bps_logger.info("Autofocus - Entered module to import images and define geometry.")
@@ -515,7 +513,7 @@ class masterAutofocus:
             if self.pols_use[ii].casefold() in self.pol_ch_idx:
                 self.idx_use[ii] = self.pol_ch_idx.index(self.pols_use[ii].casefold())
 
-        bps_logger.info("Autofocus - Polarizations to be used: {}".format(self.pols_use))
+        bps_logger.info(f"Autofocus - Polarizations to be used: {self.pols_use}")
 
         # Extract Doppler rate vector for one channel
         self.drv = channel.get_doppler_rate(0)
@@ -572,9 +570,9 @@ class masterAutofocus:
             self.data_imp[..., jj] = io.read_raster_with_raster_info(channel, ri)[: self.NaRaw, : self.NrSLC]
         data_SLC = self.data_imp[self.NaSLCStart : self.NaSLCEnd, :, :]
 
-        bps_logger.info("Autofocus - Importing images lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - Importing images lasted: {time() - hl:.02f} [s]")
         self.entr = calc_entropy(data_SLC[..., 0])
-        bps_logger.info("Autofocus - Entropy 0: {:.05f}".format(self.entr))
+        bps_logger.info(f"Autofocus - Entropy 0: {self.entr:.05f}")
 
         # Zero -pad half a block in each direction, resize to acocmodate to appropriate MDA dimentions and calculate range and time vectors
         bps_logger.info("Autofocus - Resizing matrices...")
@@ -587,7 +585,7 @@ class masterAutofocus:
             :,
         ] = data_SLC
 
-        bps_logger.info("Autofocus - Resizing matrices lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - Resizing matrices lasted: {time() - hl:.02f} [s]")
 
         # Calculate Doppler rate at hiono height at centers of blocks - save them into the data structures
         bps_logger.info("Autofocus - Calculating Doppler rate at centers of blocks at hiono...")
@@ -608,7 +606,7 @@ class masterAutofocus:
         )
 
         bps_logger.info(
-            "Autofocus - Calculating Doppler rate at centers of blocks at hiono lasted: {:.02f} [s]".format(time() - hl)
+            f"Autofocus - Calculating Doppler rate at centers of blocks at hiono lasted: {time() - hl:.02f} [s]"
         )
 
     def __routine_phase_extract__(self, shifts_prev=None):
@@ -618,7 +616,7 @@ class masterAutofocus:
 
         # Calculate shifts
         for j, jj in enumerate(self.idx_use):
-            bps_logger.info("Autofocus - Estimating shifts for polarizarion:{}".format(self.pols_use[j]))
+            bps_logger.info(f"Autofocus - Estimating shifts for polarizarion:{self.pols_use[j]}")
             shifts_a[:, :, j], _ = self.shift_calculator.operate(img=self.data_SLC_zp[:, :, jj])
 
         shifts_a -= np.mean(shifts_a, axis=0)[np.newaxis, :, :]
@@ -636,21 +634,15 @@ class masterAutofocus:
 
         if self.iteration == 0:
             self.std_ph_flag = np.std(ph)
-            bps_logger.info(
-                "Autofocus - std of screen in iteration {}: {:.05f}".format(self.iteration + 1, self.std_ph_flag)
-            )
+            bps_logger.info(f"Autofocus - std of screen in iteration {self.iteration + 1}: {self.std_ph_flag:.05f}")
         else:
             self.std_ph_flag = np.append(self.std_ph_flag, np.std(ph))
             if self.std_ph_flag[-1] > 1.5 * self.std_ph_flag[-2]:
                 bps_logger.info("Autofocus - std of screen flag activated:")
                 bps_logger.info(
-                    "Autofocus - std of screen in iteration {}: {:.05f}".format(
-                        self.iteration + 1, self.std_ph_flag[-1]
-                    )
+                    f"Autofocus - std of screen in iteration {self.iteration + 1}: {self.std_ph_flag[-1]:.05f}"
                 )
-                bps_logger.info(
-                    "Autofocus - std of screen in iteration {}: {:.05f}".format(self.iteration, self.std_ph_flag[-2])
-                )
+                bps_logger.info(f"Autofocus - std of screen in iteration {self.iteration}: {self.std_ph_flag[-2]:.05f}")
 
                 self.__abort_af__()
 
@@ -875,7 +867,7 @@ class Integrator2D:
             else:
                 bps_logger.info("Autofocus - LMSW with Faraday will be done...")
 
-        bps_logger.info("Autofocus - Initilizing integrator lasted {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - Initilizing integrator lasted {time() - hl:.02f} [s]")
 
     def LMSW(self, ddy, sigmas2):
         """
@@ -884,7 +876,7 @@ class Integrator2D:
 
         hl = time()
         yy2, acc = LMSW_LU(ddy, sigmas2, self.LL, detrend_order=2)
-        bps_logger.info("Autofocus - LMS LU integration with weights lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - LMS LU integration with weights lasted: {time() - hl:.02f} [s]")
 
         return yy2, np.diagonal(acc).reshape(self.Na_blocks, self.Nr_blocks)
 
@@ -898,7 +890,7 @@ class Integrator2D:
         hl = time()
         yy2, acc = LMSW_LU(ddy, sigmas2, self.LL, detrend_order=2)
 
-        bps_logger.info("Autofocus - LMS LU integration with weights lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - LMS LU integration with weights lasted: {time() - hl:.02f} [s]")
 
         return yy2, np.diagonal(acc).reshape(self.Na_blocks, self.Nr_blocks)
 
@@ -924,7 +916,7 @@ class Integrator2D:
         lmsg = np.linalg.inv(L.T @ L) @ L.T
 
         bps_logger.info(
-            "Autofocus - Initializing matrix for LMS integation in time domain lasted: {:.02f} [s]".format(time() - hl)
+            f"Autofocus - Initializing matrix for LMS integation in time domain lasted: {time() - hl:.02f} [s]"
         )
 
         return lmsg
@@ -953,7 +945,7 @@ class Integrator2D:
             bps_logger.info("Autofocus - Removing integrated solution trends...")
             _, yy2 = detrend_2d(np.arange(self.Na_blocks) * self.dt, yy, detrend_order)
 
-        bps_logger.info("Autofocus - LMS integration lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - LMS integration lasted: {time() - hl:.02f} [s]")
 
         return yy2
 
@@ -980,9 +972,7 @@ class Integrator2D:
         lmsf = np.linalg.inv(L.T @ L) @ L.T
 
         bps_logger.info(
-            "Autofocus - Initializing matrix for LMS integation with Faraday in time domain lasted: {:.02f} [s]".format(
-                time() - hl
-            )
+            f"Autofocus - Initializing matrix for LMS integation with Faraday in time domain lasted: {time() - hl:.02f} [s]"
         )
         return lmsf
 
@@ -1001,7 +991,7 @@ class Integrator2D:
 
         yy = (self.LMSF @ datat.flatten()).reshape(self.Na_blocks, self.Nr_blocks)
 
-        bps_logger.info("Autofocus - LMS integration lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - LMS integration lasted: {time() - hl:.02f} [s]")
         return yy
 
     def LMSWF(self, ddy, sigmas2):
@@ -1032,7 +1022,7 @@ class Integrator2D:
         lmsg = acc @ aux
         yy = (lmsg @ datat).reshape(self.Na_blocks, self.Nr_blocks)
 
-        bps_logger.info("Autofocus - LMS integration with weights lasted: {:.02f} [s]".format(time() - hl))
+        bps_logger.info(f"Autofocus - LMS integration with weights lasted: {time() - hl:.02f} [s]")
         return yy, np.diagonal(acc).reshape(self.Na_blocks, self.Nr_blocks)
 
 
@@ -1099,7 +1089,7 @@ class ShiftCalculator_C:
                 axis=self.axis,
             ).operate(img)
 
-            bps_logger.info("Autofocus - Time elapsed calculating shifts: {:.02f} [s]".format(time() - hl))
+            bps_logger.info(f"Autofocus - Time elapsed calculating shifts: {time() - hl:.02f} [s]")
             return shifts_a, shifts_r, cohs
 
         else:
@@ -1114,7 +1104,7 @@ class ShiftCalculator_C:
                 axis=self.axis,
             ).operate(img)
 
-            bps_logger.info("Autofocus - Time elapsed calculating shifts: {:.02f} [s]".format(time() - hl))
+            bps_logger.info(f"Autofocus - Time elapsed calculating shifts: {time() - hl:.02f} [s]")
             return shifts_a, shifts_r
 
     def __create_square_filters__(self, N, fcent1, fcent2, B1, B2):

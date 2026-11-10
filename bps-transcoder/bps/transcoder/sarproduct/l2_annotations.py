@@ -17,30 +17,30 @@ def ground_corner_points(dgg_latitude_axis: np.ndarray, dgg_longitude_axis: np.n
     corner_nw = [
         float(np.max(dgg_latitude_axis)),
         float(np.min(dgg_longitude_axis)),
-        float(0.0),
+        0.0,
         int(len(dgg_latitude_axis)),
-        int(0),
+        0,
     ]
     corner_ne = [
         float(np.max(dgg_latitude_axis)),
         float(np.max(dgg_longitude_axis)),
-        float(0.0),
+        0.0,
         int(len(dgg_latitude_axis)),
         int(len(dgg_longitude_axis)),
     ]
     corner_se = [
         float(np.min(dgg_latitude_axis)),
         float(np.max(dgg_longitude_axis)),
-        float(0.0),
-        int(0),
+        0.0,
+        0,
         int(len(dgg_longitude_axis)),
     ]
     corner_sw = [
         float(np.min(dgg_latitude_axis)),
         float(np.min(dgg_longitude_axis)),
-        float(0.0),
-        int(0),
-        int(0),
+        0.0,
+        0,
+        0,
     ]
 
     return [corner_nw, corner_ne, corner_se, corner_sw]

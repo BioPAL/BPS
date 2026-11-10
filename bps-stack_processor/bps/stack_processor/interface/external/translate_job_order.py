@@ -229,13 +229,11 @@ def retrieve_stack_output_products(
 
     if STACK_STANDARD_PRODUCT_STA_MAP[processing_swath] not in output_products:
         raise InvalidStackJobOrder(
-            "Missing required standard output product: {:s}".format(STACK_STANDARD_PRODUCT_STA_MAP[processing_swath]),
+            f"Missing required standard output product: {STACK_STANDARD_PRODUCT_STA_MAP[processing_swath]:s}",
         )
     if STACK_MONITORING_PRODUCT_STA_MAP[processing_swath] not in output_products:
         raise InvalidStackJobOrder(
-            "Missing required monitoring output product: {:s}".format(
-                STACK_MONITORING_PRODUCT_STA_MAP[processing_swath]
-            ),
+            f"Missing required monitoring output product: {STACK_MONITORING_PRODUCT_STA_MAP[processing_swath]:s}",
         )
 
     sta_output_products = StackOutputProducts(

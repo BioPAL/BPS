@@ -45,8 +45,8 @@ for key, value in MPH_NAMESPACES.items():
 COMPRESSION_SCHEMA_MDS_LERC_ZSTD = "LERC_ZSTD"
 COMPRESSION_SCHEMA_MDS_ZSTD = "ZSTD"
 COMPRESSION_EXIF_CODES_LERC_ZSTD = [34887, 34926]  #  LERC, ZSTD
-FLOAT_NODATA_VALUE = float(-9999.0)
-INT_NODATA_VALUE = int(255)
+FLOAT_NODATA_VALUE = -9999.0
+INT_NODATA_VALUE = 255
 L2B_OUTPUT_PRODUCT_FD = "FP_FD__L2B"
 DECIMATION_FACTOR_QUICKLOOKS = 2
 AVERAGING_FACTOR_QUICKLOOKS = 2
@@ -733,7 +733,7 @@ class BIOMASSL2bFDProductWriter:
                 "heat_map",
                 "acquisition_id_image",
             ]:
-                raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
+                raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
             data = self.product.measurement.data_dict[key]
 

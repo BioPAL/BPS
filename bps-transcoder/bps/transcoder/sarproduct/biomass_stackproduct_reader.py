@@ -326,10 +326,7 @@ class BIOMASSStackProductReader:
 
         if any(lut_layer_name not in LUT_LAYERS for lut_layer_name in lut_dict):
             raise InvalidBIOMASSStackProductError(
-                "{:s} contains unexpected LUTs ({})".format(
-                    self.product_path.name,
-                    [ln for ln in lut_dict if ln not in LUT_LAYERS],
-                )
+                f"{self.product_path.name:s} contains unexpected LUTs ({[ln for ln in lut_dict if ln not in LUT_LAYERS]})"
             )
 
         lut_iono_axes = (None, None)
@@ -436,10 +433,7 @@ class BIOMASSStackProductReader:
 
         if len(temp_product.polarization_list) != temp_product.channels:
             raise InvalidBIOMASSStackProductError(
-                "Channels and polarizations mismatch: pols={}, channels={}".format(
-                    temp_product.polarization_list,
-                    temp_product.channels,
-                )
+                f"Channels and polarizations mismatch: pols={temp_product.polarization_list}, channels={temp_product.channels}"
             )
 
         for channel in range(temp_product.channels):
@@ -688,9 +682,7 @@ class BIOMASSStackProductReader:
         self.first_line_az_time = main_annotation.sar_image.first_line_azimuth_time
         if self.first_line_az_time < temp_product.start_time:
             raise InvalidBIOMASSStackProductError(
-                "First azm time and start time mismatch: first azm={}, start time={}".format(
-                    self.first_line_az_time, temp_product.start_time
-                )
+                f"First azm time and start time mismatch: first azm={self.first_line_az_time}, start time={temp_product.start_time}"
             )
 
         self.rg_time_interval = main_annotation.sar_image.range_time_interval
@@ -848,11 +840,7 @@ class BIOMASSStackProductReader:
         ):
             if data.shape != (raster_info.lines, raster_info.samples):
                 raise InvalidBIOMASSStackProductError(
-                    "invalid raster shape for pol={}: data={}, raster={}".format(
-                        pol,
-                        data.shape,
-                        (raster_info.lines, raster_info.samples),
-                    )
+                    f"invalid raster shape for pol={pol}: data={data.shape}, raster={(raster_info.lines, raster_info.samples)}"
                 )
 
 

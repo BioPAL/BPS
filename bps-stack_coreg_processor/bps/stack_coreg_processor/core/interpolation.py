@@ -63,19 +63,9 @@ def interpolate_points_on_grid(
 
     """
     if axes_in[0].size != grid_values.shape[0]:
-        raise ValueError(
-            "x-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[0].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"x-axis and values have mismatching dimensions ({axes_in[0].size} vs {grid_values.shape})")
     if axes_in[1].size != grid_values.shape[1]:
-        raise ValueError(
-            "y-axis and values have mismatching dimensions ({} vs {})".format(
-                axes_in[1].size,
-                grid_values.shape,
-            )
-        )
+        raise ValueError(f"y-axis and values have mismatching dimensions ({axes_in[1].size} vs {grid_values.shape})")
 
     # If points are on a grid, RectBivariateSpline seems to be quite efficient.
     if query_points_on_grid:

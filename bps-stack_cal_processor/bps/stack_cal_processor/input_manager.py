@@ -11,10 +11,11 @@ Stack Calibration Input Manager
 """
 
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import reduce
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt

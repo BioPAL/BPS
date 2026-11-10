@@ -596,9 +596,7 @@ def test_bps_sta_019_int_nondefault_l1c_config(session: TestSession, env: Enviro
         netcdf_object = Dataset(l1c_product_structure.lut_annotation2_file)
         if netcdf_object.noDataValue != no_data_value:
             raise RuntimeError(
-                FAIL_FORMAT_STR.format(
-                    "Wrong noDataValue: ncdf={}, aux_pps={}".format(netcdf_object.noDataValue, no_data_value)
-                )
+                FAIL_FORMAT_STR.format(f"Wrong noDataValue: ncdf={netcdf_object.noDataValue}, aux_pps={no_data_value}")
             )
 
 

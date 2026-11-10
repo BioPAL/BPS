@@ -28,9 +28,7 @@ class BIOMASSL2bFDProductReader:
         product_folder_name = product_path.name
         product_type = product_folder_name[4:14]
         if product_type not in "FP_FD__L2B":
-            bps_logger.error(
-                "Not recognized input L2b Product from job order, file name not valid: {}".format(product_path)
-            )
+            bps_logger.error(f"Not recognized input L2b Product from job order, file name not valid: {product_path}")
 
         self.product_path = product_path
         self.parsed_product_name = parse_l2bproduct_name(self.product_path.name)

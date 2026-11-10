@@ -135,7 +135,7 @@ def write_chirp_replicas_to_product_folder(
         raster_info.set_samples_axis(
             samples_start=float(replica.axis[0]),
             samples_start_unit="s",
-            samples_step=float((replica.axis[1] - replica.axis[0] if replica.axis.size > 1 else 0.0)),
+            samples_step=float(replica.axis[1] - replica.axis[0] if replica.axis.size > 1 else 0.0),
             samples_step_unit="s",
         )
         meta.insert_element(raster_info)

@@ -538,9 +538,7 @@ def compute_cross_shift_stack(
         axis=1,
     )
     assert freqs_xshifts.shape == doppler_centroids.shape, (
-        "xshfits and DCs have mismatching shapes (xshift={}, DCs={})".format(
-            freqs_xshifts.shape, doppler_centroids.shape
-        )
+        f"xshfits and DCs have mismatching shapes (xshift={freqs_xshifts.shape}, DCs={doppler_centroids.shape})"
     )
 
     # Compute the upper and lower spectrum bounds. This is packed as a

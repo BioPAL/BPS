@@ -219,7 +219,7 @@ def name_filter(relevant_names: list[str]):
 
 
 def find_first_child_by_name(parent: Et.Element, name: str) -> Et.Element | None:
-    return next((child for child in parent if child.get("name", default="") == name))
+    return next(child for child in parent if child.get("name", default="") == name)
 
 
 def restrict_generic_input_file(root: Et.Element):
