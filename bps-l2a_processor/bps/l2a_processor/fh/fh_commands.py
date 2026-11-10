@@ -20,7 +20,11 @@ import numpy as np
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
 from bps.common.io import common
-from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A, MinMaxNumType, MinMaxType
+from bps.l2a_processor.core.aux_pp2_2a import (
+    AuxProcessingParametersL2A,
+    MinMaxNumType,
+    MinMaxType,
+)
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.core.translate_job_order import L2A_OUTPUT_PRODUCT_FH
 from bps.l2a_processor.fh import BPS_L2A_FH_PROCESSOR_NAME
@@ -51,7 +55,10 @@ from bps.transcoder.sarproduct.biomass_l2aproduct_writer import (
     BIOMASSL2aProductWriter,
 )
 from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
-from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
+from bps.transcoder.sarproduct.l2_annotations import (
+    COORDINATE_REFERENCE_SYSTEM,
+    ground_corner_points,
+)
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
 from netCDF4 import Dataset
 from perseo_core.timing import PreciseDateTime
@@ -634,7 +641,11 @@ class FH:
         )
 
         # main_ads_input_information
-        polarisation_list = [common.PolarisationType.HH, common.PolarisationType.VH, common.PolarisationType.VV]
+        polarisation_list = [
+            common.PolarisationType.HH,
+            common.PolarisationType.VH,
+            common.PolarisationType.VV,
+        ]
         acquisition_list = []
         overall_product_quality_indices = []
         for idx, acq_folder_name in enumerate(self.acquisition_paths_selected_not_sorted):
@@ -1449,8 +1460,7 @@ def snr_decorrelation_compensation(
     eps = 1.0e-010  # to avoid divide by zero
     for idx_pol_p in range(num_pols):
         for idx_pol_q in range(num_pols):
-            baseline_combination_idx = 0
-            for idx_bas_vec in baselines_combinations:
+            for baseline_combination_idx, idx_bas_vec in enumerate(baselines_combinations):
                 idx_bas_n = idx_bas_vec[0]
                 idx_bas_m = idx_bas_vec[1]
                 gamma_snr = 1 / (
@@ -1476,7 +1486,6 @@ def snr_decorrelation_compensation(
                     ]
                     / gamma_snr
                 )
-                baseline_combination_idx += 1
 
     return coherence_for_baseline_combinations
 
@@ -1941,7 +1950,9 @@ def compute_lut_kh_mu_tempdec(
 
     # Linear sampling of LUT MU axis
     lut_mu_axis = np.linspace(
-        ground_to_volume_ratio_range.min, ground_to_volume_ratio_range.max, ground_to_volume_ratio_range.num
+        ground_to_volume_ratio_range.min,
+        ground_to_volume_ratio_range.max,
+        ground_to_volume_ratio_range.num,
     )
 
     height_axis_n_samples = len(profile)

@@ -121,9 +121,7 @@ def version_update(session: nox.Session) -> None:
             return True
         if path.name == "pyproject.toml":
             return True
-        if path.name == "meta.yaml":
-            return True
-        return False
+        return path.name == "meta.yaml"
 
     def relevant_dir(path: Path) -> bool:
         name = path.resolve().name

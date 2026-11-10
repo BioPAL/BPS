@@ -72,10 +72,9 @@ def read_l0_product(product_path: Path | str) -> BIOMASSL0Product:
         phenomenon_time_length = product.sensing_stop_time - product.sensing_start_time
 
     valid_time_length = None
-    if product.start_time is None or product.stop_time is None:
-        if mph_l0.valid_time:
-            product.start_time, product.stop_time = mph_l0.valid_time
-            valid_time_length = product.stop_time - product.start_time
+    if (product.start_time is None or product.stop_time is None) and mph_l0.valid_time:
+        product.start_time, product.stop_time = mph_l0.valid_time
+        valid_time_length = product.stop_time - product.start_time
 
     product.orbit_number = mph_l0.acquisition.orbit_number
     product.orbit_direction = mph_l0.acquisition.orbit_direction

@@ -185,7 +185,7 @@ class TOMO_FH:
             and self.scs_pol_list_calibrated[0][0].shape[2] == vertical_wavenumbers[0].shape[1]
         ):
             bps_logger.info("    preliminary interpolation to bring vertical wavenumbers onto the L1c data grid")
-            for acq_idx in vertical_wavenumbers.keys():
+            for acq_idx in vertical_wavenumbers:
                 vertical_wavenumbers[acq_idx] = parallel_reinterpolate(
                     [vertical_wavenumbers[acq_idx].T],  # function works with lists
                     lut_axis_az_s,
@@ -1545,10 +1545,10 @@ def SKPD_processing(Cov_MPMB, opt_str):
         return out_str
 
     if (
-        not (np.linalg.matrix_rank(Ro[0]) == opt_str.num_acq)
-        or not (np.linalg.matrix_rank(Ro[1]) == opt_str.num_acq)
-        or not (np.linalg.matrix_rank(Co[0]) == opt_str.num_pols)
-        or not (np.linalg.matrix_rank(Co[1]) == opt_str.num_pols)
+        np.linalg.matrix_rank(Ro[0]) != opt_str.num_acq
+        or np.linalg.matrix_rank(Ro[1]) != opt_str.num_acq
+        or np.linalg.matrix_rank(Co[0]) != opt_str.num_pols
+        or np.linalg.matrix_rank(Co[1]) != opt_str.num_pols
     ):
         out_str.error[2] = 1
         return out_str

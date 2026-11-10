@@ -745,7 +745,7 @@ class BIOMASSL2bAGBProductWriter:
         assert self.product_structure.agb_standard_deviation_file is not None
         assert self.product_structure.heatmap_file is not None
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key in [
                 "dgg_latitude_axis",
                 "dgg_longitude_axis",
@@ -935,7 +935,7 @@ class BIOMASSL2bAGBProductWriter:
         if not dirname.exists():
             dirname.mkdir(parents=True, exist_ok=True)
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key in [
                 "dgg_latitude_axis",
                 "dgg_longitude_axis",

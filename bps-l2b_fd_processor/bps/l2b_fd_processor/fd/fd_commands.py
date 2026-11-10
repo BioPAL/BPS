@@ -30,7 +30,10 @@ from bps.transcoder.io import (
     main_annotation_l2b_fd,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFD
-from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct, BIOMASSL2bFDProductMeasurement
+from bps.transcoder.sarproduct.biomass_l2bfdproduct import (
+    BIOMASSL2bFDProduct,
+    BIOMASSL2bFDProductMeasurement,
+)
 from bps.transcoder.sarproduct.biomass_l2bfdproduct_writer import (
     AVERAGING_FACTOR_QUICKLOOKS,
     COMPRESSION_EXIF_CODES_LERC_ZSTD,  # LERC, ZSTD
@@ -39,7 +42,10 @@ from bps.transcoder.sarproduct.biomass_l2bfdproduct_writer import (
     INT_NODATA_VALUE,
     BIOMASSL2bFDProductWriter,
 )
-from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
+from bps.transcoder.sarproduct.l2_annotations import (
+    COORDINATE_REFERENCE_SYSTEM,
+    ground_corner_points,
+)
 from perseo_core.timing import PreciseDateTime
 
 
@@ -123,9 +129,8 @@ class FDL2B:
 
         self.product_path = self.job_order.output_directory
 
-        if self.job_order.output_baseline is not None:
-            if self.job_order.output_product == L2B_OUTPUT_PRODUCT_FD:
-                self.output_baseline = self.job_order.output_baseline
+        if self.job_order.output_baseline is not None and self.job_order.output_product == L2B_OUTPUT_PRODUCT_FD:
+            self.output_baseline = self.job_order.output_baseline
 
         self.product_type = L2B_OUTPUT_PRODUCT_FD
 
@@ -398,7 +403,8 @@ class FDL2B:
                 int_pixel_type=common.PixelTypeType.VALUE_8_BIT_UNSIGNED_INTEGER,
             ),
             no_data_value=common_annotation_l2l3.NoDataValueChoiceType(
-                float_no_data_value=FLOAT_NODATA_VALUE, int_no_data_value=INT_NODATA_VALUE
+                float_no_data_value=FLOAT_NODATA_VALUE,
+                int_no_data_value=INT_NODATA_VALUE,
             ),
         )
 

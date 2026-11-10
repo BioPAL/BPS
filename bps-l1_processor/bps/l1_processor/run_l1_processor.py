@@ -466,13 +466,12 @@ def run_l1_processing_impl(
             env=env,
         )
 
-        if not job_order.keep_intermediate():
-            if job_order.auxiliary_files.calibration_site_information is None:
-                bps_logger.info("Removing intermediate L1 pre processor products")
-                layout.pre_processor_outputs.delete()
+        if not job_order.keep_intermediate() and job_order.auxiliary_files.calibration_site_information is None:
+            bps_logger.info("Removing intermediate L1 pre processor products")
+            layout.pre_processor_outputs.delete()
 
-                bps_logger.debug("Removing input L1 core processor files")
-                layout.core_processor_files.delete()
+            bps_logger.debug("Removing input L1 core processor files")
+            layout.core_processor_files.delete()
 
         update_and_write_status(current_step)
     else:
@@ -487,10 +486,9 @@ def run_l1_processing_impl(
 
         run_l1_post_processing(layout.core_processor_outputs, job_order, aux_pp1)
 
-        if not job_order.keep_intermediate():
-            if job_order.auxiliary_files.calibration_site_information is None:
-                bps_logger.info("Removing intermediate L1 core processor products")
-                layout.core_processor_outputs.delete()
+        if not job_order.keep_intermediate() and job_order.auxiliary_files.calibration_site_information is None:
+            bps_logger.info("Removing intermediate L1 core processor products")
+            layout.core_processor_outputs.delete()
 
         update_and_write_status(current_step)
     else:

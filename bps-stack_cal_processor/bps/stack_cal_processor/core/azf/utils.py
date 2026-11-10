@@ -245,16 +245,18 @@ def apply_filter_bank_multithreaded(
 
         # Process everything multithreaded.
         valid_solutions = 0
-        for common_bandwidth, central_frequency in executor.map(
-            apply_filter_bank_fn,
-            product(range(num_images), range(num_polarizations)),
+        for completed_tasks, (common_bandwidth, central_frequency) in enumerate(
+            executor.map(
+                apply_filter_bank_fn,
+                product(range(num_images), range(num_polarizations)),
+            ),
+            start=1,
         ):
             common_bandwidths.append(common_bandwidth)
             central_frequencies.append(central_frequency)
             # We can trust the solution since bandwidths overlap.
             valid_solutions += common_bandwidth != 0
             # Report progress.
-            completed_tasks += 1
             bps_logger.info(percentage_completed_msg(completed_tasks, total=num_tasks))
 
         bps_logger.debug("Succeeded %d/%d", valid_solutions, num_tasks)

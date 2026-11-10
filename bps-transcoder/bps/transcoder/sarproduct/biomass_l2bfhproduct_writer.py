@@ -707,7 +707,7 @@ class BIOMASSL2bFHProductWriter:
         assert self.product_structure.bps_fnf_file is not None
         assert self.product_structure.heatmap_file is not None
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key in ["dgg_latitude_axis", "dgg_longitude_axis"]:
                 continue
 
@@ -893,7 +893,7 @@ class BIOMASSL2bFHProductWriter:
         if not dirname.exists():
             dirname.mkdir(parents=True, exist_ok=True)
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key not in [
                 "fh",
                 "quality",

@@ -17,10 +17,9 @@ from bps.common.joborder import DeviceResources
 
 
 def _is_resource_enough(required_mb: int | None, provided_mb: int, tag: str) -> bool:
-    if required_mb is not None:
-        if provided_mb < required_mb:
-            bps_logger.error(f"Available {tag} ({provided_mb} [MB]) lower than required ({required_mb} [MB])")
-            return False
+    if required_mb is not None and provided_mb < required_mb:
+        bps_logger.error(f"Available {tag} ({provided_mb} [MB]) lower than required ({required_mb} [MB])")
+        return False
     return True
 
 
@@ -34,12 +33,11 @@ class RequiredResources:
     disk_size_mb: int | None
 
     def _check_suggested_cpu_cores(self, provided_cores: int):
-        if self.suggested_cpu_cores is not None:
-            if provided_cores < self.suggested_cpu_cores:
-                bps_logger.warning(
-                    f"Available threads ({provided_cores}) lower than "
-                    + f"those required to meet target performances ({self.suggested_cpu_cores})"
-                )
+        if self.suggested_cpu_cores is not None and provided_cores < self.suggested_cpu_cores:
+            bps_logger.warning(
+                f"Available threads ({provided_cores}) lower than "
+                + f"those required to meet target performances ({self.suggested_cpu_cores})"
+            )
 
     def _is_ram_size_enough(self, provided_ram_size_mb: int) -> bool:
         return _is_resource_enough(required_mb=self.ram_size_mb, provided_mb=provided_ram_size_mb, tag="RAM")

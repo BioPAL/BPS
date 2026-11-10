@@ -564,7 +564,7 @@ class BIOMASSL1ProductWriter:
             start_time=self.product.start_time,
             stop_time=self.product.stop_time,
             mission_phase_id=mission_phase_id_dict[self.product.mission_phase_id],
-            drift_phase_flag=True if self.product.repeat_cycle_id == -2 else False,
+            drift_phase_flag=self.product.repeat_cycle_id == -2,
             sensor_mode=sensor_mode_dict[self.product.sensor_mode],
             global_coverage_id=self.product.global_coverage_id,
             major_cycle_id=self.product.major_cycle_id,

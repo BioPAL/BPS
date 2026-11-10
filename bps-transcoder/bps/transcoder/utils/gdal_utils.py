@@ -101,12 +101,11 @@ def _retrieve_polarimetric_interpretation(
     if metadata.matrix_representation is None:
         return None
 
-    if metadata.matrix_representation in ("SCATTERING", "SYMMETRIZED_SCATTERING"):
-        if not metadata.polarizations:
-            raise RuntimeError(
-                "Polarizations missing, it is required for "
-                + "'SCATTERING' and 'SYMMETRIZED_SCATTERING' matrix representation"
-            )
+    if metadata.matrix_representation in ("SCATTERING", "SYMMETRIZED_SCATTERING") and not metadata.polarizations:
+        raise RuntimeError(
+            "Polarizations missing, it is required for "
+            + "'SCATTERING' and 'SYMMETRIZED_SCATTERING' matrix representation"
+        )
 
     return metadata.polarizations
 

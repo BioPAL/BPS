@@ -134,12 +134,11 @@ class FHL2B:
 
         self.product_path = self.job_order.output_directory
 
-        if self.job_order.output_baseline is not None:
-            if self.job_order.output_product in [
-                L2B_OUTPUT_PRODUCT_FH,
-                L2B_OUTPUT_PRODUCT_TFH,
-            ]:
-                self.output_baseline = self.job_order.output_baseline
+        if self.job_order.output_baseline is not None and self.job_order.output_product in [
+            L2B_OUTPUT_PRODUCT_FH,
+            L2B_OUTPUT_PRODUCT_TFH,
+        ]:
+            self.output_baseline = self.job_order.output_baseline
 
         self.product_type = (
             L2B_OUTPUT_PRODUCT_FH if self.job_order.output_product == L2B_OUTPUT_PRODUCT_FH else L2B_OUTPUT_PRODUCT_TFH

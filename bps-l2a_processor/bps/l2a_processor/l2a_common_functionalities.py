@@ -468,7 +468,7 @@ def calibration(
             ]  # just needee for logging reasons
 
         # interpolate ground phase screens over SCS data axis, if needed
-        if not scs_acq_list[0][0].shape == geometry_gnd_phase_screens_rad[0].shape:
+        if scs_acq_list[0][0].shape != geometry_gnd_phase_screens_rad[0].shape:
             bps_logger.info("    preliminary interpolation to bring ground phase screens onto the same L1c grid")
             # interpolation:
             # the geometry_gnd_phase_screens_rad is assumed unwrapped to be interpolated as a float real-valued field.
@@ -1883,7 +1883,7 @@ def refine_dgg_search_tiles(
         poly_tile = ogr.CreateGeometryFromWkt(wkt_tile)
 
         # Check if the tile footprint intersects the STA footprint
-        if not poly_tile.Intersection(poly_stack).ExportToWkt() == "POLYGON EMPTY":
+        if poly_tile.Intersection(poly_stack).ExportToWkt() != "POLYGON EMPTY":
             tile_id_list.append(tile_id_curr)
 
     return tile_id_list

@@ -617,13 +617,9 @@ def _check_coverage(
 
 
 def _get_latitude_band_key(lat_min, lat_max):
-    if lat_min >= 60 or lat_max <= -60:
+    if lat_min >= 60 or lat_max <= -60 or (lat_min < 60 and lat_max > 60) or (lat_max < -60 and lat_min > -60):
         return "60-70"
-    elif (lat_min < 60 and lat_max > 60) or (lat_max < -60 and lat_min > -60):
-        return "60-70"
-    elif lat_min >= 50 or lat_max <= -50:
-        return "50-60"
-    elif (lat_min < 50 and lat_max > 50) or (lat_max < -50 and lat_min > -50):
+    elif lat_min >= 50 or lat_max <= -50 or (lat_min < 50 and lat_max > 50) or (lat_max < -50 and lat_min > -50):
         return "50-60"
     elif lat_min >= -50 or lat_max <= 50:
         return "0-50"

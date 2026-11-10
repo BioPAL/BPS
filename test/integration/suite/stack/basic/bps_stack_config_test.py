@@ -547,8 +547,8 @@ def test_bps_sta_018_int_l1c_lut_compression(session: TestSession, env: Environm
         )
 
         netcdf_object = Dataset(l1c_product_structure.lut_annotation2_file)
-        for lut_group in netcdf_object.groups.keys():
-            for lut_name in netcdf_object[lut_group].variables.keys():
+        for lut_group in netcdf_object.groups:
+            for lut_name in netcdf_object[lut_group].variables:
                 lut_filter = netcdf_object.groups[lut_group][lut_name].filters()
                 if not lut_filter["zlib"] or lut_filter["complevel"] != ZLIB_L1C_COMPLEVEL:
                     raise RuntimeError(
