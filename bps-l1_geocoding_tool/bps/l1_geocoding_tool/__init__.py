@@ -10,7 +10,7 @@ BPS L1 Geocoding Tool
 ---------------------
 """
 
-__version__ = "4.5.0"
+__version__ = "4.6.0.dev0"
 
 NO_DATA_VALUE = 0
 
