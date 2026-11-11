@@ -1848,7 +1848,7 @@ def consolidate_5x5_data_block(
             l2b_agb_std,
             mixing=referenceSelection,
         )
-        if np.logical_not(np.logical_and(np.all(cal_ab_mean) == np.nan, np.all(l2b_agb_mean) == np.nan)):
+        if np.logical_not(np.logical_and(np.all(cal_ab_mean) == np.nan, np.all(l2b_agb_mean) == np.nan)):  # noqa: PLW0177
             bps_logger.info(
                 f"            Valid reference samples after mixing: {np.sum(np.isfinite(data_object_1x1['reference_map'][:, :, 0]))}"
             )
@@ -2077,10 +2077,10 @@ def consolidate_5x5_data_block(
             cal_ab_after_lcmclass_filtering_per_tile[tile_id]
         )
 
-    for tile_id in gn_after_global_filtering_per_tile:
+    for tile_id, after_global_filtering in gn_after_global_filtering_per_tile.items():
         gn_filtered_coverage_per_tile[tile_id] = {}
 
-        gn_filtered_coverage_per_tile[tile_id]["after_global_filtering"] = gn_after_global_filtering_per_tile[tile_id]
+        gn_filtered_coverage_per_tile[tile_id]["after_global_filtering"] = after_global_filtering
         gn_filtered_coverage_per_tile[tile_id]["after_sigma_filtering"] = gn_after_sigma_filtering_per_tile[tile_id]
         gn_filtered_coverage_per_tile[tile_id]["after_angle_filtering"] = gn_after_angle_filtering_per_tile[tile_id]
 

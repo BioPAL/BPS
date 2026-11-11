@@ -265,7 +265,7 @@ def update_job_order_for_parc_processing(job_order: L1JobOrder, parc_processing_
     )
 
     if not isinstance(job_order.io_products.output, L1StripmapOutputProducts):
-        raise RuntimeError("Cannot perform PARC processing for non-stripmap acquisitions")
+        raise TypeError("Cannot perform PARC processing for non-stripmap acquisitions")
     job_order.io_products.output.dgm_standard_required = False
 
     return job_order

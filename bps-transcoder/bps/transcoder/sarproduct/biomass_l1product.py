@@ -195,7 +195,7 @@ class SARImageParameters:
 
     @classmethod
     def from_l1_annotation(cls, params) -> SARImageParameters:
-        """ """
+        """Create SARImageParameters from L1 annotation."""
         default_params = _default_sar_image_parameters()
         return cls(
             pixel_representation=params.pixel_representation,
@@ -213,7 +213,7 @@ class SARImageParameters:
 
 @dataclass
 class LUTParameters:
-    """_summary_"""
+    """LUT parameters"""
 
     @dataclass
     class LutDecimationFactors:

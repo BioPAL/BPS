@@ -715,7 +715,7 @@ def _get_l2a_tile_id(l2_product_path: Path) -> str:
     if len(tile_id) == 0:
         raise RuntimeError(f"No mission tile ID found in annotation file {annotation_file_path}")
     if not isinstance(tile_id, str):
-        raise RuntimeError(f"tile_id is not type str, but: {type(tile_id)}")
+        raise TypeError(f"tile_id is not type str, but: {type(tile_id)}")
 
     return tile_id
 

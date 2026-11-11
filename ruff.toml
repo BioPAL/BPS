@@ -7,21 +7,6 @@ required-version = "0.17.4"
 docstring-code-format = true
 line-ending = "lf"
 
-[lint]
-ignore = [
-    "D419",    # empty-docstring
-    "S102",    # exec-builtin
-    "PERF102", # incorrect-dict-iterator
-    "PLW0177", # nan-comparison
-    "S110",    # try-except-pass
-    "TRY004",  # type-check-without-type-error
-    "PLC0206", # dict-index-missing-items
-    "PYI013",  # ellipsis-in-non-empty-class-body
-    "FURB192", # sorted-min-max
-    "PIE790",  # unnecessary-placeholder
-    "PIE808",  # unnecessary-range-start
-]
-
 [lint.per-file-ignores]
 "models.py" = ["F401", "F811", "E741"]
 "*l1_framing_processor/*/models.py" = ["UP"]

@@ -41,6 +41,6 @@ class DisplayHelp:
 
 for application in APPLICATIONS:
     test_name = "test_" + application.lower()
-    exec(f'{test_name} = DisplayHelp("{application}")')
+    exec(f'{test_name} = DisplayHelp("{application}")')  # noqa: S102
     if application in LINUX_ONLY:
-        exec(f'{test_name} = skip_if(WIN32, reason="{test_name} is linux only")({test_name})')
+        exec(f'{test_name} = skip_if(WIN32, reason="{test_name} is linux only")({test_name})')  # noqa: S102

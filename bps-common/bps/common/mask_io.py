@@ -30,7 +30,7 @@ def retrieve_product_content(
     product_regex_pattern: str,
     timestamp_regex_pattern: str,
 ) -> None | Path | tuple[Path, ...]:
-    """ """
+    """Retrieve the product content closest to the reference dates."""
     if reference_dates is None:
         reference_dates = [PreciseDateTime.now()]
 
@@ -62,7 +62,7 @@ def _get_end_time(timestamps: list[str]) -> PreciseDateTime:
     if len(timestamps) == 0:
         raise RuntimeError("Invalid product name (no time strings)")
 
-    return sorted(PreciseDateTime.from_utc_string(f"{tstr}.000000") for tstr in timestamps)[-1]
+    return max(PreciseDateTime.from_utc_string(f"{tstr}.000000") for tstr in timestamps)
 
 
 def _find_closest_product(
@@ -103,7 +103,7 @@ def read_mask(
     *,
     units: Literal["rad", "deg"] = "deg",
 ) -> Mask:
-    """"""
+    """Read a mask product within the specified latitude/longitude region of interest."""
     if not product.exists():
         raise FileNotFoundError(f"FNF mask {product} does not exist")
     if units not in {"deg", "rad"}:
