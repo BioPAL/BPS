@@ -8,16 +8,6 @@ import nox
 sys.path.append("../scripts")
 import noxfile_common
 
-
-@nox.session(python=noxfile_common.UNITTEST_PYVERSIONS, venv_backend=noxfile_common.CONDABUILD_BACKEND)
-def unittest(session: nox.Session):
-    """Run unittest for current package"""
-    session.conda_install(f"gdal={noxfile_common.GDAL_VERSION}", channel="conda-forge")
-    session.install("-e", "../bps-common")
-
-    noxfile_common.run_unittest(session)
-
-
 annotation_dir = "annotation/v4.5.0/"
 XSD_FILES = [
     annotation_dir + "bio-l1ab-main-annotation.xsd",

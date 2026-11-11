@@ -21,7 +21,6 @@ spec:
       default: false
       description: Propagate Windows unit test enablement to downstream project pipelines.
 ---
-
 stages:
   - subproject
   - integration_tests
@@ -44,7 +43,7 @@ variables:
 include:
   - project: "biomass/bps/ci-variables"
     ref: main
-    file: '/variables.yml'
+    file: "/variables.yml"
   - local: ".conda-packaging-ci.yml"
   - local: ".docker-ci.yml"
   - local: ".testplan-ci.yml"
@@ -89,7 +88,7 @@ include:
   stage: subproject
   variables:
     SUBPROJECT: $CI_JOB_NAME
-    BPS_ENABLE_WIN10_UNITTEST: '$[[ inputs.bps-enable-win10-unittest ]]'
+    BPS_ENABLE_WIN10_UNITTEST: "$[[ inputs.bps-enable-win10-unittest ]]"
   trigger:
     strategy: mirror
 
@@ -104,6 +103,7 @@ bps-common:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-common/*
         - bps-common/**/*
 
@@ -118,6 +118,7 @@ bps-transcoder:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-transcoder/*
         - bps-transcoder/**/*
 
@@ -132,6 +133,7 @@ bps-l1_framing_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_framing_processor/*
         - bps-l1_framing_processor/**/*
 
@@ -146,6 +148,7 @@ bps-l1_pre_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_pre_processor/*
         - bps-l1_pre_processor/**/*
 
@@ -160,6 +163,7 @@ bps-l1_core_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_core_processor/*
         - bps-l1_core_processor/**/*
 
@@ -174,6 +178,7 @@ bps-l1_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_processor/*
         - bps-l1_processor/**/*
 
@@ -188,6 +193,7 @@ bps-stack_pre_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_pre_processor/*
         - bps-stack_pre_processor/**/*
 
@@ -202,6 +208,7 @@ bps-stack_coreg_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_coreg_processor/*
         - bps-stack_coreg_processor/**/*
 
@@ -216,6 +223,7 @@ bps-stack_cal_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_cal_processor/*
         - bps-stack_cal_processor/**/*
 
@@ -230,6 +238,7 @@ bps-stack_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_processor/*
         - bps-stack_processor/**/*
 
@@ -244,6 +253,7 @@ bps-l2a_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2a_processor/*
         - bps-l2a_processor/**/*
 
@@ -258,6 +268,7 @@ bps-l2b_fd_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_fd_processor/*
         - bps-l2b_fd_processor/**/*
 
@@ -272,6 +283,7 @@ bps-l2b_fh_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_fh_processor/*
         - bps-l2b_fh_processor/**/*
 
@@ -286,6 +298,7 @@ bps-l2b_agb_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_agb_processor/*
         - bps-l2b_agb_processor/**/*
 
@@ -300,6 +313,7 @@ bps-l1_geocoding_tool:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_geocoding_tool/*
         - bps-l1_geocoding_tool/**/*
 
