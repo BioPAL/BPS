@@ -16,14 +16,17 @@ import shutil
 from pathlib import Path
 
 from arepyextras.runner import Environment
-from bps.common import bps_logger, retrieve_aux_product_data_single_content
+from bps.common import (
+    BIOMASS_PROCESSOR_VERSION,
+    bps_logger,
+    retrieve_aux_product_data_single_content,
+)
 from bps.common.configuration import (
     fill_bps_configuration_file,
     write_bps_configuration_file,
 )
 from bps.l1_core_processor.processing_options import BPSL1CoreProcessorStep
 from bps.l1_pre_processor.aux_ins.aux_ins import AuxInsProduct
-from bps.l1_processor import __version__ as VERSION
 from bps.l1_processor.aux_tec.utils import retrieve_single_decompressed_ionex_file
 from bps.l1_processor.core.parsing import parse_aux_pp1
 from bps.l1_processor.core.processing_options_utils import (
@@ -159,7 +162,7 @@ def run_l1_processing_impl(
         job_order.processor_configuration,
         task_name="L1_P",
         processor_name="L1_P",
-        processor_version=bps_logger.get_version_in_logger_format(VERSION),
+        processor_version=BIOMASS_PROCESSOR_VERSION,
         node_name=bps_logger.get_default_logger_node(),
     )
 

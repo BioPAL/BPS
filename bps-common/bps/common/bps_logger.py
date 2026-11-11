@@ -70,6 +70,8 @@ import traceback
 from dataclasses import dataclass
 from pathlib import Path
 
+from bps.common import get_version_in_bps_format
+
 _BPS_LOGGER = logging.getLogger("bps")
 
 _LEVEL_MAPPING = {
@@ -142,28 +144,6 @@ _BPS_FORMATTER = logging.Formatter(
 )
 
 
-def get_version_in_logger_format(version: str) -> str:
-    """Convert a version to the format required by the BPS logger.
-
-    Parameters
-    ----------
-    version : str
-        version in standard format (e.g. 2.3.5)
-
-    Returns
-    -------
-    str
-        version in BPS format (e.g. 02.35)
-    """
-    major, minor, patch = (int(x) for x in version.split(".")[0:3])
-    if minor > 9 or patch > 9:
-        raise RuntimeError(f"Minor and patch version cannot exceed '9': {version}")
-
-    minor_bps = minor * 10 + patch
-    assert minor_bps < 99
-    return f"{major:02d}.{minor_bps:02d}"
-
-
 def get_default_logger_node() -> str:
     """Get a default name of the processing node.
 
@@ -216,7 +196,7 @@ def init_logger(
 
     _BPS_LOGGER.setLevel(loglevel)
 
-    version = get_version_in_logger_format(version)
+    version = get_version_in_bps_format(version)
 
     _FACILITY_INFO.node = node
     _FACILITY_INFO.processor = processor
@@ -338,7 +318,7 @@ def update_logger(
     if task is not None:
         _FACILITY_INFO.task = task
     if version is not None:
-        _FACILITY_INFO.version = get_version_in_logger_format(version)
+        _FACILITY_INFO.version = get_version_in_bps_format(version)
 
 
 def stack_trace(

@@ -14,12 +14,9 @@ import logging
 from pathlib import Path
 
 from arepytools.timing.precisedatetime import PreciseDateTime
-from bps.common import Swath
+from bps.common import BIOMASS_PROCESSOR_VERSION, Swath
 from bps.common.io import joborder_models
 from bps.common.joborder import DeviceResources, ProcessorConfiguration, TileProcessingParameters
-
-BIOMASS_PROCESSOR_VERSION = "04.60"
-"""Expected processor version for all BIOMASS CPF processor job orders"""
 
 BIOMASS_SCHEMA_NAME = r"BIOMASS CPF-Processor ICD"
 """Expected XML schema name for all BIOMASS CPF processor job orders"""

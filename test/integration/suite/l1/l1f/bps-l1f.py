@@ -14,12 +14,11 @@ import sys
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession, skip_if
-from bps.common import __version__
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION
 
 WIN32 = sys.platform == "win32"
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 
 
 @skip_if(WIN32, reason="test_bps_l1f_001 is linux only")

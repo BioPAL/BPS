@@ -27,7 +27,7 @@ from arepytools.io.productfolder2 import (
     is_product_folder,
     rename_product_folder,
 )
-from bps.common import bps_logger
+from bps.common import BIOMASS_PROCESSOR_VERSION, bps_logger
 from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
 from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
@@ -54,7 +54,6 @@ from bps.stack_coreg_processor.utils import (
     StackCoregProcessorRuntimeError,
     write_product_folder,
 )
-from bps.stack_processor import __version__ as VERSION
 from bps.stack_processor.execution.utils import setup_coreg_processor_env
 from bps.stack_processor.interface.external.aux_pps import (
     AuxiliaryStaprocessingParameters,
@@ -981,7 +980,7 @@ class StackCoregProcessorExecutionManager:
                 self.job_order.processor_configuration,
                 task_name="STA_P",
                 processor_name="STA_P",
-                processor_version=bps_logger.get_version_in_logger_format(VERSION),
+                processor_version=BIOMASS_PROCESSOR_VERSION,
                 node_name=bps_logger.get_default_logger_node(),
             ),
             breakpoint_dir / BPS_CONF_FILENAME_XML,

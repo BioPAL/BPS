@@ -17,15 +17,14 @@ from pathlib import Path
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession, skip, skip_if
-from bps.common import __version__, retrieve_aux_product_data_single_content
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content
 from bps.transcoder import BPS_AUX_FMT_VERSION
 
 WIN32 = sys.platform == "win32"
 PY311 = sys.version_info.major == 3 and sys.version_info.minor == 11
 AUTOFOCUS_ENABLED = PY311 and not WIN32
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 AUX_FMT_VERSION_STR = BPS_AUX_FMT_VERSION[1:]
 
 

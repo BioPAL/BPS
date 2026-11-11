@@ -24,8 +24,7 @@ import traceback
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
-from bps.common import __version__
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
@@ -39,7 +38,7 @@ from netCDF4 import Dataset
 FAIL_FORMAT_STR = "\n  [ FAIL ] {:s}"
 PASS_FORMAT_STR = "\n  [  OK  ] {:s}"
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 
 OUTPUT_DIR = "od"  # Short name to keep the paths short enough for Windows.
 WORKER_THREADS = 5
