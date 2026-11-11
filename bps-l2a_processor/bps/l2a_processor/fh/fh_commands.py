@@ -2154,8 +2154,6 @@ def find_minimums(
 
             min_positions[i_az, i_rg] = min_pos
 
-    return
-
 
 def find_minimums_serial(
     min_positions: np.ndarray,
@@ -2203,8 +2201,6 @@ def find_minimums_serial(
                         min_val = val
 
             min_positions[i_az, i_rg] = min_pos
-
-    return
 
 
 def polarimetric_optimization(

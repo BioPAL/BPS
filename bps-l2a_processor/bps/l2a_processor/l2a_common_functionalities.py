@@ -1737,8 +1737,6 @@ def _regular_linear_interpolator(outputM, inputM, ax0in, ax1in, ax0out, ax1out, 
             w = (px0 - sign0 * ax0in[c]) / dx0
             outputM[i0, :] = (1.0 - w) * innerM[c, :] + w * innerM[c + 1, :]
 
-    return
-
 
 def _linear_interpolation_2d(
     data_in,

@@ -327,8 +327,6 @@ class masterAutofocus:
         if not self.abort:
             self.__save_results__()
 
-        return
-
     def __resampleFaraday__(self):
         # Resample phase from FR and sigma2 to the block centers
         pha_fr_zp = np.zeros((self.Nax, self.Nrx), self.phase_fr.data.dtype)

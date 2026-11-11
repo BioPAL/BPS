@@ -11,9 +11,9 @@ from pathlib import Path
 from typing import Any, Literal
 from xml.etree import ElementTree
 
-import arepytools.io.metadata as metadata
 import numpy as np
 from arepytools.constants import LIGHT_SPEED
+from arepytools.io import metadata
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file

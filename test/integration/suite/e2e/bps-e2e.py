@@ -19,7 +19,7 @@ sys.path.append(str(Path(__file__).parent.parent / "stack" / "aux_pps_utils"))
 # fmt: on
 import os
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
 from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content

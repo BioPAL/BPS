@@ -15,11 +15,11 @@ from numbers import Number
 from pathlib import Path
 from typing import Any
 
-import arepytools.io.metadata as metadata
 import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.constants import LIGHT_SPEED
+from arepytools.io import metadata
 from bps.common import bps_logger
 from bps.common.io import common
 from bps.common.io.parsing import parse
