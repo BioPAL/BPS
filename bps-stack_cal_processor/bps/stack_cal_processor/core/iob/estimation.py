@@ -193,7 +193,7 @@ def pairwise_ionosphere_estimations_multithreaded(
                     stack_specs=stack_specs,
                     estimation_dtypes=estimation_dtypes,
                 )
-            except Exception as ex:
+            except Exception as ex:  # noqa: BLE001
                 bps_logger.warning("Iono estimation failed for pair %s", pair_ps)
                 bps_logger.debug("Got error: %s", ex)
                 output = EstimationOutput(usable=False)

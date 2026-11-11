@@ -739,7 +739,7 @@ class BIOMASSStackProductReader:
         """Read a LUT dimension. Optionally, warn on missing."""
         try:
             return np.array(dataset.variables[dimension][:], dtype=dtype)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if warn_on_missing:
                 bps_logger.warning("Failed to read dimension %s: %s", dimension, str(e))
             return None
@@ -758,7 +758,7 @@ class BIOMASSStackProductReader:
             values = np.asarray(dataset.groups[group][variable][:])
             values[values == lut_nodata_value] = _value_or(self.nodata_fill_value, default_value=lut_nodata_value)
             return values.astype(dtype)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if variable not in dataset.groups[group].__dict__ and variable in REQUIRED_LUT_LAYERS:
                 bps_logger.warning("%s is missing from %s/%s: %s", variable, self.product_path.name, group, str(e))
             return None

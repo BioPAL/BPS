@@ -38,7 +38,7 @@ def _delete(product: Path) -> None:
     if product.exists():
         try:
             open_product_folder(product).delete()
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             bps_logger.warning(
                 "An error occurred during removal of %s intermediate product: '%s: %s'",
                 product,

@@ -41,7 +41,7 @@ def reader[AnnotationModel](
         pfd_version = all_pfd_versions[version]
         try:
             model = parse(content, model_cls)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             bps_logger.warning(f"Cannot parse {file} assuming PFD version {pfd_version} for {level_tag}: {e}")
             continue
         else:

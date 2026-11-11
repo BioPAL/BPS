@@ -703,7 +703,7 @@ class masterAutofocus:
 
             try:
                 self.ph_int[..., self.iteration] += self.phase_fr.plane_phase
-            except Exception:
+            except Exception:  # noqa: BLE001
                 pass
 
             # If self.acc exist then interpolate it to full resolution too
