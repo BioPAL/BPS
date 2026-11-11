@@ -11,24 +11,11 @@ BPS nox automation utilities file
 """
 
 import shutil
-import sys
 from pathlib import Path
 
 import nox
 
-UNITTEST_PYVERSIONS = ["3.12", "3.13", "3.14"]
-CONDABUILD_BACKEND = "mamba"
-WIN32 = sys.platform == "win32"
-PLATFORM = "win" if WIN32 else "linux"
-GDAL_VERSION = "3.13.3"
 RUFF_VERSION = "0.17.4"
-
-
-def run_format_check(session: nox.Session):
-    """Check files are: formatted, with license header and import sorted"""
-    session.install(f"ruff=={RUFF_VERSION}")
-    session.run("python", "-m", "ruff", "format", ".", "--check")
-    session.run("python", "-m", "ruff", "check", ".", "--select", "I", "--select", "CPY")
 
 
 def run_format_fix(session: nox.Session):
@@ -36,63 +23,6 @@ def run_format_fix(session: nox.Session):
     session.install(f"ruff=={RUFF_VERSION}")
     session.run("python", "-m", "ruff", "format", ".")
     session.run("python", "-m", "ruff", "check", ".", "--select", "I", "--fix")
-
-
-def run_ruff(session: nox.Session):
-    """Assess code quality with ruff"""
-    session.install(f"ruff=={RUFF_VERSION}")
-    session.run("python", "-m", "ruff", "check", ".")
-
-
-def run_fawlty_deps(session: nox.Session):
-    """Check dependencies with fawlty deps"""
-    if not Path("bps").exists():
-        session.error("run fawlty_deps session inside package folder: e.g. 'cd bps-common; nox -s fawlty_deps'")
-
-    session.install("FawltyDeps")
-    session.run(
-        "python",
-        "-m",
-        "fawltydeps",
-        "--code",
-        "bps",
-        "--detailed",
-        "--config-file",
-        "../scripts/fawltydeps.toml",
-    )
-
-
-def run_unittest(session: nox.Session):
-    """Run package unittest"""
-
-    package_name = Path.cwd().name
-    package_module = package_name.replace("-", ".")
-
-    Path("_build").mkdir(exist_ok=True)
-    session.install("-e", ".")
-
-    session.install("unittest-xml-reporting", "coverage")
-    session.run(
-        "python",
-        "-m",
-        "coverage",
-        "run",
-        f"--source={package_module}",
-        "-m",
-        "xmlrunner",
-        "--output-file",
-        f"_build/unittest-report-{PLATFORM}-py{session.python}.xml",
-        "discover",
-    )
-    session.run("python", "-m", "coverage", "report", "-m")
-    session.run(
-        "python",
-        "-m",
-        "coverage",
-        "xml",
-        "-o",
-        f"_build/unittest-coverage-{PLATFORM}-py{session.python}.xml",
-    )
 
 
 def run_check_xsd(session: nox.Session, package: str, file_list: list[str]):
@@ -138,24 +68,6 @@ def run_align_xsd(session: nox.Session, package: str, file_list: list[str]):
 
 # Default sessions
 @nox.session()
-def format_check(session: nox.Session):
-    """Check files are: formatted, with license header and import sorted"""
-    run_format_check(session)
-
-
-@nox.session()
 def format_fix(session: nox.Session):
     """Fix files: format and sort import"""
     run_format_fix(session)
-
-
-@nox.session()
-def ruff(session: nox.Session):
-    """Assess code quality with ruff"""
-    run_ruff(session)
-
-
-@nox.session()
-def fawlty_deps(session: nox.Session):
-    """Check dependencies with fawlty deps"""
-    run_fawlty_deps(session)

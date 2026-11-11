@@ -8,63 +8,20 @@ workflow:
   rules:
     - when: always
 
-variables:
-  GIT_DEPTH: 1
+include:
+  - local: "/.gitlab-ci-common.yml"
 
-.tags_eo_deploy:
-  tags: ["eo", "deploy"]
+variables:
+  LOCAL_DEPENDENCIES: "../bps-common ../bps-transcoder"
 
 ruff:
-  stage: analysis
-  needs: []
-  image: python:3.14-slim-bookworm
-  script:
-    - cd $SUBPROJECT
-    - python3.14 -m pip install nox
-    - python3.14 -m nox -s ruff
+  extends: .ruff
 
 fawlty_deps:
-  stage: analysis
-  needs: []
-  image: python:3.14-slim-bookworm
-  script:
-    - cd $SUBPROJECT
-    - python3.14 -m pip install nox
-    - python3.14 -m nox -s fawlty_deps
-
-format:
-  stage: analysis
-  needs: []
-  image: python:3.14-slim-bookworm
-  script:
-    - cd $SUBPROJECT
-    - python3.14 -m pip install nox
-    - python3.14 -m nox -s format_check
+  extends: .fawlty_deps
 
 build:
-  stage: build
-  needs: []
-  image: python:3.14-slim-bookworm
-  script:
-    - cd $SUBPROJECT
-    - python3.14 -m pip install build
-    - python3.14 -m build
-  artifacts:
-    expire_in: 2 weeks
-    paths:
-      - $SUBPROJECT/dist/*.tar.gz
-      - $SUBPROJECT/dist/*.whl
+  extends: .build
 
 deploy:
-  stage: deploy
-  extends:
-    - .tags_eo_deploy
-  rules:
-    - if: "$CI_COMMIT_TAG"
-  script:
-    - eval "$(ssh-agent -s)"
-    - for file in ${SUBPROJECT}/dist/*; do
-      eo_pgp-signme ${file} > ${file}.asc &&
-      ./.gitlab/ci/dashboard-copy.sh ${file} develop/bps/bps-l1_framing_processor/archive &&
-      ./.gitlab/ci/dashboard-copy.sh ${file}.asc develop/bps/bps-l1_framing_processor/archive;
-      done
+  extends: .deploy

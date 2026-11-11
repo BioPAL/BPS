@@ -1,0 +1,118 @@
+variables:
+  GIT_DEPTH: 1
+  PIP_EXTRA_INDEX_URL: "$INTERNAL_PYPI_URL"
+
+.tags_win10_conda:
+  tags: ["eo", "win10", "conda"]
+
+.tags_eo_deploy:
+  tags: ["eo", "deploy"]
+
+.enable_win10_unittest:
+  rules:
+    - if: '$BPS_ENABLE_WIN10_UNITTEST == "true"'
+
+.xsd_alignment:
+  stage: analysis
+  needs: []
+  image: python:3.14-slim-bookworm
+  script:
+    - cd $SUBPROJECT
+    - python3.14 -m pip install nox
+    - python3.14 -m nox -s check_xsd
+
+.ruff:
+  stage: analysis
+  needs: []
+  image: python:3.14-slim-bookworm
+  script:
+    - cd $SUBPROJECT
+    - python3.14 -m pip install ruff==0.17.4
+    - python3.14 -m ruff format --check .
+    - python3.14 -m ruff check .
+
+.install_subpackage:
+  image: condaforge/miniforge3
+  variables:
+    PYTHON: "3.14"
+    CONDA_ENV: env-$SUBPROJECT
+  before_script:
+    - cd $SUBPROJECT
+    - conda create --yes --name $CONDA_ENV python=${PYTHON} gdal=3.13.3 -c conda-forge
+    - set --; for dependency in ${LOCAL_DEPENDENCIES:-}; do set -- "$@" -e "$dependency"; done; if [ "$#" -gt 0 ]; then conda run --name $CONDA_ENV python -m pip install "$@"; fi
+    - conda run --name $CONDA_ENV python -m pip install -e ".[${PACKAGE_EXTRAS}]"
+
+.fawlty_deps:
+  stage: analysis
+  needs: []
+  image: python:3.14-slim-bookworm
+  script:
+    - cd $SUBPROJECT
+    - python3.14 -m pip install FawltyDeps
+    - python3.14 -m fawltydeps --code bps --detailed --config-file ../scripts/fawltydeps.toml
+
+.build:
+  stage: build
+  needs: []
+  image: python:3.14-slim-bookworm
+  script:
+    - cd $SUBPROJECT
+    - python3.14 -m pip install build
+    - python3.14 -m build
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - $SUBPROJECT/dist/*.tar.gz
+      - $SUBPROJECT/dist/*.whl
+
+.deploy:
+  stage: deploy
+  extends:
+    - .tags_eo_deploy
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  script:
+    - eval "$(ssh-agent -s)"
+    - for file in ${SUBPROJECT}/dist/*; do
+      eo_pgp-signme ${file} > ${file}.asc &&
+      ./.gitlab/ci/dashboard-copy.sh ${file} develop/bps/${SUBPROJECT}/archive &&
+      ./.gitlab/ci/dashboard-copy.sh ${file}.asc develop/bps/${SUBPROJECT}/archive;
+      done
+
+.unittest_linux:
+  stage: test
+  needs: []
+  extends: .install_subpackage
+  variables:
+    PACKAGE_EXTRAS: test
+  script:
+    - mkdir -p _build
+    - conda run --name $CONDA_ENV python -m coverage run "--source=$SOURCE_RELATIVE_PATH" -m xmlrunner --output-file _build/unittest-report-linux-py${PYTHON}.xml discover
+    - conda run --name $CONDA_ENV python -m coverage report -m
+    - conda run --name $CONDA_ENV python -m coverage xml -o _build/unittest-coverage-linux-py${PYTHON}.xml
+  artifacts:
+    reports:
+      junit:
+        - $SUBPROJECT/_build/unittest-report-*.xml
+
+.unittest_win10:
+  stage: test
+  needs: []
+  extends:
+    - .tags_win10_conda
+    - .enable_win10_unittest
+  script:
+    - cd $SUBPROJECT
+    - $legacyProfile = Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'; if (Test-Path $legacyProfile) { . $legacyProfile } elseif (Test-Path $PROFILE) { . $PROFILE }
+    - conda create --yes --name unittest python=${PYTHON} gdal=3.13.3 -c conda-forge
+    - if ($env:LOCAL_DEPENDENCIES) { $pipArgs = @(); foreach ($dependency in ($env:LOCAL_DEPENDENCIES -split '\s+' | Where-Object { $_ })) { $pipArgs += '-e', $dependency }; if ($pipArgs.Count -gt 0) { conda run --name unittest python -m pip install @pipArgs; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } }
+    - conda run --name unittest python -m pip install -e '.[test]'
+    - New-Item -ItemType Directory -Force -Path _build | Out-Null
+    - conda run --name unittest python -m coverage run "--source=$env:SOURCE_RELATIVE_PATH" -m xmlrunner --output-file _build/unittest-report-win-py${PYTHON}.xml discover
+    - conda run --name unittest python -m coverage report -m
+    - conda run --name unittest python -m coverage xml -o _build/unittest-coverage-win-py${PYTHON}.xml
+  retry: 2
+  artifacts:
+    reports:
+      junit:
+        - $SUBPROJECT/_build/unittest-report-*.xml
