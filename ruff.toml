@@ -9,14 +9,10 @@ line-ending = "lf"
 
 [lint]
 ignore = [
-    "B009",    # get-attr-with-constant
     "C408",    # unnecessary-collection-call
-    "B010",    # set-attr-with-constant
     "C400",    # unnecessary-generator-list
     "C410",    # unnecessary-literal-within-list-call
     "D419",    # empty-docstring
-    "B008",    # function-call-in-default-argument
-    "B018",    # useless-expression
     "S102",    # exec-builtin
     "PERF102", # incorrect-dict-iterator
     "PLW0177", # nan-comparison
@@ -25,8 +21,6 @@ ignore = [
     "C401",    # unnecessary-generator-set
     "PLC0206", # dict-index-missing-items
     "PYI013",  # ellipsis-in-non-empty-class-body
-    "B023",    # function-uses-loop-variable
-    "B020",    # loop-variable-overrides-iterator
     "FURB192", # sorted-min-max
     "C414",    # unnecessary-double-cast-or-process
     "C417",    # unnecessary-map

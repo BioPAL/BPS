@@ -70,7 +70,7 @@ def xo_orbit_init_file(
     orbit_id = xo_orbit_id()
     n_files = ct.c_long(1)
 
-    xo_orbit_init_file = getattr(EOCFI_LIBS["liborb"], "xo_orbit_init_file")
+    xo_orbit_init_file = EOCFI_LIBS["liborb"].xo_orbit_init_file
 
     # Define the types of the output and arguments of
     xo_orbit_init_file.restype = ct.c_long
@@ -131,7 +131,7 @@ def xo_osv_compute(orbit_id=None, mode=0, time_ref=XL_TIME_UTC, time_in=0.0):
     pos_out = (ct.c_double * XYZ_ARRAY_SIZE)()
     vel_out = (ct.c_double * XYZ_ARRAY_SIZE)()
     acc_out = (ct.c_double * XYZ_ARRAY_SIZE)()
-    xo_osv_compute = getattr(EOCFI_LIBS["liborb"], "xo_osv_compute")
+    xo_osv_compute = EOCFI_LIBS["liborb"].xo_osv_compute
     xo_osv_compute.restype = ct.c_long
     xo_osv_compute.argtypes = [
         ct.POINTER(xo_orbit_id),
@@ -176,7 +176,7 @@ def xo_orbit_get_anx(orbit_id: xo_orbit_id):
     tnod = ct.c_double()
     # extra_info = xo_anx_extra_info()
 
-    xo_orbit_get_anx = getattr(EOCFI_LIBS["liborb"], "xo_orbit_get_anx")
+    xo_orbit_get_anx = EOCFI_LIBS["liborb"].xo_orbit_get_anx
     xo_orbit_get_anx.restype = ct.c_long
     xo_orbit_get_anx.argtypes = [
         ct.POINTER(xo_orbit_id),

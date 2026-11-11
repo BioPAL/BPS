@@ -502,8 +502,6 @@ class BIOMASSL2bAGBProductWriter:
         lon_min = min(footprint[1::2])
         lon_max = max(footprint[1::2])
         bbox = [lon_min, lat_min, lon_max, lat_max]
-        # properties
-        self.product.main_ads_input_information.l2a_inputs
 
         # times
         start_time = self.product.main_ads_product.start_time.isoformat(timespec="milliseconds")

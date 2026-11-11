@@ -96,13 +96,13 @@ def _stderr_level(record: logging.LogRecord) -> bool:
 
 def _add_msg_type(record: logging.LogRecord) -> bool:
     """Filter to map logging levels to BPS message types in log record"""
-    setattr(record, "msg_type", _LEVEL_MAPPING.get(record.levelname, "E"))
+    record.msg_type = _LEVEL_MAPPING.get(record.levelname, "E")
     return True
 
 
 def _add_musecs(record: logging.LogRecord) -> bool:
     """Filter to add micro seconds to the log record"""
-    setattr(record, "musecs", record.msecs * 1e3)
+    record.musecs = record.msecs * 1000.0
     return True
 
 
@@ -129,10 +129,10 @@ class _FacilityInfoFilter(logging.Filter):
     facility_info: _FacilityInfo
 
     def filter(self, record: logging.LogRecord) -> bool:
-        setattr(record, "node", self.facility_info.node)
-        setattr(record, "processor", self.facility_info.processor)
-        setattr(record, "task", self.facility_info.task)
-        setattr(record, "version", self.facility_info.version)
+        record.node = self.facility_info.node
+        record.processor = self.facility_info.processor
+        record.task = self.facility_info.task
+        record.version = self.facility_info.version
         return True
 
 

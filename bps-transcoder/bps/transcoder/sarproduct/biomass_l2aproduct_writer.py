@@ -1046,10 +1046,7 @@ class BIOMASSL2aProductWriter:
                     self.product.main_ads_processing_parameters.compression_options.mds,
                     "tfh",
                 ):
-                    comp_opt = getattr(
-                        self.product.main_ads_processing_parameters.compression_options.mds,
-                        "tfh",
-                    )
+                    comp_opt = self.product.main_ads_processing_parameters.compression_options.mds.tfh
                 else:
                     comp_opt = getattr(
                         self.product.main_ads_processing_parameters.compression_options.mds,
