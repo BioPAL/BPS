@@ -22,8 +22,7 @@ import os
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
-from bps.common import __version__, retrieve_aux_product_data_single_content
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content
 from bps.transcoder import BPS_AUX_FMT_VERSION
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.biomass_l2aproduct_reader import BIOMASSL2aProductReader
@@ -37,7 +36,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
 )
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 WORKER_THREADS = 7
 MAX_RAM_USAGE = 64768
 L1_OUT_DIR_1 = "output_dir_l1_1"

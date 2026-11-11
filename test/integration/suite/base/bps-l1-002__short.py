@@ -12,11 +12,10 @@ L1 002 (short) test
 
 import arepyextras.xml as xml
 from arepyextras.test import DataRepository, Environment, TestSession
-from bps.common import __version__, retrieve_aux_product_data_single_content
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content
 from bps.transcoder import BPS_AUX_FMT_VERSION
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 AUX_FMT_VERSION_STR = BPS_AUX_FMT_VERSION[1:]
 
 
