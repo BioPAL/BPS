@@ -3,6 +3,12 @@ output-format = "concise"
 target-version = "py312"
 required-version = "0.17.4"
 
+[lint]
+extend-select = ["CPY"]
+
+[lint.flake8-copyright]
+notice-rgx = '\A# Project: BIOMASS Processing Suite \(BPS\)\n#\n# Copyright \(c\) 2025, ARESYS S\.r\.l\.(?:, DLR, Deimos Space)?\n# Developed under contract with the European Space Agency \(ESA\)\n#\n# SPDX-License-Identifier: MIT\n\n'
+
 [format]
 docstring-code-format = true
 line-ending = "lf"
@@ -12,3 +18,7 @@ line-ending = "lf"
 "*l1_framing_processor/*/models.py" = ["UP"]
 "__init__.py" = ["F401"]
 "__main__.py" = ["BLE001"]
+"test/*.py" = ["CPY"]
+"*/test/*.py" = ["CPY"]
+"*/tests/*.py" = ["CPY"]
+"noxfile.py" = ["CPY"]

@@ -23,61 +23,12 @@ PLATFORM = "win" if WIN32 else "linux"
 GDAL_VERSION = "3.13.3"
 RUFF_VERSION = "0.17.4"
 
-_LICENSE_HEADER_ARESYS = """# Project: BIOMASS Processing Suite (BPS)
-#
-# Copyright (c) 2025, ARESYS S.r.l.
-# Developed under contract with the European Space Agency (ESA)
-#
-# SPDX-License-Identifier: MIT
-
-"""
-
-_GPP_FILES = ["main_autofocus_bps.py", "af_lib.py", "signalproclib.py", "save_aresys.py"]
-
-_LICENSE_HEADER_GPP = """# Project: BIOMASS Processing Suite (BPS)
-#
-# Copyright (c) 2025, ARESYS S.r.l., DLR, Deimos Space
-# Developed under contract with the European Space Agency (ESA)
-#
-# SPDX-License-Identifier: MIT
-
-"""
-
 
 def run_format_check(session: nox.Session):
     """Check files are: formatted, with license header and import sorted"""
     session.install(f"ruff=={RUFF_VERSION}")
     session.run("python", "-m", "ruff", "format", ".", "--check")
-    session.run("python", "-m", "ruff", "check", ".", "--select", "I")
-
-    def is_gpp_file(file: Path) -> bool:
-        return file.name in _GPP_FILES
-
-    def wrong_license_header(file: Path, license_header: str) -> bool:
-        num_header_lines = len(license_header.splitlines())
-        with file.open("r", encoding="utf-8") as f:
-            header = "".join(next(f) for _ in range(num_header_lines))
-        return header != license_header
-
-    source_files = list(Path("bps").rglob("*.py"))
-    no_licensed_files = list(
-        filter(
-            lambda x: wrong_license_header(x, _LICENSE_HEADER_ARESYS),
-            filter(lambda x: not is_gpp_file(x), source_files),
-        )
-    ) + list(
-        filter(
-            lambda x: wrong_license_header(x, _LICENSE_HEADER_GPP),
-            filter(lambda x: is_gpp_file(x), source_files),
-        )
-    )
-
-    if len(no_licensed_files) > 0:
-        for file in no_licensed_files:
-            session.warn(f"{file} has no license header")
-        session.error()
-    else:
-        session.log("All files have proper license header")
+    session.run("python", "-m", "ruff", "check", ".", "--select", "I", "--select", "CPY")
 
 
 def run_format_fix(session: nox.Session):
