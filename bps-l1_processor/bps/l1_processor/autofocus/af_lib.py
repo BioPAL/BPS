@@ -824,7 +824,7 @@ class masterAutofocus:
         self.iterables = [ca, cr]
 
         # Iterate to find all possible combinations and create a grid of center coordiantes
-        self.centers = sorted(list(itertools.product(*self.iterables)))
+        self.centers = sorted(itertools.product(*self.iterables))
 
     def __calculate_dimensions_new__(self):
         bps_logger.info("Autofocus - Calculating dimensions of image for AF...")

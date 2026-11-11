@@ -62,12 +62,7 @@ def _get_end_time(timestamps: list[str]) -> PreciseDateTime:
     if len(timestamps) == 0:
         raise RuntimeError("Invalid product name (no time strings)")
 
-    return sorted(
-        map(
-            lambda tstr: PreciseDateTime.from_utc_string(f"{tstr}.000000"),
-            timestamps,
-        )
-    )[-1]
+    return sorted(PreciseDateTime.from_utc_string(f"{tstr}.000000") for tstr in timestamps)[-1]
 
 
 def _find_closest_product(
