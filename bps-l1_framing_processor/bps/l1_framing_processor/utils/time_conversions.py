@@ -15,7 +15,7 @@ import numpy as np
 from bps.l1_framing_processor.utils.constants import REFERENCE_EPOCH
 
 
-def to_mjd2000(timestamp, ref=np.datetime64("2000-01-01T00:00:00")):
+def to_mjd2000(timestamp, ref: np.datetime64 | None = None):
     """Time datetime64-to-MJD2000 conversion
 
     Parameters
@@ -30,6 +30,8 @@ def to_mjd2000(timestamp, ref=np.datetime64("2000-01-01T00:00:00")):
     double
         Time (MJD2000)
     """
+    if ref is None:
+        ref = np.datetime64("2000-01-01T00:00:00")
     if hasattr(timestamp, "__iter__"):
         timestamp = np.asarray(timestamp)
         if isinstance(timestamp[0], datetime):
@@ -51,7 +53,7 @@ def to_mjd2000(timestamp, ref=np.datetime64("2000-01-01T00:00:00")):
     return time
 
 
-def to_datetime64(mjd2000, ref=np.datetime64("2000-01-01T00:00:00")):
+def to_datetime64(mjd2000, ref: np.datetime64 | None = None):
     """Time MJD2000-to-datetime64 conversion
 
     Parameters
@@ -71,6 +73,8 @@ def to_datetime64(mjd2000, ref=np.datetime64("2000-01-01T00:00:00")):
     date = date.astype("timedelta64[ns]")
     date = date.squeeze()
 
+    if ref is None:
+        ref = np.datetime64("2000-01-01T00:00:00")
     return ref + date
 
 

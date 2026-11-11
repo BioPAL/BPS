@@ -53,7 +53,7 @@ def xl_print_msg(n, msg):
 def xl_get_msg(func_id, ierr):
     msg = (ct.c_char_p * XL_MAX_COD * XL_MAX_STR)()
     n = ct.c_long()
-    xl_get_msg = getattr(EOCFI_LIBS["libcfi"], "xl_get_msg")
+    xl_get_msg = EOCFI_LIBS["libcfi"].xl_get_msg
     xl_get_msg.restype = ct.c_long
     xl_get_msg.argtypes = [
         ct.POINTER(ct.c_long),
@@ -79,7 +79,7 @@ def xl_model_init(mode=0, models=None):
     ModelsArray = ct.c_long * XL_NUM_MODEL_TYPES_ENUM
     models = ModelsArray(*models)
 
-    xl_model_init = getattr(EOCFI_LIBS["libcfi"], "xl_model_init")
+    xl_model_init = EOCFI_LIBS["libcfi"].xl_model_init
     xl_model_init.restype = ct.c_long
     xl_model_init.argtypes = [
         ct.POINTER(ct.c_long),
@@ -124,7 +124,7 @@ def xl_time_ref_init_file(
     val_time1 = ct.c_double()
     time_id = xl_time_id()
 
-    xl_time_ref_init_file = getattr(EOCFI_LIBS["libcfi"], "xl_time_ref_init_file")
+    xl_time_ref_init_file = EOCFI_LIBS["libcfi"].xl_time_ref_init_file
     xl_time_ref_init_file.restype = ct.c_long
     xl_time_ref_init_file.argtypes = [
         ct.POINTER(ct.c_long),
@@ -197,7 +197,7 @@ def xl_position_on_orbit(
     ierr = (ct.c_long * XL_NUM_ERR_POSITION_ON_ORBIT)()
 
     # Define the call
-    xl_position_on_orbit = getattr(EOCFI_LIBS["libcfi"], "xl_position_on_orbit")
+    xl_position_on_orbit = EOCFI_LIBS["libcfi"].xl_position_on_orbit
     xl_position_on_orbit.restype = ct.c_long
 
     xl_position_on_orbit.argtypes = [  # IN

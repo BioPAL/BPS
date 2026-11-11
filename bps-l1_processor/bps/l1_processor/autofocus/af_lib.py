@@ -417,7 +417,7 @@ class masterAutofocus:
                 pass
 
         else:
-            for self.iteration in range(self.Niter):
+            for self.iteration in range(self.Niter):  # noqa: B020
                 if not self.abort:
                     bps_logger.info(f"Autofocus - Entered iteration {self.iteration + 1}")
 

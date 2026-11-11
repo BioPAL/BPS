@@ -936,12 +936,10 @@ def fast_read_mission_phase_id(
         xpath_primaryImage_posList = ".//staCoregistrationParameters/primaryImage"
         primaryImage_node = root.find(xpath_primaryImage_posList)
         assert primaryImage_node is not None
-        primaryImage_node.text
 
         xpath_secondaryImage_posList = ".//staCoregistrationParameters/secondaryImage"
         secondaryImage_node = root.find(xpath_secondaryImage_posList)
         assert secondaryImage_node is not None
-        secondaryImage_node.text
 
         xpath_missionPhaseID_posList = ".//acquisitionInformation/missionPhaseID"
         missionPhaseID_node = root.find(xpath_missionPhaseID_posList)

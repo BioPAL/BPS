@@ -214,11 +214,12 @@ class BIOMASSL2bAGBProduct:
         main_ads_processing_parameters: main_annotation_l2b_agb.ProcessingParametersAnnotation,
         baseline: int,
         product_doi: str,
-        agb_tile_iteration: np.uint8 = np.uint8(1),
+        agb_tile_iteration: np.uint8 | None = None,
         agb_tile_status: agbTileStatus | None = None,
     ) -> None:
         """_summary_"""
-
+        if agb_tile_iteration is None:
+            agb_tile_iteration = np.uint8(1)
         self.measurement = measurement
         self.main_ads_product = main_ads_product
         self.main_ads_raster_image = main_ads_raster_image

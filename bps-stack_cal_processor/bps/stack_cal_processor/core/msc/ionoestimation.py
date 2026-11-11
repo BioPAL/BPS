@@ -490,7 +490,7 @@ def estimate_ionospheric_ranges_multithreaded(
             # Distribute over the ranges to compute the cumulative score.
             with ThreadPoolExecutor(max_workers=max_num_threads) as executor:
                 # Compute the score for a MS coherence slice.
-                def composite_iterative_inversion_fn(r):
+                def composite_iterative_inversion_fn(r, sorted_iono_ranges=sorted_iono_ranges):
                     ms_coherence_slice = ms_coherence_samples[:, r, :].T
                     iono_phase, iono_target_phase, *_ = composite_iterative_inversion(
                         ms_coherence_slice=ms_coherence_slice,
