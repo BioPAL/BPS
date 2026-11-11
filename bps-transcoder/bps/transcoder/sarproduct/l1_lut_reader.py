@@ -70,7 +70,7 @@ def read_lut_file(
                     group_name,
                     layer_name,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 pass
 
     # Check unexpected layers

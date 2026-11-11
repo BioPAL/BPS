@@ -9,7 +9,6 @@ line-ending = "lf"
 
 [lint]
 ignore = [
-    "BLE001",  # blind-except
     "PLR0402", # manual-from-import
     "B009",    # get-attr-with-constant
     "C408",    # unnecessary-collection-call
@@ -42,3 +41,4 @@ ignore = [
 "models.py" = ["F401", "F811", "E741"]
 "*l1_framing_processor/*/models.py" = ["UP"]
 "__init__.py" = ["F401"]
+"__main__.py" = ["BLE001"]
