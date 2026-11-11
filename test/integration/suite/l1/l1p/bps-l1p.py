@@ -15,7 +15,7 @@ import shutil
 import sys
 from pathlib import Path
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession, skip, skip_if
 from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content
 from bps.transcoder import BPS_AUX_FMT_VERSION

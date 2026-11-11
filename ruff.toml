@@ -9,14 +9,11 @@ line-ending = "lf"
 
 [lint]
 ignore = [
-    "PLR0402", # manual-from-import
     "B009",    # get-attr-with-constant
     "C408",    # unnecessary-collection-call
     "B010",    # set-attr-with-constant
-    "PLR1711", # useless-return
     "C400",    # unnecessary-generator-list
     "C410",    # unnecessary-literal-within-list-call
-    "PLR2044", # empty-comment
     "D419",    # empty-docstring
     "B008",    # function-call-in-default-argument
     "B018",    # useless-expression

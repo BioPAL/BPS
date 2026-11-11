@@ -12,7 +12,7 @@ L1F test
 
 import sys
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession, skip_if
 from bps.common import BIOMASS_PROCESSOR_VERSION
 

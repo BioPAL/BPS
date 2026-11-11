@@ -26,7 +26,7 @@ import time
 import traceback
 from collections.abc import Callable
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
 from bps.common import BIOMASS_PROCESSOR_VERSION
