@@ -85,7 +85,7 @@ def multi_baseline_interferometric_pair_indices(
 
     # Trivial case.
     if num_images <= 1:
-        return tuple()
+        return ()
 
     # The baselines (as percentage of CB) for all inteferometric pairs.
     interferometric_pairs = tuple(combinations(range(num_images), 2))
@@ -158,7 +158,7 @@ def single_baseline_interferometric_pair_indices(
     """
     # Trivial case.
     if num_images == 0:
-        return tuple()
+        return ()
 
     # Check if the reference image index is consistent with the size of the
     # stack.

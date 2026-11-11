@@ -1569,11 +1569,11 @@ def SKPD_processing(Cov_MPMB, opt_str):
     out_str.ax = ax
     out_str.bx = bx
 
-    out_str.Ra = list([ax[0] * Ro[0] + (1 - ax[0]) * Ro[1], ax[-1] * Ro[0] + (1 - ax[-1]) * Ro[1]])
-    out_str.Rb = list([bx[0] * Ro[0] + (1 - bx[0]) * Ro[1], bx[-1] * Ro[0] + (1 - bx[-1]) * Ro[1]])
+    out_str.Ra = [ax[0] * Ro[0] + (1 - ax[0]) * Ro[1], ax[-1] * Ro[0] + (1 - ax[-1]) * Ro[1]]
+    out_str.Rb = [bx[0] * Ro[0] + (1 - bx[0]) * Ro[1], bx[-1] * Ro[0] + (1 - bx[-1]) * Ro[1]]
 
-    out_str.Ca = list([-(1 - ax[0]) * Co[0] + ax[0] * Co[1], -(1 - ax[-1]) * Co[0] + ax[-1] * Co[1]])
-    out_str.Cb = list([(1 - bx[0]) * Co[0] - bx[0] * Co[1], (1 - bx[-1]) * Co[0] - bx[-1] * Co[1]])
+    out_str.Ca = [-(1 - ax[0]) * Co[0] + ax[0] * Co[1], -(1 - ax[-1]) * Co[0] + ax[-1] * Co[1]]
+    out_str.Cb = [(1 - bx[0]) * Co[0] - bx[0] * Co[1], (1 - bx[-1]) * Co[0] - bx[-1] * Co[1]]
 
     out_str.full_rank_Ra = [
         np.linalg.cond(out_str.Ra[0]) < np.linalg.cond(out_str.Ra[1]),
@@ -1808,8 +1808,8 @@ def LowRankKronApproximation(opt_str):
 
     out_str.lambda_SVD = S
 
-    out_str.B = list()
-    out_str.C = list()
+    out_str.B = []
+    out_str.C = []
     for k in np.arange(opt_str.rank):
         out_str.B.append(np.reshape(U[:, k], (opt_str.Nr1, opt_str.Nc1), order="F"))
         out_str.C.append(np.reshape(np.transpose(VH)[:, k], (opt_str.Nr2, opt_str.Nc2), order="F"))  # warning !

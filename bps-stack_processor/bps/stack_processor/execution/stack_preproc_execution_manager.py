@@ -849,9 +849,9 @@ def _compute_required_luts(
     if xpol_method is None or xpol_method is common.PolarisationCombinationMethodType.AVERAGE:
         required_nominal_polarizations = (EPolarization(p) for p in ["H/H", "H/V", "V/H", "V/V"])
     if xpol_method is common.PolarisationCombinationMethodType.HV:
-        required_nominal_polarizations = set(EPolarization(p) for p in ["H/H", "H/V", "V/V"])
+        required_nominal_polarizations = {EPolarization(p) for p in ["H/H", "H/V", "V/V"]}
     if xpol_method is common.PolarisationCombinationMethodType.VH:
-        required_nominal_polarizations = set(EPolarization(p) for p in ["H/H", "V/H", "V/V"])
+        required_nominal_polarizations = {EPolarization(p) for p in ["H/H", "V/H", "V/V"]}
 
     required_polarizations = set(usable_polarizations).intersection(required_nominal_polarizations)
 

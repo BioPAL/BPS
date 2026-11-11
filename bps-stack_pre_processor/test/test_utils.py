@@ -35,13 +35,13 @@ class TestCommonPolarizations(unittest.TestCase):
                     (EPolarization.vv,),
                 )
             ),
-            tuple(),
+            (),
         )
 
     def test_common_polarizations_empty(self):
         self.assertTupleEqual(
-            common_polarizations((tuple(), (EPolarization.xx,))),
-            tuple(),
+            common_polarizations(((), (EPolarization.xx,))),
+            (),
         )
 
 

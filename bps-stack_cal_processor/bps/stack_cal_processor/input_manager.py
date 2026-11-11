@@ -297,7 +297,7 @@ class StackCalProcessorInputManager:
                 else synth_phases[self._coreg_primary_image_index]
             )
 
-        synth_phases = list(phi - phase_bias for phi in synth_phases)
+        synth_phases = [phi - phase_bias for phi in synth_phases]
 
         # DSI's for the coregistration primary are always 0.
         if has_coreg_primary:
