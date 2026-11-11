@@ -182,8 +182,6 @@ class DopplerEstimatorStripmapConf:
     class DcCoreAlgorithm:
         """Core algorithm parameters"""
 
-        ...
-
     blocks: int
     blockl: int
     undersampling_snrd_cazimuth_ratio: int

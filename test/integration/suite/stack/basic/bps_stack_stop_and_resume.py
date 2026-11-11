@@ -440,7 +440,7 @@ def _fill_ci_job_order_in_place(
     )
 
     # Pulling and writing remaining images to the joborder.
-    for i in (n for n in range(0, Nimg) if n != coreg_primary_index):
+    for i in (n for n in range(Nimg) if n != coreg_primary_index):
         job_order.set(
             f"//Input[Input_ID/text()='Sx_SCS__1S']/List_of_Selected_Inputs/Selected_Input/List_of_File_Names/File_Name[{i + 1}]/text()",
             _pull_wrap(data, frame_list, i),

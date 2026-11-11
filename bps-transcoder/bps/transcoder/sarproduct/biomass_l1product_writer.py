@@ -1112,14 +1112,14 @@ class BIOMASSL1ProductWriter:
             for rtm in rfi_mitigation.rfi_tmreport_list:
                 rfi_tmfraction[rtm.polarisation] = rtm.avg_percentage_affected_samples
         else:
-            for _, p in polarisation_dict.items():
+            for p in polarisation_dict.values():
                 rfi_tmfraction[p] = 0.0
         rfi_fmfraction = {}
         if rfi_mitigation.rfi_persistent_fmreport_list:
             for rfm in rfi_mitigation.rfi_persistent_fmreport_list:
                 rfi_fmfraction[rfm.polarisation] = rfm.max_percentage_affected_bw / 100
         else:
-            for _, p in polarisation_dict.items():
+            for p in polarisation_dict.values():
                 rfi_fmfraction[p] = 0.0
         invalid_drift_fraction = 0.0
         invalid_replica_fraction = {}
