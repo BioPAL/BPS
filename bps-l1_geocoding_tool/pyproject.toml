@@ -12,7 +12,7 @@ dependencies = [
     "click",
     "netCDF4",
     "numpy",
-    "bps-transcoder==4.5.0",
+    "bps-transcoder==4.6.0.dev0",
 ]
 dynamic = ["version"]
 classifiers = [
