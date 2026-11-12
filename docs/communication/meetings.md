@@ -14,32 +14,56 @@ We organize meetings and events to keep the BioPAL community connected. Session 
 <div class="bps-last-event__card" markdown="0">
   <div class="bps-last-event__copy">
     <p class="bps-last-event__eyebrow">Latest session</p>
-    <h2 class="bps-last-event__title">First Developer Meeting<br><span style="color:var(--acri-color-blue-bright);font-weight:600;">Open Source &amp; Open Science</span></h2>
+    <h2 class="bps-last-event__title">Second Developer Meeting<br><span class="bps-last-event__subtitle">Open Source &amp; Open Science</span></h2>
     <ul class="bps-last-event__meta">
-      <li><i class="fa-regular fa-calendar" aria-hidden="true"></i> 30 June 2026</li>
-      <li><!-- meeting-status:2026-06-30-first-dev-meeting:inline --></li>
-      <li><i class="fa-solid fa-display" aria-hidden="true"></i> 38 slides</li>
+      <li><i class="fa-regular fa-calendar" aria-hidden="true"></i> 2 November 2026</li>
+      <li><!-- meeting-status:2026-11-02-second-dev-meeting:inline --></li>
+      <li><i class="fa-solid fa-display" aria-hidden="true"></i> 40 slides</li>
       <li><i class="fa-regular fa-user" aria-hidden="true"></i> Yoann Rey-Ricord · ACRI-ST</li>
+      <li><i class="fa-solid fa-users" aria-hidden="true"></i> Guest speakers from ESA and SERCO</li>
     </ul>
     <div class="bps-last-event__actions">
-      <a class="bps-last-event__btn bps-last-event__btn--primary" href="../presentations/2026-06-30-first-dev-meeting/index.html" target="_blank" rel="noopener noreferrer">
+      <a class="bps-last-event__btn bps-last-event__btn--primary" href="../presentations/2026-11-02-second-dev-meeting/index.html" target="_blank" rel="noopener noreferrer">
         <i class="fa-solid fa-play" aria-hidden="true"></i> Open slides
       </a>
-      <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting.html#recording">
+      <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting-2.html#recording">
         <i class="fa-solid fa-video" aria-hidden="true"></i> Watch recording
       </a>
-      <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting.html">
+      <a class="bps-last-event__btn bps-last-event__btn--ghost" href="developer-meeting-2.html">
         <i class="fa-regular fa-file-lines" aria-hidden="true"></i> About this session
       </a>
     </div>
   </div>
   <div class="bps-last-event__visual">
-    <iframe src="../presentations/2026-06-30-first-dev-meeting/index.html" title="First Developer Meeting slide preview" loading="lazy" tabindex="-1"></iframe>
-    <a class="bps-last-event__visual-link" href="../presentations/2026-06-30-first-dev-meeting/index.html" target="_blank" rel="noopener noreferrer">
+    <iframe src="../presentations/2026-11-02-second-dev-meeting/index.html" title="Second Developer Meeting slide preview" loading="lazy" tabindex="-1"></iframe>
+    <a class="bps-last-event__visual-link" href="../presentations/2026-11-02-second-dev-meeting/index.html" target="_blank" rel="noopener noreferrer">
       <span><i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i> Launch presentation</span>
     </a>
   </div>
 </div>
+
+:::
+
+### Past sessions
+
+:::{div} bps-past-events
+
+<ul class="bps-past-events" markdown="0">
+  <li class="bps-past-event">
+    <a class="bps-past-event__thumb" href="developer-meeting.html" tabindex="-1" aria-hidden="true">
+      <img src="../media/meetings/2026-06-30-first-dev-meeting/poster.jpg" alt="" loading="lazy">
+    </a>
+    <div class="bps-past-event__body">
+      <p class="bps-past-event__date"><i class="fa-regular fa-calendar" aria-hidden="true"></i> 30 June 2026</p>
+      <h4 class="bps-past-event__title"><a href="developer-meeting.html">First Developer Meeting</a></h4>
+      <p class="bps-past-event__meta"><!-- meeting-status:2026-06-30-first-dev-meeting:inline --> <span>38 slides · Yoann Rey-Ricord · ACRI-ST</span></p>
+      <p class="bps-past-event__links">
+        <a href="../presentations/2026-06-30-first-dev-meeting/index.html" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-play" aria-hidden="true"></i> Slides</a>
+        <a href="developer-meeting.html#recording"><i class="fa-solid fa-video" aria-hidden="true"></i> Recording</a>
+      </p>
+    </div>
+  </li>
+</ul>
 
 :::
 

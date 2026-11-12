@@ -56,4 +56,4 @@ Keyboard in the deck: **← / →** or **Space** · **F** present mode · **R** 
 
 ---
 
-**Previous:** [Meetings and events](meetings.md) | **Next:** [Conflict resolution](conflict-resolution.md)
+**Previous:** [Meetings and events](meetings.md) | **Next:** [Second Developer Meeting](developer-meeting-2.md)
