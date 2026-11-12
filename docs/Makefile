@@ -43,6 +43,7 @@ install:
 
 presentation:
 	@$(MAKE) -C presentations/2026-06-30-first-dev-meeting publish
+	@$(MAKE) -C presentations/2026-11-02-second-dev-meeting publish
 
 presentation-shared:
 	@python3 presentations/2026-06-30-first-dev-meeting/scripts/publish_docs.py --shared-only

@@ -64,7 +64,7 @@ Code of Conduct, contacts, and how to improve this guide.
 
 **I want to contribute:**
 - Start with the [Contributing guide](../contributing/index.md)
-- Browse [Meetings and events](meetings.md) for session slides (including the [First Developer Meeting](developer-meeting.md))
+- Browse [Meetings and events](meetings.md) for session slides (including the [First](developer-meeting.md) and [Second](developer-meeting-2.md) Developer Meetings)
 
 **I have a conflict or concern:**
 - Review [Conflict resolution](conflict-resolution.md)
@@ -78,6 +78,7 @@ Code of Conduct, contacts, and how to improve this guide.
 Channels <channels>
 Meetings and events <meetings>
 First Developer Meeting <developer-meeting>
+Second Developer Meeting <developer-meeting-2>
 Conflict resolution <conflict-resolution>
 Getting help <getting-help>
 ```
