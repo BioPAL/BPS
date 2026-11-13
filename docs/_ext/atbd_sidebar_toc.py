@@ -16,6 +16,7 @@ from typing import Any
 
 from docutils import nodes
 from sphinx.util.docutils import SphinxDirective
+from sphinx.util.osutil import relative_uri
 
 ATBD_ROOT = "science-guide/atbd-l2-agb"
 # Web export built by `make atbd-pdf ATBD=<folder>` (or `make atbd-pdf-all`)
@@ -113,6 +114,15 @@ def _atbd_pdf_path(app: Any, root: str = ATBD_ROOT) -> Path:
     return Path(app.srcdir) / "_static" / "pdf" / _pdf_filename(root)
 
 
+def _static_pdf_uri(builder: Any, docname: str, pdf_name: str) -> str:
+    """Relative link from ``docname`` to ``_static/pdf/<pdf_name>``.
+
+    ``builder.get_relative_uri`` takes its target for a docname and adds the
+    HTML suffix (``x.pdf.html``); the PDF is a static file.
+    """
+    return relative_uri(builder.get_target_uri(docname), f"_static/pdf/{pdf_name}")
+
+
 class atbd_pdf_export(nodes.General, nodes.Element):
     """Placeholder for the HTML-only PDF download block on the References page."""
 
@@ -133,9 +143,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
     official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
     pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
-        url = self.builder.get_relative_uri(
-            self.builder.current_docname, f"_static/pdf/{pdf_name}"
-        )
+        url = _static_pdf_uri(self.builder, self.builder.current_docname, pdf_name)
         self.body.append(
             '<div class="admonition tip">'
             '<p class="admonition-title">Download web export</p>'
@@ -189,8 +197,8 @@ def _inject_atbd_sidebar_toc(
     )
     pdf_path = _atbd_pdf_path(app, root)
     if pdf_path.is_file():
-        context["atbd_pdf_url"] = app.builder.get_relative_uri(
-            pagename, f"_static/pdf/{_pdf_filename(root)}"
+        context["atbd_pdf_url"] = _static_pdf_uri(
+            app.builder, pagename, _pdf_filename(root)
         )
     else:
         context["atbd_pdf_url"] = None
