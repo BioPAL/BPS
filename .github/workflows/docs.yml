@@ -37,6 +37,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          # full history: every bps-v* tag must be present for docs/_ext/bps_version.py
+          # (a depth-1 checkout brings no release tag and falls back to the GitHub API)
+          fetch-depth: 0
           fetch-tags: true
 
       - name: Set up Python
