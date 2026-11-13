@@ -63,6 +63,7 @@ This ADS is a copy of the main ADS included in the L1a product (secondary one) r
 
 | Name | Description | Differences between L1a and L1c |
 |---|---|---|
+| `schemaVersion` | PFD version | No differences |
 | `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields: `productType` becomes STA `startTime` and `stopTime` updated after coregistration `polarisationList` will cointain the output polarization |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | Copied from primary image main ADS (considering that the coregistered image is resampled over the same sampling grid of the primary image and a different `noDataValue` can be selected) |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | No differences |
@@ -149,7 +150,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staProcessingParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staProcessingParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staProcessingParametersType)](../../_static/figures/pfd-l1/figure_35_section_6.3.3.1.png)
@@ -241,7 +242,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staCoregistrationParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staCoregistrationParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staCoregistrationParametersType)](../../_static/figures/pfd-l1/figure_36_section_6.3.3.2.png)
@@ -316,7 +317,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staInSARParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staInSARParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![STA processing parameters DSR (staInSARParametersType)](../../_static/figures/pfd-l1/figure_37_section_6.3.3.3.png)
@@ -397,7 +398,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staQualityType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staQualityType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![STA quality DSR (staQualityType)](../../_static/figures/pfd-l1/figure_38_section_6.3.3.4.png)
@@ -476,7 +477,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1c-main-annotation.xsd (<code>staQualityParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staQualityParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![STA quality DSR (staQualityParametersType)](../../_static/figures/pfd-l1/figure_39_section_6.3.3.4.png)
@@ -753,6 +754,8 @@ string :`polarisationList` = "H/H", "X/X", "V/V" ;
 :`productComposition` = "Nominal" ;
 
 :`noDataValue` = -9999. ;
+
+:`formatVersion` = "V1.7.0" ;
 
 group: radiometry {
 

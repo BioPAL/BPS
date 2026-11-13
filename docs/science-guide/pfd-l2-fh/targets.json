@@ -3,7 +3,7 @@
  "title": "BIOMASS Forest Height Products Format Specification",
  "short_title": "L2 FH PFD",
  "doc_code": "BIO-BPS-FHPFD-ARE-010256",
- "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FH_PFD_v3_4_0.pdf",
+ "pdf_url": "",
  "targets": {
   "ad:1": {
    "file": "01-introduction",
@@ -466,11 +466,11 @@
    "anchor": "tab-pfd-fh-37"
   },
   "tab:38": {
-   "file": "05-l2b-products-format-overview",
+   "file": "04-l2a-products-format-specification",
    "anchor": "tab-pfd-fh-38"
   },
   "tab:39": {
-   "file": "06-l2b-products-format-specification",
+   "file": "05-l2b-products-format-overview",
    "anchor": "tab-pfd-fh-39"
   },
   "tab:4": {
@@ -498,7 +498,7 @@
    "anchor": "tab-pfd-fh-44"
   },
   "tab:45": {
-   "file": "07-appendix-common-products-format-specific",
+   "file": "06-l2b-products-format-specification",
    "anchor": "tab-pfd-fh-45"
   },
   "tab:46": {
@@ -528,6 +528,10 @@
   "tab:51": {
    "file": "07-appendix-common-products-format-specific",
    "anchor": "tab-pfd-fh-51"
+  },
+  "tab:52": {
+   "file": "07-appendix-common-products-format-specific",
+   "anchor": "tab-pfd-fh-52"
   },
   "tab:6": {
    "file": "04-l2a-products-format-specification",

@@ -321,6 +321,7 @@ classDiagram
   direction LR
   class mainAnnotationType {
     <<complexType>>
+    @schemaVersion : token [1]
     product : productL2aType [1] ⊞
     rasterImage : rasterImageType [1] ⊞
     inputInformation : InputInformationL2aType [1] ⊞
@@ -332,7 +333,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2a-fh-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2a-fh-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
 
@@ -353,6 +354,7 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
+| `schemaVersion` | PFD version | `xsd:token` | required |
 | product | Product L2a DSR. This DSR contains the L2a product information. | `productL2aType` | 1 |
 | `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2a product raster images. | `rasterImageType` | 1 |
 | InputInformation | Input Information DSR. This DSR contains the necessary information to identify the input data set to the L2a processing. | InputInformationL2aType | 1 |
@@ -419,7 +421,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>productL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Product L2a DSR (productL2aType)](../../_static/figures/pfd-fh/figure_4_section_4.3.1.1.png)
@@ -550,7 +552,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>rasterImageType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>rasterImageType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Raster image DSR (rasterImageType)](../../_static/figures/pfd-fh/figure_5_section_4.3.1.2.png)
@@ -659,7 +661,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>InputInformationL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR (InputInformationL2aType)](../../_static/figures/pfd-fh/figure_6_section_4.3.1.3.png)
@@ -693,7 +695,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>acquisitionListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR, acquisition list detail (acquisitionListType)](../../_static/figures/pfd-fh/figure_7_section_4.3.1.3.png)
@@ -729,7 +731,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>acquisitionType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR, acquisition detail (acquisitionType)](../../_static/figures/pfd-fh/figure_8_section_4.3.1.3.png)
@@ -763,7 +765,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityType](../../_static/figures/pfd-fh/figure_9_section_4.3.1.3.png)
@@ -797,7 +799,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityParametersListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityParametersListType](../../_static/figures/pfd-fh/figure_10_section_4.3.1.3.png)
@@ -840,7 +842,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityParametersType](../../_static/figures/pfd-fh/figure_11_section_4.3.1.3.png)
@@ -1002,7 +1004,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>processingParametersL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fh-proc-annotations.xsd (<code>processingParametersL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (processingparametersL2aType)](../../_static/figures/pfd-fh/figure_12_section_4.3.1.4.png)
@@ -1082,7 +1084,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>generalConfigurationParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>generalConfigurationParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (generalConfigurationParametersType)](../../_static/figures/pfd-fh/figure_13_section_4.3.1.4.png)
@@ -1115,7 +1117,7 @@ classDiagram
 <div class="atbd-figure-content">
 
 <div class="xsd-diagram" style="overflow-x: auto">
-<div style="min-width: 939px">
+<div style="min-width: 1032px">
 
 ```{mermaid}
 %%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
@@ -1136,6 +1138,7 @@ classDiagram
   class compressionOptionsL2a_ADS["compressionOptionsL2a / ADS"] {
     <<anonymous>>
     FNF : «inline» [1]
+    geometricLUTs : «inline» [1]
   }
   class compressionOptionsL2a_MDS_FH["compressionOptionsL2a / MDS / FH"] {
     <<anonymous>>
@@ -1151,17 +1154,23 @@ classDiagram
     <<anonymous>>
     compressionFactor : unsignedByte [1]
   }
+  class compressionOptionsL2a_ADS_geometricLUTs["compressionOptionsL2a / ADS / geometricLUTs"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    least_significant_digit : unsignedByte [1]
+  }
   compressionOptionsL2a --> compressionOptionsL2a_MDS : MDS
   compressionOptionsL2a --> compressionOptionsL2a_ADS : ADS
   compressionOptionsL2a_MDS --> compressionOptionsL2a_MDS_FH : FH
   compressionOptionsL2a_MDS --> compressionOptionsL2a_MDS_Quality : Quality
   compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_FNF : FNF
+  compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_geometricLUTs : geometricLUTs
 ```
 
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>compressionOptionsL2a</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fh-proc-annotations.xsd (<code>compressionOptionsL2a</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (compressionOptionsL2Type)](../../_static/figures/pfd-fh/figure_14_section_4.3.1.4.png)
@@ -1173,15 +1182,22 @@ classDiagram
 
 ::::
 
+(tab:pfd-fh-22)=
+:::{div} atbd-table
+
+<p class="atbd-table-caption"><span class="caption-number">Table 22</span><span class="caption-text"> — Processing parameters L2a DSR (compressionOptionsL2aType)</span></p>
+
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
 | MDS àFH à `compressionFactor` MDS àQualityà `compressionFactor` | ZSTD algorithm compression factor for both FH and quality images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | MDS à FH à `MAX_Z_ERROR` MDS à Qualityà `MAX_Z_ERROR` | For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
 | ADS àFNF à `compressionFactor` | ZLIB algorithm compression factor for the FNF ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS à GeometricLuts à `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS à GeometricLuts à least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 | `ADS_blockSize` | ADS NetCDF chunking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
-Processing parameters L2a DSR (`compressionOptionsL2aType`)
+:::
 
 (sec:pfd-fh-4-3-1-5)=
 ##### 4.3.1.5 Annotation LUT DSR
@@ -1210,7 +1226,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-common-types.xsd (<code>layerListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-common-types.xsd (<code>layerListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Annotation LUT DSR (layerListType)](../../_static/figures/pfd-fh/figure_15_section_4.3.1.5.png)
@@ -1222,10 +1238,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-22)=
+(tab:pfd-fh-23)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 22</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 23</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1279,6 +1295,7 @@ The content of L2a LUT ADS is reported hereafter, where:
 - the series of Attributes contain the same list of parameters described in {sec}`4.3.1.1` for the Product L2a DSR (for all the details about these parameters refer to this section);
 - the Dimensions group is composed by Latitude and Longitude, as the data array variable is defined in the Latitude Longitude based on DGG projection;
 - there is only one data array variable, which is the Forest/Non-Forest mask;
+- for the geometric LUTs (local incidence angle, height, latitude, longitude, incidence/elevation angles, range/azimuth terrain slopes), the repeated variables are described only once.
 - this notation is applicable:
     - this is the attribute or variable name
     - this is the actual content of constant values over the mission
@@ -1323,6 +1340,8 @@ frame: [uint16] Frame identifier
 platform\_heading: [float32] Platform heading relative to North, deg
 
 forest\_coverage\_percentage: [float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the STA footprint
+
+`formatVersion` [str] Version of the product
 
 LUT ADS Dimensions / Coordinate variables:
 
@@ -1434,6 +1453,210 @@ type: \<class str\>
 
 description: Geodetic reference frame
 
+Group Name: height
+
+height group contents:
+
+Name: height
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]
+
+units: m
+
+Name: `firstSample`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Product image MDS sample the first LUT sample corresponds to
+
+Name: `firstLine`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Product image MDS line the first LUT line corresponds to
+
+Name: `samplesInterval`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Number of product image MDS samples one LUT sample corresponds to
+
+Name: `linesInterval`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Number of product image MDS lines one LUT line corresponds to
+
+Name: `pixelType`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Data type of output LUT pixels
+
+Name: `noDataValue`
+
+shape: (1, 1)
+
+type: dtype(float32)
+
+description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
+
+Name: projection
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: LUT projection, DGG, as described in {rd}`8`
+
+Name: `coordinateReferenceSystem`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Coordinate reference systems, as per WKT representation {rd}`7`
+
+Name: `geodeticReferenceFrame`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Geodetic reference frame
+
+Name: least\_significant\_digit
+
+shape: (1, 1)
+
+type: `unsignedByte`
+
+description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
+
+Group Name: latitude
+
+height group contents:
+
+Name: latitude
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: longitude
+
+height group contents:
+
+Name: longitude
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `incidenceAngle`
+
+height group contents:
+
+Name: `incidenceAngle`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `elevationAngle`
+
+height group contents:
+
+Name: `elevationAngle`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `rangeTerrainSlope`
+
+height group contents:
+
+Name: `rangeTerrainSlope`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `azimuthTerrainSlope`
+
+height group contents:
+
+Name: `azimuthTerrainSlope`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
 (sec:pfd-fh-4-3-3)=
 #### 4.3.3 Quick-look ADS
 
@@ -1544,7 +1767,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Overlay ADS](../../_static/figures/pfd-fh/figure_17_section_4.3.4.png)
@@ -1556,10 +1779,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-23)=
+(tab:pfd-fh-24)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 23</span><span class="caption-text"> — Overlay ADS</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 24</span><span class="caption-text"> — Overlay ADS</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1567,10 +1790,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-24)=
+(tab:pfd-fh-25)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 24</span><span class="caption-text"> — Overlay ADS (DocumentType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 25</span><span class="caption-text"> — Overlay ADS (DocumentType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1581,10 +1804,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-25)=
+(tab:pfd-fh-26)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 25</span><span class="caption-text"> — Overlay ADS (GroundOverlayType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 26</span><span class="caption-text"> — Overlay ADS (GroundOverlayType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1596,10 +1819,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-26)=
+(tab:pfd-fh-27)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 26</span><span class="caption-text"> — Overlay ADS (TimeStampType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 27</span><span class="caption-text"> — Overlay ADS (TimeStampType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1607,10 +1830,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-27)=
+(tab:pfd-fh-28)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 27</span><span class="caption-text"> — Overlay ADS (IconType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 28</span><span class="caption-text"> — Overlay ADS (IconType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1618,10 +1841,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-28)=
+(tab:pfd-fh-29)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 28</span><span class="caption-text"> — Overlay ADS (LatLonQuadType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 29</span><span class="caption-text"> — Overlay ADS (LatLonQuadType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1629,10 +1852,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-29)=
+(tab:pfd-fh-30)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 29</span><span class="caption-text"> — Overlay ADS (PlacemarkType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 30</span><span class="caption-text"> — Overlay ADS (PlacemarkType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1645,10 +1868,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-30)=
+(tab:pfd-fh-31)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 30</span><span class="caption-text"> — Overlay ADS (StyleType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 31</span><span class="caption-text"> — Overlay ADS (StyleType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1657,10 +1880,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-31)=
+(tab:pfd-fh-32)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 31</span><span class="caption-text"> — Overlay ADS (LyneStyleType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 32</span><span class="caption-text"> — Overlay ADS (LyneStyleType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1669,10 +1892,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-32)=
+(tab:pfd-fh-33)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 32</span><span class="caption-text"> — Overlay ADS (PolyStyleType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 33</span><span class="caption-text"> — Overlay ADS (PolyStyleType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1680,10 +1903,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-33)=
+(tab:pfd-fh-34)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 33</span><span class="caption-text"> — Overlay ADS (ExtendedDataType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 34</span><span class="caption-text"> — Overlay ADS (ExtendedDataType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1691,10 +1914,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-34)=
+(tab:pfd-fh-35)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 34</span><span class="caption-text"> — Overlay ADS (DataType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 35</span><span class="caption-text"> — Overlay ADS (DataType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1702,10 +1925,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-35)=
+(tab:pfd-fh-36)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 35</span><span class="caption-text"> — Overlay ADS ()</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 36</span><span class="caption-text"> — Overlay ADS ()</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1715,10 +1938,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-36)=
+(tab:pfd-fh-37)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 36</span><span class="caption-text"> — Overlay ADS (outerBoundaryIsType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 37</span><span class="caption-text"> — Overlay ADS (outerBoundaryIsType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -1726,10 +1949,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-37)=
+(tab:pfd-fh-38)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 37</span><span class="caption-text"> — Overlay ADS (LinearRingType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 38</span><span class="caption-text"> — Overlay ADS (LinearRingType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|

@@ -489,7 +489,7 @@ where $\mathbb{Z}\left\{ s(\tau) \right\}$ represents a function that performs a
 3. Retrieve the location of the maximum:
 
 $$
-\tau_{max,IJ}^{}[m]=maxpos\left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
+\tau_{\max,IJ}^{}[m]=maxpos\left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
 \tag{3.13}
 $$ (eq:atbd-l1-sar-3-13)
 
@@ -633,7 +633,7 @@ $$ (eq:atbd-l1-sar-3-21)
 2. Estimate the sub-pixel position of the maximum in samples through a parabolic interpolation of the peak:
 
 $$
-p_{max,IJ}^{TXP}\mathbb{=Q}\left\{ S_{comp,IJ}^{TXP}(\tau) \right\}
+p_{\max,IJ}^{TXP}\mathbb{=Q}\left\{ S_{comp,IJ}^{TXP}(\tau) \right\}
 \tag{3.22}
 $$ (eq:atbd-l1-sar-3-22)
 

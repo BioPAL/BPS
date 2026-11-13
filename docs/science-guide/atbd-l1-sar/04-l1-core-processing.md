@@ -735,7 +735,7 @@ where $G_{aap}(f_{\eta})$ can be known by measures or it can be theoretically de
 The first two coefficients of the estimated autocorrelation function are derived from the SAR data for each block. The obtained values $R_0$ and $R_1$, computed for the current block, represent the average power and the sine wave amplitude of the azimuth power spectrum. Since the signal spectrum and the 2-way antenna power have the same shape, the noise level $\sigma_N^2$ of each block can finally be calculated as:
 
 $$
-\boldsymbol{\sigma}_{\boldsymbol{N}}^{\boldsymbol{2}}\boldsymbol{=}\boldsymbol{R}_{\boldsymbol{0}}\boldsymbol{-}\frac{\boldsymbol{r(}\boldsymbol{\eta}_{\boldsymbol{0}}\boldsymbol{)}}{\boldsymbol{r(}\boldsymbol{\eta}_{\boldsymbol{1}}\boldsymbol{)}}\left\vert \boldsymbol{R}_{\boldsymbol{1}} \right\vert
+\boldsymbol{\sigma}_{\boldsymbol{N}}^{\boldsymbol{2}}\boldsymbol{=}\boldsymbol{R}_{\boldsymbol{0}}\boldsymbol{-}\frac{\boldsymbol{r}\boldsymbol{(}\boldsymbol{\eta}_{\boldsymbol{0}}\boldsymbol{)}}{\boldsymbol{r}\boldsymbol{(}\boldsymbol{\eta}_{\boldsymbol{1}}\boldsymbol{)}}\left\vert \boldsymbol{R}_{\boldsymbol{1}} \right\vert
 \tag{4.32}
 $$ (eq:atbd-l1-sar-4-32)
 
@@ -1308,7 +1308,7 @@ For each block, the main steps of the Fast w-k algorithm are:
     - a. the phase transfer function, allowing to have a data focused in $(\omega_r,k_a)$ the domain:
 
 $$
-H_f(\omega_r,k_a)=exp\left\{ jr_0\left[ \sqrt{(\frac{\omega_r+\omega_{r0}}{c_0/2})^2-k_a^2}-(\frac{\omega_r}{c_0/2}+k_{r0C}) \right] \right\}
+H_f(\omega_r,k_a)=\exp\left\{ jr_0\left[ \sqrt{(\frac{\omega_r+\omega_{r0}}{c_0/2})^2-k_a^2}-(\frac{\omega_r}{c_0/2}+k_{r0C}) \right] \right\}
 \tag{4.61}
 $$ (eq:atbd-l1-sar-4-61)
 
@@ -1320,7 +1320,7 @@ where:
 - b. the unfolding phase, aimed at moving the scene to the Zero-Doppler position:
 
 $$
-H_u(\omega_r,k_a)=exp(-j\frac{\omega_r}{c_0/2}r_u+j(k_a-k_{a0C})x_u)
+H_u(\omega_r,k_a)=\exp(-j\frac{\omega_r}{c_0/2}r_u+j(k_a-k_{a0C})x_u)
 \tag{4.62}
 $$ (eq:atbd-l1-sar-4-62)
 
@@ -1338,7 +1338,7 @@ The azimuth antenna gain compensation is performed in a dedicated step described
 4. the Stolt transformation is applied through a first order approximation, i.e. as a simple $k_a$-variant shift of the spectrum, applied in the range-doppler domain and aimed at aligning the spectrum along a reference $k_{r0}$ coordinate:
 
 $$
-H_s(\tau,k_a)=exp\left[ -j\tau\omega_{rs}(k_a(\tau)) \right]
+H_s(\tau,k_a)=\exp\left[ -j\tau\omega_{rs}(k_a(\tau)) \right]
 \tag{4.63}
 $$ (eq:atbd-l1-sar-4-63)
 
@@ -2243,7 +2243,7 @@ $$ (eq:atbd-l1-sar-4-97)
 - e. Compute the mean offset and take the argument:
 
 $$
-\phi_{mean}=\arg \left\{ \sum_{}^{}{\exp \left[ {j\cdot{}\phi}_{\Omega}^{'} \right]\cdot\left\vert \gamma_{LR-RL} \right\vert} \right\}
+\phi_{mean}=\arg \left\{ \sum_{}^{}{\exp \left[ {j\cdot\phi}_{\Omega}^{'} \right]\cdot\left\vert \gamma_{LR-RL} \right\vert} \right\}
 \tag{4.98}
 $$ (eq:atbd-l1-sar-4-98)
 
@@ -2286,7 +2286,7 @@ W=\begin{bmatrix} \left\vert \gamma_1 \right\vert^2 & \cdots & 0 \\ \vdots & \dd
 
     - h. Once the plane coefficients are estimated, the corresponding FR angle surface is computed to the same sampling as the image, i.e., at full resolution, and used it in the following steps;
 3. Apply a weighted Gaussian filter to the data in order to mitigate scintillations as follows:
-    - a. Similar as before, compute the LR and RL images based on the images computed in the previous step and estimate the complex coherence between the LR/RL images, $\gamma_{LR-RL}$. In this case, a smaller window of 16x16 is used. Note that this resolution loss does not have a relevant impact in the estimation of the scintillations, since the Gaussian filter is anyway always larger than this value. Prior to the multilooking, the FR plane, ${\widehat{\Omega}}_{plane}$, estimated in step 2 is subtracted. Note that the $\gamma_{LR-RL}$ image is multilooked and therefore smaller in size than the full resolution image;
+    - a. Similar as before, compute the LR and RL images based on the images computed in the previous step and estimate the complex coherence between the LR/RL images, $\gamma_{LR-RL}$. In this case, a smaller window of 16x16 is used. Note that this resolution loss does not have a relevant impact in the estimation of the scintillations, since the Gaussian filter is anyway always larger than this value. Prior to the multilooking, the FR plane, ${\widehat{\Omega}}_{plane}$, estimated in step 2 is subtracted. Note that the $\gamma_{LR-RL}$ image is multilooked and therefore smaller in size than the full resolution image. In addition, focusing margins are not considered for the computation, to avoid polluting it;
     - b. Compute the weight based on the estimated coherence and the window size:
 
 $$
@@ -2304,7 +2304,7 @@ $$
 \tag{4.105}
 $$ (eq:atbd-l1-sar-4-105)
 
-where $*$ represents the convolution operator (in practice implemented in the Fourier domain), and $g$ is the Gaussian filter;
+where $*$ represents the convolution operator (in practice implemented in the Fourier domain), and $g$ is the Gaussian filter. Note that, in order to avoid issues in computation, in case denominator is too small (\<1e-3) the ratio is set equal to 0;
 
 - e. Add again the previously removed FR plane in order to retrieve the final estimated FR angle, ${\widehat{\Omega}}_f$;
 - f. Convert the Faraday rotation angle to TEC, and this to phase using equations in {sec}`4.10.3.1` and {sec}`4.10.3.6`, respectively;
@@ -2892,7 +2892,7 @@ Block diagram above depicts the processing steps for the estimation of the phase
 3. Import the low-resolution phase screen estimated from the FR,$\ \phi_{FR}$, and calculate the corresponding scaled to phase accuracy, $\sigma_{\phi_{FR}}^2$, and resample it to the autofocus grid to be used in  ${\overrightarrow{\sigma}}^2$. The variance of the FR angle is extracted as the square of {eq}`4.69` and the scaling factor between FR angle and phase is
 
 $$
-C_{\Omega\ }^{\phi}=\ \frac{4\cdot{}\pi\cdot{}m\cdot{}f}{e\cdot(\overrightarrow{B}\cdot\widehat{k})}.
+C_{\Omega\ }^{\phi}=\ \frac{4\cdot\pi\cdot{}m\cdot{}f}{e\cdot(\overrightarrow{B}\cdot\widehat{k})}.
 \tag{4.145}
 $$ (eq:atbd-l1-sar-4-145)
 
@@ -2900,7 +2900,7 @@ $$ (eq:atbd-l1-sar-4-145)
 5. Use the Doppler rate at ionospheric height to scale the shifts to second derivative maps with
 
 $$
-\ddot{\phi}(t_{\widehat{a}})=\ \frac{4\cdot{}\pi\cdot{}K_{a,iono}^2}{B_a^2\cdot(1+aosf)}\cdot\Delta{}a,
+\ddot{\phi}(t_{\widehat{a}})=\ \frac{4\cdot\pi\cdot{}K_{a,iono}^2}{B_a^2\cdot(1+aosf)}\cdot\Delta{}a,
 \tag{4.146}
 $$ (eq:atbd-l1-sar-4-146)
 

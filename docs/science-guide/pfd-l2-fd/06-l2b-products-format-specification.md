@@ -83,6 +83,7 @@ classDiagram
   direction LR
   class mainAnnotationType {
     <<complexType>>
+    @schemaVersion : token [1]
     product : productL2bL3Type [1] ⊞
     rasterImage : rasterImageType [1] ⊞
     inputInformation : InputInformationL2bL3ListType [1] ⊞
@@ -93,7 +94,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2b-fd-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2b-fd-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![main L2b ADS](../../_static/figures/pfd-fd/figure_19_section_6.3.1.png)
@@ -159,7 +160,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![product L2b DSR](../../_static/figures/pfd-fd/figure_20_section_6.3.1.1.png)
@@ -251,7 +252,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information L2b DSR (InputInformationL2bL3ListType )](../../_static/figures/pfd-fd/figure_21_section_6.3.1.3.png)
@@ -318,7 +319,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fd-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fd-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![processing parameters L2b DSR](../../_static/figures/pfd-fd/figure_22_section_6.3.1.4.png)
@@ -401,7 +402,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fd-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fd-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2b DSR (compressionOptionsL2bType)](../../_static/figures/pfd-fd/figure_23_section_6.3.1.4.png)

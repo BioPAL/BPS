@@ -27,7 +27,7 @@ The following table summarizes and describes primitive product types used throug
 | `calibrationScreenType` | Type of calibration screen applied (none, if not applied) | `xsd:string` | none geometry skp |
 | `polarisationCombinationMethodType` | Enumeration of polarisations combination methods. | `xsd:string` | HV VH Average None |
 | `operationalModeType` | Enumeration of Ground Cancellation algorithm to be used. | `xsd:string` | single reference multi reference insar pair |
-| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF ACM Incidence angle [deg] `numberOfAverages` |
+| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF Height [m] Latitude [deg] Longitude [deg] Incidence angle [deg] Elevation angle [deg] Range terrain slope [deg] Azimuth terrain slope [deg] Local Incidence angle [deg] ACM `numberOfAverages` |
 | `missionType` | Enumeration of valid BIOMASS mission names. | `xsd:string` | BIOMASS |
 | `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 S2 S3 |
 | `productType` | Enumeration of valid product types. | `xsd:string` | SCS DGM STA `FH_L2A` `FH_L2B` `FD_L2A` `FD_L2B` `GN_L2A` `AGB_L2B` |

@@ -86,6 +86,7 @@ classDiagram
   direction LR
   class mainAnnotationType {
     <<complexType>>
+    @schemaVersion : token [1]
     product : productL2bL3Type [1] ⊞
     rasterImage : rasterImageType [1] ⊞
     inputInformation : InputInformationL2bL3ListType [1] ⊞
@@ -96,7 +97,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2b-fh-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2b-fh-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![main L2b ADS](../../_static/figures/pfd-fh/figure_19_section_6.3.1.png)
@@ -108,10 +109,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-39)=
+(tab:pfd-fh-40)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 39</span><span class="caption-text"> — Main L2b ADS</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 40</span><span class="caption-text"> — Main L2b ADS</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -163,7 +164,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![product L2b DSR](../../_static/figures/pfd-fh/figure_20_section_6.3.1.1.png)
@@ -175,10 +176,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-40)=
+(tab:pfd-fh-41)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 40</span><span class="caption-text"> — Product L2b DSR (productL2bType and productType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 41</span><span class="caption-text"> — Product L2b DSR (productL2bType and productType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -255,7 +256,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information L2b DSR (InputInformationL2bL3ListType )](../../_static/figures/pfd-fh/figure_21_section_6.3.1.3.png)
@@ -267,10 +268,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-41)=
+(tab:pfd-fh-42)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 41</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType )</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 42</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType )</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -279,10 +280,10 @@ classDiagram
 
 :::
 
-(tab:pfd-fh-42)=
+(tab:pfd-fh-43)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 42</span><span class="caption-text"> — Input information L2b DSR (L2InputsType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 43</span><span class="caption-text"> — Input information L2b DSR (L2InputsType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -325,7 +326,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fh-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![processing parameters L2b DSR (processingParametersL2bType)](../../_static/figures/pfd-fh/figure_22_section_6.3.1.4.png)
@@ -337,10 +338,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-43)=
+(tab:pfd-fh-44)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 43</span><span class="caption-text"> — Processing parameters L2b DSR (processingParametersL2bType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 44</span><span class="caption-text"> — Processing parameters L2b DSR (processingParametersL2bType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -414,7 +415,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fh-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fh-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2b DSR (compressionOptionsL2bType)](../../_static/figures/pfd-fh/figure_23_section_6.3.1.4.png)
@@ -426,10 +427,10 @@ classDiagram
 
 ::::
 
-(tab:pfd-fh-44)=
+(tab:pfd-fh-45)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 44</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 45</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|

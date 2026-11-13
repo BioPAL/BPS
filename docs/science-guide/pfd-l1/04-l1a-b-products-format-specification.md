@@ -613,6 +613,7 @@ classDiagram
   direction LR
   class mainAnnotationType {
     <<complexType>>
+    @schemaVersion : token [1]
     acquisitionInformation : acquisitionInformationType [1] ⊞
     sarImage : sarImageType [1] ⊞
     instrumentParameters : instrumentParametersType [1] ⊞
@@ -633,7 +634,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1ab-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1ab-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
 
@@ -654,6 +655,7 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
+| `schemaVersion` | PFD version | `xsd:token` | 1 |
 | `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | `acquisitionInformationType` | 1 |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | `sarImageType` | 1 |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | `instrumentParametersType` | 1 |
@@ -726,7 +728,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>acquisitionInformationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>acquisitionInformationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Acquisition information DSR (acquisitionInformationType)](../../_static/figures/pfd-l1/figure_4_section_4.3.1.1.png)
@@ -822,7 +824,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>sarImageType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>sarImageType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![SAR image DSR (sarImageType)](../../_static/figures/pfd-l1/figure_5_section_4.3.1.2.png)
@@ -900,7 +902,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>coordinateConversionType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>coordinateConversionType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![SAR image DSR (coordinateConversionType)](../../_static/figures/pfd-l1/figure_6_section_4.3.1.2.png)
@@ -969,7 +971,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>instrumentParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>instrumentParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Instrument parameters DSR (instrumentParametersType)](../../_static/figures/pfd-l1/figure_7_section_4.3.1.3.png)
@@ -1104,7 +1106,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>txPulseType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>txPulseType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Instrument parameters DSR (txPulseType)](../../_static/figures/pfd-l1/figure_8_section_4.3.1.3.png)
@@ -1153,7 +1155,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rxGainListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rxGainListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Instrument parameters DSR (rxGainListType)](../../_static/figures/pfd-l1/figure_9_section_4.3.1.3.png)
@@ -1200,7 +1202,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>dataFormatType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dataFormatType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Instrument parameters DSR (dataFormatType)](../../_static/figures/pfd-l1/figure_10_section_4.3.1.3.png)
@@ -1254,7 +1256,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rawDataAnalysisType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rawDataAnalysisType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![RAW data analysis DSR (rawDataAnalysisType)](../../_static/figures/pfd-l1/figure_11_section_4.3.1.4.png)
@@ -1301,7 +1303,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>errorCountersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>errorCountersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![RAW data analysis DSR (errorCountersType)](../../_static/figures/pfd-l1/figure_12_section_4.3.1.4.png)
@@ -1362,7 +1364,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rawDataStatisticsType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rawDataStatisticsType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![RAW data analysis DSR (rawDataStatisticsType)](../../_static/figures/pfd-l1/figure_13_section_4.3.1.4.png)
@@ -1436,7 +1438,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>powerRatioType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>powerRatioType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![RAW data analysis DSR (powerRatioType)](../../_static/figures/pfd-l1/figure_14_section_4.3.1.4.png)
@@ -1527,7 +1529,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>processingParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>processingParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters DSR (processingParametersType)](../../_static/figures/pfd-l1/figure_15_section_4.3.1.5.png)
@@ -1618,7 +1620,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>spectrumProcessingParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>spectrumProcessingParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters DSR (spectrumProcessingParametersType)](../../_static/figures/pfd-l1/figure_16_section_4.3.1.5.png)
@@ -1701,7 +1703,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>internalCalibrationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>internalCalibrationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Internal calibration DSR (internalCalibrationType)](../../_static/figures/pfd-l1/figure_17_section_4.3.1.6.png)
@@ -1798,7 +1800,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>internalCalibrationSequenceType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>internalCalibrationSequenceType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Internal calibration DSR (internalCalibrationSequenceType)](../../_static/figures/pfd-l1/figure_18_section_4.3.1.6.png)
@@ -1893,7 +1895,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>noiseSequenceType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>noiseSequenceType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Internal calibration DSR (noiseSequenceType)](../../_static/figures/pfd-l1/figure_19_section_4.3.1.6.png)
@@ -1946,7 +1948,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rfiMitigationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiMitigationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Radio Frequency Interference mitigation DSR (rfiMitigationType)](../../_static/figures/pfd-l1/figure_20_section_4.3.1.7.png)
@@ -2007,7 +2009,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rfiTMReportType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiTMReportType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Radio Frequency Interference mitigation DSR (rfiTMReportType)](../../_static/figures/pfd-l1/figure_21_section_4.3.1.7.png)
@@ -2069,7 +2071,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rfiIsolatedFMReportType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiIsolatedFMReportType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Radio Frequency Interference mitigation DSR (rfiIsolatedFMReportType)](../../_static/figures/pfd-l1/figure_22_section_4.3.1.7.png)
@@ -2131,7 +2133,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>rfiPersistentFMReportType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiPersistentFMReportType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Radio Frequency Interference mitigation DSR (rfiPersistentFMReportType)](../../_static/figures/pfd-l1/figure_23_section_4.3.1.7.png)
@@ -2184,7 +2186,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>dopplerParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dopplerParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Doppler parameters DSR (dopplerParametersType)](../../_static/figures/pfd-l1/figure_24_section_4.3.1.8.png)
@@ -2248,7 +2250,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>dcEstimateType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dcEstimateType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Doppler parameters DSR (dcEstimateType)](../../_static/figures/pfd-l1/figure_25_section_4.3.1.8.png)
@@ -2316,7 +2318,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>radiometricCalibrationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>radiometricCalibrationType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Radiometric calibration DSR (radiometricCalibrationType)](../../_static/figures/pfd-l1/figure_26_section_4.3.1.9.png)
@@ -2390,7 +2392,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>polarimetricDistortionType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>polarimetricDistortionType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Polarimetric distortion DSR (polarimetricDistortionType)](../../_static/figures/pfd-l1/figure_27_section_4.3.1.10.png)
@@ -2474,7 +2476,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>ionosphereCorrectionType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>ionosphereCorrectionType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Ionosphere correction DSR (ionosphereCorrectionType)](../../_static/figures/pfd-l1/figure_28_section_4.3.1.11.png)
@@ -2533,7 +2535,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>geometryType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>geometryType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Geometry DSR (geometryType)](../../_static/figures/pfd-l1/figure_29_section_4.3.1.12.png)
@@ -2585,7 +2587,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>qualityType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>qualityType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Quality DSR (qualityType)](../../_static/figures/pfd-l1/figure_30_section_4.3.1.13.png)
@@ -2662,7 +2664,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-annotations.xsd (<code>qualityParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>qualityParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Quality DSR (qualityParametersType)](../../_static/figures/pfd-l1/figure_31_section_4.3.1.13.png)
@@ -2774,7 +2776,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-common-types.xsd (<code>layerListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-common-types.xsd (<code>layerListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Annotation LUT DSR (layerListType)](../../_static/figures/pfd-l1/figure_32_section_4.3.1.14.png)
@@ -2861,6 +2863,7 @@ In addition, those included in the following table are added.
 | `noDataValueBool` | Pixel value in case of LUT invalid data. Used for Boolean LUT (RFI masks). | bool | 1 |
 | `noDataValueFloat` | Pixel value in case of LUT invalid data. Used for float and double LUT. | float | 1 |
 | `referenceAzimuthTime` | Reference azimuth time to be used together with LUT relative azimuth time axes [UTC]. | `timeType` | 1 |
+| `formatVersion` | PFD version | string | 1 |
 
 :::
 
@@ -2911,7 +2914,7 @@ The table below describes the groups of variables. It shall be kept into account
 | group: `ionosphereCorrection` variable: `azimuthShifts` | Two-dimensional map covering the whole SAR image and describing the azimuth shifts computed during L1 ionospheric processing. Values are expressed in [m]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
 | group: `ionosphereCorrection` variable: `autofocusPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen computed during L1 ionospheric processing. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if autofocus step is activated) |
 | group: `ionosphereCorrection` variable: `autofocusPhaseScreenStd` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen standard deviation based on the WLS double integration. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if autofocus step is activated) |
-| group: denoising variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values. Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as powers instead of amplitudes. The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used):$\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$where:$\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT;$\sigma_{LUT}^{noise}$ is this LUT;$\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion. Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
+| group: denoising variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values. Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as amplitudes. The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used):$\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$where:$\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT;$\sigma_{LUT}^{noise}$ is this LUT;$\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion. Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
 | group: geometry variable: latitude | Two-dimensional map covering the whole SAR image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
 | group: geometry variable: longitude | Two-dimensional map covering the whole SAR image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
 | group: geometry variable: height | Two-dimensional map covering the whole SAR image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m], with the same reference of the used DEM. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
@@ -3026,6 +3029,8 @@ string :`polarisationList` = "H/H", "H/V", "V/H", "V/V" ;
 :`noDataValueFloat` = -9999. ;
 
 :`referenceAzimuthTime` = "2017-01-11T05:06:09.332291" ;
+
+:`formatVersion` = "V1.7.0" ;
 
 :\_NCProperties = "version=2,netcdf=4.9.0,hdf5=1.12.2" ;
 
@@ -3405,7 +3410,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Overlay ADS](../../_static/figures/pfd-l1/figure_33_section_4.3.5.png)

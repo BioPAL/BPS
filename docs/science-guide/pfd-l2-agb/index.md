@@ -9,15 +9,15 @@
 Pipeline metadata (not rendered):
 title: BIOMASS Above Ground Biomass Products Format Specification
 doc_code: BIO-BPS-AGBPFD-ARE-010257
-version: 3.4.0
-date: 13/03/2026
+version: 3.5.0
+date: 06/11/2026
 family: pfd
 license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-06'
-source_sha256: 6d7997d1ff636524acc3c6f641b480c69a430bd3242adcbf55195ac9c95993ca
+conversion_date: '2026-11-13'
+source_sha256: d8dbf1f3fc7031b6cdb7592d6ccbf7b92110780469bf4368cbc67f7485d89753
 -->
 
 # BIOMASS Above Ground Biomass Products Format Specification
@@ -28,13 +28,12 @@ source_sha256: 6d7997d1ff636524acc3c6f641b480c69a430bd3242adcbf55195ac9c95993ca
 :class: warning
 
 This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_PFD_v3_4_0.pdf)
 :::
 
 :::{admonition} Authoritative document
 :class: tip
 
-This page is the web-rendered version of `BIO-BPS-AGBPFD-ARE-010257` issue **3.4.0** dated **13 March 2026**.
+This page is the web-rendered version of `BIO-BPS-AGBPFD-ARE-010257` issue **3.5.0** dated **06 November 2026**.
 :::
 
 :::{dropdown} Document information
@@ -44,8 +43,8 @@ This page is the web-rendered version of `BIO-BPS-AGBPFD-ARE-010257` issue **3.4
 |---|---|
 | Title | BIOMASS Above Ground Biomass Products Format Specification |
 | External reference | `BIO-BPS-AGBPFD-ARE-010257` |
-| Issue | 3.4.0 |
-| Date | 13 March 2026 |
+| Issue | 3.5.0 |
+| Date | 06 November 2026 |
 | Pages | 80 (authoritative PDF) |
 
 **Recipients**
@@ -99,6 +98,7 @@ This page is the web-rendered version of `BIO-BPS-AGBPFD-ARE-010257` issue **3.4
 | 2025-04-30 | 3.2.1 | Post-FAT3 issue of the document BPS-693: 4.3.2.1 Local Incidence Angle variable name renamed to localIncidenceAngle BPS-FTO-BATCH4: updated L2B AGB, {sec}`6.3.1`, main annotation xml with new \<product\> element fields (contributingTiles, calABcoveragePerTile, GNcoveragePerTile) BPS-680: {sec}`4.3.2`, added units to local incidence angle LUT variable and fixed units typo in LUT latitude longitude | Paolo Mazzucchelli Emanuele Giorgi |
 | 2025-11-28 | 3.3.0 | Post-launch issue of the document (associated to BPS V4.2.0) Added Overlay ADS | Paolo Mazzucchelli Emanuele Giorgi |
 | 2026-03-13 | 3.4.0 | Post-launch issue of the document (associated to BPS V4.4.0) Updated staQualityParametersType Added polarisationCombinationMethod to generalConfigurationParametersType Removed old, solved comments | Paolo Mazzucchelli Emanuele Giorgi |
+| 2026-11-06 | 3.5.0 | Post-launch issue of the document (associated to BPS V4.5.0) 4.3.1. Main ADS: Added xsd schemaVersion attribute removed computeGNPowerFlag (always true now) compressionOptions: added geometricLUTs element 4.3.2. Look-Up Tables (LUT) ADS: Added xsd schemaVersion attribute fixed local incidence angle units (raddeg) added all the geometric LUTs | Paolo Mazzucchelli Emanuele Giorgi |
 :::
 
 ---

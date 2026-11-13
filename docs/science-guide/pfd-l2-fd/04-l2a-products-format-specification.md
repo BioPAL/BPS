@@ -321,6 +321,7 @@ classDiagram
   direction LR
   class mainAnnotationType {
     <<complexType>>
+    @schemaVersion : token [1]
     product : productL2aType [1] ⊞
     rasterImage : rasterImageType [1] ⊞
     inputInformation : InputInformationL2aType [1] ⊞
@@ -332,7 +333,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2a-fd-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2a-fd-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
 
@@ -353,6 +354,7 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
+| `schemaVersion` | PFD version | `xsd:token` | required |
 | product | Product L2a DSR. This DSR contains the L2a product information. | `productL2aType` | 1 |
 | `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2a product raster images. | `rasterImageType` | 1 |
 | InputInformation | Input Information DSR. This DSR contains the necessary information to identify the input data set to the L2a processing. | InputInformationL2aType | 1 |
@@ -419,7 +421,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>productL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Product L2a DSR (productL2aType)](../../_static/figures/pfd-fd/figure_4_section_4.3.1.1.png)
@@ -563,7 +565,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>rasterImageType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>rasterImageType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Raster image DSR (rasterImageType)](../../_static/figures/pfd-fd/figure_5_section_4.3.1.2.png)
@@ -672,7 +674,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>InputInformationL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR (InputInformationL2aType)](../../_static/figures/pfd-fd/figure_6_section_4.3.1.3.png)
@@ -706,7 +708,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>acquisitionListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR, acquisition list detail (acquisitionListType)](../../_static/figures/pfd-fd/figure_7_section_4.3.1.3.png)
@@ -742,7 +744,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>acquisitionType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input Information DSR, acquisition detail (acquisitionType)](../../_static/figures/pfd-fd/figure_8_section_4.3.1.3.png)
@@ -776,7 +778,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityType](../../_static/figures/pfd-fd/figure_9_section_4.3.1.3.png)
@@ -810,7 +812,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityParametersListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityParametersListType](../../_static/figures/pfd-fd/figure_10_section_4.3.1.3.png)
@@ -853,7 +855,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>staQualityParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Input information DSR, staQualityParametersType](../../_static/figures/pfd-fd/figure_11_section_4.3.1.3.png)
@@ -1006,7 +1008,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fd-proc-annotations.xsd (<code>processingParametersL2aType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fd-proc-annotations.xsd (<code>processingParametersL2aType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (processingparametersL2aType)](../../_static/figures/pfd-fd/figure_12_section_4.3.1.4.png)
@@ -1065,7 +1067,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-common-annotations.xsd (<code>generalConfigurationParametersType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>generalConfigurationParametersType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (generalConfigurationParametersType)](../../_static/figures/pfd-fd/figure_13_section_4.3.1.4.png)
@@ -1088,7 +1090,7 @@ classDiagram
 | `forestCoverageThreshold` | Minimum percentage forest coverage in L2a product footprint, used to trigger L2a processing. | `xsd:float` | 1 |
 | `forestMaskInterpolationThreshold` | This parameter is a threshold which has been used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid. This created a safety buffer around forest border. | `xsd:float` | 1 |
 | `subsettingRule` | In case of more than three acquisitions the user selected subsetting rule is here annotated (always “geometry” for FD L2a processor). | `subsettingRuleType` | 1 |
-|   | `polarisationCombinationMethod` | Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarizations are used). | `polarisationCombinationMethodType` 1 |
+| `polarisationCombinationMethod` | Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarizations are used). | `polarisationCombinationMethodType` | 1 |
 
 :::
 
@@ -1122,6 +1124,7 @@ classDiagram
     FNF : «inline» [1]
     ACM : «inline» [1]
     numberOfAverages : «inline» [1]
+    geometricLUTs : «inline» [1]
   }
   class compressionOptionsL2a_MDS_FD["compressionOptionsL2a / MDS / FD"] {
     <<anonymous>>
@@ -1149,6 +1152,11 @@ classDiagram
     <<anonymous>>
     compressionFactor : unsignedByte [1]
   }
+  class compressionOptionsL2a_ADS_geometricLUTs["compressionOptionsL2a / ADS / geometricLUTs"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    least_significant_digit : unsignedByte [1]
+  }
   compressionOptionsL2a --> compressionOptionsL2a_MDS : MDS
   compressionOptionsL2a --> compressionOptionsL2a_ADS : ADS
   compressionOptionsL2a_MDS --> compressionOptionsL2a_MDS_FD : FD
@@ -1157,12 +1165,13 @@ classDiagram
   compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_FNF : FNF
   compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_ACM : ACM
   compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_numberOfAverages : numberOfAverages
+  compressionOptionsL2a_ADS --> compressionOptionsL2a_ADS_geometricLUTs : geometricLUTs
 ```
 
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l2l3-fd-proc-annotations.xsd (<code>compressionOptionsL2a</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-fd-proc-annotations.xsd (<code>compressionOptionsL2a</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Processing parameters L2a DSR (compressionOptionsL2aType)](../../_static/figures/pfd-fd/figure_14_section_4.3.1.4.png)
@@ -1187,6 +1196,10 @@ classDiagram
 | ADS àFNF à `compressionFactor` and ADS ànumberOfAverages à `compressionFactor` | ZLIB algorithm compression factor for the FNF and `numberOfAverages` ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS à ACM à `compressionFactor` | ZLIB algorithm compression factor valid for all the ACM ADS LUT layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS à ACM à least\_significant\_digit | For all the layers of ACM LUT ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. See 4.3.2. | `xsd:unsignedByte` | 1 |
+| ADS à GeometricLuts à `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS à GeometricLuts à least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
+| `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
+| `ADS_blockSize` | ADS NetCDF chunking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::
 
@@ -1217,7 +1230,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-common-types.xsd (<code>layerListType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-common-types.xsd (<code>layerListType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Annotation LUT DSR (layerListType)](../../_static/figures/pfd-fd/figure_15_section_4.3.1.5.png)
@@ -1311,6 +1324,7 @@ The content of L2a LUT ADS is reported hereafter, where:
 - the series of Attributes contain the same list of parameters described in {sec}`4.3.1.1` for the Product L2a DSR (for all the details about these parameters refer to this section);
 - the Dimensions group is composed by Latitude and Longitude, as the data array variables are defined in the Latitude Longitude based on DGG projection;
 - there are three components, FNF, ACM and `numberOfAverages` matrices
+- for the geometric LUTs (local incidence angle, height, latitude, longitude, incidence/elevation angles, range/azimuth terrain slopes), the repeated variables are described only once.
 - this notation is applicable:
     - this is the attribute or variable name
     - this is the actual content of constant values over the mission
@@ -1359,6 +1373,8 @@ forest\_coverage\_percentage: [float32] Forest coverage of the input STA product
 selected\_reference\_image Optional [uint16] Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “single reference”
 
 acquisition\_id\_reference\_image Optional [str] Acquisition folder name, to better identify the input image referred by the `selectedReferenceImage`
+
+`formatVersion` [str] Version of the product
 
 LUT ADS Dimensions / Coordinate variables:
 
@@ -1738,6 +1754,210 @@ type: \<class str\>
 
 description: Geodetic reference frame
 
+Group Name: height
+
+height group contents:
+
+Name: height
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]
+
+units: m
+
+Name: `firstSample`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Product image MDS sample the first LUT sample corresponds to
+
+Name: `firstLine`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Product image MDS line the first LUT line corresponds to
+
+Name: `samplesInterval`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Number of product image MDS samples one LUT sample corresponds to
+
+Name: `linesInterval`
+
+shape: (1, 1)
+
+type: dtype(uint32)
+
+description: Number of product image MDS lines one LUT line corresponds to
+
+Name: `pixelType`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Data type of output LUT pixels
+
+Name: `noDataValue`
+
+shape: (1, 1)
+
+type: dtype(float32)
+
+description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
+
+Name: projection
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: LUT projection, DGG, as described in {rd}`8`
+
+Name: `coordinateReferenceSystem`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Coordinate reference systems, as per WKT representation {rd}`7`
+
+Name: `geodeticReferenceFrame`
+
+shape: (1, 1)
+
+type: \<class str\>
+
+description: Geodetic reference frame
+
+Name: least\_significant\_digit
+
+shape: (1, 1)
+
+type: `unsignedByte`
+
+description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
+
+Group Name: latitude
+
+height group contents:
+
+Name: latitude
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: longitude
+
+height group contents:
+
+Name: longitude
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `incidenceAngle`
+
+height group contents:
+
+Name: `incidenceAngle`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `elevationAngle`
+
+height group contents:
+
+Name: `elevationAngle`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `rangeTerrainSlope`
+
+height group contents:
+
+Name: `rangeTerrainSlope`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
+Group Name: `azimuthTerrainSlope`
+
+height group contents:
+
+Name: `azimuthTerrainSlope`
+
+dimensions: (Longitude, Latitude)
+
+shape: ([int] x shape, [int] y shape)
+
+type: dtype(float32)
+
+description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+
+units: deg
+
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
+
 (sec:pfd-fd-4-3-3)=
 #### 4.3.3 Quick-look ADS
 
@@ -1848,7 +2068,7 @@ classDiagram
 </div>
 </div>
 
-<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.4.1, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
 
 :::{dropdown} Original figure (DOCX)
 ![Overlay ADS](../../_static/figures/pfd-fd/figure_17_section_4.3.4.png)

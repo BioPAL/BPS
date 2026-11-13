@@ -9,15 +9,15 @@
 Pipeline metadata (not rendered):
 title: BIOMASS Forest Disturbance Products Format Specification
 doc_code: BIO-BPS- FDPFD-ARE-010258
-version: 3.4.0
-date: 13/03/2026
+version: 3.5.0
+date: 06/11/2026
 family: pfd
 license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-06'
-source_sha256: 8287bdd97138aa52c761d13795f69ca90d559608913c9dde9de4e74070c6d95d
+conversion_date: '2026-11-13'
+source_sha256: 73b14ebee530f0245f12bfd77cdda690ae9c2e1f918b1141b232ef9773c5cbf2
 -->
 
 # BIOMASS Forest Disturbance Products Format Specification
@@ -28,13 +28,12 @@ source_sha256: 8287bdd97138aa52c761d13795f69ca90d559608913c9dde9de4e74070c6d95d
 :class: warning
 
 This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FD_PFD_v3_4_0.pdf)
 :::
 
 :::{admonition} Authoritative document
 :class: tip
 
-This page is the web-rendered version of `BIO-BPS- FDPFD-ARE-010258` issue **3.4.0** dated **13 March 2026**.
+This page is the web-rendered version of `BIO-BPS- FDPFD-ARE-010258` issue **3.5.0** dated **06 November 2026**.
 :::
 
 :::{dropdown} Document information
@@ -44,8 +43,8 @@ This page is the web-rendered version of `BIO-BPS- FDPFD-ARE-010258` issue **3.4
 |---|---|
 | Title | BIOMASS Forest Disturbance Products Format Specification |
 | External reference | `BIO-BPS- FDPFD-ARE-010258` |
-| Issue | 3.4.0 |
-| Date | 13 March 2026 |
+| Issue | 3.5.0 |
+| Date | 06 November 2026 |
 | Pages | 77 (authoritative PDF) |
 
 **Recipients**
@@ -100,6 +99,7 @@ This page is the web-rendered version of `BIO-BPS- FDPFD-ARE-010258` issue **3.4
 | 2025-04-30 | 3.2.1 | BPS-680: {sec}`4.3.2`, added units to LUT ACM phase variables and fixed units typo in LUT latitude longitude | Paolo Mazzucchelli Emanuele Giorgi |
 | 2025-11-28 | 3.3.0 | Post-launch issue of the document (associated to BPS V4.2.0) Added Overlay ADS | Paolo Mazzucchelli Emanuele Giorgi |
 | 2026-03-13 | 3.4.0 | Post-launch issue of the document (associated to BPS V4.4.0) Updated staQualityParametersType Added polarisationCombinationMethod to generalConfigurationParametersType Removed old, solved comments | Paolo Mazzucchelli Emanuele Giorgi |
+| 2026-11-06 | 3.5.0 | Post-launch issue of the document (associated to BPS V4.5.0) 4.3.1.4 Main ADS: Added xsd schemaVersion attribute compressionOptions: added geometricLUTs element 4.3.2. Look-Up Tables (LUT) ADS: Added xsd schemaVersion attribute added all the geometric LUTs | Paolo Mazzucchelli Emanuele Giorgi |
 :::
 
 ---

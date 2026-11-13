@@ -3,7 +3,7 @@
  "title": "BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document",
  "short_title": "L1 SAR ATBD",
  "doc_code": "BIO-BPS-L1-SAR-ATBD-ARE-010165",
- "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_SAR_ATBD_v1_2_4.pdf",
+ "pdf_url": "",
  "targets": {
   "ad:1": {
    "file": "01-introduction",

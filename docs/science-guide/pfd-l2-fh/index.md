@@ -9,15 +9,15 @@
 Pipeline metadata (not rendered):
 title: BIOMASS Forest Height Products Format Specification
 doc_code: BIO-BPS-FHPFD-ARE-010256
-version: 3.4.0
-date: 13/03/2026
+version: 3.5.0
+date: 06/11/2026
 family: pfd
 license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-06'
-source_sha256: 33b2b4dade2c01201ae292ffd7bc0053afb28ca0dd371158255ab5e0c28d0307
+conversion_date: '2026-11-13'
+source_sha256: 9986be08dd0362cc82d0e1e7d1700ff6c3633bc4a4449dd5c62665b78d635d71
 -->
 
 # BIOMASS Forest Height Products Format Specification
@@ -28,13 +28,12 @@ source_sha256: 33b2b4dade2c01201ae292ffd7bc0053afb28ca0dd371158255ab5e0c28d0307
 :class: warning
 
 This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FH_PFD_v3_4_0.pdf)
 :::
 
 :::{admonition} Authoritative document
 :class: tip
 
-This page is the web-rendered version of `BIO-BPS-FHPFD-ARE-010256` issue **3.4.0** dated **13 March 2026**.
+This page is the web-rendered version of `BIO-BPS-FHPFD-ARE-010256` issue **3.5.0** dated **06 November 2026**.
 :::
 
 :::{dropdown} Document information
@@ -44,8 +43,8 @@ This page is the web-rendered version of `BIO-BPS-FHPFD-ARE-010256` issue **3.4.
 |---|---|
 | Title | BIOMASS Forest Height Products Format Specification |
 | External reference | `BIO-BPS-FHPFD-ARE-010256` |
-| Issue | 3.4.0 |
-| Date | 13 March 2026 |
+| Issue | 3.5.0 |
+| Date | 06 November 2026 |
 | Pages | 68 (authoritative PDF) |
 
 **Recipients**
@@ -100,6 +99,7 @@ This page is the web-rendered version of `BIO-BPS-FHPFD-ARE-010256` issue **3.4.
 | 2025-04-30 | 3.2.1 | BPS-680: {sec}`4.3.2`, fixed units typo in LUT latitude longitude | Paolo Mazzucchelli Emanuele Giorgi |
 | 2025-11-28 | 3.3.0 | Post-launch issue of the document (associated to BPS V4.2.0) Added Overlay ADS | Paolo Mazzucchelli Emanuele Giorgi |
 | 2026-03-13 | 3.4.0 | Post-launch issue of the document (associated to BPS V4.4.0) Updated staQualityParametersType Added polarisationCombinationMethod to generalConfigurationParametersType Removed old, solved comments | Paolo Mazzucchelli Emanuele Giorgi |
+| 2026-11-06 | 3.5.0 | Post-launch issue of the document (associated to BPS V4.5.0) 4.3.1.4 Main ADS: Added xsd schemaVersion attribute compressionOptions: added geometricLUTs element 4.3.2. Look-Up Tables (LUT) ADS: Added xsd schemaVersion attribute added all the geometric LUTs | Paolo Mazzucchelli Emanuele Giorgi |
 :::
 
 ---
