@@ -1,0 +1,110 @@
+name: Python package CI
+
+on:
+  workflow_call:
+    inputs:
+      subproject:
+        description: Repository-relative package directory
+        required: true
+        type: string
+      source-path:
+        description: Package source path relative to the subproject
+        required: true
+        type: string
+      conda-dependencies:
+        description: Space-separated additional conda package specifications
+        default: biomass-bps::arepyextras-runner
+        type: string
+      local-dependencies:
+        description: Space-separated editable dependency paths relative to the subproject
+        default: ""
+        type: string
+      run-tests:
+        description: Run the Linux unit tests
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python -m pip install ruff==0.17.4
+      - name: Check formatting and lint
+        working-directory: ${{ inputs.subproject }}
+        run: |
+          python -m ruff format --check .
+          python -m ruff check .
+
+  fawlty-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python -m pip install FawltyDeps
+      - name: Check dependencies
+        working-directory: ${{ inputs.subproject }}
+        run: python -m fawltydeps --code bps --detailed --config-file ../scripts/fawltydeps.toml
+
+  unittest-linux:
+    if: inputs.run-tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install-subpackage
+        with:
+          subproject: ${{ inputs.subproject }}
+          conda-dependencies: ${{ inputs.conda-dependencies }}
+          local-dependencies: ${{ inputs.local-dependencies }}
+          package-extras: test
+      - name: Run tests with coverage
+        working-directory: ${{ inputs.subproject }}
+        env:
+          SOURCE_PATH: ${{ inputs.source-path }}
+        run: |
+          set -eo pipefail
+          mkdir -p _build
+          python -m coverage run "--source=$SOURCE_PATH" -m xmlrunner --output-file _build/unittest-report-linux-py3.14.xml discover
+          python -m coverage report -m
+          python -m coverage xml -o _build/unittest-coverage-linux-py3.14.xml
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.subproject }}-test-reports
+          path: |
+            ${{ inputs.subproject }}/_build/unittest-report-*.xml
+            ${{ inputs.subproject }}/_build/unittest-coverage-*.xml
+          if-no-files-found: ignore
+          retention-days: 14
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python -m pip install build
+      - name: Build distributions
+        working-directory: ${{ inputs.subproject }}
+        run: python -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.subproject }}-distributions
+          path: |
+            ${{ inputs.subproject }}/dist/*.tar.gz
+            ${{ inputs.subproject }}/dist/*.whl
+          if-no-files-found: error
+          retention-days: 14

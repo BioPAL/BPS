@@ -1,0 +1,36 @@
+name: bps-stack_cal_processor CI
+on:
+  push:
+    branches: ["**"]
+    tags: ["bps-v*"]
+    paths:
+      [
+        "bps-stack_cal_processor/**",
+        "bps-common/**",
+        ".github/workflows/bps-stack_cal_processor.yml",
+        ".github/workflows/python-package-reusable.yml",
+        ".github/actions/install-subpackage/action.yml",
+        "ruff.toml",
+        "scripts/fawltydeps.toml",
+      ]
+  pull_request:
+    paths:
+      [
+        "bps-stack_cal_processor/**",
+        "bps-common/**",
+        ".github/workflows/bps-stack_cal_processor.yml",
+        ".github/workflows/python-package-reusable.yml",
+        ".github/actions/install-subpackage/action.yml",
+        "ruff.toml",
+        "scripts/fawltydeps.toml",
+      ]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ci:
+    uses: ./.github/workflows/python-package-reusable.yml
+    with:
+      subproject: bps-stack_cal_processor
+      source-path: bps/stack_cal_processor
+      local-dependencies: ../bps-common

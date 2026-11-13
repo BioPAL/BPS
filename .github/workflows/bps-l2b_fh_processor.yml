@@ -1,0 +1,38 @@
+name: bps-l2b_fh_processor CI
+on:
+  push:
+    branches: ["**"]
+    tags: ["bps-v*"]
+    paths:
+      [
+        "bps-l2b_fh_processor/**",
+        "bps-common/**",
+        "bps-transcoder/**",
+        ".github/workflows/bps-l2b_fh_processor.yml",
+        ".github/workflows/python-package-reusable.yml",
+        ".github/actions/install-subpackage/action.yml",
+        "ruff.toml",
+        "scripts/fawltydeps.toml",
+      ]
+  pull_request:
+    paths:
+      [
+        "bps-l2b_fh_processor/**",
+        "bps-common/**",
+        "bps-transcoder/**",
+        ".github/workflows/bps-l2b_fh_processor.yml",
+        ".github/workflows/python-package-reusable.yml",
+        ".github/actions/install-subpackage/action.yml",
+        "ruff.toml",
+        "scripts/fawltydeps.toml",
+      ]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ci:
+    uses: ./.github/workflows/python-package-reusable.yml
+    with:
+      subproject: bps-l2b_fh_processor
+      source-path: bps/l2b_fh_processor
+      local-dependencies: ../bps-common ../bps-transcoder
