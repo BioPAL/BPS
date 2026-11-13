@@ -14,6 +14,8 @@ non-HTML builder drops. For non-HTML builders only, this post-transform:
 * makes every table a ``longtable`` (page breaks, repeated header) as wide as
   the headings, with explicit column widths so it wraps inside the margins,
   and gives a body to header-only tables (the LaTeX writer requires one);
+* sets a table row taller than most of a page as several rows, so that
+  the page can break inside it (LaTeX cannot break a longtable row);
 * drops the "Acronyms" titles of the web dropdowns and the empty References
   chapter (its bibliography has no entry: the documents list their
   references in chapter 1);
@@ -45,6 +47,8 @@ from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.texescape import escape as tex_escape
 
 FIGURE_CLASS = "atbd-mermaid-figure"
+# Size of the Mermaid PDFs in the page (see AtbdLatexContent._figure).
+_MERMAID_SCALE = 0.75
 TABLE_CLASS = "atbd-table"
 
 _CAPTION_RE = re.compile(
@@ -468,6 +472,130 @@ def _preceding_targets(node: nodes.Element) -> list[nodes.target]:
     return found
 
 
+# ---------------------------------------------------------------------------
+# Rows taller than a page
+# ---------------------------------------------------------------------------
+# LaTeX cannot break a page inside a longtable row: a cell taller than the
+# page (a long enumeration) runs over the footer and its end is lost. Such a
+# row is set as several rows, each holding the next lines of its cells, and
+# without rule between them (``\atbdrowcontinues``), so that the page can
+# break between them.
+
+_ROW_SPLIT_LINES = 60  # estimated lines of the tallest cell before splitting
+_ROW_CHUNK_LINES = 24  # estimated lines of each row the cell is split into
+
+
+def _column_chars(tgroup: nodes.tgroup, budget: float) -> list[float]:
+    """Width in characters of each column (``budget``: table width)."""
+    specs = [c for c in tgroup.children if isinstance(c, nodes.colspec)]
+    weights = [float(s.get("colwidth", 1) or 1) for s in specs]
+    total = sum(weights) or 1.0
+    usable = budget - 2.0 * len(specs)
+    return [max(1.0, usable * w / total) for w in weights]
+
+
+def _tokens(paragraph: nodes.paragraph) -> list[tuple[nodes.Node, int]]:
+    """Words of a paragraph (Text split at spaces; inline elements whole)."""
+    out: list[tuple[nodes.Node, int]] = []
+    for child in paragraph.children:
+        if isinstance(child, nodes.Text):
+            words = re.findall(r"\S+\s*", str(child))
+            if words and str(child)[:1].isspace() and out:
+                # Keep the space between the previous element and this word.
+                words[0] = " " + words[0]
+            out.extend((nodes.Text(w), len(w.strip())) for w in words)
+        else:
+            out.append((child, max(1, len(child.astext()))))
+    return out
+
+
+def _split_paragraph(paragraph: nodes.paragraph, width: float,
+                     chunk: int) -> list[nodes.paragraph]:
+    """``paragraph`` cut at word boundaries into pieces of ``chunk`` lines."""
+    pieces: list[nodes.paragraph] = []
+    current: list[nodes.Node] = []
+    lengths: list[int] = []
+    for node, length in _tokens(paragraph):
+        if current and _wrapped_lines([lengths + [length]], width)[0] > chunk:
+            pieces.append(nodes.paragraph("", "", *current))
+            current, lengths = [], []
+        if isinstance(node, nodes.Text) and not current:
+            node = nodes.Text(str(node).lstrip())
+        if node.parent is not None:
+            node.parent.remove(node)
+        current.append(node)
+        lengths.append(length)
+    if current:
+        pieces.append(nodes.paragraph("", "", *current))
+    return pieces
+
+
+def _block_lines(block: nodes.Node, width: float) -> int:
+    return _wrapped_lines(_cell_blocks(block) if isinstance(block, nodes.Element)
+                          else [[len(w) for w in block.astext().split()] or [0]],
+                          width)[0]
+
+
+def _cell_chunks(entry: nodes.entry, width: float, chunk: int) -> list[list[nodes.Node]]:
+    """Children of ``entry`` grouped in pieces of at most ``chunk`` lines
+    (a paragraph longer than that is cut; other blocks are kept whole)."""
+    blocks: list[nodes.Node] = []
+    for child in list(entry.children):
+        entry.remove(child)
+        if (isinstance(child, nodes.paragraph)
+                and _block_lines(child, width) > chunk):
+            blocks.extend(_split_paragraph(child, width, chunk))
+        else:
+            blocks.append(child)
+    chunks: list[list[nodes.Node]] = []
+    used = chunk + 1
+    for block in blocks:
+        lines = _block_lines(block, width)
+        if chunks and used + lines <= chunk:
+            chunks[-1].append(block)
+            used += lines
+        else:
+            chunks.append([block])
+            used = lines
+    return chunks
+
+
+def _split_tall_rows(table: nodes.table, budget: float) -> int:
+    """Set each row taller than most of a page as several rows; return
+    the number of rows split."""
+    split = 0
+    for tgroup in table.findall(nodes.tgroup):
+        widths = _column_chars(tgroup, budget)
+        for tbody in [c for c in tgroup.children if isinstance(c, nodes.tbody)]:
+            for row in list(tbody.children):
+                entries = [e for e in row.children if isinstance(e, nodes.entry)]
+                if (len(entries) != len(widths)
+                        or any(e.get("morerows") or e.get("morecols") for e in entries)):
+                    continue  # spanning cells: kept as they are
+                lines = [_wrapped_lines(_cell_blocks(e), w)[0]
+                         for e, w in zip(entries, widths)]
+                if max(lines, default=0) <= _ROW_SPLIT_LINES:
+                    continue
+                cells = [_cell_chunks(e, w, _ROW_CHUNK_LINES)
+                         for e, w in zip(entries, widths)]
+                count = max(len(c) for c in cells)
+                rows = [nodes.row("", *(nodes.entry() for _ in entries))
+                        for _ in range(count)]
+                rows[0] = row
+                for col, chunks in enumerate(cells):
+                    for i, children in enumerate(chunks):
+                        rows[i].children[col].extend(children)
+                for continued in rows[:-1]:
+                    # No rule under this row: the next one continues it.
+                    continued.children[0].append(nodes.raw(
+                        "", r"\atbdrowcontinues", format="latex"))
+                index = tbody.index(row)
+                for offset, extra in enumerate(rows[1:], start=1):
+                    tbody.insert(index + offset, extra)
+                split += 1
+    return split
+
+
 class AtbdLatexContent(SphinxPostTransform):
     """Rewrite the web-only constructs of the converted documents for print."""
 
@@ -566,6 +694,9 @@ class AtbdLatexContent(SphinxPostTransform):
                 _LONG_TABLE_LITERAL if in_table else _LONG_LITERAL)
             if latex is not None and literal.parent is not None:
                 literal.replace_self(nodes.raw("", latex, format="latex"))
+        for table, _docname in found["tables"]:
+            if "longtable" in table["classes"]:
+                _split_tall_rows(table, budget)
         _drop_empty_chapters(self.document)
 
     # -- text ----------------------------------------------------------
@@ -626,7 +757,16 @@ class AtbdLatexContent(SphinxPostTransform):
         # share the page height, leaving room for the caption (a float taller
         # than the page overflows the bottom margin).
         share = 0.5 if len(visuals) <= 1 else 0.75 / len(visuals)
+        mermaid_only = has_mermaid and all(isinstance(v, mermaid_cls) for v in visuals)
+        if mermaid_only:
+            # Mermaid diagrams (XSD class diagrams) are vector PDFs the size
+            # of the drawing (mmdc --pdfFit) in 12 pt text: at 75 % (9 pt
+            # text), up to the full text width and most of the page height,
+            # so that wide and tall diagrams keep a readable text size.
+            share = 0.8 if len(visuals) <= 1 else 0.8 / len(visuals)
         setup = r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % share
+        if mermaid_only:
+            setup += r"\def\atbdfigscale{%s}\def\atbdfigmaxwidth{\linewidth}" % _MERMAID_SCALE
         if caption is not None:
             number, inlines = caption
             if number:

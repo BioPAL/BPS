@@ -121,8 +121,14 @@ ATBD_LATEX_FATAL = ^! Emergency stop|^!  ==> Fatal error|^! TeX capacity exceede
 
 MMDC ?= $(shell command -v mmdc 2>/dev/null)
 ifneq ($(MMDC),)
-  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json
+  # --pdfFit: a PDF page the size of the diagram (default: a Letter page, which
+  # crops wide diagrams and leaves the rest of the page blank under the others)
+  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json,--pdfFit
 endif
+
+# Warnings of sphinxcontrib.mermaid for a diagram it did not render (mmdc not
+# found, or failed): the PDF would show the captions without the figures.
+ATBD_MERMAID_ERRORS = needed for mermaid output|WARNING: mm code
 
 atbd-pdf:
 	@echo "Building web-export PDF for science-guide/$(ATBD)/ …"
@@ -130,8 +136,22 @@ atbd-pdf:
 	@mkdir -p "$(ATBD_LATEX_DIR)"
 	@rm -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf" "$(ATBD_PDF)"
 	@printf '{"args": ["--no-sandbox"]}\n' > "$(ATBD_PDF_BUILDDIR)/puppeteer.json"
+	@# sphinxcontrib.mermaid reuses a rendered diagram whatever the mmdc
+	@# options: render them again when the options change.
+	@if [ "$$(cat "$(ATBD_LATEX_DIR)/.mermaid-opts" 2>/dev/null)" != '$(ATBD_MERMAID_OPTS)' ]; then \
+	  rm -f "$(ATBD_LATEX_DIR)"/mermaid-*.pdf; \
+	  echo '$(ATBD_MERMAID_OPTS)' > "$(ATBD_LATEX_DIR)/.mermaid-opts"; \
+	fi
 	@SPHINX_ATBD_PDF=$(ATBD) $(SPHINXBUILD) -b latex -d "$(ATBD_PDF_BUILDDIR)/doctrees" \
+	  -w "$(ATBD_PDF_BUILDDIR)/$(ATBD).warnings" \
 	  "$(SOURCEDIR)" "$(ATBD_LATEX_DIR)" $(ATBD_MERMAID_OPTS) $(SPHINXOPTS)
+	@n=$$(grep -Ec '$(ATBD_MERMAID_ERRORS)' "$(ATBD_PDF_BUILDDIR)/$(ATBD).warnings"); \
+	if [ "$$n" -gt 0 ]; then \
+	  echo "PDF build failed: $$n Mermaid diagram(s) of $(ATBD) not rendered (mermaid-cli"; \
+	  echo "mmdc not found or failed, MMDC='$(MMDC)'). Install it (npm i -g @mermaid-js/mermaid-cli)"; \
+	  echo "or pass MMDC=/path/to/mmdc. Warnings: $(ATBD_PDF_BUILDDIR)/$(ATBD).warnings"; \
+	  exit 1; \
+	fi
 	@cd "$(ATBD_LATEX_DIR)" && \
 	  if [ -n '$(LATEXMK)' ]; then \
 	    $(LATEXMK) -xelatex $(LATEXMK_OPTS) -interaction=nonstopmode "$(ATBD).tex"; \
@@ -176,7 +196,11 @@ atbd-pdf-all:
 	    "$$(sed -n 's/.*Output written on .*(\([0-9]*\) pages.*/\1/p' "$$log" 2>/dev/null | tail -1)" \
 	    "$$(grep -c '^!' "$$log" 2>/dev/null)"; \
 	done; \
-	for d in $$failed; do printf '  FAILED  %-16s see %s\n' "$$d" "$(ATBD_PDF_BUILDDIR)/$$d/$$d.log"; done; \
+	for d in $$failed; do \
+	  if grep -Eq '$(ATBD_MERMAID_ERRORS)' "$(ATBD_PDF_BUILDDIR)/$$d.warnings" 2>/dev/null; then \
+	    printf '  FAILED  %-16s Mermaid diagrams not rendered, see %s\n' "$$d" "$(ATBD_PDF_BUILDDIR)/$$d.warnings"; \
+	  else printf '  FAILED  %-16s see %s\n' "$$d" "$(ATBD_PDF_BUILDDIR)/$$d/$$d.log"; fi; \
+	done; \
 	test -z "$$failed"
 
 # Catch-all: route any unknown target to sphinx-build via the M shortcut
