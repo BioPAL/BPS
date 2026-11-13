@@ -121,7 +121,9 @@ ATBD_LATEX_FATAL = ^! Emergency stop|^!  ==> Fatal error|^! TeX capacity exceede
 
 MMDC ?= $(shell command -v mmdc 2>/dev/null)
 ifneq ($(MMDC),)
-  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json
+  # --pdfFit: a PDF page the size of the diagram (default: a Letter page, which
+  # crops wide diagrams and leaves the rest of the page blank under the others)
+  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json,--pdfFit
 endif
 
 atbd-pdf:
@@ -130,6 +132,12 @@ atbd-pdf:
 	@mkdir -p "$(ATBD_LATEX_DIR)"
 	@rm -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf" "$(ATBD_PDF)"
 	@printf '{"args": ["--no-sandbox"]}\n' > "$(ATBD_PDF_BUILDDIR)/puppeteer.json"
+	@# sphinxcontrib.mermaid reuses a rendered diagram whatever the mmdc
+	@# options: render them again when the options change.
+	@if [ "$$(cat "$(ATBD_LATEX_DIR)/.mermaid-opts" 2>/dev/null)" != '$(ATBD_MERMAID_OPTS)' ]; then \
+	  rm -f "$(ATBD_LATEX_DIR)"/mermaid-*.pdf; \
+	  echo '$(ATBD_MERMAID_OPTS)' > "$(ATBD_LATEX_DIR)/.mermaid-opts"; \
+	fi
 	@SPHINX_ATBD_PDF=$(ATBD) $(SPHINXBUILD) -b latex -d "$(ATBD_PDF_BUILDDIR)/doctrees" \
 	  "$(SOURCEDIR)" "$(ATBD_LATEX_DIR)" $(ATBD_MERMAID_OPTS) $(SPHINXOPTS)
 	@cd "$(ATBD_LATEX_DIR)" && \

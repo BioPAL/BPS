@@ -47,6 +47,8 @@ from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.texescape import escape as tex_escape
 
 FIGURE_CLASS = "atbd-mermaid-figure"
+# Size of the Mermaid PDFs in the page (see AtbdLatexContent._figure).
+_MERMAID_SCALE = 0.75
 TABLE_CLASS = "atbd-table"
 
 _CAPTION_RE = re.compile(
@@ -755,7 +757,16 @@ class AtbdLatexContent(SphinxPostTransform):
         # share the page height, leaving room for the caption (a float taller
         # than the page overflows the bottom margin).
         share = 0.5 if len(visuals) <= 1 else 0.75 / len(visuals)
+        mermaid_only = has_mermaid and all(isinstance(v, mermaid_cls) for v in visuals)
+        if mermaid_only:
+            # Mermaid diagrams (XSD class diagrams) are vector PDFs the size
+            # of the drawing (mmdc --pdfFit) in 12 pt text: at 75 % (9 pt
+            # text), up to the full text width and most of the page height,
+            # so that wide and tall diagrams keep a readable text size.
+            share = 0.8 if len(visuals) <= 1 else 0.8 / len(visuals)
         setup = r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % share
+        if mermaid_only:
+            setup += r"\def\atbdfigscale{%s}\def\atbdfigmaxwidth{\linewidth}" % _MERMAID_SCALE
         if caption is not None:
             number, inlines = caption
             if number:
