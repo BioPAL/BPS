@@ -32,8 +32,8 @@
 \providecommand\atbdtablefont{\linespread{1}\fontsize{9}{10.5}\selectfont}
 % A row taller than a page is set as several rows (atbd_latex_content.py):
 % \atbdrowcontinues in a row drops the rule under it, so that the next row
-% reads as its continuation (8 pt less of cell padding) and the page can
-% break between them.
+% reads as its continuation and the page can break between them (no
+% negative space: the next cell background would hide the last line).
 % \atbdrowcontinuation (longtable.tex.jinja) wraps the \sphinxhline of the
 % table style.
 \newif\ifatbd@rowcont
@@ -41,7 +41,7 @@
 \newcommand\atbdrowcontinuation{%
   \let\atbd@hline\sphinxhline
   \def\sphinxhline{\ifatbd@rowcont
-    \noalign{\global\atbd@rowcontfalse\vskip-8pt}%
+    \noalign{\global\atbd@rowcontfalse}%
     \else\atbd@hline\fi}}
 % "Issue x – BPS vY" (no BPS part when the version is unknown).
 \newcommand\atbdissueline{Issue \atbdissue

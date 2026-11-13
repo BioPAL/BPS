@@ -14,7 +14,7 @@ non-HTML builder drops. For non-HTML builders only, this post-transform:
 * makes every table a ``longtable`` (page breaks, repeated header) as wide as
   the headings, with explicit column widths so it wraps inside the margins,
   and gives a body to header-only tables (the LaTeX writer requires one);
-* sets a table row taller than about half a page as several rows, so that
+* sets a table row taller than most of a page as several rows, so that
   the page can break inside it (LaTeX cannot break a longtable row);
 * drops the "Acronyms" titles of the web dropdowns and the empty References
   chapter (its bibliography has no entry: the documents list their
@@ -481,8 +481,8 @@ def _preceding_targets(node: nodes.Element) -> list[nodes.target]:
 # without rule between them (``\atbdrowcontinues``), so that the page can
 # break between them.
 
-_ROW_SPLIT_LINES = 30  # estimated lines of the tallest cell before splitting
-_ROW_CHUNK_LINES = 15  # estimated lines of each row the cell is split into
+_ROW_SPLIT_LINES = 60  # estimated lines of the tallest cell before splitting
+_ROW_CHUNK_LINES = 24  # estimated lines of each row the cell is split into
 
 
 def _column_chars(tgroup: nodes.tgroup, budget: float) -> list[float]:
@@ -561,7 +561,7 @@ def _cell_chunks(entry: nodes.entry, width: float, chunk: int) -> list[list[node
 
 
 def _split_tall_rows(table: nodes.table, budget: float) -> int:
-    """Set each row taller than about half a page as several rows; return
+    """Set each row taller than most of a page as several rows; return
     the number of rows split."""
     split = 0
     for tgroup in table.findall(nodes.tgroup):
