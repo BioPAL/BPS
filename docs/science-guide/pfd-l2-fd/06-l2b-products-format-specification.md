@@ -421,8 +421,8 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
-| MDS à FD à `compressionFactor` MDS à `probabilityOfChange` à `compressionFactor` MDS àCFM à `compressionFactor` MDS à HeatMap à `compressionFactor` MDS à `acquisitionIdImage` à `compressionFactor` | ZSTD algorithm compression factor for all the MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS à `probabilityOfChange` à `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → FD → `compressionFactor` MDS → `probabilityOfChange` → `compressionFactor` MDS →CFM → `compressionFactor` MDS → HeatMap → `compressionFactor` MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factor for all the MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → `probabilityOfChange` → `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::

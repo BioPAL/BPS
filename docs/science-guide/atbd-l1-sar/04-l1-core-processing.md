@@ -498,12 +498,12 @@ In addition to the internal delays coming from the internal calibration measurem
 
 In case a PARC is present in the scene, a dedicated processing mode can be activated at configuration level allowing L1 Processor to process data in the following way:
 
-1. a first time considering the whole data and processing it in the “standard” way in this case the whole data results properly focused, while PARC appears (partially) unfocused;
+1. a first time considering the whole data and processing it in the “standard” way → in this case the whole data results properly focused, while PARC appears (partially) unfocused;
 2. then, for each of the PARC four scattering responses (Gt1, Gt2, X and Y):
     - a. cutting just a portion of data around PARC (cut is performed after L1 Pre-Processing, i.e., on extracted raw data, and dimensions are configurable);
     - b. processing it applying the scattering response corresponding delay through an opportune update of the data range start time (note: all the parameters estimated on data, e.g., Doppler Centroid, ionosphere height, …, are re-estimated over the selected data portion. A discussion is on-going at BIOMASS L1 GPP level to confirm or update this approach).
 
-in this case the whole data results (partially) unfocused, while PARC appears properly focused.
+→ in this case the whole data results (partially) unfocused, while PARC appears properly focused.
 
 In this way a total of 1+4 L1 products are generated.
 

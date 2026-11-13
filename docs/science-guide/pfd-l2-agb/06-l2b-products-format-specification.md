@@ -738,8 +738,8 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
-| MDS à AGB à `compressionFactor` MDS à AGBstandardDeviation à `compressionFactor` MDS àBPS\_FNF à `compressionFactor` MDS à HeatMap à `compressionFactor` MDS à `acquisitionIdImage` à `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS à AGB à `MAX_Z_ERROR` MDS à AGBstandardDeviation à `MAX_Z_ERROR` MDS à HeatMap à `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → AGB → `compressionFactor` MDS → AGBstandardDeviation → `compressionFactor` MDS →`BPS_FNF` → `compressionFactor` MDS → HeatMap → `compressionFactor` MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → AGB → `MAX_Z_ERROR` MDS → AGBstandardDeviation → `MAX_Z_ERROR` MDS → HeatMap → `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). Zero means loss-less compression. | `xsd:float` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::

@@ -98,7 +98,7 @@ This page is the web-rendered version of `BIO-BPS-AGBPFD-ARE-010257` issue **3.5
 | 2025-04-30 | 3.2.1 | Post-FAT3 issue of the document BPS-693: 4.3.2.1 Local Incidence Angle variable name renamed to localIncidenceAngle BPS-FTO-BATCH4: updated L2B AGB, {sec}`6.3.1`, main annotation xml with new \<product\> element fields (contributingTiles, calABcoveragePerTile, GNcoveragePerTile) BPS-680: {sec}`4.3.2`, added units to local incidence angle LUT variable and fixed units typo in LUT latitude longitude | Paolo Mazzucchelli Emanuele Giorgi |
 | 2025-11-28 | 3.3.0 | Post-launch issue of the document (associated to BPS V4.2.0) Added Overlay ADS | Paolo Mazzucchelli Emanuele Giorgi |
 | 2026-03-13 | 3.4.0 | Post-launch issue of the document (associated to BPS V4.4.0) Updated staQualityParametersType Added polarisationCombinationMethod to generalConfigurationParametersType Removed old, solved comments | Paolo Mazzucchelli Emanuele Giorgi |
-| 2026-11-06 | 3.5.0 | Post-launch issue of the document (associated to BPS V4.5.0) 4.3.1. Main ADS: Added xsd schemaVersion attribute removed computeGNPowerFlag (always true now) compressionOptions: added geometricLUTs element 4.3.2. Look-Up Tables (LUT) ADS: Added xsd schemaVersion attribute fixed local incidence angle units (raddeg) added all the geometric LUTs | Paolo Mazzucchelli Emanuele Giorgi |
+| 2026-11-06 | 3.5.0 | Post-launch issue of the document (associated to BPS V4.5.0) 4.3.1. Main ADS: Added xsd schemaVersion attribute removed computeGNPowerFlag (always true now) compressionOptions: added geometricLUTs element 4.3.2. Look-Up Tables (LUT) ADS: Added xsd schemaVersion attribute fixed local incidence angle units (rad→deg) added all the geometric LUTs | Paolo Mazzucchelli Emanuele Giorgi |
 :::
 
 ---

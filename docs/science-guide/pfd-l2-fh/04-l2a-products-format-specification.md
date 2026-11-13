@@ -1189,11 +1189,11 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
-| MDS àFH à `compressionFactor` MDS àQualityà `compressionFactor` | ZSTD algorithm compression factor for both FH and quality images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS à FH à `MAX_Z_ERROR` MDS à Qualityà `MAX_Z_ERROR` | For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
-| ADS àFNF à `compressionFactor` | ZLIB algorithm compression factor for the FNF ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS à GeometricLuts à `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS à GeometricLuts à least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
+| MDS →FH → `compressionFactor` MDS →Quality→ `compressionFactor` | ZSTD algorithm compression factor for both FH and quality images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → FH → `MAX_Z_ERROR` MDS → Quality→ `MAX_Z_ERROR` | For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
+| ADS →FNF → `compressionFactor` | ZLIB algorithm compression factor for the FNF ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS → GeometricLuts → `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS → GeometricLuts → least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 | `ADS_blockSize` | ADS NetCDF chunking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 

@@ -1190,14 +1190,14 @@ classDiagram
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
-| MDS à `probabilityOfChange` à `compressionFactor` | `LERC_ZSTD` algorithm compression factor for the probability of change image MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS à `probabilityOfChange` à `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
-| MDS à FD à `compressionFactor` and MDS à CFM à `compressionFactor` | ZSTD algorithm compression factor for the FD and CFM binary images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS àFNF à `compressionFactor` and ADS ànumberOfAverages à `compressionFactor` | ZLIB algorithm compression factor for the FNF and `numberOfAverages` ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS à ACM à `compressionFactor` | ZLIB algorithm compression factor valid for all the ACM ADS LUT layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS à ACM à least\_significant\_digit | For all the layers of ACM LUT ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. See 4.3.2. | `xsd:unsignedByte` | 1 |
-| ADS à GeometricLuts à `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS à GeometricLuts à least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
+| MDS → `probabilityOfChange` → `compressionFactor` | `LERC_ZSTD` algorithm compression factor for the probability of change image MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → `probabilityOfChange` → `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → FD → `compressionFactor` and MDS → CFM → `compressionFactor` | ZSTD algorithm compression factor for the FD and CFM binary images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS →FNF → `compressionFactor` and ADS →`numberOfAverages` → `compressionFactor` | ZLIB algorithm compression factor for the FNF and `numberOfAverages` ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS → ACM → `compressionFactor` | ZLIB algorithm compression factor valid for all the ACM ADS LUT layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS → ACM → least\_significant\_digit | For all the layers of ACM LUT ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. See 4.3.2. | `xsd:unsignedByte` | 1 |
+| ADS → GeometricLuts → `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS → GeometricLuts → least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 | `ADS_blockSize` | ADS NetCDF chunking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
