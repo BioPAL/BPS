@@ -42,6 +42,15 @@ variables:
     - set --; for dependency in ${LOCAL_DEPENDENCIES:-}; do set -- "$@" -e "$dependency"; done; if [ "$#" -gt 0 ]; then conda run --name $CONDA_ENV python -m pip install "$@"; fi
     - conda run --name $CONDA_ENV python -m pip install -e ".[${PACKAGE_EXTRAS}]"
 
+.pyrefly:
+  stage: analysis
+  needs: []
+  extends: .install_subpackage
+  variables:
+    PACKAGE_EXTRAS: dev
+  script:
+    - conda run --name $CONDA_ENV python -m pyrefly check
+
 .fawlty_deps:
   stage: analysis
   needs: []

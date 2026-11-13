@@ -42,6 +42,23 @@ jobs:
           python -m ruff format --check .
           python -m ruff check .
 
+  pyrefly:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install-subpackage
+        with:
+          subproject: ${{ inputs.subproject }}
+          conda-dependencies: ${{ inputs.conda-dependencies }}
+          local-dependencies: ${{ inputs.local-dependencies }}
+          package-extras: dev
+      - name: Check types
+        working-directory: ${{ inputs.subproject }}
+        run: python -m pyrefly check
+
   fawlty-deps:
     runs-on: ubuntu-latest
     steps:
