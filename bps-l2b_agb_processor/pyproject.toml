@@ -34,7 +34,7 @@ classifiers = [
 bps_l2b_agb_processor = "bps.l2b_agb_processor.__main__:main"
 
 [project.optional-dependencies]
-dev = ["nox", "ruff==0.17.4"]
+dev = ["nox", "ruff==0.17.4", "pyrefly==1.4.1"]
 test = ["unittest-xml-reporting", "coverage"]
 
 [build-system]
@@ -49,3 +49,7 @@ only-include = ["bps"]
 
 [tool.hatch.build.targets.wheel]
 only-include = ["bps"]
+
+[tool.pyrefly]
+extends = "../pyrefly.toml"
+project-includes = ["**/*.py*"]

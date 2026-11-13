@@ -18,6 +18,9 @@ variables:
 ruff:
   extends: .ruff
 
+pyrefly:
+  extends: .pyrefly
+
 fawlty_deps:
   extends: .fawlty_deps
 
