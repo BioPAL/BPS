@@ -15,9 +15,7 @@ TaskTable_and_PMM_xml_validation:
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends libxml2-utils
   script:
-    - cd $SUBPROJECT
-    - python3.14 -m pip install nox
-    - python3.14 -m nox -s validate_task_tables validate_product_metadata_mapping
+    - python3.14 scripts/validate_task_tables.py
 
 deploy:
   stage: deploy

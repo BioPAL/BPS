@@ -18,8 +18,7 @@ variables:
   image: python:3.14-slim-bookworm
   script:
     - cd $SUBPROJECT
-    - python3.14 -m pip install nox
-    - python3.14 -m nox -s check_xsd
+    - python3.14 ../scripts/xsd_alignment.py check "$SUBPROJECT"
 
 .ruff:
   stage: analysis

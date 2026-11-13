@@ -21,4 +21,3 @@ line-ending = "lf"
 "test/*.py" = ["CPY"]
 "*/test/*.py" = ["CPY"]
 "*/tests/*.py" = ["CPY"]
-"noxfile.py" = ["CPY"]
