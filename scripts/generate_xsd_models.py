@@ -5,20 +5,18 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""
-XSD models generation helper module
------------------------------------
-"""
+"""Generate Python models from the configured XSD files."""
 
+import argparse
 import ast
 import contextlib
 import os
+import subprocess
+import sys
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-
-import nox
 
 LICENSE_HEADER = """# Project: BIOMASS Processing Suite (BPS)
 #
@@ -29,11 +27,7 @@ LICENSE_HEADER = """# Project: BIOMASS Processing Suite (BPS)
 
 """
 
-# NOTE: To (re)generate the BrickSAR's XSD models, uncomment relevant line
-# below:
-#
-#    # XSD_FILES += XSD_FILES_BRICKSAR
-#
+ROOT = Path(__file__).resolve().parent.parent
 
 
 @dataclass
@@ -53,7 +47,7 @@ class XSDInfo:
     module_docstring: str = field(init=False)
 
     def __post_init__(self):
-        self.namespace_base_dir = Path(f"bps-{self.namespace}").absolute()
+        self.namespace_base_dir = ROOT / f"bps-{self.namespace}"
         self.package_dir = self.namespace_base_dir.joinpath("bps", self.namespace, "io", *self.subpackage.split("."))
         self.models_file = self.package_dir.joinpath("models.py")
         self.init_file = self.package_dir.joinpath("__init__.py")
@@ -62,7 +56,7 @@ class XSDInfo:
         self.module_docstring = '"""\n' + self.description + "\n" + len(self.description) * "-" + '\n"""\n'
 
 
-XSD_SOURCE_DIR = Path("xsd").absolute()
+XSD_SOURCE_DIR = ROOT / "xsd"
 BRICKSAR_XSD = XSD_SOURCE_DIR.joinpath("bricksar-xsd")
 BIOMASS_XSD = XSD_SOURCE_DIR.joinpath("biomass-xsd")
 ANNOTATION_XSD = BIOMASS_XSD.joinpath("annotation")
@@ -330,8 +324,6 @@ XSD_FILES_BIOMASS += XSD_AUX_INS
 
 XSD_FILES: list[XSDInfo] = []
 XSD_FILES += XSD_FILES_BIOMASS
-# XSD_FILES += XSD_FILES_BRICKSAR
-# XSD_FILES += XSD_FILES_ICD
 for version in VERSIONS:
     XSD_FILES += XSD_ANNOTATION[version]
 
@@ -371,19 +363,24 @@ def exclude(xsd_files: list[XSDInfo], subpackages: set[str]) -> list[XSDInfo]:
     return [xsd_file for xsd_file in xsd_files if xsd_file.subpackage not in subpackages]
 
 
-def generate_xsd_models(session: nox.Session):
-    """XSD Models generation core function"""
+def generate_xsd_models() -> None:
+    """Generate XSD models; requires xsdata[cli] and ruff in the active environment."""
     for xsd_file in XSD_FILES:
         with contextlib.chdir(xsd_file.namespace_base_dir):
-            command = (
-                "xsdata generate"
-                + f" --package {xsd_file.package}"
-                + " --structure-style single-package"
-                + f" --config {XSDATA_CONFIG_FILE}"
-                + f" {xsd_file.xsd_path}"
+            subprocess.run(
+                [
+                    "xsdata",
+                    "generate",
+                    "--package",
+                    xsd_file.package,
+                    "--structure-style",
+                    "single-package",
+                    "--config",
+                    str(XSDATA_CONFIG_FILE),
+                    str(xsd_file.xsd_path),
+                ],
+                check=True,
             )
-
-            session.run(*command.split())
 
         # BPS is a namespace: it should not contain __init__.py, but xsdata generates it
         extra_init_file = xsd_file.namespace_base_dir.joinpath("bps", "__init__.py")
@@ -418,8 +415,8 @@ def generate_xsd_models(session: nox.Session):
     files = [str(xsd_file.models_file) for xsd_file in XSD_FILES]
     files += [str(xsd_file.init_file) for xsd_file in XSD_FILES]
 
-    session.run("python", "-m", "ruff", "format", *files)
-    session.run("python", "-m", "ruff", "check", *files, "--select", "I", "--fix")
+    subprocess.run([sys.executable, "-m", "ruff", "format", *files], check=True)
+    subprocess.run([sys.executable, "-m", "ruff", "check", *files, "--select", "I", "--fix"], check=True)
 
 
 def index_from_right(input_list: list, value: Any) -> int:
@@ -462,7 +459,7 @@ def move_definitions_to_common_file(common_module_file, common_module_init_file,
     module_classes = get_classes(module_ast)
 
     module_classes_to_be_moved = filter(
-        lambda element: str(element.name).lower() in class_to_move and element.name not in common_classes_names,
+        lambda element: element.name.lower() in class_to_move and element.name not in common_classes_names,
         module_classes,
     )
 
@@ -551,3 +548,16 @@ def restore_original_formatting(module: str) -> str:
         module = module.replace(*replace_item)
 
     return module
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate Python models from the configured XSD files.")
+    parser.add_argument("--bs", action="store_true", default=False, help="Include BrickSAR XSD models")
+    parser.add_argument("--icd", action="store_true", default=False, help="Include ICD XSD models")
+    parser.add_argument("--all", action="store_true", default=False, help="Include both BrickSAR and ICD XSD models")
+    args = parser.parse_args()
+    if args.bs or args.all:
+        XSD_FILES += XSD_FILES_BRICKSAR
+    if args.icd or args.all:
+        XSD_FILES += XSD_FILES_ICD
+    generate_xsd_models()
