@@ -1,0 +1,34 @@
+name: bps-common CI
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "bps-v*"
+    paths:
+      - "bps-common/**"
+      - ".github/workflows/bps-common.yml"
+      - ".github/workflows/python-package-reusable.yml"
+      - ".github/actions/install-subpackage/action.yml"
+      - "ruff.toml"
+      - "scripts/fawltydeps.toml"
+  pull_request:
+    paths:
+      - "bps-common/**"
+      - ".github/workflows/bps-common.yml"
+      - ".github/workflows/python-package-reusable.yml"
+      - ".github/actions/install-subpackage/action.yml"
+      - "ruff.toml"
+      - "scripts/fawltydeps.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/python-package-reusable.yml
+    with:
+      subproject: bps-common
+      source-path: bps/common
