@@ -2,6 +2,14 @@
 {# SPDX-License-Identifier: Apache-2.0 #}
 {% if atbd_sidebar_toc %}
 <nav class="atbd-sidebar-toc" aria-label="{{ _('Table of contents') }}">
+  {%- if science_guide_prev_doc %}
+  <a class="atbd-sidebar-toc__prev-doc" href="{{ pathto(science_guide_prev_doc.docname) }}"
+     rel="prev" title="{{ _('Previous document') }}: {{ science_guide_prev_doc.title }}">
+    <i class="fa-solid fa-arrow-left fa-fw" aria-hidden="true"></i>
+    <span class="atbd-sidebar-toc__prev-doc-label">{{ _('Previous document') }}</span>
+    <span class="atbd-sidebar-toc__prev-doc-title">{{ science_guide_prev_doc.title }}</span>
+  </a>
+  {%- endif %}
   <a class="atbd-sidebar-toc__home{% if atbd_sidebar_current == atbd_index_docname %} atbd-sidebar-toc__home--current{% endif %}"
      href="{{ pathto(atbd_index_docname) }}">
     {{ atbd_index_title }}

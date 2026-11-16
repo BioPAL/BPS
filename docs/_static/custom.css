@@ -604,6 +604,34 @@ h3 .doc-icon {
   margin-bottom: 1.25rem;
 }
 
+.atbd-sidebar-toc__prev-doc {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.35rem;
+  margin: 0 0 0.75rem;
+  padding: 0 0 0.6rem;
+  border-bottom: 1px solid var(--pst-color-border);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--pst-color-text-muted);
+  text-decoration: none;
+}
+
+.atbd-sidebar-toc__prev-doc i {
+  grid-row: span 2;
+  align-self: center;
+}
+
+.atbd-sidebar-toc__prev-doc-title {
+  grid-column: 2;
+  font-weight: 600;
+  color: var(--pst-color-link);
+}
+
+.atbd-sidebar-toc__prev-doc:hover .atbd-sidebar-toc__prev-doc-title {
+  text-decoration: underline;
+}
+
 .atbd-sidebar-toc__home {
   display: block;
   margin: 0 0 0.75rem;

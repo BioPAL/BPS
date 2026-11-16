@@ -146,9 +146,18 @@ def _inject_science_guide_nav(
     context: dict[str, Any],
     doctree: Any,
 ) -> None:
-    if pagename != SCIENCE_GUIDE_HUB:
+    if pagename == SCIENCE_GUIDE_HUB:
+        context["science_guide_atbds"] = science_guide_docs(app.env)
         return
-    context["science_guide_atbds"] = science_guide_docs(app.env)
+    parts = pagename.split("/")
+    if len(parts) != 3 or parts[0] != "science-guide":
+        return
+    # Link to the previous document of the hub list (same order as the hub).
+    docs = science_guide_docs(app.env)
+    index_doc = f"science-guide/{parts[1]}/index"
+    position = next((i for i, d in enumerate(docs) if d["docname"] == index_doc), None)
+    if position:
+        context["science_guide_prev_doc"] = docs[position - 1]
 
 
 def setup(app: Any) -> dict[str, Any]:
