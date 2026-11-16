@@ -1,3 +1,9 @@
+<div align="center">
+
+[![BPS documentation](docs/_static/readme-banner.png)](https://www.biomass-disc.info/docs/)
+
+</div>
+
 # BIOMASS Processing Suite (BPS)
 
 The BIOMASS Product Algorithm Laboratory hosts official tools for processing and analysing ESA\'s BIOMASS mission data.
