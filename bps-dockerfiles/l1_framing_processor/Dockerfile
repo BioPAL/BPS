@@ -5,7 +5,7 @@ COPY pkgs /tmp/python-packages
 ENV LD_LIBRARY_PATH=/opt/conda_folder/envs/env/lib/bps-l1-framing-processor-libs
 
 USER root
-RUN microdnf install libgomp && \
+RUN microdnf install -y libgomp && \
     microdnf clean all && \
     bash -c "conda index /tmp/python-packages && \
     conda install -y --strict-channel-priority bps-l1_framing_processor && \
