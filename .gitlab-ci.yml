@@ -466,14 +466,20 @@ stack_win10_py314:
   extends:
     - .tags_rocky8_conda
     - .full_build
+  variables:
+    BPS_CHANNEL: "./bps_channel"
   script:
-    - conda create --name test python=${PYTHON} conda-build
+    - conda create --name test python=${PYTHON} conda-index
     - conda activate test
-    - python -m conda_index ./local_channel
+    - rm -rf $BPS_CHANNEL
+    - mkdir $BPS_CHANNEL
+    - cp -R ./local_channel/. ./$BPS_CHANNEL/
+    - conda index $BPS_CHANNEL
     - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
     - conda config --prepend channels conda-forge
     - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
-    - conda config --prepend channels ${PWD}/local_channel
+    - conda config --prepend channels ${PWD}/$BPS_CHANNEL
+    - conda config --show channels
     - conda install --strict-channel-priority bps-l1_framing_processor bps-l1_processor bps-stack_processor bps-l2a_processor bps-l2b_fd_processor bps-l2b_fh_processor bps-l2b_agb_processor
     - conda list
     - python -m pip install -r test/requirements.txt
