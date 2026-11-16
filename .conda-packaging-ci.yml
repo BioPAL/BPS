@@ -1,14 +1,19 @@
-.conda_build_setup:
-  extends:
-    - .tags_rocky8_conda
+.conda_build_common_setup:
+  image: condaforge/miniforge3
   before_script:
+    - apt-get update && apt-get install -y curl
     - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
-    - python -m pip install build
     - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
     - conda config --prepend channels conda-forge
     - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
     - conda config --prepend channels ${PWD}/local_channel
+    - conda install -y conda-build
+
+.conda_build_setup:
+  extends:
+    - .conda_build_common_setup
   script:
+    - conda install -y python-build
     - cd ${BPSPROJECT}
     - python -m build --sdist
     - conda-build recipe --output-folder conda_build_dir
@@ -32,16 +37,12 @@
 
 .conda_build_binaries_setup:
   extends:
-    - .tags_rocky8_conda
+    - .conda_build_common_setup
   before_script:
-    - mkdir -p ${BPSPROJECT}/dist
-    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
-    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
-    - conda config --prepend channels conda-forge
-    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
-    - conda config --prepend channels ${PWD}/local_channel
+    - !reference [.conda_build_common_setup, before_script]
   script:
     - cd ${BPSPROJECT}
+    - mkdir -p dist
     - conda-build recipe --output-folder conda_build_dir
     - ls conda_build_dir/*/*.conda
     - |
