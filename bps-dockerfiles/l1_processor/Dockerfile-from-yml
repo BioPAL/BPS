@@ -4,7 +4,7 @@ COPY pkgs /tmp/python-packages
 COPY environment.yml /tmp/environment.yml
 
 USER root
-RUN bash -c "conda index --verbose /tmp/python-packages && \
+RUN bash -c "conda index /tmp/python-packages && \
     conda env update --file /tmp/environment.yml && \
     conda clean -afy" && \
     rm -fr /tmp/python-packages && \

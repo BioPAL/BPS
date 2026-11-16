@@ -7,7 +7,7 @@ ENV NUMBA_CACHE_DIR "/tmp/numba"
 USER root
 RUN mkdir /tmp/numba && \
     chmod 777 /tmp/numba && \
-    bash -c "conda index --verbose /tmp/python-packages && \
+    bash -c "conda index /tmp/python-packages && \
     conda install -y --strict-channel-priority bps-l2a_processor && \
     conda clean -afy" && \
     rm -rf /tmp/numba/* && \

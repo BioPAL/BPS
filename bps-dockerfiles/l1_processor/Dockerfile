@@ -3,7 +3,7 @@ FROM bps-prereq:latest
 COPY pkgs /tmp/python-packages
 
 USER root
-RUN bash -c "conda index --verbose /tmp/python-packages && \
+RUN bash -c "conda index /tmp/python-packages && \
     conda install -y --strict-channel-priority bps-l1_processor && \
     conda clean -afy" && \
     rm -fr /tmp/python-packages && \

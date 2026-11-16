@@ -16,7 +16,7 @@
 2. Initialize a local conda channel
 
     ```sh
-    mkdir -p local_stack_channel && cp -r ./pkgs/* local_stack_channel && conda index --verbose ${PWD}/local_stack_channel
+    mkdir -p local_stack_channel && cp -r ./pkgs/* local_stack_channel && conda index ${PWD}/local_stack_channel
     ```
 
 3. Configure conda channels priorities

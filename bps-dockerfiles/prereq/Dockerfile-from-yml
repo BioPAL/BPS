@@ -13,7 +13,7 @@ RUN cd /tmp && \
     chmod +x Mambaforge.sh && \
     ./Mambaforge.sh -b -p /opt/conda_folder && \
     /opt/conda_folder/bin/conda install -y -c conda-forge conda-build && \
-    /opt/conda_folder/bin/conda index --verbose /tmp/python-packages && \
+    /opt/conda_folder/bin/conda index /tmp/python-packages && \
     /opt/conda_folder/bin/conda config --prepend channels conda-forge && \
     /opt/conda_folder/bin/conda config --prepend channels /tmp/python-packages && \
     /opt/conda_folder/bin/conda env create -f /tmp/environment.yml && \

@@ -12,7 +12,7 @@ RUN cd /tmp && \
     chmod +x Miniforge3.sh && \
     ./Miniforge3.sh -b -p /opt/conda_folder && \
     /opt/conda_folder/bin/conda install -y -c conda-forge conda-index && \
-    /opt/conda_folder/bin/conda index --verbose /tmp/python-packages && \
+    /opt/conda_folder/bin/conda index /tmp/python-packages && \
     /opt/conda_folder/bin/conda config --prepend channels conda-forge && \
     /opt/conda_folder/bin/conda config --prepend channels /tmp/python-packages && \
     /opt/conda_folder/bin/conda create -n env -y python=3.14 bps-common bps-transcoder && \

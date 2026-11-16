@@ -2,7 +2,7 @@
   image: condaforge/miniforge3
   before_script:
     - apt-get update && apt-get install -y curl
-    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index --verbose ./local_channel
+    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index ./local_channel
     - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
     - conda config --prepend channels conda-forge
     - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
@@ -26,7 +26,7 @@
             cp $file ../local_channel/linux-64
           fi
         done
-    - cd - && python -m conda_index --verbose ./local_channel
+    - cd - && python -m conda_index ./local_channel
   timeout: 20 minutes
   retry: 2
   artifacts:
@@ -54,7 +54,7 @@
             cp $file ../local_channel/linux-64
           fi
         done
-    - cd - && python -m conda_index --verbose ./local_channel
+    - cd - && python -m conda_index ./local_channel
   timeout: 20 minutes
   retry: 2
   artifacts:
