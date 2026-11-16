@@ -69,7 +69,7 @@ jobs:
       - run: python -m pip install FawltyDeps
       - name: Check dependencies
         working-directory: ${{ inputs.subproject }}
-        run: python -m fawltydeps --code bps --detailed --config-file ../scripts/fawltydeps.toml
+        run: python -m fawltydeps --code bps --detailed --config-file ../fawltydeps.toml
 
   unittest-linux:
     if: inputs.run-tests
