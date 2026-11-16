@@ -489,7 +489,7 @@ where $\mathbb{Z}\left\{ s(\tau) \right\}$ represents a function that performs a
 3. Retrieve the location of the maximum:
 
 $$
-\tau_{max,IJ}^{}[m]=maxpos\left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
+\tau_{\max,IJ}^{}[m]=maxpos\left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
 \tag{3.13}
 $$ (eq:atbd-l1-sar-3-13)
 
@@ -633,7 +633,7 @@ $$ (eq:atbd-l1-sar-3-21)
 2. Estimate the sub-pixel position of the maximum in samples through a parabolic interpolation of the peak:
 
 $$
-p_{max,IJ}^{TXP}\mathbb{=Q}\left\{ S_{comp,IJ}^{TXP}(\tau) \right\}
+p_{\max,IJ}^{TXP}\mathbb{=Q}\left\{ S_{comp,IJ}^{TXP}(\tau) \right\}
 \tag{3.22}
 $$ (eq:atbd-l1-sar-3-22)
 
@@ -906,7 +906,7 @@ roll=\tan^{-1} ({-Z2S}_{3,2},\sqrt{{Z2S}_{3,1}^2+{Z2S}_{3,3}^2})
 \tag{3.37}
 \end{equation}
 
-where ${Z2S}_{i,j}$ is the element in position (i,j) of the 3x3 matrix representing the Zero Doppler to SAR rotation. The sign convention used is: roll à clock-wise rotation around +X axis, pitch à clock-wise rotation around +Y axis, yaw à clock-wise rotation around +Z axis.
+where ${Z2S}_{i,j}$ is the element in position (i,j) of the 3x3 matrix representing the Zero Doppler to SAR rotation. The sign convention used is: roll → clock-wise rotation around +X axis, pitch → clock-wise rotation around +Y axis, yaw → clock-wise rotation around +Z axis.
 
 Being the input quaternions already converted from ECI to ECEF reference frame, there is no need to use EO CFI to perform these operations.
 

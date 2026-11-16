@@ -2,8 +2,8 @@
  "doc": "science-guide/pfd-l2-fd",
  "title": "BIOMASS Forest Disturbance Products Format Specification",
  "short_title": "L2 FD PFD",
- "doc_code": "BIO-BPS-FD-PFD-ARE-010258",
- "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FD_PFD_v3_4_0.pdf",
+ "doc_code": "BIO-BPS-FDPFD-ARE-010258",
+ "pdf_url": "",
  "targets": {
   "ad:1": {
    "file": "01-introduction",

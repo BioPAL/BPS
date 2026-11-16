@@ -9,15 +9,15 @@
 Pipeline metadata (not rendered):
 title: BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document
 doc_code: BIO-BPS-L1-SAR-ATBD-ARE-010165
-version: 1.2.4
-date: 27/03/2026
+version: 1.2.5
+date: 06/11/2026
 family: atbd
 license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-05'
-source_sha256: b84379a9befde0623f6bd537aced849b4e2118871134a55c90065fe755287c93
+conversion_date: '2026-11-13'
+source_sha256: dba862f0fc5d16c9a3ecbc4d8c619e0c3a88754dda5c36a3e3dbb742dcb41f90
 -->
 
 # BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document
@@ -28,13 +28,12 @@ source_sha256: b84379a9befde0623f6bd537aced849b4e2118871134a55c90065fe755287c93
 :class: warning
 
 This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_SAR_ATBD_v1_2_4.pdf)
 :::
 
 :::{admonition} Authoritative document
 :class: tip
 
-This page is the web-rendered version of `BIO-BPS-L1-SAR-ATBD-ARE-010165` issue **1.2.4** dated **27 March 2026**.
+This page is the web-rendered version of `BIO-BPS-L1-SAR-ATBD-ARE-010165` issue **1.2.5** dated **06 November 2026**.
 :::
 
 :::{dropdown} Document information
@@ -44,8 +43,8 @@ This page is the web-rendered version of `BIO-BPS-L1-SAR-ATBD-ARE-010165` issue 
 |---|---|
 | Title | BPS L1 SAR ATBD - Algorithms Theoretical Baseline Document |
 | External reference | `BIO-BPS-L1-SAR-ATBD-ARE-010165` |
-| Issue | 1.2.4 |
-| Date | 27 March 2026 |
+| Issue | 1.2.5 |
+| Date | 06 November 2026 |
 | Pages | 162 (authoritative PDF) |
 
 **Recipients**
@@ -99,6 +98,7 @@ This page is the web-rendered version of `BIO-BPS-L1-SAR-ATBD-ARE-010165` issue 
 | 2025-07-23 | 1.2.2 | Post-launch issue of the document (associated to BPS V4.0.0) Removed unused configuration parameters ({sec}`4.6`) Added possibility to make blocks size and overlap configurable ({sec}`4.10.1`) | Riccardo Piantanida |
 | 2025-11-28 | 1.2.3 | Post-launch issue of the document (associated to BPS V4.2.0) Added details on new processing options for RFI mitigation step and on annotated RFI statistics ({sec}`4.1`) Added details on range delays corrected during range compression step ({sec}`4.2.2`) Added clarifications on Doppler Centroid combined method fallback and polarization management strategies ({sec}`4.3.2`) Added section on management of geomagnetic equator crossing during ionospheric calibration step ({sec}`4.10.3.3`) List of open points updated (removing closed ones) ({sec}`8`) | Riccardo Piantanida |
 | 2026-03-27 | 1.2.4 | Post-launch issue of the document (associated to BPS V4.4.0) Added detailed formulas for annotated RFI statistics ({sec}`4.1`) Added in/out-of-band power ratio computation step ({sec}`3.2.5`) | Riccardo Piantanida |
+| 2025-11-06 | 1.2.5 | Post-launch issue of the document (associated to BPS V4.5.0) Added minor clarifications to FR filtering implementation ({sec}`4.10.4`) | Riccardo Piantanida |
 :::
 
 ---

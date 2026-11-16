@@ -16,11 +16,13 @@ from typing import Any
 
 from docutils import nodes
 from sphinx.util.docutils import SphinxDirective
+from sphinx.util.osutil import relative_uri
 
 ATBD_ROOT = "science-guide/atbd-l2-agb"
-# Web export built by `make atbd-pdf` → docs/_static/pdf/<stem>.pdf
+# Web export built by `make atbd-pdf ATBD=<folder>` (or `make atbd-pdf-all`)
+# → docs/_static/pdf/<folder>.pdf
 ATBD_PDF_FILENAME = "atbd-l2-agb.pdf"
-ATBD_PDF_BUILD_CMD = "make atbd-pdf"
+ATBD_PDF_BUILD_CMD = "make atbd-pdf ATBD={folder}"
 ATBD_CHAPTERS = (
     f"{ATBD_ROOT}/01-introduction",
     f"{ATBD_ROOT}/02-bps-agb-overview",
@@ -112,6 +114,15 @@ def _atbd_pdf_path(app: Any, root: str = ATBD_ROOT) -> Path:
     return Path(app.srcdir) / "_static" / "pdf" / _pdf_filename(root)
 
 
+def _static_pdf_uri(builder: Any, docname: str, pdf_name: str) -> str:
+    """Relative link from ``docname`` to ``_static/pdf/<pdf_name>``.
+
+    ``builder.get_relative_uri`` takes its target for a docname and adds the
+    HTML suffix (``x.pdf.html``); the PDF is a static file.
+    """
+    return relative_uri(builder.get_target_uri(docname), f"_static/pdf/{pdf_name}")
+
+
 class atbd_pdf_export(nodes.General, nodes.Element):
     """Placeholder for the HTML-only PDF download block on the References page."""
 
@@ -128,18 +139,17 @@ class AtbdPdfExportDirective(SphinxDirective):
 def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
     root = _atbd_root(self.builder.current_docname) or ATBD_ROOT
     pdf_name = _pdf_filename(root)
+    build_cmd = ATBD_PDF_BUILD_CMD.format(folder=pdf_name.removesuffix(".pdf"))
     official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
     pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
-        url = self.builder.get_relative_uri(
-            self.builder.current_docname, f"_static/pdf/{pdf_name}"
-        )
+        url = _static_pdf_uri(self.builder, self.builder.current_docname, pdf_name)
         self.body.append(
             '<div class="admonition tip">'
             '<p class="admonition-title">Download web export</p>'
             f'<p><a class="reference download internal" href="{url}" download>'
             f'<i class="fa-solid fa-file-pdf"></i> '
-            "Download this ATBD as PDF</a> "
+            "Download this document as PDF</a> "
             "(generated from the same MyST source as this website).</p>"
             "<p>The "
             '<a class="reference external" '
@@ -153,7 +163,7 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             '<div class="admonition note">'
             '<p class="admonition-title">PDF export</p>'
             f"<p>Build the web-export PDF from the <code>docs/</code> directory with "
-            f"<code>{ATBD_PDF_BUILD_CMD}</code> (requires TeX Live or MacTeX). "
+            f"<code>{build_cmd}</code> (requires TeX Live or MacTeX). "
             f"The file is written to <code>_static/pdf/{pdf_name}</code> "
             "and linked here once generated.</p>"
             "</div>"
@@ -183,12 +193,12 @@ def _inject_atbd_sidebar_toc(
     context["atbd_index_title"] = (
         app.env.titles[index_doc].astext()
         if index_doc in app.env.titles
-        else "Above-Ground Biomass Product ATBD"
+        else _root_meta(app.srcdir, root).get("title", "")
     )
     pdf_path = _atbd_pdf_path(app, root)
     if pdf_path.is_file():
-        context["atbd_pdf_url"] = app.builder.get_relative_uri(
-            pagename, f"_static/pdf/{_pdf_filename(root)}"
+        context["atbd_pdf_url"] = _static_pdf_uri(
+            app.builder, pagename, _pdf_filename(root)
         )
     else:
         context["atbd_pdf_url"] = None

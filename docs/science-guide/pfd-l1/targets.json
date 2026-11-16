@@ -2,8 +2,8 @@
  "doc": "science-guide/pfd-l1",
  "title": "BIOMASS L1a/b/c Products Format Specification",
  "short_title": "L1 PFD",
- "doc_code": "BIO-BPS-L1-PFD-ARE-010076",
- "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_PFD_v1_6_1.pdf",
+ "doc_code": "BIO-BPS-L1PFD-ARE-010076",
+ "pdf_url": "",
  "targets": {
   "ad:1": {
    "file": "01-introduction",

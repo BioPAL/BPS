@@ -9,15 +9,15 @@
 Pipeline metadata (not rendered):
 title: BIOMASS L1a/b/c Products Format Specification
 doc_code: BIO-BPS-L1PFD-ARE-010076
-version: 1.6.1
-date: 02/04/2026
+version: 1.7.0
+date: 06/11/2026
 family: pfd
 license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-05'
-source_sha256: a8e2e4de29cd5f07edc9b2d7d81f48b48ddf4d7668e43509a620ed6dc00324eb
+conversion_date: '2026-11-13'
+source_sha256: 0b1514b320fbf1523ddd4be9eaaa80680f0b4bac9969bfc0c90d41fc6592eed9
 -->
 
 # BIOMASS L1a/b/c Products Format Specification
@@ -28,13 +28,12 @@ source_sha256: a8e2e4de29cd5f07edc9b2d7d81f48b48ddf4d7668e43509a620ed6dc00324eb
 :class: warning
 
 This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_L1_PFD_v1_6_1.pdf)
 :::
 
 :::{admonition} Authoritative document
 :class: tip
 
-This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.6.1** dated **02 April 2026**.
+This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.7.0** dated **06 November 2026**.
 :::
 
 :::{dropdown} Document information
@@ -44,8 +43,8 @@ This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.6.
 |---|---|
 | Title | BIOMASS L1a/b/c Products Format Specification |
 | External reference | `BIO-BPS-L1PFD-ARE-010076` |
-| Issue | 1.6.1 |
-| Date | 02 April 2026 |
+| Issue | 1.7.0 |
+| Date | 06 November 2026 |
 | Pages | 140 (authoritative PDF) |
 
 **Recipients**
@@ -107,6 +106,7 @@ This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.6.
 | 2026-01-23 | 1.5.1 | Post-launch issue of the document (associated to BPS V4.3.0) Updated L1a/b overall product quality index to add geomagnetic equator crossing fallback activation flag ({sec}`4.3.1.13.1`) | Riccardo Piantanida |
 | 2026-03-13 | 1.6.0 | Post-launch issue of the document (associated to BPS V4.4.0) Updated L1a/b product format ({sec}`4`): Foreseen the possibility to have 2 quick-looks for L1a product ({sec}`3`) and updated naming convention ({sec}`3.4`) and description ({sec}`4.3.4`) Added inOutBandPowerRatioList section ({sec}`4.3.1.4`) terrainSlope LUT replaced by rangeTerrainSlope and azimuthTerrainSlope ones ({sec}`4.3.2`) Updated L1c product format ({sec}`6`): Foreseen the possibility to have 2 quick-looks for L1c product ({sec}`5`) and updated naming convention ({sec}`5.3`) Update L1c annotations with Multi-Squint Calibration annotations Deprecate PPR-related annotations from L1c products Deprecate rangeSpectralFilteringFlag from L1c product annotations terrainSlope LUT replaced by rangeTerrainSlope and azimuthTerrainSlope ones ({sec}`4.3.2`) | Riccardo Piantanida Federico Boniardi |
 | 2026-04-02 | 1.6.1 | Post-launch issue of the document (associated to BPS V4.4.1) Updated L1a/b product format ({sec}`4`): Fixed cardinality of dcEstimate and fmRateEstimate ({sec}`4.3.1.8`) Updated L1c product format ({sec}`5`, 6): Fixed list of quick-look files in L1c products ({sec}`5`, 6.3.6) Added coherence and interferogram LUTs ({sec}`5`, 6.3.4) Fixed residual issue in {ref}`Tab. 80 <tab:pfd-l1-80>` and 82 ({sec}`6.3.3.1`, {sec}`6.3.3.4`) | Riccardo Piantanida Federico Boniardi |
+| 2026-11-06 | 1.7.0 | Post-launch issue of the document (associated to BPS V4.5.0) Format version information added to main ADS and LUT ADS ({sec}`4.3.1`, {sec}`4.3.2`, 6.3.3, 6.3.4) Fixed typo in denoising LUT description (LUT are expressed as amplitudes, not power) ({sec}`4.3.2.3`) | Riccardo Piantanida Federico Boniardi |
 :::
 
 ---

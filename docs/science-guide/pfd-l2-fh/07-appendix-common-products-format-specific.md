@@ -16,10 +16,10 @@
 
 The following table summarizes and describes primitive product types used throughout the document.
 
-(tab:pfd-fh-45)=
+(tab:pfd-fh-46)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 45</span><span class="caption-text"> — Primitive product types</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Primitive product types</span></p>
 
 | Name | Description | Base Type | Values |
 |---|---|---|---|
@@ -29,7 +29,7 @@ The following table summarizes and describes primitive product types used throug
 | bps\_fnfType | Enumeration of Forest Mask: CFM from FD processor or FNF. | `xsd:string` | FNF CFM |
 | `verticalProfileOptionType` | Vertical profile choice. | `xsd:string` | default profile |
 | `modelInversionType` | Forest height inversion option | `xsd:string` | single dual |
-| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF ACM Incidence angle [deg] `numberOfAverages` |
+| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF Height [m] Latitude [deg] Longitude [deg] Incidence angle [deg] Elevation angle [deg] Range terrain slope [deg] Azimuth terrain slope [deg] Local Incidence angle [deg] ACM `numberOfAverages` |
 | `missionType` | Enumeration of valid BIOMASS mission names. | `xsd:string` | BIOMASS |
 | `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 S2 S3 |
 | `productType` | Enumeration of valid product types. | `xsd:string` | SCS DGM STA `FH_L2A` `FH_L2B` `FD_L2A` `FD_L2B` `GN_L2A` `AGB_L2B` |
@@ -52,10 +52,10 @@ The following table summarizes and describes primitive product types used throug
 
 The following table summarizes and describes those primitive product types for which attributes have been added with respect to base types.
 
-(tab:pfd-fh-46)=
+(tab:pfd-fh-47)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Primitive product types with custom attributes</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Primitive product types with custom attributes</span></p>
 
 | Name | Description | Base Type | Attributes |
 |---|---|---|---|
@@ -63,10 +63,10 @@ The following table summarizes and describes those primitive product types for w
 
 :::
 
-(tab:pfd-fh-47)=
+(tab:pfd-fh-48)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Common product types (datumType)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Common product types (datumType)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -75,10 +75,10 @@ The following table summarizes and describes those primitive product types for w
 
 :::
 
-(tab:pfd-fh-48)=
+(tab:pfd-fh-49)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Common product types (minMaxNumType )</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Common product types (minMaxNumType )</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -88,10 +88,10 @@ The following table summarizes and describes those primitive product types for w
 
 :::
 
-(tab:pfd-fh-49)=
+(tab:pfd-fh-50)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Common product types (floatArrayWithUnits)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Common product types (floatArrayWithUnits)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -101,10 +101,10 @@ The following table summarizes and describes those primitive product types for w
 
 :::
 
-(tab:pfd-fh-50)=
+(tab:pfd-fh-51)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Common product types (floatWithUnit)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — Common product types (floatWithUnit)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
@@ -113,10 +113,10 @@ The following table summarizes and describes those primitive product types for w
 
 :::
 
-(tab:pfd-fh-51)=
+(tab:pfd-fh-52)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — Common product types (doubleWithUnit)</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 52</span><span class="caption-text"> — Common product types (doubleWithUnit)</span></p>
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|

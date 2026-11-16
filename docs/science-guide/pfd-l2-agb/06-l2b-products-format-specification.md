@@ -86,17 +86,42 @@ This section describes in detail the content of main ADS for L2b products. Diffe
 An overview is provided by the two figures below and by the table which describes all the elements, both for L2b.
 
 (fig:pfd-agb-19)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<style>.xsd-diagram pre.mermaid > svg { width: auto; }</style>
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 440px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class mainAnnotationType {
+    <<complexType>>
+    @schemaVersion : token [1]
+    product : productL2bL3Type [1] ⊞
+    rasterImage : rasterImageType [1] ⊞
+    inputInformation : InputInformationL2bL3ListType [1] ⊞
+    processingParameters : processingParametersL2bType [1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2b-agb-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![main L2b ADS](../../_static/figures/pfd-agb/figure_19_section_6.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 19</span><span class="caption-text"> — main L2b ADS</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-41)=
 :::{div} atbd-table
@@ -120,17 +145,49 @@ This DSR contains the parameters to describe the L2b product.
 An overview is provided by figures and table below.
 
 (fig:pfd-agb-20)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 453px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class productL2bL3Type {
+    <<complexType>>
+    mission : missionType [1]
+    tileID : string [1]
+    basinID : stringListType [1] ⊞
+    productType : productType [1]
+    startTime : timeType [1]
+    stopTime : timeType [1]
+    radarCarrierFrequency : doubleWithUnit [1] @units
+    missionPhaseID : missionPhaseIDType [1]
+    sensorMode : sensorModeType [1]
+    globalCoverageID : unsignedShort [1]
+    contributingTiles : stringListType [0..1] ⊞
+    calABcoveragePerTile : calABcoverageTilesListType [0..1] ⊞
+    GNcoveragePerTile : GNcoverageTilesListType [0..1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![product L2b DSR](../../_static/figures/pfd-agb/figure_20_section_6.3.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 20</span><span class="caption-text"> — product L2b DSR</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-42)=
 :::{div} atbd-table
@@ -289,17 +346,58 @@ This DSR contains, for each of the L2a Product in input to L2b processor:
 An overview is provided by figure below and in the table below for the L2inputs.
 
 (fig:pfd-agb-21)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 1162px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class InputInformationL2bL3ListType {
+    <<complexType>>
+    @count : unsignedInt [1]
+    L2aInputs : «inline» [1..∞]
+  }
+  class InputInformationL2bL3ListType_L2aInputs["InputInformationL2bL3ListType / L2aInputs"] {
+    <<anonymous>>
+    @significanceLevel : float [0..1]
+    all · L2aProductFolderName : string [1]
+    all · L2aProductDate : string [1]
+    all · L1Inputs : InputInformationL2aType [1]
+  }
+  class InputInformationL2aType {
+    productType : productType [1]
+    overallProductsQualityIndex : unsignedByte [1]
+    nominalStack : bool [1]
+    polarisationList : polarisationListType [1] ⊞
+    projection : projectionType [1]
+    footprint : floatArrayWithUnits [1] @count @units
+    verticalWavenumbers : minMaxTypeWithUnit [1] ⊞
+    heightOfAmbiguity : minMaxTypeWithUnit [1] ⊞
+    acquisitionList : acquisitionListType [1] ⊞
+  }
+  InputInformationL2bL3ListType --> InputInformationL2bL3ListType_L2aInputs : L2aInputs
+  InputInformationL2bL3ListType_L2aInputs --> InputInformationL2aType : L1Inputs
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Input information L2b DSR (InputInformationL2bL3ListType)](../../_static/figures/pfd-agb/figure_21_section_6.3.1.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 21</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType)</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-52)=
 :::{div} atbd-table
@@ -332,17 +430,57 @@ An overview is provided by figure below and in the table below for the L2inputs.
 This DSR contains the exhaustive list of L2b processing parameters applied. An overview is provided by figures and table below.
 
 (fig:pfd-agb-22)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 421px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class processingParametersL2bType {
+    <<complexType>>
+    processorVersion : string [1]
+    productGenerationTime : timeType [1]
+    forestMaskingFlag : bool [1]
+    minimumL2aCoverage : float [1]
+    rejectedLandcoverClasses : intArray [1] @count
+    backscatterLimits : backscatterLimitsType [1] ⊞
+    angleLimits : minMaxTypeWithUnit [1] ⊞
+    meanAGBLimits : minMaxTypeWithUnit [1] ⊞
+    stdAGBLimits : minMaxTypeWithUnit [1] ⊞
+    relativeAGBLimits : minMaxType [1] ⊞
+    referenceSelection : referenceSelectionType [1]
+    indexingL : agbIndexingType [1]
+    indexingA : agbIndexingType [1]
+    indexingN : agbIndexingType [1]
+    useConstantN : bool [1]
+    valuesConstantN : floatArray [1] @count
+    regressionSolver : string [1]
+    regressionMatrixSubsamplingFactor : unsignedByte [1]
+    minimumPercentageOfFillableVoids : float [1]
+    estimatedParameters : estimatedParametersL2bAGB [1] ⊞
+    compressionOptions : compressionOptionsL2b [1] ⊞
+  }
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![processing parameters L2b DSR](../../_static/figures/pfd-agb/figure_22_section_6.3.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 22</span><span class="caption-text"> — processing parameters L2b DSR</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-54)=
 :::{div} atbd-table
@@ -387,17 +525,75 @@ This DSR contains the exhaustive list of L2b processing parameters applied. An o
 :::
 
 (fig:pfd-agb-23)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 2059px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class estimatedParametersL2bAGB {
+    <<complexType>>
+    rho : float [1]
+    Polarisation : estimatedParametersPolarisationType [1..3]
+  }
+  class estimatedParametersPolarisationType {
+    @polarisations : string [1]
+    LCM : «inline» [1..∞]
+  }
+  class estimatedParametersPolarisationType_LCM["estimatedParametersPolarisationType / LCM"] {
+    <<anonymous>>
+    @classes : string [1]
+    date : «inline» [1..∞]
+  }
+  class estimatedParametersPolarisationType_LCM_date["estimatedParametersPolarisationType / LCM / date"] {
+    <<anonymous>>
+    @dates : string [1]
+    all · N : «inline» [1]
+    all · A : «inline» [1]
+    all · L : «inline» [1]
+  }
+  class estimatedParametersPolarisationType_LCM_date_N["estimatedParametersPolarisationType / LCM / date / N"] {
+    <<anonymous>>
+    mean : float [1]
+    std : float [1]
+  }
+  class estimatedParametersPolarisationType_LCM_date_A["estimatedParametersPolarisationType / LCM / date / A"] {
+    <<anonymous>>
+    mean : float [1]
+    std : float [1]
+  }
+  class estimatedParametersPolarisationType_LCM_date_L["estimatedParametersPolarisationType / LCM / date / L"] {
+    <<anonymous>>
+    mean : float [1]
+    std : float [1]
+  }
+  estimatedParametersL2bAGB --> estimatedParametersPolarisationType : Polarisation
+  estimatedParametersPolarisationType --> estimatedParametersPolarisationType_LCM : LCM
+  estimatedParametersPolarisationType_LCM --> estimatedParametersPolarisationType_LCM_date : date
+  estimatedParametersPolarisationType_LCM_date --> estimatedParametersPolarisationType_LCM_date_N : N
+  estimatedParametersPolarisationType_LCM_date --> estimatedParametersPolarisationType_LCM_date_A : A
+  estimatedParametersPolarisationType_LCM_date --> estimatedParametersPolarisationType_LCM_date_L : L
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>estimatedParametersL2bAGB</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Processinc parameters L2b DSR (estimatedParametersL2bAGBType)](../../_static/figures/pfd-agb/figure_23_section_6.3.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 23</span><span class="caption-text"> — Processinc parameters L2b DSR (estimatedParametersL2bAGBType)</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-56)=
 :::{div} atbd-table
@@ -466,17 +662,74 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 :::
 
 (fig:pfd-agb-24)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
+<div class="xsd-diagram" style="overflow-x: auto">
+<div style="min-width: 1178px">
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
+classDiagram
+  direction LR
+  class compressionOptionsL2b {
+    <<complexType>>
+    MDS : «inline» [1]
+    MDS_blockSize : unsignedByte [1]
+  }
+  class compressionOptionsL2b_MDS["compressionOptionsL2b / MDS"] {
+    <<anonymous>>
+    AGB : «inline» [1]
+    AGBstandardDeviation : «inline» [1]
+    BPS_FNF : «inline» [1]
+    HeatMap : «inline» [1]
+    acquisitionIdImage : «inline» [1]
+  }
+  class compressionOptionsL2b_MDS_AGB["compressionOptionsL2b / MDS / AGB"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    MAX_Z_ERROR : float [1]
+  }
+  class compressionOptionsL2b_MDS_AGBstandardDeviation["compressionOptionsL2b / MDS / AGBstandardDeviation"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+    MAX_Z_ERROR : float [1]
+  }
+  class compressionOptionsL2b_MDS_BPS_FNF["compressionOptionsL2b / MDS / BPS_FNF"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+  }
+  class compressionOptionsL2b_MDS_HeatMap["compressionOptionsL2b / MDS / HeatMap"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+  }
+  class compressionOptionsL2b_MDS_acquisitionIdImage["compressionOptionsL2b / MDS / acquisitionIdImage"] {
+    <<anonymous>>
+    compressionFactor : unsignedByte [1]
+  }
+  compressionOptionsL2b --> compressionOptionsL2b_MDS : MDS
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_AGB : AGB
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_AGBstandardDeviation : AGBstandardDeviation
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_BPS_FNF : BPS_FNF
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_HeatMap : HeatMap
+  compressionOptionsL2b_MDS --> compressionOptionsL2b_MDS_acquisitionIdImage : acquisitionIdImage
+```
+
+</div>
+</div>
+
+<p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Processing parameters L2b DSR (compressionOptionsL2bType)](../../_static/figures/pfd-agb/figure_24_section_6.3.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 24</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
 
-:::
+::::
 
 (tab:pfd-agb-61)=
 :::{div} atbd-table
@@ -485,8 +738,8 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 
 | Name | Description | Data Type | Cardinality |
 |---|---|---|---|
-| MDS à AGB à `compressionFactor` MDS à AGBstandardDeviation à `compressionFactor` MDS àBPS\_FNF à `compressionFactor` MDS à HeatMap à `compressionFactor` MDS à `acquisitionIdImage` à `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS à AGB à `MAX_Z_ERROR` MDS à AGBstandardDeviation à `MAX_Z_ERROR` MDS à HeatMap à `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → AGB → `compressionFactor` MDS → AGBstandardDeviation → `compressionFactor` MDS →`BPS_FNF` → `compressionFactor` MDS → HeatMap → `compressionFactor` MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → AGB → `MAX_Z_ERROR` MDS → AGBstandardDeviation → `MAX_Z_ERROR` MDS → HeatMap → `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). Zero means loss-less compression. | `xsd:float` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::

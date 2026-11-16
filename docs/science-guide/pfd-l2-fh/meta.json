@@ -5,14 +5,14 @@
  "flavor": "bps",
  "bps_slug": "pfd-l2-fh",
  "manifest": null,
- "version": "3.4.0",
+ "version": "3.5.0",
  "title": "BIOMASS Forest Height Products Format Specification",
- "source": "BPS_FH_PFD_v3_4_0.docx",
- "source_sha256": "33b2b4dade2c01201ae292ffd7bc0053afb28ca0dd371158255ab5e0c28d0307",
+ "source": "BPS_FH_PFD_v3_5_0.docx",
+ "source_sha256": "9986be08dd0362cc82d0e1e7d1700ff6c3633bc4a4449dd5c62665b78d635d71",
  "backend": "docx",
  "license": "Apache-2.0",
  "pipeline_version": "0.1.0",
- "conversion_date": "2026-11-05",
+ "conversion_date": "2026-11-13",
  "checks": {
   "V1": "PASS",
   "V2": "PASS",
@@ -29,11 +29,11 @@
  },
  "counts": {
   "headings": 42,
-  "paragraphs": 278,
-  "list_items": 149,
+  "paragraphs": 380,
+  "list_items": 150,
   "tables": 53,
   "figures": 22,
   "equations": 0,
-  "captions": 74
+  "captions": 75
  }
 }

@@ -43,10 +43,10 @@ L2b Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyt
 
 :::
 
-(tab:pfd-fh-38)=
+(tab:pfd-fh-39)=
 :::{div} atbd-table
 
-<p class="atbd-table-caption"><span class="caption-number">Table 38</span><span class="caption-text"> — Forest Height L2b products structure</span></p>
+<p class="atbd-table-caption"><span class="caption-number">Table 39</span><span class="caption-text"> — Forest Height L2b products structure</span></p>
 
 | File / Folder | Cardinality | Format | Description / Content |
 |---|---|---|---|

@@ -2,8 +2,8 @@
  "doc": "science-guide/pfd-l2-agb",
  "title": "BIOMASS Above Ground Biomass Products Format Specification",
  "short_title": "L2 AGB PFD",
- "doc_code": "BIO-BPS-AGB-PFD-ARE-010257",
- "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_AGB_PFD_v3_4_0.pdf",
+ "doc_code": "BIO-BPS-AGBPFD-ARE-010257",
+ "pdf_url": "",
  "targets": {
   "ad:1": {
    "file": "01-introduction",
