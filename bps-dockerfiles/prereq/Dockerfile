@@ -8,7 +8,7 @@ ENV PROJ_DATA="/opt/conda_folder/envs/env/share/proj"
 
 USER root
 RUN cd /tmp && \
-    curl -fsSL https://github.com/conda-forge/miniforge/releases/download/25.1.1-2/Miniforge3-Linux-x86_64.sh -o Miniforge3.sh && \
+    curl -fsSL https://github.com/conda-forge/miniforge/releases/download/26.9.4-2/Miniforge3-26.9.4-2-Linux-x86_64.sh -o Miniforge3.sh && \
     chmod +x Miniforge3.sh && \
     ./Miniforge3.sh -b -p /opt/conda_folder && \
     /opt/conda_folder/bin/conda install -y -c conda-forge conda-index && \
