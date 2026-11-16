@@ -13,7 +13,6 @@ ignore_unused = [
     'coverage',                  # dev dependency
     'ruff',                      # dev dependency
     'pyrefly',                   # dev dependency
-    'nox',                       # dev dependency
     'unittest-xml-reporting',    # dev dependency
 ]
 verbosity = 1

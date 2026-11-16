@@ -58,7 +58,7 @@ variables:
   script:
     - cd $SUBPROJECT
     - python3.14 -m pip install FawltyDeps
-    - python3.14 -m fawltydeps --code bps --detailed --config-file ../scripts/fawltydeps.toml
+    - python3.14 -m fawltydeps --code bps --detailed --config-file ../fawltydeps.toml
 
 .build:
   stage: build
