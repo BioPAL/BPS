@@ -6,7 +6,7 @@ COPY environment.yml /tmp/environment.yml
 LD_LIBRARY_PATH=/opt/conda_folder/envs/env/lib/bps-l1-framing-processor-libs
 
 USER root
-RUN bash -c "conda index --verbose /tmp/python-packages && \
+RUN bash -c "conda index /tmp/python-packages && \
     conda env update --file /tmp/environment.yml && \
     conda clean -afy" && \
     rm -fr /tmp/python-packages && \
