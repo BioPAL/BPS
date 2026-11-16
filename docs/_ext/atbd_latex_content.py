@@ -9,6 +9,9 @@ non-HTML builder drops. For non-HTML builders only, this post-transform:
 * turns ``:::{div} atbd-mermaid-figure`` into a real ``figure`` node (images,
   Mermaid diagrams, caption ``Figure N: ...`` with the source number N, label
   kept) and drops the "Original figure" dropdown when a Mermaid diagram is shown;
+  a left-to-right diagram too wide for a readable text size is laid out top to
+  bottom when that is larger, and one that stays too small shows the original
+  figure of the dropdown instead;
 * turns ``:::{div} atbd-table`` into a captioned table (``Tab.N ...``, source
   number N, label kept);
 * makes every table a ``longtable`` (page breaks, repeated header) as wide as
@@ -44,11 +47,30 @@ from docutils import nodes
 from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.transforms.post_transforms import SphinxPostTransform
+from sphinx.util import logging
 from sphinx.util.texescape import escape as tex_escape
+
+logger = logging.getLogger(__name__)
 
 FIGURE_CLASS = "atbd-mermaid-figure"
 # Size of the Mermaid PDFs in the page (see AtbdLatexContent._figure).
 _MERMAID_SCALE = 0.75
+# Text of the Mermaid PDFs (mmdc --pdfFit, 16 px = 12 pt) and the page of the
+# export (A4, margins of atbd_pdf_layout): a diagram scaled down to fit the
+# text width prints its text at 12 pt x scale.
+_MERMAID_FONT_PT = 12.0
+_TEXT_WIDTH_PT = 448.0
+_TEXT_HEIGHT_PT = 683.0
+# Below _MERMAID_MIN_PT, a left-to-right diagram is also rendered top to
+# bottom and the larger of the two is kept. Below _MERMAID_FALLBACK_PT, clearly
+# smaller than the text of the original XMLSpy figures in the Word PDFs (about
+# 4.5 to 5 pt), the original figure is printed instead, at the full text width.
+_MERMAID_MIN_PT = 5.0
+_MERMAID_FALLBACK_PT = 4.0
+_LR_RE = re.compile(r"^(\s*direction\s+)LR\s*$", re.MULTILINE)
+_MEDIABOX_RE = re.compile(
+    rb"/MediaBox\s*\[\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\]"
+)
 TABLE_CLASS = "atbd-table"
 
 _CAPTION_RE = re.compile(
@@ -751,6 +773,12 @@ class AtbdLatexContent(SphinxPostTransform):
             else:
                 extra.append(child)
 
+        original = False
+        if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
+            fallback = self._fit_mermaid(visuals[0], container)
+            if fallback:
+                visuals, original = fallback, True
+
         figure = nodes.figure("", ids=list(container["ids"]),
                               names=list(container["names"]))
         # At most half a page per figure, as in the originals; stacked images
@@ -758,7 +786,7 @@ class AtbdLatexContent(SphinxPostTransform):
         # than the page overflows the bottom margin).
         share = 0.5 if len(visuals) <= 1 else 0.75 / len(visuals)
         mermaid_only = has_mermaid and all(isinstance(v, mermaid_cls) for v in visuals)
-        if mermaid_only:
+        if mermaid_only or original:
             # Mermaid diagrams (XSD class diagrams) are vector PDFs the size
             # of the drawing (mmdc --pdfFit) in 12 pt text: at 75 % (9 pt
             # text), up to the full text width and most of the page height,
@@ -767,6 +795,10 @@ class AtbdLatexContent(SphinxPostTransform):
         setup = r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % share
         if mermaid_only:
             setup += r"\def\atbdfigscale{%s}\def\atbdfigmaxwidth{\linewidth}" % _MERMAID_SCALE
+        elif original:
+            # the original figure of a diagram too wide for the page: as large
+            # as the page allows (its text is small in the Word PDFs too)
+            setup += r"\def\atbdfigscale{1}\def\atbdfigmaxwidth{\linewidth}"
         if caption is not None:
             number, inlines = caption
             if number:
@@ -781,6 +813,66 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += nodes.caption("", "", *inlines)
         container.replace_self([figure, *extra])
         return figure
+
+    def _mermaid_font(self, code: str, options: Any, height: float) -> float | None:
+        """Text size (pt) of a Mermaid diagram once fitted in the page.
+
+        Renders it with sphinxcontrib.mermaid (same file and cache as the
+        LaTeX writer, which then reuses it); None when it cannot be rendered.
+        """
+        from types import SimpleNamespace
+
+        from sphinxcontrib.mermaid import MermaidError, render_mm
+
+        try:
+            _relfn, outfn = render_mm(SimpleNamespace(builder=self.app.builder),
+                                      code, options, "pdf")
+            if outfn is None:  # mmdc not found: the writer reports it
+                return None
+            match = _MEDIABOX_RE.search(Path(outfn).read_bytes())
+        except MermaidError:
+            return None  # the writer reports the same error
+        except Exception as exc:  # noqa: BLE001 - keep the default layout
+            logger.warning("cannot size a Mermaid diagram for the PDF layout: %s", exc,
+                           location=self.env.docname)
+            return None
+        if not match:
+            return None
+        x0, y0, x1, y1 = (float(v) for v in match.groups())
+        width, tall = x1 - x0, y1 - y0
+        if width <= 0 or tall <= 0:
+            return None
+        return _MERMAID_FONT_PT * min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width,
+                                      height * _TEXT_HEIGHT_PT / tall)
+
+    def _fit_mermaid(self, diagram: nodes.Element,
+                     container: nodes.container) -> list[nodes.Node] | None:
+        """Keep a wide left-to-right diagram readable in the PDF.
+
+        Lays it out top to bottom when that gives larger text; returns the
+        images of the "Original figure" dropdown when the text stays under
+        _MERMAID_FALLBACK_PT (None: print the diagram).
+        """
+        code, options = diagram["code"], diagram.get("options", {})
+        if not _LR_RE.search(code):
+            return None
+        best = self._mermaid_font(code, options, 0.8)
+        if best is None or best >= _MERMAID_MIN_PT:
+            return None
+        top_down = _LR_RE.sub(r"\1TB", code)
+        font = self._mermaid_font(top_down, options, 0.8)
+        if font is not None and font > best:
+            diagram["code"], best = top_down, font
+        if best >= _MERMAID_FALLBACK_PT:
+            return None
+        for child in container.children:
+            if self._is_original_dropdown(child):
+                images = list(child.findall(nodes.image))
+                if images:
+                    return images
+        logger.warning("Mermaid diagram printed at %.1f pt: no original figure to "
+                       "print instead", best, location=container)
+        return None
 
     def _mermaid_class(self) -> type[nodes.Element] | None:
         try:
