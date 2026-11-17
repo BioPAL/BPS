@@ -3,13 +3,13 @@
 
 ATBD L2 AGB (atbd-l2-agb), section 4. Only the bottom image is redrawn here
 (the top one, a world map, stays an image). From the text of section 4: each
-3°×3° processing block (the DGG tile, centre) is estimated from a 5°×5°
-neighbourhood, i.e. the block plus a 1° buffer zone. The 5 × 5 grid has one
-cell per degree; the blue 3 × 3 square is the AGB estimation area, the green
-outer ring is the AGB neighbourhood.
+3°×3° processing block (the blue 3 × 3 square, AGB estimation area) is
+estimated from a 5°×5° neighbourhood (the green outer ring, AGB neighbourhood),
+i.e. the block plus a 1° buffer zone. The 5 × 5 grid has one cell per degree;
+the label "DGG Tile" names a cell of the grid, as in the original.
 
 To modify: change the sizes in GEOMETRY, the labels in LABELS or the colours
-in COLOURS, then run ``/usr/bin/python3 fig12.py`` (matplotlib needed): it
+in COLOURS, then run ``python3 fig12.py`` (matplotlib needed): it
 rewrites fig12.svg (web page) and fig12.pdf (PDF export) next to this file.
 Commit the three files together. Keep a dark text colour: the page puts a
 white background behind the figure in both site themes.

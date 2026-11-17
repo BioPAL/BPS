@@ -15,17 +15,59 @@ The key step is fusion of L2a estimates at map level. These steps are described 
 **The step is mandatory.**
 
 (fig:atbd-fd-14)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the L2b processing.
+  accDescr: Within the group All stacks, on an area, in a given time, Forest Disturbance L2a, Probability of change L2a and CFM L2a and DGG feed the L2b processing group, which contains Combining L2a products. The L2b processing group outputs Aggregated Forest Disturbance L2b, Aggregated probability of change L2b and Aggregated CFM L2b.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data:  input or output (parallelogram, light grey)
+  %%   step:  processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  dgg[/"DGG"/]:::data
+
+  subgraph stacks["All stacks, on an area, in a given time"]
+    fd[/"Forest<br/>Disturbance<br/>L2a"/]:::data
+    poc[/"Probability<br/>of change L2a"/]:::data
+    cfm[/"CFM L2a"/]:::data
+  end
+
+  subgraph l2b["L2b processing"]
+    comb["Combining L2a<br/>products"]:::step
+  end
+
+  afd[/"Aggregated<br/>Forest<br/>Disturbance L2b"/]:::data
+  apoc[/"Aggregated<br/>probability of<br/>change L2b"/]:::data
+  acfm[/"Aggregated<br/>CFM L2b"/]:::data
+
+  style stacks fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:2 2
+  style l2b fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:2 2
+
+  fd --> l2b
+  poc --> l2b
+  cfm --> l2b
+  dgg --> l2b
+  l2b --> afd
+  l2b --> apoc
+  l2b --> acfm
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the L2b processing.](../../_static/figures/atbd-fd/figure_14_section_4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 14</span><span class="caption-text"> — Complete flow-chart of the L2b processing.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-4-1)=
 ### 4.1 Fusion of L2a products on a Tile within a fixed timespan
@@ -38,17 +80,62 @@ The disturbance maps allow the combination of different acquisitions in a simple
 From the disturbance map combined, the extraction of the combined CFM is obtained by a simple logical and operator.
 
 (fig:atbd-fd-15)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: L2a FD fusion.
+  accDescr: Within the group All stacks, on an area, in a given time, DGG, Probability of change L2a, Forest Disturbance L2a and CFM L2a are shown. Probability of change L2a and Forest Disturbance L2a feed Temporal sorting, followed by Series time derivative, FD steps count and Consistency check. Consistency check feeds Probability of change averaging, which gives Aggregated Probability of change L2b, and gives Aggregated Forest Disturbance L2b. CFM L2a and Aggregated Forest Disturbance L2b feed Update CFM, which gives Aggregated CFM L2b.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data:  input or output (parallelogram, light grey)
+  %%   step:  processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  subgraph stacks["All stacks, on an area, in a given time"]
+    dgg[/"DGG"/]:::data
+    poc[/"Probability of<br/>change L2a"/]:::data
+    fd[/"Forest<br/>Disturbance L2a"/]:::data
+    cfm[/"CFM L2a"/]:::data
+  end
+  style stacks fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:2 2
+
+  sort["Temporal sorting"]:::step
+  deriv["Series time<br/>derivative"]:::step
+  count["FD steps count"]:::step
+  check["Consistency check"]:::step
+  avg["Probability of<br/>change averaging"]:::step
+  ucfm["Update CFM"]:::step
+
+  apoc[/"Aggregated<br/>Probability of<br/>change L2b"/]:::data
+  afd[/"Aggregated<br/>Forest<br/>Disturbance L2b"/]:::data
+  acfm[/"Aggregated<br/>CFM L2b"/]:::data
+
+  poc --> sort
+  fd --> sort
+  dgg ~~~ poc
+  sort --> deriv --> count --> check
+  check --> avg
+  check --> afd
+  avg --> apoc
+  afd --> ucfm
+  cfm --> ucfm
+  ucfm --> acfm
+```
+
+:::{dropdown} Original figure (DOCX)
 ![L2a FD fusion.](../../_static/figures/atbd-fd/figure_15_section_4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 15</span><span class="caption-text"> — L2a FD fusion.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-4-1-2)=
 #### 4.1.2 Inputs
@@ -108,17 +195,21 @@ $$ (eq:atbd-fd-4-4)
 If the sum is odd, detection is assumed, and the resulting probability of change is the average of the different probabilities pixel-wise for detection only. Otherwise, the resulting probability of change and FD map is set to zero. If the sum is zero, detection is assumed only if all the acquisitions show detection. The rationale is that change is assumed only if all the acquisitions detecting it are simultaneously consistent. The situation is depicted in {fig}`Fig.|16` for the example of three acquisitions and the corresponding truth table is reported in {ref}`Tab.1 <tab:atbd-fd-1>`.
 
 (fig:atbd-fd-16)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+![Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.](../../_static/figures/atbd-fd/fig16.*)
+
+:::{dropdown} Original figure (DOCX)
 ![Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.](../../_static/figures/atbd-fd/figure_16_section_4.1.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.</span></p>
 
-:::
+::::
 
 (tab:atbd-fd-1)=
 :::{div} atbd-table

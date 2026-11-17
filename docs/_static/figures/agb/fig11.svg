@@ -168,11 +168,11 @@ L 395.544304 361.640506
    </g>
    <g id="patch_3">
     <path d="M 84.759494 66.677468 
-Q 112.165063 109.057215 138.254722 149.402047 
+Q 105.666835 109.057215 125.50204 149.263711 
 " style="fill: none; stroke: #4472c4; stroke-width: 1.8; stroke-linecap: round"/>
-    <path d="M 137.182819 143.932445 
-L 138.254722 149.402047 
-L 133.706376 146.180544 
+    <path d="M 125.068883 143.706922 
+L 125.50204 149.263711 
+L 121.356106 145.538558 
 z
 " style="fill: #4472c4; stroke: #4472c4; stroke-width: 1.8; stroke-linecap: round"/>
    </g>
@@ -512,7 +512,7 @@ z
    </g>
    <g id="text_3">
     <!-- $\hat{\imath}_{LOS}$ -->
-    <g transform="translate(143.64697 137.321538) scale(0.14375 -0.14375)">
+    <g transform="translate(132.345704 139.581791) scale(0.14375 -0.14375)">
      <defs>
       <path id="Cmmi10-4c" d="M 300 0 
 Q 238 0 238 84 
@@ -1408,7 +1408,7 @@ z
    </g>
    <g id="text_16">
     <!-- Ellipsoid -->
-    <g transform="translate(231.79112 315.009365) rotate(-340) scale(0.13225 -0.13225)">
+    <g transform="translate(282.024513 374.03565) rotate(-350) scale(0.13225 -0.13225)">
      <defs>
       <path id="DejaVuSans-6c" d="M 603 4863 
 L 1178 4863 

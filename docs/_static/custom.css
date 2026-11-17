@@ -902,9 +902,12 @@ html[data-mode="light"] .atbd-logo-banner__img--dark {
 /* Science Guide figures redrawn as Mermaid source keep the colours of the
    original document (lanes, red/green tags): in the dark theme they are shown on
    a white mat, as the images are, instead of the PyData inversion of Mermaid
-   diagrams (their source sets the light Mermaid theme). */
+   diagrams (their source sets the light Mermaid theme); the matplotlib
+   figures keep their colours too (no PyData dimming of images, where white
+   may carry meaning). */
 html[data-theme="dark"] .atbd-drawn-figure pre.mermaid > svg,
-html[data-theme="dark"] .atbd-drawn-figure div.mermaid > svg {
+html[data-theme="dark"] .atbd-drawn-figure div.mermaid > svg,
+html[data-theme="dark"] .atbd-drawn-figure .atbd-figure-content > p img {
   filter: none !important;
   background-color: #fff !important;
   border-radius: 0.25rem;

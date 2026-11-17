@@ -10,7 +10,7 @@ b_min and b_max. This is a schematic: horizontal positions are qualitative.
 
 To modify: change the positions in GEOMETRY (units of the original figure,
 x to the right, y downwards), the labels in LABELS or the colours in COLOURS,
-then run ``/usr/bin/python3 fig12.py`` (matplotlib needed): it rewrites
+then run ``python3 fig12.py`` (matplotlib needed): it rewrites
 fig12.svg (web page) and fig12.pdf (PDF export) next to this file. Commit the
 three files together. Keep a dark text colour: the page puts a white
 background behind the figure in both site themes.

@@ -184,7 +184,9 @@ flowchart TB
   stacks[("L2a stacks*")]:::store
   agb[("BIOMASS AGB<br/>maps**")]:::store
 
-  subgraph L2A["Stack-based"]
+  %% The &nbsp; after a frame title push the title to the left, out of the way
+  %% of the arrows that enter the frame from the top (Mermaid centres titles).
+  subgraph L2A["Stack-based&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
     l2a["L2a"]:::head
     fcc["Forest coverage check"]:::step
     cal["Calibration"]:::step
@@ -193,7 +195,7 @@ flowchart TB
     geo["Geocoding"]:::step
   end
 
-  subgraph L2B["Block-based"]
+  subgraph L2B["Block-based&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
     l2b["L2b"]:::head
     mpe["Model parameter<br/>estimation"]:::step
     pred["AGB mean & error<br/>prediction"]:::step

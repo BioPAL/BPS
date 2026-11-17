@@ -91,30 +91,49 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`Fig.|4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`Fig.|5`.
 
 (fig:atbd-fd-4)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for seven TOM.](../../_static/figures/atbd-fd/figure_4_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Selection for seven TOM.</span></p>
 
-:::
+::::
 
 (fig:atbd-fd-5)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |  |
+| 4 |  |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for eight TOM (contingency).](../../_static/figures/atbd-fd/figure_5_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Selection for eight TOM (contingency).</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-3)=
 ### 3.3 Calibration
@@ -125,17 +144,58 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 The calibration algorithm makes use of the L1c annotation {ad}`3` to apply phase calibration to L1c necessary for the L2a processing.
 
 (fig:atbd-fd-6)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Calibration.
+  accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
+
+  %% Colours of the original figure.
+  %%   data: SCS image (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph IN["L1c stack + Phase Screens"]
+    direction LR
+    i1[/"SCS<sub>1</sub>"/]:::data
+    i2[/"SCS<sub>2</sub>"/]:::data
+    id["○ ○ ○"]:::dots
+    iM[/"SCS<sub>M</sub>"/]:::data
+    i1 ~~~ i2 ~~~ id ~~~ iM
+  end
+
+  cal["Screen calibration:<br/>phase screen<br/>subtraction"]:::step
+
+  subgraph OUT["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    o1[/"SCS<sub>1</sub>"/]:::data
+    o2[/"SCS<sub>2</sub>"/]:::data
+    od["○ ○ ○"]:::dots
+    oM[/"SCS<sub>M</sub>"/]:::data
+    o1 ~~~ o2 ~~~ od ~~~ oM
+  end
+
+  IN --> cal --> OUT
+
+  style IN fill:#ffffff,stroke:#000000,color:#000000
+  style OUT fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Calibration.](../../_static/figures/atbd-fd/figure_6_section_3.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Calibration.</span></p>
 
-:::
+::::
 
 **The step is mandatory. If disabled for debug, default rule is to copy inputs as step output.**
 
@@ -222,30 +282,116 @@ The default operation mode of ground cancellation is `operationalMode`="single r
 The flowcharts of the ground cancellation algorithm are shown in {fig}`Fig.|7`, {fig}`Fig.|8`. Each polarization channel is processed independently. A preliminary interpolation step is needed to bring wavenumbers onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`).
 
 (fig:atbd-fd-7)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Ground cancellation algorithm with two images.
+  accDescr: A phase calibrated, ground steered L1c stack of two images, SCS1 and SCS2, goes through images subtraction, giving GN.
+
+  %% Colours of the original figure.
+  %%   data: image or product (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+
+  subgraph IN["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    i1[/"SCS<sub>1</sub>"/]:::data
+    i2[/"SCS<sub>2</sub>"/]:::data
+    i1 ~~~ i2
+  end
+
+  sub["Images subtraction"]:::step
+  gn[/"GN"/]:::data
+
+  IN --> sub --> gn
+
+  style IN fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Ground cancellation algorithm with two images.](../../_static/figures/atbd-fd/figure_7_section_3.4.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Ground cancellation algorithm with two images.</span></p>
 
-:::
+::::
 
 (fig:atbd-fd-8)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Ground cancellation algorithm with more than two images.
+  accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM both feed demodulation and reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
+
+  %% Colours of the original figure.
+  %%   data: image or input (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph VWS["Vertical Wavenumbers (back-geocoding product)"]
+    direction LR
+    v1[/"VW<sub>1</sub>"/]:::data
+    v2[/"VW<sub>2</sub>"/]:::data
+    vd["○ ○ ○"]:::dots
+    vM[/"VW<sub>M</sub>"/]:::data
+    v1 ~~~ v2 ~~~ vd ~~~ vM
+  end
+
+  subgraph STK["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    s1[/"SCS<sub>1</sub>"/]:::data
+    s2[/"SCS<sub>2</sub>"/]:::data
+    sd["○ ○ ○"]:::dots
+    sM[/"SCS<sub>M</sub>"/]:::data
+    s1 ~~~ s2 ~~~ sd ~~~ sM
+  end
+
+  demod["Demodulation"]:::step
+  refsel["Reference acquisition<br/>selection"]:::step
+  height[/"Height to<br/>emphasize"/]:::data
+  interp["Linear interpolation"]:::step
+  modul["Modulation"]:::step
+  refsub["Reference image<br/>subtraction"]:::step
+  gn[/"GN"/]:::data
+
+  VWS --> demod
+  STK --> demod
+  VWS --> refsel
+  STK --> refsel
+  refsel --> demod
+  demod --> interp
+  height --> interp
+  interp --> modul
+  modul --> refsub
+  refsel --> refsub
+  refsub --> gn
+
+  style VWS fill:#ffffff,stroke:#000000,color:#000000
+  style STK fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Ground cancellation algorithm with more than two images.](../../_static/figures/atbd-fd/figure_8_section_3.4.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Ground cancellation algorithm with more than two images.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-4-4-1)=
 ##### 3.4.4.1 Case of two images
@@ -324,17 +470,41 @@ The polarimetric covariance estimation block aims to estimate the second order s
 **The step is mandatory.**
 
 (fig:atbd-fd-9)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart LR
+  accTitle: Polarimetric covariance estimation.
+  accDescr: GN and Spatial averaging window size are inputs to Polarimetric covariance matrix computation, which outputs Polarimetric covariance.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data: input or output (parallelogram, light grey)
+  %%   step: processing step (white box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#ffffff,stroke:#7f7f7f,color:#000000
+
+  gn[/"GN"/]:::data
+  win[/"Spatial<br/>averaging<br/>window size"/]:::data
+  pcm["Polarimetric covariance<br/>matrix computation"]:::step
+  out[/"Polarimetric<br/>covariance"/]:::data
+
+  gn --> pcm
+  win --> pcm
+  pcm --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Polarimetric covariance estimation.](../../_static/figures/atbd-fd/figure_9_section_3.5.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Polarimetric covariance estimation.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-5-2)=
 #### 3.5.2 Inputs
@@ -411,17 +581,49 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 **The step is mandatory.**
 
 (fig:atbd-fd-10)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Geocoding.
+  accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c stack reference orbit feed the update coordinates step. Its output and the DGG feed the step that projects on a geographic map, which gives the geocoded processed data.
+
+  %% Colours of the original figure.
+  %%   data: input or output (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  pd[/"Processed Data"/]:::data
+  dem[/"Reference DEM LLH<br/>coordinates<br/>(back-geocoding product)"/]:::data
+  tomo[/"Tomographic 3D<br/>forest points<br/>elevation"/]:::data
+  orbit[/"L1c Stack<br/>Reference Orbit"/]:::data
+  dgg[/"DGG"/]:::data
+  upd["Update coordinates"]:::step
+  proj["Project on geographic<br/>map"]:::step
+  out[/"Geocoded<br/>Processed Data"/]:::data
+
+  pd --> upd
+  dem --> upd
+  tomo --> upd
+  orbit --> upd
+  upd --> proj
+  dgg --> proj
+  proj --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Geocoding.](../../_static/figures/atbd-fd/figure_10_section_3.6.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — Geocoding.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-6-2)=
 #### 3.6.2 Inputs
@@ -448,17 +650,21 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 ###### 3.6.4.1.1 Update reference DEM coordinates
 
 (fig:atbd-fd-11)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fd/fig11.*)
+
+:::{dropdown} Original figure (DOCX)
 ![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fd/figure_11_section_3.6.4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.</span></p>
 
-:::
+::::
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`Fig.|11`:
 
@@ -508,17 +714,67 @@ The disturbance processing is concerned with providing maps of high-intensity ch
 **The step is mandatory.**
 
 (fig:atbd-fd-12)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Change detection.
+  accDescr: Number of averages, X(N+1) and Y(N) feed Compute probability of change, which outputs Probability of change and feeds Thresholding: disturbance map generation, which also takes Level of significance. Thresholding outputs Forest Disturbance and feeds Update ACM, which outputs Y(N+1) and Number of averages. Forest Disturbance, FNF and CFM (dashed) feed Update CFM, which outputs CFM.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data:  input or output (parallelogram, light grey)
+  %%   prior: input drawn with a dashed outline and a dashed arrow
+  %%   step:  processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef prior fill:#f2f2f2,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  yn[/"Y<sub>N</sub>"/]:::data
+  xn1[/"X<sub>N+1</sub>"/]:::data
+  navg[/"Number of<br/>averages"/]:::data
+  sig[/"Level of<br/>significance"/]:::data
+  fnf[/"FNF"/]:::data
+  cfmin[/"CFM"/]:::prior
+
+  prob["Compute probability of<br/>change"]:::step
+  thr["Thresholding:<br/>disturbance map<br/>generation"]:::step
+  acm["Update ACM"]:::step
+  ucfm["Update CFM"]:::step
+
+  poc[/"Probability<br/>of change"/]:::data
+  fd[/"Forest<br/>Disturbance"/]:::data
+  yn1[/"Y<sub>N+1</sub>"/]:::data
+  navg2[/"Number of<br/>averages"/]:::data
+  cfmout[/"CFM"/]:::data
+
+  yn --> prob
+  xn1 --> prob
+  navg --> prob
+  prob --> poc
+  prob --> thr
+  sig --> thr
+  thr --> fd
+  thr --> acm
+  acm --> yn1
+  acm --> navg2
+  fd --> ucfm
+  fnf --> ucfm
+  cfmin -.-> ucfm
+  ucfm --> cfmout
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Change detection.](../../_static/figures/atbd-fd/figure_12_section_3.7.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Change detection.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-7-2)=
 #### 3.7.2 Inputs
@@ -605,17 +861,68 @@ $$ (eq:atbd-fd-3-20)
 History of previous N cycles is represented by an Average Covariance Matrix $\boldsymbol{Y}_N$ (equivalent to current Covariance Matrix $\boldsymbol{X}_{N+1}$ as for dimensions and data type), which consists of the stacking of covariance matrices from previous cycles, in case no change occurred. When detection is computed between current CM $\boldsymbol{X}_{N+1}$ and the ACM $\boldsymbol{Y}_N$ for a given pixel, in case of no change current CM is added to ACM to be used in the subsequent cycle (ACM is updated to be the average over the whole series where no change has occurred). In case of change, instead, this ACM is reset to current CM for subsequent cycles and FD will report an indication of change for the corresponding pixels in the disturbance layer. The `numberOfAverages` of the previous N cycles, which is a measure of how many objects are averaged in the current ACM, is also reset to 1. The update mechanism is reported in {fig}`Fig.|13` for the ACM $\boldsymbol{Y}_N$.
 
 (fig:atbd-fd-13)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Update mechanism for Average Covariance Matrix.
+  accDescr: X(N+1), Y(N) and Number of averages feed the Change detection decision. If Yes, Y(N) = X(N+1) is applied, then Number of averages = 1; Y(N) = X(N+1) gives Y(N+1) and Number of averages = 1 gives Number of averages. If No, a framed group applies: X(N+1) and Y(N) are added with a plus operator, giving Y(N+1), and Number of averages += 1 gives Number of averages.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data:  input or output (parallelogram, light grey)
+  %%   step:  processing step (light grey box)
+  %%   dec:   decision (light grey diamond)
+  %%   op:    addition operator (white circle)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef dec fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef op fill:#ffffff,stroke:#7f7f7f,color:#000000,font-weight:bold
+
+  xin[/"X<sub>N+1</sub>"/]:::data
+  yin[/"Y<sub>N</sub>"/]:::data
+  navgin[/"Number of<br/>averages"/]:::data
+  cd{"Change<br/>detection"}:::dec
+
+  yes["Y<sub>N</sub> =X<sub>N+1</sub>"]:::step
+  one["Number of<br/>averages= 1"]:::step
+
+  subgraph nob[" "]
+    x2[/"X<sub>N+1</sub>"/]:::data
+    y2[/"Y<sub>N</sub>"/]:::data
+    plus(("+")):::op
+    inc["Number of<br/>averages<br/>+=1"]:::step
+  end
+  style nob fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  yout[/"Y<sub>N+1</sub>"/]:::data
+  nout[/"Number of<br/>averages"/]:::data
+
+  xin --> cd
+  yin --> cd
+  navgin --> cd
+  cd -- "Yes" --> yes
+  cd -- "No" --> nob
+  yes --> one
+  y2 --> plus
+  x2 --> plus
+  yes --> yout
+  plus --> yout
+  one --> nout
+  inc --> nout
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Update mechanism for Average Covariance Matrix.](../../_static/figures/atbd-fd/figure_13_section_3.7.4.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Update mechanism for Average Covariance Matrix.</span></p>
 
-:::
+::::
 
 (sec:atbd-fd-3-7-4-4)=
 ##### 3.7.4.4 ACM computed in TOM

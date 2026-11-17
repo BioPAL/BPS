@@ -332,7 +332,7 @@ flowchart TB
 %%{init: {"theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Ground cancellation algorithm with more than two images.
-  accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM feed demodulation, and the stack also feeds reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
+  accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM both feed demodulation and reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
 
   %% Colours of the original figure.
   %%   data: image or input (white parallelogram)

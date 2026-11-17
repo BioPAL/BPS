@@ -14,7 +14,7 @@ DEM. This is a schematic: positions and curves are qualitative.
 
 To modify: change the positions in GEOMETRY (pixels of the original figure,
 x to the right, y downwards), the labels in LABELS or the colours in COLOURS,
-then run ``/usr/bin/python3 fig11.py`` (matplotlib needed): it rewrites
+then run ``python3 fig11.py`` (matplotlib needed): it rewrites
 fig11.svg (web page) and fig11.pdf (PDF export) next to this file. Commit the
 three files together. Keep a dark text colour: the page puts a white
 background behind the figure in both site themes.
@@ -39,8 +39,8 @@ FONT_PT = 11.5  # the PDF export prints it at about 65 %: subscripts stay >= 5 p
 W, H = 790, 740
 S0, P0, P1 = (115, 48), (335, 492), (471, 428)
 GEOMETRY = {
-    "los_head": (247, 268),                    # tip of i_LOS on the line S0-P0
-    "az_start": (150, 118),                    # i_az runs along the line of sight
+    "los_head": (224, 268),                    # tip of i_LOS, exactly on the line S0-P0
+    "az_start": (150, 118),                    # start of the thick i_LOS arrow on S0-P0
     "iz": (350, 405), "ixr": (527, 400), "iE": (532, 522),
     "range": ((265, 95), (397, 117)),
     "dxr": ((272, 362), (403, 292)),           # dimension arrow
@@ -69,11 +69,12 @@ LABELS = {
 }
 # label positions (pixels, centre of the text)
 LABEL_AT = {
-    "S0": (78, 52), "iaz": (153, 30), "ilos": (278, 236), "iz": (368, 405),
+    "S0": (78, 52), "iaz": (153, 30), "ilos": (258, 240), "iz": (368, 405),
     "ixr": (546, 417), "iE": (560, 548), "range": (307, 78), "dxr": (332, 316),
     "P0": (335, 524), "P1": (479, 399), "psi": (395, 492), "dem": (160, 468),
     "Er": (232, 513), "tomo": (610, 490), "dz": (692, 562),
 }
+ELL_AT, ELL_ROT = (548, 664), -10  # "Ellipsoid", right of the DEM curve, touching nothing
 LABEL_SIZE = {"dem": 1.35, "ell": 1.15, "range": 1.15}
 
 # -- drawing -------------------------------------------------------------------
@@ -118,7 +119,7 @@ for key, ls, lw in (("dem", "-", 1.8), ("ell", "-.", 1.5)):
             lw=lw, ls=ls)
 # line of sight S0 -> P0, with i_az and i_LOS arrowheads
 line(S0, P0)
-ax.plot(*zip(S0, S0), marker="x", color=BLUE, ms=9, mew=1.5)
+ax.plot(*zip(S0, S0, strict=True), marker="x", color=BLUE, ms=9, mew=1.5)
 arrow(g["az_start"], g["los_head"], lw=1.8)
 # unit vectors at P0
 arrow(P0, g["iz"])
@@ -141,8 +142,8 @@ for p in (P0, P1):
     ax.plot(*p, "o", color=COLOURS["point"], ms=8, zorder=5)
 for key in LABEL_AT:
     text(key)
-ax.text(458, 568, LABELS["ell"], color=COLOURS["text"], ha="center",
-        va="center", fontsize=FONT_PT * LABEL_SIZE["ell"], rotation=-20)
+ax.text(ELL_AT[0], ELL_AT[1], LABELS["ell"], color=COLOURS["text"], ha="center",
+        va="center", fontsize=FONT_PT * LABEL_SIZE["ell"], rotation=ELL_ROT)
 
 # -- output (same bytes for the same script: fixed ids and dates) -------------
 if __name__ == "__main__":

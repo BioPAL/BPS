@@ -59,6 +59,8 @@ flowchart TB
   classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
   classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
 
+  %% The &nbsp; after a frame title push the title to the left, out of the way
+  %% of the arrows that enter the frame from the top (Mermaid centres titles).
   subgraph NEIGH["All <i>DGG</i>tiles within a 5° × 5° neighbourhood:"]
     fd[/"FD L2b"/]:::data
     ref[/"Reference AGB<br/>mean & std"/]:::data
@@ -75,7 +77,7 @@ flowchart TB
     pred["AGB mean & error<br/>prediction"]:::step
   end
 
-  subgraph BLOCK["All <i>DGG</i>tiles within a 3° × 3° block:"]
+  subgraph BLOCK["All <i>DGG</i>tiles within a 3° × 3° block:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
     agb[/"BIOMASS AGB<br/>mean & std"/]:::data
   end
 

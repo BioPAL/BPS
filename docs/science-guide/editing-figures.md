@@ -37,6 +37,14 @@ flowchart TB
 | a schematic plot (axes, windows, geometry) | a Python script `_static/figures/<folder>/fig<N>.py`, next to the `fig<N>.svg` and `fig<N>.pdf` it produces | the `.py`, then regenerate (below) |
 | a measured map, an image of real data, a figure taken from another publication | the image itself (it cannot be redrawn without inventing data) | nothing: ask the document owner for a new image |
 
+The figure folder of a script is named after the product, not always after the
+document (`atbd-l2-agb` uses `docs/_static/figures/agb/`, `atbd-l2-fd` uses
+`atbd-fd/`): the line
+`![…](../../_static/figures/<folder>/fig<N>.*)` of the figure block gives the
+folder and the script name (`fig<N>.py`). A figure can show a fixed image (a
+map, a measured product) above a drawn one: Fig. 12 of `atbd-l2-agb` has the
+land cover map on top (an image) and the block grid below (`fig12.py`).
+
 Under every redrawn figure, the **Original figure (DOCX)** dropdown keeps the
 image of the approved Word document, for comparison.
 
@@ -80,8 +88,12 @@ flowchart TB
   (`cal`), which the arrows use.
 - **Add a step**: add a node line, then the arrows to and from it.
 - **Line break, index, exponent**: `<br/>`, `G<sub>i</sub>`, `m<sup>2</sup>`.
+- **Two boxes with the same text** need two identifiers (`ion1["Ionosphere
+  Removal"]`, `ion2["Ionosphere Removal"]`).
 - **Colours**: the `classDef` lines at the top define the styles; a node uses
-  one with `:::name` (`cal["Calibration"]:::step`). Always give both `fill` (box)
+  one with `:::name` (`cal["Calibration"]:::step`). A colour is written
+  `#rrggbb` (`#ffd9a0`); two classes may have the same colour (`data` and
+  `step`): change each of them to recolour the whole figure. Always give both `fill` (box)
   and `color` (text) so that the text stays readable in the light and the dark
   themes of the site.
 - **Groups**: `subgraph id["Title"]` … `end` draws a box around nodes (the
@@ -115,7 +127,7 @@ colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
 2. Regenerate the images, in the figure folder:
 
    ```bash
-   cd docs/_static/figures/<folder>
+   cd docs/_static/figures/<folder>      # for atbd-l2-agb: agb
    python3 fig<N>.py
    ```
 
@@ -123,7 +135,18 @@ colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
    need Python 3 with matplotlib (`pip install matplotlib`). A warning about a
    "timestamp" is harmless (the files get a fixed date so that the same script
    always gives the same files).
-3. Commit the three files together.
+3. Look at the new `fig<N>.svg`: the drawing area has a fixed size, so a
+   longer label may be cut at the edge; then move it, or enlarge the canvas
+   (the size constants at the top of the script).
+4. Commit the three files together (with Git, or send them to the document
+   owner).
+
+## Editing a table
+
+A table is a Markdown table in the page: one line per row, cells separated by
+`|`. Write a star as `\*` (a bare `*` makes italics). To add a row, copy a line
+and change its cells; to add a column, add a cell to the header, to the
+`|---|` line and to every row, so that each line has the same number of `|`.
 
 ## Checking the result
 
@@ -136,7 +159,10 @@ pip install -r requirements.txt
 sphinx-build -b html . _build/html
 ```
 
-then open the chapter page of the figure,
+The build takes about a minute; warnings about `grid-item` or about a page
+"not included in any toctree" are not related to your change. Then open the
+chapter page of the figure (reload it without the cache, Ctrl+Shift+R, after
+regenerating a Python figure),
 `_build/html/science-guide/<document>/<chapter>.html` (the `.md` file you
 edited, with `.html`), and look at the figure in both themes (the sun/moon button at the top right). A Mermaid error
 shows as a red message in place of the diagram; for a Python figure, check
