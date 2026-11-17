@@ -119,115 +119,17 @@ flowchart TB
 ::::
 
 (fig:atbd-l1-stack-2)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
-```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
-flowchart TB
-  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
-  accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): the L0 frames (G_i, M_j, m_k, A_l, S_m), A_l+1 and A_l+2 each go through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m), A_l+1 and A_l+2. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m), A_l+1 and A_l+2, feeds the FD L2a proc, FH L2a proc and AGB L2a proc steps of the L2a processor; FD L2a proc also takes FD_a(G_i-1, M_j, m_k, F_m). L2b Tile-based Processing (Asynchronous): FD_a(G_i, M_j, m_k, F_m) and FD_a(G_i, *Tn, *Tn, *Tn) feed the FD L2b Tile proc, whose FD_b(t_a, t_b, T_n) goes to the FH L2b Tile proc and, with FH_b(t_a, t_b, T_n), to the AGB L2b Tile proc. FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles) and AGB_a(G_i, *Tn, *Tn, *Tn) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FD_b, FH_b and AGB_b(t_a, t_b, T_n) go to the FD L3, FH L3 and AGB L3 consolidation steps of the L3 processor, which output FD_3, FH_3 and AGB_3(t_a, t_b, B_n).
-
-  %% Colours of the original figure. Each class sets its text colour too, so it
-  %% stays readable with the light and the dark site themes.
-  %%   step:  processing step (blue box, white text)
-  %%   proc:  step inside a processor (grey box, white text)
-  %%   data:  input or output label (text only, on the lane colour)
-  %%   red A, red G: the index that changes from one acquisition to the next
-  classDef step fill:#8faadc,stroke:#1f1f1f,color:#ffffff,font-weight:bold
-  classDef proc fill:#a6a6a6,stroke:#1f1f1f,color:#ffffff,font-weight:bold
-  classDef data fill:none,stroke:none,color:#000000
-
-  subgraph L1["<b>L1 processing</b><br/>L1 Frame-based Processing<br/><span style='color:#548235'>Data Driven</span>"]
-    in1["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, S<sub>m</sub>)"]:::data
-    in2["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, S<sub>m</sub>)"]:::data
-    in3["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, S<sub>m</sub>)"]:::data
-    l1a["L1 Pr."]:::step
-    l1b["L1 Pr."]:::step
-    l1c["L1 Pr."]:::step
-  end
-
-  subgraph L2P["<b>L2 processing</b>"]
-    subgraph L2A["L2a Stack-based Processing<br/><span style='color:#548235'>Data Driven</span>"]
-      stack["Stack"]:::step
-      fdprev["FD<sub>a</sub>(<b style='color:#e00000'>G<sub>i-1</sub></b>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)"]:::data
-      subgraph L2AP["L2a processor"]
-        fda["FD L2a<br/>proc"]:::proc
-        fha["FH L2a<br/>proc"]:::proc
-        agba["AGB<br/>L2a<br/>proc"]:::proc
-      end
-    end
-    subgraph L2B["L2b Tile-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
-      fdin["FD<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
-      fhin["FH<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
-      agbinb["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)"]:::data
-      agbina["AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
-      fdb["FD L2b<br/>Tile<br/>proc"]:::step
-      fhb["FH L2b<br/>Tile<br/>proc"]:::step
-      agbb["AGB<br/>L2b Tile<br/>proc"]:::step
-    end
-  end
-
-  subgraph L3["<b>L3 processing</b><br/>L3 Basin-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
-    subgraph L3PR["L3<br/>processor"]
-      fd3["FD L3<br/><small>consolidation</small>"]:::proc
-      fh3["FH L3<br/><small>consolidation</small>"]:::proc
-      agb3["AGB L3<br/><small>consolidation</small>"]:::proc
-    end
-    fdout["FD<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
-    fhout["FH<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
-    agbout["AGB<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
-  end
-
-  in1 --> l1a
-  in2 --> l1b
-  in3 --> l1c
-  l1a -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, F<sub>m</sub>)" --> stack
-  l1b -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, F<sub>m</sub>)" --> stack
-  l1c -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, F<sub>m</sub>)" --> stack
-  stack -- "L1c(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, F<sub>m</sub>)<br/>L1c (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, F<sub>m</sub>)<br/>L1c(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, F<sub>m</sub>)" --> fda
-  stack --> fha
-  stack --> agba
-  fdprev --> fda
-  fda -- "FD<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> fdb
-  fha -- "FH<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> fhb
-  agba -- "AGB<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> agbb
-  fdin --> fdb
-  fhin --> fhb
-  agbinb --> agbb
-  fdb == "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" ==> fhb
-  fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)<br/>FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agbb
-  fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fd3
-  fhb -- "FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fh3
-  agbb -- "AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agb3
-  fd3 --> fdout
-  fh3 --> fhout
-  agb3 --> agbout
-  agbina --> agbb
-
-  %% lane colours (fill and text colour: readable in both site themes)
-  style L2P fill:none,stroke:none,color:#000000
-  style L1 fill:#dae3f3,stroke:#dae3f3,color:#000000
-  style L2A fill:#fbe5d6,stroke:#fbe5d6,color:#000000
-  style L2B fill:#e2f0d9,stroke:#e2f0d9,color:#000000
-  style L3 fill:#fff2cc,stroke:#fff2cc,color:#000000
-  style L2AP fill:#8faadc,stroke:#1f1f1f,color:#ffffff
-  style L3PR fill:#8faadc,stroke:#1f1f1f,color:#ffffff
-  %% links 16 and 17: FD_b of the FD L2b Tile proc (green, then orange)
-  linkStyle 16 stroke:#70ad47,stroke-width:3px
-  linkStyle 17 stroke:#ed7d31,stroke-width:2px
-```
-
-:::{dropdown} Original figure (DOCX)
 ![Biomass high-level processing scheme from L0 data to L3 products, INT phase.](../../_static/figures/atbd-l1-stack/figure_2_section_2.1.png)
-:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 2</span><span class="caption-text"> — Biomass high-level processing scheme from L0 data to L3 products, INT phase.</span></p>
 
-::::
+:::
 
 (sec:atbd-l1-stack-2-2)=
 ### 2.2 Overview
@@ -245,74 +147,17 @@ Other operations, like the generation of Digital Elevation Model (DEM) and Digit
 The main steps of the BPS Stack Processor workflow are depicted in the following figure and described in detail in the following sub-sections.
 
 (fig:atbd-l1-stack-3)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
-```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
-flowchart TB
-  accTitle: Stack Processor detailed workflow. The AUX_PPS is omitted from the figure since it is an input to each step of the Stack Processor.
-  accDescr: The L1a Stack enters the Pre-Processing block, which contains cross-polarization combination, estimation of RFI degradation indices, reference image selection and geometrical quantity's upsampling. Its output goes to the Coregistration block, made of shift estimation from geometry, residual shift estimation from data, image shifting and LUT shifting. Its output goes to the Calibration block, made of azimuth spectral filtering (AZF), background ionosphere removal (IOB), multi-squint calibration (MSC) and SKP phase calibration (SKP). The FNF Mask feeds the SKP phase calibration. The Calibration block outputs the L1c Stack.
-
-  %% Colours of the original figure. Each class sets its text colour too, so it
-  %% stays readable with the light and the dark site themes.
-  %%   product: data product (cylinder, white)
-  %%   step:    processing step inside a block (light grey box)
-  classDef product fill:#ffffff,stroke:#000000,color:#000000
-  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
-
-  l1a[("L1a Stack")]:::product
-  fnf[("FNF Mask")]:::product
-  l1c[("L1c Stack")]:::product
-
-  subgraph pre["<b>Pre-Processing</b>"]
-    direction TB
-    xpol["Cross-Polarization Combination"]:::step
-    rfi["Estimation of RFI Degradation Indices"]:::step
-    refsel["Reference Image Selection"]:::step
-    upsamp["Geometrical Quantity's Upsampling"]:::step
-    xpol ~~~ rfi ~~~ refsel ~~~ upsamp
-  end
-
-  subgraph coreg["<b>Coregistration</b>"]
-    direction TB
-    shiftgeo["Shift Estimation from Geometry"]:::step
-    shiftres["Residual Shift Estimation from Data"]:::step
-    imgshift["Image Shifting"]:::step
-    lutshift["LUT shifting"]:::step
-    shiftgeo ~~~ shiftres ~~~ imgshift ~~~ lutshift
-  end
-
-  subgraph cal["<b>Calibration</b>"]
-    direction TB
-    azf["Azimuth Spectral Filtering (AZF)"]:::step
-    iob["Background Ionosphere Removal (IOB)"]:::step
-    msc["Multi-Squint Calibration (MSC)"]:::step
-    skp["SKP Phase Calibration (SKP)"]:::step
-    azf ~~~ iob ~~~ msc ~~~ skp
-  end
-
-  style pre fill:#ffffff,stroke:#000000,color:#000000
-  style coreg fill:#ffffff,stroke:#000000,color:#000000
-  style cal fill:#ffffff,stroke:#000000,color:#000000
-
-  l1a --> pre
-  pre --> coreg
-  coreg --> cal
-  fnf --> skp
-  cal --> l1c
-```
-
-:::{dropdown} Original figure (DOCX)
 ![Stack Processor detailed workflow. The AUX\_PPS is omitted from the figure since it is an input to each step of the Stack Processor.](../../_static/figures/atbd-l1-stack/figure_3_section_2.3.png)
-:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — Stack Processor detailed workflow. The AUX_PPS is omitted from the figure since it is an input to each step of the Stack Processor.</span></p>
 
-::::
+:::
 
 (sec:atbd-l1-stack-2-3-1)=
 #### 2.3.1 Pre-processing

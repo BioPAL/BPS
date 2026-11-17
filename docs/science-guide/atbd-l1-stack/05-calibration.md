@@ -22,128 +22,17 @@ An overview of the full stack calibration algorithms is reported in {fig}`Figure
 Note that PPR and IOB are proved to be essentially equivalent, with PPR being more robust for larger baselines (e.g. above 35% of CB). The user is therefore recommended to avoid running the Stack Processor with both the module activated.
 
 (fig:atbd-l1-stack-9)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
-```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"mergeEdges": false, "nodePlacementStrategy": "NETWORK_SIMPLEX", "forceNodeModelOrder": true, "considerModelOrder": "NODES_AND_EDGES"}}}%%
-flowchart TB
-  accTitle: Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX_PPS.
-  accDescr: The coregistered SCS products go through azimuth spectral filtering, then the background ionosphere removal (IOB), made of an ionosphere estimation and an ionosphere removal. The result enters the multi-squint calibration (MSC), which also takes the SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) at its first step, SCS image warping. MSC then runs along-track shift estimation, along-track shifts correction, ionosphere estimation, ionosphere removal and phase-plane removal. Its output enters the SKP phase calibration, made of a ground phase estimation and a ground phase removal; the FNF feeds the ground phase removal. The SKP phase calibration produces the calibrated coregistered SCS products.
-
-  %% Colours of the original figure. Each class sets its text colour too, so it
-  %% stays readable with the light and the dark site themes.
-  %%   product: data item (white parallelogram)
-  %%   step:    processing step inside a block (light grey box)
-  %%   dots:    ellipsis between the first and last item (text only)
-  classDef product fill:#ffffff,stroke:#000000,color:#000000
-  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
-  classDef lone fill:#f2f2f2,stroke:#000000,color:#000000,font-weight:bold
-  classDef dots fill:none,stroke:none,color:#000000
-
-  subgraph cosc["<b>Coregistered SCS Products</b>"]
-    direction LR
-    cosc1[/"CoSCS1"/]:::product
-    cosc2[/"CoSCS2"/]:::product
-    coscdots["…"]:::dots
-    coscn[/"CoSCSn"/]:::product
-    cosc1 ~~~ cosc2 ~~~ coscdots ~~~ coscn
-  end
-
-  azf["Azimuth Spectral Filtering"]:::lone
-
-  subgraph iob["<b>Background Ionosphere Removal (IOB)</b>"]
-    direction TB
-    iobest["Ionosphere Estimation"]:::step
-    iobrem["Ionosphere Removal"]:::step
-    iobest ~~~ iobrem
-  end
-
-  %% The three inputs of MSC are stacked as in the original. Their items have
-  %% no links, so the layout engine (ELK) orders them: it shows them in the
-  %% order 3rd, 1st, 2nd, 4th of declaration, hence the declarations below
-  %% (item 2, dots, item 1, last item) to read 1, 2, …, n on the figure.
-  subgraph scs["<b>SCS Products</b>"]
-    scs2[/"SCS2"/]:::product
-    scsdots["…"]:::dots
-    scs1[/"SCS1"/]:::product
-    scsn[/"SCSn"/]:::product
-  end
-
-  subgraph rg["<b>Range Coregistration Shifts (Geo + Data)</b>"]
-    rg2[/"Rg1"/]:::product
-    rgdots["…"]:::dots
-    rg1[/"Rg1"/]:::product
-    rgn[/"CorRgN"/]:::product
-  end
-
-  subgraph az["<b>Along-Track Coregistration Shifts (Geo only)</b>"]
-    az2[/"AzGeo1"/]:::product
-    azdots["…"]:::dots
-    az1[/"AzGeo1"/]:::product
-    azn[/"AzGeoN"/]:::product
-  end
-
-  subgraph msc["<b>Multi-Squint Calibration (MSC)</b>"]
-    direction TB
-    warp["SCS Image Warping"]:::step
-    atest["Along-Track Shift Estimation"]:::step
-    atcor["Along-Track Shifts Correction"]:::step
-    mscest["Ionosphere Estimation"]:::step
-    mscrem["Ionosphere Removal"]:::step
-    plane["Phase-Plane Removal"]:::step
-    warp ~~~ atest ~~~ atcor ~~~ mscest ~~~ mscrem ~~~ plane
-  end
-
-  fnf[/"FNF"/]:::product
-
-  subgraph skp["<b>Skp Phase Calibration (SKP)</b>"]
-    direction TB
-    gest["Ground Phase Estimation"]:::step
-    grem["Ground Phase Removal"]:::step
-    gest ~~~ grem
-  end
-
-  subgraph calout["<b>Calibrated Coregistered SCS Products</b>"]
-    direction LR
-    cal1[/"CalCoSCS1"/]:::product
-    cal2[/"CalCoSCS2"/]:::product
-    caldots["…"]:::dots
-    caln[/"CalCoSCSn"/]:::product
-    cal1 ~~~ cal2 ~~~ caldots ~~~ caln
-  end
-
-  style cosc fill:#ffffff,stroke:#000000,color:#000000
-  style iob fill:#ffffff,stroke:#000000,color:#000000
-  style scs fill:#ffffff,stroke:#000000,color:#000000
-  style rg fill:#ffffff,stroke:#000000,color:#000000
-  style az fill:#ffffff,stroke:#000000,color:#000000
-  style msc fill:#ffffff,stroke:#000000,color:#000000
-  style skp fill:#ffffff,stroke:#000000,color:#000000
-  style calout fill:#ffffff,stroke:#000000,color:#000000
-
-  cosc --> azf
-  azf --> iob
-  iob --> msc
-  scs ~~~ rg ~~~ az
-  scs --> warp
-  rg --> warp
-  az --> warp
-  msc --> skp
-  fnf --> grem
-  skp --> calout
-```
-
-:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX\_PPS.](../../_static/figures/atbd-l1-stack/figure_9_section_5.png)
-:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX_PPS.</span></p>
 
-::::
+:::
 
 (sec:atbd-l1-stack-5-1)=
 ### 5.1 Azimuth Spectral Filtering
@@ -798,126 +687,15 @@ Next, given a calibration pair $(CoSCS_p,CoSCS_s^{\#})$ and a selected polarizat
 - Use the calibrated image $CoSCS_s^{\#}$and the primary $CoSCS_p$ to estimate and correct the phase plane associated with the low-pass artifacts and correct $CoSCS_s^{\#}$ accordingly
 - Update the primary stack’s secondary image with the calibrated image: $CalCoSCS_s\leftarrow{}CoSCS_s^{\#}$
 
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
-```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
-flowchart TB
-  accTitle: Multi-squint calibration flow chart (figure without caption, section 5.3.2)
-  accDescr: The SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) feed an image shifting step, which gives a temporary L1c stack. The temporary stack feeds the multi-squint coherence estimation and the along-track shifting. In parallel, the coregistered SCS products feed a coherence estimation. The coherence estimation and the multi-squint coherence estimation go to a coherence test, which leads to the multi-squint ionosphere correction: along-track shift estimation, along-track shifting, MS coherence estimation, ionosphere estimation and ionosphere correction. The multi-squint coherence estimation also feeds the along-track shift estimation. The coherence test output, the coregistered SCS products and the multi-squint ionosphere correction all go to the phase plane removal, which gives the calibrated coregistered SCS products.
-
-  %% Colours of the original figure. Each class sets its text colour too, so it
-  %% stays readable with the light and the dark site themes.
-  %%   product:  data item (white parallelogram)
-  %%   stack:    temporary product (white cylinder)
-  %%   step:     processing step in a block (light grey box)
-  %%   lone:     stand-alone processing step (light grey box, bold text)
-  %%   decision: decision point (white diamond)
-  %%   dots:     ellipsis between the first and last item (text only)
-  classDef product fill:#ffffff,stroke:#000000,color:#000000
-  classDef stack fill:#ffffff,stroke:#000000,color:#000000
-  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
-  classDef lone fill:#f2f2f2,stroke:#000000,color:#000000,font-weight:bold
-  classDef decision fill:#ffffff,stroke:#000000,color:#000000
-  classDef dots fill:none,stroke:none,color:#000000
-
-  subgraph scs["<b>SCS Products</b>"]
-    direction LR
-    scs1[/"SCS1"/]:::product
-    scs2[/"SCS2"/]:::product
-    scsdots["…"]:::dots
-    scsn[/"SCSn"/]:::product
-    scs1 ~~~ scs2 ~~~ scsdots ~~~ scsn
-  end
-
-  subgraph rg["<b>Range Coregistration Shifts (Geo + Data)</b>"]
-    direction LR
-    rg1[/"Rg1"/]:::product
-    rg2[/"Rg1"/]:::product
-    rgdots["…"]:::dots
-    rgn[/"CorRgN"/]:::product
-    rg1 ~~~ rg2 ~~~ rgdots ~~~ rgn
-  end
-
-  subgraph az["<b>Along-Track Coregistration Shifts (Geo only)</b>"]
-    direction LR
-    az1[/"AzGeo1"/]:::product
-    az2[/"AzGeo1"/]:::product
-    azdots["…"]:::dots
-    azn[/"AzGeoN"/]:::product
-    az1 ~~~ az2 ~~~ azdots ~~~ azn
-  end
-
-  subgraph cosc["<b>Coregistered SCS Products</b>"]
-    direction LR
-    cosc1[/"CoSCS1"/]:::product
-    cosc2[/"CoSCS2"/]:::product
-    coscdots["…"]:::dots
-    coscn[/"CoSCSn"/]:::product
-    cosc1 ~~~ cosc2 ~~~ coscdots ~~~ coscn
-  end
-
-  shift["Image Shifting"]:::lone
-  coh["Coherence Estimation"]:::lone
-  temp[("Temp L1c stack")]:::stack
-  mscoh["Multi-Squint Coherence<br/>Estimation"]:::lone
-  test{"Coherence<br/>Test"}:::decision
-
-  subgraph msi["<b>Multi-Squint Ionospehre Correction</b>"]
-    direction TB
-    atest["Along-track shift<br/>estimation"]:::step
-    atshift["Along-track Shifting"]:::step
-    mscohe["MS Coherence Estimation"]:::step
-    iest["Ionosphere Estimation"]:::step
-    icor["Ionosphere Correction"]:::step
-    atest --> atshift --> mscohe --> iest --> icor
-  end
-
-  plane["Phase Plane Removal"]:::lone
-
-  subgraph calout["<b>Calibrated Coregistered SCS Products</b>"]
-    direction LR
-    cal1[/"CalCoSCS1"/]:::product
-    cal2[/"CalCoSCS2"/]:::product
-    caldots["…"]:::dots
-    caln[/"CalCoSCSn"/]:::product
-    cal1 ~~~ cal2 ~~~ caldots ~~~ caln
-  end
-
-  style scs fill:#ffffff,stroke:#000000,color:#000000
-  style rg fill:#ffffff,stroke:#000000,color:#000000
-  style az fill:#ffffff,stroke:#000000,color:#000000
-  style cosc fill:#ffffff,stroke:#000000,color:#000000
-  style msi fill:#ffffff,stroke:#000000,color:#000000
-  style calout fill:#ffffff,stroke:#000000,color:#000000
-
-  scs ~~~ rg ~~~ az
-  scs --> shift
-  rg --> shift
-  az --> shift
-  shift --> temp
-  cosc --> coh
-  cosc --> plane
-  temp --> mscoh
-  temp --> atshift
-  coh --> test
-  mscoh --> test
-  mscoh --> atest
-  test --> msi
-  test --> plane
-  msi --> plane
-  plane --> calout
-```
-
-:::{dropdown} Original figure (DOCX)
 ![Figure](../../_static/figures/atbd-l1-stack/image_1_section_5.3.2.png)
-:::
 
 </div>
 
-::::
+:::
 
 {fig}`Fig|12`. The workflow of the Multi-Squint Calibration Module
 
