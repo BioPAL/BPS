@@ -775,8 +775,9 @@ class AtbdLatexContent(SphinxPostTransform):
                 True for _ in child.findall(mermaid_cls)
             ):
                 visuals.extend(child.findall(mermaid_cls))
-            elif has_mermaid and self._is_original_dropdown(child):
-                continue  # the Mermaid rendering already shows this figure
+            elif (has_mermaid or "atbd-drawn-figure" in container.get("classes", [])) \
+                    and self._is_original_dropdown(child):
+                continue  # the Mermaid rendering or the redrawn figure already shows it
             else:
                 extra.append(child)
 
