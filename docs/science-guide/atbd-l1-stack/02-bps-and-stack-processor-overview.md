@@ -27,7 +27,7 @@ The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 da
 ```{mermaid}
 %%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
-  accTitle: Biomass high-level processing scheme from L0 data to L3 products, TOM phase
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, TOM phase.
   accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): each L0 frame (G_i, M_j, m_k, A_l, S_m) up to A_l+6 goes through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m) to A_l+6. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m) to A_l+6, feeds the FH L2a proc and AGB L2a proc steps of the L2a processor. L2b Tile-based Processing (Asynchronous): FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc, which also takes the internal forest class/mask; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles), AGB_a(G_i, *Tn, *Tn, *Tn) and the forest class/mask with FH_b(t_a, t_b, T_n) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FH_b(t_a, t_b, T_n) and AGB_b(t_a, t_b, T_n) go to the FH L3 and AGB L3 consolidation steps of the L3 processor, which output FH_3(t_a, t_b, B_n) and AGB_3(t_a, t_b, B_n).
 
   %% Colours of the original figure. Each class sets its text colour too, so it
@@ -60,7 +60,8 @@ flowchart TB
     subgraph L2B["L2b Tile-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
       mask["internal forest<br/>class/mask"]:::data
       fhin["FH<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
-      agbin["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)<br/>AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
+      agbinb["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)"]:::data
+      agbina["AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
       fhb["FH L2b<br/>Tile<br/>proc"]:::step
       agbb["AGB<br/>L2b Tile<br/>proc"]:::step
     end
@@ -85,13 +86,14 @@ flowchart TB
   fha -- "FH<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> fhb
   agba -- "AGB<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> agbb
   fhin --> fhb
-  agbin --> agbb
+  agbinb --> agbb
   mask ==> fhb
   mask -- "forest<br/>class/mask<br/>FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agbb
   fhb -- "FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fh3
   agbb -- "AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agb3
   fh3 --> fhout
   agb3 --> agbout
+  agbina --> agbb
 
   %% lane colours (fill and text colour: readable in both site themes)
   style L2P fill:none,stroke:none,color:#000000
@@ -124,7 +126,7 @@ flowchart TB
 ```{mermaid}
 %%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
-  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
   accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): the L0 frames (G_i, M_j, m_k, A_l, S_m), A_l+1 and A_l+2 each go through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m), A_l+1 and A_l+2. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m), A_l+1 and A_l+2, feeds the FD L2a proc, FH L2a proc and AGB L2a proc steps of the L2a processor; FD L2a proc also takes FD_a(G_i-1, M_j, m_k, F_m). L2b Tile-based Processing (Asynchronous): FD_a(G_i, M_j, m_k, F_m) and FD_a(G_i, *Tn, *Tn, *Tn) feed the FD L2b Tile proc, whose FD_b(t_a, t_b, T_n) goes to the FH L2b Tile proc and, with FH_b(t_a, t_b, T_n), to the AGB L2b Tile proc. FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles) and AGB_a(G_i, *Tn, *Tn, *Tn) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FD_b, FH_b and AGB_b(t_a, t_b, T_n) go to the FD L3, FH L3 and AGB L3 consolidation steps of the L3 processor, which output FD_3, FH_3 and AGB_3(t_a, t_b, B_n).
 
   %% Colours of the original figure. Each class sets its text colour too, so it
@@ -159,7 +161,8 @@ flowchart TB
     subgraph L2B["L2b Tile-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
       fdin["FD<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
       fhin["FH<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
-      agbin["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)<br/>AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
+      agbinb["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)"]:::data
+      agbina["AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
       fdb["FD L2b<br/>Tile<br/>proc"]:::step
       fhb["FH L2b<br/>Tile<br/>proc"]:::step
       agbb["AGB<br/>L2b Tile<br/>proc"]:::step
@@ -192,7 +195,7 @@ flowchart TB
   agba -- "AGB<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> agbb
   fdin --> fdb
   fhin --> fhb
-  agbin --> agbb
+  agbinb --> agbb
   fdb == "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" ==> fhb
   fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)<br/>FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agbb
   fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fd3
@@ -201,6 +204,7 @@ flowchart TB
   fd3 --> fdout
   fh3 --> fhout
   agb3 --> agbout
+  agbina --> agbb
 
   %% lane colours (fill and text colour: readable in both site themes)
   style L2P fill:none,stroke:none,color:#000000
@@ -248,7 +252,7 @@ The main steps of the BPS Stack Processor workflow are depicted in the following
 ```{mermaid}
 %%{init: {"theme": "default", "layout": "elk"}}%%
 flowchart TB
-  accTitle: Stack Processor detailed workflow. The AUX_PPS is omitted for the sake of clarity.
+  accTitle: Stack Processor detailed workflow. The AUX_PPS is omitted from the figure since it is an input to each step of the Stack Processor.
   accDescr: The L1a Stack enters the Pre-Processing block, which contains cross-polarization combination, estimation of RFI degradation indices, reference image selection and geometrical quantity's upsampling. Its output goes to the Coregistration block, made of shift estimation from geometry, residual shift estimation from data, image shifting and LUT shifting. Its output goes to the Calibration block, made of azimuth spectral filtering (AZF), background ionosphere removal (IOB), multi-squint calibration (MSC) and SKP phase calibration (SKP). The FNF Mask feeds the SKP phase calibration. The Calibration block outputs the L1c Stack.
 
   %% Colours of the original figure. Each class sets its text colour too, so it

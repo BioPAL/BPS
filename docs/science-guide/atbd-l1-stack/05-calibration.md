@@ -27,9 +27,9 @@ Note that PPR and IOB are proved to be essentially equivalent, with PPR being mo
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX", "mergeEdges": false}}}%%
+%%{init: {"theme": "default", "layout": "elk", "elk": {"mergeEdges": false, "nodePlacementStrategy": "NETWORK_SIMPLEX", "forceNodeModelOrder": true, "considerModelOrder": "NODES_AND_EDGES"}}}%%
 flowchart TB
-  accTitle: Complete flow-chart of the calibration processor. Note that the AUX_PPS is omitted for the sake of clarity.
+  accTitle: Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX_PPS.
   accDescr: The coregistered SCS products go through azimuth spectral filtering, then the background ionosphere removal (IOB), made of an ionosphere estimation and an ionosphere removal. The result enters the multi-squint calibration (MSC), which also takes the SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) at its first step, SCS image warping. MSC then runs along-track shift estimation, along-track shifts correction, ionosphere estimation, ionosphere removal and phase-plane removal. Its output enters the SKP phase calibration, made of a ground phase estimation and a ground phase removal; the FNF feeds the ground phase removal. The SKP phase calibration produces the calibrated coregistered SCS products.
 
   %% Colours of the original figure. Each class sets its text colour too, so it
@@ -60,31 +60,29 @@ flowchart TB
     iobest ~~~ iobrem
   end
 
+  %% The three inputs of MSC are stacked as in the original. Their items have
+  %% no links, so the layout engine (ELK) orders them: it shows them in the
+  %% order 3rd, 1st, 2nd, 4th of declaration, hence the declarations below
+  %% (item 2, dots, item 1, last item) to read 1, 2, …, n on the figure.
   subgraph scs["<b>SCS Products</b>"]
-    direction LR
-    scs1[/"SCS1"/]:::product
     scs2[/"SCS2"/]:::product
     scsdots["…"]:::dots
+    scs1[/"SCS1"/]:::product
     scsn[/"SCSn"/]:::product
-    scs1 ~~~ scs2 ~~~ scsdots ~~~ scsn
   end
 
   subgraph rg["<b>Range Coregistration Shifts (Geo + Data)</b>"]
-    direction LR
-    rg1[/"Rg1"/]:::product
     rg2[/"Rg1"/]:::product
     rgdots["…"]:::dots
+    rg1[/"Rg1"/]:::product
     rgn[/"CorRgN"/]:::product
-    rg1 ~~~ rg2 ~~~ rgdots ~~~ rgn
   end
 
   subgraph az["<b>Along-Track Coregistration Shifts (Geo only)</b>"]
-    direction LR
-    az1[/"AzGeo1"/]:::product
     az2[/"AzGeo1"/]:::product
     azdots["…"]:::dots
+    az1[/"AzGeo1"/]:::product
     azn[/"AzGeoN"/]:::product
-    az1 ~~~ az2 ~~~ azdots ~~~ azn
   end
 
   subgraph msc["<b>Multi-Squint Calibration (MSC)</b>"]
@@ -128,6 +126,7 @@ flowchart TB
   cosc --> azf
   azf --> iob
   iob --> msc
+  scs ~~~ rg ~~~ az
   scs --> warp
   rg --> warp
   az --> warp
@@ -159,7 +158,7 @@ Due to the different Doppler centroids and viewing geometries caused by the sate
 ```{mermaid}
 %%{init: {"theme": "default"}}%%
 flowchart TB
-  accTitle: The AZF's flow diagram.
+  accTitle: The AZF’s flow diagram.
   accDescr: The Doppler polynomials and the CoSCS stack feed the step that selects the azimuth common bandwidth. Its result goes to the azimuth spectral filtering step, which gives the azimuth filtered CoSCS stack.
 
   %% Colours of the original figure.
@@ -406,7 +405,7 @@ where $c$ is the speed of light, and $\Delta{}TEC,\ \Delta{}r_{nd}$, and $K$ are
 ```{mermaid}
 %%{init: {"theme": "default", "layout": "elk"}}%%
 flowchart TB
-  accTitle: Single-baseline IOB estimation
+  accTitle: Block diagram representing the single-baseline IOB estimation.
   accDescr: Each of the two co-registered SCS images (CoSCS 1 and 2) goes through focusing window removal, revert of the L1 ionosphere correction (using the iono phase by FR of the same image), geometric phase removal (using its synthetic phases) and range sub-looks generation. The low sub-looks of both images give the low frequency interferogram and the high sub-looks the high frequency interferogram. Both interferograms, with the coregistration shifts 1 and 2, go to resampling phase removal, then dispersive phase computation and linear regression, which output the linear component of the differential ionospheric phase screen.
 
   %% Colours of the original figure (grey gradient boxes, dark text).
@@ -807,7 +806,7 @@ Next, given a calibration pair $(CoSCS_p,CoSCS_s^{\#})$ and a selected polarizat
 %%{init: {"theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Multi-squint calibration flow chart (figure without caption, section 5.3.2)
-  accDescr: The SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) feed an image shifting step, which gives a temporary L1c stack. The temporary stack feeds the multi-squint coherence estimation and the along-track shifting. In parallel, the coregistered SCS products feed a coherence estimation. The coherence estimation and the multi-squint coherence estimation go to a coherence test. When the test is passed, the multi-squint ionosphere correction runs: along-track shift estimation, along-track shifting, MS coherence estimation, ionosphere estimation and ionosphere correction. The multi-squint coherence estimation also feeds the along-track shift estimation. The coherence test output, the coregistered SCS products and the multi-squint ionosphere correction all go to the phase plane removal, which gives the calibrated coregistered SCS products.
+  accDescr: The SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) feed an image shifting step, which gives a temporary L1c stack. The temporary stack feeds the multi-squint coherence estimation and the along-track shifting. In parallel, the coregistered SCS products feed a coherence estimation. The coherence estimation and the multi-squint coherence estimation go to a coherence test, which leads to the multi-squint ionosphere correction: along-track shift estimation, along-track shifting, MS coherence estimation, ionosphere estimation and ionosphere correction. The multi-squint coherence estimation also feeds the along-track shift estimation. The coherence test output, the coregistered SCS products and the multi-squint ionosphere correction all go to the phase plane removal, which gives the calibrated coregistered SCS products.
 
   %% Colours of the original figure. Each class sets its text colour too, so it
   %% stays readable with the light and the dark site themes.
@@ -1294,7 +1293,7 @@ flowchart TB
 ```{mermaid}
 %%{init: {"theme": "default"}}%%
 flowchart TB
-  accTitle: SKP decomposition
+  accTitle: SKP decomposition.
   accDescr: The MPMB covariance goes through a rank 2 approximation, giving R1,R2 and C1,C2. Both feed the physically admissible range determination, which gives a, b. A coherence analysis of a, b outputs R Coh,thin, R Coh,fat, R inc,thin and R inc,fat.
 
   %% Colours of the original figure (grey gradient boxes, dark text).

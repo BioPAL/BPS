@@ -40,6 +40,17 @@ flowchart TB
 Under every redrawn figure, the **Original figure (DOCX)** dropdown keeps the
 image of the approved Word document, for comparison.
 
+To find a figure, open the chapter page that shows it on the site (its address
+ends with the page name, for example `05-calibration.html` →
+`05-calibration.md`) and search the file for its number as written in the
+caption, `Fig. 5</span>`; from a terminal:
+
+```bash
+grep -rn "Fig. 5</span>" docs/science-guide/atbd-l1-stack/
+```
+
+The source block is just above that line.
+
 ```{important}
 The pages are generated from the Word documents by the converter
 esa-doc2open, which holds the master copy of every
@@ -75,6 +86,13 @@ flowchart TB
   themes of the site.
 - **Groups**: `subgraph id["Title"]` … `end` draws a box around nodes (the
   coloured lanes); `style id fill:…,color:…` sets its colours.
+- **Invisible links** `a ~~~ b` only set the order of boxes (for example inside
+  a group with no arrows); they draw nothing. When you add a step to such a
+  group, add it to the chain: `a ~~~ new ~~~ b`.
+- **Remove an arrow**: delete its line (`a --> b`). Arrows are counted from 0
+  in the order of their lines (invisible links included) by the `linkStyle n`
+  lines that colour them: check those numbers after adding or removing an
+  arrow.
 - `accTitle` and `accDescr` describe the diagram for screen readers: update
   `accDescr` when you change the content.
 - Keep the first line, `%%{init: {"theme": "default", …}}%%`: it keeps the
@@ -91,8 +109,9 @@ The script `fig<N>.py` draws the figure with matplotlib. Its first lines say
 which figure it is and where its values come from; the values, labels and
 colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
 
-1. Change a value or a label at the top of the script. Labels between `$…$`
-   are formulas (`$\sigma^0$`).
+1. Change a value or a label at the top of the script, where the values
+   (`PARAMETERS` or `GEOMETRY`), the labels (`LABELS`) and the colours
+   (`COLOURS`) are grouped. Labels between `$…$` are formulas (`$\sigma^0$`).
 2. Regenerate the images, in the figure folder:
 
    ```bash
@@ -101,7 +120,9 @@ colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
    ```
 
    This rewrites `fig<N>.svg` (web page) and `fig<N>.pdf` (PDF export). You
-   need Python 3 with matplotlib (`pip install matplotlib`).
+   need Python 3 with matplotlib (`pip install matplotlib`). A warning about a
+   "timestamp" is harmless (the files get a fixed date so that the same script
+   always gives the same files).
 3. Commit the three files together.
 
 ## Checking the result
@@ -115,8 +136,9 @@ pip install -r requirements.txt
 sphinx-build -b html . _build/html
 ```
 
-then open `_build/html/science-guide/<document>/index.html` and look at the
-figure in both themes (the sun/moon button at the top right). A Mermaid error
+then open the chapter page of the figure,
+`_build/html/science-guide/<document>/<chapter>.html` (the `.md` file you
+edited, with `.html`), and look at the figure in both themes (the sun/moon button at the top right). A Mermaid error
 shows as a red message in place of the diagram; for a Python figure, check
 that the build output mentions no missing image.
 

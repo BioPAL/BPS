@@ -26,14 +26,15 @@ import matplotlib.pyplot as plt  # noqa: E402
 # -- colours and sizes -------------------------------------------------------
 COLOURS = {"text": "#000000", "a": "#ff0000", "b": "#00b050", "line": "#000000"}
 WIDTH_IN = 6.2  # PDF text width
-FONT_PT = 8.5
+FONT_PT = 11.5  # the PDF export prints it at about 65 %: subscripts stay >= 5 pt
 THICK, THIN = 2.2, 0.9  # line widths (pt)
 
 # -- geometry (pixels of the original figure, y downwards) -------------------
-W, H = 1380, 545
+W, H = 1530, 560  # canvas: the original figure plus a margin for the larger text
 Y_TRUE, Y_FALSE = (80, 150), (257, 313)  # upper and lower panel levels
 Y_AXIS3 = 420  # axis of the admissible range
-# left column (parameter a) and right column (parameter b)
+# left column (parameter a) and right column (parameter b, 60 px further right
+# than in the original, to leave room between the larger labels)
 COLS = {
     "a": {
         "x0": 100, "x1": 455, "yaxis": 117,
@@ -43,11 +44,11 @@ COLS = {
         "top_end": 455, "bot_end": 445,
     },
     "b": {
-        "x0": 850, "x1": 1205, "yaxis": 866,
-        "top": (975, 1145),    # R_v(b) > 0
-        "bot": (920, 1065),    # C_g(b) > 0
-        "bounds": (975, 1065),  # b_min, b_max
-        "top_end": 1195, "bot_end": 1205,
+        "x0": 910, "x1": 1265, "yaxis": 926,
+        "top": (1035, 1205),    # R_v(b) > 0
+        "bot": (980, 1125),    # C_g(b) > 0
+        "bounds": (1035, 1125),  # b_min, b_max
+        "top_end": 1255, "bot_end": 1265,
     },
 }
 
@@ -152,7 +153,7 @@ for col in ("a", "b"):
     label(hi + 2, 452, LABELS[f"{col}max"])
 
 # determinant labels and the arrows towards them
-for col, x_left, x_right in (("a", 35, 420), ("b", 727, 1125)):
+for col, x_left, x_right in (("a", 35, 400), ("b", 805, 1195)):
     lo, hi = COLS[col]["bounds"]
     arrow(lo + 13, 470, lo - 9, 493)
     arrow(hi + 37, 477, hi + 50, 493)
