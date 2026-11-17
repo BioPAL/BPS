@@ -37,6 +37,15 @@ flowchart TB
 | a schematic plot (axes, windows, geometry) | a Python script `_static/figures/<folder>/fig<N>.py`, next to the `fig<N>.svg` and `fig<N>.pdf` it produces | the `.py`, then regenerate (below) |
 | a measured map, an image of real data, a figure taken from another publication | the image itself (it cannot be redrawn without inventing data) | nothing: ask the document owner for a new image |
 
+A figure drawn in several parts, (a), (b), (c)…, is several `{mermaid}` blocks
+one after the other, each preceded by a line
+`<p class="atbd-subfigure-label">(c)</p>`; they share one label, one caption
+and one "Original figure (DOCX)" dropdown. Edit only the block of the part you
+want (the caption comes after all the parts: read upwards to the part label).
+Each part is an independent diagram (an arrow cannot join two parts: a link to
+another part is drawn as a dotted reference box, "from (c): …"), and each part
+has its own `accDescr` to update.
+
 The figure folder of a script is named after the product, not always after the
 document (`atbd-l2-agb` uses `docs/_static/figures/agb/`, `atbd-l2-fd` uses
 `atbd-fd/`): the line
@@ -135,6 +144,9 @@ colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
 1. Change a value or a label at the top of the script, where the values
    (`PARAMETERS` or `GEOMETRY`), the labels (`LABELS`) and the colours
    (`COLOURS`) are grouped. Labels between `$…$` are formulas (`$\sigma^0$`).
+   In some scripts the label positions are written apart from the points they
+   name (pixels of the original figure): after moving a point, move its label
+   too, then look at the new `fig<N>.svg`.
 2. Regenerate the images, in the figure folder:
 
    ```bash
@@ -228,7 +240,8 @@ sphinx-build -b html . _build/html
 The build takes about a minute; warnings about `grid-item` or about a page
 "not included in any toctree" are not related to your change. Then open the
 chapter page of the figure (reload it without the cache, Ctrl+Shift+R, after
-regenerating a Python figure),
+regenerating a Python figure: run the build again first, it copies the new
+`.svg`),
 `_build/html/science-guide/<document>/<chapter>.html` (the `.md` file you
 edited, with `.html`), and look at the figure in both themes (the sun/moon button at the top right). A Mermaid error
 shows as a red message in place of the diagram; for a Python figure, check
