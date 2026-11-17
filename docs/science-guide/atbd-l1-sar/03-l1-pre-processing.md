@@ -115,9 +115,7 @@ flowchart TB
   style baq fill:#ffffff,stroke:#000000,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the BAQ Decoding step.](../../_static/figures/atbd-l1-sar/figure_5_section_3.2.1.jpg)
-:::
+<!-- source image: figure_5_section_3.2.1 sha256 2b0ad71a3550999162505b2bb28b2b52de3b901d0172553180c6e980c1f8fe9b -->
 
 </div>
 
@@ -399,7 +397,7 @@ The rationale of the internal calibration process is depicted in the figure belo
 Some of the following sub-sections present the computation of a “normalization factor” based on a look-up table. This factor characterizes the passive elements within the calibration paths as a function of the temperature measured by the thermistors, whose impact (mainly attenuations and delays) need to be removed from the derived quantities (PGP, antenna complex coefficients, etc.). The detailed description of such computations is included in {ad}`6` and therefore omitted in the following sub-sections. Note that while the sections below refer to this information as a “LUT”, in practice the actual implementation is not a look-up table, but it follows the description as provided in {ad}`6`. Therefore, the computed factors are related to the instrument characterization data included in the instrument CCDB, such that the applied factors are updated in response to changes in temperature measured by the thermistors and stored in the instrument ancillary packets.
 
 (fig:atbd-l1-sar-6)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -452,15 +450,13 @@ flowchart TB
   class sel decision
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the internal calibration approach.](../../_static/figures/atbd-l1-sar/figure_6_section_3.3.png)
-:::
+<!-- source image: figure_6_section_3.3 sha256 a91630c14b9f4ddb647bf5b986388f6a5797e945b03df0b1efe0e7132b914a2d -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Block diagram of the internal calibration approach.</span></p>
 
-::::
+:::
 
 Note that in case internal calibration parameters cannot be derived from input product internal calibration pulses, default values are taken from `AUX_INS` file (in particular, `modelDrift`, `internalDelay`, `txChannelImbalance`, `rxChannelImbalance` and `noisePower` parameters are used).
 

@@ -108,9 +108,7 @@ flowchart TB
   linkStyle 12 stroke:#ed7d31,stroke-width:2px
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Biomass high-level processing scheme from L0 data to L3 products, TOM phase.](../../_static/figures/atbd-fh/figure_1_section_2.1.png)
-:::
+<!-- source image: figure_1_section_2.1 sha256 33a97074fa7afe25c1d16c43cf0fa648cb1ff41c2b4b2e91559f98ef5446bb8f -->
 
 </div>
 
@@ -119,17 +117,263 @@ flowchart TB
 ::::
 
 (fig:atbd-fh-2)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
-![Biomass high-level processing scheme from L0 data to L3 products, INT phase.](../../_static/figures/atbd-fh/figure_2_section_2.1.png)
+<p class="atbd-subfigure-label">(a)</p>
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "wrappingWidth": 320}}}%%
+flowchart TB
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
+  accDescr: Overview of the figure, whose detail is in four sub-figures, one per lane; each lane names the sub-figure that details it. L0 frames enter the L1 Frame-based Processing (Data Driven), the L1 processing; its L1 frames go to the L2a Stack-based Processing (Data Driven), the first lane of the L2 processing, which gives the FD_a, FH_a and AGB_a products to the L2b Tile-based Processing (Asynchronous), its second lane. The L2b products FD_b, FH_b and AGB_b go to the L3 Basin-based Processing (Asynchronous), the L3 processing, which outputs FD_3, FH_3 and AGB_3.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   data:  input or output label (text only)
+  %%   l1, l2a, l2b, l3: one lane of the original, in its lane colour, under its
+  %%                     stage title (L1, L2 or L3 processing); its last line, in
+  %%                     italics, names the sub-figure that details it: (b) to (e)
+  classDef data fill:none,stroke:none,color:#000000
+  classDef l1 fill:#dae3f3,stroke:#8faadc,color:#000000
+  classDef l2a fill:#fbe5d6,stroke:#f4b183,color:#000000
+  classDef l2b fill:#e2f0d9,stroke:#a9d18e,color:#000000
+  classDef l3 fill:#fff2cc,stroke:#ffd966,color:#000000
+
+  l0["L0"]:::data
+
+  lane1["<b>L1 processing</b><br/>L1 Frame-based Processing<br/><b style='color:#548235'>Data Driven</b><br/><i>(b)</i>"]:::l1
+
+  %% The original has one L2 processing stage holding two lanes
+  subgraph L2["&nbsp;"]
+    direction TB
+    l2title["<b>L2 processing</b>"]:::data
+    lane2a["L2a Stack-based Processing<br/><b style='color:#548235'>Data Driven</b><br/><i>(c)</i>"]:::l2a
+    lane2b["L2b Tile-based Processing<br/><b style='color:#e00000'>Asynchronous</b><br/><i>(d)</i>"]:::l2b
+  end
+
+  lane3["<b>L3 processing</b><br/>L3 Basin-based Processing<br/><b style='color:#e00000'>Asynchronous</b><br/><i>(e)</i>"]:::l3
+
+  out["FD<sub>3</sub>, FH<sub>3</sub>, AGB<sub>3</sub>"]:::data
+
+  l0 --> lane1
+  lane1 --> lane2a
+  lane2a --> lane2b
+  lane2b --> lane3
+  lane3 --> out
+  l2title ~~~ lane2a
+
+  %% L2 processing stage: white frame, thin grey outline
+  style L2 fill:#ffffff,stroke:#7f7f7f,color:#000000
+```
+
+<p class="atbd-subfigure-label">(b)</p>
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "flowchart": {"useMaxWidth": false, "diagramPadding": 4}}}%%
+flowchart LR
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
+  accDescr: Detail of the L1 Frame-based Processing (Data Driven) lane, in L1 processing. The L0 frames L0 (G_i, M_j, m_k, A_l, S_m), L0 (G_i, M_j, m_k, A_l+1, S_m) and L0 (G_i, M_j, m_k, A_l+2, S_m) each go through an L1 Pr. step, which gives L1 (G_i, M_j, m_k, A_l, F_m), L1 (G_i, M_j, m_k, A_l+1, F_m) and L1 (G_i, M_j, m_k, A_l+2, F_m). The three L1 frames go to the Stack step of sub-figure (c).
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   step: processing step (blue box, white text)
+  %%   data: input label (text only, on the lane colour)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         step drawn in another sub-figure, so that no step is duplicated
+  %%   red A: the acquisition index, which changes from one frame to the next
+  classDef step fill:#8faadc,stroke:#1f1f1f,color:#ffffff,font-weight:bold
+  classDef data fill:none,stroke:none,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  subgraph L1["<b>L1 processing</b><br/>L1 Frame-based Processing<br/><span style='color:#548235'>Data Driven</span>"]
+    direction LR
+    in1["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, S<sub>m</sub>)"]:::data
+    in2["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, S<sub>m</sub>)"]:::data
+    in3["L0 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, S<sub>m</sub>)"]:::data
+    l1a["L1 Pr."]:::step
+    l1b["L1 Pr."]:::step
+    l1c["L1 Pr."]:::step
+  end
+
+  toStack(["to (c): Stack"]):::ref
+
+  in1 --> l1a
+  in2 --> l1b
+  in3 --> l1c
+  l1a -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, F<sub>m</sub>)" --> toStack
+  l1b -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, F<sub>m</sub>)" --> toStack
+  l1c -- "L1 (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, F<sub>m</sub>)" --> toStack
+
+  %% lane colour of the original
+  style L1 fill:#dae3f3,stroke:#dae3f3,color:#000000
+```
+
+<p class="atbd-subfigure-label">(c)</p>
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "flowchart": {"useMaxWidth": false, "diagramPadding": 4}}}%%
+flowchart LR
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
+  accDescr: Detail of the L2a Stack-based Processing (Data Driven) lane, in L2 processing. The three L1 frames from the L1 Pr. steps of sub-figure (b) are stacked. The Stack step gives L1c(G_i, M_j, m_k, A_l, F_m), L1c (G_i, M_j, m_k, A_l+1, F_m) and L1c(G_i, M_j, m_k, A_l+2, F_m) to the FD L2a proc, FH L2a proc and AGB L2a proc steps of the L2a processor. FD L2a proc also takes FD_a(G_i-1, M_j, m_k, F_m). The three steps give FD_a(G_i, M_j, m_k, F_m), FH_a(G_i, M_j, m_k, F_m) and AGB_a(G_i, M_j, m_k, F_m) to the FD, FH and AGB L2b Tile proc steps of sub-figure (d).
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   step: processing step (blue box, white text)
+  %%   proc: step inside the L2a processor (grey box, white text)
+  %%   data: input label (text only, on the lane colour)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         step drawn in another sub-figure, so that no step is duplicated
+  %%   red A, red G: the index that changes from one acquisition or cycle to the next
+  classDef step fill:#8faadc,stroke:#1f1f1f,color:#ffffff,font-weight:bold
+  classDef proc fill:#a6a6a6,stroke:#1f1f1f,color:#ffffff,font-weight:bold
+  classDef data fill:none,stroke:none,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  fromL1(["from (b):<br/>L1 Pr."]):::ref
+
+  subgraph L2A["<b>L2 processing</b><br/>L2a Stack-based Processing<br/><span style='color:#548235'>Data Driven</span>"]
+    direction LR
+    stack["Stack"]:::step
+    fdprev["FD<sub>a</sub>(<b style='color:#e00000'>G<sub>i-1</sub></b>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)"]:::data
+    subgraph L2AP["L2a processor"]
+      direction TB
+      fda["FD L2a<br/>proc"]:::proc
+      fha["FH L2a<br/>proc"]:::proc
+      agba["AGB<br/>L2a<br/>proc"]:::proc
+    end
+  end
+
+  toFD(["to (d): FD<br/>L2b Tile proc"]):::ref
+  toFH(["to (d): FH<br/>L2b Tile proc"]):::ref
+  toAGB(["to (d): AGB<br/>L2b Tile proc"]):::ref
+
+  fromL1 --> stack
+  stack -- "L1c(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l</sub></b>, F<sub>m</sub>)<br/>L1c (G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+1</sub></b>, F<sub>m</sub>)<br/>L1c(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, <b style='color:#e00000'>A<sub>l+2</sub></b>, F<sub>m</sub>)" --> fda
+  stack --> fha
+  stack --> agba
+  fdprev --> fda
+  fda -- "FD<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> toFD
+  fha -- "FH<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> toFH
+  agba -- "AGB<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> toAGB
+
+  %% lane colour and L2a processor frame of the original
+  style L2A fill:#fbe5d6,stroke:#fbe5d6,color:#000000
+  style L2AP fill:#8faadc,stroke:#1f1f1f,color:#ffffff
+```
+
+<p class="atbd-subfigure-label">(d)</p>
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"considerModelOrder": "NODES_AND_EDGES", "forceNodeModelOrder": true, "nodePlacementStrategy": "LINEAR_SEGMENTS"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "wrappingWidth": 320}}}%%
+flowchart TB
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
+  accDescr: Detail of the L2b Tile-based Processing (Asynchronous) lane, in L2 processing. The FD L2b Tile proc takes FD_a(G_i, M_j, m_k, F_m) from sub-figure (c) and FD_a(G_i, *Tn, *Tn, *Tn); its FD_b(t_a, t_b, T_n) goes to the FH L2b Tile proc (green arrow) and, with FH_b(t_a, t_b, T_n), to the AGB L2b Tile proc (orange arrow). The FH L2b Tile proc also takes FH_a(G_i, M_j, m_k, F_m) from sub-figure (c) and FH_a(G_i, *Tn, *Tn, *Tn). The AGB L2b Tile proc also takes AGB_a(G_i, M_j, m_k, F_m) from sub-figure (c), AGB_b(t_a, t_b, neighbour Tiles) and AGB_a(G_i, *Tn, *Tn, *Tn). The three steps give FD_b, FH_b and AGB_b(t_a, t_b, T_n) to the FD, FH and AGB L3 consolidation steps of sub-figure (e).
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   step: processing step (blue box, white text)
+  %%   data: input label (text only, on the lane colour)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         step drawn in another sub-figure, so that no step is duplicated
+  classDef step fill:#8faadc,stroke:#1f1f1f,color:#ffffff,font-weight:bold
+  classDef data fill:none,stroke:none,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  fromFD(["from (c): FD L2a proc"]):::ref
+  fromFH(["from (c): FH L2a proc"]):::ref
+  fromAGB(["from (c): AGB L2a proc"]):::ref
+
+  subgraph L2B["<b>L2 processing</b><br/>L2b Tile-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
+    direction TB
+    fdin["FD<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
+    fhin["FH<sub>a</sub>(G<sub>i</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
+    agbinb["AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, <i>neighbour Tiles</i>)"]:::data
+    agbina["AGB<sub>a</sub>(G<sub>i</sub>,*<sub>Tn</sub>, *<sub>Tn</sub>, *<sub>Tn</sub>)"]:::data
+    fdb["FD L2b<br/>Tile<br/>proc"]:::step
+    fhb["FH L2b<br/>Tile<br/>proc"]:::step
+    agbb["AGB<br/>L2b Tile<br/>proc"]:::step
+  end
+
+  toFD(["to (e): FD L3 consolidation"]):::ref
+  toFH(["to (e): FH L3 consolidation"]):::ref
+  toAGB(["to (e): AGB L3 consolidation"]):::ref
+
+  fromFD -- "FD<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> fdb
+  fromFH -- "FH<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> fhb
+  fromAGB -- "AGB<sub>a</sub>(G<sub>i</sub>, M<sub>j</sub>, m<sub>k</sub>, F<sub>m</sub>)" --> agbb
+  fdin --> fdb
+  fhin --> fhb
+  agbinb --> agbb
+  agbina --> agbb
+  fdb == "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" ==> fhb
+  fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)<br/>FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agbb
+  fdb -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> toFD
+  fhb -- "FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> toFH
+  agbb -- "AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> toAGB
+
+  %% lane colour of the original
+  style L2B fill:#e2f0d9,stroke:#e2f0d9,color:#000000
+  %% links 7 and 8: FD_b of the FD L2b Tile proc (green, then orange)
+  linkStyle 7 stroke:#70ad47,stroke-width:3px
+  linkStyle 8 stroke:#ed7d31,stroke-width:2px
+```
+
+<p class="atbd-subfigure-label">(e)</p>
+
+```{mermaid}
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "flowchart": {"useMaxWidth": false, "diagramPadding": 4}}}%%
+flowchart LR
+  accTitle: Biomass high-level processing scheme from L0 data to L3 products, INT phase.
+  accDescr: Detail of the L3 Basin-based Processing (Asynchronous) lane, in L3 processing. FD_b, FH_b and AGB_b(t_a, t_b, T_n), from the FD, FH and AGB L2b Tile proc steps of sub-figure (d), go to the FD L3, FH L3 and AGB L3 consolidation steps of the L3 processor, which output FD_3, FH_3 and AGB_3(t_a, t_b, B_n).
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   proc: step inside the L3 processor (grey box, white text)
+  %%   data: output label (text only, on the lane colour)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         step drawn in another sub-figure, so that no step is duplicated
+  classDef proc fill:#a6a6a6,stroke:#1f1f1f,color:#ffffff,font-weight:bold
+  classDef data fill:none,stroke:none,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  fromFD(["from (d): FD L2b Tile proc"]):::ref
+  fromFH(["from (d): FH L2b Tile proc"]):::ref
+  fromAGB(["from (d): AGB L2b Tile proc"]):::ref
+
+  subgraph L3["<b>L3 processing</b><br/>L3 Basin-based Processing<br/><span style='color:#e00000'>Asynchronous</span>"]
+    direction LR
+    subgraph L3PR["L3<br/>processor"]
+      direction TB
+      fd3["FD L3<br/><small>consolidation</small>"]:::proc
+      fh3["FH L3<br/><small>consolidation</small>"]:::proc
+      agb3["AGB L3<br/><small>consolidation</small>"]:::proc
+    end
+    fdout["FD<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
+    fhout["FH<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
+    agbout["AGB<sub>3</sub>(t<sub>a</sub>, t<sub>b</sub>, B<sub>n</sub>)"]:::data
+  end
+
+  fromFD -- "FD<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fd3
+  fromFH -- "FH<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> fh3
+  fromAGB -- "AGB<sub>b</sub>(t<sub>a</sub>, t<sub>b</sub>, T<sub>n</sub>)" --> agb3
+  fd3 --> fdout
+  fh3 --> fhout
+  agb3 --> agbout
+
+  %% lane colour and L3 processor frame of the original
+  style L3 fill:#fff2cc,stroke:#fff2cc,color:#000000
+  style L3PR fill:#8faadc,stroke:#1f1f1f,color:#ffffff
+```
+
+<!-- source image: figure_2_section_2.1 sha256 5de7fe36c9ccaa724a6a7263db7c09cdaaec4c489eafc6b7894604d6f2a1d7aa -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 2</span><span class="caption-text"> — Biomass high-level processing scheme from L0 data to L3 products, INT phase.</span></p>
 
-:::
+::::
 
 (sec:atbd-fh-2-2)=
 ### 2.2 FH Processing Overview
@@ -221,9 +465,7 @@ flowchart TB
   style L2B fill:#ffffff,stroke:#f4b183,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![FH processing detailed workflow.](../../_static/figures/atbd-fh/figure_3_section_2.3.png)
-:::
+<!-- source image: figure_3_section_2.3 sha256 ba826c553c96e3e1c3b221471db97b23081388b943b177bf327bc45c3c7417e2 -->
 
 </div>
 

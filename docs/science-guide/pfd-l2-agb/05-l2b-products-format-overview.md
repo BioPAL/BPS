@@ -33,7 +33,7 @@ L2b Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyt
 The value is reported in all the MDS COG metadata (`GDAL_NODATA` tag, see {ref}`Tab.2 <tab:pfd-agb-2>`) and in the Raster Image DSR (`noDataValue` element, see 6.3.1.2).
 
 (fig:pfd-agb-18)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -56,15 +56,13 @@ BIOMASS L2b Product/
     └── Support schemas RDS       [XSD]
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Above Ground Biomass L2b products structure](../../_static/figures/pfd-agb/figure_18_section_5.png)
-:::
+<!-- source image: figure_18_section_5 sha256 ce65ecf9a882f5e7e54e9f0b0ac19bca87892d31c4e2d73df71652d072eb6777 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 18</span><span class="caption-text"> — Above Ground Biomass L2b products structure</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-40)=
 :::{div} atbd-table

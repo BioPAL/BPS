@@ -49,8 +49,7 @@ flowchart TB
 
 A figure drawn in several parts, (a), (b), (c)…, is several `{mermaid}` blocks
 one after the other, each preceded by a line
-`<p class="atbd-subfigure-label">(c)</p>`; they share one label, one caption
-and one "Original figure (DOCX)" dropdown. Edit only the block of the part you
+`<p class="atbd-subfigure-label">(c)</p>`; they share one label and one caption. Edit only the block of the part you
 want (the caption comes after all the parts: read upwards to the part label).
 Each part is an independent diagram (an arrow cannot join two parts: a link to
 another part is drawn as a dotted reference box, "from (c): …"), and each part
@@ -64,8 +63,9 @@ folder and the script name (`fig<N>.py`). A figure can show a fixed image (a
 map, a measured product) above a drawn one: Fig. 12 of `atbd-l2-agb` has the
 land cover map on top (an image) and the block grid below (`fig12.py`).
 
-Under every redrawn figure, the **Original figure (DOCX)** dropdown keeps the
-image of the approved Word document, for comparison.
+The image of the approved Word document is not published next to a redrawn
+figure: to compare, open the Word or PDF document (the converter keeps a
+fingerprint of each original image and reports a change).
 
 To find a figure, open the chapter page that shows it on the site (its address
 ends with the page name, for example `05-calibration.html` →
@@ -253,8 +253,8 @@ that the build output mentions no missing image.
 
 The PDF of a document (`make -C docs atbd-pdf SPHINX_ATBD_PDF=<document>`,
 which needs LaTeX) prints the same diagrams. A very large diagram is printed on
-a page of its own; if its text would be smaller than 4 pt, the PDF prints the
-original figure instead and the build reports it.
+a page of its own; the build warns when its text would be smaller than 4 pt:
+then split the diagram into parts, (a), (b)…
 
 When the meaning of a figure changed, update its `accDescr` (Mermaid) or the
 caption text (table, tree) as well.

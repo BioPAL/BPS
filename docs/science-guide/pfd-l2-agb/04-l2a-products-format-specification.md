@@ -307,7 +307,7 @@ This section describes in detail the content of main ADS for L2a products.
 An overview is provided by figure and table below.
 
 (fig:pfd-agb-3)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -337,15 +337,11 @@ classDiagram
 
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Main L2a ADS](../../_static/figures/pfd-agb/figure_3_section_4.3.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — Main L2a ADS</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-4)=
 :::{div} atbd-table
@@ -382,7 +378,7 @@ This DSR contains the parameters to describe the L2a product.
 An overview is provided by figure and table below.
 
 (fig:pfd-agb-4)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -423,15 +419,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2aType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Product L2a DSR (productL2aType)](../../_static/figures/pfd-agb/figure_4_section_4.3.1.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Product L2a DSR (productL2aType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-5)=
 :::{div} atbd-table
@@ -503,7 +495,7 @@ classDiagram
 This DSR contains all the necessary information to exploit the raster images of the product. An overview is provided by figure and table below.
 
 (fig:pfd-agb-5)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -567,15 +559,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>rasterImageType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Raster image DSR (rasterImageType)](../../_static/figures/pfd-agb/figure_5_section_4.3.1.2.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Raster image DSR (rasterImageType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-10)=
 :::{div} atbd-table
@@ -647,7 +635,7 @@ This DSR contains information about the L1c acquisitions in input to the L2a pro
 An overview is provided by figures and tables below.
 
 (fig:pfd-agb-6)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -677,18 +665,14 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2aType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input Information DSR (InputInformationL2aType)](../../_static/figures/pfd-agb/figure_6_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Input Information DSR (InputInformationL2aType)</span></p>
 
-::::
+:::
 
 (fig:pfd-agb-7)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -711,18 +695,14 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input Information DSR, acquisition list detail (acquisitionListType)](../../_static/figures/pfd-agb/figure_7_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Input Information DSR, acquisition list detail (acquisitionListType)</span></p>
 
-::::
+:::
 
 (fig:pfd-agb-8)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -747,18 +727,14 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>acquisitionType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input Information DSR, acquisition detail (acquisitionType)](../../_static/figures/pfd-agb/figure_8_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Input Information DSR, acquisition detail (acquisitionType)</span></p>
 
-::::
+:::
 
 (fig:pfd-agb-9)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -781,18 +757,14 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input information DSR, staQualityType](../../_static/figures/pfd-agb/figure_9_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Input information DSR, staQualityType</span></p>
 
-::::
+:::
 
 (fig:pfd-agb-10)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -815,18 +787,14 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input information DSR, staQualityParametersListType](../../_static/figures/pfd-agb/figure_10_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — Input information DSR, staQualityParametersListType</span></p>
 
-::::
+:::
 
 (fig:pfd-agb-11)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -858,15 +826,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>staQualityParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input information DSR, staQualityParametersType](../../_static/figures/pfd-agb/figure_11_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Input information DSR, staQualityParametersType</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-14)=
 :::{div} atbd-table
@@ -978,7 +942,7 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 This DSR contains the exhaustive list of L2a processing parameters applied (ground cancellation). An overview is provided by figure and table below.
 
 (fig:pfd-agb-12)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1010,15 +974,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>processingParametersL2aType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters L2a DSR (processingparametersL2aType)](../../_static/figures/pfd-agb/figure_12_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Processing parameters L2a DSR (processingparametersL2aType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-21)=
 :::{div} atbd-table
@@ -1042,7 +1002,7 @@ classDiagram
 :::
 
 (fig:pfd-agb-13)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1095,15 +1055,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>compressionOptionsL2a</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters L2a DSR (compressionOptionsL2aType)](../../_static/figures/pfd-agb/figure_13_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Processing parameters L2a DSR (compressionOptionsL2aType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-22)=
 :::{div} atbd-table
@@ -1123,7 +1079,7 @@ classDiagram
 :::
 
 (fig:pfd-agb-14)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1149,15 +1105,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>generalConfigurationParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters L2a DSR (generalConfigurationParametersType)](../../_static/figures/pfd-agb/figure_14_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 14</span><span class="caption-text"> — Processing parameters L2a DSR (generalConfigurationParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-23)=
 :::{div} atbd-table
@@ -1180,7 +1132,7 @@ classDiagram
 This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations. An overview is provided by figure and table below.
 
 (fig:pfd-agb-15)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1203,15 +1155,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-common-types.xsd (<code>layerListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Annotation LUT DSR (layerListType)](../../_static/figures/pfd-agb/figure_15_section_4.3.1.5.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 15</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-24)=
 :::{div} atbd-table
@@ -1246,7 +1194,7 @@ The LUT ADS provides the FNF generated outside of BPS from aggregated C3S LCM {a
     - ancillary scalar variables containing other useful metadata to complete the LUT definition.
 
 (fig:pfd-agb-16)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -1299,19 +1247,17 @@ classDiagram
   annotationLUT --> layerListType
 ```
 
+<!-- source image: image_1_section_4.3.2 sha256 bd6f63354535bc7c1b9c726a48890b7b1279980f206c423c1e696f3168621b67 -->
+
+<!-- source image: figure_16_section_4.3.2 sha256 32b089b24af9d26e15dc486c06d93ae3e5603e03b775b2e401a2be679260e10c -->
+
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
-
-:::{dropdown} Original figure (DOCX)
-![Look-Up Tables (LUT) ADS](../../_static/figures/pfd-agb/image_1_section_4.3.2.png)
-
-![Look-Up Tables (LUT) ADS](../../_static/figures/pfd-agb/figure_16_section_4.3.2.png)
-:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Look-Up Tables (LUT) ADS</span></p>
 
-::::
+:::
 
 **Compression strategy**
 
@@ -1740,7 +1686,7 @@ The Overlay ADS is a Keyhole Markup Language (KML) file that describes the produ
 Its structure is described in the following figure and tables.
 
 (fig:pfd-agb-17)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1837,15 +1783,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Overlay ADS](../../_static/figures/pfd-agb/figure_17_section_4.3.2.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 17</span><span class="caption-text"> — Overlay ADS</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-25)=
 :::{div} atbd-table

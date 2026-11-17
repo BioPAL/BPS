@@ -86,7 +86,7 @@ This section describes in detail the content of main ADS for L2b products. Diffe
 An overview is provided by the two figures below and by the table which describes all the elements, both for L2b.
 
 (fig:pfd-agb-19)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -113,15 +113,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2b-agb-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![main L2b ADS](../../_static/figures/pfd-agb/figure_19_section_6.3.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 19</span><span class="caption-text"> — main L2b ADS</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-41)=
 :::{div} atbd-table
@@ -145,7 +141,7 @@ This DSR contains the parameters to describe the L2b product.
 An overview is provided by figures and table below.
 
 (fig:pfd-agb-20)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -179,15 +175,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>productL2bL3Type</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![product L2b DSR](../../_static/figures/pfd-agb/figure_20_section_6.3.1.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 20</span><span class="caption-text"> — product L2b DSR</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-42)=
 :::{div} atbd-table
@@ -346,7 +338,7 @@ This DSR contains, for each of the L2a Product in input to L2b processor:
 An overview is provided by figure below and in the table below for the L2inputs.
 
 (fig:pfd-agb-21)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -389,15 +381,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-common-annotations.xsd (<code>InputInformationL2bL3ListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Input information L2b DSR (InputInformationL2bL3ListType)](../../_static/figures/pfd-agb/figure_21_section_6.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 21</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-52)=
 :::{div} atbd-table
@@ -430,7 +418,7 @@ classDiagram
 This DSR contains the exhaustive list of L2b processing parameters applied. An overview is provided by figures and table below.
 
 (fig:pfd-agb-22)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -472,15 +460,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>processingParametersL2bType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![processing parameters L2b DSR](../../_static/figures/pfd-agb/figure_22_section_6.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 22</span><span class="caption-text"> — processing parameters L2b DSR</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-54)=
 :::{div} atbd-table
@@ -525,7 +509,7 @@ classDiagram
 :::
 
 (fig:pfd-agb-23)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -585,15 +569,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>estimatedParametersL2bAGB</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processinc parameters L2b DSR (estimatedParametersL2bAGBType)](../../_static/figures/pfd-agb/figure_23_section_6.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 23</span><span class="caption-text"> — Processinc parameters L2b DSR (estimatedParametersL2bAGBType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-56)=
 :::{div} atbd-table
@@ -662,7 +642,7 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 :::
 
 (fig:pfd-agb-24)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -721,15 +701,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l2l3-agb-proc-annotations.xsd (<code>compressionOptionsL2b</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters L2b DSR (compressionOptionsL2bType)](../../_static/figures/pfd-agb/figure_24_section_6.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 24</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-61)=
 :::{div} atbd-table

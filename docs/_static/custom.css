@@ -920,7 +920,10 @@ html[data-mode="light"] .atbd-logo-banner__img--dark {
    may carry meaning). */
 html[data-theme="dark"] .atbd-drawn-figure pre.mermaid > svg,
 html[data-theme="dark"] .atbd-drawn-figure div.mermaid > svg,
-html[data-theme="dark"] .atbd-drawn-figure .atbd-figure-content > p img {
+html[data-theme="dark"] .atbd-drawn-figure .atbd-figure-content > p img,
+/* images kept as they are (measured data, third-party figures) get the same
+   white mat, without the theme's dimming, so that they match the drawn ones */
+html[data-theme="dark"] .atbd-mermaid-figure .atbd-figure-content img {
   filter: none !important;
   background-color: #fff !important;
   border-radius: 0.25rem;

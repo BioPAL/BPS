@@ -91,7 +91,7 @@ The algorithm applies to TOM stacks and subsets the stack in order to select (or
 The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`5`.
 
 (fig:atbd-agb-int-subset-7)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -102,18 +102,16 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 | 1 |  | \* |  | \* |  | \* |  | \<-default |
 | 3 |  |  | \* |  | \* |  | \* |  |
 
-:::{dropdown} Original figure (DOCX)
-![Selection for seven TOM.](../../_static/figures/agb/figure_4_section_3.2.4.1.png)
-:::
+<!-- source image: figure_4_section_3.2.4.1 sha256 e74b8632f1b8611d79d9db79f9a39550dffbbf07a5b623155eed0a7962d0ae2b -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Selection for seven TOM.</span></p>
 
-::::
+:::
 
 (fig:atbd-agb-int-subset-8)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -125,15 +123,13 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 | 3 |  |  | \* |  | \* |  | \* |  |  |
 | 4 |  |  |  | \* |  | \* |  | \* |  |
 
-:::{dropdown} Original figure (DOCX)
-![Selection for eight TOM (contingency).](../../_static/figures/agb/figure_5_section_3.2.4.1.png)
-:::
+<!-- source image: figure_5_section_3.2.4.1 sha256 3b6c926ecaaee50ea7628d0bea836d0b56cc39a14364c8d78c1444a0faccfc81 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Selection for eight TOM (contingency).</span></p>
 
-::::
+:::
 
 (sec:atbd-agb-3-3)=
 ### 3.3 Calibration
@@ -187,9 +183,7 @@ flowchart TB
   style OUT fill:#ffffff,stroke:#000000,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Calibration.](../../_static/figures/agb/figure_6_section_3.3.1.png)
-:::
+<!-- source image: figure_6_section_3.3.1 sha256 6ba29c6b2466201b29c8ec1cd26f7f6b791e0451fc925c1ace95c8ff8a06233b -->
 
 </div>
 
@@ -313,9 +307,7 @@ flowchart TB
   style IN fill:#ffffff,stroke:#000000,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Ground cancellation algorithm with two images.](../../_static/figures/agb/figure_7_section_3.4.4.png)
-:::
+<!-- source image: figure_7_section_3.4.4 sha256 437c49f4942c0c9fee53845ddf3bf9ee11d85cb28209519a7be92093f503b24a -->
 
 </div>
 
@@ -383,9 +375,7 @@ flowchart TB
   style STK fill:#ffffff,stroke:#000000,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Ground cancellation algorithm with more than two images.](../../_static/figures/agb/figure_8_section_3.4.4.png)
-:::
+<!-- source image: figure_8_section_3.4.4 sha256 c0d8deed41f998779ca44ecc11bd62e32a289e336858528f59641087c6a445bc -->
 
 </div>
 
@@ -521,9 +511,7 @@ flowchart TB
   norm --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Sigma naught normalisation.](../../_static/figures/agb/figure_9_section_3.5.1.png)
-:::
+<!-- source image: figure_9_section_3.5.1 sha256 951a5cd1a90b26600d2df601dc317151b051a11b8e6f87f88a4c055200441ac1 -->
 
 </div>
 
@@ -642,9 +630,7 @@ flowchart TB
   proj --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Geocoding.](../../_static/figures/agb/figure_10_section_3.6.1.png)
-:::
+<!-- source image: figure_10_section_3.6.1 sha256 0873ef8bf85bceece5d0d7689fe10bc5328f649c6a809c3be22fb130fb314cd5 -->
 
 </div>
 
@@ -677,21 +663,19 @@ flowchart TB
 ###### 3.6.4.1.1 Update reference DEM coordinates
 
 (fig:atbd-agb-geocoding-forest-point)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/agb/fig11.*)
 
-:::{dropdown} Original figure (DOCX)
-![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/agb/figure_11_section_3.6.4.1.1.png)
-:::
+<!-- source image: figure_11_section_3.6.4.1.1 sha256 dc9320d65c95a7b3d6d7fbe29a3402555a3b90e42e31f3e379088fc846ba6877 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.</span></p>
 
-::::
+:::
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`11`:
 

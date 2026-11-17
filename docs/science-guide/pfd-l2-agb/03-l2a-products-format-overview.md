@@ -32,7 +32,7 @@ The declination and customisation of this format structure for BIOMASS Above Gro
 L2a Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyte) depending on data type, where the input L1c pixels are invalid and for each pixel discarded by the algorithm. The value is reported in the MDS COG metadata (`GDAL_NODATA` tag, see {ref}`Tab.2 <tab:pfd-agb-2>`), in the Raster Image DSR (`noDataValue` element, see {ref}`Tab.10 <tab:pfd-agb-10>`) and in LUT ADS (`noDataValue` variable, see 4.3.2.1).
 
 (fig:pfd-agb-1)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -52,15 +52,13 @@ BIOMASS L2a Product/
     └── Support schemas RDS  [XSD]
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Above Ground Biomass ground cancellation L2a products structure](../../_static/figures/pfd-agb/figure_1_section_3.png)
-:::
+<!-- source image: figure_1_section_3 sha256 28ca31cfd5117d7136191fe4d2713c53c534bc032f8347d573a674dc5621ef9c -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 1</span><span class="caption-text"> — Above Ground Biomass ground cancellation L2a products structure</span></p>
 
-::::
+:::
 
 (tab:pfd-agb-1)=
 :::{div} atbd-table

@@ -59,9 +59,7 @@ flowchart TB
   l2b --> acfm
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the L2b processing.](../../_static/figures/atbd-fd/figure_14_section_4.png)
-:::
+<!-- source image: figure_14_section_4 sha256 ce75f05974fb472915cdb066d8ebed9c2128db6b7bcdc4f8f5c6cd4c6714736a -->
 
 </div>
 
@@ -127,9 +125,7 @@ flowchart TB
   ucfm --> acfm
 ```
 
-:::{dropdown} Original figure (DOCX)
-![L2a FD fusion.](../../_static/figures/atbd-fd/figure_15_section_4.1.1.png)
-:::
+<!-- source image: figure_15_section_4.1.1 sha256 a3620ce9038f87a755bc8b18fe61ebb522c2f5ef85ec9eb57cd93c740ac9668e -->
 
 </div>
 
@@ -195,21 +191,19 @@ $$ (eq:atbd-fd-4-4)
 If the sum is odd, detection is assumed, and the resulting probability of change is the average of the different probabilities pixel-wise for detection only. Otherwise, the resulting probability of change and FD map is set to zero. If the sum is zero, detection is assumed only if all the acquisitions show detection. The rationale is that change is assumed only if all the acquisitions detecting it are simultaneously consistent. The situation is depicted in {fig}`Fig.|16` for the example of three acquisitions and the corresponding truth table is reported in {ref}`Tab.1 <tab:atbd-fd-1>`.
 
 (fig:atbd-fd-16)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.](../../_static/figures/atbd-fd/fig16.*)
 
-:::{dropdown} Original figure (DOCX)
-![Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.](../../_static/figures/atbd-fd/figure_16_section_4.1.4.png)
-:::
+<!-- source image: figure_16_section_4.1.4 sha256 748207b024b04e295722ec407134e3d026e373231d7730666174025f238ac690 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.</span></p>
 
-::::
+:::
 
 (tab:atbd-fd-1)=
 :::{div} atbd-table

@@ -33,7 +33,7 @@ For the sake of flexibility, in the L1 Processor it is made available the possib
 The approach described here is relevant for interference signals that are well localized in the range-azimuth time domain. The main steps of the detection and mitigation algorithm are represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-7)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -61,15 +61,13 @@ flowchart TB
   class stats,thr,mit rfistep
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the RFI Mitigation in time domain.](../../_static/figures/atbd-l1-sar/figure_7_section_4.1.1.png)
-:::
+<!-- source image: figure_7_section_4.1.1 sha256 cc33bd6c2f726bbd2246f4e2d8a088098b8600e1084677e97dea3620e2f4d5e9 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Block diagram of the RFI Mitigation in time domain.</span></p>
 
-::::
+:::
 
 **Inputs**
 
@@ -170,7 +168,7 @@ The approach described here is relevant for interference signals that are not we
 Both interferences types are easily detectable in the range frequency domain, where they appear like single-tone or narrow-band disturbances. In the two cases the detection and mitigation steps are performed in similar ways, as represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-8)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -204,15 +202,13 @@ flowchart TB
   class psdc,psdr,thr,fft,mit,ifft rfistep
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the RFI Mitigation in frequency domain.](../../_static/figures/atbd-l1-sar/figure_8_section_4.1.2.png)
-:::
+<!-- source image: figure_8_section_4.1.2 sha256 28edffcbe221091d5ecf665f12ee7fdb7bd2eed7743223aac87b61c1bc8525df -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Block diagram of the RFI Mitigation in frequency domain.</span></p>
 
-::::
+:::
 
 **Inputs**
 
@@ -362,7 +358,7 @@ The Range Compression step is performed on RAW data and, due to its specific alg
 The main steps of the algorithm are represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-9)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -388,15 +384,13 @@ flowchart TB
   class fft,chirp,subpx,weight,ifft,px,comp rcstep
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the Range Compression and Internal Calibration Corrections step.](../../_static/figures/atbd-l1-sar/figure_9_section_4.2.1.png)
-:::
+<!-- source image: figure_9_section_4.2.1 sha256 b8110a073b90856eb18ed61f006daa9004d771d8833a4586e68c9b2392bea435 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Block diagram of the Range Compression and Internal Calibration Corrections step.</span></p>
 
-::::
+:::
 
 **Inputs**
 
@@ -456,21 +450,19 @@ For performances analyses, in particular those related to the choice of using in
 The SWP (Sampling Window Position) alignment step is required by the fact that it is possible to have changes of the instrument timing along the satellite orbit, mainly due to variations on the altitude, even during the single data-take. Before proceeding with the other processing steps, it is then mandatory to align all the echoes on the same sampling grid with a common range start time. A schematic representation of the SWP alignment strategy is represented by the following figure.
 
 (fig:atbd-l1-sar-10)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Schematic representation of the SWP alignment strategy implemented during the Range Compression step.](../../_static/figures/atbd-l1-sar/fig10.*)
 
-:::{dropdown} Original figure (DOCX)
-![Schematic representation of the SWP alignment strategy implemented during the Range Compression step.](../../_static/figures/atbd-l1-sar/figure_10_section_4.2.2.png)
-:::
+<!-- source image: figure_10_section_4.2.2 sha256 8db18696e419e676890cbe32def5a30d9119cb485d7af493c9c91590af3530b8 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — Schematic representation of the SWP alignment strategy implemented during the Range Compression step.</span></p>
 
-::::
+:::
 
 **Mathematical description**
 
@@ -646,7 +638,7 @@ The Doppler Centroid Estimation from Geometry uses only the satellite position, 
 The main steps of the algorithm are represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-11)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -679,15 +671,13 @@ flowchart TB
   class posvel,sensor,poe,dc dcstep
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the Doppler Centroid estimation step (Geometry Mode).](../../_static/figures/atbd-l1-sar/figure_11_section_4.3.1.png)
-:::
+<!-- source image: figure_11_section_4.3.1 sha256 e7248bb02eabedff66e6241d10ef2b9e52d76c7ddcc46360ea81c6b64b1d3ae8 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Block diagram of the Doppler Centroid estimation step (Geometry Mode).</span></p>
 
-::::
+:::
 
 **Inputs**
 
@@ -770,7 +760,7 @@ The Doppler Centroid Estimation from Geometry and Data uses information derived 
 The main steps of the algorithm are represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-13)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -815,15 +805,13 @@ flowchart TB
   class block,ambdc,quality,unwrap,ambig,attcorr,geom dcstep
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the Doppler Centroid estimation step (Combined Mode).](../../_static/figures/atbd-l1-sar/figure_13_section_4.3.2.png)
-:::
+<!-- source image: figure_13_section_4.3.2 sha256 670582fba13f4b3623324e459af6c07b9dabfc257a357866accf32432ab3c10f -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Block diagram of the Doppler Centroid estimation step (Combined Mode).</span></p>
 
-::::
+:::
 
 **Inputs**
 
@@ -1210,9 +1198,7 @@ flowchart TB
   style opt fill:#ffffff,stroke:#bfbfbf,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Outline of the processing steps for topography adaptive antenna pattern correction. The operations for the reference height (APC1) are embedded into the SAR focusing kernel. All operations related to AP correction are marked in green. The optional compensation of the antenna cross-talk is performed at the end of the SAR focussing and involves all polarisations (see Sec. 4.6.2).](../../_static/figures/atbd-l1-sar/figure_16_section_4.6.1.png)
-:::
+<!-- source image: figure_16_section_4.6.1 sha256 f86a82562a91ed7fe99cb7827f92aec40705ec520b2116074027adfe2824ef0b -->
 
 </div>
 
@@ -1464,9 +1450,7 @@ flowchart TB
   ifft --> imgout
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram showing the operations for the antenna cross-talk compensation. The extraction of reference off-nadir and antenna patterns is analogous to the APC1 correction step (see first figure in Sec. 4.6.1).](../../_static/figures/atbd-l1-sar/figure_17_section_4.6.2.png)
-:::
+<!-- source image: figure_17_section_4.6.2 sha256 3979cdb60f82a11420d24e5ff7499df48a9b44482a03c7c71adba54b4927d0db -->
 
 </div>
 
@@ -1582,9 +1566,7 @@ flowchart TB
   aifft --> scs
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the azimuth compression step.](../../_static/figures/atbd-l1-sar/figure_18_section_4.7.png)
-:::
+<!-- source image: figure_18_section_4.7 sha256 a2e74d3d4e8f193a927c87bdc8122f9a2870ce601b8ed13a4a3a5cfb60de72f5 -->
 
 </div>
 
@@ -1903,9 +1885,7 @@ flowchart TB
   pc2 --> slcfull
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Overview flow chart.](../../_static/figures/atbd-l1-sar/figure_19_section_4.10.1.png)
-:::
+<!-- source image: figure_19_section_4.10.1 sha256 f4a2c9a80554aa92ac5680c64b8125481ce79ddd0de1431ec6bc6ea26e461c20 -->
 
 </div>
 
@@ -2079,9 +2059,7 @@ flowchart TB
   geo --> tec
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Summary of FR correction on polarimetry](../../_static/figures/atbd-l1-sar/figure_20_section_4.10.2.2.png)
-:::
+<!-- source image: figure_20_section_4.10.2.2 sha256 294a3641c463e637b8bed58602faa7cc99ea0ab48b32bea1fce6464648c77fbf -->
 
 </div>
 
@@ -2163,9 +2141,7 @@ flowchart TB
   model --> h3
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Summary of ionosphere height estimation methods](../../_static/figures/atbd-l1-sar/figure_21_section_4.10.2.3.png)
-:::
+<!-- source image: figure_21_section_4.10.2.3 sha256 75ef6a046655a58ae3c6d79637b83148c9ff1c798497bc772136a84e9b0e515d -->
 
 </div>
 
@@ -2208,21 +2184,19 @@ $$ (eq:atbd-l1-sar-4-78)
 where $L_{SA}$ is the length of the synthetic aperture. $L_{sep}$ is estimated from the data by means of (incoherent) correlation between two azimuth sub-band FR estimates is applied. This height estimation method is based on the fact that the look direction of each approaching and departing sub-bands are constant. The spatial separation $L_{sep}$ is estimated by the estimating the offset of ionospheric features appearing on two sub-band images.
 
 (fig:atbd-l1-sar-22)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Geometry of the ionospheric altitude estimation problem.](../../_static/figures/atbd-l1-sar/fig22.*)
 
-:::{dropdown} Original figure (DOCX)
-![Geometry of the ionospheric altitude estimation problem.](../../_static/figures/atbd-l1-sar/figure_22_section_4.10.2.3.1.png)
-:::
+<!-- source image: figure_22_section_4.10.2.3.1 sha256 fa6af1943d490de9858621e2bfb1ff5a88edb1bd96febd8736c4558f88760e2b -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 22</span><span class="caption-text"> — Geometry of the ionospheric altitude estimation problem.</span></p>
 
-::::
+:::
 
 It is expected that the estimation of $L_{sep}$ from the cross-correlation between two sub-band FR estimates would fail in many cases, as the spatial variations of FR varies in wide range of magnitude. At first place, the lack of prominent peak in the cross-correlation function is considered as height estimation failure. The power ratio of the primary peak to the secondary should be higher than a certain threshold. The threshold should be determined by heuristic approach.
 
@@ -2503,9 +2477,7 @@ flowchart TB
   phi --> mult
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Summary of ionospheric phase screen correction approach.](../../_static/figures/atbd-l1-sar/figure_25_section_4.10.3.5.png)
-:::
+<!-- source image: figure_25_section_4.10.3.5 sha256 9ff074b7eb869f2b326dbdafe21b196c8323cb6470a367afff847d1bab932fc3 -->
 
 </div>
 
@@ -2886,21 +2858,19 @@ where ${\widehat{n}}_2=\frac{{\overrightarrow{n}}_2}{\left\vert {\overrightarrow
 The geometry of the equations is shown in figure below.
 
 (fig:atbd-l1-sar-27)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![The definition of geomagnetic time. It is defined by the angle between two planes, one defined by geomagnetic pole, point of interest and Earth’s center and the second by the geomagnetic pole, subsolar point and the Earth’s center. ts is conventional solar time, and tm is geomagnetic time.](../../_static/figures/atbd-l1-sar/fig27.*)
 
-:::{dropdown} Original figure (DOCX)
-![The definition of geomagnetic time. It is defined by the angle between two planes, one defined by geomagnetic pole, point of interest and Earth’s center and the second by the geomagnetic pole, subsolar point and the Earth’s center. ts is conventional solar time, and tm is geomagnetic time.](../../_static/figures/atbd-l1-sar/figure_27_section_4.10.5.png)
-:::
+<!-- source image: figure_27_section_4.10.5 sha256 7bbba6f4926f8452d9f150bcd0941398a55cc2e5555913246fc7de746dd123c2 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 27</span><span class="caption-text"> — The definition of geomagnetic time. It is defined by the angle between two planes, one defined by geomagnetic pole, point of interest and Earth’s center and the second by the geomagnetic pole, subsolar point and the Earth’s center. <span class="math notranslate nohighlight">\(t_s\)</span> is conventional solar time, and <span class="math notranslate nohighlight">\(t_m\)</span> is geomagnetic time.</span></p>
 
-::::
+:::
 
 - iii. As an intermediate parameter, the average invariant latitude $\phi_b$ is calculated.
 
@@ -2962,21 +2932,19 @@ has an ellipse of which major axis $\frac{1}{a}$, minor axis $\frac{1}{b}$, and 
 The geometry of the B-aligned coordinate is shown in figure below. The geomagnetic field $\overrightarrow{B}$, and its projection onto horizontal plane which aligns with the $x$-direction are demonstrated.
 
 (fig:atbd-l1-sar-29)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Relation between the east-north and vertical coordinate and the B-aligned coordinate Here the geomagnetic field B is assigned with declination Dec and inclination, or geomagnetic dip angle I. The direction of x-axis in the B-aligned coordinate is parallel to the projection of B on the horizontal plane.](../../_static/figures/atbd-l1-sar/fig29.*)
 
-:::{dropdown} Original figure (DOCX)
-![Relation between the east-north and vertical coordinate and the B-aligned coordinate Here the geomagnetic field B is assigned with declination Dec and inclination, or geomagnetic dip angle I. The direction of x-axis in the B-aligned coordinate is parallel to the projection of B on the horizontal plane.](../../_static/figures/atbd-l1-sar/figure_29_section_4.10.5.png)
-:::
+<!-- source image: figure_29_section_4.10.5 sha256 a7fb0bf0935cc892def3aea7d192871962db15e796939280c22319d9fe7c0321 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 29</span><span class="caption-text"> — Relation between the east-north and vertical coordinate and the B-aligned coordinate Here the geomagnetic field <span class="math notranslate nohighlight">\(\overrightarrow{B}\)</span> is assigned with declination <span class="math notranslate nohighlight">\(Dec\)</span> and inclination, or geomagnetic dip angle <span class="math notranslate nohighlight">\(I\)</span>. The direction of <span class="math notranslate nohighlight">\(x\)</span>-axis in the B-aligned coordinate is parallel to the projection of <span class="math notranslate nohighlight">\(\overrightarrow{B}\)</span> on the horizontal plane.</span></p>
 
-::::
+:::
 
 - b. The projection of ellipsoid along the propagation vector $\widehat{\kappa}$ onto horizontal plane is calculated as
 
@@ -3036,21 +3004,19 @@ B/2 & C
 The geometry of the rotated ellipse is shown in figure below.
 
 (fig:atbd-l1-sar-30)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![B-aligned axes x and y, and ellipse aligned axes x' and y'. The latter is acquired by rotating the former coordinate as much as -θ. For information, east and north directions are shown. The green arrow indicates the range direction, or LOS.](../../_static/figures/atbd-l1-sar/fig30.*)
 
-:::{dropdown} Original figure (DOCX)
-![B-aligned axes x and y, and ellipse aligned axes x' and y'. The latter is acquired by rotating the former coordinate as much as -θ. For information, east and north directions are shown. The green arrow indicates the range direction, or LOS.](../../_static/figures/atbd-l1-sar/figure_30_section_4.10.5.png)
-:::
+<!-- source image: figure_30_section_4.10.5 sha256 a9cd5e68f0237c0c06f8c7899baa10b829deb6f1cc31389ba44910a4470f91d1 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 30</span><span class="caption-text"> — B-aligned axes <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, and ellipse aligned axes <span class="math notranslate nohighlight">\(x'\)</span> and <span class="math notranslate nohighlight">\(y'\)</span>. The latter is acquired by rotating the former coordinate as much as <span class="math notranslate nohighlight">\(-\theta\)</span>. For information, east and north directions are shown. The green arrow indicates the range direction, or LOS.</span></p>
 
-::::
+:::
 
 - d. As these axes are calculated in the wavenumber domain, they are converted to distance domain by replacing the major and minor axes with their inverses. The resulting matrix is
 
@@ -3089,7 +3055,7 @@ The quadratic form of matrix in distance domain becomes
 The geometry of rescaling onto the ground is shown in figure below.
 
 (fig:atbd-l1-sar-31)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -3097,17 +3063,15 @@ The geometry of rescaling onto the ground is shown in figure below.
 
 ![Geometry of rescaling to the ground. Due to the imaging geometry of SAR, the misalignments of the ionospheric feature at the ionospheric height exaggerated on SAR image (left side). Its effect on the ellipse is shown on the right side. The rescaling is associated also with additional rotation.](../../_static/figures/atbd-l1-sar/fig31.*)
 
-:::{dropdown} Original figure (DOCX)
-![Geometry of rescaling to the ground. Due to the imaging geometry of SAR, the misalignments of the ionospheric feature at the ionospheric height exaggerated on SAR image (left side). Its effect on the ellipse is shown on the right side. The rescaling is associated also with additional rotation.](../../_static/figures/atbd-l1-sar/image_1_section_4.10.5.png)
+<!-- source image: image_1_section_4.10.5 sha256 c4073b221a34f6134e04bd300f445aa922f427d41414f27af33e41043f644c32 -->
 
-![Geometry of rescaling to the ground. Due to the imaging geometry of SAR, the misalignments of the ionospheric feature at the ionospheric height exaggerated on SAR image (left side). Its effect on the ellipse is shown on the right side. The rescaling is associated also with additional rotation.](../../_static/figures/atbd-l1-sar/figure_31_section_4.10.5.png)
-:::
+<!-- source image: figure_31_section_4.10.5 sha256 7b4753e88951dbcca372c51fe6bfac320a57c10d68f394d9bcc493bcfdc01429 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 31</span><span class="caption-text"> — Geometry of rescaling to the ground. Due to the imaging geometry of SAR, the misalignments of the ionospheric feature at the ionospheric height exaggerated on SAR image (left side). Its effect on the ellipse is shown on the right side. The rescaling is associated also with additional rotation.</span></p>
 
-::::
+:::
 
 - g. Finally, the quadratic form is rescaled one more time to be ready applied on the SAR data. For that the quadratic form is rescaled in accordance with range and azimuth sampling. The range and azimuth pixel spacings are $\delta_{rg}$ and $\delta_{az}$. The quadratic form becomes
 
@@ -3395,9 +3359,7 @@ flowchart TB
   corr --> outslc
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of MDA to estimate the phase screen due to ionospheric scintillations.](../../_static/figures/atbd-l1-sar/figure_32_section_4.11.1.png)
-:::
+<!-- source image: figure_32_section_4.11.1 sha256 a607cdaf46d7b19374b73b5fc4a4b565c8d12fe7b8bc68769ff5a7691253f49f -->
 
 </div>
 
@@ -3521,17 +3483,80 @@ The Multilooking step is performed on single look complex data, both in range an
 The main steps of the algorithm are represented in the following figure and described in detail below.
 
 (fig:atbd-l1-sar-34)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
-![Block diagram of the Multilook step.](../../_static/figures/atbd-l1-sar/figure_34_section_4.12.png)
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false, "rankSpacing": 32}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+flowchart TB
+  accTitle: Block diagram of the Multilook step.
+  accDescr: SCS data go through range FFT, spectrum whitening and look extraction, then down-sampling, range IFFT, azimuth FFT, and spectra demodulation and whitening. A second look extraction is followed by down-sampling, azimuth IFFT and detection, then looks incoherent averaging, which loops over azimuth looks back to the second look extraction. A second looks incoherent averaging loops over range looks back to the first look extraction, and is followed by square root application, which yields the multilooked data.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data: input or output data (grey-white parallelogram)
+  %%   step: processing step (grey-white box)
+  %%   loop: label of a loop, NOT a step (no fill, thin dashed outline so that the return
+  %%         line visibly reaches it): the original writes it beside the return line; here it
+  %%         sits on that line, so it stays next to it
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#8497b0,color:#000000
+  classDef loop fill:none,stroke:#7f7f7f,stroke-width:1px,stroke-dasharray:4 3,color:#000000
+
+  scs[/"SCS"/]:::data
+  rfft["Range FFT"]:::step
+  white["Spectrum whitening"]:::step
+  lookr["Look extraction"]:::step
+  downr["Down-sampling"]:::step
+  rifft["Range IFFT"]:::step
+  afft["Azimuth FFT"]:::step
+  demod["Spectra demodulation<br/>and whitening"]:::step
+  looka["Look extraction"]:::step
+  downa["Down-sampling"]:::step
+  aifft["Azimuth IFFT"]:::step
+  detect["Detection"]:::step
+  avga["Looks incoherent<br/>averaging"]:::step
+  avgr["Looks incoherent<br/>averaging"]:::step
+  sqrt["Square root<br/>application"]:::step
+  out[/"Multilooked<br/>Data"/]:::data
+
+  %% Return lines of the two loops, each broken by its label
+  loopaz("Loop over<br/>azimuth looks"):::loop
+  looprg("Loop over<br/>range looks"):::loop
+
+  scs --> rfft
+  rfft --> white
+  white --> lookr
+  lookr --> downr
+  downr --> rifft
+  rifft --> afft
+  afft --> demod
+  demod --> looka
+  looka --> downa
+  downa --> aifft
+  aifft --> detect
+  detect --> avga
+  avga --> avgr
+  avga lpaz1@--- loopaz
+  loopaz lpaz2@--> looka
+  avgr lprg1@--- looprg
+  looprg lprg2@--> lookr
+  avgr --> sqrt
+  sqrt --> out
+  %% Return lines of the loops drawn with right angles, as in the original
+  lpaz1@{ curve: stepBefore }
+  lpaz2@{ curve: stepBefore }
+  lprg1@{ curve: stepBefore }
+  lprg2@{ curve: stepBefore }
+```
+
+<!-- source image: figure_34_section_4.12 sha256 b6c676a0352efc95701171325c1b44f362dd2ea72e7b797fcdef87be663e5a94 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 34</span><span class="caption-text"> — Block diagram of the Multilook step.</span></p>
 
-:::
+::::
 
 **Inputs**
 
@@ -3632,9 +3657,7 @@ flowchart TB
   rem --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram of the Denoising step.](../../_static/figures/atbd-l1-sar/figure_36_section_4.13.png)
-:::
+<!-- source image: figure_36_section_4.13 sha256 05b95c80ed1d92437991d3942a0f728570ce4a8f560e8723f953f560e39c78ee -->
 
 </div>
 

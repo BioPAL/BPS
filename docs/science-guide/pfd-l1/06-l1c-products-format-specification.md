@@ -93,7 +93,7 @@ The content of the new DSR is described in the following sections.
 This DSR contains the exhaustive list of static stack processing parameters and of corrections applied.
 
 (fig:pfd-l1-35)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -152,15 +152,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staProcessingParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![STA processing parameters DSR (staProcessingParametersType)](../../_static/figures/pfd-l1/figure_35_section_6.3.3.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 35</span><span class="caption-text"> — STA processing parameters DSR (staProcessingParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-80)=
 :::{div} atbd-table
@@ -215,7 +211,7 @@ classDiagram
 This DSR contains high-level information about data coregistration step.
 
 (fig:pfd-l1-36)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -244,15 +240,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staCoregistrationParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![STA processing parameters DSR (staCoregistrationParametersType)](../../_static/figures/pfd-l1/figure_36_section_6.3.3.2.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 36</span><span class="caption-text"> — STA processing parameters DSR (staCoregistrationParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-81)=
 :::{div} atbd-table
@@ -278,7 +270,7 @@ classDiagram
 This DSR contains high-level information about calibration steps.
 
 (fig:pfd-l1-37)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -319,15 +311,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staInSARParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![STA processing parameters DSR (staInSARParametersType)](../../_static/figures/pfd-l1/figure_37_section_6.3.3.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 37</span><span class="caption-text"> — STA processing parameters DSR (staInSARParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-82)=
 :::{div} atbd-table
@@ -377,7 +365,7 @@ classDiagram
 This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.
 
 (fig:pfd-l1-38)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -400,15 +388,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staQualityType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![STA quality DSR (staQualityType)](../../_static/figures/pfd-l1/figure_38_section_6.3.3.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 38</span><span class="caption-text"> — STA quality DSR (staQualityType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-84)=
 :::{div} atbd-table
@@ -435,7 +419,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-39)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -479,15 +463,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1c-main-annotation.xsd (<code>staQualityParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![STA quality DSR (staQualityParametersType)](../../_static/figures/pfd-l1/figure_39_section_6.3.3.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 39</span><span class="caption-text"> — STA quality DSR (staQualityParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-86)=
 :::{div} atbd-table

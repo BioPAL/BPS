@@ -32,7 +32,7 @@ The declination and customisation of this format structure for BIOMASS Forest Di
 L2a Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyte) depending on data type, where the input L1c pixels are invalid and for each pixel discarded by the algorithm. The value is reported in the MDS COG metadata (`GDAL_NODATA` tag, see {ref}`Tab.2 <tab:pfd-fd-2>`), in the Raster Image DSR (`noDataValue` element, see {ref}`Tab.9 <tab:pfd-fd-9>`) and in all the LUT ADS images (`noDataValue` variable, see 4.3.2.1).
 
 (fig:pfd-fd-1)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -54,15 +54,13 @@ BIOMASS L2a Product/
     └── Support schemas RDS        [XSD]
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Forest Disturbance L2a products structure](../../_static/figures/pfd-fd/figure_1_section_3.png)
-:::
+<!-- source image: figure_1_section_3 sha256 837e2cfb77973915ca4563fbe565ff9173829c4c7f0d24b4ee1e268236a68146 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 1</span><span class="caption-text"> — Forest Disturbance L2a products structure</span></p>
 
-::::
+:::
 
 (tab:pfd-fd-1)=
 :::{div} atbd-table

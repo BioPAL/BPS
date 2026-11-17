@@ -599,7 +599,7 @@ This section describes in details the content of main ADS and of all its DSR.
 An overview is provided by figure and table below.
 
 (fig:pfd-l1-3)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -638,15 +638,11 @@ classDiagram
 
 <p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Main ADS](../../_static/figures/pfd-l1/figure_3_section_4.3.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — Main ADS</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-4)=
 :::{div} atbd-table
@@ -690,7 +686,7 @@ Data types requiring a dedicated definition table are underlined, for all the ot
 This DSR contains information that applies to the entire data set.
 
 (fig:pfd-l1-4)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -730,15 +726,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>acquisitionInformationType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Acquisition information DSR (acquisitionInformationType)](../../_static/figures/pfd-l1/figure_4_section_4.3.1.1.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Acquisition information DSR (acquisitionInformationType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-5)=
 :::{div} atbd-table
@@ -787,7 +779,7 @@ classDiagram
 This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images).
 
 (fig:pfd-l1-5)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -826,15 +818,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>sarImageType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![SAR image DSR (sarImageType)](../../_static/figures/pfd-l1/figure_5_section_4.3.1.2.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — SAR image DSR (sarImageType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-7)=
 :::{div} atbd-table
@@ -877,7 +865,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-6)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -904,15 +892,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>coordinateConversionType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![SAR image DSR (coordinateConversionType)](../../_static/figures/pfd-l1/figure_6_section_4.3.1.2.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — SAR image DSR (coordinateConversionType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-9)=
 :::{div} atbd-table
@@ -936,7 +920,7 @@ classDiagram
 This DSR contains the main instrument settings at the time of imaging.
 
 (fig:pfd-l1-7)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -973,15 +957,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>instrumentParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Instrument parameters DSR (instrumentParametersType)](../../_static/figures/pfd-l1/figure_7_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Instrument parameters DSR (instrumentParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-10)=
 :::{div} atbd-table
@@ -1082,7 +1062,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-8)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1108,15 +1088,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>txPulseType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Instrument parameters DSR (txPulseType)](../../_static/figures/pfd-l1/figure_8_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Instrument parameters DSR (txPulseType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-17)=
 :::{div} atbd-table
@@ -1134,7 +1110,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-9)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1157,15 +1133,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rxGainListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Instrument parameters DSR (rxGainListType)](../../_static/figures/pfd-l1/figure_9_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Instrument parameters DSR (rxGainListType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-18)=
 :::{div} atbd-table
@@ -1179,7 +1151,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-10)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1204,15 +1176,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dataFormatType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Instrument parameters DSR (dataFormatType)](../../_static/figures/pfd-l1/figure_10_section_4.3.1.3.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — Instrument parameters DSR (dataFormatType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-19)=
 :::{div} atbd-table
@@ -1234,7 +1202,7 @@ classDiagram
 This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor.
 
 (fig:pfd-l1-11)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1258,15 +1226,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rawDataAnalysisType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![RAW data analysis DSR (rawDataAnalysisType)](../../_static/figures/pfd-l1/figure_11_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — RAW data analysis DSR (rawDataAnalysisType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-20)=
 :::{div} atbd-table
@@ -1282,7 +1246,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-12)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1305,15 +1269,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>errorCountersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![RAW data analysis DSR (errorCountersType)](../../_static/figures/pfd-l1/figure_12_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — RAW data analysis DSR (errorCountersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-21)=
 :::{div} atbd-table
@@ -1340,7 +1300,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-13)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1366,15 +1326,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rawDataStatisticsType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![RAW data analysis DSR (rawDataStatisticsType)](../../_static/figures/pfd-l1/figure_13_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — RAW data analysis DSR (rawDataStatisticsType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-23)=
 :::{div} atbd-table
@@ -1417,7 +1373,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-14)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1440,15 +1396,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>powerRatioType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![RAW data analysis DSR (powerRatioType)](../../_static/figures/pfd-l1/figure_14_section_4.3.1.4.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 14</span><span class="caption-text"> — RAW data analysis DSR (powerRatioType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-26)=
 :::{div} atbd-table
@@ -1468,7 +1420,7 @@ classDiagram
 This DSR contains the exhaustive list of static SAR processing parameters and of corrections applied.
 
 (fig:pfd-l1-15)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1531,15 +1483,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>processingParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters DSR (processingParametersType)](../../_static/figures/pfd-l1/figure_15_section_4.3.1.5.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 15</span><span class="caption-text"> — Processing parameters DSR (processingParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-27)=
 :::{div} atbd-table
@@ -1594,7 +1542,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-16)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1622,15 +1570,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>spectrumProcessingParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Processing parameters DSR (spectrumProcessingParametersType)](../../_static/figures/pfd-l1/figure_16_section_4.3.1.5.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Processing parameters DSR (spectrumProcessingParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-28)=
 :::{div} atbd-table
@@ -1679,7 +1623,7 @@ classDiagram
 This DSR contains the results of the internal calibration analysis performed by the processor.
 
 (fig:pfd-l1-17)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1705,15 +1649,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>internalCalibrationType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Internal calibration DSR (internalCalibrationType)](../../_static/figures/pfd-l1/figure_17_section_4.3.1.6.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 17</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-31)=
 :::{div} atbd-table
@@ -1756,7 +1696,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-18)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1802,15 +1742,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>internalCalibrationSequenceType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Internal calibration DSR (internalCalibrationSequenceType)](../../_static/figures/pfd-l1/figure_18_section_4.3.1.6.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 18</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationSequenceType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-34)=
 :::{div} atbd-table
@@ -1873,7 +1809,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-19)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1897,15 +1833,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>noiseSequenceType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Internal calibration DSR (noiseSequenceType)](../../_static/figures/pfd-l1/figure_19_section_4.3.1.6.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 19</span><span class="caption-text"> — Internal calibration DSR (noiseSequenceType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-37)=
 :::{div} atbd-table
@@ -1926,7 +1858,7 @@ classDiagram
 This DSR contains information on detected RFI and on their mitigation.
 
 (fig:pfd-l1-20)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -1950,15 +1882,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiMitigationType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Radio Frequency Interference mitigation DSR (rfiMitigationType)](../../_static/figures/pfd-l1/figure_20_section_4.3.1.7.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 20</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiMitigationType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-38)=
 :::{div} atbd-table
@@ -1986,7 +1914,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-21)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2011,15 +1939,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiTMReportType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Radio Frequency Interference mitigation DSR (rfiTMReportType)](../../_static/figures/pfd-l1/figure_21_section_4.3.1.7.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 21</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiTMReportType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-40)=
 :::{div} atbd-table
@@ -2048,7 +1972,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-22)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2073,15 +1997,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiIsolatedFMReportType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Radio Frequency Interference mitigation DSR (rfiIsolatedFMReportType)](../../_static/figures/pfd-l1/figure_22_section_4.3.1.7.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 22</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiIsolatedFMReportType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-42)=
 :::{div} atbd-table
@@ -2110,7 +2030,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-23)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2135,15 +2055,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>rfiPersistentFMReportType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Radio Frequency Interference mitigation DSR (rfiPersistentFMReportType)](../../_static/figures/pfd-l1/figure_23_section_4.3.1.7.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 23</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiPersistentFMReportType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-44)=
 :::{div} atbd-table
@@ -2165,7 +2081,7 @@ classDiagram
 This DSR contains the Doppler Centroid (DC) and Frequency Modulation rate (FM) parameters estimated and used during processing.
 
 (fig:pfd-l1-24)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2188,15 +2104,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dopplerParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Doppler parameters DSR (dopplerParametersType)](../../_static/figures/pfd-l1/figure_24_section_4.3.1.8.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 24</span><span class="caption-text"> — Doppler parameters DSR (dopplerParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-45)=
 :::{div} atbd-table
@@ -2223,7 +2135,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-25)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2252,15 +2164,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>dcEstimateType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Doppler parameters DSR (dcEstimateType)](../../_static/figures/pfd-l1/figure_25_section_4.3.1.8.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 25</span><span class="caption-text"> — Doppler parameters DSR (dcEstimateType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-47)=
 :::{div} atbd-table
@@ -2298,7 +2206,7 @@ classDiagram
 This DSR contains all the necessary information to absolutely calibrate the data pixels.
 
 (fig:pfd-l1-26)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2320,15 +2228,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>radiometricCalibrationType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Radiometric calibration DSR (radiometricCalibrationType)](../../_static/figures/pfd-l1/figure_26_section_4.3.1.9.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 26</span><span class="caption-text"> — Radiometric calibration DSR (radiometricCalibrationType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-49)=
 :::{div} atbd-table
@@ -2359,7 +2263,7 @@ classDiagram
 This DSR contains the necessary information e.g. receive and transmit polarisation distortion matrix, allowing users to correct for them if not applied at processing level.
 
 (fig:pfd-l1-27)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2394,15 +2298,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>polarimetricDistortionType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Polarimetric distortion DSR (polarimetricDistortionType)](../../_static/figures/pfd-l1/figure_27_section_4.3.1.10.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 27</span><span class="caption-text"> — Polarimetric distortion DSR (polarimetricDistortionType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-51)=
 :::{div} atbd-table
@@ -2448,7 +2348,7 @@ classDiagram
 This DSR contains the results of the ionosphere correction estimated and applied by the processor.
 
 (fig:pfd-l1-28)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2478,15 +2378,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>ionosphereCorrectionType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Ionosphere correction DSR (ionosphereCorrectionType)](../../_static/figures/pfd-l1/figure_28_section_4.3.1.11.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 28</span><span class="caption-text"> — Ionosphere correction DSR (ionosphereCorrectionType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-54)=
 :::{div} atbd-table
@@ -2513,7 +2409,7 @@ classDiagram
 This DSR contains all the necessary information to understand the Earth model/geometry used in the image and its geolocation.
 
 (fig:pfd-l1-29)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2537,15 +2433,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>geometryType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Geometry DSR (geometryType)](../../_static/figures/pfd-l1/figure_29_section_4.3.1.12.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 29</span><span class="caption-text"> — Geometry DSR (geometryType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-55)=
 :::{div} atbd-table
@@ -2566,7 +2458,7 @@ classDiagram
 This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level.
 
 (fig:pfd-l1-30)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2589,15 +2481,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>qualityType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Quality DSR (qualityType)](../../_static/figures/pfd-l1/figure_30_section_4.3.1.13.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 30</span><span class="caption-text"> — Quality DSR (qualityType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-56)=
 :::{div} atbd-table
@@ -2624,7 +2512,7 @@ classDiagram
 :::
 
 (fig:pfd-l1-31)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2666,15 +2554,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-annotations.xsd (<code>qualityParametersType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Quality DSR (qualityParametersType)](../../_static/figures/pfd-l1/figure_31_section_4.3.1.13.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 31</span><span class="caption-text"> — Quality DSR (qualityParametersType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-58)=
 :::{div} atbd-table
@@ -2755,7 +2639,7 @@ Note that some bits are intentionally left blank to support user-defined custom 
 This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations.
 
 (fig:pfd-l1-32)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -2778,15 +2662,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-common-types.xsd (<code>layerListType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Annotation LUT DSR (layerListType)](../../_static/figures/pfd-l1/figure_32_section_4.3.1.14.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 32</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-59)=
 :::{div} atbd-table
@@ -3315,7 +3195,7 @@ for L1a products and the Lexicographic one for L1b products, i.e.:
 The Overlay ADS is a Keyhole Markup Language (KML) file that describes the product coverage area and is suitable for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications). Its structure is described in the following figure and tables.
 
 (fig:pfd-l1-33)=
-::::{div} atbd-mermaid-figure
+:::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -3412,15 +3292,11 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1-overlay.xsd (<code>kmlType</code>).</small></p>
 
-:::{dropdown} Original figure (DOCX)
-![Overlay ADS](../../_static/figures/pfd-l1/figure_33_section_4.3.5.png)
-:::
-
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 33</span><span class="caption-text"> — Overlay ADS</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-63)=
 :::{div} atbd-table

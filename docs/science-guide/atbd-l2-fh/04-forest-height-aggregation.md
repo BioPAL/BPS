@@ -62,9 +62,7 @@ flowchart TB
   style STACKS fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:2 2
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the L2b processing.](../../_static/figures/atbd-fh/figure_13_section_4.1.1.png)
-:::
+<!-- source image: figure_13_section_4.1.1 sha256 fb547cf29f87c8c8cb4f6ff1d5f552d553f2abe1fb9cd0ac1e12eaff53f6632b -->
 
 </div>
 

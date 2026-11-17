@@ -14,7 +14,7 @@
  "pipeline_version": "0.1.0",
  "conversion_date": "2026-11-17",
  "checks": {
-  "V1": "PASS",
+  "V1": "FAIL",
   "V2": "PASS",
   "V3": "PASS",
   "V4": "PASS",

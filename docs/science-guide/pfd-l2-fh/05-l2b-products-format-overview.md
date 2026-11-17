@@ -31,7 +31,7 @@ No need for Look-Up Tables (LUT) ADS in L2b products.
 L2b Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyte) depending on data type, where the input L2a pixels are invalid and for each pixel discarded by the algorithm. The value is reported in all the MDS COG metadata (`GDAL_NODATA` tag, see {ref}`Tab.2 <tab:pfd-fh-2>`) and in the Raster Image DSR (`noDataValue` element, see 6.3.1.2).
 
 (fig:pfd-fh-18)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -54,15 +54,13 @@ BIOMASS FH L2b Product/
     └── Support schemas RDS       [XSD]
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Forest Height L2b products structure](../../_static/figures/pfd-fh/figure_18_section_5.png)
-:::
+<!-- source image: figure_18_section_5 sha256 d7a5250e929889ba50203fbd7479895310dcd2fcde561ee45a8e18072b8ad07a -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 18</span><span class="caption-text"> — Forest Height L2b products structure</span></p>
 
-::::
+:::
 
 (tab:pfd-fh-39)=
 :::{div} atbd-table

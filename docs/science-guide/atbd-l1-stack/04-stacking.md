@@ -81,9 +81,7 @@ flowchart TB
   interp --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the coregistration processor.](../../_static/figures/atbd-l1-stack/figure_7_section_4.png)
-:::
+<!-- source image: figure_7_section_4 sha256 c16da1a7fa77b30ef2f95640fab20fc839a300a8d05f529d6eaef546085f0ec4 -->
 
 </div>
 
@@ -245,9 +243,7 @@ flowchart TB
   resid --> invert --> coreg
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Coregistration from data.](../../_static/figures/atbd-l1-stack/figure_8_section_4.2.png)
-:::
+<!-- source image: figure_8_section_4.2 sha256 c3b18fd2005e52e28e007fbe4b8473ef0bc6ab3331c1f9e664d455d7fce996ea -->
 
 </div>
 

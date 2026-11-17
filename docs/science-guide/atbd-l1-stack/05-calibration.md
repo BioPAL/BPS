@@ -141,9 +141,7 @@ flowchart TB
   skp --> calout
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX\_PPS.](../../_static/figures/atbd-l1-stack/figure_9_section_5.png)
-:::
+<!-- source image: figure_9_section_5 sha256 b4501cf026968b2fdc1602a449952071be8b9445568764a400e5c83034f4e674 -->
 
 </div>
 
@@ -184,9 +182,7 @@ flowchart TB
   select --> azf --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![The AZF’s flow diagram.](../../_static/figures/atbd-l1-stack/figure_10_section_5.1.png)
-:::
+<!-- source image: figure_10_section_5.1 sha256 a7b0742cce985007cd3a247715e95059b7a1af1fc5e855daba116a758c94831f -->
 
 </div>
 
@@ -459,9 +455,7 @@ flowchart TB
   res --> disp --> lin --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Block diagram representing the single-baseline IOB estimation.](../../_static/figures/atbd-l1-stack/figure_11_section_5.2.2.png)
-:::
+<!-- source image: figure_11_section_5.2.2 sha256 d6ef7f3d93c82379101765e9e685706f561afb7beb9449b86b7392704f975e0e -->
 
 </div>
 
@@ -919,9 +913,7 @@ flowchart TB
   plane --> calout
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Figure](../../_static/figures/atbd-l1-stack/image_1_section_5.3.2.png)
-:::
+<!-- source image: image_1_section_5.3.2 sha256 c67cf973c90ac7d64453bc5939746ff56e3c1f599978b4fa655ca1cc977ca37d -->
 
 </div>
 
@@ -1283,9 +1275,7 @@ flowchart TB
   skprem --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Phase calibration by SKP.](../../_static/figures/atbd-l1-stack/figure_13_section_5.4.png)
-:::
+<!-- source image: figure_13_section_5.4 sha256 6f26d1c6018bef2fb980d598afdeb751f8e58d11cc2beedad7eea6cd10f861d3 -->
 
 </div>
 
@@ -1334,9 +1324,7 @@ flowchart TB
   coh --> rif
 ```
 
-:::{dropdown} Original figure (DOCX)
-![SKP decomposition.](../../_static/figures/atbd-l1-stack/figure_14_section_5.4.png)
-:::
+<!-- source image: figure_14_section_5.4 sha256 8966b381b31d60a21989a293b70af5aea95e7fd183809d78f200790511e47e3c -->
 
 </div>
 
@@ -1454,21 +1442,19 @@ The linear combination is ruled by just two real valued parameters, $a$ and $b$.
 The Physically admissible range determination block returns two vectors, associated with $a$ and $b$ respectively, which sample the range of admissibility for the two parameters. At the edges of the admissibility range of the $a$ parameter either $R_1(a)$ or $C_2(a,b)$ is singular, and similarly for the $b$ parameter, as shown in the figure below.
 
 (fig:atbd-l1-stack-12)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.](../../_static/figures/atbd-l1-stack/fig12.*)
 
-:::{dropdown} Original figure (DOCX)
-![Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.](../../_static/figures/atbd-l1-stack/figure_12_section_5.4.2.3.png)
-:::
+<!-- source image: figure_12_section_5.4.2.3 sha256 1cf950f5d664c42ae91ce9cf54eb89d5d4d00b90758fb9e4b7c5a6b8d0f526a8 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.</span></p>
 
-::::
+:::
 
 The Coherence analysis block analyzes the structure matrices returned by the decomposition and classifies them according to their average interferometric coherence. The scattering mechanism that provides the highest coherence is labeled as “coh” and the other as “inc”. The matrices resulting from the extreme values of the parameters giving the highest coherence are labeled as “thin”, the other extreme values lead to the “fat” matrices. These four matrices are the main output of the SKPD block of Figure 19 and are gathered by the MBas covariances block in the same figure.
 

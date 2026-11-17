@@ -13,7 +13,7 @@ The overall scheme of the L2b processing is reported in the figure below. The ke
 The world is divided into processing blocks covering all forested areas and not overlapping with each other ({fig}`12`, top). This step is run separately for each 3°×3° processing block, where the data for parameter estimation are extracted from a 5°×5° neighbourhood while the estimated AGB mean and standard error maps are only saved for the 3°×3° processing block: the neighbourhood consists of the processing block and includes a 1° buffer zone as shown in {fig}`12`, bottom.
 
 (fig:atbd-agb-processing-blocks)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -21,15 +21,13 @@ The world is divided into processing blocks covering all forested areas and not 
 
 ![World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).](../../_static/figures/agb/fig12.*)
 
-:::{dropdown} Original figure (DOCX)
-![World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).](../../_static/figures/agb/figure_12_section_4.png)
-:::
+<!-- source image: figure_12_section_4 sha256 07506184c8243000b5c570b2b8d435b6a077421151b58b21de110f50ab0afd45 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).</span></p>
 
-::::
+:::
 
 The algorithm performs up to two iterations for each processing block. The following approach to orchestration is followed:
 
@@ -96,9 +94,7 @@ flowchart TB
   style BLOCK fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the L2b processing.](../../_static/figures/agb/figure_13_section_4.png)
-:::
+<!-- source image: figure_13_section_4 sha256 b988299f161339ed5a712506e5bc24214fff3faa2b2de1ee21e39ac1777c565c -->
 
 </div>
 
@@ -165,9 +161,7 @@ flowchart TB
   style MPE fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the model parameter estimation module.](../../_static/figures/agb/figure_14_section_4.1.1.png)
-:::
+<!-- source image: figure_14_section_4.1.1 sha256 7a066ccac74c5b83cc9e5d60f3efc9bff84b2ff116306c870cf7c8655460b5c2 -->
 
 </div>
 
@@ -610,9 +604,7 @@ flowchart TB
   est --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![AGB mean and standard error estimation.](../../_static/figures/agb/figure_15_section_4.1.4.4.png)
-:::
+<!-- source image: figure_15_section_4.1.4.4 sha256 c60e9e7ea172e6f562e74408b8ec4818d96e0de72532e71bcafc96b821abfebf -->
 
 </div>
 

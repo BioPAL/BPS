@@ -89,7 +89,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`Fig.|4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`Fig.|5`.
 
 (fig:atbd-fh-4)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -100,18 +100,16 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 | 1 |  | \* |  | \* |  | \* |  | \<-default |
 | 3 |  |  | \* |  | \* |  | \* |  |
 
-:::{dropdown} Original figure (DOCX)
-![Selection for seven TOM.](../../_static/figures/atbd-fh/figure_4_section_3.2.4.1.png)
-:::
+<!-- source image: figure_4_section_3.2.4.1 sha256 e74b8632f1b8611d79d9db79f9a39550dffbbf07a5b623155eed0a7962d0ae2b -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Selection for seven TOM.</span></p>
 
-::::
+:::
 
 (fig:atbd-fh-5)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -123,15 +121,13 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 | 3 |  |  | \* |  | \* |  | \* |  |  |
 | 4 |  |  |  | \* |  | \* |  | \* |  |
 
-:::{dropdown} Original figure (DOCX)
-![Selection for eight TOM (contingency).](../../_static/figures/atbd-fh/figure_5_section_3.2.4.1.png)
-:::
+<!-- source image: figure_5_section_3.2.4.1 sha256 3b6c926ecaaee50ea7628d0bea836d0b56cc39a14364c8d78c1444a0faccfc81 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Selection for eight TOM (contingency).</span></p>
 
-::::
+:::
 
 (sec:atbd-fh-3-3)=
 ### 3.3 Calibration
@@ -186,9 +182,7 @@ flowchart TB
   style OUT fill:#ffffff,stroke:#000000,color:#000000
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Calibration.](../../_static/figures/atbd-fh/figure_6_section_3.3.1.png)
-:::
+<!-- source image: figure_6_section_3.3.1 sha256 35442b1c4fe48e83ea6d54799f01ed69b9779e7b2e1eb3b1e93cc630cf4727fc -->
 
 </div>
 
@@ -253,17 +247,215 @@ The coherence estimation block aims to estimate the second order polarimetric-in
 **The step is mandatory.**
 
 (fig:atbd-fh-7)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
-![Coherence estimation algorithm (INT/TOM Phase).](../../_static/figures/atbd-fh/figure_7_section_3.4.1.png)
+<p class="atbd-subfigure-label">(a)</p>
+
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}}}%%
+flowchart TB
+  accTitle: Coherence estimation algorithm (INT/TOM Phase).
+  accDescr: Overview of the figure, whose detail is in three sub-figures. The phase calibrated, ground steered L1c stack, detailed in sub-figure (b), feeds the coherence estimation and, within it, the coherence calibration. The vertical wavenumbers of the back-geocoding product feed the coherence estimation, detailed in sub-figure (c), which gives the terrain-corrected vertical wavenumbers. The coherence calibration, which is part of the coherence estimation and is detailed in sub-figure (d), gives the polarimetric-interferometric coherences for 3 baselines (5D).
+
+  %% Colours and outlines of the original figure. Each class sets its text colour too.
+  %%   frame: frame of the original holding a list of inputs or outputs (white box, solid outline)
+  %%   cal:   "Coherence calibration" frame, detailed in (d) (white box, dash-dot outline)
+  %%   data:  product (light grey parallelogram)
+  %%   title: title of the "Coherence estimation" frame, in italics at the bottom of the
+  %%          frame as in the original (plain text, no box)
+  classDef frame fill:#ffffff,stroke:#000000,color:#000000
+  classDef cal fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:4 2 1 2
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef title fill:none,stroke:none,color:#000000
+
+  %% Inputs
+  vwin["Vertical Wavenumbers  (back-geocoding product)"]:::frame
+  stk["L1c stack Phase calibrated / Ground steered<br/><i>(b)</i>"]:::frame
+
+  %% "Coherence estimation" frame, detailed in (c); it holds the "Coherence calibration"
+  %% frame, detailed in (d). Its title is a text node at the bottom ("&nbsp;" keeps an
+  %% empty band at the top), so that the arrows entering from above never cross it.
+  subgraph CEST["&nbsp;"]
+    ccal["Coherence calibration<br/><i>(d)</i>"]:::cal
+    cesttitle["<i>Coherence estimation (c)</i>"]:::title
+  end
+
+  %% Outputs
+  vwout["Vertical Wavenumbers  (terrain corrected)"]:::frame
+  cohout[/"Polarimetric-<br/>interferometric<br/>coherences 3 bas. (5D)  γ̃<sub>Obs</sub>"/]:::data
+
+  vwin --> CEST
+  stk --> CEST
+  stk --> ccal
+  CEST --> vwout
+  ccal --> cohout
+  %% Layout only (invisible): puts the frame title below the coherence calibration
+  ccal ~~~ cesttitle
+
+  %% Frame of the original (dashed outline)
+  style CEST fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:6 3
+```
+
+<p class="atbd-subfigure-label">(b)</p>
+
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false, "subGraphTitleMargin": {"top": 10, "bottom": 4}}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+flowchart TB
+  accTitle: Coherence estimation algorithm (INT/TOM Phase).
+  accDescr: Detail of the phase calibrated, ground steered L1c stack, which holds the Sigma Nought LUTs, the Denoising LUTs and the images SCS1, SCS2 and SCS3. The Sigma Nought LUTs, the Denoising LUTs and the stack feed the computation of the SNR induced decorrelation, in sub-figure (d). The stack also feeds the polarimetric-interferometric coherence estimation, in sub-figure (c).
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data: input (light grey parallelogram)
+  %%   lut:  look-up table (light grey parallelogram, dash-dot outline)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         step drawn in another sub-figure, so that no step is duplicated
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef lut fill:#f2f2f2,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 2 1 2
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  subgraph STK["L1c stack Phase calibrated / Ground steered"]
+    sig[/"Sigma<br/>Nought LUTs"/]:::lut
+    den[/"Denoising<br/>LUTs"/]:::lut
+    s1[/"SCS<sub>1</sub>"/]:::data
+    s2[/"SCS<sub>2</sub>"/]:::data
+    s3[/"SCS<sub>3</sub>"/]:::data
+  end
+
+  %% Links of the original figure towards the other sub-figures
+  tosnr(["to (d): Compute SNR induced decorrelation"]):::ref
+  topolcoh(["to (c): Polarimetric-interferometric, coherence estimation"]):::ref
+
+  sig --> tosnr
+  den --> tosnr
+  STK --> tosnr
+  STK --> topolcoh
+
+  %% Frame of the original (solid outline)
+  style STK fill:#ffffff,stroke:#000000,color:#000000
+```
+
+<p class="atbd-subfigure-label">(c)</p>
+
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false, "subGraphTitleMargin": {"top": 10, "bottom": 4}}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"considerModelOrder": "PREFER_EDGES"}}}%%
+flowchart TB
+  accTitle: Coherence estimation algorithm (INT/TOM Phase).
+  accDescr: Detail of the coherence estimation. The vertical wavenumbers VW1, VW2 and VW3 of the back-geocoding product go through vertical wavenumbers terrain correction, together with the terrain slope and the incidence angle (ref), giving the terrain-corrected vertical wavenumbers VW1, VW2 and VW3. The correction also feeds the computation of the range spectral decorrelation, and the incidence angle (ref) feeds the coherence calibration, both in sub-figure (d). The L1c stack, from sub-figure (b), and the product resolution feed the polarimetric-interferometric coherence estimation, which gives the observed coherence to the compensation step in sub-figure (d).
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data: input or product (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  %%   ref:  cross-reference, NOT a step (white stadium, dashed outline): it points to a
+  %%         frame or step drawn in another sub-figure, so that no step is duplicated
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+
+  %% VW items declared 2, 3, 1: ELK then draws them 1, 2, 3 from left to right, as in the original
+  subgraph VWIN["Vertical Wavenumbers  (back-geocoding product)"]
+    vi2[/"VW<sub>2</sub>"/]:::data
+    vi3[/"VW<sub>3</sub>"/]:::data
+    vi1[/"VW<sub>1</sub>"/]:::data
+  end
+  fromstk(["from (b): L1c stack Phase calibrated / Ground steered"]):::ref
+
+  subgraph CEST["Coherence estimation"]
+    slope[/"Terrain slope"/]:::data
+    inc[/"Incidence<br/>angle (ref)"/]:::data
+    vwtc["Vertical wavenumbers<br/>terrain correction"]:::step
+    polcoh["Polarimetric-<br/>interferometric,<br/>coherence estimation"]:::step
+    prodres[/"Product<br/>resolution"/]:::data
+    %% The "Coherence calibration" frame lies inside this frame in the original
+    tocal(["to (d): Coherence calibration"]):::ref
+    torsd(["to (d): Compute range spectral decorrelation"]):::ref
+    tocomp(["to (d): Compensation for non-volumetric SNR and range spectral decorrelation"]):::ref
+  end
+
+  subgraph VWOUT["Vertical Wavenumbers  (terrain corrected)"]
+    vo2[/"VW<sub>2</sub>"/]:::data
+    vo3[/"VW<sub>3</sub>"/]:::data
+    vo1[/"VW<sub>1</sub>"/]:::data
+  end
+
+  VWIN --> vwtc
+  slope --> vwtc
+  inc --> vwtc
+  inc --> tocal
+  vwtc --> torsd
+  vwtc --> VWOUT
+  fromstk --> polcoh
+  prodres --> polcoh
+  polcoh -- "γ̃<sub>Obs</sub>" --> tocomp
+
+  %% Frames of the original: inputs and outputs solid, coherence estimation dashed
+  style VWIN fill:#ffffff,stroke:#000000,color:#000000
+  style VWOUT fill:#ffffff,stroke:#000000,color:#000000
+  style CEST fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:6 3
+```
+
+<p class="atbd-subfigure-label">(d)</p>
+
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Coherence estimation algorithm (INT/TOM Phase).
+  accDescr: Detail of the coherence calibration, which receives the incidence angle (ref) from sub-figure (c). The Sigma Nought LUTs, the Denoising LUTs and the L1c stack, from sub-figure (b), feed the computation of the SNR induced decorrelation. The vertical wavenumbers terrain correction, from sub-figure (c), feeds the computation of the range spectral decorrelation. The observed coherence from the polarimetric-interferometric coherence estimation, in sub-figure (c), and both decorrelations feed the compensation for non-volumetric SNR and range spectral decorrelation, which gives the polarimetric-interferometric coherences for 3 baselines (5D).
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data:  product (light grey parallelogram)
+  %%   step:  processing step (light grey box)
+  %%   ref:   cross-reference, NOT a step (white stadium, dashed outline): it points to an
+  %%          input or step drawn in another sub-figure, so that no step is duplicated
+  %%   title: title of the frame, in italics as in the original (plain text, no box)
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef ref fill:#ffffff,stroke:#7f7f7f,color:#000000,stroke-dasharray:4 3
+  classDef title fill:none,stroke:none,color:#000000
+
+  %% Links of the original figure from the other sub-figures
+  frompolcoh(["from (c):<br/>Polarimetric-<br/>interferometric,<br/>coherence estimation"]):::ref
+  fromvwtc(["from (c):<br/>Vertical wavenumbers<br/>terrain correction"]):::ref
+  frominc(["from (c):<br/>Incidence<br/>angle (ref)"]):::ref
+  fromsig(["from (b):<br/>Sigma<br/>Nought LUTs"]):::ref
+  fromden(["from (b):<br/>Denoising<br/>LUTs"]):::ref
+  fromstk(["from (b):<br/>L1c stack<br/>Phase calibrated /<br/>Ground steered"]):::ref
+
+  %% The original draws this frame inside the "Coherence estimation" frame of (c).
+  %% Its title is a text node at the bottom of the frame ("&nbsp;" keeps an empty band at
+  %% the top), so that the arrows entering the frame from above never cross it.
+  subgraph CCAL["&nbsp;"]
+    snr["Compute SNR induced<br/>decorrelation"]:::step
+    rsd["Compute range<br/>spectral<br/>decorrelation"]:::step
+    comp["Compensation for<br/>non-volumetric  SNR<br/>and<br/>range spectral decorrelation"]:::step
+    ccaltitle["<i>Coherence calibration</i>"]:::title
+  end
+  cohout[/"Polarimetric-<br/>interferometric<br/>coherences 3 bas. (5D)  γ̃<sub>Obs</sub>"/]:::data
+
+  frominc --> CCAL
+  fromsig --> snr
+  fromden --> snr
+  fromstk --> snr
+  fromvwtc --> rsd
+  frompolcoh -- "γ̃<sub>Obs</sub>" --> comp
+  snr --> comp
+  rsd --> comp
+  comp --> cohout
+  %% Layout only (invisible): puts the frame title on the row of the compensation step
+  snr ~~~ ccaltitle
+
+  %% Frame of the original (dash-dot outline)
+  style CCAL fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:4 2 1 2
+```
+
+<!-- source image: figure_7_section_3.4.1 sha256 1cdbf1a6265b8763b4ff2fa99c2f1931e2da96ca812809a42d6f02449e463b2e -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Coherence estimation algorithm (INT/TOM Phase).</span></p>
 
-:::
+::::
 
 (sec:atbd-fh-3-4-2)=
 #### 3.4.2 Inputs
@@ -480,9 +672,7 @@ flowchart TB
   style EACH fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:6 3 1 3
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Forest height inversion.](../../_static/figures/atbd-fh/figure_9_section_3.5.1.png)
-:::
+<!-- source image: figure_9_section_3.5.1 sha256 e88d965ca509e857738dc91577c55e9408491b2ff354d4d42c2a7f09c5958d3e -->
 
 </div>
 
@@ -743,9 +933,7 @@ flowchart TB
   proj --> out
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Geocoding.](../../_static/figures/atbd-fh/figure_11_section_3.6.1.png)
-:::
+<!-- source image: figure_11_section_3.6.1 sha256 4fce313d3f359e32676f0912178bb39f9b6a7ea7dfedf71d22a9be12921d76d4 -->
 
 </div>
 
@@ -778,21 +966,19 @@ flowchart TB
 ###### 3.6.4.1.1 Update reference DEM coordinates
 
 (fig:atbd-fh-12)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fh/fig11.*)
 
-:::{dropdown} Original figure (DOCX)
-![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fh/figure_12_section_3.6.4.1.1.png)
-:::
+<!-- source image: figure_12_section_3.6.4.1.1 sha256 dc9320d65c95a7b3d6d7fbe29a3402555a3b90e42e31f3e379088fc846ba6877 -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.</span></p>
 
-::::
+:::
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same forest height range-azimuth grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`Fig.|12`:
 

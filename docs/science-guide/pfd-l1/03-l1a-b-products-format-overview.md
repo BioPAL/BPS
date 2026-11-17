@@ -27,7 +27,7 @@ The declination and customisation of this format structure for BIOMASS L1a and L
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
 (fig:pfd-l1-1)=
-::::{div} atbd-mermaid-figure atbd-drawn-figure
+:::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
@@ -50,15 +50,13 @@ BIOMASS L1a/b Product/
     └── Support schemas RDS                        [XSD]
 ```
 
-:::{dropdown} Original figure (DOCX)
-![L1a/b products structure](../../_static/figures/pfd-l1/figure_1_section_3.png)
-:::
+<!-- source image: figure_1_section_3 sha256 f17190ded91e7cf2b16684584aae3f9c5777ae3d8c4c2e81e949a03ac35a112f -->
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 1</span><span class="caption-text"> — L1a/b products structure</span></p>
 
-::::
+:::
 
 (tab:pfd-l1-1)=
 :::{div} atbd-table

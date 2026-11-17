@@ -68,9 +68,7 @@ flowchart TB
   rfi --> xpol --> refsel --> outstack
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Complete flow-chart of the pre-processing processor.](../../_static/figures/atbd-l1-stack/figure_4_section_3.png)
-:::
+<!-- source image: figure_4_section_3 sha256 d0bd88a439c1aca9ac05b9c80d496a4839c6eb1e604b2194a96c79b904345cb9 -->
 
 </div>
 
@@ -137,9 +135,7 @@ flowchart TB
   loss --> decor
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Data quality measure according to RFI pattern.](../../_static/figures/atbd-l1-stack/figure_5_section_3.1.1.png)
-:::
+<!-- source image: figure_5_section_3.1.1 sha256 d8137904953fa59873fa527fd89d2eef74828e49c62acdf55ac36735ade01dfd -->
 
 </div>
 
@@ -425,9 +421,7 @@ flowchart TB
   refsel --> master
 ```
 
-:::{dropdown} Original figure (DOCX)
-![Selection of the coregistration primary image.](../../_static/figures/atbd-l1-stack/figure_6_section_3.3.1.png)
-:::
+<!-- source image: figure_6_section_3.3.1 sha256 bd94fb60a03adc9203abf3888a148daedf6945d817290b42f7b30eaf2f38715a -->
 
 </div>
 
