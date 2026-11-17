@@ -27,17 +27,43 @@ The declination and customisation of this format structure for BIOMASS L1c produ
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
 (fig:pfd-l1-34)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```text
+BIOMASS L1c Product/
+├── Main product header                                [XML]
+├── Measurement folder/
+│   ├── SAR (coregistered) image MDS (amp. and phase)  [COG]
+│   └── VRT file                                       [VRT]
+├── Annotation folder (coregistered image)/
+│   ├── Main ADS                                       [XML]
+│   ├── Look-Up Tables ADS                             [NetCDF]
+│   └── Navigation folder/
+│       ├── Orbit ADS                                  [XML]
+│       └── Attitude ADS                               [XML]
+├── Annotation folder (primary image)/
+│   ├── Main ADS                                       [XML]
+│   └── Navigation folder/
+│       ├── Orbit ADS                                  [XML]
+│       └── Attitude ADS                               [XML]
+├── Preview folder/
+│   ├── Quick-look ADS                                 [PNG]
+│   └── Overlay ADS                                    [KMZ]
+└── Schema folder/
+    └── Support schemas RDS                            [XSD]
+```
+
+:::{dropdown} Original figure (DOCX)
 ![L1c products structure](../../_static/figures/pfd-l1/figure_34_section_5.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 34</span><span class="caption-text"> — L1c products structure</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-78)=
 :::{div} atbd-table

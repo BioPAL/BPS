@@ -25,7 +25,7 @@ The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 da
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
   accTitle: Biomass high-level processing scheme from L0 data to L3 products, TOM phase.
   accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): each L0 frame (G_i, M_j, m_k, A_l, S_m) up to A_l+6 goes through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m) to A_l+6. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m) to A_l+6, feeds the FH L2a proc and AGB L2a proc steps of the L2a processor. L2b Tile-based Processing (Asynchronous): FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc, which also takes the internal forest class/mask; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles), AGB_a(G_i, *Tn, *Tn, *Tn) and the forest class/mask with FH_b(t_a, t_b, T_n) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FH_b(t_a, t_b, T_n) and AGB_b(t_a, t_b, T_n) go to the FH L3 and AGB L3 consolidation steps of the L3 processor, which output FH_3(t_a, t_b, B_n) and AGB_3(t_a, t_b, B_n).
@@ -169,7 +169,7 @@ The main steps of FD processing workflow are depicted in the following figure an
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: FD processing detailed workflow.
   accDescr: The L1c Stack and FNF feed L2a. In L2a, stack-based steps run in sequence: Forest coverage check, Calibration, Ground cancellation, Polarimetric covariance matrix computation, Geocoding and Change detection, which also takes FD L2a: previous cycle. L2a outputs Probability of change, Forest Disturbance and CFM. These three products feed L2b, which holds Combining L2a products (Global). L2b outputs Aggregated Probability of change, Aggregated Forest Disturbance and Aggregated CFM.

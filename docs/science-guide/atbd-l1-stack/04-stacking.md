@@ -20,7 +20,7 @@ In this section we will describe in detail the stacking operation, which consist
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the coregistration processor.
   accDescr: The stack of L1a SCS products and the DEM (coregistration primary) feed the coregistration from geometry. Its output reaches a decision. One branch goes directly to the image interpolation. The other goes through range spectral filtering and incoherent speckle tracking, then a second decision that leads to model-based inversion and to shifts upsampling, both feeding the image interpolation. The image interpolation produces the coregistered SCS products.
@@ -213,7 +213,7 @@ The purpose of this step is to estimate the coregistration shifts via data cross
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Coregistration from data.
   accDescr: Each of the two SCS images, SCS 1 and SCS 2, goes through a range spectral filtering step together with its synthetic phases (1 and 2). Both filtered images and the shifts from geometry feed the blockwise residual shift estimation, followed by the modelbase inversion of the shifts, which gives the co-registration shifts.

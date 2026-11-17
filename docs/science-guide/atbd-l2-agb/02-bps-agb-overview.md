@@ -25,7 +25,7 @@ The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 da
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
   accTitle: Biomass high-level processing scheme from L0 data to L3 products, TOM phase.
   accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): each L0 frame (G_i, M_j, m_k, A_l, S_m) up to A_l+6 goes through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m) to A_l+6. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m) to A_l+6, feeds the FH L2a proc and AGB L2a proc steps of the L2a processor. L2b Tile-based Processing (Asynchronous): FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc, which also takes the internal forest class/mask; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles), AGB_a(G_i, *Tn, *Tn, *Tn) and the forest class/mask with FH_b(t_a, t_b, T_n) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FH_b(t_a, t_b, T_n) and AGB_b(t_a, t_b, T_n) go to the FH L3 and AGB L3 consolidation steps of the L3 processor, which output FH_3(t_a, t_b, B_n) and AGB_3(t_a, t_b, B_n).
@@ -163,7 +163,7 @@ The main steps of AGB processing workflow are depicted in the following figure a
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: AGB processing detailed workflow. 5°x5° neighbourhood and 3°x3° processing block are shown in Fig.12.
   accDescr: The L1c Stack and FNF feed the stack-based L2a processor, which runs Forest coverage check, Calibration, Ground cancellation, Sigma naught normalisation and Geocoding in sequence and outputs L2a stacks. The L2a stacks, FD L2b, LCM and External reference AGB maps feed the block-based L2b processor, which runs Model parameter estimation and then AGB mean & error prediction, giving BIOMASS AGB maps. The BIOMASS AGB maps feed L2b again as an optional second iteration. FD L2b is shown with a dashed arrow.

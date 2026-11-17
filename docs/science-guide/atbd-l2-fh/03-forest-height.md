@@ -147,7 +147,7 @@ The calibration algorithm makes use of the L1c annotation {ad}`2` to apply phase
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Calibration.
   accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
@@ -409,7 +409,7 @@ The forest height inversion algorithm aims to generate maps of forest upper cano
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"considerModelOrder": "PREFER_EDGES"}}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"considerModelOrder": "PREFER_EDGES"}}}%%
 flowchart TB
   accTitle: Forest height inversion.
   accDescr: Polarimetric-interferometric coherences for 3 baselines go through polarimetric optimization. Terrain-corrected vertical wavenumbers VW1 to VW3 and a normalized tomographic reflectivity profile feed a LUT of complex coherences computation. Both results reach an Inversion method decision that selects dual baseline or single baseline inversion. Each inversion computes a height followed by a quality index computation, using the residual non-volumetric decorrelation; the single baseline branch is repeated for each baseline and then averaged. The dual baseline height and the averaged single baseline heights go through slope correction, with the terrain slope, giving the Forest Height map. The dual baseline quality index and the averaging result give the Forest height Quality Map.
@@ -714,7 +714,7 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Geocoding.
   accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c Stack Reference Orbit feed Update coordinates. Its result and the DGG feed Project on geographic map, which gives the Geocoded Processed Data.

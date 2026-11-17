@@ -149,7 +149,7 @@ The calibration algorithm makes use of the L1c annotation {ad}`3` to apply phase
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Calibration.
   accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
@@ -287,7 +287,7 @@ The flowcharts of the ground cancellation algorithm are shown in {fig}`7`, {fig}
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Ground cancellation algorithm with two images.
   accDescr: A phase calibrated, ground steered L1c stack of two images, SCS1 and SCS2, goes through images subtraction, giving GN.
@@ -329,7 +329,7 @@ flowchart TB
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Ground cancellation algorithm with more than two images.
   accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM both feed demodulation and reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
@@ -498,7 +498,7 @@ The sigma naught normalization block aims to estimate the second order statistic
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Sigma naught normalisation.
   accDescr: GN, the local incidence angle and the spatial averaging window size feed sigma naught normalisation, which gives GN intensity σ0.
@@ -613,7 +613,7 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Geocoding.
   accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c stack reference orbit feed the update coordinates step. Its output and the DGG feed the step that projects on a geographic map, which gives the geocoded processed data.

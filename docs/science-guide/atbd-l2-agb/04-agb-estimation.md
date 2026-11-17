@@ -48,7 +48,7 @@ The algorithm performs up to two iterations for each processing block. The follo
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the L2b processing.
   accDescr: Six inputs feed model parameter estimation in L2b processing: FD L2b (dashed), Reference AGB mean & std and LCM, all DGG tiles within a 5° × 5° neighbourhood, and Ground-notched sigma naught, Local incidence angle and FNF, all stacks for the current global cycle. Model parameter estimation is followed by AGB mean & error prediction, which gives BIOMASS AGB mean & std for all DGG tiles within a 3° × 3° block.
@@ -126,7 +126,7 @@ This step first checks the availability and values of reference AGB data, Level 
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the model parameter estimation module.
   accDescr: LCM, Reference AGB mean & std and L2a stacks feed training data consolidation, which also takes the input data constraints. Its output goes to regression-based parameter estimation, which also takes the regression success criteria and the model configuration, and gives the model parameters (mean, std) and the logarithmic bias correction factor.
@@ -581,7 +581,7 @@ This step first consolidates the prediction data (Level 2a stacks and forest cla
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: AGB mean and standard error estimation.
   accDescr: LCM, L2a stacks, the model parameters (mean, std), the input data constraints and the logarithmic bias correction factor feed AGB mean & std estimation, which gives BIOMASS AGB mean & std.

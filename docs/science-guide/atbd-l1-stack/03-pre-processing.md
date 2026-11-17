@@ -14,7 +14,7 @@
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the pre-processing processor.
   accDescr: A stack of L1 SCS images plus orbits (4 polarizations), SCS 1 to SCS N, goes both to the geometrical quantity oversampling step and to the RFI impact computation. Oversampling gives the stack of geometric quantities, GEO 1 to GEO N. The RFI impact computation feeds cross-pol merging, then reference image selection, which gives the stack of SCS plus orbits (3 or 4 polarizations), SCS 1 to SCS N.
@@ -96,7 +96,7 @@ The purpose of this step is to deal with the interferences that may impact the i
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Data quality measure according to RFI pattern.
   accDescr: A stack of RFI correction maps from L1, RFI map 1 to RFI map n, goes through the missing wavenumbers computation, then the conversion of missing wavenumbers to coherence loss. The result is the RFI decorrelation stack, RFI decorrelation 1 to RFI decorrelation n.
@@ -371,7 +371,7 @@ In the reminder of this section we will provide general definitions of stack’s
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
   accTitle: Selection of the coregistration primary image.
   accDescr: The stack of L1 SCS images plus orbits, SCS 1 to SCS N, goes to the baseline computation, which feeds the reference image selection. The Faraday Rotation quality indicators FR 1 to FR N and the RFI mitigation quality indicators RFI 1 to RFI N also feed the reference image selection. It outputs the index of the master image.

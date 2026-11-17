@@ -1246,19 +1246,72 @@ The LUT ADS provides the FNF generated outside of BPS from aggregated C3S LCM {a
     - ancillary scalar variables containing other useful metadata to complete the LUT definition.
 
 (fig:pfd-agb-16)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+classDiagram
+  accTitle: Look-Up Tables (LUT) ADS
+  accDescr: XML schema diagram. The element lutAnnotation has the type lutAnnotationType, an extension. Its sequence holds Attributes (18), Dimensions (2), Coordinate_variables (2), FNF and Local_Incidence_Angle. FNF has the type fnf_variables and Local_Incidence_Angle has the type local_incidence_angle_variables. Each of these two types holds a sequence of Variable elements, 10 in each.
+  direction TB
+  %% A number alone under a stacked (double-frame) XMLSpy element is its occurrence count
+  %% (minOccurs = maxOccurs), written [18], [2], [10] as in [min..max]; it is not a child count.
+  %% Types of Attributes, Dimensions, Coordinate_variables and Variable are not shown: none written.
+  class lutAnnotation
+  class lutAnnotationType["lutAnnotationType (extension)"] {
+    <<complexType>>
+    Attributes [18]
+    Dimensions [2]
+    Coordinate_variables [2]
+    FNF : fnf_variables [1]
+    Local_Incidence_Angle : local_incidence_angle_variables [1]
+  }
+  class fnf_variables {
+    <<complexType>>
+    Variable [10]
+  }
+  class local_incidence_angle_variables {
+    <<complexType>>
+    Variable [10]
+  }
+  lutAnnotation --> lutAnnotationType
+  lutAnnotationType --> fnf_variables : FNF
+  lutAnnotationType --> local_incidence_angle_variables : Local_Incidence_Angle
+```
+
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+classDiagram
+  accTitle: Look-Up Tables (LUT) ADS
+  accDescr: XML schema diagram. The element annotationLUT has the type layerListType. That type has an attribute count and a sequence of layer elements occurring one to thirty times.
+  direction LR
+  %% XMLSpy notation: annotationLUT is the root element; layerListType is the named type
+  %% (dashed yellow frame) with its attribute count and a sequence of 1..30 layer elements.
+  %% The figure does not show the type of layer, so none is written.
+  class annotationLUT
+  class layerListType {
+    <<complexType>>
+    @count
+    layer [1..30]
+  }
+  annotationLUT --> layerListType
+```
+
+<p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Look-Up Tables (LUT) ADS](../../_static/figures/pfd-agb/image_1_section_4.3.2.png)
 
 ![Look-Up Tables (LUT) ADS](../../_static/figures/pfd-agb/figure_16_section_4.3.2.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Look-Up Tables (LUT) ADS</span></p>
 
-:::
+::::
 
 **Compression strategy**
 

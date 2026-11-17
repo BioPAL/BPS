@@ -26,7 +26,7 @@ The forest height and quality maps allow the combination of different acquisitio
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the L2b processing.
   accDescr: The DGG, the group of Forest Height L2a, FNF and Forest Height Quality L2a for all stacks on an area in a given time, and FD L2b shown by a dashed arrow feed Combining L2a products. It gives Aggregated Forest Height L2b and Aggregated Forest Height Quality L2b.

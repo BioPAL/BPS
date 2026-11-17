@@ -32,17 +32,38 @@ L2b Data Sets pixels will have a no data value of -9999.0 (float32) or 255 (ubyt
 The value is reported in all the MDS COG metadata (`GDAL_NODATA` tag, see {ref}`Tab.2 <tab:pfd-fd-2>`) and in the Raster Image DSR (`noDataValue` element, see 6.3.1.2).
 
 (fig:pfd-fd-18)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```text
+BIOMASS L2b Product/
+├── Main product header            [XML]
+├── STAC                           [Json]
+├── Measurement folder/
+│   ├── CFM MDS                    [COG]
+│   ├── Probability of change MDS  [COG]
+│   └── Forest Disturbance MDS     [COG]
+├── Annotation folder/
+│   ├── Main ADS                   [XML]
+│   ├── Heat Map ADS               [COG]
+│   └── Acquisition id image ADS   [COG]
+├── Preview folder/
+│   ├── Quick-look ADS             [PNG]
+│   └── Overlay ADS                [KMZ]
+└── Schema folder/
+    └── Support schemas RDS        [XSD]
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Forest Disturbance L2b products structure](../../_static/figures/pfd-fd/figure_18_section_5.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 18</span><span class="caption-text"> — Forest Disturbance L2b products structure</span></p>
 
-:::
+::::
 
 (tab:pfd-fd-39)=
 :::{div} atbd-table

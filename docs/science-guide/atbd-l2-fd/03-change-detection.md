@@ -149,7 +149,7 @@ The calibration algorithm makes use of the L1c annotation {ad}`3` to apply phase
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Calibration.
   accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
@@ -287,7 +287,7 @@ The flowcharts of the ground cancellation algorithm are shown in {fig}`Fig.|7`, 
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Ground cancellation algorithm with two images.
   accDescr: A phase calibrated, ground steered L1c stack of two images, SCS1 and SCS2, goes through images subtraction, giving GN.
@@ -329,7 +329,7 @@ flowchart TB
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Ground cancellation algorithm with more than two images.
   accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM both feed demodulation and reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
@@ -475,7 +475,7 @@ The polarimetric covariance estimation block aims to estimate the second order s
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart LR
   accTitle: Polarimetric covariance estimation.
   accDescr: GN and Spatial averaging window size are inputs to Polarimetric covariance matrix computation, which outputs Polarimetric covariance.
@@ -586,7 +586,7 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Geocoding.
   accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c stack reference orbit feed the update coordinates step. Its output and the DGG feed the step that projects on a geographic map, which gives the geocoded processed data.
@@ -719,7 +719,7 @@ The disturbance processing is concerned with providing maps of high-intensity ch
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Change detection.
   accDescr: Number of averages, X(N+1) and Y(N) feed Compute probability of change, which outputs Probability of change and feeds Thresholding: disturbance map generation, which also takes Level of significance. Thresholding outputs Forest Disturbance and feeds Update ACM, which outputs Y(N+1) and Number of averages. Forest Disturbance, FNF and CFM (dashed) feed Update CFM, which outputs CFM.
@@ -866,7 +866,7 @@ History of previous N cycles is represented by an Average Covariance Matrix $\bo
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
 flowchart TB
   accTitle: Update mechanism for Average Covariance Matrix.
   accDescr: X(N+1), Y(N) and Number of averages feed the Change detection decision. If Yes, Y(N) = X(N+1) is applied, then Number of averages = 1; Y(N) = X(N+1) gives Y(N+1) and Number of averages = 1 gives Number of averages. If No, a framed group applies: X(N+1) and Y(N) are added with a plus operator, giving Y(N+1), and Number of averages += 1 gives Number of averages.

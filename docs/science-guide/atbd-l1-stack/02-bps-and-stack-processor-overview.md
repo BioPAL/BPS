@@ -25,7 +25,7 @@ The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 da
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
+%%{init: {"class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"useMaxWidth": false, "diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
 flowchart TB
   accTitle: Biomass high-level processing scheme from L0 data to L3 products, TOM phase.
   accDescr: Three stages, L1, L2 and L3 processing, in four lanes drawn side by side from left to right in the original and here from top to bottom. L1 Frame-based Processing (Data Driven): each L0 frame (G_i, M_j, m_k, A_l, S_m) up to A_l+6 goes through an L1 Pr. step, giving L1 (G_i, M_j, m_k, A_l, F_m) to A_l+6. L2a Stack-based Processing (Data Driven): the L1 frames are stacked; the stack, L1c(G_i, M_j, m_k, A_l, F_m) to A_l+6, feeds the FH L2a proc and AGB L2a proc steps of the L2a processor. L2b Tile-based Processing (Asynchronous): FH_a(G_i, M_j, m_k, F_m) and FH_a(G_i, *Tn, *Tn, *Tn) feed the FH L2b Tile proc, which also takes the internal forest class/mask; AGB_a(G_i, M_j, m_k, F_m), AGB_b(t_a, t_b, neighbour Tiles), AGB_a(G_i, *Tn, *Tn, *Tn) and the forest class/mask with FH_b(t_a, t_b, T_n) feed the AGB L2b Tile proc. L3 Basin-based Processing (Asynchronous): FH_b(t_a, t_b, T_n) and AGB_b(t_a, t_b, T_n) go to the FH L3 and AGB L3 consolidation steps of the L3 processor, which output FH_3(t_a, t_b, B_n) and AGB_3(t_a, t_b, B_n).
@@ -147,17 +147,79 @@ Other operations, like the generation of Digital Elevation Model (DEM) and Digit
 The main steps of the BPS Stack Processor workflow are depicted in the following figure and described in detail in the following sub-sections.
 
 (fig:atbd-l1-stack-3)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}}}%%
+flowchart LR
+  accTitle: Stack Processor detailed workflow. The AUX_PPS is omitted from the figure since it is an input to each step of the Stack Processor.
+  accDescr: The L1a Stack enters the Pre-Processing block, which contains cross-polarization combination, estimation of RFI degradation indices, reference image selection and geometrical quantity's upsampling. Its output goes to the Coregistration block, made of shift estimation from geometry, residual shift estimation from data, image shifting and LUT shifting. Its output goes to the Calibration block, made of azimuth spectral filtering (AZF), background ionosphere removal (IOB), multi-squint calibration (MSC) and SKP phase calibration (SKP). The FNF Mask feeds the SKP phase calibration. The Calibration block outputs the L1c Stack.
+
+  %% Layout: left to right as the original. The ELK NETWORK_SIMPLEX placement keeps
+  %% the FNF Mask arrow out of the Coregistration and Calibration frames. The steps of
+  %% Pre-Processing and Coregistration are chained by invisible links (~~~) to keep their
+  %% order; those of Calibration are not, because that frame has an incoming link on a
+  %% step (FNF) and ELK then lays its chain out horizontally.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   product: data product (cylinder, white)
+  %%   step:    processing step inside a block (light grey box)
+  classDef product fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  l1a[("L1a Stack")]:::product
+  fnf[("FNF Mask")]:::product
+  l1c[("L1c Stack")]:::product
+
+  subgraph pre["<b>Pre-Processing</b>"]
+    direction TB
+    xpol["Cross-Polarization Combination"]:::step
+    rfi["Estimation of RFI Degradation Indices"]:::step
+    refsel["Reference Image Selection"]:::step
+    upsamp["Geometrical Quantity's Upsampling"]:::step
+    xpol ~~~ rfi ~~~ refsel ~~~ upsamp
+  end
+
+  subgraph coreg["<b>Coregistration</b>"]
+    direction TB
+    shiftgeo["Shift Estimation from Geometry"]:::step
+    shiftres["Residual Shift Estimation from Data"]:::step
+    imgshift["Image Shifting"]:::step
+    lutshift["LUT shifting"]:::step
+    shiftgeo ~~~ shiftres ~~~ imgshift ~~~ lutshift
+  end
+
+  subgraph cal["<b>Calibration</b>"]
+    direction TB
+    azf["Azimuth Spectral Filtering (AZF)"]:::step
+    iob["Background Ionosphere Removal (IOB)"]:::step
+    msc["Multi-Squint Calibration (MSC)"]:::step
+    skp["SKP Phase Calibration (SKP)"]:::step
+  end
+
+  style pre fill:#ffffff,stroke:#000000,color:#000000
+  style coreg fill:#ffffff,stroke:#000000,color:#000000
+  style cal fill:#ffffff,stroke:#000000,color:#000000
+
+  l1a --> pre
+  pre --> coreg
+  coreg --> cal
+  fnf --> skp
+  cal --> l1c
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Stack Processor detailed workflow. The AUX\_PPS is omitted from the figure since it is an input to each step of the Stack Processor.](../../_static/figures/atbd-l1-stack/figure_3_section_2.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — Stack Processor detailed workflow. The AUX_PPS is omitted from the figure since it is an input to each step of the Stack Processor.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-2-3-1)=
 #### 2.3.1 Pre-processing

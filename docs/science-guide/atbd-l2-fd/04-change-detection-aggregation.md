@@ -20,7 +20,7 @@ The key step is fusion of L2a estimates at map level. These steps are described 
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: Complete flow-chart of the L2b processing.
   accDescr: Within the group All stacks, on an area, in a given time, Forest Disturbance L2a, Probability of change L2a and CFM L2a and DGG feed the L2b processing group, which contains Combining L2a products. The L2b processing group outputs Aggregated Forest Disturbance L2b, Aggregated probability of change L2b and Aggregated CFM L2b.
@@ -85,7 +85,7 @@ From the disturbance map combined, the extraction of the combined CFM is obtaine
 <div class="atbd-figure-content">
 
 ```{mermaid}
-%%{init: {"theme": "default"}}%%
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
 flowchart TB
   accTitle: L2a FD fusion.
   accDescr: Within the group All stacks, on an area, in a given time, DGG, Probability of change L2a, Forest Disturbance L2a and CFM L2a are shown. Probability of change L2a and Forest Disturbance L2a feed Temporal sorting, followed by Series time derivative, FD steps count and Consistency check. Consistency check feeds Probability of change averaging, which gives Aggregated Probability of change L2b, and gives Aggregated Forest Disturbance L2b. CFM L2a and Aggregated Forest Disturbance L2b feed Update CFM, which gives Aggregated CFM L2b.

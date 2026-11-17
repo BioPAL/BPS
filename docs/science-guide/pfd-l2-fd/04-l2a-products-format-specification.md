@@ -1295,17 +1295,58 @@ The LUT ADS provides:
     - ancillary scalar variables containing other useful metadata to complete the LUT definition.
 
 (fig:pfd-fd-16)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+classDiagram
+  accTitle: Look-Up Tables (LUT) ADS
+  accDescr: XML schema diagram. The element lutAnnotation has the type lutAnnotationType, an extension. Its sequence holds Attributes (18), Dimensions (2), Coordinate_variables (2), FNF, ACM and numberOfAverages. FNF has the type fnf_variables with 11 Variable elements, ACM has the type ACM_variables with 19, and numberOfAverages has the type numberOfAverages_variables with 11.
+  direction TB
+  %% A number alone under a stacked (double-frame) XMLSpy element is its occurrence count
+  %% (minOccurs = maxOccurs), written [18], [2], [11], [19]; it is not a child count.
+  %% Types of Attributes, Dimensions, Coordinate_variables and Variable are not shown: none written.
+  class lutAnnotation
+  class lutAnnotationType["lutAnnotationType (extension)"] {
+    <<complexType>>
+    Attributes [18]
+    Dimensions [2]
+    Coordinate_variables [2]
+    FNF : fnf_variables [1]
+    ACM : ACM_variables [1]
+    numberOfAverages : numberOfAverages_variables [1]
+  }
+  class fnf_variables {
+    <<complexType>>
+    Variable [11]
+  }
+  class ACM_variables {
+    <<complexType>>
+    Variable [19]
+  }
+  class numberOfAverages_variables {
+    <<complexType>>
+    Variable [11]
+  }
+  lutAnnotation --> lutAnnotationType
+  lutAnnotationType --> fnf_variables : FNF
+  lutAnnotationType --> ACM_variables : ACM
+  lutAnnotationType --> numberOfAverages_variables : numberOfAverages
+```
+
+<p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
+
+:::{dropdown} Original figure (DOCX)
 ![Look-Up Tables (LUT) ADS](../../_static/figures/pfd-fd/figure_16_section_4.3.2.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Look-Up Tables (LUT) ADS</span></p>
 
-:::
+::::
 
 **Compression strategy**
 

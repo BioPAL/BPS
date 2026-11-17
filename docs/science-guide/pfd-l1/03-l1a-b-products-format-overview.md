@@ -27,17 +27,38 @@ The declination and customisation of this format structure for BIOMASS L1a and L
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
 (fig:pfd-l1-1)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```text
+BIOMASS L1a/b Product/
+├── Main product header                            [XML]
+├── Measurement folder/
+│   ├── SAR image MDS (amplitude and (opt) phase)  [COG]
+│   └── VRT file                                   [VRT]
+├── Annotation folder/
+│   ├── Main ADS                                   [XML]
+│   ├── Look-Up Tables ADS                         [NetCDF]
+│   └── Navigation folder/
+│       ├── Orbit ADS                              [XML]
+│       └── Attitude ADS                           [XML]
+├── Preview folder/
+│   ├── Quick-look ADS                             [PNG]
+│   └── Overlay ADS                                [KMZ]
+└── Schema folder/
+    └── Support schemas RDS                        [XSD]
+```
+
+:::{dropdown} Original figure (DOCX)
 ![L1a/b products structure](../../_static/figures/pfd-l1/figure_1_section_3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 1</span><span class="caption-text"> — L1a/b products structure</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-1)=
 :::{div} atbd-table

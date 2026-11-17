@@ -80,17 +80,50 @@ Each sub-step is described in details in the following sub-sections.
 The BAQ Decoding block operates on an echo basis and dividing each echo on blocks of samples. The dimension of each block within the echo depends on the BAQ Coding strategy implemented on-board, on the number of samples, as well as on the number of bits used to encode each sample in the block ({ad}`1`).
 
 (fig:atbd-l1-sar-5)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default"}}%%
+flowchart TB
+  accTitle: Block diagram of the BAQ Decoding step.
+  accDescr: Filtered ISP packets go to the extraction of BAQ codes, signs and ASM. Its output goes to the magnitude reconstruction, which loops back over blocks and also takes the hardcoded thresholds. The reconstruction goes to the sequence recombination, which yields the decoded ISP packets.
+
+  %% Colours of the original figure. Each class sets its text colour too.
+  %%   data: input or output data (grey-white parallelogram)
+  %%   step: processing step (grey-white box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  subgraph baq["BAQ DECODING"]
+    direction TB
+    isp[/"Filtered ISP<br/>packets"/]:::data
+    thr[/"Hardcoded<br/>Thresholds"/]:::data
+    ext["BAQ codes, signs<br/>and ASM extraction"]:::step
+    mag["Magnitude<br/>reconstruction"]:::step
+    seq["Sequence<br/>recombination"]:::step
+    out[/"Decoded ISP<br/>packets"/]:::data
+  end
+
+  isp --> ext
+  ext --> mag
+  mag -- "Loop over<br/>blocks" --> ext
+  thr --> mag
+  mag --> seq
+  seq --> out
+  style baq fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Block diagram of the BAQ Decoding step.](../../_static/figures/atbd-l1-sar/figure_5_section_3.2.1.jpg)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Block diagram of the BAQ Decoding step.</span></p>
 
-:::
+::::
 
 **Mathematical description**
 
@@ -366,17 +399,68 @@ The rationale of the internal calibration process is depicted in the figure belo
 Some of the following sub-sections present the computation of a “normalization factor” based on a look-up table. This factor characterizes the passive elements within the calibration paths as a function of the temperature measured by the thermistors, whose impact (mainly attenuations and delays) need to be removed from the derived quantities (PGP, antenna complex coefficients, etc.). The detailed description of such computations is included in {ad}`6` and therefore omitted in the following sub-sections. Note that while the sections below refer to this information as a “LUT”, in practice the actual implementation is not a look-up table, but it follows the description as provided in {ad}`6`. Therefore, the computed factors are related to the instrument characterization data included in the instrument CCDB, such that the applied factors are updated in response to changes in temperature measured by the thermistors and stored in the instrument ancillary packets.
 
 (fig:atbd-l1-sar-6)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"flowchart": {"useMaxWidth": false}, "class": {"useMaxWidth": false}, "theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Block diagram of the internal calibration approach.
+  accDescr: Housekeeping temperature, calibration sequences and the normalization-factor look-up table feed PGP processing, which yields amplitude and phase drifts and a replica for each polarization. The replicas, the temperature and the look-up table feed the delays and imbalance extraction, which yields the relative internal delays between polarizations and the instrument internal channel imbalance. These feed the nominal replica generation. A replica selection chooses between the extracted replicas and the nominal replica. The internal calibration correction uses the amplitude and phase drifts and the selected replica to produce range-compressed raw data. Separately, the preamble and postamble feed the instrument noise extraction, which yields the receiver noise power.
+  hk[/"HK<br/>(Temperature)"/]
+  seq[/"Calibration<br/>sequences"/]
+  lut[/"LUT<br/>(normalization<br/>factors)"/]
+  pre[/"Preamble/<br/>Postamble"/]
+  pgp["PGP processing"]
+  noise["Instrument noise<br/>extraction"]
+  drifts[/"Amplitude<br/>and phase<br/>drifts"/]
+  replica[/"Replica<br/>(for each<br/>polarization)"/]
+  rnp[/"Receiver<br/>noise power"/]
+  delays["Delays and imbalance<br/>extraction"]
+  reldel[/"Relative internal<br/>delays between<br/>polarizations"/]
+  imb[/"Instrument<br/>internal channel<br/>imbalance"/]
+  nominal["Nominal replica<br/>generation"]
+  sel{"Replica selection"}
+  icc["Internal calibration<br/>correction"]
+  rcrd[/"Range-compressed<br/>raw data"/]
+  hk --> pgp
+  seq --> pgp
+  lut --> pgp
+  hk --> delays
+  lut --> delays
+  pre --> noise
+  noise --> rnp
+  pgp --> drifts
+  pgp --> replica
+  replica --> delays
+  delays --> reldel
+  delays --> imb
+  reldel --> nominal
+  imb --> nominal
+  replica --> sel
+  nominal --> sel
+  drifts --> icc
+  sel --> icc
+  icc --> rcrd
+  %% data = parallelogram products; calstep = processing step; decision = replica selection
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000
+  classDef calstep fill:#f2f2f2,stroke:#a6a6a6,color:#000
+  classDef decision fill:#ffffff,stroke:#000000,color:#000
+  class hk,seq,lut,pre,drifts,replica,rnp,reldel,imb,rcrd data
+  class pgp,noise,delays,nominal,icc calstep
+  class sel decision
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Block diagram of the internal calibration approach.](../../_static/figures/atbd-l1-sar/figure_6_section_3.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Block diagram of the internal calibration approach.</span></p>
 
-:::
+::::
 
 Note that in case internal calibration parameters cannot be derived from input product internal calibration pulses, default values are taken from `AUX_INS` file (in particular, `modelDrift`, `internalDelay`, `txChannelImbalance`, `rxChannelImbalance` and `noisePower` parameters are used).
 
