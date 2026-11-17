@@ -13,19 +13,23 @@ The overall scheme of the L2b processing is reported in the figure below. The ke
 The world is divided into processing blocks covering all forested areas and not overlapping with each other ({fig}`12`, top). This step is run separately for each 3°×3° processing block, where the data for parameter estimation are extracted from a 5°×5° neighbourhood while the estimated AGB mean and standard error maps are only saved for the 3°×3° processing block: the neighbourhood consists of the processing block and includes a 1° buffer zone as shown in {fig}`12`, bottom.
 
 (fig:atbd-agb-processing-blocks)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
 ![World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).](../../_static/figures/agb/image_1_section_4.png)
 
+![World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).](../../_static/figures/agb/fig12.*)
+
+:::{dropdown} Original figure (DOCX)
 ![World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).](../../_static/figures/agb/figure_12_section_4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — World covered by 3°x3° processing blocks (top) and 5°x5° neighbourhood for AGB estimation (bottom).</span></p>
 
-:::
+::::
 
 The algorithm performs up to two iterations for each processing block. The following approach to orchestration is followed:
 
@@ -39,17 +43,66 @@ The algorithm performs up to two iterations for each processing block. The follo
 - second iteration: external reference + first iteration AGB output
 
 (fig:atbd-agb-l2b-workflow)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the L2b processing.
+  accDescr: Six inputs feed model parameter estimation in L2b processing: FD L2b (dashed), Reference AGB mean & std and LCM, all DGG tiles within a 5° × 5° neighbourhood, and Ground-notched sigma naught, Local incidence angle and FNF, all stacks for the current global cycle. Model parameter estimation is followed by AGB mean & error prediction, which gives BIOMASS AGB mean & std for all DGG tiles within a 3° × 3° block.
+
+  %% Colours of the original figure.
+  %%   data: input or output (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  subgraph NEIGH["All <i>DGG</i>tiles within a 5° × 5° neighbourhood:"]
+    fd[/"FD L2b"/]:::data
+    ref[/"Reference AGB<br/>mean & std"/]:::data
+    lcm[/"LCM"/]:::data
+    subgraph STACKS["All stacks for the current global cycle"]
+      sig[/"Ground-<br/>notched<br/>sigma naught"/]:::data
+      lia[/"Local<br/>incidence<br/>angle"/]:::data
+      fnf[/"FNF"/]:::data
+    end
+  end
+
+  subgraph L2B["L2b processing"]
+    mpe["Model parameter<br/>estimation"]:::step
+    pred["AGB mean & error<br/>prediction"]:::step
+  end
+
+  subgraph BLOCK["All <i>DGG</i>tiles within a 3° × 3° block:"]
+    agb[/"BIOMASS AGB<br/>mean & std"/]:::data
+  end
+
+  fd -.-> mpe
+  ref --> mpe
+  lcm --> mpe
+  sig --> mpe
+  lia --> mpe
+  fnf --> mpe
+  mpe --> pred
+  pred --> agb
+
+  style NEIGH fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
+  style STACKS fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
+  style L2B fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
+  style BLOCK fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the L2b processing.](../../_static/figures/agb/figure_13_section_4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Complete flow-chart of the L2b processing.</span></p>
 
-:::
+::::
 
 While the tessellation of the world in 3°x3° processing blocks is proposed as a manageable way to assure the expected parameter variability, the algorithm formulation itself allows any possible definition of parameter estimation and AGB estimation manifolds. They both can be as small as 1°x1° tile only: thus, areas on continental borders / land sea interfaces are nicely and implicitly managed (as described in {sec}`section|4.1.4.2`).
 
@@ -66,17 +119,59 @@ This step first checks the availability and values of reference AGB data, Level 
 **The step is mandatory.**
 
 (fig:atbd-agb-model-parameter-estimation)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the model parameter estimation module.
+  accDescr: LCM, Reference AGB mean & std and L2a stacks feed training data consolidation, which also takes the input data constraints. Its output goes to regression-based parameter estimation, which also takes the regression success criteria and the model configuration, and gives the model parameters (mean, std) and the logarithmic bias correction factor.
+
+  %% Colours of the original figure.
+  %%   data: input or output (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  lcm[/"LCM"/]:::data
+  ref[/"Reference<br/>AGB mean &<br/>std"/]:::data
+  l2a[/"L2a stacks"/]:::data
+  constraints[/"Input data<br/>constraints"/]:::data
+  criteria[/"Regression<br/>success criteria"/]:::data
+  config[/"Model<br/>configuration"/]:::data
+
+  subgraph MPE[" "]
+    train["Training data<br/>consolidation"]:::step
+    regr["Regression-based<br/>parameter<br/>estimation"]:::step
+  end
+
+  params[/"Model parameters<br/>(mean, std)"/]:::data
+  bias[/"Logarithmic bias<br/>correction factor"/]:::data
+
+  lcm --> train
+  ref --> train
+  l2a --> train
+  constraints --> train
+  train --> regr
+  criteria --> regr
+  config --> regr
+  regr --> params
+  regr --> bias
+
+  style MPE fill:#ffffff,stroke:#000000,stroke-dasharray:3 3,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the model parameter estimation module.](../../_static/figures/agb/figure_14_section_4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 14</span><span class="caption-text"> — Complete flow-chart of the model parameter estimation module.</span></p>
 
-:::
+::::
 
 (sec:atbd-agb-4-1-2)=
 #### 4.1.2 Inputs
@@ -479,17 +574,49 @@ This step first consolidates the prediction data (Level 2a stacks and forest cla
 {fig}`15` shows the flow chart for this step.
 
 (fig:atbd-agb-agb-mean-std-estimation)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: AGB mean and standard error estimation.
+  accDescr: LCM, L2a stacks, the model parameters (mean, std), the input data constraints and the logarithmic bias correction factor feed AGB mean & std estimation, which gives BIOMASS AGB mean & std.
+
+  %% Colours of the original figure.
+  %%   data: input (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  %%   store: output product (light grey cylinder)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef store fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  lcm[/"LCM"/]:::data
+  l2a[/"L2a stacks"/]:::data
+  params[/"Model parameters<br/>(mean, std)"/]:::data
+  constraints[/"Input data<br/>constraints"/]:::data
+  bias[/"Logarithmic bias<br/>correction factor"/]:::data
+  est["AGB mean & std<br/>estimation"]:::step
+  out[("BIOMASS AGB<br/>mean & std")]:::store
+
+  lcm --> est
+  l2a --> est
+  params --> est
+  constraints --> est
+  bias --> est
+  est --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![AGB mean and standard error estimation.](../../_static/figures/agb/figure_15_section_4.1.4.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 15</span><span class="caption-text"> — AGB mean and standard error estimation.</span></p>
 
-:::
+::::
 
 Mappable pixels (i.e., those that contain the required SAR data within the block) are defined as:
 

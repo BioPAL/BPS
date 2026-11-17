@@ -91,30 +91,49 @@ The algorithm applies to TOM stacks and subsets the stack in order to select (or
 The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`5`.
 
 (fig:atbd-agb-int-subset-7)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for seven TOM.](../../_static/figures/agb/figure_4_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Selection for seven TOM.</span></p>
 
-:::
+::::
 
 (fig:atbd-agb-int-subset-8)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |  |
+| 4 |  |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for eight TOM (contingency).](../../_static/figures/agb/figure_5_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Selection for eight TOM (contingency).</span></p>
 
-:::
+::::
 
 (sec:atbd-agb-3-3)=
 ### 3.3 Calibration
@@ -125,17 +144,58 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 The calibration algorithm makes use of the L1c annotation {ad}`3` to apply phase calibration to L1c necessary for the L2a processing.
 
 (fig:atbd-agb-calibration)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Calibration.
+  accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
+
+  %% Colours of the original figure.
+  %%   data: SCS image (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph IN["L1c stack + Phase Screens"]
+    direction LR
+    i1[/"SCS<sub>1</sub>"/]:::data
+    i2[/"SCS<sub>2</sub>"/]:::data
+    id["○ ○ ○"]:::dots
+    iM[/"SCS<sub>M</sub>"/]:::data
+    i1 ~~~ i2 ~~~ id ~~~ iM
+  end
+
+  cal["Screen calibration:<br/>phase screen<br/>subtraction"]:::step
+
+  subgraph OUT["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    o1[/"SCS<sub>1</sub>"/]:::data
+    o2[/"SCS<sub>2</sub>"/]:::data
+    od["○ ○ ○"]:::dots
+    oM[/"SCS<sub>M</sub>"/]:::data
+    o1 ~~~ o2 ~~~ od ~~~ oM
+  end
+
+  IN --> cal --> OUT
+
+  style IN fill:#ffffff,stroke:#000000,color:#000000
+  style OUT fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Calibration.](../../_static/figures/agb/figure_6_section_3.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Calibration.</span></p>
 
-:::
+::::
 
 **The step is mandatory. If disabled for debug, default rule is to copy inputs as step output.**
 
@@ -222,30 +282,116 @@ The default operation mode of ground cancellation is `operationalMode`="multi re
 The flowcharts of the ground cancellation algorithm are shown in {fig}`7`, {fig}`8`. Each polarization channel is processed independently. A preliminary interpolation step is needed to bring wavenumbers onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`).
 
 (fig:atbd-agb-gc-two)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Ground cancellation algorithm with two images.
+  accDescr: A phase calibrated, ground steered L1c stack of two images, SCS1 and SCS2, goes through images subtraction, giving GN.
+
+  %% Colours of the original figure.
+  %%   data: image or product (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+
+  subgraph IN["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    i1[/"SCS<sub>1</sub>"/]:::data
+    i2[/"SCS<sub>2</sub>"/]:::data
+    i1 ~~~ i2
+  end
+
+  sub["Images subtraction"]:::step
+  gn[/"GN"/]:::data
+
+  IN --> sub --> gn
+
+  style IN fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Ground cancellation algorithm with two images.](../../_static/figures/agb/figure_7_section_3.4.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Ground cancellation algorithm with two images.</span></p>
 
-:::
+::::
 
 (fig:atbd-agb-gc-multi)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Ground cancellation algorithm with more than two images.
+  accDescr: Vertical wavenumbers VW1 to VWM (back-geocoding product) and the phase calibrated, ground steered L1c stack SCS1 to SCSM feed demodulation, and the stack also feeds reference acquisition selection, which feeds demodulation. Demodulation goes to linear interpolation, which also takes the height to emphasize, then to modulation and to reference image subtraction. Reference acquisition selection also feeds reference image subtraction, which gives GN.
+
+  %% Colours of the original figure.
+  %%   data: image or input (white parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph VWS["Vertical Wavenumbers (back-geocoding product)"]
+    direction LR
+    v1[/"VW<sub>1</sub>"/]:::data
+    v2[/"VW<sub>2</sub>"/]:::data
+    vd["○ ○ ○"]:::dots
+    vM[/"VW<sub>M</sub>"/]:::data
+    v1 ~~~ v2 ~~~ vd ~~~ vM
+  end
+
+  subgraph STK["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    s1[/"SCS<sub>1</sub>"/]:::data
+    s2[/"SCS<sub>2</sub>"/]:::data
+    sd["○ ○ ○"]:::dots
+    sM[/"SCS<sub>M</sub>"/]:::data
+    s1 ~~~ s2 ~~~ sd ~~~ sM
+  end
+
+  demod["Demodulation"]:::step
+  refsel["Reference acquisition<br/>selection"]:::step
+  height[/"Height to<br/>emphasize"/]:::data
+  interp["Linear interpolation"]:::step
+  modul["Modulation"]:::step
+  refsub["Reference image<br/>subtraction"]:::step
+  gn[/"GN"/]:::data
+
+  VWS --> demod
+  STK --> demod
+  VWS --> refsel
+  STK --> refsel
+  refsel --> demod
+  demod --> interp
+  height --> interp
+  interp --> modul
+  modul --> refsub
+  refsel --> refsub
+  refsub --> gn
+
+  style VWS fill:#ffffff,stroke:#000000,color:#000000
+  style STK fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Ground cancellation algorithm with more than two images.](../../_static/figures/agb/figure_8_section_3.4.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Ground cancellation algorithm with more than two images.</span></p>
 
-:::
+::::
 
 (sec:ground-cancellation-two-images)=
 ##### 3.4.4.1 Case of two images
@@ -347,17 +493,43 @@ The sigma naught normalization block aims to estimate the second order statistic
 **The step is mandatory. If disabled for debug, default rule is to skip correction.**
 
 (fig:atbd-agb-sigma-naught-normalisation)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Sigma naught normalisation.
+  accDescr: GN, the local incidence angle and the spatial averaging window size feed sigma naught normalisation, which gives GN intensity σ0.
+
+  %% Colours of the original figure.
+  %%   data: input or output (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  gn[/"GN"/]:::data
+  lia[/"Local incidence<br/>angle"/]:::data
+  win[/"Spatial<br/>averaging<br/>window size"/]:::data
+  norm["Sigma naught<br/>normalisation"]:::step
+  out[/"GN intensity <i>σ</i><sup>0</sup>"/]:::data
+
+  gn --> norm
+  lia --> norm
+  win --> norm
+  norm --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Sigma naught normalisation.](../../_static/figures/agb/figure_9_section_3.5.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Sigma naught normalisation.</span></p>
 
-:::
+::::
 
 (sec:atbd-agb-3-5-2)=
 #### 3.5.2 Inputs
@@ -436,17 +608,49 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 **The step is mandatory.**
 
 (fig:atbd-agb-geocoding)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Geocoding.
+  accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c stack reference orbit feed the update coordinates step. Its output and the DGG feed the step that projects on a geographic map, which gives the geocoded processed data.
+
+  %% Colours of the original figure.
+  %%   data: input or output (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  pd[/"Processed Data"/]:::data
+  dem[/"Reference DEM LLH<br/>coordinates<br/>(back-geocoding product)"/]:::data
+  tomo[/"Tomographic 3D<br/>forest points<br/>elevation"/]:::data
+  orbit[/"L1c Stack<br/>Reference Orbit"/]:::data
+  dgg[/"DGG"/]:::data
+  upd["Update coordinates"]:::step
+  proj["Project on geographic<br/>map"]:::step
+  out[/"Geocoded<br/>Processed Data"/]:::data
+
+  pd --> upd
+  dem --> upd
+  tomo --> upd
+  orbit --> upd
+  upd --> proj
+  dgg --> proj
+  proj --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Geocoding.](../../_static/figures/agb/figure_10_section_3.6.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — Geocoding.</span></p>
 
-:::
+::::
 
 (sec:atbd-agb-3-6-2)=
 #### 3.6.2 Inputs
@@ -473,17 +677,21 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 ###### 3.6.4.1.1 Update reference DEM coordinates
 
 (fig:atbd-agb-geocoding-forest-point)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/agb/fig11.*)
+
+:::{dropdown} Original figure (DOCX)
 ![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/agb/figure_11_section_3.6.4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.</span></p>
 
-:::
+::::
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`11`:
 

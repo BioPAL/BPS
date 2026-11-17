@@ -16,7 +16,7 @@ license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-06'
+conversion_date: '2026-11-17'
 source_sha256: d9055900c12833b4dfc7d81e28088dc169f2bbd1e084b802d1a2969ee7f4039c
 -->
 
