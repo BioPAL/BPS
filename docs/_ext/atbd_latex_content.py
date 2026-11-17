@@ -790,6 +790,16 @@ class AtbdLatexContent(SphinxPostTransform):
             fallback, single_share = self._fit_mermaid(visuals[0], container)
             if fallback:
                 visuals, original = fallback, True
+            if single_share > _MERMAID_SHARE and caption is not None:
+                # a figure on a page of its own leaves room for its caption
+                # (about 95 characters per line, 3 % of the text height each)
+                text = "".join(n.astext() for n in caption[1])
+                lines = -(-len(text) // 95)
+                single_share = min(single_share, 0.98 - 0.03 * max(lines, 1))
+
+        if (has_mermaid and len(visuals) > 1 and "atbd-drawn-figure" in container.get("classes", [])
+                and all(isinstance(v, mermaid_cls) for v in visuals)):
+            return self._figure_parts(container, docname, visuals, caption, extra)
 
         figure = nodes.figure("", ids=list(container["ids"]),
                               names=list(container["names"]))
@@ -825,6 +835,32 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += nodes.caption("", "", *inlines)
         container.replace_self([figure, *extra])
         return figure
+
+    def _figure_parts(self, container: nodes.container, docname: str,
+                      visuals: list[nodes.Node], caption: Any,
+                      extra: list[nodes.Node]) -> nodes.figure:
+        """A complex figure redrawn in parts (a), (b)…: one float per part,
+        each sized as a figure of its own, the caption under the last one."""
+        figures = []
+        last = len(visuals) - 1
+        for i, visual in enumerate(visuals):
+            _images, share = self._fit_mermaid(visual, container)
+            figure = nodes.figure("")
+            setup = (r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % share
+                     + r"\def\atbdfigscale{%s}\def\atbdfigmaxwidth{\linewidth}" % _MERMAID_SCALE)
+            if i == 0:
+                setup += "".join(_latex_label(docname, x) for x in container["ids"])
+            if i == last and caption is not None and caption[0]:
+                setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
+            setup += r"{\small (%s)}\par\smallskip " % chr(97 + i)
+            figure += nodes.raw("", setup, format="latex")
+            visual.parent.remove(visual)
+            figure += visual
+            if i == last and caption is not None:
+                figure += nodes.caption("", "", *caption[1])
+            figures.append(figure)
+        container.replace_self([*figures, *extra])
+        return figures[0]
 
     def _mermaid_font(self, code: str, options: Any, height: float) -> float | None:
         """Text size (pt) of a Mermaid diagram once fitted in the page.

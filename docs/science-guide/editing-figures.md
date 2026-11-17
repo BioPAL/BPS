@@ -152,6 +152,61 @@ colours are grouped at the top (`PARAMETERS`, `LABELS`, `COLOURS`).
 4. Commit the three files together (with Git, or send them to the document
    owner).
 
+## Editing a folder tree
+
+A product structure is a `text` block drawn with box characters; it is shown
+as is.
+
+```text
+BIOMASS FH L2b Product/
+├── Main product header           [XML]
+├── Preview folder/
+│   ├── Quick-look ADS            [PNG]
+│   └── Overlay ADS               [KMZ]
+└── Schema folder/
+    └── Support schemas RDS       [XSD]
+```
+
+- **Add a file**: copy a neighbouring line (the box characters `├── └── │` are
+  not on the keyboard), change the name and the `[format]`. The last line of
+  a folder starts with `└──`, all the others with `├──`: when you add after
+  the last line, change the old last line to `├──` and give `└──` to the new
+  one.
+- **Remove a file**: delete its line; if it was the last of its folder, change
+  the new last line to `└──`.
+- **Rename a folder**: change its name (a folder name ends with `/`); its
+  content is indented under it with `│   ` (four spaces under a `└──`).
+- **Move a file**: delete its line and add it in the other folder, with the
+  indentation of its new neighbours.
+- Keep the `[format]` column aligned with spaces. Nothing checks the tree:
+  look at the page.
+
+## Editing a schema diagram
+
+The structures of the product formats (XML schemas) are Mermaid class
+diagrams:
+
+```text
+classDiagram
+  class lutAnnotationType {
+    <<complexType>>
+    Attributes [18]
+    History [0..1]
+    FNF : fnf_variables [1]
+  }
+  lutAnnotationType --> fnf_variables : FNF
+```
+
+- One line per element: its name, `: type` when the figure gives it, then its
+  occurrences: `[n]` exactly n, `[0..1]` optional, `[1..30]` 1 to 30.
+  `@count` is an attribute; `<<complexType>>` is the kind of box. An arrow
+  links a type to the type of one of its elements.
+- **Add an element**: add its line inside the braces of its class. **Change
+  a cardinality**: edit the brackets (plain text, not checked).
+- After a change, update `accDescr` and the `%%` comments above the classes.
+- A schema diagram with a line "Generated from biomass-xsd" under it is
+  produced from the XSD files: change the schema in biomass-xsd, not the page.
+
 ## Editing a table
 
 A table is a Markdown table in the page: one line per row, cells separated by

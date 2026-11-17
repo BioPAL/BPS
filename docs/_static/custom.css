@@ -899,6 +899,13 @@ html[data-mode="light"] .atbd-logo-banner__img--dark {
   color: var(--pst-color-text-base);
 }
 
+/* Redrawn diagrams are never stretched beyond their natural size (their
+   source sets useMaxWidth to false); max-width: 100% still shrinks a wide one. */
+.atbd-drawn-figure pre.mermaid > svg,
+.atbd-drawn-figure div.mermaid > svg {
+  width: auto !important;
+}
+
 /* A redrawn folder tree is a text block: keep its lines aligned (the
    figure box centres its content). */
 .atbd-mermaid-figure .atbd-figure-content pre {
