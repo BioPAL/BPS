@@ -899,6 +899,18 @@ html[data-mode="light"] .atbd-logo-banner__img--dark {
   color: var(--pst-color-text-base);
 }
 
+/* Science Guide figures redrawn as Mermaid source keep the colours of the
+   original document (lanes, red/green tags): in the dark theme they are shown on
+   a white mat, as the images are, instead of the PyData inversion of Mermaid
+   diagrams (their source sets the light Mermaid theme). */
+html[data-theme="dark"] .atbd-drawn-figure pre.mermaid > svg,
+html[data-theme="dark"] .atbd-drawn-figure div.mermaid > svg {
+  filter: none !important;
+  background-color: #fff !important;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
 /* Standalone mermaid outside ATBD figures (contributing pages, etc.) */
 div.mermaid:not(.atbd-mermaid-figure div.mermaid),
 pre.mermaid:not(.atbd-mermaid-figure pre.mermaid) {

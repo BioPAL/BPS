@@ -122,8 +122,12 @@ ATBD_LATEX_FATAL = ^! Emergency stop|^!  ==> Fatal error|^! TeX capacity exceede
 MMDC ?= $(shell command -v mmdc 2>/dev/null)
 ifneq ($(MMDC),)
   # --pdfFit: a PDF page the size of the diagram (default: a Letter page, which
-  # crops wide diagrams and leaves the rest of the page blank under the others)
-  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json,--pdfFit
+  # crops wide diagrams and leaves the rest of the page blank under the others);
+  # --width 4000: render at the natural size (mmdc shrinks a diagram wider than
+  # its 800 px default page, and atbd_latex_content would then overestimate the
+  # text size of the PDF, which it measures assuming 16 px = 12 pt);
+  # --cssFile: print the colours as drawn (Chrome prints white text grey)
+  ATBD_MERMAID_OPTS = -D mermaid_cmd=$(MMDC) -D mermaid_params=-p,$(abspath $(ATBD_PDF_BUILDDIR))/puppeteer.json,--pdfFit,--width,4000,--cssFile,$(abspath $(ATBD_PDF_BUILDDIR))/mermaid-print.css
 endif
 
 # Warnings of sphinxcontrib.mermaid for a diagram it did not render (mmdc not
@@ -136,6 +140,7 @@ atbd-pdf:
 	@mkdir -p "$(ATBD_LATEX_DIR)"
 	@rm -f "$(ATBD_LATEX_DIR)/$(ATBD).pdf" "$(ATBD_PDF)"
 	@printf '{"args": ["--no-sandbox"]}\n' > "$(ATBD_PDF_BUILDDIR)/puppeteer.json"
+	@printf '* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }\n' > "$(ATBD_PDF_BUILDDIR)/mermaid-print.css"
 	@# sphinxcontrib.mermaid reuses a rendered diagram whatever the mmdc
 	@# options: render them again when the options change.
 	@if [ "$$(cat "$(ATBD_LATEX_DIR)/.mermaid-opts" 2>/dev/null)" != '$(ATBD_MERMAID_OPTS)' ]; then \

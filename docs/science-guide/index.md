@@ -22,6 +22,9 @@ Web versions are **drafts** until Aresys and ESA approve them; the official PDF
 remains authoritative until then.
 :::
 
+The drawings of these pages are editable text sources: see
+[Editing the figures](editing-figures.md).
+
 ## Available web conversions
 
 ```{science-guide-conversions}
@@ -34,4 +37,12 @@ remains authoritative until then.
 :glob:
 
 */index
+```
+
+```{toctree}
+:maxdepth: 1
+:hidden:
+:caption: Contributing
+
+editing-figures
 ```

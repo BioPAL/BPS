@@ -67,6 +67,11 @@ _TEXT_HEIGHT_PT = 683.0
 # 4.5 to 5 pt), the original figure is printed instead, at the full text width.
 _MERMAID_MIN_PT = 5.0
 _MERMAID_FALLBACK_PT = 4.0
+# Share of the text height a Mermaid figure may take; a tall diagram (a
+# top-to-bottom flowchart of the Science Guide) under _MERMAID_MIN_PT may take
+# a page of its own, its caption included.
+_MERMAID_SHARE = 0.8
+_MERMAID_TALL_SHARE = 0.95
 # "direction LR" (XSD class diagrams) and "flowchart LR" / "graph LR" (the
 # redrawn Science Guide figures).
 _LR_RE = re.compile(r"^(\s*(?:flowchart|graph|direction)\s+)LR\s*$", re.MULTILINE)
@@ -776,8 +781,9 @@ class AtbdLatexContent(SphinxPostTransform):
                 extra.append(child)
 
         original = False
+        single_share = _MERMAID_SHARE
         if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
-            fallback = self._fit_mermaid(visuals[0], container)
+            fallback, single_share = self._fit_mermaid(visuals[0], container)
             if fallback:
                 visuals, original = fallback, True
 
@@ -793,7 +799,7 @@ class AtbdLatexContent(SphinxPostTransform):
             # of the drawing (mmdc --pdfFit) in 12 pt text: at 75 % (9 pt
             # text), up to the full text width and most of the page height,
             # so that wide and tall diagrams keep a readable text size.
-            share = 0.8 if len(visuals) <= 1 else 0.8 / len(visuals)
+            share = single_share if len(visuals) <= 1 else _MERMAID_SHARE / len(visuals)
         setup = r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % share
         if mermaid_only:
             setup += r"\def\atbdfigscale{%s}\def\atbdfigmaxwidth{\linewidth}" % _MERMAID_SCALE
@@ -847,34 +853,40 @@ class AtbdLatexContent(SphinxPostTransform):
         return _MERMAID_FONT_PT * min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width,
                                       height * _TEXT_HEIGHT_PT / tall)
 
-    def _fit_mermaid(self, diagram: nodes.Element,
-                     container: nodes.container) -> list[nodes.Node] | None:
-        """Keep a wide left-to-right diagram readable in the PDF.
+    def _fit_mermaid(self, diagram: nodes.Element, container: nodes.container
+                     ) -> tuple[list[nodes.Node] | None, float]:
+        """Keep a large diagram readable in the PDF.
 
-        Lays it out top to bottom when that gives larger text; returns the
-        images of the "Original figure" dropdown when the text stays under
-        _MERMAID_FALLBACK_PT (None: print the diagram).
+        Returns (images, share): the images of the "Original figure" dropdown
+        to print instead when the text stays under _MERMAID_FALLBACK_PT (None:
+        print the diagram), and the share of the text height the figure may
+        take. A left-to-right diagram is laid out top to bottom when that gives
+        larger text; a tall one may take a page of its own (_MERMAID_TALL_SHARE).
         """
         code, options = diagram["code"], diagram.get("options", {})
-        if not _LR_RE.search(code):
-            return None
-        best = self._mermaid_font(code, options, 0.8)
+        best = self._mermaid_font(code, options, _MERMAID_SHARE)
         if best is None or best >= _MERMAID_MIN_PT:
-            return None
-        top_down = _LR_RE.sub(r"\1TB", code)
-        font = self._mermaid_font(top_down, options, 0.8)
-        if font is not None and font > best:
-            diagram["code"], best = top_down, font
+            return None, _MERMAID_SHARE
+        if _LR_RE.search(code):
+            top_down = _LR_RE.sub(r"\1TB", code)
+            font = self._mermaid_font(top_down, options, _MERMAID_SHARE)
+            if font is not None and font > best:
+                diagram["code"], best = top_down, font
+        share = _MERMAID_SHARE
+        if best < _MERMAID_MIN_PT:
+            tall = self._mermaid_font(diagram["code"], options, _MERMAID_TALL_SHARE)
+            if tall is not None and tall > best:
+                best, share = tall, _MERMAID_TALL_SHARE
         if best >= _MERMAID_FALLBACK_PT:
-            return None
+            return None, share
         for child in container.children:
             if self._is_original_dropdown(child):
                 images = list(child.findall(nodes.image))
                 if images:
-                    return images
+                    return images, _MERMAID_SHARE
         logger.warning("Mermaid diagram printed at %.1f pt: no original figure to "
                        "print instead", best, location=container)
-        return None
+        return None, share
 
     def _mermaid_class(self) -> type[nodes.Element] | None:
         try:
