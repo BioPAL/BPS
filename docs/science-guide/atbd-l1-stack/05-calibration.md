@@ -22,17 +22,129 @@ An overview of the full stack calibration algorithms is reported in {fig}`Figure
 Note that PPR and IOB are proved to be essentially equivalent, with PPR being more robust for larger baselines (e.g. above 35% of CB). The user is therefore recommended to avoid running the Stack Processor with both the module activated.
 
 (fig:atbd-l1-stack-9)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX", "mergeEdges": false}}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the calibration processor. Note that the AUX_PPS is omitted for the sake of clarity.
+  accDescr: The coregistered SCS products go through azimuth spectral filtering, then the background ionosphere removal (IOB), made of an ionosphere estimation and an ionosphere removal. The result enters the multi-squint calibration (MSC), which also takes the SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) at its first step, SCS image warping. MSC then runs along-track shift estimation, along-track shifts correction, ionosphere estimation, ionosphere removal and phase-plane removal. Its output enters the SKP phase calibration, made of a ground phase estimation and a ground phase removal; the FNF feeds the ground phase removal. The SKP phase calibration produces the calibrated coregistered SCS products.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   product: data item (white parallelogram)
+  %%   step:    processing step inside a block (light grey box)
+  %%   dots:    ellipsis between the first and last item (text only)
+  classDef product fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef lone fill:#f2f2f2,stroke:#000000,color:#000000,font-weight:bold
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph cosc["<b>Coregistered SCS Products</b>"]
+    direction LR
+    cosc1[/"CoSCS1"/]:::product
+    cosc2[/"CoSCS2"/]:::product
+    coscdots["…"]:::dots
+    coscn[/"CoSCSn"/]:::product
+    cosc1 ~~~ cosc2 ~~~ coscdots ~~~ coscn
+  end
+
+  azf["Azimuth Spectral Filtering"]:::lone
+
+  subgraph iob["<b>Background Ionosphere Removal (IOB)</b>"]
+    direction TB
+    iobest["Ionosphere Estimation"]:::step
+    iobrem["Ionosphere Removal"]:::step
+    iobest ~~~ iobrem
+  end
+
+  subgraph scs["<b>SCS Products</b>"]
+    direction LR
+    scs1[/"SCS1"/]:::product
+    scs2[/"SCS2"/]:::product
+    scsdots["…"]:::dots
+    scsn[/"SCSn"/]:::product
+    scs1 ~~~ scs2 ~~~ scsdots ~~~ scsn
+  end
+
+  subgraph rg["<b>Range Coregistration Shifts (Geo + Data)</b>"]
+    direction LR
+    rg1[/"Rg1"/]:::product
+    rg2[/"Rg1"/]:::product
+    rgdots["…"]:::dots
+    rgn[/"CorRgN"/]:::product
+    rg1 ~~~ rg2 ~~~ rgdots ~~~ rgn
+  end
+
+  subgraph az["<b>Along-Track Coregistration Shifts (Geo only)</b>"]
+    direction LR
+    az1[/"AzGeo1"/]:::product
+    az2[/"AzGeo1"/]:::product
+    azdots["…"]:::dots
+    azn[/"AzGeoN"/]:::product
+    az1 ~~~ az2 ~~~ azdots ~~~ azn
+  end
+
+  subgraph msc["<b>Multi-Squint Calibration (MSC)</b>"]
+    direction TB
+    warp["SCS Image Warping"]:::step
+    atest["Along-Track Shift Estimation"]:::step
+    atcor["Along-Track Shifts Correction"]:::step
+    mscest["Ionosphere Estimation"]:::step
+    mscrem["Ionosphere Removal"]:::step
+    plane["Phase-Plane Removal"]:::step
+    warp ~~~ atest ~~~ atcor ~~~ mscest ~~~ mscrem ~~~ plane
+  end
+
+  fnf[/"FNF"/]:::product
+
+  subgraph skp["<b>Skp Phase Calibration (SKP)</b>"]
+    direction TB
+    gest["Ground Phase Estimation"]:::step
+    grem["Ground Phase Removal"]:::step
+    gest ~~~ grem
+  end
+
+  subgraph calout["<b>Calibrated Coregistered SCS Products</b>"]
+    direction LR
+    cal1[/"CalCoSCS1"/]:::product
+    cal2[/"CalCoSCS2"/]:::product
+    caldots["…"]:::dots
+    caln[/"CalCoSCSn"/]:::product
+    cal1 ~~~ cal2 ~~~ caldots ~~~ caln
+  end
+
+  style cosc fill:#ffffff,stroke:#000000,color:#000000
+  style iob fill:#ffffff,stroke:#000000,color:#000000
+  style scs fill:#ffffff,stroke:#000000,color:#000000
+  style rg fill:#ffffff,stroke:#000000,color:#000000
+  style az fill:#ffffff,stroke:#000000,color:#000000
+  style msc fill:#ffffff,stroke:#000000,color:#000000
+  style skp fill:#ffffff,stroke:#000000,color:#000000
+  style calout fill:#ffffff,stroke:#000000,color:#000000
+
+  cosc --> azf
+  azf --> iob
+  iob --> msc
+  scs --> warp
+  rg --> warp
+  az --> warp
+  msc --> skp
+  fnf --> grem
+  skp --> calout
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX\_PPS.](../../_static/figures/atbd-l1-stack/figure_9_section_5.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Complete flow-chart of the calibration processor. Note that all steps can be optionally enabled/disabled by the user via AUX_PPS.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-5-1)=
 ### 5.1 Azimuth Spectral Filtering
@@ -40,17 +152,42 @@ Note that PPR and IOB are proved to be essentially equivalent, with PPR being mo
 Due to the different Doppler centroids and viewing geometries caused by the satellite’s along- and across-track baselines, two acquisitions may have non-overlapping spectral components. Therefore, a filtering operation may be required (as a matter of principle, in both directions) to ensure that the stack calibration processor uses only the common bandwidth. Such a filtering is expected to reduce the spectral decorrelation and prevents it to adversely affect the calibration procedure. Whereas range spectral filtering (see {sec}`4.2.1` for more details) is optionally applied independently in each relevant calibration module, the Azimuth Spectral Filtering (AZF) is provided as a standalone module that is optionally executed at the beginning of the entire calibration pipeline. By default, AZF is enabled but the user will have the option to disable it via configuration file (`AUX_PPS___`). The flow of the AZF is shown in the {fig}`Fig.|12` below and its main steps are described in detail in the remainder of this section.
 
 (fig:atbd-l1-stack-10)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: The AZF's flow diagram.
+  accDescr: The Doppler polynomials and the CoSCS stack feed the step that selects the azimuth common bandwidth. Its result goes to the azimuth spectral filtering step, which gives the azimuth filtered CoSCS stack.
+
+  %% Colours of the original figure.
+  %%   step:  processing step (grey box, bold dark text)
+  %%   data:  input or output data (parallelogram, light grey)
+  classDef step fill:#ececec,stroke:#7f7f7f,color:#000000,font-weight:bold
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  doppler[/"Doppler<br/>polynomials"/]:::data
+  coscs[/"CoSCS stack"/]:::data
+  select["Select azimuth common bandwidth"]:::step
+  azf["Azimuth spectral filtering"]:::step
+  out[/"Azimuth<br/>filtered<br/>CoSCS stack"/]:::data
+
+  doppler --> select
+  coscs --> select
+  select --> azf --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![The AZF’s flow diagram.](../../_static/figures/atbd-l1-stack/figure_10_section_5.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 10</span><span class="caption-text"> — The AZF’s flow diagram.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-5-1-1)=
 #### 5.1.1 Inputs and Outputs
@@ -262,17 +399,70 @@ The main component of the module is based on the Split-Spectrum Method {rd}`9` w
 where $c$ is the speed of light, and $\Delta{}TEC,\ \Delta{}r_{nd}$, and $K$ are physical quantities dependent upon the ionosphere scenario and whose characterization lies beyond the scope of this document.
 
 (fig:atbd-l1-stack-11)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Single-baseline IOB estimation
+  accDescr: Each of the two co-registered SCS images (CoSCS 1 and 2) goes through focusing window removal, revert of the L1 ionosphere correction (using the iono phase by FR of the same image), geometric phase removal (using its synthetic phases) and range sub-looks generation. The low sub-looks of both images give the low frequency interferogram and the high sub-looks the high frequency interferogram. Both interferograms, with the coregistration shifts 1 and 2, go to resampling phase removal, then dispersive phase computation and linear regression, which output the linear component of the differential ionospheric phase screen.
+
+  %% Colours of the original figure (grey gradient boxes, dark text).
+  %%   step:  processing step (rectangle)
+  %%   data:  input or output data (parallelogram)
+  classDef step fill:#ececec,stroke:#3f3f3f,color:#000000
+  classDef data fill:#f2f2f2,stroke:#3f3f3f,color:#000000
+
+  coreg1[/"Coreg<br/>shifts 1"/]:::data
+  synth1[/"Synthetic<br/>phases 1"/]:::data
+  iono1[/"Iono phase<br/>by FR 1"/]:::data
+  scs1[/"CoSCS 1"/]:::data
+  scs2[/"CoSCS 2"/]:::data
+  iono2[/"Iono phase<br/>by FR 2"/]:::data
+  synth2[/"Synthetic<br/>phases 2"/]:::data
+  coreg2[/"Coreg<br/>shifts 2"/]:::data
+  fw1["Focusing window<br/>removal"]:::step
+  fw2["Focusing window<br/>removal"]:::step
+  rev1["Revert of L1<br/>ionosphere<br/>correction"]:::step
+  rev2["Revert of L1<br/>ionosphere<br/>correction"]:::step
+  geo1["Geometric phase<br/>removal"]:::step
+  geo2["Geometric phase<br/>removal"]:::step
+  sub1["Range sub-looks<br/>generation"]:::step
+  sub2["Range sub-looks<br/>generation"]:::step
+  low["Computation of the<br/>Low frequency<br/>interferogram"]:::step
+  high["Computation of the<br/>High frequency<br/>interferogram"]:::step
+  res["Resampling phase<br/>removal"]:::step
+  disp["Dispersive phase<br/>computation"]:::step
+  lin["Linear regression"]:::step
+  out[/"Linear component of<br/>differential ionospheric<br/>phase screen"/]:::data
+  scs1 --> fw1 --> rev1 --> geo1 --> sub1
+  scs2 --> fw2 --> rev2 --> geo2 --> sub2
+  iono1 --> rev1
+  iono2 --> rev2
+  synth1 --> geo1
+  synth2 --> geo2
+  sub1 -- Low --> low
+  sub1 -- High --> high
+  sub2 -- Low --> low
+  sub2 -- High --> high
+  coreg1 --> res
+  low --> res
+  high --> res
+  coreg2 --> res
+  res --> disp --> lin --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Block diagram representing the single-baseline IOB estimation.](../../_static/figures/atbd-l1-stack/figure_11_section_5.2.2.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Block diagram representing the single-baseline IOB estimation.</span></p>
 
-:::
+::::
 
 The range Split-Spectrum leverages the different frequency behavior of the two ionosphere components to decouple them. In the remainder of the section, we will describe each sub-step in detail.
 
@@ -609,15 +799,126 @@ Next, given a calibration pair $(CoSCS_p,CoSCS_s^{\#})$ and a selected polarizat
 - Use the calibrated image $CoSCS_s^{\#}$and the primary $CoSCS_p$ to estimate and correct the phase plane associated with the low-pass artifacts and correct $CoSCS_s^{\#}$ accordingly
 - Update the primary stack’s secondary image with the calibrated image: $CalCoSCS_s\leftarrow{}CoSCS_s^{\#}$
 
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Multi-squint calibration flow chart (figure without caption, section 5.3.2)
+  accDescr: The SCS products, the range coregistration shifts (geo plus data) and the along-track coregistration shifts (geo only) feed an image shifting step, which gives a temporary L1c stack. The temporary stack feeds the multi-squint coherence estimation and the along-track shifting. In parallel, the coregistered SCS products feed a coherence estimation. The coherence estimation and the multi-squint coherence estimation go to a coherence test. When the test is passed, the multi-squint ionosphere correction runs: along-track shift estimation, along-track shifting, MS coherence estimation, ionosphere estimation and ionosphere correction. The multi-squint coherence estimation also feeds the along-track shift estimation. The coherence test output, the coregistered SCS products and the multi-squint ionosphere correction all go to the phase plane removal, which gives the calibrated coregistered SCS products.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   product:  data item (white parallelogram)
+  %%   stack:    temporary product (white cylinder)
+  %%   step:     processing step in a block (light grey box)
+  %%   lone:     stand-alone processing step (light grey box, bold text)
+  %%   decision: decision point (white diamond)
+  %%   dots:     ellipsis between the first and last item (text only)
+  classDef product fill:#ffffff,stroke:#000000,color:#000000
+  classDef stack fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef lone fill:#f2f2f2,stroke:#000000,color:#000000,font-weight:bold
+  classDef decision fill:#ffffff,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph scs["<b>SCS Products</b>"]
+    direction LR
+    scs1[/"SCS1"/]:::product
+    scs2[/"SCS2"/]:::product
+    scsdots["…"]:::dots
+    scsn[/"SCSn"/]:::product
+    scs1 ~~~ scs2 ~~~ scsdots ~~~ scsn
+  end
+
+  subgraph rg["<b>Range Coregistration Shifts (Geo + Data)</b>"]
+    direction LR
+    rg1[/"Rg1"/]:::product
+    rg2[/"Rg1"/]:::product
+    rgdots["…"]:::dots
+    rgn[/"CorRgN"/]:::product
+    rg1 ~~~ rg2 ~~~ rgdots ~~~ rgn
+  end
+
+  subgraph az["<b>Along-Track Coregistration Shifts (Geo only)</b>"]
+    direction LR
+    az1[/"AzGeo1"/]:::product
+    az2[/"AzGeo1"/]:::product
+    azdots["…"]:::dots
+    azn[/"AzGeoN"/]:::product
+    az1 ~~~ az2 ~~~ azdots ~~~ azn
+  end
+
+  subgraph cosc["<b>Coregistered SCS Products</b>"]
+    direction LR
+    cosc1[/"CoSCS1"/]:::product
+    cosc2[/"CoSCS2"/]:::product
+    coscdots["…"]:::dots
+    coscn[/"CoSCSn"/]:::product
+    cosc1 ~~~ cosc2 ~~~ coscdots ~~~ coscn
+  end
+
+  shift["Image Shifting"]:::lone
+  coh["Coherence Estimation"]:::lone
+  temp[("Temp L1c stack")]:::stack
+  mscoh["Multi-Squint Coherence<br/>Estimation"]:::lone
+  test{"Coherence<br/>Test"}:::decision
+
+  subgraph msi["<b>Multi-Squint Ionospehre Correction</b>"]
+    direction TB
+    atest["Along-track shift<br/>estimation"]:::step
+    atshift["Along-track Shifting"]:::step
+    mscohe["MS Coherence Estimation"]:::step
+    iest["Ionosphere Estimation"]:::step
+    icor["Ionosphere Correction"]:::step
+    atest --> atshift --> mscohe --> iest --> icor
+  end
+
+  plane["Phase Plane Removal"]:::lone
+
+  subgraph calout["<b>Calibrated Coregistered SCS Products</b>"]
+    direction LR
+    cal1[/"CalCoSCS1"/]:::product
+    cal2[/"CalCoSCS2"/]:::product
+    caldots["…"]:::dots
+    caln[/"CalCoSCSn"/]:::product
+    cal1 ~~~ cal2 ~~~ caldots ~~~ caln
+  end
+
+  style scs fill:#ffffff,stroke:#000000,color:#000000
+  style rg fill:#ffffff,stroke:#000000,color:#000000
+  style az fill:#ffffff,stroke:#000000,color:#000000
+  style cosc fill:#ffffff,stroke:#000000,color:#000000
+  style msi fill:#ffffff,stroke:#000000,color:#000000
+  style calout fill:#ffffff,stroke:#000000,color:#000000
+
+  scs ~~~ rg ~~~ az
+  scs --> shift
+  rg --> shift
+  az --> shift
+  shift --> temp
+  cosc --> coh
+  cosc --> plane
+  temp --> mscoh
+  temp --> atshift
+  coh --> test
+  mscoh --> test
+  mscoh --> atest
+  test --> msi
+  test --> plane
+  msi --> plane
+  plane --> calout
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Figure](../../_static/figures/atbd-l1-stack/image_1_section_5.3.2.png)
+:::
 
 </div>
 
-:::
+::::
 
 {fig}`Fig|12`. The workflow of the Multi-Squint Calibration Module
 
@@ -914,30 +1215,127 @@ $$ (eq:atbd-l1-stack-5-54)
 This section deals with the calibration strategy to estimate the ground steering phases. The aim of this procedure is to estimate the phase contributions due to both the ground and the disturbance. This approach cannot separate the contribution of external DEM error ($DTM-DEM_{EXT}$) from the residual phase disturbance. Accordingly, the output is a calibration screen containing both the phase disturbance and the phase contributions of the terrain height at P-band for each pixel.
 
 (fig:atbd-l1-stack-13)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Phase calibration by SKP.
+  accDescr: The calibrated coregistered stack L1.5 and the distances go to the geometric phase removal, then the covariance matrix estimation, giving the SKPD and the covariance matrices. The most coherent mechanism selection gives the SKP phase cal, which also uses the vertical wavenumber. The covariance matrices and the SKP phase cal are subtracted; the result goes through ground recognition and ground to phase conversion, which also uses the vertical wavenumber. This is subtracted from the SKP phase cal to give the ground steering phase plus phase disturbance. The SKP phase removal takes it with the calibrated stack and the ground phase screen quality, which is derived from AUX_FNF, and outputs the coregistered stack L1.5 (SKP calibrated).
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   data:  data item (light grey parallelogram)
+  %%   step:  processing step (light grey box)
+  %%   op:    subtraction operator (white circle)
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef op fill:#ffffff,stroke:#000000,color:#000000
+
+  vwn[/"Vertical<br/>wavenumber"/]:::data
+  dist[/"Distances"/]:::data
+  stk[/"Coregistered<br/>stack L1.5<br/>(Calibrated)"/]:::data
+  gpr["Geometric phase<br/>removal"]:::step
+  cme["Covariance matrix<br/>estimation"]:::step
+  skpd["SKPD"]:::step
+  cov[/"Covariance<br/>matrices"/]:::data
+  mcm["Most coherent<br/>mechanism selection"]:::step
+  skpcal[/"SKP phase<br/>cal"/]:::data
+  sub1(("-")):::op
+  gr["Ground<br/>recognition"]:::step
+  g2p["Ground to phase<br/>conversion"]:::step
+  sub2(("-")):::op
+  gsp[/"Ground steering phase<br/>+<br/>Phase disturbance"/]:::data
+  skprem["SKP phase removal"]:::step
+  out[/"Coregistered<br/>stack L1.5<br/>(SKP Calibrated)"/]:::data
+  fnf["AUX_FNF"]:::step
+  gpsq[/"Ground Phase Screen<br/>Quality"/]:::data
+
+  stk --> gpr
+  dist --> gpr
+  gpr --> cme
+  cme --> skpd
+  skpd --> cov
+  cov --> mcm
+  mcm --> skpcal
+  vwn --> skpcal
+  vwn --> g2p
+  cov --> sub1
+  skpcal --> sub1
+  sub1 --> gr
+  gr --> g2p
+  g2p --> sub2
+  skpcal --> sub2
+  sub2 --> gsp
+  gsp --> skprem
+  stk --> skprem
+  fnf --> gpsq
+  gpsq --> skprem
+  skprem --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Phase calibration by SKP.](../../_static/figures/atbd-l1-stack/figure_13_section_5.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Phase calibration by SKP.</span></p>
 
-:::
+::::
 
 (fig:atbd-l1-stack-14)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: SKP decomposition
+  accDescr: The MPMB covariance goes through a rank 2 approximation, giving R1,R2 and C1,C2. Both feed the physically admissible range determination, which gives a, b. A coherence analysis of a, b outputs R Coh,thin, R Coh,fat, R inc,thin and R inc,fat.
+
+  %% Colours of the original figure (grey gradient boxes, dark text).
+  %%   step:  processing step (rectangle)
+  %%   data:  input or output data (parallelogram)
+  classDef step fill:#ececec,stroke:#3f3f3f,color:#000000
+  classDef data fill:#f2f2f2,stroke:#3f3f3f,color:#000000
+
+  cov[/"MPMB<br/>covariance"/]:::data
+  rank["Rank 2<br/>approximation"]:::step
+  r12[/"R<sub>1</sub>,R<sub>2</sub>"/]:::data
+  c12[/"C<sub>1</sub>,C<sub>2</sub>"/]:::data
+  range["Phisically admissible<br/>rangedetermination"]:::step
+  ab[/"a, b"/]:::data
+  coh["Coherence analysis"]:::step
+  rct[/"R<sub>Coh,thin</sub>"/]:::data
+  rcf[/"R<sub>Coh,fat</sub>"/]:::data
+  rit[/"R<sub>inc,thin</sub>"/]:::data
+  rif[/"R<sub>inc,fat</sub>"/]:::data
+  cov --> rank
+  rank --> r12
+  rank --> c12
+  r12 --> range
+  c12 --> range
+  range --> ab
+  ab --> coh
+  coh --> rct
+  coh --> rcf
+  coh --> rit
+  coh --> rif
+```
+
+:::{dropdown} Original figure (DOCX)
 ![SKP decomposition.](../../_static/figures/atbd-l1-stack/figure_14_section_5.4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 14</span><span class="caption-text"> — SKP decomposition.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-5-4-1)=
 #### 5.4.1 Inputs and Outputs
@@ -1049,17 +1447,21 @@ The linear combination is ruled by just two real valued parameters, $a$ and $b$.
 The Physically admissible range determination block returns two vectors, associated with $a$ and $b$ respectively, which sample the range of admissibility for the two parameters. At the edges of the admissibility range of the $a$ parameter either $R_1(a)$ or $C_2(a,b)$ is singular, and similarly for the $b$ parameter, as shown in the figure below.
 
 (fig:atbd-l1-stack-12)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+![Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.](../../_static/figures/atbd-l1-stack/fig12.*)
+
+:::{dropdown} Original figure (DOCX)
 ![Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.](../../_static/figures/atbd-l1-stack/figure_12_section_5.4.2.3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Schematic representation of the range of admissible values for parameters a and b, i.e., the range of values that ensures that the matrices returned by the decomposition are semi-definite positive matrices.</span></p>
 
-:::
+::::
 
 The Coherence analysis block analyzes the structure matrices returned by the decomposition and classifies them according to their average interferometric coherence. The scattering mechanism that provides the highest coherence is labeled as “coh” and the other as “inc”. The matrices resulting from the extreme values of the parameters giving the highest coherence are labeled as “thin”, the other extreme values lead to the “fat” matrices. These four matrices are the main output of the SKPD block of Figure 19 and are gathered by the MBas covariances block in the same figure.
 

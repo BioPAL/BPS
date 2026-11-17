@@ -15,17 +15,81 @@ In this section we will describe in detail the stacking operation, which consist
 - LUT shifting and interpolation, which, similarly to the image interpolation step, warps the LUTs contained in the L1a input stack onto the common primary LUT grid.
 
 (fig:atbd-l1-stack-7)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the coregistration processor.
+  accDescr: The stack of L1a SCS products and the DEM (coregistration primary) feed the coregistration from geometry. Its output reaches a decision. One branch goes directly to the image interpolation. The other goes through range spectral filtering and incoherent speckle tracking, then a second decision that leads to model-based inversion and to shifts upsampling, both feeding the image interpolation. The image interpolation produces the coregistered SCS products.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   product:  data item (white parallelogram)
+  %%   step:     processing step (light grey box)
+  %%   decision: unlabelled decision point (white diamond)
+  %%   dots:     ellipsis between the first and last item (text only)
+  classDef product fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef decision fill:#ffffff,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph stack["<b>Stack of L1a SCS products</b>"]
+    direction LR
+    scs1[/"SCS1"/]:::product
+    scs2[/"SCS1"/]:::product
+    scsdots["…"]:::dots
+    scsn[/"SCSn"/]:::product
+    scs1 ~~~ scs2 ~~~ scsdots ~~~ scsn
+  end
+  dem[/"DEM<br/>(Coregistration primary)"/]:::product
+
+  geom["Coregistration form<br/>Geometry"]:::step
+  split1{" "}:::decision
+  rsf["Range Spectral Filtering"]:::step
+  ist["Incoherenct Speckle<br/>Tracking"]:::step
+  split2{" "}:::decision
+  inv["Model-based<br/>Inversion"]:::step
+  ups["Shifts<br/>Upsampling"]:::step
+  interp["Image Interpolation"]:::step
+
+  subgraph out["<b>Coregistred SCS Products</b>"]
+    direction LR
+    co1[/"CoSCS1"/]:::product
+    co2[/"CoSCS1"/]:::product
+    codots["…"]:::dots
+    con[/"CoSCSn"/]:::product
+    co1 ~~~ co2 ~~~ codots ~~~ con
+  end
+
+  style stack fill:#ffffff,stroke:#000000,color:#000000
+  style out fill:#ffffff,stroke:#000000,color:#000000
+
+  stack --> geom
+  dem --> geom
+  geom --> split1
+  split1 --> rsf
+  split1 --> interp
+  rsf --> ist
+  ist --> split2
+  split2 --> inv
+  split2 --> ups
+  inv --> interp
+  ups --> interp
+  interp --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the coregistration processor.](../../_static/figures/atbd-l1-stack/figure_7_section_4.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 7</span><span class="caption-text"> — Complete flow-chart of the coregistration processor.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-4-1)=
 ### 4.1 Coregistration from Geometry via Inverse Geocoding
@@ -144,17 +208,52 @@ where:
 The purpose of this step is to estimate the coregistration shifts via data cross-correlation. To obtain local shift estimations using data cross-correlation, the two images are divided into blocks. For each block, range and azimuth shifts are estimated, looking for the amplitude cross-correlation maximum.
 
 (fig:atbd-l1-stack-8)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Coregistration from data.
+  accDescr: Each of the two SCS images, SCS 1 and SCS 2, goes through a range spectral filtering step together with its synthetic phases (1 and 2). Both filtered images and the shifts from geometry feed the blockwise residual shift estimation, followed by the modelbase inversion of the shifts, which gives the co-registration shifts.
+
+  %% Colours of the original figure.
+  %%   step:  processing step (grey gradient box, dark text)
+  %%   data:  input or output data (parallelogram, light grey)
+  classDef step fill:#ececec,stroke:#000000,color:#000000
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+
+  synth1[/"Synthetic<br/>phases 1"/]:::data
+  scs1[/"SCS<sub>1</sub>"/]:::data
+  synth2[/"Synthetic<br/>phases 2"/]:::data
+  scs2[/"SCS<sub>2</sub>"/]:::data
+  geoshift[/"Shifts from<br/>geometry"/]:::data
+  filt1["Range spectral<br/>filtering"]:::step
+  filt2["Range spectral<br/>filtering"]:::step
+  resid["Blockwise residual<br/>shift estimation"]:::step
+  invert["Modelbase<br/>inversion of the<br/>shifts"]:::step
+  coreg[/"Co-registration<br/>shifts"/]:::data
+
+  synth1 --> filt1
+  scs1 --> filt1
+  synth2 --> filt2
+  scs2 --> filt2
+  filt1 --> resid
+  filt2 --> resid
+  geoshift --> resid
+  resid --> invert --> coreg
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Coregistration from data.](../../_static/figures/atbd-l1-stack/figure_8_section_4.2.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Coregistration from data.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-4-2-1)=
 #### 4.2.1 Incoherent Speckle Tracking

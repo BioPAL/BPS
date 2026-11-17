@@ -9,17 +9,74 @@
 # 3. Pre-processing
 
 (fig:atbd-l1-stack-4)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the pre-processing processor.
+  accDescr: A stack of L1 SCS images plus orbits (4 polarizations), SCS 1 to SCS N, goes both to the geometrical quantity oversampling step and to the RFI impact computation. Oversampling gives the stack of geometric quantities, GEO 1 to GEO N. The RFI impact computation feeds cross-pol merging, then reference image selection, which gives the stack of SCS plus orbits (3 or 4 polarizations), SCS 1 to SCS N.
+
+  %% Colours of the original figure.
+  %%   step:  processing step (grey gradient box, dark text)
+  %%   data:  data item (parallelogram, light grey)
+  %%   dots:  the "o o o" ellipsis between items (text only)
+  classDef step fill:#ececec,stroke:#7f7f7f,color:#000000
+  classDef data fill:#f2f2f2,stroke:#4d4d4d,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph instack["Stack of L1 SCS + Orbits (4 polarizations)"]
+    direction LR
+    scs1[/"SCS<sub>1</sub>"/]:::data
+    scs2[/"SCS<sub>2</sub>"/]:::data
+    dots1["◦ ◦ ◦"]:::dots
+    scsn[/"SCS<sub>N</sub>"/]:::data
+    scs1 ~~~ scs2 ~~~ dots1 ~~~ scsn
+  end
+  style instack fill:#ffffff,stroke:#000000,color:#000000
+
+  geoover["Geometrical quantity<br/>oversampling"]:::step
+  rfi["RFI impact computation"]:::step
+  xpol["Cross-pol merging"]:::step
+  refsel["Reference image selection"]:::step
+
+  subgraph geostack["Stack of geometric quantities"]
+    direction LR
+    geo1[/"GEO<sub>1</sub>"/]:::data
+    geo2[/"GEO<sub>2</sub>"/]:::data
+    dots2["◦ ◦ ◦"]:::dots
+    geon[/"GEO<sub>N</sub>"/]:::data
+    geo1 ~~~ geo2 ~~~ dots2 ~~~ geon
+  end
+  style geostack fill:#ffffff,stroke:#000000,color:#000000
+
+  subgraph outstack["Stack of SCS + Orbits (3 or 4 polarizations)"]
+    direction LR
+    oscs1[/"SCS<sub>1</sub>"/]:::data
+    oscs2[/"SCS<sub>2</sub>"/]:::data
+    dots3["◦ ◦ ◦"]:::dots
+    oscsn[/"SCS<sub>N</sub>"/]:::data
+    oscs1 ~~~ oscs2 ~~~ dots3 ~~~ oscsn
+  end
+  style outstack fill:#ffffff,stroke:#000000,color:#000000
+
+  instack --> geoover
+  instack --> rfi
+  geoover --> geostack
+  rfi --> xpol --> refsel --> outstack
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the pre-processing processor.](../../_static/figures/atbd-l1-stack/figure_4_section_3.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Complete flow-chart of the pre-processing processor.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-3-1)=
 ### 3.1 RFI-based Data Quality Measure
@@ -34,17 +91,61 @@ The quality measure of an interferometric pair after the RFI mitigation can be e
 The purpose of this step is to deal with the interferences that may impact the images and to compute an indicator of the resulting coherence impact for each image.
 
 (fig:atbd-l1-stack-5)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk"}}%%
+flowchart TB
+  accTitle: Data quality measure according to RFI pattern.
+  accDescr: A stack of RFI correction maps from L1, RFI map 1 to RFI map n, goes through the missing wavenumbers computation, then the conversion of missing wavenumbers to coherence loss. The result is the RFI decorrelation stack, RFI decorrelation 1 to RFI decorrelation n.
+
+  %% Colours of the original figure. Each class sets its text colour too, so it
+  %% stays readable with the light and the dark site themes.
+  %%   product: data item (white parallelogram)
+  %%   step:    processing step (light grey box)
+  %%   dots:    ellipsis between the first and last item (text only)
+  classDef product fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph maps["<b>Stack of RFI correction map from L1</b>"]
+    direction LR
+    map1[/"RFI map<sub>1</sub>"/]:::product
+    mapdots["…"]:::dots
+    mapn[/"RFI map<sub>n</sub>"/]:::product
+    map1 ~~~ mapdots ~~~ mapn
+  end
+
+  missing["Missing<br/>wavenumbers<br/>computation"]:::step
+  loss["Missing<br/>wavenumbers to<br/>coherence loss"]:::step
+
+  subgraph decor["<b>RFI decorrelation</b>"]
+    direction LR
+    dec1[/"RFI<br/>decorrelation<sub>1</sub>"/]:::product
+    decdots["…"]:::dots
+    decn[/"RFI<br/>decorrelation<sub>n</sub>"/]:::product
+    dec1 ~~~ decdots ~~~ decn
+  end
+
+  style maps fill:#ffffff,stroke:#000000,color:#000000
+  style decor fill:#ffffff,stroke:#000000,color:#000000
+
+  maps --> missing
+  missing --> loss
+  loss --> decor
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Data quality measure according to RFI pattern.](../../_static/figures/atbd-l1-stack/figure_5_section_3.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Data quality measure according to RFI pattern.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-3-1-2)=
 #### 3.1.2 Inputs and Outputs
@@ -265,17 +366,74 @@ In interferometric processing, the temporal location of the image is often used 
 In the reminder of this section we will provide general definitions of stack’s normal baselines ({sec}`Section|3.3.3.1`) and temporal baselines ({sec}`Section|3.3.3.2`), and describe how these are used in combination with quality criteria for the selection of the coregistration primary image ({sec}`Section|3.3.3.3`).
 
 (fig:atbd-l1-stack-6)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk", "elk": {"nodePlacementStrategy": "NETWORK_SIMPLEX"}, "flowchart": {"diagramPadding": 4, "subGraphTitleMargin": {"top": 2, "bottom": 2}}}}%%
+flowchart TB
+  accTitle: Selection of the coregistration primary image.
+  accDescr: The stack of L1 SCS images plus orbits, SCS 1 to SCS N, goes to the baseline computation, which feeds the reference image selection. The Faraday Rotation quality indicators FR 1 to FR N and the RFI mitigation quality indicators RFI 1 to RFI N also feed the reference image selection. It outputs the index of the master image.
+
+  %% Colours of the original figure.
+  %%   step:  processing step (grey gradient box, dark text)
+  %%   data:  data item (parallelogram, light grey)
+  %%   dots:  the vertical "o o o" ellipsis between items (text only)
+  classDef step fill:#ececec,stroke:#3f3f3f,color:#000000
+  classDef data fill:#f2f2f2,stroke:#3f3f3f,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph scsstack["Stack of L1 SCS + Orbits"]
+    direction TB
+    scs1[/"SCS<sub>1</sub>"/]:::data
+    scs2[/"SCS<sub>2</sub>"/]:::data
+    dots1["◦<br/>◦<br/>◦"]:::dots
+    scsn[/"SCS<sub>N</sub>"/]:::data
+    scs1 ~~~ scs2 ~~~ dots1 ~~~ scsn
+  end
+  style scsstack fill:#ffffff,stroke:#000000,color:#000000
+
+  subgraph frstack["L1 quality indicators<br/><b>Faraday Rotation</b>"]
+    direction TB
+    fr1[/"FR<sub>1</sub>"/]:::data
+    fr2[/"FR<sub>2</sub>"/]:::data
+    dots2["◦<br/>◦<br/>◦"]:::dots
+    frn[/"FR<sub>N</sub>"/]:::data
+    fr1 ~~~ fr2 ~~~ dots2 ~~~ frn
+  end
+  style frstack fill:#ffffff,stroke:#000000,color:#000000
+
+  subgraph rfistack["L1 quality indicators<br/><b>RFI mitigation</b>"]
+    direction TB
+    rfi1[/"RFI<sub>1</sub>"/]:::data
+    rfi2[/"RFI<sub>2</sub>"/]:::data
+    dots3["◦<br/>◦<br/>◦"]:::dots
+    rfin[/"RFI<sub>N</sub>"/]:::data
+    rfi1 ~~~ rfi2 ~~~ dots3 ~~~ rfin
+  end
+  style rfistack fill:#ffffff,stroke:#000000,color:#000000
+
+  baseline["Baseline<br/>computation"]:::step
+  refsel["Refence image<br/>selection"]:::step
+  master[/"Index of the<br/>master image"/]:::data
+
+  scsstack --> baseline
+  baseline --> refsel
+  frstack --> refsel
+  rfistack --> refsel
+  refsel --> master
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Selection of the coregistration primary image.](../../_static/figures/atbd-l1-stack/figure_6_section_3.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Selection of the coregistration primary image.</span></p>
 
-:::
+::::
 
 (sec:atbd-l1-stack-3-3-2)=
 #### 3.3.2 Inputs and Outputs
