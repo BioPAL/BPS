@@ -67,7 +67,9 @@ _TEXT_HEIGHT_PT = 683.0
 # 4.5 to 5 pt), the original figure is printed instead, at the full text width.
 _MERMAID_MIN_PT = 5.0
 _MERMAID_FALLBACK_PT = 4.0
-_LR_RE = re.compile(r"^(\s*direction\s+)LR\s*$", re.MULTILINE)
+# "direction LR" (XSD class diagrams) and "flowchart LR" / "graph LR" (the
+# redrawn Science Guide figures).
+_LR_RE = re.compile(r"^(\s*(?:flowchart|graph|direction)\s+)LR\s*$", re.MULTILINE)
 _MEDIABOX_RE = re.compile(
     rb"/MediaBox\s*\[\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\]"
 )

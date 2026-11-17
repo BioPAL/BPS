@@ -65,6 +65,13 @@ exclude_patterns = [
     "tutorials/run-bps-locally/CONFIGURATION_FILE/**",
 ]
 
+# Mermaid on the site: the same release as the PDF export (mmdc of the
+# esa-doc2open tools), and the ELK layout for the large Science Guide flowcharts
+# (``config: layout: elk``); 0.2.3 is the layout-elk release mmdc loads.
+mermaid_version = "11.17.2"
+mermaid_include_elk = True
+mermaid_elk_version = "0.2.3"
+
 # Suppress noisy warnings.
 # - "image.not_readable": raw <img> tags reference SVGs in `_extra_static/`,
 #   which Sphinx doesn't track as source images. They render correctly in the
