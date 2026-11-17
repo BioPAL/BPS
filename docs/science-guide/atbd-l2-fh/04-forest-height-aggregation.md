@@ -21,17 +21,56 @@ The key step is fusion of L2a estimates at map level. These steps are described 
 The forest height and quality maps allow the combination of different acquisitions in a simple and efficient pixelwise way. L2a products falling onto the same L2b tile within a global cycle are retrieved through geospatial query of information (tile IDs and time tags) in the Main Product Header of the product.
 
 (fig:atbd-fh-13)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Complete flow-chart of the L2b processing.
+  accDescr: The DGG, the group of Forest Height L2a, FNF and Forest Height Quality L2a for all stacks on an area in a given time, and FD L2b shown by a dashed arrow feed Combining L2a products. It gives Aggregated Forest Height L2b and Aggregated Forest Height Quality L2b.
+
+  %% Colours of the original figure.
+  %%   data: input or product (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+
+  dgg[/"DGG"/]:::data
+  fd[/"FD L2b"/]:::data
+
+  %% Dotted frame of the original; the &nbsp; push its title to the left.
+  subgraph STACKS["All stacks, on an area, in a given time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
+    direction LR
+    fh[/"Forest Height<br/>L2a"/]:::data
+    fnf[/"FNF"/]:::data
+    fhq[/"Forest Height<br/>Quality L2a"/]:::data
+    fh ~~~ fnf ~~~ fhq
+  end
+
+  comb["Combining L2a<br/>products"]:::step
+  afh[/"Aggregated<br/>Forest Height<br/>L2b"/]:::data
+  afhq[/"Aggregated<br/>Forest Height<br/>Quality L2b"/]:::data
+
+  dgg --> comb
+  STACKS --> comb
+  fd -.-> comb
+  comb --> afh
+  comb --> afhq
+
+  style STACKS fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:2 2
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Complete flow-chart of the L2b processing.](../../_static/figures/atbd-fh/figure_13_section_4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 13</span><span class="caption-text"> — Complete flow-chart of the L2b processing.</span></p>
 
-:::
+::::
 
 **The step is mandatory.**
 

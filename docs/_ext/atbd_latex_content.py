@@ -769,6 +769,9 @@ class AtbdLatexContent(SphinxPostTransform):
                 visuals.extend(c for c in child.children if isinstance(c, nodes.image))
             elif isinstance(child, nodes.image):
                 visuals.append(child)
+            elif isinstance(child, nodes.literal_block) and (
+                    "atbd-drawn-figure" in container.get("classes", [])):
+                visuals.append(child)  # a redrawn folder tree: inside the float, captioned
             elif mermaid_cls is not None and isinstance(child, mermaid_cls):
                 visuals.append(child)
             elif mermaid_cls is not None and isinstance(child, nodes.figure) and any(

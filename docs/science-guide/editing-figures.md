@@ -101,10 +101,21 @@ flowchart TB
 - **Invisible links** `a ~~~ b` only set the order of boxes (for example inside
   a group with no arrows); they draw nothing. When you add a step to such a
   group, add it to the chain: `a ~~~ new ~~~ b`.
-- **Remove an arrow**: delete its line (`a --> b`). Arrows are counted from 0
-  in the order of their lines (invisible links included) by the `linkStyle n`
-  lines that colour them: check those numbers after adding or removing an
-  arrow.
+- **Remove an arrow**: delete its line (`a --> b`). A chain such as
+  `a --> b --> c` is one line but two arrows: to remove only `b --> c`,
+  rewrite it as `a --> b`. A node left without any arrow is still drawn:
+  delete its line too if it must disappear. Arrows are counted from 0 in the
+  order they are read (each arrow of a chain counts, invisible links `~~~`
+  too) by the `linkStyle n` lines that colour them: after adding or removing an
+  arrow, check those numbers (most figures have no `linkStyle`).
+- **Arrow styles**: `a --> b` solid, `a -.-> b` dotted (optional input),
+  `a ==> b` thick, `a --- b` without head; a label goes in the middle:
+  `a -- "text" --> b`.
+- **Add a step inside a frame**: write its line between the `subgraph` line
+  and its `end`; a node declared outside the frame is drawn outside it.
+- **Renaming a frame**: keep the `&nbsp;` series after its title, they keep the
+  title at the left, away from the arrows.
+- After recolouring a class, update the comment above it (`%%   step: …`).
 - `accTitle` and `accDescr` describe the diagram for screen readers: update
   `accDescr` when you change the content.
 - Keep the first line, `%%{init: {"theme": "default", …}}%%`: it keeps the

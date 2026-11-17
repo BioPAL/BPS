@@ -899,6 +899,12 @@ html[data-mode="light"] .atbd-logo-banner__img--dark {
   color: var(--pst-color-text-base);
 }
 
+/* A redrawn folder tree is a text block: keep its lines aligned (the
+   figure box centres its content). */
+.atbd-mermaid-figure .atbd-figure-content pre {
+  text-align: left;
+}
+
 /* Science Guide figures redrawn as Mermaid source keep the colours of the
    original document (lanes, red/green tags): in the dark theme they are shown on
    a white mat, as the images are, instead of the PyData inversion of Mermaid

@@ -89,30 +89,49 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`Fig.|4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`Fig.|5`.
 
 (fig:atbd-fh-4)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for seven TOM.](../../_static/figures/atbd-fh/figure_4_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 4</span><span class="caption-text"> — Selection for seven TOM.</span></p>
 
-:::
+::::
 
 (fig:atbd-fh-5)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | TOM stack |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Evaluation order | \* | \* | \* | \* | \* | \* | \* | \* |  |
+| 2 | \* |  | \* |  | \* |  |  |  |  |
+| 1 |  | \* |  | \* |  | \* |  |  | \<-default |
+| 3 |  |  | \* |  | \* |  | \* |  |  |
+| 4 |  |  |  | \* |  | \* |  | \* |  |
+
+:::{dropdown} Original figure (DOCX)
 ![Selection for eight TOM (contingency).](../../_static/figures/atbd-fh/figure_5_section_3.2.4.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 5</span><span class="caption-text"> — Selection for eight TOM (contingency).</span></p>
 
-:::
+::::
 
 (sec:atbd-fh-3-3)=
 ### 3.3 Calibration
@@ -123,17 +142,59 @@ The "geometry" criterion for subsetting selects among the seven/eight TOM stack 
 The calibration algorithm makes use of the L1c annotation {ad}`2` to apply phase calibration to L1c necessary for the L2a processing.
 
 (fig:atbd-fh-6)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Calibration.
+  accDescr: A stack of SCS images with phase screens, SCS1 to SCSM, goes through screen calibration by phase screen subtraction, giving a phase calibrated, ground steered L1c stack of SCS1 to SCSM.
+
+  %% Colours of the original figure.
+  %%   data: SCS image (white parallelogram)
+  %%   step: processing step (light grey box)
+  %%   dots: the three circles standing for the omitted SCS images (no frame)
+  classDef data fill:#ffffff,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dots fill:none,stroke:none,color:#000000
+
+  subgraph IN["L1c stack + Phase Screens"]
+    direction LR
+    i1[/"SCS<sub>1</sub>"/]:::data
+    i2[/"SCS<sub>2</sub>"/]:::data
+    id["○ ○ ○"]:::dots
+    iM[/"SCS<sub>M</sub>"/]:::data
+    i1 ~~~ i2 ~~~ id ~~~ iM
+  end
+
+  cal["Screen calibration:<br/>phase screen<br/>subtraction"]:::step
+
+  subgraph OUT["L1c stack Phase calibrated / Ground steered"]
+    direction LR
+    o1[/"SCS<sub>1</sub>"/]:::data
+    o2[/"SCS<sub>2</sub>"/]:::data
+    od["○ ○ ○"]:::dots
+    oM[/"SCS<sub>M</sub>"/]:::data
+    o1 ~~~ o2 ~~~ od ~~~ oM
+  end
+
+  IN --> cal --> OUT
+
+  style IN fill:#ffffff,stroke:#000000,color:#000000
+  style OUT fill:#ffffff,stroke:#000000,color:#000000
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Calibration.](../../_static/figures/atbd-fh/figure_6_section_3.3.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 6</span><span class="caption-text"> — Calibration.</span></p>
 
-:::
+::::
 
 **The step is mandatory. If disabled for debug, default rule is to copy inputs as step output.**
 
@@ -343,17 +404,91 @@ It should be noted that, as implied by the equations above, multilooking is impl
 The forest height inversion algorithm aims to generate maps of forest upper canopy height (H100 Standard) by means of a model-based inversion based on the so-called Random Volume over Ground (RVoG) model accounting for a polarization invariant vertical volume reflectivity function, a 3D polarimetric ground scattering component and a scalar temporal decorrelation of the volume layer. The implementation here described relies on the use of a modeled or tomographically derived volume-only reflectivity profile normalized to unit height, following the approach {rd}`10`. The default forest height inversion method is dual-baseline, the alternative method is single-baseline, the flowchart of the algorithm is shown in figure below. The following processing applies to each subsampled range-azimuth position. The notation is simplified omitting range-azimuth indexes for the sake of clarity.
 
 (fig:atbd-fh-9)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default", "layout": "elk", "elk": {"considerModelOrder": "PREFER_EDGES"}}}%%
+flowchart TB
+  accTitle: Forest height inversion.
+  accDescr: Polarimetric-interferometric coherences for 3 baselines go through polarimetric optimization. Terrain-corrected vertical wavenumbers VW1 to VW3 and a normalized tomographic reflectivity profile feed a LUT of complex coherences computation. Both results reach an Inversion method decision that selects dual baseline or single baseline inversion. Each inversion computes a height followed by a quality index computation, using the residual non-volumetric decorrelation; the single baseline branch is repeated for each baseline and then averaged. The dual baseline height and the averaged single baseline heights go through slope correction, with the terrain slope, giving the Forest Height map. The dual baseline quality index and the averaging result give the Forest height Quality Map.
+
+  %% Colours of the original figure.
+  %%   data: data product or input (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  %%   dec:  decision (light grey diamond)
+  classDef data fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef step fill:#f2f2f2,stroke:#000000,color:#000000
+  classDef dec fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  pcoh[/"Polarimetric-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;γ̃<sub>Obs</sub><br/>interferometric<br/>coherences 3 bas. (5D)"/]:::data
+  popt["Polarimetric<br/>optimization"]:::step
+
+  %% The &nbsp; after the frame titles push them to the left, out of the way of the arrows.
+  subgraph VWF["Vertical Wavenumbers (terrain corrected)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
+    direction LR
+    vw1[/"VW<sub>1</sub>"/]:::data
+    vw2[/"VW<sub>2</sub>"/]:::data
+    vw3[/"VW<sub>3</sub>"/]:::data
+    vw1 ~~~ vw2 ~~~ vw3
+  end
+  ntrp[/"Normalized<br/>tomographic<br/>reflectivity profile"/]:::data
+  lut["LUT of complex<br/>coherences<br/>computation"]:::step
+
+  inv{"Inversion<br/>method"}:::dec
+
+  dual["Compute Height,<br/>Dual baseline<br/>inversion"]:::step
+  qd["Quality index<br/>computation"]:::step
+  resid[/"Residual non-<br/>volumetric<br/>decorrelation"/]:::data
+
+  %% Dash-dot frame of the original: the steps repeated for each baseline.
+  subgraph EACH["For each baseline&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
+    single["Compute Height,<br/>Single baseline<br/>inversion"]:::step
+    qs["Quality index<br/>computation"]:::step
+  end
+
+  avg["Averaging"]:::step
+  slope_in[/"Terrain slope"/]:::data
+  slope["Slope correction"]:::step
+  fhmap[/"Forest Height<br/>map"/]:::data
+  fhq[/"Forest height<br/>Quality Map"/]:::data
+
+  %% Invisible links: keep the profile clear of the frame; same row as in the original.
+  VWF ~~~ ntrp
+  pcoh --> popt
+  VWF --> lut
+  ntrp --> lut
+  popt --> inv
+  lut --> inv
+  inv --> single
+  inv --> dual
+  dual --> qd
+  single --> qs
+  resid --> qs
+  resid --> qd
+  qs --> avg
+  slope_in --> slope
+  qd --> slope
+  avg --> slope
+  slope --> fhmap
+  fhmap ~~~ fhq
+  qd --> fhq
+  avg --> fhq
+
+  style VWF fill:#ffffff,stroke:#000000,color:#000000
+  style EACH fill:#ffffff,stroke:#000000,color:#000000,stroke-dasharray:6 3 1 3
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Forest height inversion.](../../_static/figures/atbd-fh/figure_9_section_3.5.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 9</span><span class="caption-text"> — Forest height inversion.</span></p>
 
-:::
+::::
 
 **The step is mandatory.**
 
@@ -574,17 +709,49 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 **The step is mandatory.**
 
 (fig:atbd-fh-11)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+```{mermaid}
+%%{init: {"theme": "default"}}%%
+flowchart TB
+  accTitle: Geocoding.
+  accDescr: Processed Data, the reference DEM LLH coordinates (back-geocoding product), the tomographic 3D forest points elevation and the L1c Stack Reference Orbit feed Update coordinates. Its result and the DGG feed Project on geographic map, which gives the Geocoded Processed Data.
+
+  %% Colours of the original figure.
+  %%   data: input or product (light grey parallelogram)
+  %%   step: processing step (light grey box)
+  classDef data fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+  classDef step fill:#f2f2f2,stroke:#7f7f7f,color:#000000
+
+  pd[/"Processed Data"/]:::data
+  dem[/"Reference DEM LLH<br/>coordinates<br/>(back-geocoding product)"/]:::data
+  tomo[/"Tomographic 3D<br/>forest points<br/>elevation"/]:::data
+  orbit[/"L1c Stack<br/>Reference Orbit"/]:::data
+  dgg[/"DGG"/]:::data
+  upd["Update coordinates"]:::step
+  proj["Project on geographic<br/>map"]:::step
+  out[/"Geocoded<br/>Processed Data"/]:::data
+
+  pd --> upd
+  dem --> upd
+  tomo --> upd
+  orbit --> upd
+  upd --> proj
+  dgg --> proj
+  proj --> out
+```
+
+:::{dropdown} Original figure (DOCX)
 ![Geocoding.](../../_static/figures/atbd-fh/figure_11_section_3.6.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Geocoding.</span></p>
 
-:::
+::::
 
 (sec:atbd-fh-3-6-2)=
 #### 3.6.2 Inputs
@@ -611,17 +778,21 @@ This functionality is used by all three AGB, FD, FH processors with different I/
 ###### 3.6.4.1.1 Update reference DEM coordinates
 
 (fig:atbd-fh-12)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure atbd-drawn-figure
 
 <div class="atbd-figure-content">
 
+![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fh/fig11.*)
+
+:::{dropdown} Original figure (DOCX)
 ![Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.](../../_static/figures/atbd-fh/figure_12_section_3.6.4.1.1.png)
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — Determining the elevation of one forest point. The picture represents a lateral section for one sensor azimuth position. Details of the represented quantities are given in the text description.</span></p>
 
-:::
+::::
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same forest height range-azimuth grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`Fig.|12`:
 
