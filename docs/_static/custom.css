@@ -1151,6 +1151,16 @@ div.math .eqno {
   overflow: visible !important;
 }
 
+/* A display formula wider than the column (phone): scroll it sideways instead
+   of cutting its start; the small padding keeps over/under bars visible. */
+.bd-content div.math mjx-container[display="true"],
+.bd-content mjx-container[jax="CHTML"][display="true"] {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100%;
+  padding: 0.15em 0;
+}
+
 /* MAAP eligibility callouts — semantic accent colours */
 .maap-eligibility-notice.admonition,
 div.maap-eligibility-notice {

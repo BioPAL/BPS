@@ -158,16 +158,9 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             "until Aresys and ESA approve this web conversion.</p>"
             "</div>"
         )
-    else:
-        self.body.append(
-            '<div class="admonition note">'
-            '<p class="admonition-title">PDF export</p>'
-            f"<p>Build the web-export PDF from the <code>docs/</code> directory with "
-            f"<code>{build_cmd}</code> (requires TeX Live or MacTeX). "
-            f"The file is written to <code>_static/pdf/{pdf_name}</code> "
-            "and linked here once generated.</p>"
-            "</div>"
-        )
+    # no PDF built: nothing on the published page (the build command is a
+    # maintainer's note, in the Makefile, not for the readers)
+    del build_cmd
     raise nodes.SkipNode
 
 
