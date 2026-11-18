@@ -32,7 +32,8 @@ The world is divided into processing blocks covering all forested areas and not 
 The algorithm performs up to two iterations for each processing block. The following approach to orchestration is followed:
 
 1. perform first iteration for all blocks: during first iteration, only external reference AGB mean and standard error are present as input over all the 5°x5° neighbourhood.
-    - a. the invalid AGB estimates (where corresponding regression parameters cannot be estimated) are tagged in output at a pixel level **AND** a flag is raised.
+
+    a. the invalid AGB estimates (where corresponding regression parameters cannot be estimated) are tagged in output at a pixel level **AND** a flag is raised.
 2. perform second iteration only for all blocks where invalid AGB (but still recoverable) estimates are present (based on the flag).The second iteration uses the output from the first iteration as reference (as an addition to external AGB estimates). Only pixels tagged as invalid form first iteration are recomputed.
 
 {fig}`13` shows the flow chart for Level 2b processing for one processing block. Input reference AGB mean and std differs from first and second iteration:
@@ -190,7 +191,7 @@ flowchart TB
 | *LCM* | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product classifying the type of land and forest |
 | $\Omega_{fcrej}$ | `rejectedLandcover` Classes | `AUX_PP2_AGB` (`AUX_FMT`) | List of integers | - | - | Set of landcover class indices to ignore. LCM description can be found in (IODD) |
 | ${\underline{\sigma}}_p^0,\ {\overline{\sigma}}_p^0$ | `backscatterLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}\times$2 float value [scalar] | $0<{\underline{\sigma}}_p^0<{\overline{\sigma}}_p^0<\infty$ | 0.0001,100 for all polarisations | Lower and upper limits on backscatter in linear units |
-| $\underline{\vartheta},\overline{\vartheta}$ | `angleLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{\vartheta}<\overline{\vartheta}$$\leq\frac{\pi}{2}$ | 0,π/2 | Lower and upper limits on the local incidence angle in radians |
+| $\underline{\vartheta},\overline{\vartheta}$ | `angleLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{\vartheta}<\overline{\vartheta}{}\leq\frac{\pi}{2}$ | 0,π/2 | Lower and upper limits on the local incidence angle in radians |
 | $\underline{W},\overline{W}$ | meanAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{W}<\overline{W}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB mean in t/ha |
 | $\underline{U},\overline{U}$ | stdAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{U}<\overline{U}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB std in t/ha |
 | $\underline{R},\overline{R}$ | relativeAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{R}<\overline{R}<\infty$ | 0,0.3 | Lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units |
@@ -405,11 +406,11 @@ Where **x,y,p,j,k,w,c** and **s** are vectors containing specific data for all m
 Fitting of the forward model is solved through ordinary least squares and the following equation:
 
 $$
-\mathbf{A\beta}=\mathbf{s}
+\mathbf{A}\boldsymbol{\beta}=\mathbf{s}
 \tag{4.16}
 $$ (eq:model-parameter-estimation-16)
 
-where $\mathbf{A}$ is the design matrix and $\mathbf{\beta}$ is the vector of unknown parameters.
+where $\mathbf{A}$ is the design matrix and $\boldsymbol{\beta}$ is the vector of unknown parameters.
 
 The design matrix $\mathbf{A}$ consists of three sub-matrices:
 
@@ -418,15 +419,15 @@ $$
 \tag{4.17}
 $$ (eq:model-parameter-estimation-17)
 
-and $\mathbf{\beta}$ consists of three sub-vectors:
+and $\boldsymbol{\beta}$ consists of three sub-vectors:
 
 (equation-eq-model-parameter-estimation-18)=
 \begin{equation}
-\mathbf{\beta}\boldsymbol{=}\begin{bmatrix} \mathbf{l} \\ \mathbf{a} \\ \mathbf{n} \end{bmatrix}
+\boldsymbol{\beta}\boldsymbol{=}\begin{bmatrix} \mathbf{l} \\ \mathbf{a} \\ \mathbf{n} \end{bmatrix}
 \tag{4.18}
 \end{equation}
 
-The following describes the generation of the three sub-matrices of $\mathbf{A}$, and the meaning of the three sub-vectors of $\mathbf{\beta}$.
+The following describes the generation of the three sub-matrices of $\mathbf{A}$, and the meaning of the three sub-vectors of $\boldsymbol{\beta}$.
 
 - $\mathbf{A}_l$ is a $N_{meas}\times{}N_l$ design matrix for parameter $l$ and $\mathbf{l}\mathbf{=}\begin{bmatrix}
 l_1 & \boldsymbol{\cdots} & l_{N_l}
@@ -500,18 +501,18 @@ where $p_r$ is the polarisation index for measurement $r$.
 Using ordinary least squares, the model parameters can be estimated to:
 
 $$
-\widehat{\mathbf{\beta}}=(\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{s}
+\widehat{\boldsymbol{\beta}}=(\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{s}
 \tag{4.19}
 $$ (eq:model-parameter-estimation-19)
 
 And their standard deviations to:
 
 $$
-\widehat{\mathbf{\delta}}=\sqrt{\frac{\left\Vert \mathbf{s}\mathbf{-}\mathbf{A}\widehat{\mathbf{x}} \right\Vert^2}{N_{meas}-N_l-N_a-N_n}\cdot{}diag\left[ (\mathbf{A}^T\mathbf{A})^{-1} \right]}
+\widehat{\boldsymbol{\delta}}=\sqrt{\frac{\left\Vert \mathbf{s}\mathbf{-}\mathbf{A}\widehat{\mathbf{x}} \right\Vert^2}{N_{meas}-N_l-N_a-N_n}\cdot{}diag\left[ (\mathbf{A}^T\mathbf{A})^{-1} \right]}
 \tag{4.20}
 $$ (eq:model-parameter-estimation-20)
 
-For measurement r, the three parameters can be extracted from vector $\widehat{\mathbf{\beta}}$ using:
+For measurement r, the three parameters can be extracted from vector $\widehat{\boldsymbol{\beta}}$ using:
 
 (equation-eq-model-parameter-estimation-21)=
 \begin{equation}
@@ -523,7 +524,7 @@ For measurement r, the three parameters can be extracted from vector $\widehat{\
 \tag{4.21}
 \end{equation}
 
-where ${\widehat{\beta}}_{\nu}$ is the $\nu$th element of vector $\widehat{\mathbf{\beta}}$.
+where ${\widehat{\beta}}_{\nu}$ is the $\nu$th element of vector $\widehat{\boldsymbol{\beta}}$.
 
 It must be noted that design matrix A can be rank-deficient (i.e., a column has all zero entries). In this situation, the corresponding regression parameter(s) cannot be solved, and a (subset) of AGB estimates cannot be computed, and will be tagged as invalid data in output.
 
@@ -552,7 +553,7 @@ Where the estimated AGB for pixel $(x,y)$ is calculated from a weighted average 
 \tag{4.24}
 \end{equation}
 
-*NOTE: while the description is formally carried out for the default parameter variability, eq. 4.15, 4.16 and 4.17 are independent of the selected parametrization, and are of general validity. Moreover, the exact cardinality of the regression problems depends also on the specific population (number of acquisitions, number of forest classes) in the current neighbourhood.*
+*NOTE: while the description is formally carried out for the default parameter variability,* {eq}`4.15`, {eq}`4.16 <4.16>` *and* {eq}`4.17 <4.17>` *are independent of the selected parametrization, and are of general validity. Moreover, the exact cardinality of the regression problems depends also on the specific population (number of acquisitions, number of forest classes) in the current neighbourhood.*
 
 *Moreover, from the implementation side, it must be noted that the least squares model inversion can be split into three orthogonal problems, if and only if all parameters depend on polarization: in this case, the above formulation is completely separable in the polarization domain.*
 
@@ -652,7 +653,7 @@ $$ (eq:model-parameter-estimation-30)
 
 We now extract model parameter estimates ${\widehat{l}}_u,{\widehat{a}}_u,{\widehat{n}}_u$ and standard deviations ${\widehat{\sigma_l}}_u,{\widehat{\sigma_a}}_u,{\widehat{\sigma_n}}_u$
 
-for measurement $u$ from vector $\widehat{\mathbf{\beta}}$ and $\widehat{\mathbf{\delta}}$ of equations 4.18/19, using the same mapping mechanism as described in {sec}`section 4.1.4.3 <4.1.4.3>`.
+for measurement $u$ from vector $\widehat{\boldsymbol{\beta}}$ and $\widehat{\boldsymbol{\delta}}$ of equations 4.18/19, using the same mapping mechanism as described in {sec}`section 4.1.4.3 <4.1.4.3>`.
 
 Now the mean log-AGB for measurement $u$ can be estimated using:
 
@@ -661,7 +662,7 @@ $$
 \tag{4.31}
 $$ (eq:model-parameter-estimation-31)
 
-Now, we want to estimate the standard deviation of the log-AGB estimate above. To do this, we will use the ratio distribution together with the mean and standard deviation estimates from $\widehat{\mathbf{\beta}}$ and $\widehat{\mathbf{\delta}}$. We will assume that both the numerator and denominator are uncorrelated, non-central Gaussian distributed. Under these circumstances, a closed-form expression for the standard deviation can be used if the ratio distribution is approximated as Gaussian.
+Now, we want to estimate the standard deviation of the log-AGB estimate above. To do this, we will use the ratio distribution together with the mean and standard deviation estimates from $\widehat{\boldsymbol{\beta}}$ and $\widehat{\boldsymbol{\delta}}$. We will assume that both the numerator and denominator are uncorrelated, non-central Gaussian distributed. Under these circumstances, a closed-form expression for the standard deviation can be used if the ratio distribution is approximated as Gaussian.
 
 For the numerator, the mean and standard deviations are (dropping index $u$ for simplicity of the derivation that follows):
 

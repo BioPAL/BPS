@@ -19,4 +19,4 @@ The Forest Height product family is generated during routine phase by the BIOMAS
 
 The L2b BIOMASS products are geocoded to a specific tile based geographic DGG {rd}`9`, while the L2a products are geocoded in a latitude longitude projection with the same origin and sampling of the DGG, but with an extension of the current L2a product ground coverage.
 
-*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially input to FH/AGB a Forest/Non-Forest mask generated outside of BPS [AD6][AD7][AD8][AD9]. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance.*
+*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially input to FH/AGB a Forest/Non-Forest mask generated outside of BPS* {ad}`6` {ad}`7` {ad}`8` {ad}`9`*. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance.*

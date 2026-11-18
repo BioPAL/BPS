@@ -888,9 +888,9 @@ The resulting forest height H{sub}`F` and quality estimates out of `uncertaintyV
 
 The purpose of this step is to project the processed data onto a geographic map, accounting for the different forest points location with respect to reference DEM.
 
-*NOTE: It should be noted that the use of the BIOMASS DTM [RD3] is to be preferred* *to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.*
+*NOTE: It should be noted that the use of the BIOMASS DTM* {rd}`3` *is to be preferred* *to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.*
 
-*NOTE: this functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS [RD1] and not on the L1 geocoding tool [RD2].*
+*NOTE: this functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS* {rd}`1` *and not on the L1 geocoding tool* {rd}`2`.
 
 **The step is mandatory.**
 

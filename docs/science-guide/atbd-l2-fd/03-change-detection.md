@@ -243,7 +243,7 @@ where *f* is a bilinear interpolant function. Other alternate interpolating func
 
 Ground cancellation {rd}`4` is the interferometric combination of two or more images so that the backscattered echo coming from the ground level is cancelled. This processing step can be carried out starting from the calibrated and ground steered stack of SAR images (so that the phase of the ground contribution is aligned in the images). Consequently, the radar signal coming from a particular elevation gets emphasized. This specific elevation depends on the spatial baseline characterizing the interferometric system, depending on the geometry of acquisition, and cannot usually be chosen when processing the data. However, the availability of more than two interferometric images allows this specific elevation to be selected. This is referred to as interpolated ground cancellation, which is the default setting. The processing steps are described in the following, for two images and with several images.
 
-**The step is mandatory. If disabled for debug, default rule is to set $I_{GN}$ (see section 3.4.3) to primary image acquisition.**
+**The step is mandatory. If disabled for debug, default rule is to set $I_{GN}$ (see {sec}`section 3.4.3 <3.4.3>`) to primary image acquisition.**
 
 (sec:atbd-fd-3-4-2)=
 #### 3.4.2 Inputs
@@ -556,9 +556,9 @@ It should be noted that, as implied by the equations above, multilooking is impl
 
 The purpose of this step is to project the processed data onto a geographic map, accounting for the different forest points location with respect to reference DEM.
 
-*NOTE:* *It should be noted that the use of the BIOMASS DTM [RD3]* *is to be preferred* *to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.*
+*NOTE:* *It should be noted that the use of the BIOMASS DTM* {rd}`3` *is to be preferred* *to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.*
 
-*NOTE: this functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS [RD1] and not on the L1 geocoding tool [RD2].*
+*NOTE: this functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS* {rd}`1` *and not on the L1 geocoding tool* {rd}`2`.
 
 **The step is mandatory.**
 

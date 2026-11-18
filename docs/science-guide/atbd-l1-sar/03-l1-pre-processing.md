@@ -15,11 +15,12 @@
 
 The ISP Filtering step is in charge of filtering the input L0 product Instrument Source Packets (ISP) by performing the following checks for anomalies. The filtering is applied distinguishably for the SAR Packets and the Ancillary Packets, as follows:
 
-- a. SAR Packets:
+a. SAR Packets:
     - Corrupted packets (those ones for which the CRC check is failed) are detected and discarded. Duplicated packets are detected and discarded. The detection is based on the comparison of the Sequence Count and the APID with the same values of the previous ISP. If both values are the same the packet is discarded;
     - Missing packets are detected by checking the Sequence Count of each ISP. If the difference of the Sequence Count values of two successive packets for the same APID is not equal to 1 this means that one or more missing ISPs have been detected. The data of the missing packets are replaced by zeroes;
     - The number of consecutive missing packets per APID and the equivalent time gap are computed. If one of these two values exceeds the corresponding configuration thresholds MaxISPGap or MaxTimeGap, the processing will not continue;
-- b. ANC Packets:
+
+b. ANC Packets:
     - The instrument HK parameters are checked against configurable validity thresholds and any deviation is reported.
 
 **Inputs**
@@ -130,16 +131,22 @@ The algorithm for a given coded echo is organized in the following steps:
 1. Check the BAQMODE value in the SAR Header of the SAR packet. This 3-bit parameter selects the BAQ Mode of the BAQ function: 4bit, 5bit, 6bit or bypass. If not “bypass”, go to step 2, otherwise go to step 4;
 2. (BAQ not-Bypass case) Extract the normalized thresholds LUT;
 3. (BAQ not-Bypass case) For each block:
-    - a. Extract the ASM value;
-    - b. In the case ASM is higher or equal than the given ASM small value limit for the selected BAQ mode:
-        - i. Multiply the normalized thresholds LUT by the ASM and by a factor of $\sqrt{\frac{\pi}{2}}$ to to get the up-scaled thresholds LUT;
-        - ii. For each echo in the block, for both I and Q values:
+
+    a. Extract the ASM value;
+
+    b. In the case ASM is higher or equal than the given ASM small value limit for the selected BAQ mode:
+
+        i. Multiply the normalized thresholds LUT by the ASM and by a factor of $\sqrt{\frac{\pi}{2}}$ to to get the up-scaled thresholds LUT;
+
+        ii. For each echo in the block, for both I and Q values:
             1. Extract the BAQ code and sign;
             2. Use the code as an index to retrieve the magnitude in the up-scaled thresholds LUT;
             3. Multiply the magnitude by the sign to get the float echo value;
             4. Check the echo value against configurable validity thresholds and report any out-of-range value;
-    - c. In the case ASM is lower than the given ASM small value limit for the selected BAQ mode:
-        - i. For each echo in the block, for both I and Q values:
+
+    c. In the case ASM is lower than the given ASM small value limit for the selected BAQ mode:
+
+        i. For each echo in the block, for both I and Q values:
             1. Extract the BAQ code and sign;
             2. If the magnitude is lower than 7/15/31 for BAQ 4/5/6 respectively, the compressed I and Q values are already the final values;
             3. If the magnitude is 7/15/31 for BAQ 4/5/6 respectively, use the ASM value to retrieve the uncompressed I and Q values from small ASM LUT;
@@ -215,8 +222,9 @@ The receive events after rank pulses corresponding to most of the transmit event
 
 During the acquisition variations of the SWP and SWL are possible. In particular variations of the SWL correspond to a different number of samples in the echo lines. The purpose of this processing step is to equalize the number of samples in all echo lines in the product by a proper zero padding at the end of the echo. This step is performed as follows:
 
-- a. the maximum SWL values (one for the standard pulses and one for the calibration pulses) are determined before the ISP Filtering processing of each input file (see {sec}`Sec. 3.1 <3.1>`), by inspecting every packet in the input product. The separation between standard and calibration is done based on the STYP value (see {sec}`Sec. 3.2.2 <3.2.2>`);
-- b. after decoding (see {sec}`Sec. 3.2.1 <3.2.1>`), each echo will be inserted in the output product after appending zero values to match the maximum SWL value (computed at step a).
+a. the maximum SWL values (one for the standard pulses and one for the calibration pulses) are determined before the ISP Filtering processing of each input file (see {sec}`Sec. 3.1 <3.1>`), by inspecting every packet in the input product. The separation between standard and calibration is done based on the STYP value (see {sec}`Sec. 3.2.2 <3.2.2>`);
+
+b. after decoding (see {sec}`Sec. 3.2.1 <3.2.1>`), each echo will be inserted in the output product after appending zero values to match the maximum SWL value (computed at step a).
 
 **Mathematical description**
 
@@ -628,7 +636,7 @@ where $\Gamma\left\{ \cdot \right\}$ represents a low order (e.g., cubic) interp
 
 As described in {ad}`3`, the PGP product can be directly used to retrieve the replica to be used during range compression in order to ensure an ideal impulse response function.
 
-*NOTE: In [AD3] it is not mentioned whether all PGP products within the data take should be used to derive the replica or whether the replica should be generated from the PGP of each calibration sequence and then be applied and updated as a function of azimuth time by the processor. Therefore, in the following the replica will be obtained by averaging all PGPs within the data take corresponding to the same chirp parameters, i.e., in the case of a PRF change within a data take two different replicas will be derived.*
+*NOTE: In* {ad}`3` *it is not mentioned whether all PGP products within the data take should be used to derive the replica or whether the replica should be generated from the PGP of each calibration sequence and then be applied and updated as a function of azimuth time by the processor. Therefore, in the following the replica will be obtained by averaging all PGPs within the data take corresponding to the same chirp parameters, i.e., in the case of a PRF change within a data take two different replicas will be derived.*
 
 **Inputs**
 
@@ -731,7 +739,7 @@ $$ (eq:atbd-l1-sar-3-23)
 
 If the processor corrects for the amplitude and phase drifts the instrument internal channel imbalance between polarizations will be automatically corrected. However, in case the compensation of the drifts is skipped, the polarimetric channels will need to be compensated additionally. In this section, the channel imbalances between polarizations are estimated for that purpose.
 
-*NOTE: Since nothing is mentioned in* *[AD3], it will be assumed that one single channel imbalance value per data take should be derived. Consequently, the different calibration pulses will be averaged to improve the estimation. It is also assumed that the channel imbalance is the same independent of the pulse type used.*
+*NOTE: Since nothing is mentioned in* {ad}`3`*, it will be assumed that one single channel imbalance value per data take should be derived. Consequently, the different calibration pulses will be averaged to improve the estimation. It is also assumed that the channel imbalance is the same independent of the pulse type used.*
 
 **Inputs**
 
@@ -940,7 +948,7 @@ For more details on BIOMASS coordinates systems refer to {ad}`2`.
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $p_s{,\ v}_s$ | Orbit | *RFI mitigation step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Updated orbit state vectors (satellite position and velocity) Note that these data are passed to next steps updating RAW data annotations *Intermediate product: iRAW (updated annotations)* |
-| $yaw,\ pitch,$$roll$ | Attitude | *RFI mitigation step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles Note that these data are passed to next steps updating RAW data annotations *Intermediate product: iRAW (updated annotations)* |
+| $yaw,\ pitch,{}roll$ | Attitude | *RFI mitigation step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles Note that these data are passed to next steps updating RAW data annotations *Intermediate product: iRAW (updated annotations)* |
 
 **Mathematical description**
 

@@ -384,9 +384,9 @@ The AGB processing has as main goal the generation of maps of above ground bioma
 - L2b, generates above ground biomass density map from all the L2a products on a connected group of DGG tiles, as well as a quality map, training on external reference AGB {rd}`10`;
 - L3, consolidates the result removing discontinuities in L2b products.
 
-*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially* *input to FH/AGB a forest/non-forest mask generated outside of BPS* *[AD1][AD2]. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance. The diagram of Fig.2 reports nonetheless FD* *input for completeness.*
+*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially* *input to FH/AGB a forest/non-forest mask generated outside of BPS* {ad}`1` {ad}`2`*. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance. The diagram of* {fig}`2` *reports nonetheless FD* *input for completeness.*
 
-*NOTE: L2 processor receives from Stack processor L1c products with two co-polarization (CP) channels and one cross-polarization (XP) channel.* *Details on the aggregation of XP channels into one XP are reported in [RD1].*
+*NOTE: L2 processor receives from Stack processor L1c products with two co-polarization (CP) channels and one cross-polarization (XP) channel.* *Details on the aggregation of XP channels into one XP are reported in* {rd}`1`.
 
 *NOTE: Regarding stack images cardinality, their number can vary (not always 3 or 7) due to contingency reasons and it can go up to 8 in TOM phase.*
 

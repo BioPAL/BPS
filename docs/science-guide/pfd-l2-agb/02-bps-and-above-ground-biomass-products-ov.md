@@ -21,4 +21,4 @@ The L2b BIOMASS products are geocoded to a specific tile based geographic DGG {r
 
 *NOTE: Regarding AGB, the nomenclature AGB L2a indicates the processing unit and flow, whereas the product for AGB flow at L2a is the ground cancelled product (GN).*
 
-*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially input to FH/AGB a Forest/Non-Forest mask generated outside of BPS [AD6][AD7][AD8][AD9]. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance.*
+*NOTE: Provided that FD algorithm proper validation will only be possible with BIOMASS in orbit, the strategy proposed to deal with FH/AGB dependency on FD is to initially input to FH/AGB a Forest/Non-Forest mask generated outside of BPS* {ad}`6` {ad}`7` {ad}`8` {ad}`9`*. After testing FD performance with BIOMASS in orbit, FD dependency can be switched on again, provided it has a satisfactory performance.*

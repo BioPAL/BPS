@@ -298,7 +298,8 @@ The mitigation step is performed operating line by line on the input raw data:
 
 1. the RAW data are transformed in range direction;
 2. the frequency samples that are indexed by the RFI mask are
-    - a. forced to zero (notch filter):
+
+    a. forced to zero (notch filter):
 
 (equation-eq-atbd-l1-sar-4-14)=
 \begin{equation}
@@ -306,7 +307,7 @@ F_r(RAW(\tau,t))=\begin{Bmatrix} 0,\ if\ Mask(f_r,t)=1 \\ F(RAW(\tau,t)),\ if\ M
 \tag{4.14}
 \end{equation}
 
-    - b. or, interpolated using a nearest neighbour approach;
+    b. or, interpolated using a nearest neighbour approach;
 3. the data are then inverse transformed in range direction.
 
 The following statistics are annotated in L1 products for detected frequency-domain RFI (separately for isolated and persistent ones) starting from computed masks:
@@ -541,8 +542,9 @@ where $A_{drift}^{ref}$ and $\varphi_{drift}^{ref}$ are the reference values for
 
 As described in previous section, the chirp function used during the Range Compression step can come from different sources. Two main cases can be identified:
 
-- a. the chirp function comes from the internal calibration measurements (see {sec}`Sec. 3.3.3 <3.3.3>`) or from an internal database: in this case it is assumed that the compensation of the internal delays is implicitly achieved when this chirp function is used for the Range Compression step;
-- b. the chirp function is the ideal one (computed according to the formula in {sec}`Sec. 4.2.1 <4.2.1>`): in this case it is assumed that the compensation of the internal delays shall be performed independently. For this purpose, refer to the following sub-section.
+a. the chirp function comes from the internal calibration measurements (see {sec}`Sec. 3.3.3 <3.3.3>`) or from an internal database: in this case it is assumed that the compensation of the internal delays is implicitly achieved when this chirp function is used for the Range Compression step;
+
+b. the chirp function is the ideal one (computed according to the formula in {sec}`Sec. 4.2.1 <4.2.1>`): in this case it is assumed that the compensation of the internal delays shall be performed independently. For this purpose, refer to the following sub-section.
 
 (sec:atbd-l1-sar-4-2-3-3)=
 ##### 4.2.3.3 Compensation of the Internal Delays Between Polarizations
@@ -578,8 +580,10 @@ In case a PARC is present in the scene, a dedicated processing mode can be activ
 
 1. a first time considering the whole data and processing it in the “standard” way → in this case the whole data results properly focused, while PARC appears (partially) unfocused;
 2. then, for each of the PARC four scattering responses (Gt1, Gt2, X and Y):
-    - a. cutting just a portion of data around PARC (cut is performed after L1 Pre-Processing, i.e., on extracted raw data, and dimensions are configurable);
-    - b. processing it applying the scattering response corresponding delay through an opportune update of the data range start time (note: all the parameters estimated on data, e.g., Doppler Centroid, ionosphere height, …, are re-estimated over the selected data portion. A discussion is on-going at BIOMASS L1 GPP level to confirm or update this approach).
+
+    a. cutting just a portion of data around PARC (cut is performed after L1 Pre-Processing, i.e., on extracted raw data, and dimensions are configurable);
+
+    b. processing it applying the scattering response corresponding delay through an opportune update of the data range start time (note: all the parameters estimated on data, e.g., Doppler Centroid, ionosphere height, …, are re-estimated over the selected data portion. A discussion is on-going at BIOMASS L1 GPP level to confirm or update this approach).
 
 → in this case the whole data results (partially) unfocused, while PARC appears properly focused.
 
@@ -685,7 +689,7 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes *Intermediate product: iRGC* |
 | $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,$$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
 | $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information *Intermediate product:* `iSlantDem` |
 | $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default value is 5s. |
 
@@ -820,7 +824,7 @@ flowchart TB
 | $RGC$ | RGC data | *Azimuth data resampling step* | N{sub}`rg`-N{sub}`chirp`+1 x N{sub}`az` array of complex values | - | - | Range compressed data *Intermediate product: iRGC* |
 | $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
 | $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 array of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,$$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
 | $N,\ M$ | `blockSamples`, `blockLines` | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 128, 8192 | Number of samples and lines in the blocks used to estimate Doppler Centroid from data |
 | $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default value is 5s. |
 | - | dcRMSErrorThreshold | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Doppler Centroid estimation root mean squared (RMS) error threshold [Hz] |
@@ -831,7 +835,7 @@ flowchart TB
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $f_{DC}$ | Doppler Centroid | *Azimuth compression step, Antenna pattern compensation step, Multilooking step* | set of polynomials + set of arrays of real values | - | - | Doppler Centroid polynomials, estimates grids and estimates quality *Intermediate product: iRGC (updated annotations), iDC, iDC\_std* |
-| $yaw,\ pitch,$$roll$ | Attitude refined | - | N{sub}`sv` x 3 array of real values | - | - | Refined attitude Euler angles *Intermediate product: iRGC (updated annotations)* |
+| $yaw,\ pitch,{}roll$ | Attitude refined | - | N{sub}`sv` x 3 array of real values | - | - | Refined attitude Euler angles *Intermediate product: iRGC (updated annotations)* |
 
 **Mathematical description**
 
@@ -1062,7 +1066,7 @@ Note that this step is executed after Range Compression one, but before Doppler 
 | - | RGC | *Range compression step* | (N{sub}`rg`-N{sub}`chirp`+1) x N{sub}`az` array of complex values | - | - | Range compressed data *Intermediate product: iRGC* |
 | $\tau,\ t$ | RGC data slant range and azimuth time axes | *Range compression step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
 | $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,$$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
 | - | `azimuthResamplingFrequency` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 1018.80 | Azimuth resampling frequency [Hz] |
 | - | `filterType` | `AUX_PP1` (`AUX_FMT`) | string | - | FIR / SINC \* | Type of filters used for azimuth resampling (FIR, SINC, GLS) |
 | - | `filterBandwidth` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 1500 / 1018.80 \* | Filter cut-off frequency [Hz] |
@@ -1082,9 +1086,12 @@ Note that this step is executed after Range Compression one, but before Doppler 
 In order to support all the possible PRF changes configurations (e.g. with sudden transition, with smooth transition, with a generic ratio between different PRF values, …) and all the possible input/output sampling frequency ratios, a generic interpolation approach based on a bank of filters is used. As described in detail in {sec}`Sec. 6.2 <6.2>`, this approach allows to manage cases where the input data is generically sampled and shall be resampled to a generic sampling frequency and/or on a generic axis. For the specific purpose of azimuth resampling step, the user can specify via configurations the characteristics of the bank of filters to be created at runtime and used. The following default configurations are suggested:
 
 - in case down-sampling is deactivated (then only PRF changes are to be managed), a bank of equi-ripple lowpass FIR filters ({rd}`30`) with default configuration at 500 filters of 21 samples each, cutoff frequency at 1500Hz. In this way, considering that:
-    - a. PRF changes are typically of few Hz;
-    - b. PRF average values are around 1500Hz;
-    - c. an up-sampling of a factor of 2 is applied before resampling;
+
+    a. PRF changes are typically of few Hz;
+
+    b. PRF average values are around 1500Hz;
+
+    c. an up-sampling of a factor of 2 is applied before resampling;
 
 the filters are all-pass ones and the entire spectrum of the input signal is preserved;
 
@@ -1601,7 +1608,8 @@ For each block, the main steps of the Fast w-k algorithm are:
 
 1. the Range Compressed (RGC) data are transformed both in range and in azimuth directions;
 2. in the spectral domain the data is corrected applying:
-    - a. the phase transfer function, allowing to have a data focused in $(\omega_r,k_a)$ the domain:
+
+    a. the phase transfer function, allowing to have a data focused in $(\omega_r,k_a)$ the domain:
 
 $$
 H_f(\omega_r,k_a)=\exp\left\{ jr_0\left[ \sqrt{\left( \frac{\omega_r+\omega_{r0}}{c_0/2} \right)^2-k_a^2}-\left( \frac{\omega_r}{c_0/2}+k_{r0C} \right) \right] \right\}
@@ -1613,7 +1621,8 @@ where:
     - $k_{r0C}=\sqrt{\left( \frac{\omega_{r0}}{c_0/2} \right)^2-k_{a0C}^2}$
     - $k_a=\frac{2\pi{}f_a}{v_{e0C}}$
     - $k_{a0C}=\frac{2\pi}{v_{e0C}}floor\left( \frac{f_{DC}}{PRF} \right)PRF$
-- b. the unfolding phase, aimed at moving the scene to the Zero-Doppler position:
+
+b. the unfolding phase, aimed at moving the scene to the Zero-Doppler position:
 
 $$
 H_u(\omega_r,k_a)=\exp\left( -j\frac{\omega_r}{c_0/2}r_u+j(k_a-k_{a0C})x_u \right)
@@ -1624,7 +1633,8 @@ where:
 
     - $x_u=\left( r_0+M\frac{c_0}{4f_s}\cos{\beta_a} \right)\tan \beta$
     - $r_u=r_0\left( 1-\frac{1}{\cos \beta} \right)$
-- c. the weighting window (e.g. Hamming) in azimuth direction;
+
+c. the weighting window (e.g. Hamming) in azimuth direction;
 
 ```{note}
 The azimuth antenna gain compensation is performed in a dedicated step described in {sec}`Sec. 4.6 <4.6>`, while the range weighting window is applied during the Range Compression step described in {sec}`Sec. 4.2.1 <4.2.1>`;
@@ -2370,35 +2380,51 @@ In case of crossing, TEC is estimated as proportional to the ratio between FR pl
 The algorithm is described below:
 
 1. FR zero-crossing in azimuth are identified
-    - a. for each range sample:
-        - i. read the FR plane values along the azimuth dimension;
-        - ii. detect where FR changes sign (i.e., where it crosses zero);
-        - iii. interpolate between neighbouring azimuth samples to estimate the exact zero-crossing azimuth time;
+
+    a. for each range sample:
+
+        i. read the FR plane values along the azimuth dimension;
+
+        ii. detect where FR changes sign (i.e., where it crosses zero);
+
+        iii. interpolate between neighbouring azimuth samples to estimate the exact zero-crossing azimuth time;
 
 Note that this step is done on FR plane which is defined on the same SAR coordinates grid as the data;
 
 2. Range-dependent ionospheric height is determined:
-    - a. for each range sample:
-        - i. consider the previously computed azimuth zero-crossing time and the sample’s range time;
-        - ii. evaluate the geomagnetic field component Bk in this SAR coordinate point and over a set of different heights (e.g., from 0 to 600km with a step of 1km);
-        - iii. detect the height where Bk changes sign and interpolate the neighbours linearly to obtain the exact height for which Bk changes sign:
+
+    a. for each range sample:
+
+        i. consider the previously computed azimuth zero-crossing time and the sample’s range time;
+
+        ii. evaluate the geomagnetic field component Bk in this SAR coordinate point and over a set of different heights (e.g., from 0 to 600km with a step of 1km);
+
+        iii. detect the height where Bk changes sign and interpolate the neighbours linearly to obtain the exact height for which Bk changes sign:
 
 Note that this step is done on range time axis of the data;
 
 3. Geomagnetic field is evaluated on a sampled SAR coordinates grid and with range-variant ionospheric height:
-    - a. build a coarsely subsampled azimuth–range grid (e.g., every 1000 lines and 100 samples;
-    - b. add to the grid a last sample in both directions to make sure all the data corners are properly considered;
-    - c. for each node of this coarse grid:
-        - i. retrieve the ionospheric height for the current range time;
-        - ii. evaluate the geomagnetic field component Bk at the current point with the proper ionospheric height;
+
+    a. build a coarsely subsampled azimuth–range grid (e.g., every 1000 lines and 100 samples;
+
+    b. add to the grid a last sample in both directions to make sure all the data corners are properly considered;
+
+    c. for each node of this coarse grid:
+
+        i. retrieve the ionospheric height for the current range time;
+
+        ii. evaluate the geomagnetic field component Bk at the current point with the proper ionospheric height;
 4. Bk is interpolated onto the original SAR coordinates grid:
-    - a. for each azimuth, range times in the data grid:
-        - i. retrieve Bk value by using bilinear interpolation
+
+    a. for each azimuth, range times in the data grid:
+
+        i. retrieve Bk value by using bilinear interpolation
 
 Note that the grid is evenly spaced except for the last sample in both directions;
 
 5. Compute the TEC:
-    - a. divide FR plane by the component Bk
+
+    a. divide FR plane by the component Bk
 
 Note that, by construction, they cross zero in the same points;
 
@@ -2527,10 +2553,14 @@ By substituting $R_0$ by some arbitrary distance $R$ in previous equation, it is
 The steps to perform the correction are the following:
 
 1. Starting from the SLC image focused with respect to the distance $R=R_0$, it is possible to obtain an image focused at the ionospheric altitude ($SLC_{iono}$) by performing the following sequential steps:
-- a. Fourier transforming the SLC image into the frequency domain,
-- b. Decompressing in the azimuth direction by multiplying by $\exp (-i\phi(f_a,R_0))$,
-- c. Partially focusing back to the ionospheric altitude by multiplying $\exp (i\phi(f_a,R_{iono}))$, where $R=R_{iono}$ is the range to the ionospheric layer (after range focusing and range migration compensation), and finally,
-- d. using an inverse Fourier transform to get back to the image domain.
+
+a. Fourier transforming the SLC image into the frequency domain,
+
+b. Decompressing in the azimuth direction by multiplying by $\exp (-i\phi(f_a,R_0))$,
+
+c. Partially focusing back to the ionospheric altitude by multiplying $\exp (i\phi(f_a,R_{iono}))$, where $R=R_{iono}$ is the range to the ionospheric layer (after range focusing and range migration compensation), and finally,
+
+d. using an inverse Fourier transform to get back to the image domain.
 
 Points a) to d) are mathematically expressed as:
 
@@ -2675,8 +2705,10 @@ The proposed filtering approach includes the following steps.
 
 1. Focus all polarimetric channels to the ionospheric height as described in {sec}`Sec. 4.10.3.5 <4.10.3.5>`;
 2. Estimate a smooth surface on the FR phase:
-    - a. Compute the LR and RL images based on the images computed in the previous step. The LR and RL images are retrieved as described in {sec}`Sec. 4.10.2.1 <4.10.2.1>`;
-    - b. Estimate the complex coherence between the LR/RL images, $\boldsymbol{\gamma}_{\boldsymbol{LR}\mathbf{-}\boldsymbol{RL}}$ by using a large window, e.g., 256x256 samples:
+
+    a. Compute the LR and RL images based on the images computed in the previous step. The LR and RL images are retrieved as described in {sec}`Sec. 4.10.2.1 <4.10.2.1>`;
+
+    b. Estimate the complex coherence between the LR/RL images, $\boldsymbol{\gamma}_{\boldsymbol{LR}\mathbf{-}\boldsymbol{RL}}$ by using a large window, e.g., 256x256 samples:
 
 $$
 \gamma_{LR-RL}(m,n)=\frac{\sum_{i=m}^{m+M-1}{\sum_{j=n}^{n+N-1}{I_{LR}(i,j)\cdot{}I_{RL}^*}(i,j)}}{\sqrt{\sum_{i=m}^{m+M-1}{\sum_{j=n}^{n+N-1}{\left\vert I_{LR}(i,j) \right\vert^2}}}\cdot\sqrt{\sum_{i=m}^{m+M-1}{\sum_{j=n}^{n+N-1}{\left\vert I_{RL}(i,j) \right\vert^2}}}}
@@ -2685,9 +2717,11 @@ $$ (eq:atbd-l1-sar-4-95)
 
 where $M$ and $N$ refer to the window size. Note that the output matrix is accordingly smaller and therefore the next steps to estimate the 2{sup}`nd` order polynomial surface fit do not work at full resolution;
 
-- c. Retrieve the external TEC map, $\Omega_{ext}$:
-    - i. Back-geocode the external vertical TEC map to the slant-range plane.
-    - ii. Convert the vertical TEC map to slant TEC using the mapping function:
+c. Retrieve the external TEC map, $\Omega_{ext}$:
+
+    i. Back-geocode the external vertical TEC map to the slant-range plane.
+
+    ii. Convert the vertical TEC map to slant TEC using the mapping function:
 
 $$
 sTEC=\ \frac{vTEC}{\cos{\theta_l}}
@@ -2696,29 +2730,30 @@ $$ (eq:atbd-l1-sar-4-96)
 
 where $\theta_l$ is the look angle computed for the points at the ionospheric height. Since at this stage the ionospheric height has not been estimated yet, it suffices to assume a reference value, which is currently set to 350 km. This is not an issue since the external TEC is only used for the unwrapping, and any error in the ionospheric height is in practice negligible for that purpose.
 
-    - iii. Convert the slant TEC map to FR angle using equation in {sec}`Sec. 4.10.3.2 <4.10.3.2>`;
-- d. Remove the FR derived from the external map in the complex domain and take the argument:
+    iii. Convert the slant TEC map to FR angle using equation in {sec}`Sec. 4.10.3.2 <4.10.3.2>`;
+
+d. Remove the FR derived from the external map in the complex domain and take the argument:
 
 $$
 \phi_{\Omega}^{'}=\arg \left\{ \gamma_{LR-RL}\cdot\exp \left[ -j\ 4\cdot\Omega_{ext} \right] \right\}
 \tag{4.97}
 $$ (eq:atbd-l1-sar-4-97)
 
-- e. Compute the mean offset and take the argument:
+e. Compute the mean offset and take the argument:
 
 $$
 \phi_{mean}=\arg \left\{ \sum_{}^{}{\exp \left[ {j\cdot\phi}_{\Omega}^{'} \right]\cdot\left\vert \gamma_{LR-RL} \right\vert} \right\}
 \tag{4.98}
 $$ (eq:atbd-l1-sar-4-98)
 
-- f. Remove the offset in the complex domain, take the argument (hence assuming no wrapping is occurring) and add again the mean offset and the FR phase derived from the external TEC map:
+f. Remove the offset in the complex domain, take the argument (hence assuming no wrapping is occurring) and add again the mean offset and the FR phase derived from the external TEC map:
 
 $$
 \widehat{\Omega}=\frac{1}{4}\cdot\arg{\left\{ \exp \left[ j\cdot(\phi_{\Omega}^{'}-\phi_{mean}) \right] \right\}+\frac{\phi_{mean}}{4}+\Omega_{ext}}
 \tag{4.99}
 $$ (eq:atbd-l1-sar-4-99)
 
-- g. Perform a weighted least squares estimation to retrieve a plane. The following model is being used:
+g. Perform a weighted least squares estimation to retrieve a plane. The following model is being used:
 
 $$
 {\widehat{\Omega}}_{surface}(r,x)=a_{00}+a_{10}\cdot{}x+a_{01}\cdot{}r+a_{11}\cdot{}x\cdot{}r+a_{20}\cdot{}x^2+a_{02}\cdot{}r^2
@@ -2748,10 +2783,12 @@ W=\begin{bmatrix} \left\vert \gamma_1 \right\vert^2 & \cdots & 0 \\ \vdots & \dd
 \tag{4.103}
 \end{equation}
 
-    - h. Once the plane coefficients are estimated, the corresponding FR angle surface is computed to the same sampling as the image, i.e., at full resolution, and used it in the following steps;
+    h. Once the plane coefficients are estimated, the corresponding FR angle surface is computed to the same sampling as the image, i.e., at full resolution, and used it in the following steps;
 3. Apply a weighted Gaussian filter to the data in order to mitigate scintillations as follows:
-    - a. Similar as before, compute the LR and RL images based on the images computed in the previous step and estimate the complex coherence between the LR/RL images, $\gamma_{LR-RL}$. In this case, a smaller window of 16x16 is used. Note that this resolution loss does not have a relevant impact in the estimation of the scintillations, since the Gaussian filter is anyway always larger than this value. Prior to the multilooking, the FR plane, ${\widehat{\Omega}}_{plane}$, estimated in step 2 is subtracted. Note that the $\gamma_{LR-RL}$ image is multilooked and therefore smaller in size than the full resolution image. In addition, focusing margins are not considered for the computation, to avoid polluting it;
-    - b. Compute the weight based on the estimated coherence and the window size:
+
+    a. Similar as before, compute the LR and RL images based on the images computed in the previous step and estimate the complex coherence between the LR/RL images, $\gamma_{LR-RL}$. In this case, a smaller window of 16x16 is used. Note that this resolution loss does not have a relevant impact in the estimation of the scintillations, since the Gaussian filter is anyway always larger than this value. Prior to the multilooking, the FR plane, ${\widehat{\Omega}}_{plane}$, estimated in step 2 is subtracted. Note that the $\gamma_{LR-RL}$ image is multilooked and therefore smaller in size than the full resolution image. In addition, focusing margins are not considered for the computation, to avoid polluting it;
+
+    b. Compute the weight based on the estimated coherence and the window size:
 
 $$
 w=\frac{2\cdot{}N\cdot\left\vert \gamma_{LR-RL} \right\vert}{1-\left\vert \gamma_{LR-RL} \right\vert^2}
@@ -2760,8 +2797,9 @@ $$ (eq:atbd-l1-sar-4-104)
 
 where $N$ is the number of samples used to compute the coherence;
 
-- c. Retrieve the Gaussian filter $g$. If the size of the filter, which depends on the sensitivity to FR and therefore increases toward lower latitudes, is larger than input configuration parameters (i.e., max size of minor and major axes), then the size of the Gaussian filter is clipped to those values. Note in addition that the orientation of the Gaussian filter is computed based on the projection of the geomagnetic field unto the slant-range plane {rd}`34`, while the anisotropy of the filter is computed as described in {rd}`35`.
-- d. Perform the weighted Gaussian filter as follows {rd}`31`:
+c. Retrieve the Gaussian filter $g$. If the size of the filter, which depends on the sensitivity to FR and therefore increases toward lower latitudes, is larger than input configuration parameters (i.e., max size of minor and major axes), then the size of the Gaussian filter is clipped to those values. Note in addition that the orientation of the Gaussian filter is computed based on the projection of the geomagnetic field unto the slant-range plane {rd}`34`, while the anisotropy of the filter is computed as described in {rd}`35`.
+
+d. Perform the weighted Gaussian filter as follows {rd}`31`:
 
 $$
 {\widehat{\Omega}}_g=\frac{1}{4}\cdot\arg \left\{ \frac{\exp{\left[ j\cdot\arg \left\{ \gamma_{LR-RL} \right\} \right]\cdot{}w*g}}{w*g} \right\}
@@ -2770,9 +2808,11 @@ $$ (eq:atbd-l1-sar-4-105)
 
 where $*$ represents the convolution operator (in practice implemented in the Fourier domain), and $g$ is the Gaussian filter. Note that, in order to avoid issues in computation, in case denominator is too small (\<1e-3) the ratio is set equal to 0;
 
-- e. Add again the previously removed FR plane in order to retrieve the final estimated FR angle, ${\widehat{\Omega}}_f$;
-- f. Convert the Faraday rotation angle to TEC, and this to phase using equations in {sec}`Sec. 4.10.3.1 <4.10.3.1>` and {sec}`4.10.3.6 <4.10.3.6>`, respectively;
-- g. Upsample the phase to the full resolution matrix size. The phase is used in the correction step as described in {sec}`Sec. 4.10.3.5 <4.10.3.5>`.
+e. Add again the previously removed FR plane in order to retrieve the final estimated FR angle, ${\widehat{\Omega}}_f$;
+
+f. Convert the Faraday rotation angle to TEC, and this to phase using equations in {sec}`Sec. 4.10.3.1 <4.10.3.1>` and {sec}`4.10.3.6 <4.10.3.6>`, respectively;
+
+g. Upsample the phase to the full resolution matrix size. The phase is used in the correction step as described in {sec}`Sec. 4.10.3.5 <4.10.3.5>`.
 
 (sec:atbd-l1-sar-4-10-5)=
 #### 4.10.5 Computation of the Gaussian filter
@@ -2791,7 +2831,8 @@ These are the goal of the four steps:
 The details follow.
 
 1. Step 2: Set elongation parameters $a$ and $b$.
-    - a. Geomagnetic latitude $\phi_m$ is calculated by
+
+    a. Geomagnetic latitude $\phi_m$ is calculated by
 
 $$
 \tan{\phi_m}=\frac{1}{2}\tan I,\ and\sin I=\frac{\overrightarrow{B}\cdot\widehat{n}}{\sqrt{\overrightarrow{B}\cdot\overrightarrow{B}}},
@@ -2813,16 +2854,18 @@ where $\widehat{n}$ is vertical upward unit vector calculated at Step 1.b and $I
 
 :::
 
-- b. Elongation parameter $a$ is calculated from its geomagnetic latitude by
+b. Elongation parameter $a$ is calculated from its geomagnetic latitude by
 
 $$
 a=30-11\left( 1+\operatorname{erf} \left( \frac{\left( \left\vert \phi_m \right\vert-\frac{\pi}{9} \right)}{3} \right) \right).
 \tag{4.107}
 $$ (eq:atbd-l1-sar-4-107)
 
-- c. The elongation parameter $b$ is required near geomagnetic poles.
-    - i. Geomagnetic poles are calculated by interpolating the pre-calculated geomagnetic pole positions provided through URL http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_NP.xy and http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_SP.xy
-    - ii. Geomagnetic time $t_m$ is calculated from the subsolar point, satellite and pole positions. As the apparent time represents the angle at pole between sun and the location of interest, the geomagnetic time is the angle at geomagnetic pole. The longitude of the subsolar point is calculated from local time, and the latitude of that is approximated to be on equator. The angle between two planes indicates the geomagnetic time. The first plane bears the center of Earth and passes geomagnetic pole, scene center, with normal vector
+c. The elongation parameter $b$ is required near geomagnetic poles.
+
+    i. Geomagnetic poles are calculated by interpolating the pre-calculated geomagnetic pole positions provided through URL http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_NP.xy and http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_SP.xy
+
+    ii. Geomagnetic time $t_m$ is calculated from the subsolar point, satellite and pole positions. As the apparent time represents the angle at pole between sun and the location of interest, the geomagnetic time is the angle at geomagnetic pole. The longitude of the subsolar point is calculated from local time, and the latitude of that is approximated to be on equator. The angle between two planes indicates the geomagnetic time. The first plane bears the center of Earth and passes geomagnetic pole, scene center, with normal vector
 
 $$
 {\overrightarrow{n}}_1=\begin{pmatrix}
@@ -2870,7 +2913,7 @@ The geometry of the equations is shown in figure below.
 
 :::
 
-- iii. As an intermediate parameter, the average invariant latitude $\phi_b$ is calculated.
+iii. As an intermediate parameter, the average invariant latitude $\phi_b$ is calculated.
 
 $$
 \phi_b=\frac{\pi}{180}\left( 71.8-\frac{3}{2}K_p-\frac{11}{2}\cos \left( \frac{t_m-2}{12}\pi \right) \right).
@@ -2879,7 +2922,7 @@ $$ (eq:atbd-l1-sar-4-109)
 
 $K_p$ value of 3 is applied in the code. It determines where from which latitude the polar region starts.
 
-- iv. Elongation parameter $b$ is calculated by
+iv. Elongation parameter $b$ is calculated by
 
 $$
 b=1+\frac{3}{4}\left( 1+\cos \left( \frac{t_m-2}{12}\pi \right) \right)\left( 1+\operatorname{erf} \frac{\phi_m-\phi_b}{\phi_h} \right),
@@ -2903,9 +2946,10 @@ Example of $b$ distribution is shown in figure below.
 
 :::
 
-    - d. References for Step 2.b and 2.c are found at E.J.Fremouw and J.A.Secan, “Modeling and scientific application of Scintillation Results,” Radio Science, Vol. 19, No. 3, pp. 687—694, 1984.
+    d. References for Step 2.b and 2.c are found at E.J.Fremouw and J.A.Secan, “Modeling and scientific application of Scintillation Results,” Radio Science, Vol. 19, No. 3, pp. 687—694, 1984.
 2. Step 3: Calculation of directions of ellipse for the gaussian filter
-    - a. The ellipsoid is defined on B-aligned coordinate, where the $x$-direction to be the vertical projection of the geomagnetic field onto horizontal plane, the $z$-direction to be vertical downward direction, and $y$-direction to cross-product of $z$- and $x$-direction. The ellipsoid is expressed as
+
+    a. The ellipsoid is defined on B-aligned coordinate, where the $x$-direction to be the vertical projection of the geomagnetic field onto horizontal plane, the $z$-direction to be vertical downward direction, and $y$-direction to cross-product of $z$- and $x$-direction. The ellipsoid is expressed as
 
 (equation-eq-atbd-l1-sar-4-111)=
 \begin{equation}
@@ -2944,7 +2988,7 @@ The geometry of the B-aligned coordinate is shown in figure below. The geomagnet
 
 :::
 
-- b. The projection of ellipsoid along the propagation vector $\widehat{\kappa}$ onto horizontal plane is calculated as
+b. The projection of ellipsoid along the propagation vector $\widehat{\kappa}$ onto horizontal plane is calculated as
 
 (equation-eq-atbd-l1-sar-4-112)=
 \begin{equation}
@@ -2954,7 +2998,7 @@ The geometry of the B-aligned coordinate is shown in figure below. The geomagnet
 
 where $A=C_{11}+C_{33}(\tan \theta\cos \phi)^2-2C_{13}\tan \theta\cos \phi$, $B/2=\ C_{12}+C_{33}(\tan \theta)^2\sin \phi\cos \phi-(C_{13}\sin \phi+C_{23}\cos \phi)\tan \theta$ and $C=C_{22}+C_{33}(\tan \theta\sin \phi)^2-2C_{23}\tan \theta\sin \phi$ .Here $\theta$ is incidence angle at the ionospheric altitude, and $\phi$ is the angle where the projection of the propagation vector $\widehat{\kappa}$ onto the horizontal plane forms with $x$-axis of B-aligned coordinate. Here the angle $\phi$ is irrelevant with that appears in Step 2. The angle $\theta$ is incidence angle. The projection of $\overrightarrow{B}$ along $\widehat{\kappa}$ is shown in figure above with red arrow, where $\widehat{\kappa}$ is plotted with downward green arrow.
 
-- c. A rotated ellipse is expressed in a quadratic form.
+c. A rotated ellipse is expressed in a quadratic form.
 
 (equation-eq-atbd-l1-sar-4-113)=
 \begin{equation}
@@ -3016,7 +3060,7 @@ The geometry of the rotated ellipse is shown in figure below.
 
 :::
 
-- d. As these axes are calculated in the wavenumber domain, they are converted to distance domain by replacing the major and minor axes with their inverses. The resulting matrix is
+d. As these axes are calculated in the wavenumber domain, they are converted to distance domain by replacing the major and minor axes with their inverses. The resulting matrix is
 
 (equation-eq-atbd-l1-sar-4-118)=
 \begin{equation}
@@ -3034,7 +3078,7 @@ The quadratic form of matrix in distance domain becomes
 \tag{4.119}
 \end{equation}
 
-- e. The quadratic form is rotated into the range-azimuth coordinate. The range direction component of the geomagnetic field is $\overrightarrow{B}\cdot{\widehat{e}}_{rg}$, and the azimuth direction component is $\overrightarrow{B}\cdot{\widehat{e}}_{az}$, where ${\widehat{e}}_{rg}$ and ${\widehat{e}}_{az}$ are the unit vectors parallel to the LOS direction projected onto the horizontal plane, and the azimuth direction unit vector, respectively. The rotation angle is calculated by $\theta_r=\angle(\overrightarrow{B}\cdot{\widehat{e}}_{rg}+i\overrightarrow{B}\cdot{\widehat{e}}_{az})$. Once rotation angle is calculated, the quadratic form on the range-azimuth coordinate becomes
+e. The quadratic form is rotated into the range-azimuth coordinate. The range direction component of the geomagnetic field is $\overrightarrow{B}\cdot{\widehat{e}}_{rg}$, and the azimuth direction component is $\overrightarrow{B}\cdot{\widehat{e}}_{az}$, where ${\widehat{e}}_{rg}$ and ${\widehat{e}}_{az}$ are the unit vectors parallel to the LOS direction projected onto the horizontal plane, and the azimuth direction unit vector, respectively. The rotation angle is calculated by $\theta_r=\angle(\overrightarrow{B}\cdot{\widehat{e}}_{rg}+i\overrightarrow{B}\cdot{\widehat{e}}_{az})$. Once rotation angle is calculated, the quadratic form on the range-azimuth coordinate becomes
 
 (equation-eq-atbd-l1-sar-4-120)=
 \begin{equation}
@@ -3042,7 +3086,7 @@ The quadratic form of matrix in distance domain becomes
 \tag{4.120}
 \end{equation}
 
-- f. The quadratic form is rescaled to the ground. The scaling factor is a function of the ionospheric height. At first, the satellite height $h_{sat}$ is calculated from the satellite position. The scaling factor is $r=\frac{h_{sat}}{(h_{sat}-h_{iono})}$. The quadratic form is updated to
+f. The quadratic form is rescaled to the ground. The scaling factor is a function of the ionospheric height. At first, the satellite height $h_{sat}$ is calculated from the satellite position. The scaling factor is $r=\frac{h_{sat}}{(h_{sat}-h_{iono})}$. The quadratic form is updated to
 
 (equation-eq-atbd-l1-sar-4-121)=
 \begin{equation}
@@ -3071,7 +3115,7 @@ The geometry of rescaling onto the ground is shown in figure below.
 
 :::
 
-- g. Finally, the quadratic form is rescaled one more time to be ready applied on the SAR data. For that the quadratic form is rescaled in accordance with range and azimuth sampling. The range and azimuth pixel spacings are $\delta_{rg}$ and $\delta_{az}$. The quadratic form becomes
+g. Finally, the quadratic form is rescaled one more time to be ready applied on the SAR data. For that the quadratic form is rescaled in accordance with range and azimuth sampling. The range and azimuth pixel spacings are $\delta_{rg}$ and $\delta_{az}$. The quadratic form becomes
 
 (equation-eq-atbd-l1-sar-4-122)=
 \begin{equation}
@@ -3092,7 +3136,7 @@ C^{''}=\left( \frac{A^{'}\delta_{rg}^2}{r^2} \right)\sin^2{\theta_r}+(\frac{B^{'
 \end{aligned}
 $$
 
-- h. Now the major and the minor axis, as well as, the rotation angle of the ellipse is calculated. It is similar process as Step 3.c. The major and the minor axes, $m_j$ and $m_n$, respectively, are
+h. Now the major and the minor axis, as well as, the rotation angle of the ellipse is calculated. It is similar process as Step 3.c. The major and the minor axes, $m_j$ and $m_n$, respectively, are
 
 $$
 m_j,\ m_n=\frac{\sqrt{2}}{\sqrt{(A^{''}+C'')\mp\sqrt{(A^{''}-C'')^2-B^{''2}}}}
@@ -3107,7 +3151,8 @@ $$
 $$ (eq:atbd-l1-sar-4-124)
 
 3. Step 4: Determination of size of filter
-    - a. SNR is calculated from the polarimetric coherence. It is calculated from the SAR data.
+
+    a. SNR is calculated from the polarimetric coherence. It is calculated from the SAR data.
 
 $$
 \gamma_{pol}=\frac{\left\langle S_{lr}\cdot{}S_{rl}^* \right\rangle}{\sqrt{\left\langle S_{lr}\cdot{}S_{lr}^* \right\rangle}\sqrt{\left\langle S_{rl}\cdot{}S_{rl}^* \right\rangle}}
@@ -3134,7 +3179,7 @@ $$ (eq:atbd-l1-sar-4-127)
 
 SNR is calculated for down-sampled SLC. Resolution can be adjusted on demand.
 
-- b. FR-to-phase conversion factor $k$ is calculated.
+b. FR-to-phase conversion factor $k$ is calculated.
 
 $$
 k=\frac{4\pi{}mf}{e\overrightarrow{B}\cdot\widehat{\kappa}},
@@ -3148,7 +3193,7 @@ $$
 \tag{4.129}
 $$ (eq:atbd-l1-sar-4-129)
 
-- c. Required number of looks is calculated from the Cramer-Rao bound.
+c. Required number of looks is calculated from the Cramer-Rao bound.
 
 $$
 \sigma_{\Omega}=\frac{1}{4}\frac{\sqrt{1-\gamma_{pol}^2}}{\sqrt{2\gamma_{pol}^2N}}.
@@ -3169,7 +3214,7 @@ $$
 \tag{4.132}
 $$ (eq:atbd-l1-sar-4-132)
 
-- d. The major axis and minor axis are rescaled to the required number of looks. The area of the ellipse should be the same with $N_{req}$, i.e.,
+d. The major axis and minor axis are rescaled to the required number of looks. The area of the ellipse should be the same with $N_{req}$, i.e.,
 
 $$
 \pi{}m_j^{'}m_n^{'}=N_{req},
@@ -3183,7 +3228,7 @@ R=\sqrt{\frac{N_{req}}{\pi{}m_jm_n}}.
 \tag{4.134}
 $$ (eq:atbd-l1-sar-4-134)
 
-- e. Quadratic form is updated to
+e. Quadratic form is updated to
 
 (equation-eq-atbd-l1-sar-4-135)=
 \begin{equation}
@@ -3191,7 +3236,7 @@ $$ (eq:atbd-l1-sar-4-134)
 \tag{4.135}
 \end{equation}
 
-- f. In order to add further space where the Gaussian filter to damp, a buffer is added. Its range direction buffer is calculated by
+f. In order to add further space where the Gaussian filter to damp, a buffer is added. Its range direction buffer is calculated by
 
 $$
 B_{rg}=3\sqrt{(m_j^{'}\cos{\theta^{'}})^2+(m_n^{'}\sin{\theta'})^2},
@@ -3205,14 +3250,14 @@ B_{az}=3\sqrt{(m_j^{'}\sin{\theta'})^2+(m_n^{'}\cos{\theta^{'}})^2},
 \tag{4.137}
 $$ (eq:atbd-l1-sar-4-137)
 
-- g. Build kernel for gaussian filter. A 2-D array size of $2B_{rg}$×$2B_{az}$ is generated. Its x-axis is indexed from $-B_{rg}$ to $B_{rg}$ and y-axis from $-B_{az}$ to $B_{az}$. The filter kernel is
+g. Build kernel for gaussian filter. A 2-D array size of $2B_{rg}$×$2B_{az}$ is generated. Its x-axis is indexed from $-B_{rg}$ to $B_{rg}$ and y-axis from $-B_{az}$ to $B_{az}$. The filter kernel is
 
 $$
 Q'=\exp (-(\mathcal{A}x^2\mathcal{+B}xy+\mathcal{C}y^2))
 \tag{4.138}
 $$ (eq:atbd-l1-sar-4-138)
 
-- h. Nest $Q'$ into a wider 2-D array of which range and azimuth extents are the smallest power of 2 larger than the sum of number of range pixels in scene and $2B_{rg}$, and the sum of the number of azimuth pixels of the scene and $2B_{az}$, respectively.
+h. Nest $Q'$ into a wider 2-D array of which range and azimuth extents are the smallest power of 2 larger than the sum of number of range pixels in scene and $2B_{rg}$, and the sum of the number of azimuth pixels of the scene and $2B_{az}$, respectively.
 
 ```{note}
 When the number of looks needed to achieve the requested phase accuracy performance is larger than the number of samples of the input image, the size of the filter is limited to the one of the image.
@@ -3597,13 +3642,20 @@ The main steps of the algorithm are:
 :::
 
 4. for each range look:
-    - a. the data is down-sampled directly in frequency domain by shortening the filtered spectrum vector according to the desired output sampling frequency, ensuring that a minimum up-sampling factor of 2 is present to avoid aliasing when performing the detection operation;
-    - b. the data is then inverse transformed along range direction;
-    - c. the data is transformed in azimuth direction;
-    - d. the azimuth spectrum is demodulated for the Doppler Centroid frequency and flattened, removing any shaping applied during previous processing steps (i.e. the weighting window applied during the azimuth compression step), in order to obtain looks all with the same energy;
-    - e. azimuth looks are extracted and down-sampled, as already done for range direction;
-    - f. the data is then inverse transformed along azimuth direction;
-    - g. the intensity values of each look are extracted and averaged:
+
+    a. the data is down-sampled directly in frequency domain by shortening the filtered spectrum vector according to the desired output sampling frequency, ensuring that a minimum up-sampling factor of 2 is present to avoid aliasing when performing the detection operation;
+
+    b. the data is then inverse transformed along range direction;
+
+    c. the data is transformed in azimuth direction;
+
+    d. the azimuth spectrum is demodulated for the Doppler Centroid frequency and flattened, removing any shaping applied during previous processing steps (i.e. the weighting window applied during the azimuth compression step), in order to obtain looks all with the same energy;
+
+    e. azimuth looks are extracted and down-sampled, as already done for range direction;
+
+    f. the data is then inverse transformed along azimuth direction;
+
+    g. the intensity values of each look are extracted and averaged:
 
 $$
 ML(l_r)=\sqrt{\frac{\sum_{l_a=1}^{L_a}{\left\vert SCS(l_r,l_a) \right\vert^2}}{L_a}}
@@ -3750,18 +3802,23 @@ The Ground-range Projection step performs a mono-dimensional interpolation of th
 The algorithm is composed of three main steps:
 
 1. ground-to-slant polynomials retrieval:
-    - a. the input regular slant range time axis ($\tau$) is converted into ground coordinates axis ($x,y,z$) through a direct geocoding operation over the WGS84 ellipsoid (see {sec}`Sec. 3.5 <3.5>`);
-    - b. an irregular distances axis ($d$) is derived from ground coordinates axis computing the distances between consecutive ground points ($\overrightarrow{p_i}$) and conventionally setting the first sample to 0[m]:
+
+    a. the input regular slant range time axis ($\tau$) is converted into ground coordinates axis ($x,y,z$) through a direct geocoding operation over the WGS84 ellipsoid (see {sec}`Sec. 3.5 <3.5>`);
+
+    b. an irregular distances axis ($d$) is derived from ground coordinates axis computing the distances between consecutive ground points ($\overrightarrow{p_i}$) and conventionally setting the first sample to 0[m]:
 
 $$
 d_i=d_{i-1}+\left\Vert \overrightarrow{p_i}-\overrightarrow{p_{i-1}} \right\Vert
 \tag{4.152}
 $$ (eq:atbd-l1-sar-4-152)
 
-- c. a regular ground range distances axis is computed, going from 0[m] to the last value of the axis computed at step b;
-- d. step c axis is converted into ground coordinates through step a axis coordinates linear interpolation. This is is equivalent to approximate the observed Earth surface curve to a broken line, inducing a negligible error if the considered ground step is small;
-- e. an irregular slant range time axis is computed through an inverse geocoding operation applied on the step d axis (see {sec}`Sec. 3.5 <3.5>`);
-- f. using regular ground range and irregular slant range axes a polynomial fitting is performed to retrieve the ground-to-slant polynomial coefficients. The polynomial fitting allows to invert the ground range projection procedure. In the output L1b products both slant-to-ground and ground-to-slant polynomials are annotated;
+c. a regular ground range distances axis is computed, going from 0[m] to the last value of the axis computed at step b;
+
+d. step c axis is converted into ground coordinates through step a axis coordinates linear interpolation. This is is equivalent to approximate the observed Earth surface curve to a broken line, inducing a negligible error if the considered ground step is small;
+
+e. an irregular slant range time axis is computed through an inverse geocoding operation applied on the step d axis (see {sec}`Sec. 3.5 <3.5>`);
+
+f. using regular ground range and irregular slant range axes a polynomial fitting is performed to retrieve the ground-to-slant polynomial coefficients. The polynomial fitting allows to invert the ground range projection procedure. In the output L1b products both slant-to-ground and ground-to-slant polynomials are annotated;
 
 (fig:atbd-l1-sar-37)=
 :::{div} atbd-mermaid-figure
