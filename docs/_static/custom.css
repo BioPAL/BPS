@@ -1151,14 +1151,24 @@ div.math .eqno {
   overflow: visible !important;
 }
 
-/* A display formula wider than the column (phone): scroll it sideways instead
-   of cutting its start; the small padding keeps over/under bars visible. */
-.bd-content div.math mjx-container[display="true"],
-.bd-content mjx-container[jax="CHTML"][display="true"] {
+/* A display formula wider than the column (phone): its block scrolls sideways
+   instead of cutting its start. The theme lays div.math out as a flex box,
+   where the formula takes its own width: the block becomes a plain box no
+   wider than the column, and the formula keeps its natural width inside. */
+.bd-content div.math {
+  display: block !important;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto !important;
   overflow-y: hidden !important;
-  max-width: 100%;
   padding: 0.15em 0;
+}
+.bd-content div.math mjx-container[display="true"] {
+  /* as wide as the formula, at least the column: centred when it fits,
+     scrolled from its left edge when it does not */
+  width: max-content;
+  min-width: 100% !important;  /* MathJax sets min-width: 21em inline */
+  margin: 0.5em 0;
 }
 
 /* MAAP eligibility callouts — semantic accent colours */
