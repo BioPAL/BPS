@@ -310,9 +310,9 @@
 \newcommand\atbdfitmath[1]{%
   \allowbreak\sbox\z@{#1}%
   \ifdim\wd\z@>\linewidth
-    \dimen@=0.7\wd\z@
-    \ifdim\dimen@<\linewidth\dimen@=\linewidth\fi
-    \resizebox{\dimen@}{!}{\usebox\z@}%
+    % always the column width: below 70 %% of its size the formula used to
+    % overflow the cell and lose its end (FD "Size" columns, W4-5)
+    \resizebox{\linewidth}{!}{\usebox\z@}%
   \else\usebox\z@\fi}
 % Numbered equations (atbd_latex_content.py): multi-line body aligned on &
 % like split, scaled down when wider than the text minus the tag.
