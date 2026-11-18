@@ -7,6 +7,8 @@
 
 # References
 
+The applicable documents ([ADn]) and reference documents ([RDn]) are listed in the [introduction](01-introduction.md) and linked from every in-text occurrence.
+
 ```{bibliography}
 :filter: cited and "pfd-l2-agb" in docname
 ```

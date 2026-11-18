@@ -65,7 +65,7 @@ BIOMASS L2a Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — L2a products structure (Ground cancellation)</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS ground cancellation L2a Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |

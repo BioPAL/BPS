@@ -32,13 +32,13 @@ The world is divided into processing blocks covering all forested areas and not 
 The algorithm performs up to two iterations for each processing block. The following approach to orchestration is followed:
 
 1. perform first iteration for all blocks: during first iteration, only external reference AGB mean and standard error are present as input over all the 5°x5° neighbourhood.
-    - a. the invalid AGB estimates (where corresponding regression parameters cannot be estimated) are tagged in output at a pixel level AND a flag is raised.
+    - a. the invalid AGB estimates (where corresponding regression parameters cannot be estimated) are tagged in output at a pixel level **AND** a flag is raised.
 2. perform second iteration only for all blocks where invalid AGB (but still recoverable) estimates are present (based on the flag).The second iteration uses the output from the first iteration as reference (as an addition to external AGB estimates). Only pixels tagged as invalid form first iteration are recomputed.
 
 {fig}`13` shows the flow chart for Level 2b processing for one processing block. Input reference AGB mean and std differs from first and second iteration:
 
-- first iteration: external reference only
-- second iteration: external reference + first iteration AGB output
+- **first iteration:** external reference only
+- **second iteration:** external reference + first iteration AGB output
 
 (fig:atbd-agb-l2b-workflow)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -102,7 +102,7 @@ flowchart TB
 
 ::::
 
-While the tessellation of the world in 3°x3° processing blocks is proposed as a manageable way to assure the expected parameter variability, the algorithm formulation itself allows any possible definition of parameter estimation and AGB estimation manifolds. They both can be as small as 1°x1° tile only: thus, areas on continental borders / land sea interfaces are nicely and implicitly managed (as described in {sec}`section|4.1.4.2`).
+While the tessellation of the world in 3°x3° processing blocks is proposed as a manageable way to assure the expected parameter variability, the algorithm formulation itself allows any possible definition of parameter estimation and AGB estimation manifolds. They both can be as small as 1°x1° tile only: thus, areas on continental borders / land sea interfaces are nicely and implicitly managed (as described in {sec}`section 4.1.4.2 <4.1.4.2>`).
 
 (sec:atbd-agb-4-1)=
 ### 4.1 Model parameter estimation
@@ -180,26 +180,26 @@ flowchart TB
 | $U_r$ | Reference AGB std | Internal resource (IODD) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
 | $W_{fc}$ | “First cycle” AGB mean | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB mean used as reference [t/ha] in a 5°×5° neighborhood |
 | $U_{fc}$ | “First cycle” AGB std | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
-| DGG | DGG | Internal lookup table | - | - | - | DGG tiles in a 5°×5° neighborhood |
-| FNF t | FNF | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^t$ | - | - | Annotated forest-non-forest mask |
-| CFM | CFM | FD L2b product in a 5°×5° neighborhood in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | optional | not provided | Computed Forest Mask |
+| *DGG* | DGG | Internal lookup table | - | - | - | DGG tiles in a 5°×5° neighborhood |
+| *FNF* {sup}`t` | FNF | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^t$ | - | - | Annotated forest-non-forest mask |
+| *CFM* | CFM | FD L2b product in a 5°×5° neighborhood in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | optional | not provided | Computed Forest Mask |
 | - | `forestMaskingFlag` | `AUX_PP2_AGB` (`AUX_FMT`) | bool | - | True | True if forest/non-forest map masking should be performed |
-| BB t | Footprint | L2a main product header (`AGB_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates in a 5°×5° neighborhood |
-| mDGG | `minimumL2aCoverage` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
+| *BB* {sup}`t` | Footprint | L2a main product header (`AGB_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates in a 5°×5° neighborhood |
+| *mDGG* | `minimumL2aCoverage` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
 | `refSel` | `referenceSeelection` | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | ‘`refOnly`’ | Combinatorial behaviour for multiple reference data at second iteration |
-| LCM | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product classifying the type of land and forest |
+| *LCM* | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product classifying the type of land and forest |
 | $\Omega_{fcrej}$ | `rejectedLandcover` Classes | `AUX_PP2_AGB` (`AUX_FMT`) | List of integers | - | - | Set of landcover class indices to ignore. LCM description can be found in (IODD) |
 | ${\underline{\sigma}}_p^0,\ {\overline{\sigma}}_p^0$ | `backscatterLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}\times$2 float value [scalar] | $0<{\underline{\sigma}}_p^0<{\overline{\sigma}}_p^0<\infty$ | 0.0001,100 for all polarisations | Lower and upper limits on backscatter in linear units |
 | $\underline{\vartheta},\overline{\vartheta}$ | `angleLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{\vartheta}<\overline{\vartheta}$$\leq\frac{\pi}{2}$ | 0,π/2 | Lower and upper limits on the local incidence angle in radians |
 | $\underline{W},\overline{W}$ | meanAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{W}<\overline{W}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB mean in t/ha |
 | $\underline{U},\overline{U}$ | stdAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{U}<\overline{U}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB std in t/ha |
 | $\underline{R},\overline{R}$ | relativeAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{R}<\overline{R}<\infty$ | 0,0.3 | Lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units |
-| indexingL | indexingL | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘pj’ | l parameter variability with polarization ’p’, date ’j’, forest class ’k’. See {sec}`4.1.4.3` for further details. |
-| indexingA | indexingA | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘pk’ | a parameter variability with polarization ’p’, date ’j’, forest class ’k’. See {sec}`4.1.4.3` for further details. |
-| indexingN | indexingN | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘p’ | n parameter variability with polarization ’p’, date ’j’, forest class ’k’. . See {sec}`4.1.4.3` for further details. |
+| indexingL | indexingL | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘pj’ | l parameter variability with polarization ’p’, date ’j’, forest class ’k’. See {sec}`section 4.1.4.3 <4.1.4.3>` for further details. |
+| indexingA | indexingA | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘pk’ | a parameter variability with polarization ’p’, date ’j’, forest class ’k’. See {sec}`section 4.1.4.3 <4.1.4.3>` for further details. |
+| indexingN | indexingN | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘none’, ’p’, ’j’, ’k’, ’pj’, ’pk’, ’jk’, ’pjk’ | ‘p’ | n parameter variability with polarization ’p’, date ’j’, forest class ’k’. . See {sec}`section 4.1.4.3 <4.1.4.3>` for further details. |
 | `useConstantN` | `useConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | Boolean [scalar] | - | False | If True, indexingN=p is forced |
 | $n_p$ | `valuesConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}$floats | (-∞,∞) | (1.0,1.0,1.0) | Values to use if `useConstantN`=True |
-| mFV | `minimumPercentageOfFillableVoids` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] of invalid pixels that triggers a new iteration |
+| *mFV* | `minimumPercentageOfFillableVoids` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] of invalid pixels that triggers a new iteration |
 | - | `regressionSolver` | `AUX_PP2_AGB` (`AUX_FMT`) | string | ‘double’, ’float’ | double | Numerical precision of the regression |
 
 (sec:atbd-agb-4-1-3)=
@@ -209,21 +209,21 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | $\widehat{W}$ | Estimated AGB mean | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | - | - | AGB mean map [t/ha] for the 3°×3° processing block |
 | $\widehat{\sigma_W}$ | Estimated AGB std | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | - | - | AGB std map [t/ha] for the 3°×3° processing block |
-| rerun | `agbTileStatus` | AGB L2b product (`AGB_PFD`) | String | ‘Complete’,, “NotComplete’, ‘Partial’ | - | Flag raised when a new iteration is needed |
-| HM | heat map | AGB L2b product (`AGB_PFD`) | $3\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | 0- | - | heat map (three values (1 float and 2 integers) per pixel) for the 3°×3° processing block |
+| *rerun* | `agbTileStatus` | AGB L2b product (`AGB_PFD`) | String | ‘Complete’,, “NotComplete’, ‘Partial’ | - | Flag raised when a new iteration is needed |
+| *HM* | heat map | AGB L2b product (`AGB_PFD`) | $3\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | 0- | - | heat map (three values (1 float and 2 integers) per pixel) for the 3°×3° processing block |
 | `acquisitionIdImage` | `acquisitionIdImage` | AGB L2b product (`AGB_PFD`) | $N_{L2a}\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | 0,1 | - | Incidence matrix for the contributing data |
 
 (sec:atbd-agb-4-1-4)=
 #### 4.1.4 Algorithm mathematical background
 
-As a first step, the minimum required coverage over L2b DGG tiles in a 5°×5° neighbourhood j is checked to proceed with computations:
+As a first step, the minimum required coverage over L2b DGG tiles in a 5°×5° neighbourhood *j* is checked to proceed with computations:
 
 $$
-TR=\ (100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG)
+TR=\ \left( 100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG \right)
 \tag{4.1}
 $$ (eq:model-parameter-estimation-1)
 
-where BBi are the L2a bounding boxes, TTj is the footprint of the current L2b DGG tile collection and A operator computes the area of the corresponding polygon.
+where *BB*{sup}`i` are the L2a bounding boxes, *TT*{sup}`j` is the footprint of the current L2b DGG tile collection and *A* operator computes the area of the corresponding polygon.
 
 (sec:atbd-agb-4-1-4-1)=
 ##### 4.1.4.1 Definitions
@@ -239,7 +239,7 @@ where BBi are the L2a bounding boxes, TTj is the footprint of the current L2b DG
 
 This section describes the necessary steps to check the availability of input data and to define which pixels can be used for subsequent model parameter estimation.
 
-The management and provision of 1° tiles and resources (stacks, auxiliary: AGB reference and AGB estimates at previous iteration when available) is dealt by the orchestrator and not described here {ad}`1`. A 3°×3° processing block will be formed by up to 9 tiles and a 5°×5° neighbourhood will be formed by up to 25 tiles. One acquisition is defined as one or more stacks from the same date and orbit. Throughout this part, pixels are identified via their $(x,y)$ coordinates and SAR acquisitions are identified using index $j$, derived using the date-of-acquisition. In the following sections of the document, U and W are defined as the combination of Wr and Wfc, Ur and Ufc, following the selected behaviour described in the note at the end of this section.
+The management and provision of 1° tiles and resources (stacks, auxiliary: AGB reference and **AGB estimates at previous iteration when available**) is dealt by the orchestrator and not described here {ad}`1`. A 3°×3° processing block will be formed by up to 9 tiles and a 5°×5° neighbourhood will be formed by up to 25 tiles. One acquisition is defined as one or more stacks from the same date and orbit. Throughout this part, pixels are identified via their $(x,y)$ coordinates and SAR acquisitions are identified using index $j$, derived using the date-of-acquisition. In the following sections of the document, U and W are defined as the combination of *W*{sub}`r` and *W*{sub}`fc`, *U*{sub}`r` and *U*{sub}`fc`, following the selected behaviour described in the note at the end of this section.
 
 Let $\Omega_B$ denote the set of pixel coordinates $(x,y)$ within the current processing block:
 
@@ -276,7 +276,7 @@ $$
 \tag{4.6}
 $$ (eq:model-parameter-estimation-6)
 
-where $R(x,y)=\frac{U(x,y)}{W(x,y)}$ is the AGB coefficient of variation (standard deviation relative mean) and $\Omega_{fcrej}$ is the set of landcover class indices to ignore. The set of landcover classes to ignore shall be made consistent with the input FNF information $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-FNF}^t \right\}$ for all t L2a stacks, or CFM in case this is provided $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-CFM}^{L2b} \right\}$ for all $t^{L2b}$ L2b stacks.
+where $R(x,y)=\frac{U(x,y)}{W(x,y)}$ is the AGB coefficient of variation (standard deviation relative mean) and $\Omega_{fcrej}$ is the set of landcover class indices to ignore. The set of landcover classes to ignore shall be made consistent with the input FNF information $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-FNF}^t \right\}$ for all *t* L2a stacks, or CFM in case this is provided $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-CFM}^{L2b} \right\}$ for all $t^{L2b}$ L2b stacks.
 
 From the four sets: $\Omega_B$, $\Omega_N$, $\Omega_{SAR}$, and $\Omega_{AGB}$ we compute the following:
 
@@ -319,18 +319,16 @@ $$ (eq:model-parameter-estimation-7)
 
 Such sets can belong to an area that covers only a subset of the original 3°×3° processing block 5°×5° neighbourhood: continental borders and sea/land interfaces are implicitly dealt within this algorithmic substep.
 
-```{note}
-When combining AGB previous estimates and external reference AGB estimates in the second iteration, the behaviour can be selected by user (with parameter ‘`refSel`’) as follows:
-```
+*NOTE: when combining AGB previous estimates and external reference* AGB estimates in the second iteration, the behaviour can be selected by user (with parameter ‘`refSel`*’) as follows:*
 
-- `refOnly`: reference estimates are preferred when both data are available at the same pixel (default behaviour)
-- `firstIterationOnly`: AGB previously estimated values are preferred when both data are available at the same pixel
-- `weightedMean`: a weighted mean (where weights are the inverse of AGB standard deviation U and Ufc) is computed when both data are available at the same pixel
+- `refOnly`: *reference estimates are preferred when both data are available at the same pixel (default behaviour)*
+- `firstIterationOnly`: *AGB previously estimated* *values are preferred when both data are available at the same pixel*
+- `weightedMean`: *a weighted mean (where weights are the inverse of AGB standard deviation U and U*{sub}`fc`) *is computed when both data are available at the same pixel*
 
 (sec:atbd-agb-4-1-4-3)=
 ##### 4.1.4.3 Regression-based parameter estimation
 
-The actual number of regression parameters is ruled by the combination of user-selected parameter variability (by input flags indexingL, indexingA, indexing) AND the number of different forest classes, different acquisition dates and valid polarizations in the neighbourhood. Thus, it can differ for each processing block.
+The actual number of regression parameters is ruled by the combination of user-selected parameter variability (by input flags indexingL, indexingA, indexing) **AND** the number of different forest classes, different acquisition dates and valid polarizations in the neighbourhood. Thus, it can differ for each processing block.
 
 All possible choices for indexingL, indexingA, indexing are valid. However, they may lead to invalid regression (thus generating invalid AGB estimates), because of lack of input reference data. The default parameter variability is chosen as:
 
@@ -340,7 +338,7 @@ All possible choices for indexingL, indexingA, indexing are valid. However, they
 
 As an example, a different parametrization where all parameters depend only on polarization can be chosen to limit the number of invalid AGB estimates (due to the lack of input data), if in the currently processed area the different forest classes are known to share similar allometries, and the acquisition conditions (i.e. meteorological conditions) are known to be similar even if acquisition dates are different.
 
-The Power Law Model describes the dependence of radar observation σ0pj on AGB W and the local incidence angle θ. It requires three parameters for each unknown group: a scaling factor and two exponents, one for AGB α and one for the incidence angle normalisation n.
+The Power Law Model describes the dependence of radar observation σ{sup}`0` {sub}`pj` on AGB W and the local incidence angle θ. It requires three parameters for each unknown group: a scaling factor and two exponents, one for AGB *α* and one for the incidence angle normalisation *n.*
 
 $$
 \sigma_{pj}^0(x,y)=A_{pj}{\ \bullet{}W(x,y)}^{a_{pk}}\ \bullet{{\cos{\vartheta_j(x,y)}}^{n_p}\ \ }_{}
@@ -402,7 +400,7 @@ We define the training data table as:
 \tag{4.15}
 \end{equation}
 
-Where x,y,p,j,k,w,c and s are vectors containing specific data for all measurements. These data are, in respective order: longitude, latitude, polarisation index, acquisition date index, forest class index, mean reference AGB (in dB), cosine of the local incidence angle (in dB), and the vegetation backscatter coefficient (in dB).
+Where **x,y,p,j,k,w,c** and **s** are vectors containing specific data for all measurements. These data are, in respective order: longitude, latitude, polarisation index, acquisition date index, forest class index, mean reference AGB (in dB), cosine of the local incidence angle (in dB), and the vegetation backscatter coefficient (in dB).
 
 Fitting of the forward model is solved through ordinary least squares and the following equation:
 
@@ -554,13 +552,11 @@ Where the estimated AGB for pixel $(x,y)$ is calculated from a weighted average 
 \tag{4.24}
 \end{equation}
 
-```{note}
-While the description is formally carried out for the default parameter variability, {eq}`4.15`, {eq}`4.16` and {eq}`4.17` are independent of the selected parametrization, and are of general validity. Moreover, the exact cardinality of the regression problems depends also on the specific population (number of acquisitions, number of forest classes) in the current neighbourhood.
-```
+*NOTE: while the description is formally carried out for the default parameter variability, eq. 4.15, 4.16 and 4.17 are independent of the selected parametrization, and are of general validity. Moreover, the exact cardinality of the regression problems depends also on the specific population (number of acquisitions, number of forest classes) in the current neighbourhood.*
 
-Moreover, from the implementation side, it must be noted that the least squares model inversion can be split into three orthogonal problems, if and only if all parameters depend on polarization: in this case, the above formulation is completely separable in the polarization domain.
+*Moreover, from the implementation side, it must be noted that the least squares model inversion can be split into three orthogonal problems, if and only if all parameters depend on polarization: in this case, the above formulation is completely separable in the polarization domain.*
 
-Note that the least square problem can be solved with double (64bit) or single (32bit) precision, based on `regressionSolver` flag.
+*Note that the least square problem can be solved with double (64bit) or single (32bit) precision, based on* `regressionSolver` *flag.*
 
 (sec:atbd-agb-4-1-4-4)=
 ##### 4.1.4.4 AGB mean and standard error estimation
@@ -647,7 +643,7 @@ N_{pred}=n(\mathcal{D})
 \tag{4.29}
 $$ (eq:model-parameter-estimation-29)
 
-We order the elements of $\mathcal{D}$ in the same mapping order described in {sec}`section|4.1.4.3` and then we assign an individual index $u\in\left\{ 1,\ldots,N_{pred} \right\}$ to each element. The $u$th element is defined as:
+We order the elements of $\mathcal{D}$ in the same mapping order described in {sec}`section 4.1.4.3 <4.1.4.3>` and then we assign an individual index $u\in\left\{ 1,\ldots,N_{pred} \right\}$ to each element. The $u$th element is defined as:
 
 $$
 \mathbf{d}_u=\begin{bmatrix} x_u & y_u & p_u & j_u & k_u & w_u & c_u & s_u \end{bmatrix}
@@ -656,7 +652,7 @@ $$ (eq:model-parameter-estimation-30)
 
 We now extract model parameter estimates ${\widehat{l}}_u,{\widehat{a}}_u,{\widehat{n}}_u$ and standard deviations ${\widehat{\sigma_l}}_u,{\widehat{\sigma_a}}_u,{\widehat{\sigma_n}}_u$
 
-for measurement $u$ from vector $\widehat{\mathbf{\beta}}$ and $\widehat{\mathbf{\delta}}$ of equations 4.18/19, using the same mapping mechanism as described in {sec}`section|4.1.4.3`.
+for measurement $u$ from vector $\widehat{\mathbf{\beta}}$ and $\widehat{\mathbf{\delta}}$ of equations 4.18/19, using the same mapping mechanism as described in {sec}`section 4.1.4.3 <4.1.4.3>`.
 
 Now the mean log-AGB for measurement $u$ can be estimated using:
 
@@ -763,7 +759,7 @@ While the first condition cannot be overcome, for the latter condition the avail
 Thus, the number of invalid AGB estimates caused by missing regression parameters only shall be counted (i.e., meaning that only AGB estimates that cannot be computed due to lack of valid parameters while solving {eq}`4.30`), and a flag is raised asking to rerun the regression with enriched reference (i.e., second iteration taking advantage of the results of neighbouring processing blocks):
 
 $$
-rerun=\ (100\times\frac{invalidEstimateNumber}{totalEstimateNumber})>mFV
+rerun=\ \left( 100\times\frac{invalidEstimateNumber}{totalEstimateNumber} \right)>mFV
 \tag{4.40}
 $$ (eq:model-parameter-estimation-40)
 
@@ -771,11 +767,11 @@ The orchestration takes advantage of the presence of the rerun flag in the outpu
 
 In fact, three statuses are identified:
 
-“Complete”: all pixels are correctly processed
+***“Complete”:*** all pixels are correctly processed
 
-“NotComplete”: some pixels are invalid and cannot be recovered by a subsequent iteration (or their number is under the selected threshold in {eq}`4.39`)
+***“NotComplete”:*** some pixels are invalid and cannot be recovered by a subsequent iteration (or their number is under the selected threshold in {eq}`4.39`)
 
-“Partial”; corresponding to rerun Boolean flag set to true ({eq}`4.39`): a subsequent iteration is required to fill-up estimation voids.
+***“Partial”;*** corresponding to rerun Boolean flag set to true ({eq}`4.39`): a subsequent iteration is required to fill-up estimation voids.
 
 It must be noted that such approach, while limited to two iterations (that shall be adequate to compute AGB estimates for all processing blocks), can in principle iteratively run for any number of iterations.
 
@@ -801,24 +797,24 @@ Two additional layers will store in the HeatMap HM, at each pixel location:
 
 Moreover, the full traceability of the source data (i.e. L2a’s contributing for L2b data at the pixel level) is assured with the `acquisitionIdImage`, a volume having the following features:
 
-- the number of layers corresponds number of contributing L2a data, where i-th refers to the referred to the i-th L2a contributing data
-- for each pixel and layer, it assumes 0 value if the i-th L2a selected image did not contribute to the j-th pixel of the L2b product, 1 otherwise.
+- the number of layers corresponds number of contributing L2a data, where *i-th* refers to the referred to the *i-th* L2a contributing data
+- for each pixel and layer, it assumes 0 value if the *i-th* L2a selected image did not contribute to the *j-th* pixel of the L2b product, 1 otherwise.
 
 (sec:atbd-agb-4-1-4-6)=
 ##### 4.1.4.6 Notes on further developments
 
-Default parametrization may be subject to updates, depending on analysis of preliminary results on real data. In particular, as (due to the limited extent of angles for satellite acquisition geometries) the regression terms l and n are highly correlated, it may be safe to assume a fixed value (n=2) for the third regression term (for all polarizations), and solve a simplified problem.
+Default parametrization may be subject to updates, depending on analysis of preliminary results on real data. In particular, as (due to the limited extent of angles for satellite acquisition geometries) the regression terms ***l*** and ***n*** are highly correlated, it may be safe to assume a fixed value (***n***=2) for the third regression term (for all polarizations), and solve a simplified problem.
 
-The current error model formulation prevents the analysis and use of covariances (i.e. off-diagonal terms in the covariance matrix). A possible alternative solution (that however presents some drawbacks) is to express the regression forward problem as a function of AGB w(x,y) known values.
+The current error model formulation prevents the analysis and use of covariances (i.e. off-diagonal terms in the covariance matrix). A possible alternative solution (that however presents some drawbacks) is to express the regression forward problem as a function of AGB *w(x,y)* known values.
 
-With such a formulation, not only the error model can easily take into account the full covariance matrix, but also the variable error on AGB known values can be easily accounted for. However, l,a,n regression parameters always depend on polarization, date and forest class (that may lead to unsolvable unknowns because of lack of apriori knowledge). Biomes may be clustered in biome classes to reduce the unsolvable areas.
+With such a formulation, not only the error model can easily take into account the full covariance matrix, but also the variable error on AGB known values can be easily accounted for. However, ***l,a,n*** regression parameters always depend on polarization, date and forest class (that may lead to unsolvable unknowns because of lack of apriori knowledge). Biomes may be clustered in biome classes to reduce the unsolvable areas.
 
-It must be noted that the regression problem is not generally separable (it is separable only for specific choices of parametrization, where the same dependency appear for all l,a,n regression parameters)
+It must be noted that the regression problem is not generally separable (it is separable **only** for specific choices of parametrization, where the same dependency appear for all ***l,a,n*** regression parameters)
 
 Some notable examples are:
 
-- pj,pk,none → Regression cannot be be separated in smaller problems
-- pj,pk,p → Regression can be separated in 3 smaller problems of dimension (Nj+Nk+1) x M/3 (where M is ther number of prior entries for regression, and priors are equally present for each polarization)
-- pjk, pjk, pjk → Regression can be separated in Np\*Nj\*Nk problems of variable dimension 3 x M' (where M' depends on the distribution of priors)
+- ***pj,pk,none*** → Regression **cannot** be be separated in smaller problems
+- ***pj,pk,p*** → Regression can be separated in 3 smaller problems of dimension (Nj+Nk+1) x M/3 (where M is ther number of prior entries for regression, and priors are equally present for each polarization)
+- ***pjk, pjk, pjk*** → Regression can be separated in Np\*Nj\*Nk problems of variable dimension 3 x M' (where M' depends on the distribution of priors)
 
-The suggested way to lower memory requirements is taking advantage of the sparse (while unstructured) nature of incidence matrix A, and directly create the regression terms ATA, ATs, Ax ({eq}`4.19`, {eq}`4.20`) without explicitly building incidence matrix A.
+The suggested way to lower memory requirements is taking advantage of the sparse (while unstructured) nature of incidence matrix **A**, and directly create the regression terms **A**{sup}`T`**A**, **A**{sup}`T`**s**, **Ax** ({eq}`4.19`, {eq}`4.20 <4.20>`) without explicitly building incidence matrix **A**.

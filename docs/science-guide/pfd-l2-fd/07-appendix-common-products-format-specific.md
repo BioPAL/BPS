@@ -21,7 +21,7 @@ The following table summarizes and describes primitive product types used throug
 
 <p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Primitive product types</span></p>
 
-| Name | Description | Base Type | Values |
+| **Name** | **Description** | **Base Type** | **Values** |
 |---|---|---|---|
 | `subsettingRuleType` | Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase). | `xsd:string` | geometry maintain all |
 | `calibrationScreenType` | Type of calibration screen applied (none, if not applied) | `xsd:string` | none geometry skp |
@@ -55,9 +55,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Primitive product types with custom attributes</span></p>
 
-| Name | Description | Base Type | Attributes |
+| **Name** | **Description** | **Base Type** | **Attributes** |
 |---|---|---|---|
-| `acquisitionType` | String containing an acquisition folder name; The mandatory `referenceImage` attribute is a bool to indicate if the acquisition is the reference one. The optional `averageWavenumber` attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in image pair acquisitions (`imagesPairSelection` in 4.3.1.4) | `xsd:string` | `referenceImage` (mandatory, bool) `averageWavenumber` (optional, float) |
+| `acquisitionType` | String containing an acquisition folder name; The mandatory `referenceImage` attribute is a *bool* to indicate if the acquisition is the reference one. The optional `averageWavenumber` attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in image pair acquisitions (`imagesPairSelection` in 4.3.1.4) | `xsd:string` | `referenceImage` (mandatory, bool) `averageWavenumber` (optional, float) |
 
 :::
 
@@ -66,7 +66,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Common product types (datumType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `coordinateReferenceSystem` | Coordinate reference system. | `coordinateReferenceSystemType` | 1 |
 | `geodeticReferenceFrame` | Geodetic reference frame. | `geodeticReferenceFrameType` | 1 |
@@ -78,7 +78,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Common product types (minMaxTypeWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | min | Minimum value. | `floatWithUnit` | 1 |
 | max | Maximum value. | `floatWithUnit` | 1 |
@@ -90,7 +90,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Common product types (floatArrayWithUnits)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | count | counter | `xsd:unsignedInt` | 1 |
 | units | units | `uomType` | 1 |
@@ -103,9 +103,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — Common product types (floatWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | `uomType` | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -115,9 +115,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 52</span><span class="caption-text"> — Common product types (doubleWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | `uomType` | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::

@@ -21,7 +21,7 @@ The following table summarizes and describes primitive product types used throug
 
 <p class="atbd-table-caption"><span class="caption-number">Table 90</span><span class="caption-text"> — Primitive product types</span></p>
 
-| Name | Description | Base Type | Values |
+| **Name** | **Description** | **Base Type** | **Values** |
 |---|---|---|---|
 | `missionType` | Enumeration of valid BIOMASS mission names. | `xsd:string` | BIOMASS |
 | `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 S2 S3 |
@@ -58,7 +58,7 @@ The following table summarizes and describes primitive product types used throug
 | `ionosphereHeightSourceType` | Enumeration of stack ionosphere height sources. | `xsd:string` | None Reference Image Manual |
 | `autofocusMethodType` | Enumeration of autofocus methods. | `xsd:string` | Map Drift |
 | `internalCalibrationSourceType` | Enumeration of the available internal calibration sources. | `xsd:string` | Extracted Model |
-| `heightModelType` Attribute: version | Enumeration of Digital Elevation Models (DEM). Attribute: DEM version. Default values: COP-`DEM_GLO`-90-DGED-2021\_1 `EGM2008-2`.5 for Copernicus DEM (convention: \<format\>-\<delivery name\> \<geoid\>-\<resolution\>) `SRTM_v1` EGM96 for SRTM (convention: SRTM\_\<version\> \<geoid\>) Empty value for Ellipsoid Version value has a one-to-one mapping with the physical folder where DEM to be used has been installed. | `xsd:string` Attribute: `xsd:string` | Ellipsoid SRTM Copernicus DEM BIOMASS DTM |
+| `heightModelType` *Attribute: version* | Enumeration of Digital Elevation Models (DEM). *Attribute: DEM version.* *Default values:* COP-`DEM_GLO`*-90-DGED-2021\_1* `EGM2008-2`*.5 for Copernicus DEM (convention: \<format\>-\<delivery name\> \<geoid\>-\<resolution\>)* `SRTM_v1` *EGM96 for SRTM (convention: SRTM\_\<version\> \<geoid\>)* *Empty value for Ellipsoid* *Version value has a one-to-one mapping with the physical folder where DEM to be used has been installed.* | `xsd:string` *Attribute:* `xsd:string` | Ellipsoid SRTM Copernicus DEM BIOMASS DTM |
 | `coordinateReferenceSystemType` | Coordinate reference systems, as per WKT representation {rd}`7`. | `xsd:string` |   |
 | `geodeticReferenceFrameType` | Enumeration of geodetic reference frames. | `xsd:string` | WGS84 ITRF2000 |
 | `polarisationCombinationMethodType` | Enumeration of polarisations combination methods. | `xsd:string` | HV VH Average None |
@@ -83,7 +83,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 91</span><span class="caption-text"> — Primitive product types with custom attributes</span></p>
 
-| Name | Description | Base Type | Attributes |
+| **Name** | **Description** | **Base Type** | **Attributes** |
 |---|---|---|---|
 | `timeTypeWithPolarisation` | Extension of `timeType` with the indication of the corresponding polarisation. | `timeType` | polarisation |
 | `unsignedIntWithGroup` | Extension of `unsignedInt` with the indication of the corresponding LUT group of variables. Attribute type is `groupType` | `xsd:unsignedInt` | group |
@@ -110,7 +110,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 92</span><span class="caption-text"> — Common product types (complex)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | re | 32 bit single precision floating point real number. | `xsd:float` | 1 |
 | im | 32 bit single precision floating point imaginary number. | `xsd:float` | 1 |
@@ -122,7 +122,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 93</span><span class="caption-text"> — Common product types (stateType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time of current value [UTC]. | `timeType` | 1 |
 | value | Current value. | `floatWithUnit` | 1 |
@@ -134,7 +134,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 94</span><span class="caption-text"> — Common product types (slantRangePolynomialType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for polynomial [s]. | `doubleWithUnit` | 1 |
@@ -147,7 +147,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 95</span><span class="caption-text"> — Common product types (azimuthPolynomialType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `slantRangeTime` | Two-way slant range time corresponding to the start of the current polynomial validity area [s]. | `doubleWithUnit` | 1 |
 | t0 | Zero Doppler azimuth time origin for polynomial [UTC]. | `timeType` | 1 |
@@ -160,7 +160,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 96</span><span class="caption-text"> — Common product types (datumType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `coordinateReferenceSystem` | Coordinate reference system. | `coordinateReferenceSystemType` | 1 |
 | `geodeticReferenceFrame` | Geodetic reference frame. | `geodeticReferenceFrameType` | 1 |
@@ -172,7 +172,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 97</span><span class="caption-text"> — Common product types (minMaxTypeWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | min | Minimum value. | `floatWithUnit` | 1 |
 | max | Maximum value. | `floatWithUnit` | 1 |
@@ -184,7 +184,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 98</span><span class="caption-text"> — Common product types (floatArrayWithUnits)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | count | counter | `xsd:unsignedInt` | 1 |
 | units | units | `uomType` | 1 |
@@ -197,9 +197,9 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 99</span><span class="caption-text"> — Common product types (floatWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | `uomType` | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -209,9 +209,9 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 100</span><span class="caption-text"> — Common product types (doubleWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | `uomType` | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::
@@ -221,10 +221,10 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 101</span><span class="caption-text"> — Common product types (doubleArrayWithUnits)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | counter | `xsd:unsignedInt` | 1 |
-| units | units | `uomType` | 1 |
+| *count* | *counter* | `xsd:unsignedInt` | *1* |
+| *units* | *units* | `uomType` | *1* |
 | `doubleArrayWithUnits` | String containing an array of double precision floating point values separated by spaces. The mandatory count attribute defines the number of elements in the array. | `xsd:string` | 1 |
 
 :::
@@ -234,7 +234,7 @@ The following tables describe common product types used throughout the document.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 102</span><span class="caption-text"> — Common product types (interferometricPairType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | primary | Index of the primary inteferometric image with respect to a stack of images. | `xsd:unisignedInt` | 1 |
 | secondary | Index of the secondary interferometric image with respect to a stack of images. | `xsd:unsignedInt` | 1 |

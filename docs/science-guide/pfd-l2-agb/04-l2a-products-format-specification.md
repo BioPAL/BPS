@@ -37,49 +37,49 @@ This is a mandatory element for the standard which is left empty by this specifi
 
 This element or block of elements is optional
 
-bio:EarthObservation Root element of metadata representation tailored for BIOMASS SAR products
+bio:EarthObservation *Root element of metadata representation tailored for BIOMASS SAR products*
 
-om:`phenomenonTime` Time coverage of the product
+om:`phenomenonTime` *Time coverage of the product*
 
-gml:TimePeriod Time coverage of the product as a period
+gml:TimePeriod *Time coverage of the product as a period*
 
 **gml:`beginPosition` Start date and time of the product**
 
 **gml:`endPosition` Stop date and time of the product**
 
-om:`resultTime` Time when the sensing data has become available
+om:`resultTime` *Time when the sensing data has become available*
 
-gml:TimeInstant Identifiable position in time
+gml:TimeInstant *Identifiable position in time*
 
 **gml:`timePosition` Date and time of data availability**
 
-om:`validTime` Time validity of the product
+om:`validTime` *Time validity of the product*
 
-gml:TimePeriod Time validity of the product as a period
+gml:TimePeriod *Time validity of the product as a period*
 
 **gml:`beginPosition` Validity start date and time of the product**
 
 **gml:`endPosition` Validity stop date and time of the product**
 
-om:procedure Procedure used to sense the data
+om:procedure *Procedure used to sense the data*
 
-eop:EarthObservationEquipment Equipment used to sense the data
+eop:EarthObservationEquipment *Equipment used to sense the data*
 
-eop:platform Platform description
+eop:platform *Platform description*
 
-eop:Platform Nested element for platform description
+eop:Platform *Nested element for platform description*
 
 **eop:`shortName` Satellite name**
 
-eop:instrument Instrument description
+eop:instrument *Instrument description*
 
-eop:Instrument Nested element for instrument description
+eop:Instrument *Nested element for instrument description*
 
 **eop:`shortName` Sensor name**
 
-eop:sensor Sensor description
+eop:sensor *Sensor description*
 
-eop:Sensor Nested element for sensor description
+eop:Sensor *Nested element for sensor description*
 
 **eop:`sensorType` Sensor type**
 
@@ -87,9 +87,9 @@ eop:Sensor Nested element for sensor description
 
 **eop:`swathIdentifier` Swath identifier**
 
-eop:`acquisitionParameters` Acquisition parameters
+eop:`acquisitionParameters` *Acquisition parameters*
 
-bio:Acquisition Acquisition description
+bio:Acquisition *Acquisition description*
 
 **eop:`orbitDirection` Orbit direction**
 
@@ -109,11 +109,11 @@ bio:Acquisition Acquisition description
 
 **bio:basinID Retrieval basin identifier**
 
-om:`observedProperty` Observed property (empty)
+om:`observedProperty` *Observed property (empty)*
 
-om:`featureOfInterest` Observed area eop:Footprint Footprint description
+om:`featureOfInterest` *Observed area* eop:Footprint *Footprint description*
 
-eop:`multiExtentOf` Footprint representation structure, coordinates in `posList`
+eop:`multiExtentOf` *Footprint representation structure, coordinates in* `posList`
 
 gml:MultiSurface
 
@@ -127,13 +127,13 @@ gml:LinearRing
 
 **gml:`posList` Footprint points in NE,SE,SW,NW,NE order**
 
-eop:`centerOf` Acquisition centre representation structure
+eop:`centerOf` *Acquisition centre representation structure*
 
 gml:Point
 
 **gml:pos Coordinates of the centre of the acquisition**
 
-om:result Observation result
+om:result *Observation result*
 
 eop:EarthObservationResult
 
@@ -145,7 +145,7 @@ eop:`fileName`
 
 **ows:ServiceReference Product filename**
 
-ows:RequestMessage download request (empty)
+ows:RequestMessage **download request (empty)**
 
 **eop:version Product baseline**
 
@@ -157,13 +157,13 @@ eop:`fileName`
 
 **ows:ServiceReference Product filename (internal files)**
 
-ows:RequestMessage download request (empty)
+ows:RequestMessage **download request (empty)**
 
 **eop:size Product size**
 
 **bio:rds Product Schema**
 
-eop:`metaDataProperty` Observation metadata
+eop:`metaDataProperty` *Observation metadata*
 
 bio:EarthObservationMetaData
 
@@ -177,7 +177,7 @@ bio:EarthObservationMetaData
 
 **eop:status Status of the product**
 
-eop:processing Data processing information
+eop:processing *Data processing information*
 
 bio:ProcessingInformation
 
@@ -236,7 +236,7 @@ The TIFF and GeoTIFF tags used to annotate the MDS files are described in the fo
 
 <p class="atbd-table-caption"><span class="caption-number">Table 2</span><span class="caption-text"> — MDS – TIFF and GeoTIFF tags</span></p>
 
-| Tag Name | Code | Value | Description |
+| **Tag Name** | **Code** | **Value** | **Description** |
 |---|---|---|---|
 | ImageWidth | 256 | Variable | Number of columns in the image, i.e. the number of pixels per row. |
 | ImageLength | 257 | Variable | Number of rows of pixels in the image. |
@@ -271,7 +271,7 @@ The `GDAL_METADATA` tag content is listed in the following table
 
 <p class="atbd-table-caption"><span class="caption-number">Table 3</span><span class="caption-text"> — MDS – GDAL_METADATA tiff tag content</span></p>
 
-| Tag Name | Value | Description |
+| **Tag Name** | **Value** | **Description** |
 |---|---|---|
 | basinID | list of strings | List of DGG basin identifiers (for querying purposes). More than one ID in case of tile covering more than one geographic location. Private Tag code. |
 | `MATRIX_REPRESENTATION` | string | Representation of the matrix, always “SCATTERING”. Private Tag code. (L2A only) |
@@ -348,9 +348,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 4</span><span class="caption-text"> — Main L2a ADS</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `schemaVersion` | PFD version | `xsd:token` | required |
+| `schemaVersion` | *PFD version* | `xsd:token` | *required* |
 | product | Product L2a DSR. This DSR contains the L2a product information. | `productL2aType` | 1 |
 | `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2a product raster images. | `rasterImageType` | 1 |
 | InputInformation | Input Information L2a DSR. This DSR contains the necessary information to identify the input data set to the L2a processing. | InputInformationL2aType | 1 |
@@ -366,9 +366,9 @@ The content of each DSR is described making use of tables as the one here above.
 - Data Type: defines the data type of the element or attribute;
 - Cardinality: for elements, this column defines the number of occurrences of the element in the form `minOccurs..maxOccurs`; for attributes, “optional” means the attribute may or may not be present and “required” means the presence of the attribute is mandatory.
 
-In general, elements are displayed in normal font, attributes are displayed in italics.
+In general, elements are displayed in normal font, attributes are displayed in *italics*.
 
-Data types requiring a dedicated definition table are underlined, for all the others the common reference is {sec}`7.1.1`.
+Data types requiring a dedicated definition table are underlined, for all the others the common reference is {sec}`Sec. 7.1.1 <7.1.1>`.
 
 (sec:pfd-agb-4-3-1-1)=
 ##### 4.3.1.1 Product L2a DSR
@@ -430,7 +430,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 5</span><span class="caption-text"> — Product L2a DSR (productL2Type)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | mission | Mission (BIOMASS). | `missionType` | 1 |
 | tileID | List of DGG geographic cell (tile) identifiers. | `stringListType` | 1 |
@@ -451,7 +451,7 @@ classDiagram
 | frame | Frame identifier. | `xsd:unsignedShort` | 1 |
 | `platformHeading` | Platform heading relative to North [deg]. | `doubleWithUnit` | 1 |
 | `forestCoveragePercentage` | Forest coverage of the input STA products, compute as a percentage of all the pixels in the STA footprint. | double | 1 |
-| `selectedReferenceImage` | Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage),used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “single reference” | `selectedReferenceImageType` | 0,1 |
+| `selectedReferenceImage` | Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage),used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “***single reference***” | `selectedReferenceImageType` | 0,1 |
 
 :::
 
@@ -460,7 +460,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 6</span><span class="caption-text"> — stringListType</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | ID | Tile identifier string | string | 1 .. unbounded |
 
@@ -471,7 +471,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 7</span><span class="caption-text"> — integerListType</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | val | Integer value | uint32 | 1 .. unbounded |
 
@@ -482,9 +482,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 8</span><span class="caption-text"> — selectedReferenceImageType</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| acquisitionID | Acquisition folder name, to better identify the input image referred by the integer value. | `xsd:string` | 1 |
+| *acquisitionID* | *Acquisition folder name, to better identify the input image referred by the integer value.* | `xsd:string` | *1* |
 | `selectedReferenceImage` | Zero based Integer value of the selected reference image, based on the image reading order. | `xsd:unsignedByte` | 1 |
 
 :::
@@ -570,7 +570,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 10</span><span class="caption-text"> — Raster image DSR (rasterImageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | footprint | Image footprint, expressed as a list of latitude, longitude tuples in NE, SE, SW, NW order [deg]. | `floatArrayWithUnits` | 1 |
 | `firstLatitudeValue` | First latitude value of the image [deg]. | `floatWithUnit` | 1 |
@@ -583,7 +583,7 @@ classDiagram
 | datum | Datum used during processing. | `datumType` | 1 |
 | `pixelRepresentation` | Representation of the image pixels within the image MDS. | `pixelRepresentationChoiceType` | 1 |
 | `pixelType` | Data type of output pixels within the image MDS. | `pixelTypeChoiceType` | 1 |
-| `noDataValue` | Pixel value in case of invalid data. The value is always set to -9999.0 float32 or 255 ubyte, depending on data type, see {sec}`3`. | `noDataValueChoiceType` | 1 |
+| `noDataValue` | Pixel value in case of invalid data. The value is always set to -9999.0 float32 or 255 ubyte, depending on data type, see {sec}`section 3 <3>`. | `noDataValueChoiceType` | 1 |
 
 :::
 
@@ -592,7 +592,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 11</span><span class="caption-text"> — pixelRepresentationChoiceType (only L2a GN choice described here)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | GN | Representation of the image pixels within the image MDS: Ground Cancelled Backscatter | `pixelRepresentationType` | 1 |
 | AGB | Representation of the image pixels within the image MDS: AGB (only L2b) | `pixelRepresentationType` | 1 |
@@ -608,7 +608,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 12</span><span class="caption-text"> — pixelTypeChoiceType</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `floatPixelType` | Data type of output pixels within the image MDS: 32 bit Float | `pixelTypeType` | 1 |
 | `intPixelType` | Integer data type of output pixels within the image MDS: 8 bit Unsigned Integer (L2b only) | `pixelTypeType` | 0,1 |
@@ -620,7 +620,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 13</span><span class="caption-text"> — noDataValueChoiceType</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `floatNoDataValue` | Pixel value in case of invalid data. The value is always set to -9999.0 | `xsd:float` | 1 |
 | `intNoDataValue` | Pixel value in case of invalid data. The value is always set to +255 (L2b only) | `xsd:unsignedByte` | 0,1 |
@@ -837,7 +837,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 14</span><span class="caption-text"> — Input Information DSR (InputInformationL2aType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `productType` | Input product type: always “STA” (L1c STA) | `productType` | 1 |
 | `overallProductsQualityIndex` | Quality index based on the "`overallProductQualityIndex`" of the single STA input data, giving a qualitative overall idea of the input stack. Equal to "0" if all STA feature "`overallProductQualityIndex`"=False and to "1" if at least one is degraded. | `xsd:unsignedByte` | 1 |
@@ -858,9 +858,9 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 15</span><span class="caption-text"> — Input information DSR (acquisitionListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of acquisitions. | `unsignedInt` | required |
+| *count* | *Number of acquisitions.* | `unsignedInt` | *required* |
 | acquisition | Info about acquisition of the stack. | `acquisitionType` | 2..8 |
 
 :::
@@ -870,10 +870,10 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 16</span><span class="caption-text"> — Input information DSR (acquisitionType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `referenceImage` | Flag to indicate if this is the reference image or not. | bool | 1 |
-| `averageWavenumber` | Optional Average Wavenumber, it is not used in GN (only in L2A FD) | `xsd:float` | 0 |
+| `referenceImage` | *Flag to indicate if this is the reference image or not.* | *bool* | *1* |
+| `averageWavenumber` | *Optional Average Wavenumber, it is not used in GN (only in L2A FD)* | `xsd:float` | *0* |
 | FolderName | Folder name which univocally identifies an acquisition of the stack. | `xsd:string` | 1 |
 | `staQuality` | Folder name which univocally identifies an acquisition of the stack, as defined in {rd}`10` | `staQualityType` | 1 |
 
@@ -884,7 +884,7 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 17</span><span class="caption-text"> — Input information DSR (staQualityType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `overallProductQualityIndex` | Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. Equal to 0 for valid products and to 1 for invalid ones. | `xsd:unsignedInt` | 1 |
 | `staQualityParametersList` | Quality parameters list. The list contains an entry for each output product’s polarisation. | `staQualityParametersListType` | 1 |
@@ -896,9 +896,9 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 18</span><span class="caption-text"> — STA quality DSR (staQualityParametersListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `staQualityParameters` | Quality parameters for the current polarisation. | `staQualityParametersType` | 1 .. 4 |
 
 :::
@@ -908,9 +908,9 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 19</span><span class="caption-text"> — STA quality DSR (staQualityParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `invalidL1aDataSamples` | Number of invalid L1a data samples (according to their mean and standard deviation), expressed as a normalized fraction of the total number of samples. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelation` | Decorrelation factor due to RFI strength. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelationThreshold` | Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image. The value is between 0 and 1 and copied from the AUX-PPS. | `xsd:float` | 1 |
@@ -929,9 +929,9 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 20</span><span class="caption-text"> — Input information DSR (polarisationListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | polarisation | Polarisation (HH, VH, VV). | `polarisationType` | 3 |
 
 :::
@@ -985,13 +985,13 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 21</span><span class="caption-text"> — Processing parameters L2a DSR (processingparametersL2aType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `processorVersion` | Version of the processor used to generate the product. | `xsd:string` | 1 |
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
 | `generalConfigurationParameters` | General processing flags (not specific to the ground cancellation processing). | `generalConfigurationParametersType` | 1 |
 | `emphasizedForestHeight` | Single value of the height [m] for all the pixels and polarizations, which has been emphasized during ground cancellation {ad}`8`. | `floatWithUnit` | 1 |
-| `operationalMode` | Ground Cancellation method used between the followings. “multi reference”: multiple data computation using each image as reference, followed by data averaging. or “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`. Note: in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | `operationalModeType` | 1 |
+| `operationalMode` | Ground Cancellation method used between the followings. “multi reference”: multiple data computation using each image as reference, followed by data averaging. *or* “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`. Note: in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | `operationalModeType` | 1 |
 | `radiometricCalibrationFlag` | True if the incidence angle radiometric calibration has been applied, False otherwise. | bool | 1 |
 | `imagesPairSelection` | Optional: if `operationalMode` is “insar pair” and if this element is present, this means that ground cancellation has being performed using only the two images specified here. | `acquisitionListType` | 0..1 |
 | `disableGroundCancellationFlag` | False, if the ground cancellation has been performed. True, if ground cancellation has been disabled. Optional, default is False. | bool | 0..1 |
@@ -1066,7 +1066,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 22</span><span class="caption-text"> — Processing parameters L2a DSR (compressionOptionsL2aType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | MDS → GN →`compressionFactor` | ZSTD algorithm compression factor for the ground cancelled backscatter images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | MDS → GN →`MAX_Z_ERROR` | For the ground cancelled backscatter images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
@@ -1116,7 +1116,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 23</span><span class="caption-text"> — Processing parameters L2a DSR (generalConfigurationParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `applyCalibrationScreen` | Phase calibration performed: “none”: no phase screen has been applied “geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry) “skp”: complete phase screen has been applied (default) | `calibrationScreenType` | 1 |
 | `forestCoverageThreshold` | Minimum percentage forest coverage in L2a product footprint, used to trigger L2a processing. | `xsd:float` | 1 |
@@ -1166,9 +1166,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 24</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of layers. | `xsd:string` | required |
+| *count* | *Number of layers.* | `xsd:string` | *required* |
 | layer | LUT layer content. | `layerType` | 1 .. unbounded |
 
 :::
@@ -1184,13 +1184,13 @@ The format adopted for LUT ADS is NetCDF {rd}`6` and in particular the used impl
 
 The LUT ADS provides the FNF generated outside of BPS from aggregated C3S LCM {ad}`6` {ad}`7` {ad}`8` {ad}`9` and the incidence angle image, which takes into account terrain local slope.
 
-{fig}`Fig.|16` provides a schematic representation of the LUT ADS structure. Note that an XSD diagram has been used for this purpose, even if there is no link between the two formats. The ADS is organised as follows:
+{fig}`16` provides a schematic representation of the LUT ADS structure. Note that an XSD diagram has been used for this purpose, even if there is no link between the two formats. The ADS is organised as follows:
 
-- a series of root level Attributes, containing all those global parameters referring to the product as a whole;
-- a Dimensions group, where names and lengths of the dimensions used when creating data arrays are here defined;
-- a series of Coordinate variables, special variables to store the axis data values, for each dimension in the Dimensions group;
+- a series of root level *Attributes*, containing all those global parameters referring to the product as a whole;
+- a *Dimensions* group, where *names* and *lengths* of the dimensions used when creating data arrays are here defined;
+- a series of *Coordinate* *variables*, special variables to store the axis data values, for each dimension in the *Dimensions* group;
 - a series of components (group of variables), one for each LUT stored in the ADS. Each component is composed by a group of variables which can be divided in:
-    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the Dimensions group;
+    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *Dimensions* group;
     - ancillary scalar variables containing other useful metadata to complete the LUT definition.
 
 (fig:pfd-agb-16)=
@@ -1264,7 +1264,7 @@ classDiagram
 One LUT ADS data variable is composed by real values, the other is a binary one: it is possible to introduce with benefit a strategy for data compression making use of native Python NetCDF4 capabilities {rd}`7` depending on the data type, using a ZLIB compression, featuring:
 
 - for the binary FNF, a compression level from 0 to 9 (loss-less), where zero means no compression;
-- for the real data variable (incidence angle) a compression level from 0 to 9, where zero means no compression and an additional option “least\_significant\_digit” to decide how lossy the compression will be.
+- for the real data variable (incidence angle) a compression level from 0 to 9, where zero means no compression and an additional option “*least\_significant\_digit*” to decide how lossy the compression will be.
 
 All set by configuration, more details in {sec}`4.3.1.4`.
 
@@ -1273,65 +1273,65 @@ All set by configuration, more details in {sec}`4.3.1.4`.
 
 The content of L2a LUT ADS is reported hereafter, where:
 
-- the series of Attributes contain the same list of parameters described in {sec}`4.3.1.1` for the Product L2a DSR (for all the details about these parameters refer to this section)
-- the Dimensions group is composed by Latitude and Longitude, as the data array variable is defined in the Latitude Longitude based on DGG projection
+- the series of *Attributes* contain the same list of parameters described in {sec}`Sec. 4.3.1.1 <4.3.1.1>` for the Product L2a DSR (for all the details about these parameters refer to this section)
+- the *Dimensions* group is composed by Latitude and Longitude, as the data array variable is defined in the Latitude Longitude based on DGG projection
 - for the geometric LUTs (local incidence angle, height, latitude, longitude, incidence/elevation angles, range/azimuth terrain slopes), the repeated variables are described only once.
 - this notation is applicable:
-    - this is the attribute or variable name
+    - **this is the attribute or variable name**
     - this is the actual content of constant values over the mission
-    - this is a description of values content which depends on the processing
+    - *this is a description of values content which depends on the processing*
 
 LUT ADS Attributes:
 
-mission: “BIOMASS”
+**mission**: “BIOMASS”
 
-tileID: [string] json encoded list of DGG geographic tile identifiers
+**tileID**: *[string] json encoded list of DGG geographic tile identifiers*
 
-basinID: [string] json encoded list of DGG Basin identifiers
+**basinID**: *[string] json encoded list of DGG Basin identifiers*
 
 `productType`: “FP\_GN\_\_L2A”
 
-`startTime`: [str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC
+`startTime`: *[str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC*
 
-`stopTime`: [str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC
+`stopTime`: *[str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC*
 
-`radarCarrierFrequency`: [float32] Radar carrier frequency [Hz]
+`radarCarrierFrequency`: *[float32] Radar carrier frequency [Hz]*
 
-`missionPhaseID`: [str: COM, TOM or INT] Mission phase identifier
+`missionPhaseID`: *[str: COM, TOM or INT] Mission phase identifier*
 
 `sensorMode`: “Measurement”
 
-`globalCoverageID`: [uint16] Global coverage identifier
+`globalCoverageID`: *[uint16] Global coverage identifier*
 
-swath: [str: S1, S2 or S3] BIOMASS swath identifier
+**swath**: *[str: S1, S2 or S3] BIOMASS swath identifier*
 
-`majorCycleID`: [uint16] Major cycle identifier
+`majorCycleID`: *[uint16] Major cycle identifier*
 
-`absoluteOrbitNumber`: [list of uint32] List of absolute orbit numbers at start time (one for each input L1c)
+`absoluteOrbitNumber`: *[list of uint32] List of absolute orbit numbers at start time (one for each input L1c)*
 
-`relativeOrbitNumber`: [uint16] Relative orbit number (track) at start time
+`relativeOrbitNumber`: *[uint16] Relative orbit number (track) at start time*
 
-`orbitPass`: [str: Ascending or Descending] Orbit pass
+`orbitPass`: *[str: Ascending or Descending] Orbit pass*
 
-`dataTakeID`: [string] json encoded list of data take identifiers (one for each input L1c)
+`dataTakeID`: *[string] json encoded list of data take identifiers (one for each input L1c)*
 
-frame: [uint16] Frame identifier
+**frame**: *[uint16] Frame identifier*
 
-platform\_heading: [float32] Platform heading relative to North, deg
+**platform\_heading**: *[float32] Platform heading relative to North, deg*
 
-forest\_coverage\_percentage: [float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the STA footprint
+**forest\_coverage\_percentage**: *[float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the* *STA footprint*
 
-selected\_reference\_image Optional [uint16] Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “single reference”
+**selected\_reference\_image** *Optional* *[uint16]* *Index of the input STA acquisition selected as optimal reference image (guaranteeing* *the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and* `operationalMode` *configuration has been set to “single reference”*
 
-acquisition\_id\_reference\_image Optional [str] Acquisition folder name, to better identify the input image referred by the `selectedReferenceImage`
+**acquisition\_id\_reference\_image** *Optional* *[str] Acquisition folder name, to better identify the input image referred by the* `selectedReferenceImage`
 
-`formatVersion` [str] Version of the product
+`formatVersion` *[str]* *Version of the product*
 
 LUT ADS Dimensions / Coordinate variables:
 
-Name: Latitude
+Name: **Latitude**
 
-size: [int] size
+size: *[int] size*
 
 type: dtype(float32)
 
@@ -1339,9 +1339,9 @@ units: deg
 
 description: LUTs latitude axis
 
-Name: Longitude
+Name: **Longitude**
 
-size: [int] size
+size: *[int] size*
 
 type: dtype(float32)
 
@@ -1351,15 +1351,15 @@ description: LUTs longitude axis
 
 LUT ADS group of variables:
 
-Group Name: FNF
+Group Name: **FNF**
 
 FNF group contents:
 
-Name: FNF
+Name: **FNF**
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(ubyte)
 
@@ -1413,7 +1413,7 @@ type: dtype(ubyte)
 
 description: Pixel value in case of invalid data. The value is always set to 255. (See 3)
 
-Name: projection
+Name: **projection**
 
 shape: (1, 1)
 
@@ -1445,7 +1445,7 @@ Name: `localIncidenceAngle`
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1501,7 +1501,7 @@ type: dtype(float32)
 
 description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
 
-Name: projection
+Name: **projection**
 
 shape: (1, 1)
 
@@ -1525,7 +1525,7 @@ type: \<class str\>
 
 description: Geodetic reference frame
 
-Name: least\_significant\_digit
+Name: **least\_significant\_digit**
 
 shape: (1, 1)
 
@@ -1533,15 +1533,15 @@ type: `unsignedByte`
 
 description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
 
-Group Name: height
+Group Name: **height**
 
 height group contents:
 
-Name: height
+Name: **height**
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1551,15 +1551,15 @@ units: m
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
-Group Name: latitude
+Group Name: **latitude**
 
 height group contents:
 
-Name: latitude
+Name: **latitude**
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1569,15 +1569,15 @@ units: deg
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
-Group Name: longitude
+Group Name: **longitude**
 
 height group contents:
 
-Name: longitude
+Name: **longitude**
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1595,7 +1595,7 @@ Name: `incidenceAngle`
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1613,7 +1613,7 @@ Name: `elevationAngle`
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1631,7 +1631,7 @@ Name: `rangeTerrainSlope`
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1649,7 +1649,7 @@ Name: `azimuthTerrainSlope`
 
 dimensions: (Longitude, Latitude)
 
-shape: ([int] x shape, [int] y shape)
+shape: *([int] x shape, [int] y shape)*
 
 type: dtype(float32)
 
@@ -1794,7 +1794,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 25</span><span class="caption-text"> — Overlay ADS</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Document | Document container for KML components. | DocumentType | 1 |
 
@@ -1805,7 +1805,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 26</span><span class="caption-text"> — Overlay ADS (DocumentType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | name | Name of the document. | `xsd:string` | 1 |
 | description | Description of the document. | `xsd:string` | 1 |
@@ -1819,7 +1819,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 27</span><span class="caption-text"> — Overlay ADS (GroundOverlayType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | name | Name of the ground overlay. | `xsd:string` | 1 |
 | visibility | Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible). | `xsd:unsignedInt` | 1 |
@@ -1834,7 +1834,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 28</span><span class="caption-text"> — Overlay ADS (TimeStampType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | when | Overlay time stamp in ISO 8601 format (YYYY-MM-DDThh:mm:ss). | `xsd:string` | 1 |
 
@@ -1845,7 +1845,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 29</span><span class="caption-text"> — Overlay ADS (IconType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | href | A local file specification or URL used to load the desired image and overlay it on the map. | `xsd:string` | 1 |
 
@@ -1856,9 +1856,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 30</span><span class="caption-text"> — Overlay ADS (LatLonQuadType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: lon,lat lon,lat lon,lat lon,lat lon,lat The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: *lon,lat lon,lat lon,lat lon,lat lon,lat* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -1867,7 +1867,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 31</span><span class="caption-text"> — Overlay ADS (PlacemarkType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Name | Name of the placemark. | `xsd:string` | 1 |
 | visibility | Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible). | `xsd:unsignedInt` | 1 |
@@ -1883,7 +1883,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 32</span><span class="caption-text"> — Overlay ADS (StyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | LyneStyle | Line style. | LyneStyleType | 1 |
 | PolyStyle | Polygon style. | PolyStyleType | 1 |
@@ -1895,7 +1895,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 33</span><span class="caption-text"> — Overlay ADS (LyneStyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | color | Line color in 32 bit hex format (AABBGGRR order). | `xsd:string` | 1 |
 | width | Line width. | `xsd:unsignedInt` | 1 |
@@ -1907,7 +1907,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 34</span><span class="caption-text"> — Overlay ADS (PolyStyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | color | Polygon color in 32 bit hex format (AABBGGRR order). | `xsd:string` | 1 |
 
@@ -1918,7 +1918,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 35</span><span class="caption-text"> — Overlay ADS (ExtendedDataType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Data | Metadata. | DataType | 1..inf |
 
@@ -1929,7 +1929,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 36</span><span class="caption-text"> — Overlay ADS (DataType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | value | Metadata value. | `xsd:string` | 1 |
 
@@ -1940,7 +1940,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 37</span><span class="caption-text"> — Overlay ADS ()</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | tessellate | Tessellate option. | `xsd:unsignedInt` | 1 |
 | `altitudeMode` | Altitude mode option. | `xsd:string` | 1 |
@@ -1953,7 +1953,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 38</span><span class="caption-text"> — Overlay ADS (outerBoundaryIsType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | LinearRing | Linear ring description. | LinearRingType | 1 |
 
@@ -1964,8 +1964,8 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 39</span><span class="caption-text"> — Overlay ADS (LinearRingType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::

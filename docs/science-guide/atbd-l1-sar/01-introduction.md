@@ -24,13 +24,13 @@ The purpose of this document is to provide the “L1 Processor Algorithms Theore
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and L1 Processor;
-- {sec}`Section|3`: Description of L1 Pre-Processing algorithms;
-- {sec}`Section|4`: Description of L1 Core Processing algorithms;
-- {sec}`Section|5`: Description of L1 Post-Processing algorithms;
-- {sec}`Section|6`: Description of ancillary functions and parameters;
-- {sec}`Section|7`: Description of configurable input parameters;
-- {sec}`Section|8`: List of open points.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and L1 Processor;
+- {sec}`Section 3 <3>`: Description of L1 Pre-Processing algorithms;
+- {sec}`Section 4 <4>`: Description of L1 Core Processing algorithms;
+- {sec}`Section 5 <5>`: Description of L1 Post-Processing algorithms;
+- {sec}`Section 6 <6>`: Description of ancillary functions and parameters;
+- {sec}`Section 7 <7>`: Description of configurable input parameters;
+- {sec}`Section 8 <8>`: List of open points.
 
 (sec:atbd-l1-sar-1-3)=
 ### 1.3 Acronyms

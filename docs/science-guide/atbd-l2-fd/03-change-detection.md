@@ -8,7 +8,7 @@
 (sec:atbd-fd-3)=
 # 3. Change detection
 
-The overall scheme of the L2a processing is reported in {fig}`Fig.|3`.
+The overall scheme of the L2a processing is reported in {fig}`3`.
 
 The key steps are ground cancellation and the change computation. These steps are described in detail in the following subsections.
 
@@ -18,7 +18,7 @@ The key steps are ground cancellation and the change computation. These steps ar
 (sec:atbd-fd-3-1-1)=
 #### 3.1.1 Overview and rationale
 
-The availability of a general FNF map allows to predetermine which input data (as a whole image) should need to be processed. A threshold (mF) must be set as input parameter to select the minimum forest coverage (as a percentage of the whole area covered by the images) to start or skip computation.
+The availability of a general FNF map allows to predetermine which input data (as a whole image) should need to be processed. A threshold (*mF*) must be set as input parameter to select the minimum forest coverage (as a percentage of the whole area covered by the images) to start or skip computation.
 
 **The step is optional. If unset, change detection computation is always performed for all the data elements.**
 
@@ -27,24 +27,24 @@ The availability of a general FNF map allows to predetermine which input data (a
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| FNF | FNF | Internal resource (IODD) | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
-| mF | `forestCoverageThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] relative forest coverage that triggers the computations |
-| BB | Footprint | L1c main product header (`L1_PFD`) | lat-lon vertices [4 couples] | - | - | The extent of the L1c input data in geographical coordinates |
+| *FNF* | FNF | Internal resource (IODD) | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
+| *mF* | `forestCoverageThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] relative forest coverage that triggers the computations |
+| *BB* | Footprint | L1c main product header (`L1_PFD`) | lat-lon vertices [4 couples] | - | - | The extent of the L1c input data in geographical coordinates |
 
 (sec:atbd-fd-3-1-3)=
 #### 3.1.3 Outputs
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| TR | trigger | Next steps | Boolean [scalar] | - | True | Allows to trigger (True) the computation of the change detection |
+| *TR* | trigger | *Next steps* | Boolean [scalar] | - | True | Allows to trigger (True) the computation of the change detection |
 
 (sec:atbd-fd-3-1-4)=
 #### 3.1.4 Algorithm mathematical background
 
-The values of the FNF mask that lie within the area covered by the image, defined by the bounding box BB, are extracted from the global FNF mask. The relative number of forested pixels is compared to the required minimum threshold mF to trigger any subsequent computation.
+The values of the FNF mask that lie within the area covered by the image, defined by the bounding box *BB*, are extracted from the global FNF mask. The relative number of forested pixels is compared to the required minimum threshold *mF* to trigger any subsequent computation.
 
 $$
-TR=\ (100*\frac{\left. ForestedArea \right\vert_{BB}}{\left. TotalArea \right\vert_{BB}}>mF)
+TR=\ \left( 100*\frac{\left. ForestedArea \right\vert_{BB}}{\left. TotalArea \right\vert_{BB}}>mF \right)
 \tag{3.1}
 $$ (eq:atbd-fd-3-1)
 
@@ -72,7 +72,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| SCS | L1c | Stack processor (`L1_PFD`) | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
 | - | `subsettingRule` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “geometry” | Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase. |
 
 (sec:atbd-fd-3-2-3)=
@@ -80,7 +80,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| SCS | L1c | Calibration step | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | *Calibration step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
 
 (sec:atbd-fd-3-2-4)=
 #### 3.2.4 Algorithm mathematical background
@@ -88,7 +88,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 (sec:atbd-fd-3-2-4-1)=
 ##### 3.2.4.1 Geometry criterion
 
-The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`Fig.|4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`Fig.|5`.
+The "geometry" criterion for subsetting selects among the seven/eight TOM stack the three acquisitions that give nominally consistent baselines with INT phase. As different combinations are possible, see {fig}`4`, the default rule is to select the central combination, which is corresponding to exactly the same nominal situation as INT. In case this combination presents a missing acquisition, the rule is to then evaluate remaining combinations in sequential order until a three-acquisitions combination is found. If no combination of three exists, the minimum required is two and the maximum baseline is equivalent to double TOM spacing. The contingency case with eight TOM acquisitions is reported in {fig}`5`.
 
 (fig:atbd-fd-4)=
 :::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -198,7 +198,7 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| SCS | L1c | Stack processor, or INT subsetting step | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | Stack processor, or *INT subsetting step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
 | $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
 | $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
 | - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | string | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed: skp or geometry if phase screens calibration should be applied, none otherwise. |
@@ -208,16 +208,16 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| SCS | L1c | Ground cancellation processing step | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 
 (sec:atbd-fd-3-3-4)=
 #### 3.3.4 Algorithm mathematical background
 
 This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on `applyCalibrationScreen` configuration, the used screen is:
 
-$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`= “skp”
+$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`*= “skp”*
 
-$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`= “geometry”
+$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`*= “geometry”*
 
 The operation implemented in the calibration step of the L2 processor is simply the subtraction of the selected calibration phase screens from the input image stack phase. The operation can be expressed as:
 
@@ -233,7 +233,7 @@ $$
 \tag{3.3}
 $$ (eq:atbd-fd-3-3)
 
-where f is a bilinear interpolant function. Other alternate interpolating function are detailed in {rd}`11`.
+where *f* is a bilinear interpolant function. Other alternate interpolating function are detailed in {rd}`11`.
 
 (sec:atbd-fd-3-4)=
 ### 3.4 Ground cancellation
@@ -243,23 +243,21 @@ where f is a bilinear interpolant function. Other alternate interpolating functi
 
 Ground cancellation {rd}`4` is the interferometric combination of two or more images so that the backscattered echo coming from the ground level is cancelled. This processing step can be carried out starting from the calibrated and ground steered stack of SAR images (so that the phase of the ground contribution is aligned in the images). Consequently, the radar signal coming from a particular elevation gets emphasized. This specific elevation depends on the spatial baseline characterizing the interferometric system, depending on the geometry of acquisition, and cannot usually be chosen when processing the data. However, the availability of more than two interferometric images allows this specific elevation to be selected. This is referred to as interpolated ground cancellation, which is the default setting. The processing steps are described in the following, for two images and with several images.
 
-**The step is mandatory. If disabled for debug, default rule is to set $I_{GN}$ (see {sec}`section|3.4.3`) to primary image acquisition.**
+**The step is mandatory. If disabled for debug, default rule is to set $I_{GN}$ (see section 3.4.3) to primary image acquisition.**
 
 (sec:atbd-fd-3-4-2)=
 #### 3.4.2 Inputs
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| SCS | L1c | Calibration processing step | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Calibration processing step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 | $k_z$ | Wavenumber | L1c Stack ADS (`L1_PFD`) | M, each$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
-| $z_0$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value\* for all polarizations and all pixels | 30.0 | Desired elevation emphasized from ground cancellation, meters [m] |
+| $z_0$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value{sup}`*` for all polarizations and all pixels | 30.0 | Desired elevation emphasized from ground cancellation, meters [m] |
 | - | `disableGroundCancellationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | False | True to disable ground cancellation: for debug. |
 | - | `operationalMode` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “single reference” | Choose the Ground Cancellation method to use |
 | - | `imagesPairSelection` | `AUX_PP2_2A` (`AUX_FMT`) | List of integers | - | - | Optional, needed only when `operationMode`=”`insarPair`” and more than 2 images are available |
 
-```{note}
-Analysis can be carried out post-launch to assess whether this value can be made forest-class dependent.
-```
+{sup}`*`*NOTE: analysis can be carried out post-launch to assess whether this value can be made forest-class dependent.*
 
 The default operation mode of ground cancellation is `operationalMode`="single reference" with full INT stack {rd}`7`. To operate with a single pair configuration must be set to “insar pair” and the pair can be selected through `imagesPairSelection`. In case of only two images available, the `operationalMode` is automatically set to “insar pair”.
 
@@ -268,12 +266,12 @@ The default operation mode of ground cancellation is `operationalMode`="single r
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $I_{GN}$ | - | Polarimetric covariance matrix computation | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M) | - | Ground cancelled complex image |
+| $I_{GN}$ | - | *Polarimetric covariance matrix computation* | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M) | - | Ground cancelled complex image |
 
 (sec:atbd-fd-3-4-4)=
 #### 3.4.4 Algorithm mathematical background
 
-The flowcharts of the ground cancellation algorithm are shown in {fig}`Fig.|7`, {fig}`Fig.|8`. Each polarization channel is processed independently. A preliminary interpolation step is needed to bring wavenumbers onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`).
+The flowcharts of the ground cancellation algorithm are shown in {fig}`7`, {fig}`8`. Each polarization channel is processed independently. A preliminary interpolation step is needed to bring wavenumbers onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`).
 
 (fig:atbd-fd-7)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -499,7 +497,7 @@ flowchart LR
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $I_{GN}$ | - | Ground cancellation processing step | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M acquisitions) | - | Ground cancelled complex image |
+| $I_{GN}$ | - | *Ground cancellation processing step* | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M acquisitions) | - | Ground cancelled complex image |
 | `pRes` | `productResolution` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | - | 50.0 | Value in [m] to be used as the resolution on ground range map and also to perform the covariance averaging in radar coordinates |
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsampling factor, that modules the overall decimation in multilooking within covariance computation |
 | $\theta$ | `incidenceAngle` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\theta}\times{}N_{az,\theta} \right]$ | - | - | L1c stack reference acquisition incidence angle (on inflated ellipsoid) annotation [deg] |
@@ -514,8 +512,8 @@ flowchart LR
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $Cov$ | - | Geocoding | $\left[ N_{pol}\times{}N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack |
-| L | - | Change detection processing step | integer value [scalar] | - | - | Number of looks [adimensional] |
+| $Cov$ | - | *Geocoding* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack |
+| *L* | - | *Change detection processing step* | integer value [scalar] | - | - | Number of looks [adimensional] |
 
 (sec:atbd-fd-3-5-4)=
 #### 3.5.4 Algorithm mathematical background
@@ -538,7 +536,7 @@ $$
 \left\vert \Omega_a \right\vert=\left\lceil \frac{pRes}{\rho_a}(\Delta_aB_a)^{-1} \right\rceil
 $$
 
-where $\rho_r=\frac{c}{2B_r}$ and $\rho_a=\frac{v_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed c, average azimuth velocity $v_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks L {rd}`6` is computed as:
+where $\rho_r=\frac{c}{2B_r}$ and $\rho_a=\frac{v_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $v_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
 
 $$
 L=\left\lceil \frac{pRes^2}{\rho_r\rho_a}\sin{\theta_m} \right\rceil
@@ -548,7 +546,7 @@ $$ (eq:atbd-fd-3-13)
 (sec:atbd-fd-3-5-5)=
 #### 3.5.5 Notes on implementation
 
-It should be noted that, as implied by the equations above, multilooking is implicitly performed while computing polarimetric covariance. The ratio of subsampling of the final covariance matrix (i.e., the step where full matrix is sampled) is ruled by the “`upsamplingFactor`” parameter: when the assumed value is 1, full subsampling is applied (Nrg|az,subs = Nrg|az / NΩr|az), while when its value is higher, the final output covariance matrix will be bigger (Nrg|az,subs = Nrg|az / NΩr|az \* `upsamplingFactor`).
+It should be noted that, as implied by the equations above, multilooking is implicitly performed while computing polarimetric covariance. The ratio of subsampling of the final covariance matrix (i.e., the step where full matrix is sampled) is ruled by the “`upsamplingFactor`” parameter: when the assumed value is 1, full subsampling is applied (N{sub}`rg|az,subs` = N{sub}`rg|az` / N{sub}`Ωr|az`), while when its value is higher, the final output covariance matrix will be bigger (N{sub}`rg|az,subs` = N{sub}`rg|az` / N{sub}`Ωr|az` \* `upsamplingFactor`).
 
 (sec:atbd-fd-3-6)=
 ### 3.6 Geocoding
@@ -558,13 +556,9 @@ It should be noted that, as implied by the equations above, multilooking is impl
 
 The purpose of this step is to project the processed data onto a geographic map, accounting for the different forest points location with respect to reference DEM.
 
-```{note}
-It should be noted that the use of the BIOMASS DTM {rd}`3` is to be preferred to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.
-```
+*NOTE:* *It should be noted that the use of the BIOMASS DTM [RD3]* *is to be preferred* *to other DEM since it represents the true terrain level at P-band, necessary for correct geocoding.*
 
-```{note}
-This functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS {rd}`1` and not on the L1 geocoding tool {rd}`2`.
-```
+*NOTE: this functionality is used by all three AGB, FD, FH processors with different I/O. mathematical formulation is described highlighting the mapping of the different processors I/O to geocoding formulas in each processor document. The functionality relies on L1c ADS [RD1] and not on the L1 geocoding tool [RD2].*
 
 **The step is mandatory.**
 
@@ -616,10 +610,10 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $Cov\rightarrow{}Rd$ | - | Polarimetric covariance matrix computation | $\left[ N_{pol}\times{}N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case the polarimetric covariance of the ground cancelled complex data of current stack |
+| $Cov\rightarrow{}Rd$ | - | *Polarimetric covariance matrix computation* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case the polarimetric covariance of the ground cancelled complex data of current stack |
 | (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude longitude height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,llh}\times{}N_{az,llh} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
 | $z_0\rightarrow\delta{}z_{tomo}$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value (see previous note) for all polarizations and all pixels | 30.0 | Tomographic 3D forest points elevation [m], in this case the desired elevation emphasized from ground cancellation |
-| DGG | DGG | Internal lookup table | - | - | - | DGG sampling |
+| *DGG* | *DGG* | Internal lookup table | - | - | - | DGG sampling |
 | ${\widehat{i}}_{az}$ | Orbit ADS | L1c reference acquisition ADS | - | - | - | L1c stack reference acquisition orbit annotation |
 
 (sec:atbd-fd-3-6-3)=
@@ -627,7 +621,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $Rd\boldsymbol{\rightarrow{}X}$ | - | Change detection processing step | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack projected onto a geographic map |
+| $Rd\boldsymbol{\rightarrow{}X}$ | - | *Change detection processing step* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack projected onto a geographic map |
 
 (sec:atbd-fd-3-6-4)=
 #### 3.6.4 Algorithm mathematical background
@@ -650,7 +644,7 @@ flowchart TB
 
 :::
 
-This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section|3.3.4`). Determining the elevation of one forest point is shown in {fig}`Fig.|11`:
+This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`). Determining the elevation of one forest point is shown in {fig}`11`:
 
 - (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) is the reference DEM for the point $\boldsymbol{P}_0$ , which can be converted to Cartesian coordinates ($X_{P_0}$, $Y_{P_0}$, $Z_{P_0}$)
 - 𝑧 is normal direction to ellipsoid reported to DEM at point $\boldsymbol{P}_0$, i.e., given the tangent plane to ellipsoid 𝑎 X + 𝑏 Y + 𝑐 Z + 𝑑 = 0 then ${\widehat{i}}_z=\left[ a,b,\ c\ \right]$
@@ -658,8 +652,8 @@ This step aims to account for the different forest points location with respect 
 - ${\widehat{i}}_{LOS}=\frac{\boldsymbol{P}_0-\boldsymbol{S}_0}{\left\vert \boldsymbol{P}_0-\boldsymbol{S}_0 \right\vert}$ is line of sight vector, $\boldsymbol{S}_0$ is the sensor position for the considered azimuth
 - ${\widehat{i}}_{xr}={\widehat{i}}_{az}\times{\widehat{i}}_{LOS}$ is the cross range vector
 - the ellipsoid direction at reference DEM is ${\widehat{i}}_E\cdot{\widehat{i}}_z=0$, i.e., ${\widehat{i}}_E=\frac{d\left[ \boldsymbol{E}(r) \right]}{dr}$ and $\boldsymbol{E}(r)=\left[ X_E(r),\ Y_E(r),\ Z_E(r) \right]$ are ellipsoid coordinates as a function of range
-- 𝛿𝑧𝑡𝑜𝑚𝑜 is one tomographic forest point elevation, in this case the desired elevation emphasized from ground cancellation
-- 𝛿𝑧 is the elevation of point P1 versus DEM (with respect to WGS84 geodetic system). Note that while this is represented for completeness in {fig}`Fig.|11`, it is not explicitly needed to compute P1 [x,y,z] position in the following {eq}`eq|3.15`
+- 𝛿𝑧{sub}`𝑡𝑜𝑚𝑜` is one tomographic forest point elevation, in this case the desired elevation emphasized from ground cancellation
+- 𝛿𝑧 is the elevation of point P1 versus DEM (with respect to WGS84 geodetic system). Note that while this is represented for completeness in {fig}`11`, it is not explicitly needed to compute P1 [x,y,z] position in the following {eq}`eq 3.15 <3.15>`
 
 Then
 
@@ -685,7 +679,7 @@ Rd(lat,lon,z)\ =\left. \ f\left[ \left. Rd(lat,lon,z) \right\vert_{\boldsymbol{P
 \tag{3.16}
 $$ (eq:atbd-fd-3-16)
 
-where f is a bilinear interpolant a function, Rd is each raster layer to be interpolated.
+where *f* is a bilinear interpolant a function, *Rd* is each raster layer to be interpolated.
 
 (sec:atbd-fd-3-7)=
 ### 3.7 Change detection
@@ -693,7 +687,7 @@ where f is a bilinear interpolant a function, Rd is each raster layer to be inte
 (sec:atbd-fd-3-7-1)=
 #### 3.7.1 Overview and rationale
 
-The disturbance processing is concerned with providing maps of high-intensity change between successive temporal cycles under the implicit hypothesis of occurred deforestation (logging, fire etc.). This assumption is further detailed in the {sec}`section|3.7.4.5`. The chosen methodology is by hypothesis testing {rd}`6` {rd}`5` on geocoded polarimetric covariance estimate of the ground cancelled complex data, where the null hypothesis is that in a time series of polarimetric data no change has occurred (at a given position and up to a given time). If this hypothesis fails at a given level of significance (assuming a Wishart distribution for the complex covariance data), then it is assumed a change has occurred. This is closely related to the Constant False Alarm Rate approach to target detection {rd}`5`, in which the probability that an undisturbed pixel is incorrectly classified as disturbed is fixed. As a first step, the probability of change for each latitude-longitude pixel will be estimated, which is by itself a quality measure. Change detection to compute disturbance maps from L2a probabilities of change for each stack is applied by null hypothesis rejection at a given level of significance.
+The disturbance processing is concerned with providing maps of high-intensity change between successive temporal cycles under the implicit hypothesis of occurred deforestation (logging, fire etc.). This assumption is further detailed in the {sec}`section 3.7.4.5 <3.7.4.5>`. The chosen methodology is by hypothesis testing {rd}`6` {rd}`5` on geocoded polarimetric covariance estimate of the ground cancelled complex data, where the null hypothesis is that in a time series of polarimetric data no change has occurred (at a given position and up to a given time). If this hypothesis fails at a given level of significance (assuming a Wishart distribution for the complex covariance data), then it is assumed a change has occurred. This is closely related to the Constant False Alarm Rate approach to target detection {rd}`5`, in which the probability that an undisturbed pixel is incorrectly classified as disturbed is fixed. As a first step, the probability of change for each latitude-longitude pixel will be estimated, which is by itself a quality measure. Change detection to compute disturbance maps from L2a probabilities of change for each stack is applied by null hypothesis rejection at a given level of significance.
 
 **The step is mandatory.**
 
@@ -763,14 +757,14 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\boldsymbol{X}$ | - | Geocoding | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack projected onto a geographic map |
+| $\boldsymbol{X}$ | - | *Geocoding* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Polarimetric covariance of the ground cancelled complex data of current stack projected onto a geographic map |
 | $\boldsymbol{Y}$ | ACM | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Average Covariance Matrix of previous cycles |
-| q | `significanceLevel` | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 1.0 | Significance [%] level to be applied in the change detection algorithm |
-| CFM | CFM | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Computed Forest Mask |
-| L | - | Polarimetric covariance computation | integer value [scalar] | - | - | Number of looks |
-| N | `numberOfAverages` | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | lower bound=1 | - | Number of averages in ACM computation |
-| FNF | FNF | Internal resource | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
-| fMIT | `forestMaskInterpolationThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.5 | Threshold to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid |
+| *q* | `significanceLevel` | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 1.0 | Significance [%] level to be applied in the change detection algorithm |
+| *CFM* | CFM | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Computed Forest Mask |
+| *L* | - | *Polarimetric covariance computation* | integer value [scalar] | - | - | Number of looks |
+| *N* | `numberOfAverages` | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | lower bound=1 | - | Number of averages in ACM computation |
+| *FNF* | FNF | Internal resource | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
+| *fMIT* | `forestMaskInterpolationThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.5 | Threshold to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid |
 | `detLimit` | `numericalDeterminatLimit` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | \>0.0 | 1.0e-12 | Lower Threshold to avoid numerical errors when computing pol covariance matrices determinants |
 
 (sec:atbd-fd-3-7-3)=
@@ -778,11 +772,11 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| CFM | CFM | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Update of CFM |
+| *CFM* | CFM | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Update of CFM |
 | $P_c$ | Probability of change | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Probability of change map of current stack |
 | ${FD}_{map}$ | Forest Disturbance | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Forest Disturbance map of current stack |
 | $\boldsymbol{Y}$ | ACM | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{pol}\times{}N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$ | - | - | Update of ACM |
-| N | `numberOfAverages` | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | lower bound=1 | - | Update of number of averages in ACM computation |
+| *N* | `numberOfAverages` | FD L2a product of current cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | lower bound=1 | - | Update of number of averages in ACM computation |
 
 (sec:atbd-fd-3-7-4)=
 #### 3.7.4 Algorithm mathematical background
@@ -790,7 +784,7 @@ flowchart TB
 (sec:atbd-fd-3-7-4-1)=
 ##### 3.7.4.1 Hypothesis testing
 
-Each pixel is processed independently. For each pixel of the geocoded ground cancelled polarimetric covariance matrix at current global cycle “N+1” multiplied by a factor L (corresponding the number of looks {rd}`6`) $\boldsymbol{X}_{N+1}=L\boldsymbol{X}$, the likelihood ratio statistic is calculated to test the null hypothesis that it is the same as that of the previous N cycles (N= `numberOfAverages`) Average Covariance Matrix $\boldsymbol{Y}_N=\ \sum_{i=0}^N{\boldsymbol{X}_i}$
+Each pixel is processed independently. For each pixel of the geocoded ground cancelled polarimetric covariance matrix at current global cycle “*N+1*” multiplied by a factor *L* (corresponding the number of looks {rd}`6`) $\boldsymbol{X}_{N+1}=L\boldsymbol{X}$, the likelihood ratio statistic is calculated to test the null hypothesis that it is the same as that of the previous *N* cycles (*N=* `numberOfAverages`) Average Covariance Matrix $\boldsymbol{Y}_N=\ \sum_{i=0}^N{\boldsymbol{X}_i}$
 
 (equation-eq-atbd-fd-3-17)=
 \begin{equation}
@@ -801,7 +795,7 @@ R_{N+1}=\left\{ \frac{(N+1)^{(N+1)p}}{N^{Np}}\frac{\left\vert \boldsymbol{Y}_N \
 \tag{3.17}
 \end{equation}
 
-From {sec}`Section|3.5.4` L is the number of looks, |..| denotes determinant, and p is the polarimetric dimension of the data matrix (L=6 and p=3 as per BIOMASS requirements {rd}`9`). The polarimetric covariance matrices are (by definition) Hermitian and semi-positive definite: their determinant is real-valued. However, determinant calculation can be ill-posed as its value approaches zero (as numerical errors may arise). It has been chosen to set a lower limit (optional user defined parameter `numericalDeterminantLimit`) to deal with numerical errors and avoid any problems in subsequent equations.
+From {sec}`Section 3.5.4 <3.5.4>` *L* is the number of looks, |..| denotes determinant, and *p* is the polarimetric dimension of the data matrix (*L=6* and *p=3* as per BIOMASS requirements {rd}`9`). The polarimetric covariance matrices are (by definition) Hermitian and semi-positive definite: their determinant is real-valued. However, determinant calculation can be ill-posed as its value approaches zero (as numerical errors may arise). It has been chosen to set a lower limit (optional user defined parameter `numericalDeterminantLimit`) to deal with numerical errors and avoid any problems in subsequent equations.
 
 To calculate the probability of rejecting the null hypothesis if all the covariance matrices are the same, the following auxiliary variables are calculated {rd}`6` {rd}`5`:
 
@@ -811,11 +805,11 @@ f=p^2
 $$ (eq:atbd-fd-3-18)
 
 $$
-\rho_{N+1}=1-\frac{2f-1}{6pL}(1+\frac{1}{N(N+1)})
+\rho_{N+1}=1-\frac{2f-1}{6pL}\left( 1+\frac{1}{N(N+1)} \right)
 $$
 
 $$
-\omega_{2(N+1)}=-\frac{f}{4}(1-\frac{1}{\rho_{N+1}})^2+\frac{1}{24L^2}f(f-1)(1+\frac{2N+1}{N^2{(N+1)}^2})\frac{1}{\rho_{N+1}^2}
+\omega_{2(N+1)}=-\frac{f}{4}\left( 1-\frac{1}{\rho_{N+1}} \right)^2+\frac{1}{24L^2}f(f-1)\left( 1+\frac{2N+1}{N^2{(N+1)}^2} \right)\frac{1}{\rho_{N+1}^2}
 $$
 
 Under the null hypothesis the probability of change is calculated as:
@@ -830,7 +824,7 @@ where $z=-2\rho_{N+1\ }\ln{r_{N+1}}$, $r_{N+1}$ is the measured value of the sta
 (sec:atbd-fd-3-7-4-2)=
 ##### 3.7.4.2 Disturbance map generation
 
-If the null hypothesis is rejected at a given level of significance q, the pixel is assumed to have undergone significant disturbance and so has been deforested between times N and N+1. FD map generation for each pixel of the current stack is obtained by thresholding the probability of change as:
+If the null hypothesis is rejected at a given level of significance *q*, the pixel is assumed to have undergone significant disturbance and so has been deforested between times *N* and *N+1*. FD map generation for each pixel of the current stack is obtained by thresholding the probability of change as:
 
 $$
 {FD}_{map}=\left\{ 1-P_c \right\}<q
@@ -840,7 +834,7 @@ $$ (eq:atbd-fd-3-20)
 (sec:atbd-fd-3-7-4-3)=
 ##### 3.7.4.3 ACM update mechanism
 
-History of previous N cycles is represented by an Average Covariance Matrix $\boldsymbol{Y}_N$ (equivalent to current Covariance Matrix $\boldsymbol{X}_{N+1}$ as for dimensions and data type), which consists of the stacking of covariance matrices from previous cycles, in case no change occurred. When detection is computed between current CM $\boldsymbol{X}_{N+1}$ and the ACM $\boldsymbol{Y}_N$ for a given pixel, in case of no change current CM is added to ACM to be used in the subsequent cycle (ACM is updated to be the average over the whole series where no change has occurred). In case of change, instead, this ACM is reset to current CM for subsequent cycles and FD will report an indication of change for the corresponding pixels in the disturbance layer. The `numberOfAverages` of the previous N cycles, which is a measure of how many objects are averaged in the current ACM, is also reset to 1. The update mechanism is reported in {fig}`Fig.|13` for the ACM $\boldsymbol{Y}_N$.
+History of previous *N* cycles is represented by an Average Covariance Matrix $\boldsymbol{Y}_N$ (equivalent to current Covariance Matrix $\boldsymbol{X}_{N+1}$ as for dimensions and data type), which consists of the stacking of covariance matrices from previous cycles, in case no change occurred. When detection is computed between current CM $\boldsymbol{X}_{N+1}$ and the ACM $\boldsymbol{Y}_N$ for a given pixel, in case of no change current CM is added to ACM to be used in the subsequent cycle (ACM is updated to be the average over the whole series where no change has occurred). In case of change, instead, this ACM is reset to current CM for subsequent cycles and FD will report an indication of change for the corresponding pixels in the disturbance layer. The `numberOfAverages` of the previous *N* cycles, which is a measure of how many objects are averaged in the current ACM, is also reset to 1. The update mechanism is reported in {fig}`13` for the ACM $\boldsymbol{Y}_N$.
 
 (fig:atbd-fd-13)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -912,7 +906,7 @@ To have a FD map in the first INT global coverage ACM computed in TOM can be fed
 (sec:atbd-fd-3-7-4-5)=
 ##### 3.7.4.5 Computed Forest Mask
 
-A Computed Forest Mask is also generated, accounting for the incremental FD information. At the first cycle this is equal to external FNF. A preliminary FNF interpolation step is needed to bring FNF onto the same FD grid, in the same fashion as for the calibration screens ({sec}`Section|3.3.4`). Since interpolation generates border effects a threshold fMIT to fix rounding of pixels with decimal values is applied:
+A Computed Forest Mask is also generated, accounting for the incremental FD information. At the first cycle this is equal to external FNF. A preliminary FNF interpolation step is needed to bring FNF onto the same FD grid, in the same fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`). Since interpolation generates border effects a threshold *fMIT* to fix rounding of pixels with decimal values is applied:
 
 $$
 FNF=FNF>fMIT
@@ -926,8 +920,8 @@ CFM=\left\{ 1-{FD}_{map} \right\}\land{}CFM
 \tag{3.22}
 $$ (eq:atbd-fd-3-22)
 
-where $\land$ is the logical and operator.
+where $\land$ is the logical *and* operator.
 
-It is worth noting that the current implementation cannot differentiate between the sources of the changes that have occurred (i.e., the disturbances detected as per {sec}`section|3.7.4.2`). This means that each disturbed pixel will always be mapped as a ‘Non-Forest’ class in the output CFM.
+It is worth noting that the current implementation cannot differentiate between the sources of the changes that have occurred (i.e., the disturbances detected as per {sec}`section3.7.4.2 <3.7.4.2>`). This means that each disturbed pixel will always be mapped as a ‘Non-Forest’ class in the output CFM.
 
 At the time of the ATBD formulation, this simplified assumption was considered acceptable due to the anticipated application with BIOMASS data (i.e., the nominal production of an FD product between two global coverages). The reliability of the CFM product should be carefully evaluated if the FD algorithm is applied over more extended time ranges.

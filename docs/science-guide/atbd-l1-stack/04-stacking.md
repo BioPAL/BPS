@@ -10,8 +10,8 @@
 
 In this section we will describe in detail the stacking operation, which consists in aligning both the data and the LUTs of a set of L1a input frames onto a common grid that is chosen to be the grid of the primary frame. The stacking module executes three main steps:
 
-- Estimation of the pixel shifts between the L1a input frame and the coregistration primary L1a frame. This step can be executed by only using the sole information of the frames’ orbits and scattering surface height (coregistration from Geometry), or applying a further refinement using incoherent cross-correlation applied to the actual frame data (coregistration using Geometry and Data)
-- Image interpolation, which consists of warping the stack images onto the primary grid by means of the coregistration shifts computed at the previous step (see {fig}`Fig.|7`).
+- *Estimation* of the pixel shifts between the L1a input frame and the coregistration primary L1a frame. This step can be executed by only using the sole information of the frames’ orbits and scattering surface height (coregistration from *Geometry*), or applying a further refinement using incoherent cross-correlation applied to the actual frame data (coregistration using *Geometry and Data*)
+- *Image interpolation*, which consists of warping the stack images onto the primary grid by means of the coregistration shifts computed at the previous step (see {fig}`Fig. 7 <7>`).
 - LUT shifting and interpolation, which, similarly to the image interpolation step, warps the LUTs contained in the L1a input stack onto the common primary LUT grid.
 
 (fig:atbd-l1-stack-7)=
@@ -97,7 +97,7 @@ This module is responsible for computing the shifts needed to interpolate an ima
 (sec:atbd-l1-stack-4-1-1)=
 #### 4.1.1 Overview
 
-The algorithm for coregistration from geometric information uses the orbits and a model of the topography, i.e. the world model obtained by upsampling the Lat/Lon/Height LUTs from the L1a input stack (see {sec}`Section|3.4.1`), in order to calculate for each pixel the relative pixel distance or, equivalently, the time difference, between the primary and secondary acquisitions.
+The algorithm for coregistration from geometric information uses the orbits and a model of the topography, *i.e.* the world model obtained by upsampling the Lat/Lon/Height LUTs from the L1a input stack (see {sec}`Section 3.4.1 <3.4.1>`), in order to calculate for each pixel the relative pixel distance or, equivalently, the time difference, between the primary and secondary acquisitions.
 
 (sec:atbd-l1-stack-4-1-2)=
 #### 4.1.2 Inputs and outputs
@@ -126,19 +126,19 @@ The algorithm for coregistration from geometric information uses the orbits and 
 (sec:atbd-l1-stack-4-1-3-1)=
 ##### 4.1.3.1 Inverse Geocoding
 
-By inverse geocoding, we refer to the procedure of retrieving the azimuth and range time $\tau_{az}$ and $\tau_{rg}$ at which a target point on the Earth is imaged by the sensor. Inverse geocoding is typically associated with the direct geocoding operation, which is the procedure of inferring the ECEF coordinates of a point onto the Earth surface with respect to an elevation model at at the time which the sensor imaged that target point. For more details we refer to {rd}`20`. Note that in the stack processor only inverse geocoding is executed since the results of direct geocoding for the input stack are assumed to be stored as Lat/Lon/Height LUTs in the L1a input products and mapped onto the primary grid data via oversampling as described in {sec}`Section|3.4`.
+By *inverse geocoding*, we refer to the procedure of retrieving the azimuth and range time $\tau_{az}$ and $\tau_{rg}$ at which a target point on the Earth is imaged by the sensor. Inverse geocoding is typically associated with the *direct geocoding* operation, which is the procedure of inferring the ECEF coordinates of a point onto the Earth surface with respect to an elevation model at at the time which the sensor imaged that target point. For more details we refer to {rd}`20`. Note that in the stack processor only inverse geocoding is executed since the results of direct geocoding for the input stack are assumed to be stored as Lat/Lon/Height LUTs in the L1a input products and mapped onto the primary grid data via oversampling as described in {sec}`Section 3.4 <3.4>`.
 
 (sec:atbd-l1-stack-4-1-3-2)=
 ##### 4.1.3.2 Coregistration Shift’s Estimation
 
-The purpose of this step is to compute the coregistration shifts expected from the acquisition geometry. This result is accomplished via inverse geocoding (see {sec}`Section|4.1.3.1`). More in detail, each pixel of the primary image is associated to its azimuth and range time coordinates:
+The purpose of this step is to compute the coregistration shifts expected from the acquisition geometry. This result is accomplished via *inverse* *geocoding* (see {sec}`Section 4.1.3.1 <4.1.3.1>`). More in detail, each pixel of the primary image is associated to its azimuth and range time coordinates:
 
 $$
 \left[ \tau_{az},\ \tau_{rg} \right]^r(i,\ j)
 \tag{4.1}
 $$ (eq:atbd-l1-stack-4-1)
 
-that represent the (i-th, j-th) element of the primary data matrix. Since, each point $\boldsymbol{P}(i,j)$ of the DEM scattering surface (see {sec}`Section|3.4`), is assumed to be obtained by an approximation of the directed geocoded surface computed upstream of the stack processor, the location is inversely geocoded using orbit data of n-th secondary image to obtain azimuth and range times
+that represent the (i-th, j-th) element of the primary data matrix. Since, each point $\boldsymbol{P}(i,j)$ of the DEM scattering surface (see {sec}`Section 3.4 <3.4>`), is assumed to be obtained by an approximation of the directed geocoded surface computed upstream of the stack processor, the location is inversely geocoded using orbit data of *n*-th secondary image to obtain azimuth and range times
 
 $$
 \left[ \tau_{az},\ \tau_{rg} \right]^n(i,\ j).
@@ -158,20 +158,20 @@ where $\left[ \tau_{az,0},\ \tau_{rg,0} \right]^n$ are the acquisition start tim
 (sec:atbd-l1-stack-4-1-3-3)=
 ##### 4.1.3.3 Synthetic Interferogram Computation and Debiasing
 
-By synthetic interferogram $\Delta\varphi_{syn,n,r}$ (or henceforth DSI), we refer to the difference, expressed as a phase delay, of the absolute LOS distances at 0-Doppler between a ground target and the orbital positions of the RADAR in two acquisitions. The purpose of this step is to provide the geometrical quantities that are necessary to flatten the raw interferograms, that is, to remove all possible contributions of the DEM, and thus to make it easier for the calibration modules to isolate other possible sources of phase delays, such as ionosphere or baseline errors. For this, we use the results of the coregistration shifts as described in {sec}`Section|4.1.3.2`., that is, set $\tau_{rg}^r$ and $\tau_{rg}^n$ to be respectively the range time coordinates of primary and secondary frames, computed via inverse geocoding, it is straightforward to compute the distance between the two sensors and the ground target and accordingly convert it into phase delay by applying the following pixelwise conversion:
+By *synthetic interferogram* $\Delta\varphi_{syn,n,r}$ (or henceforth *DSI*), we refer to the difference, expressed as a phase delay, of the absolute LOS distances at 0-Doppler between a ground target and the orbital positions of the RADAR in two acquisitions. The purpose of this step is to provide the geometrical quantities that are necessary to flatten the raw interferograms, that is, to remove all possible contributions of the DEM, and thus to make it easier for the calibration modules to isolate other possible sources of phase delays, such as ionosphere or baseline errors. For this, we use the results of the coregistration shifts as described in {sec}`Section 4.1.3.2 <4.1.3.2>`., that is, set $\tau_{rg}^r$ and $\tau_{rg}^n$ to be respectively the range time coordinates of primary and secondary frames, computed via inverse geocoding, it is straightforward to compute the distance between the two sensors and the ground target and accordingly convert it into phase delay by applying the following pixelwise conversion:
 
 $$
 {\Delta{}\varphi}_{syn,n,r}(i,j)=\ 2\pi\cdot{}f_c\cdot(\tau_{rg}^n(i,j)-\tau_{rg}^r(i,j))
 \tag{4.4}
 $$ (eq:atbd-l1-stack-4-4)
 
-where $f_c$ is the central (carrier) frequency. Note that, since the DEM is computed upstream of the stack processor (i.e., on L1a) on a grid that is not necessarily that of the coregistration primary frame, it follows that all inversely geocoded times $\tau_{rg}^n(i,j)$ (including those of the coregistration primary) may reflect the interpolation residuals⁽²⁾ between the directly geocoded Earth surface and the DEM obtained via upsampling the L1a LUTs (see {sec}`Section|3.4`). Nonetheless, it can be observed that such an error is in fact approximately a common bias in all image frames and can be therefore estimated by inversely geocoding the coregistration primary⁽³⁾. Therefore, using as coregistration primary times $\tau_{rg}^r(i,j)$ in {eq}`Equation|4.4` those obtained by inversely geocoding the DEM onto the orbit of the coregistration primary frame, the bias induced by the DEM upsampling can be compensated and the method described in {eq}`Equation|4.6` is still sufficiently accurate and within the scope of the applications of the BPS stack processor. This bias removal can nonetheless be disabled by user via `AUX_PPS`.
+where $f_c$ is the central (carrier) frequency. Note that, since the DEM is computed upstream of the stack processor (i.e., on L1a) on a grid that is not necessarily that of the coregistration primary frame, it follows that all inversely geocoded times $\tau_{rg}^n(i,j)$ (including those of the coregistration primary) may reflect the interpolation residuals⁽²⁾ between the directly geocoded Earth surface and the DEM obtained via upsampling the L1a LUTs (see {sec}`Section 3.4 <3.4>`). Nonetheless, it can be observed that such an error is in fact approximately a common bias in all image frames and can be therefore estimated by inversely geocoding the coregistration primary⁽³⁾. Therefore, using as coregistration primary times $\tau_{rg}^r(i,j)$ in {eq}`Equation 4.4 <4.4>` those obtained by inversely geocoding the DEM onto the orbit of the coregistration primary frame, the bias induced by the DEM upsampling can be compensated and the method described in {eq}`Equation 4.6 <4.6>` is still sufficiently accurate and within the scope of the applications of the BPS stack processor. This bias removal can nonetheless be disabled by user via `AUX_PPS`.
 
 [2] Note that the residuals are only due the fact that the input L1a data has been direct geocoded by the `L1_P` on a grid that is not that of the data. `STA_P` always use the same elevation model used by `L1_P`, since the elevation model is stored in the L1a product as a LUT annotation.
 
 [3] As a matter of principle, if the DEM were obtained by directly geocoding the sampling times of the coregistration primary, it would not be necessary to inverse geocode it with respect to the coregistration primary, since direct and inverse geocoding are indeed inverse operations. Hence, that would exactly return the range sampling times of the primary frame.
 
-Note that, owing to {eq}`Equation|4.6`, a “+” convention is required for compensating the contribution of the DEM in a coregistered image. More formally, as
+Note that, owing to {eq}`Equation 4.6 <4.6>`, a “+” convention is required for compensating the contribution of the DEM in a coregistered image. More formally, as
 
 $$
 CoSCS(i,\ j)\cdot\exp \left\{ +j\ {\Delta{}\varphi}_{syn,n,r}(i,j) \right\}.
@@ -198,7 +198,7 @@ where:
 
 [4] Note that $\Delta\theta$ (relative look angle) equals $\Delta\vartheta$, that is, the relative incidence angles between primary and secondary image. Also, note that the $\Delta\theta$ is used as an approximation of the exact value $\sin (\Delta\theta)$ since $\Delta\theta\ll\ 1.$
 
-- $\vartheta$is the incidence angle of the n-th image.
+- $\vartheta$ is the incidence angle of the n-th image.
 
 (sec:atbd-l1-stack-4-2)=
 ### 4.2 Residual Coregistration from Data
@@ -300,7 +300,7 @@ To reduce the aliasing that is inherent in computing cross-correlation on amplit
 The cross-correlation estimate of the local coregistration shifts is defined as the block displacement that corresponds to the maximum of the cross-correlation matrix:
 
 $$
-\left[ s_{az},\ s_{rg} \right](n,m)=\argmax_{a,r} (XC_{n,m}(a,\ r))
+\left[ s_{az},\ s_{rg} \right](n,m)=\operatorname{argmax}_{a,r} (XC_{n,m}(a,\ r))
 \tag{4.8}
 $$ (eq:atbd-l1-stack-4-8)
 
@@ -315,17 +315,17 @@ $$ (eq:atbd-l1-stack-4-9)
 
 The shifts estimated in a block are considered valid if $W(n,m)$ is above a quality threshold specified by `AUX_PPS` (`blockQualityThreshold`). The matrix $W(n,m)$ is written in the quality LUTs of the stack.
 
-At this stage, the Stack Processor allow for two possible approaches for estimating the final coregistration shifts from those estimated in {eq}`Equation|4.12`:
+At this stage, the Stack Processor allow for two possible approaches for estimating the final coregistration shifts from those estimated in {eq}`Equation (4.12) <4.12>`:
 
-- Upsample the coregistration shifts to the primary grid (see {sec}`Section|4.2.3`)
-- Use a model-based inversion of the shifts (see {sec}`Section|4.2.4`)
+- Upsample the coregistration shifts to the primary grid (see {sec}`Section 4.2.3 <4.2.3>`)
+- Use a model-based inversion of the shifts (see {sec}`Section 4.2.4 <4.2.4>`)
 
 The selection of the method is left to the user and it is configurable via the `AUX_PPS` parameter `modelBasedFitFlag`. By default, Stack Processor uses not model-based inversion.
 
 (sec:atbd-l1-stack-4-2-2)=
 #### 4.2.2 Upsampling of the Coregistration Shifts
 
-In this modality, the coregistration shifts in {eq}`Equation|4.12` are filtered with a low-pass filter using either a boxcar or a Gaussian kernel, as specified by the `AUX_PPS` parameter `lowPassFilterType` and then upsampled to the full extent of the coregistration primary grid using a linear interpolation. Since the operation is trivial, we simply report the Inputs and Outputs table in the section below to give an overview of the parameters configurable via `AUX_PPS`.
+In this modality, the coregistration shifts in {eq}`Equation (4.12) <4.12>` are filtered with a low-pass filter using either a boxcar or a Gaussian kernel, as specified by the `AUX_PPS` parameter `lowPassFilterType` and then upsampled to the full extent of the coregistration primary grid using a linear interpolation. Since the operation is trivial, we simply report the Inputs and Outputs table in the section below to give an overview of the parameters configurable via `AUX_PPS`.
 
 (sec:atbd-l1-stack-4-2-2-1)=
 ##### 4.2.2.1 Inputs and Outputs
@@ -440,7 +440,7 @@ The purpose of this step is to provide a quality measure of the model-based resi
 (sec:atbd-l1-stack-4-2-4-2)=
 ##### 4.2.4.2 Mathematical Description
 
-The quality of the model-based shifts estimation can be measured using the following fitting quality metric.
+The quality of the model-based shifts estimation can be measured using the following *fitting quality* metric.
 
 $$
 Q_{shifts}\mathrel{:=}\ \sqrt{Q_{shifts}^{az}\cdot{}Q_{shifts}^{rg}}
@@ -450,7 +450,7 @@ $$ (eq:atbd-l1-stack-4-11-2)
 Where:
 
 - $Q_{shifts}^{rg}\mathrel{:=}\max{(}1-\sigma_{r_{rg}}^2/\sigma_{M_{rg}}^2\ ,\ \ 0)$ and $Q_{shifts}^{az}\mathrel{:=}\max{(}1-\sigma_{r_{az}}^2/\sigma_{M_{az}}^2\ ,\ \ 0)$
-- $\sigma_M^2$ is the variance of a uniform distribution over the interval $[-\frac{M}{2},\frac{M}{2}]$ (i.e. $M^2/3)$
+- $\sigma_M^2$ is the variance of a uniform distribution over the interval $[-\frac{M}{2},\frac{M}{2}]$ (*i.e.* $M^2/3)$
 - $M$ is the maximum allowed coregistration residual between geometry coregistration and model-based fitting, as described in Equation 4.16 (range, or Equation 4.18 for azimuth counterpart). The quantities are expressed in pixels and defaulted to 5 but configurable via `AUX_PPS___` for range and azimuth independently.
 - $r_{rg}$ and $r_{az}$ are the difference between the fitted model and the shifts estimated from data-based coregistration in range and azimuth direction respectively (in pixels).
 
@@ -459,7 +459,7 @@ This parameter will be compared with a threshold in the `AUX_PPS` configuration 
 (sec:atbd-l1-stack-4-2-4-3)=
 ##### 4.2.4.3 Automatic Modality
 
-The coregistration module exposes to the user the possibility to let the processor to automatically chose between coregistration from data and coregistration from geometry. We will henceforth call this coregistration modality Automatic mode.
+The coregistration module exposes to the user the possibility to let the processor to automatically chose between coregistration from data and coregistration from geometry. We will henceforth call this coregistration modality *Automatic* mode.
 
 Under Automatic mode, the coregistration model first attempts to the coregister the data using the coregistration with “geometry and data” mode and evaluates the coregistration by checking that the following conditions hold:
 
@@ -500,22 +500,22 @@ The filter bank is an ensemble of interpolating filters, each responsible for a 
 (sec:atbd-l1-stack-4-4)=
 ### 4.4 Contingency Handling
 
-In the unlikely event of an unexpected error occurring during stacking, the stack processor discards the secondary frames that resulted in a coregistration failure, and it will not pass them over to the remainder of the calibration chain. To do so, the stack processor re-packs the input stack, including a possible change of the index of the primary image. Although the stack processor attempts continuing its execution as much as possible, whenever stacking fails for all frames or a failure occurs in estimating quantities associated to the coregistration primary (e.g. absolute LOS absolute 0-doppler distances from satellite to ground), the execution of the stack processor terminates gracefully with an error code. Note that failures during stacking will not affect the possibility of resuming the stack processor if interrupted before the natural conclusion of the execution since all information associated with coregistration failures are cached in the stack processor’s working directory.
+In the unlikely event of an unexpected error occurring during stacking, the stack processor discards the secondary frames that resulted in a coregistration failure, and it will not pass them over to the remainder of the calibration chain. To do so, the stack processor re-packs the input stack, including a possible change of the index of the primary image. Although the stack processor attempts continuing its execution as much as possible, whenever stacking fails for all frames or a failure occurs in estimating quantities associated to the coregistration primary (*e.g.* absolute LOS absolute 0-doppler distances from satellite to ground), the execution of the stack processor terminates gracefully with an error code. Note that failures during stacking will not affect the possibility of resuming the stack processor if interrupted before the natural conclusion of the execution since all information associated with coregistration failures are cached in the stack processor’s working directory.
 
 (sec:atbd-l1-stack-4-5)=
 ### 4.5 LUT Shifting and Interpolation
 
 The aim of this step is to align the input LUTs in the L1a onto the coregistration primary grid (or a sub-grid thereof) by using the coregistration shifted times output during the coregistration step. In this step, 2 possible output grids are considered:
 
-- The full resolution coregistration primary grid, which is the common grid of all the L1c products output by the stack processor.
-- The subsampled primary LUT grid, which is a subsampled version of the full resolution primary grid whose resolution is identical to that of the geometric LUTs (i.e. latitude/longitude/height) of the coregistration primary L1a frame. The default output resolution is approximately 90m x 90m.
+- The *full resolution coregistration primary grid*, which is the common grid of all the L1c products output by the stack processor.
+- The *subsampled primary LUT grid*, which is a subsampled version of the full resolution primary grid whose resolution is identical to that of the geometric LUTs (*i.e. latitude/longitude/height*) of the coregistration primary L1a frame. The default output resolution is approximately 90m x 90m.
 
-Every LUT that will be exported in the L1c product will be shifted onto the subsampled primary grid with the sole exception of those associated to the IOS module (see {sec}`Section|5.4`), which are computed and annotated on a dedicated grid. Moreover, only some LUTs are shifted in full resolution, namely those that are required in some intermediate calibration steps (e.g. the L1 ionospheric phase screen for the IOB, see {sec}`Section|5.2.2.1`). Nonetheless, if such LUTs are also exported into the L1c products (e.g. the elevation angles), they are further subsampled onto the subsampled primary LUT grid before being exported in the L1c.
+Every LUT that will be exported in the L1c product will be shifted onto the subsampled primary grid with the sole exception of those associated to the IOS module (see {sec}`Section 5.4 <5.4>`), which are computed and annotated on a dedicated grid. Moreover, only some LUTs are shifted in full resolution, namely those that are required in some intermediate calibration steps (*e.g.* the L1 ionospheric phase screen for the IOB, see {sec}`Section 5.2.2.1 <5.2.2.1>`). Nonetheless, if such LUTs are also exported into the L1c products (*e.g.* the elevation angles), they are further subsampled onto the subsampled primary LUT grid before being exported in the L1c.
 
 (sec:atbd-l1-stack-4-5-1)=
 #### 4.5.1 Algorithmic Overview
 
-Before detailing the LUT shifting procedure we note that, for lack of a more intuitive word, with shifting we henceforth refer to the process of:
+Before detailing the LUT shifting procedure we note that, for lack of a more intuitive word, with *shifting* we henceforth refer to the process of:
 
 - Applying the coregistration shifts to a LUT in order to align it to the associated coregistrered/warped image.
 - Possibly subsampling the aligned LUT to match a desired output resolution.
@@ -540,7 +540,7 @@ L^{\vert{}r}(i^{'},j^{'})\mathrel{:=}\Gamma\left[ L \right](T_{az}(i^{'},j^{'}),
 \tag{4.13}
 $$ (eq:atbd-l1-stack-4-13)
 
-Accordingly, shifting onto the full resolution coregistration primary grid is achieved by selecting the indices $i=i'$ and $j=j'$. Similarly, we shift onto the target subsampled primary LUT grid by selecting subsampling indices $i^{'}$ and $j'$ that best approximate the target resolution (90m x 90m under default configuration of the L1a products).
+Accordingly, shifting onto the *full resolution coregistration primary grid* is achieved by selecting the indices $i=i'$ and $j=j'$. Similarly, we shift onto the target *subsampled primary LUT grid* by selecting subsampling indices $i^{'}$ and $j'$ that best approximate the target resolution (90m x 90m under default configuration of the L1a products).
 
 In the context of coregistration with Geometry and Data, we only shift pixels that correspond to an estimation accuracy above a user selected threshold (see `AUX_FMT`, Table 67, `residualShiftsQualityThreshold`). For the other pixels, no shift is applied. That is achieved by setting $T_{az}(i,j)\mathrel{:=}{}t_{az}^L(i,\ j)$ and $T_{rg}(i,j)\mathrel{:=}{}t_{rg}^L(i,\ j)$ for each pixel $(i,j)$ so that $Q_{ij}<q_{thres}$.
 
@@ -549,4 +549,4 @@ Finally, note that if a LUT needs to be shifted onto the full resolution coregis
 (sec:atbd-l1-stack-4-5-2)=
 #### 4.5.2 Axes and Grids
 
-All LUTs are defined over the same sampling grid except for the LUT that contains the fast-ionosphere phase screen and quality (see {sec}`Section|5.4`), henceforth called fast-ionosphere LUTs. The sampling grid for all LUTs except the fast-ionosphere-LUTs will be that of the DEM LUTs of the L1a product used as coregistration primary. Under default configuration of the `L1_P` processor, all stack LUTs, except for fast-ionosphere LUTs, will have a ground resolution of approximately 90m x 90m (range x azimuth), which is the resolution of the DEM used (Copernicus DEM). That is, all LUTs except the fast-ionosphere-LUTs will be defined on a grid obtained by subsampling the primary data grid using range and azimuth steps that best approximate the target resolution for each axis, irrespectively of the resolution of the LUTs in the source L1a products. For more details on LUT grids and axes, we refer to Section 6.3.4.1 of `BPS_L1_PFD`. All available LUTs in the stack are reported in Section 6.3.4 of `BPS_L1_PFD`.
+All LUTs are defined over the same sampling grid except for the LUT that contains the fast-ionosphere phase screen and quality (see {sec}`Section 5.4 <5.4>`), henceforth called fast-ionosphere LUTs. The sampling grid for all LUTs except the fast-ionosphere-LUTs will be that of the DEM LUTs of the L1a product used as coregistration primary. Under default configuration of the `L1_P` processor, all stack LUTs, except for fast-ionosphere LUTs, will have a ground resolution of approximately 90m x 90m (range x azimuth), which is the resolution of the DEM used (Copernicus DEM). That is, all LUTs except the fast-ionosphere-LUTs will be defined on a grid obtained by subsampling the primary data grid using range and azimuth steps that best approximate the target resolution for each axis, irrespectively of the resolution of the LUTs in the source L1a products. For more details on LUT grids and axes, we refer to Section 6.3.4.1 of `BPS_L1_PFD`. All available LUTs in the stack are reported in Section 6.3.4 of `BPS_L1_PFD`.

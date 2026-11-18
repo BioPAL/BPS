@@ -24,12 +24,12 @@ The purpose of this document is to provide the “Forest Height Products Format 
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and Forest Height products;
-- {sec}`Section|3`: Overview of L2a products format;
-- {sec}`Section|4`: Detailed description of L2a products format specifications;
-- {sec}`Section|5`: Overview of L2b products format;
-- {sec}`Section|6`: Detailed description of L2b products format specifications.
-- {sec}`Section|7`: Appendix containing xml primitive product types description.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and Forest Height products;
+- {sec}`Section 3 <3>`: Overview of L2a products format;
+- {sec}`Section 4 <4>`: Detailed description of L2a products format specifications;
+- {sec}`Section 5 <5>`: Overview of L2b products format;
+- {sec}`Section 6 <6>`: Detailed description of L2b products format specifications.
+- {sec}`Section 7 <7>`: Appendix containing xml primitive product types description.
 
 (sec:pfd-fh-1-3)=
 ### 1.3 Acronyms

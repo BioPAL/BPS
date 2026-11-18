@@ -75,7 +75,7 @@ flowchart TB
 
 The disturbance maps allow the combination of different acquisitions in a simple and efficient pixelwise way. L2a products falling onto the same L2b tile within a global cycle are retrieved through geospatial query of information (tile IDs and time tags) in the Main Product Header of the product.
 
-From the disturbance map combined, the extraction of the combined CFM is obtained by a simple logical and operator.
+From the disturbance map combined, the extraction of the combined CFM is obtained by a simple logical *and* operator.
 
 (fig:atbd-fd-15)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -141,9 +141,9 @@ flowchart TB
 | ${{FD}_{map}}^{t^i}$ | Forest Disturbance | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | Forest Disturbance map |
 | ${CFM}^{t^i}$ | CFM | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | CFM |
 | ${P_c}^{t^i}$ | Probability of change | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | Probability of change map |
-| DGG | DGG | Internal lookup table | - | - | - | DGG tile |
-| BBi | Footprint | L2a main product header (`FD_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates |
-| mDGG | `minimumL2aCoverage` | `AUX_PP2_` FD (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
+| *DGG* | DGG | Internal lookup table | - | - | - | DGG tile |
+| *BB*{sup}`i` | Footprint | L2a main product header (`FD_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates |
+| *mDGG* | `minimumL2aCoverage` | `AUX_PP2_` FD (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
 
 (sec:atbd-fd-4-1-3)=
 #### 4.1.3 Outputs
@@ -153,19 +153,19 @@ flowchart TB
 | ${{FD}_{map}}^{aggregated}$ | Forest Disturbance | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | Forest Disturbance map aggregated |
 | ${CFM}^{aggregated}$ | CFM | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | CFM aggregated |
 | ${P_c}^{aggregated}$ | Probability of change | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | Probability of change map aggregated |
-| HM | heat map | FD L2b product (`FD_PFD`) | $2\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | 0- | - | heat map (couple of integer values per pixel) |
+| *HM* | heat map | FD L2b product (`FD_PFD`) | $2\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | 0- | - | heat map (couple of integer values per pixel) |
 
 (sec:atbd-fd-4-1-4)=
 #### 4.1.4 Algorithm mathematical background
 
-As a first step, the minimum required coverage over L2b DGG tile j is checked to proceed with computations:
+As a first step, the minimum required coverage over L2b DGG tile *j* is checked to proceed with computations:
 
 $$
-TR=\ (100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG)
+TR=\ \left( 100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG \right)
 \tag{4.1}
 $$ (eq:atbd-fd-4-1)
 
-where BBi are the L2a bounding boxes, TTj is the footprint of the current L2b DGG tile and A operator computes the area of the corresponding polygon.
+where *BB*{sup}`i` are the L2a bounding boxes, *TT*{sup}`j` is the footprint of the current L2b DGG tile and *A* operator computes the area of the corresponding polygon.
 
 The aggregation at pixel map level of the various L2a disturbance maps is done by examining the consistency of the time series of detections. First, the series of detection is temporally sorted, both ascending and descending orbits:
 
@@ -188,7 +188,7 @@ $$
 \tag{4.4}
 $$ (eq:atbd-fd-4-4)
 
-If the sum is odd, detection is assumed, and the resulting probability of change is the average of the different probabilities pixel-wise for detection only. Otherwise, the resulting probability of change and FD map is set to zero. If the sum is zero, detection is assumed only if all the acquisitions show detection. The rationale is that change is assumed only if all the acquisitions detecting it are simultaneously consistent. The situation is depicted in {fig}`Fig.|16` for the example of three acquisitions and the corresponding truth table is reported in {ref}`Tab.1 <tab:atbd-fd-1>`.
+If the sum is odd, detection is assumed, and the resulting probability of change is the average of the different probabilities pixel-wise for detection only. Otherwise, the resulting probability of change and FD map is set to zero. If the sum is zero, detection is assumed only if all the acquisitions show detection. The rationale is that change is assumed only if all the acquisitions detecting it are simultaneously consistent. The situation is depicted in {fig}`16` for the example of three acquisitions and the corresponding truth table is reported in {ref}`Tab.1 <tab:atbd-fd-1>`.
 
 (fig:atbd-fd-16)=
 :::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -223,7 +223,7 @@ If the sum is odd, detection is assumed, and the resulting probability of change
 
 :::
 
-A heat map HM is also stored representing at pixel level:
+A heat map *HM* is also stored representing at pixel level:
 
 - the total number of acquisitions contributing to the decision, as reported in {ref}`Tab.1 <tab:atbd-fd-1>` – column 6
 - the number of acquisitions agreeing to the decision, as reported in {ref}`Tab.1 <tab:atbd-fd-1>` – column 7

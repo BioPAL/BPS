@@ -527,7 +527,7 @@ The TIFF and GeoTIFF tags used to annotate SAR image MDS are described in the fo
 
 <p class="atbd-table-caption"><span class="caption-number">Table 2</span><span class="caption-text"> — SAR image MDS – TIFF and GeoTIFF tags</span></p>
 
-| Tag Name | Code | Value | Description |
+| **Tag Name** | **Code** | **Value** | **Description** |
 |---|---|---|---|
 | ImageWidth | 256 | Variable | Number of columns in the image, i.e. the number of pixels per row. |
 | ImageLength | 257 | Variable | Number of rows of pixels in the image. |
@@ -559,7 +559,7 @@ The `GDAL_METADATA` tag content is listed in the following table
 
 <p class="atbd-table-caption"><span class="caption-number">Table 3</span><span class="caption-text"> — SAR image MDS – GDAL_METADATA tiff tag content</span></p>
 
-| Tag Name | Value | Description |
+| **Tag Name** | **Value** | **Description** |
 |---|---|---|
 | Swath | S1,S2,S3 | Image swath: S1,S2,S3 |
 | PolarisationsSequence | Variable | String: list of polarisations associated to the raster bands in the corresponding order. For esample: “HH HV VH VV” means that band 1 corresponds to the HH polarization, band 2 to the HV polarization band 3 to the VH polarization and band 4 to the VV polarization |
@@ -649,9 +649,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 4</span><span class="caption-text"> — Main ADS</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `schemaVersion` | PFD version | `xsd:token` | 1 |
+| `schemaVersion` | *PFD version* | `xsd:token` | *1* |
 | `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | `acquisitionInformationType` | 1 |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | `sarImageType` | 1 |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | `instrumentParametersType` | 1 |
@@ -676,9 +676,9 @@ The content of each DSR is described making use of tables as the one here above.
 - Data Type: defines the data type of the element or attribute;
 - Cardinality: for elements, this column defines the number of occurrences of the element in the form `minOccurs..maxOccurs`; for attributes, “optional” means the attribute may or may not be present and “required” means the presence of the attribute is mandatory.
 
-In general, elements are displayed in normal font, attributes are displayed in italics.
+In general, elements are displayed in normal font, attributes are displayed in *italics*.
 
-Data types requiring a dedicated definition table are underlined, for all the others the common reference is {sec}`7.1.1`.
+Data types requiring a dedicated definition table are underlined, for all the others the common reference is {sec}`Sec. 7.1.1 <7.1.1>`.
 
 (sec:pfd-l1-4-3-1-1)=
 ##### 4.3.1.1 Acquisition information DSR
@@ -737,7 +737,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 5</span><span class="caption-text"> — Acquisition information DSR (acquisitionInformationType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | mission | Mission (BIOMASS). | `missionType` | 1 |
 | swath | Swath (S1, S2, S3). | `swathType` | 1 |
@@ -766,9 +766,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 6</span><span class="caption-text"> — Acquisition information DSR (polarisationListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | polarisation | Polarisation (HH, HV, VH, VV). | `polarisationType` | 1 .. 4 |
 
 :::
@@ -829,7 +829,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 7</span><span class="caption-text"> — SAR image DSR (sarImageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `firstSampleSlantRangeTime` | Two-way slant range time to first sample of the image [s]. | `doubleWithUnit` | 1 |
 | `lastSampleSlantRangeTime` | Two-way slant range time to last sample of the image [s]. | `doubleWithUnit` | 1 |
@@ -857,9 +857,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 8</span><span class="caption-text"> — SAR image DSR (coordinateConversionListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of coordinate conversion records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of coordinate conversion records within the list.* | `xsd:unsignedInt` | *required* |
 | `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
 
 :::
@@ -903,7 +903,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 9</span><span class="caption-text"> — SAR image DSR (coordinateConversionType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for coordinate conversion polynomial [s]. | `doubleWithUnit` | 1 |
@@ -968,7 +968,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 10</span><span class="caption-text"> — Instrument parameters DSR (instrumentParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `firstLineSensingTimeList` | Sensing time of first line of the input RAW data for all the polarisations [UTC]. | `firstLineSensingTimeListType` | 1 |
 | `lastLineSensingTimeList` | Sensing time of last line of the input RAW data for all the polarisations [UTC]. | `lastLineSensingTimeListType` | 1 |
@@ -994,9 +994,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 11</span><span class="caption-text"> — Instrument parameters DSR (firstLineSensingTimeListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `firstLineSensingTime` | Sensing time of first line of the input RAW data for the current polarisation [UTC]. | `timeTypeWithPolarisation` | 1 .. 4 |
 
 :::
@@ -1006,9 +1006,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 12</span><span class="caption-text"> — Instrument parameters DSR (lastLineSensingTimeListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `lastLineSensingTime` | Sensing time of last line of the input RAW data for the current polarisation [UTC]. | `timeTypeWithPolarisation` | 1 .. 4 |
 
 :::
@@ -1018,9 +1018,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 13</span><span class="caption-text"> — Instrument parameters DSR (swpListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of SWP records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of SWP records within the list.* | `xsd:unsignedInt` | *required* |
 | swp | SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
@@ -1030,9 +1030,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 14</span><span class="caption-text"> — Instrument parameters DSR (swlListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of SWL records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of SWL records within the list.* | `xsd:unsignedInt` | *required* |
 | swl | SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
@@ -1042,9 +1042,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 15</span><span class="caption-text"> — Instrument parameters DSR (prfListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of PRF records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of PRF records within the list.* | `xsd:unsignedInt` | *required* |
 | prf | PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time. List `maxOccurs` is set to 5, considered as worst case. | `stateType` | 1.. 5 |
 
 :::
@@ -1054,9 +1054,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 16</span><span class="caption-text"> — Instrument parameters DSR (txPulseListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of transmitted pulse records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of transmitted pulse records within the list.* | `xsd:unsignedInt` | *required* |
 | `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
 
 :::
@@ -1099,7 +1099,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 17</span><span class="caption-text"> — Instrument parameters DSR (txPulseType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time of transmitted pulse change [UTC]. | `timeType` | 1 |
 | `txPulseLength` | Transmit pulse length [s]. | `doubleWithUnit` | 1 |
@@ -1144,7 +1144,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 18</span><span class="caption-text"> — Instrument parameters DSR (rxGainListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `rxGain` | RX gain, extracted from RAS control message. | `floatWithPolarisation` | 2 |
 
@@ -1187,7 +1187,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 19</span><span class="caption-text"> — Instrument parameters DSR (dataFormatType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `echoFormat` | Data format of echo packets. | `dataFormatModeType` | 1 |
 | `calibrationFormat` | Data format of calibration packets. | `dataFormatModeType` | 1 |
@@ -1237,7 +1237,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 20</span><span class="caption-text"> — RAW data analysis DSR (rawDataAnalysisType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `errorCounters` | Error counters computed starting from input Instrument Source Packets stream. | `errorCountersType` | 1 |
 | `rawDataStatisticsList` | Extracted RAW data I and Q channels statistics for all the polarisations. | `rawDataStatisticsListType` | 1 |
@@ -1280,7 +1280,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 21</span><span class="caption-text"> — RAW data analysis DSR (errorCountersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `numIspHeaderErrors` | Total number of errors detected in ISP headers. | `xsd:unsignedInt` | 1 |
 | `numIspMissing` | Total number of missing ISP. | `xsd:unsignedInt` | 1 |
@@ -1292,9 +1292,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 22</span><span class="caption-text"> — RAW data analysis DSR (rawDataStatisticsListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `rawDataStatistics` | Extracted RAW data I and Q channels statistics for the current polarisation. | `rawDataStatisticsType` | 1 .. 4 |
 
 :::
@@ -1337,9 +1337,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 23</span><span class="caption-text"> — RAW data analysis DSR (rawDataStatisticsType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `iBias` | Calculated I bias. | `xsd:double` | 1 |
 | `qBias` | Calculated Q bias. | `xsd:double` | 1 |
 | `iqQuadratureDeparture` | Calculated I/Q quadrature departure. | `xsd:double` | 1 |
@@ -1352,9 +1352,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 24</span><span class="caption-text"> — RAW data analysis DSR (inOutBandPowerRatioListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `powerRatioList` | In/out-of-band power ratio measurements for the current polarisation. | `powerRatioListType` | 1 .. 4 |
 
 :::
@@ -1364,10 +1364,10 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 25</span><span class="caption-text"> — RAW data analysis DSR (powerRatioListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
-| count | Number of in/out-of-band power ratio measurements for the current polarisation within the list. | `xsd:unsignedInt` | required |
+| *polarisation* |   | `polarisationType` | *required* |
+| *count* | *Number of in/out-of-band power ratio measurements for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
 | `powerRatio` | In/out-of-band power ratio measurements. Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
 
 :::
@@ -1407,7 +1407,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 26</span><span class="caption-text"> — RAW data analysis DSR (powerRatioType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time of the in/out-of-band power ratio measurement [UTC]. | `timeType` | 1 |
 | value | In/out-of-band power ratio measurement. | `xsd:float` | 1 |
@@ -1494,7 +1494,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 27</span><span class="caption-text"> — Processing parameters DSR (processingParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `processorVersion` | Version of the processor used to generate the product. | `xsd:string` | 1 |
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
@@ -1581,7 +1581,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 28</span><span class="caption-text"> — Processing parameters DSR (spectrumProcessingParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `windowType` | Name of the weighting window type used during processing. | `weightingWindowType` | 1 |
 | `windowCoefficient` | Value of the weighting window coefficient used during processing. | `xsd:double` | 1 |
@@ -1598,9 +1598,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 29</span><span class="caption-text"> — Processing parameters DSR (processingGainListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `processingGain` | Processing gain computed and applied multiplicatively to the image during processing for the current polarisation. | `floatWithPolarisation` | 1 .. 4 |
 
 :::
@@ -1610,9 +1610,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 30</span><span class="caption-text"> — Processing parameters DSR (noiseGainListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `noiseGain` | Processing gain computed and applied multiplicatively to the thermal noise level before using it during denoising step for the current polarisation. | `floatWithPolarisation` | 1 .. 4 |
 
 :::
@@ -1660,7 +1660,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 31</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `internalCalibrationParametersUsed` | Internal calibration parameters effectively used during processing (Model or Extracted). | `internalCalibrationSourceType` | 1 |
 | `rangeReferenceFunctionUsed` | Chirp source effectively used for range compression (Nominal, Replica or Internal). Can be different from `rangeReferenceFunctionSource`. | `rangeReferenceFunctionType` | 1 |
@@ -1675,9 +1675,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 32</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationParametersListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `internalCalibrationSequenceList` | Internal calibration parameters derived from the calibration pulses for the current polarisation. | `internalCalibrationSequenceListType` | 1 .. 4 |
 
 :::
@@ -1687,10 +1687,10 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 33</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationSequenceListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
-| count | Number of internal calibration sequences for the current polarisation within the list. | `xsd:unsignedInt` | required |
+| *polarisation* |   | `polarisationType` | *required* |
+| *count* | *Number of internal calibration sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
 | `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses. Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
 
 :::
@@ -1753,7 +1753,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 34</span><span class="caption-text"> — Internal calibration DSR (internalCalibrationSequenceType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time in azimuth at which internal calibration parameters applies [UTC]. | `timeType` | 1 |
 | `driftAmplitude` | Amplitude drift for the current power gain product (PGP). | `xsd:float` | 1 |
@@ -1788,9 +1788,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 35</span><span class="caption-text"> — Internal calibration DSR (noiseListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `noiseSequenceList` | Noise parameters derived from the noise packets for the current polarisation. | `noiseSequenceListType` | 1 .. 4 |
 
 :::
@@ -1800,10 +1800,10 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 36</span><span class="caption-text"> — Internal calibration DSR (noiseSequenceListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
-| count | Number of noise sequences for the current polarisation within the list. | `xsd:unsignedInt` | required |
+| *polarisation* |   | `polarisationType` | *required* |
+| *count* | *Number of noise sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
 | `noiseSequence` | Noise parameters derived from noise packets. List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
 
 :::
@@ -1844,7 +1844,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 37</span><span class="caption-text"> — Internal calibration DSR (noiseSequenceType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time of the noise measurement [UTC]. | `timeType` | 1 |
 | `noisePowerCorrectionFactor` | Noise power correction factor. | `xsd:float` | 1 |
@@ -1893,7 +1893,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 38</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiMitigationType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | rfiTMReportList | Time-domain RFI mitigation report list. This element is present only if time-domain RFI mitigation is performed. | rfiTMReportListType | 0 .. 1 |
 | `rfiIsolatedFMReportList` | Frequency-domain isolated RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed. | `rfiIsolatedFMReportListType` | 0 .. 1 |
@@ -1906,9 +1906,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 39</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiTMReportListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | rfiTMReport | Time-domain RFI mitigation report. | rfiTMReportType | 1 .. 4 |
 
 :::
@@ -1950,9 +1950,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 40</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiTMReportType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `percentageAffectedLines` | Percentage of input RAW data lines affected by RFI. | `xsd:float` | 1 |
 | `avgPercentageAffectedSamples` | Average percentage of affected input RAW data samples in the lines containing RFI. | `xsd:float` | 1 |
 | `maxPercentageAffectedSamples` | Maximum percentage of input RAW data samples affected by RFI in the same line. | `xsd:float` | 1 |
@@ -1964,9 +1964,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 41</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiIsolatedFMReportListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `rfiIsolatedFMReport` | Frequency-domain isolated RFI mitigation report. | `rfiIsolatedFMReportType` | 1 .. 4 |
 
 :::
@@ -2008,9 +2008,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 42</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiIsolatedFMReportType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `percentageAffectedLines` | Percentage of input RAW data lines affected by isolated RFI. | `xsd:float` | 1 |
 | `maxPercentageAffectedBW` | Max percentage of bandwidth affected by isolated RFI in a single line. | `xsd:float` | 1 |
 | `avgPercentageAffectedBW` | Average percentage of bandwidth affected by isolated RFI | `xsd:float` | 1 |
@@ -2022,9 +2022,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 43</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiPersistentFMReportListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `rfiPersistentFMReport` | Frequency-domain persistent RFI mitigation report. | `rfiPersistentFMReportType` | 1 .. 4 |
 
 :::
@@ -2066,9 +2066,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 44</span><span class="caption-text"> — Radio Frequency Interference mitigation DSR (rfiPersistentFMReportType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `maxPercentageAffectedBW` | Max percentage of bandwidth affected by persistent RFI. | `xsd:float` | 1 |
 | `avgPercentageAffectedBW` | Average percentage of bandwidth affected by persistent RFI. | `xsd:float` | 1 |
 | `percentageAffectedLines` | Percentage of lines affected by persistent RFI. | `xsd:float` | 1 |
@@ -2115,7 +2115,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 45</span><span class="caption-text"> — Doppler parameters DSR (dopplerParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `dcEstimateList` | List of Doppler Centroid estimates that have been calculated during image processing. The list contains an entry for each Doppler Centroid estimate made along azimuth, i.e., each N seconds, where N is configurable. | `dcEstimateListType` | 1 |
 | `fmRateEstimateList` | List of Frequency Modulation rate estimates that have been calculated during image processing. The list contains an entry for each Frequency Modulation rate estimate made along azimuth, i.e., each N seconds, where N is configurable. | `fmRateEstimatesListType` | 1 |
@@ -2127,9 +2127,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Doppler parameters DSR (dcEstimateListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of `dcEstimate` records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of* `dcEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
 | `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
 
 :::
@@ -2175,7 +2175,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Doppler parameters DSR (dcEstimateType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for polynomial [s]. | `doubleWithUnit` | 1 |
@@ -2193,9 +2193,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Doppler parameters DSR (fmRateEstimatesListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of `fmRateEstimate` records within the list. | `xsd:unsignedInt` | required |
+| *count* | *Number of* `fmRateEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
 | `fmRateEstimate` | Frequency Modulation rate estimate record. Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
 
 :::
@@ -2239,7 +2239,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Radiometric calibration DSR (radiometricCalibrationType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `absoluteCalibrationConstantList` | Absolute calibration constant. Already applied to the image during processing for all the polarisations. | `calibrationConstantListType` | 1 |
 
@@ -2250,9 +2250,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Radiometric calibration DSR (calibrationConstantListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `absoluteCalibrationConstant` | Absolute calibration constant applied multiplicatively to the image during processing for the current polarisation. | `floatWithPolarisation` | 1 .. 4 |
 
 :::
@@ -2309,7 +2309,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — Polarimetric distortion DSR (polarimetricDistortionType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `crossTalkList` | System cross-talk values. | `crossTalkList` | 1 |
 | `channelImbalanceList` | System channel imbalance values. | `channelImbalanceList` | 1 |
@@ -2321,7 +2321,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 52</span><span class="caption-text"> — Polarimetric distortion DSR (crossTalkList)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `crossTalkHVTx` | H to V system cross-talk on transmit values, $\delta_4$. | complex | 1 |
 | `crossTalkVHTx` | V to H system cross-talk on transmit values, $\delta_3$. | complex | 1 |
@@ -2335,7 +2335,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 53</span><span class="caption-text"> — Polarimetric distortion DSR (channelImbalanceList)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `channelImbalHVTx` | H to V system channel imbalance on transmit values, $f_2$. | complex | 1 |
 | `channelImbalHVRx` | H to V system channel imbalance on receive values, $f_1$. | complex | 1 |
@@ -2389,7 +2389,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 54</span><span class="caption-text"> — Ionosphere correction DSR (ionosphereCorrectionType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `ionosphereHeightUsed` | Ionosphere height used for processing [m] (-1 if not available). | `floatWithUnit` | 1 |
 | `ionosphereHeightEstimated` | Ionosphere height estimated using Feature Tracking or Squint Sensitivity method, if selected via configuration [m] (-1 if not available). | `floatWithUnit` | 1 |
@@ -2444,7 +2444,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 55</span><span class="caption-text"> — Geometry DSR (geometryType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `heightModel` | Digital Elevation Model (DEM) commanded for usage during processing (with version as attribute). | `heightModelType` | 1 |
 | `heightModelUsedFlag` | True if the DEM effectively used during processing is the commanded one reported in `heightModel`, False otherwise (i.e. ellipsoid has been used for contingency handling). | bool | 1 |
@@ -2492,7 +2492,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 56</span><span class="caption-text"> — Quality DSR (qualityType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `overallProductQualityIndex` | Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. | `xsd:unsignedInt` | 1 |
 | `qualityParametersList` | Quality parameters list. The list contains an entry for each polarisation. | `qualityParametersListType` | 1 |
@@ -2504,9 +2504,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 57</span><span class="caption-text"> — Quality DSR (qualityParametersListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `qualityParameters` | Quality parameters for the current polarisation. | `qualityParametersType` | 1 .. 4 |
 
 :::
@@ -2565,9 +2565,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 58</span><span class="caption-text"> — Quality DSR (qualityParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | missingISPFraction | Number of missing ISP, expressed as a normalized fraction of the total number of ISP. | `xsd:float` | 1 |
 | maxISPGap | Maximum number of gaps between science data ISPs. | `xsd:unsignedInt` | 1 |
 | maxISPGapThreshold | Threshold on maxISPGap. If maxISPGap exceeds this parameter, the processing will not continue. | `xsd:unsignedInt` | 1 |
@@ -2594,42 +2594,42 @@ classDiagram
 (sec:pfd-l1-4-3-1-13-1)=
 ###### 4.3.1.13.1 Overall Product Quality Index
 
-As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex` is an unsigned integer value (i.e. a 32-bit integer ranging from 0 to 232 – 1) that summarizes the execution history of the L1 Processor. The L1’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
+As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex` is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the L1 Processor. The L1’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
 
 | Bit # | Module/Sub-step | Bit-Flipping Condition |
 |---|---|---|
-| 0 | Input products and auxiliary files ingestion | - Intentionally left blank, i.e. 0 - |
-| 1 |   | - Intentionally left blank, i.e. 0 - |
-| 2 |   | - Intentionally left blank, i.e. 0 - |
-| 3 |   | - Intentionally left blank, i.e. 0 - |
-| 4 | RAW data analysis | RAW data statistics out of boundaries (set to 1 if `invalidRawDataSamples`\>0, otherwise set to 0) |
-| 5 |   | - Intentionally left blank, i.e. 0 - |
-| 6 |   | - Intentionally left blank, i.e. 0 - |
-| 7 |   | - Intentionally left blank, i.e. 0 - |
-| 8 | Internal calibration | Invalid calibration sequences above threshold (set to 1 if `invalidDriftFraction`\>0 or if `invalidReplicaFraction`\>0, otherwise set to 0) |
-| 9 |   | - Intentionally left blank, i.e. 0 - |
-| 10 |   | - Intentionally left blank, i.e. 0 - |
-| 11 |   | - Intentionally left blank, i.e. 0 - |
-| 12 | RFI mitigation | - Intentionally left blank, i.e. 0 - |
-| 13 |   | - Intentionally left blank, i.e. 0 - |
-| 14 |   | - Intentionally left blank, i.e. 0 - |
-| 15 |   | - Intentionally left blank, i.e. 0 - |
-| 16 | Doppler Centroid estimation | Doppler Centroid estimation fallback from Combined method to Geometry method activated (set to 1 if activated, otherwise set to 0) |
-| 17 |   | Doppler Centroid estimation root mean squared (RMS) error above threshold (set to 1 if invalidDCEstimatesFraction\>0, otherwise set to 0) |
-| 18 |   | - Intentionally left blank, i.e. 0 - |
-| 19 |   | - Intentionally left blank, i.e. 0 - |
-| 20 | Range and azimuth compression | - Intentionally left blank, i.e. 0 - |
-| 21 |   | - Intentionally left blank, i.e. 0 - |
-| 22 |   | - Intentionally left blank, i.e. 0 - |
-| 23 |   | - Intentionally left blank, i.e. 0 - |
-| 24 | Polarimetric and ionospheric corrections | Ionosphere height estimation failing (set to 1 if `ionosphereHeightEstimationFlag`==False, otherwise set to 0) |
-| 25 |   | IRI model used (set to 1 if IRI model is used as fallback solution, due to failure of ionosphere height estimation, or set to 0 if it is used on purpose or not used) |
-| 26 |   | Gaussian filter size out of boundaries (set to 1 if `gaussianFilterComputationFlag`==False, otherwise set to 0) |
-| 27 |   | Inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`4.3.2` and L1 ATBD Sec. 4.10.3.5) (set to 1 in case of inconsistency, otherwise set to 0) |
-| 28 |   | Geomagnetic equator crossing fallback activated, i.e., phase screen and group delay corrections not applied (set to 1 if activated, otherwise set to 0) |
-| 29 |   | - Intentionally left blank, i.e. 0 - |
-| 30 | Autofocus | Number of failing estimations above threshold (set to 1 if `autofocusShiftsApplied`==False, otherwise set to 0) |
-| 31 |   | - Intentionally left blank, i.e. 0 - |
+| **0** | Input products and auxiliary files ingestion | *- Intentionally left blank, i.e. 0 -* |
+| **1** |   | *- Intentionally left blank, i.e. 0 -* |
+| **2** |   | *- Intentionally left blank, i.e. 0 -* |
+| **3** |   | *- Intentionally left blank, i.e. 0 -* |
+| **4** | RAW data analysis | RAW data statistics out of boundaries (set to 1 if `invalidRawDataSamples`\>0, otherwise set to 0) |
+| **5** |   | *- Intentionally left blank, i.e. 0 -* |
+| **6** |   | *- Intentionally left blank, i.e. 0 -* |
+| **7** |   | *- Intentionally left blank, i.e. 0 -* |
+| **8** | Internal calibration | Invalid calibration sequences above threshold (set to 1 if `invalidDriftFraction`\>0 or if `invalidReplicaFraction`\>0, otherwise set to 0) |
+| **9** |   | *- Intentionally left blank, i.e. 0 -* |
+| **10** |   | *- Intentionally left blank, i.e. 0 -* |
+| **11** |   | *- Intentionally left blank, i.e. 0 -* |
+| **12** | RFI mitigation | *- Intentionally left blank, i.e. 0 -* |
+| **13** |   | *- Intentionally left blank, i.e. 0 -* |
+| **14** |   | *- Intentionally left blank, i.e. 0 -* |
+| **15** |   | *- Intentionally left blank, i.e. 0 -* |
+| **16** | Doppler Centroid estimation | Doppler Centroid estimation fallback from Combined method to Geometry method activated (set to 1 if activated, otherwise set to 0) |
+| **17** |   | Doppler Centroid estimation root mean squared (RMS) error above threshold (set to 1 if *invalidDCEstimatesFraction*\>0, otherwise set to 0) |
+| **18** |   | *- Intentionally left blank, i.e. 0 -* |
+| **19** |   | *- Intentionally left blank, i.e. 0 -* |
+| **20** | Range and azimuth compression | *- Intentionally left blank, i.e. 0 -* |
+| **21** |   | *- Intentionally left blank, i.e. 0 -* |
+| **22** |   | *- Intentionally left blank, i.e. 0 -* |
+| **23** |   | *- Intentionally left blank, i.e. 0 -* |
+| **24** | Polarimetric and ionospheric corrections | Ionosphere height estimation failing (set to 1 if `ionosphereHeightEstimationFlag`==False, otherwise set to 0) |
+| **25** |   | IRI model used (set to 1 if IRI model is used as fallback solution, due to failure of ionosphere height estimation, or set to 0 if it is used on purpose or not used) |
+| **26** |   | Gaussian filter size out of boundaries (set to 1 if `gaussianFilterComputationFlag`==False, otherwise set to 0) |
+| **27** |   | Inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Sec. 4.3.2 <4.3.2>` and L1 ATBD Sec. 4.10.3.5) (set to 1 in case of inconsistency, otherwise set to 0) |
+| **28** |   | Geomagnetic equator crossing fallback activated, i.e., phase screen and group delay corrections not applied (set to 1 if activated, otherwise set to 0) |
+| **29** |   | *- Intentionally left blank, i.e. 0 -* |
+| **30** | Autofocus | Number of failing estimations above threshold (set to 1 if `autofocusShiftsApplied`==False, otherwise set to 0) |
+| **31** |   | *- Intentionally left blank, i.e. 0 -* |
 
 Note that some bits are intentionally left blank to support user-defined custom information. The quality index bits aim at providing the user with hints for tracing possible problems in case of failures in the processing.
 
@@ -2673,9 +2673,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 59</span><span class="caption-text"> — Annotation LUT DSR (layerListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | Number of layers. | `unsignedInt` | required |
+| *count* | *Number of layers.* | `unsignedInt` | *required* |
 | layer | LUT layer content. | `layerType` | 1 .. 30 |
 
 :::
@@ -2697,11 +2697,11 @@ The format adopted for LUT ADS is NetCDF one {rd}`6`. Thanks to the flexibility 
 
 The LUT ADS file is organised as follows:
 
-- a series of root level attributes, containing all those global attributes referring to the file as a whole;
-- a dimensions group, where names and lengths of the dimensions used when creating data arrays (variables) are defined;
-- a series of coordinate variables, containing special variables to store the axes data values for each dimension in the dimensions group;
-- a series of components, each one composed by a group of variables which can be divided in:
-    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the dimensions group;
+- a series of root level *attributes*, containing all those global attributes referring to the file as a whole;
+- a *dimensions* group, where names and lengths of the dimensions used when creating data arrays (variables) are defined;
+- a series of *coordinate variables*, containing special variables to store the axes data values for each dimension in the *dimensions* group;
+- a series of *components*, each one composed by a group of variables which can be divided in:
+    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *dimensions* group;
     - ancillary scalar variables containing other useful metadata to complete the data definition.
 
 Note that the LUT are defined over different sampling grids, depending on their specific definition, on the point in the processing chain where they have been computed (e.g., RFI masks are defined over a sub-sampled version of the RAW data sampling grid) and on the configured decimation factors.
@@ -2710,7 +2710,7 @@ Note that the LUT are defined over different sampling grids, depending on their 
 
 The NetCDF file used for LUT ADS will be in general a compressed one.
 
-It must be noticed that considering that (see also {sec}`4.3.2.3`):
+It must be noticed that considering that (see also {sec}`Sec. 4.3.2.3 <4.3.2.3>`):
 
 - a L1a frame is a raster of 1500x30000 pixels (range x azimuth, worst-case in terms of data size);
 - the decimation ratio for a LUT is of a factor 20x120, except for geometry-based LUT for which a factor 2x12 is used;
@@ -2729,7 +2729,7 @@ In order to reduce this size, a compression is applied. In particular, a zlib (L
 (sec:pfd-l1-4-3-2-1)=
 ##### 4.3.2.1 Attributes
 
-The attributes contain the same list of parameters described in {sec}`4.3.1.1` for the Acquisition information DSR. For all the details about these parameters refer to this section.
+The attributes contain the same list of parameters described in {sec}`Sec. 4.3.1.1 <4.3.1.1>` for the Acquisition information DSR. For all the details about these parameters refer to this section.
 
 In addition, those included in the following table are added.
 
@@ -2738,7 +2738,7 @@ In addition, those included in the following table are added.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 60</span><span class="caption-text"> — LUT ADS additional attributes</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `noDataValueBool` | Pixel value in case of LUT invalid data. Used for Boolean LUT (RFI masks). | bool | 1 |
 | `noDataValueFloat` | Pixel value in case of LUT invalid data. Used for float and double LUT. | float | 1 |
@@ -2757,7 +2757,7 @@ The table below describes the dimensions and coordinate variables.
 
 <p class="atbd-table-caption"><span class="caption-number">Table 61</span><span class="caption-text"> — LUT ADS dimensions and coordinate variables</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `slantRangeTimeRAW` | Slant range time axis for LUT defined on RAW data sampling grid [s]. | float | 1 |
 | `rangeFreqRAW` | Range frequency axis for LUT defined on RAW data sampling grid [Hz]. | float | 1 |
@@ -2779,7 +2779,7 @@ The table below describes the groups of variables. It shall be kept into account
 
 <p class="atbd-table-caption"><span class="caption-number">Table 62</span><span class="caption-text"> — LUT ADS groups of variables</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | group: `rfiMitigation` variables: `rfiTimeMaskHH`, `rfiTimeMaskHV`, `rfiTimeMaskVH`, `rfiTimeMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI time-domain mitigation has been applied (ones) or not (zeros) during L1 processing. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 (only if RFI mitigation step is activated) |
 | group: `rfiMitigation` variables: `rfiFreqMaskHH`, `rfiFreqMaskHV`, `rfiFreqMaskVH`, `rfiFreqMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI frequency-domain mitigation has been applied (ones) or not (zeros) during L1 processing. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 (only if RFI mitigation step is activated) |
@@ -3303,7 +3303,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 63</span><span class="caption-text"> — Overlay ADS</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Document | Document container for KML components. | DocumentType | 1 |
 
@@ -3314,7 +3314,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 64</span><span class="caption-text"> — Overlay ADS (DocumentType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | name | Name of the document. | `xsd:string` | 1 |
 | description | Description of the document. | `xsd:string` | 1 |
@@ -3328,7 +3328,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 65</span><span class="caption-text"> — Overlay ADS (GroundOverlayType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | name | Name of the ground overlay. | `xsd:string` | 1 |
 | visibility | Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible). | `xsd:unsignedInt` | 1 |
@@ -3343,7 +3343,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 66</span><span class="caption-text"> — Overlay ADS (TimeStampType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | when | Overlay time stamp in ISO 8601 format (YYYY-MM-DDThh:mm:ss). | `xsd:string` | 1 |
 
@@ -3354,7 +3354,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 67</span><span class="caption-text"> — Overlay ADS (IconType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | href | A local file specification or URL used to load the desired image and overlay it on the map. | `xsd:string` | 1 |
 
@@ -3365,9 +3365,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 68</span><span class="caption-text"> — Overlay ADS (LatLonQuadType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: lon,lat lon,lat lon,lat lon,lat lon,lat The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: *lon,lat lon,lat lon,lat lon,lat lon,lat* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -3376,7 +3376,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 69</span><span class="caption-text"> — Overlay ADS (PlacemarkType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Name | Name of the placemark. | `xsd:string` | 1 |
 | visibility | Specifies whether the feature is drawn in the 3D viewer when it is initially loaded (0: not visible, 1: visible). | `xsd:unsignedInt` | 1 |
@@ -3392,7 +3392,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 70</span><span class="caption-text"> — Overlay ADS (StyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | LyneStyle | Line style. | LyneStyleType | 1 |
 | PolyStyle | Polygon style. | PolyStyleType | 1 |
@@ -3404,7 +3404,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 71</span><span class="caption-text"> — Overlay ADS (LyneStyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | color | Line color in 32 bit hex format (AABBGGRR order). | `xsd:string` | 1 |
 | width | Line width. | `xsd:unsignedInt` | 1 |
@@ -3416,7 +3416,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 72</span><span class="caption-text"> — Overlay ADS (PolyStyleType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | color | Polygon color in 32 bit hex format (AABBGGRR order). | `xsd:string` | 1 |
 
@@ -3427,7 +3427,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 73</span><span class="caption-text"> — Overlay ADS (ExtendedDataType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | Data | Metadata. | DataType | 1..inf |
 
@@ -3438,7 +3438,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 74</span><span class="caption-text"> — Overlay ADS (DataType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | value | Metadata value. | `xsd:string` | 1 |
 
@@ -3449,7 +3449,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 75</span><span class="caption-text"> — Overlay ADS ()</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | tessellate | Tessellate option. | `xsd:unsignedInt` | 1 |
 | `altitudeMode` | Altitude mode option. | `xsd:string` | 1 |
@@ -3462,7 +3462,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 76</span><span class="caption-text"> — Overlay ADS (outerBoundaryIsType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | LinearRing | Linear ring description. | LinearRingType | 1 |
 
@@ -3473,8 +3473,8 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 77</span><span class="caption-text"> — Overlay ADS (LinearRingType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height The coordinates must appear in the following order: last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::

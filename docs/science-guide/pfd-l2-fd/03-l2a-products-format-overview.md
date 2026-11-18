@@ -67,7 +67,7 @@ BIOMASS L2a Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Forest Disturbance L2a products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS Forest Disturbance L2a Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |

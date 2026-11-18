@@ -14,16 +14,16 @@ The kinds of datasets are the same of L1a and L1b products, i.e., the Measuremen
 
 The declination and customisation of this format structure for BIOMASS L1c product is summarised in the following table. In particular, a typical product contains:
 
-- a main product header, an XML file including high-level information about the product origin, structure and main metadata (see {sec}`6.1`);
-- SAR (coregistered) image MDS, including the coregistered image binary raster data for the three or four BIOMASS polarisations (depending on configuration), organised in two Cloud Optimized GeoTIFF (COG) files, one for amplitude and one for phase components (see {sec}`6.2`);
-- primary image main annotation ADS, a copy of the primary image L1a product main ADS XML file, including only relevant DSR (see {sec}`6.3.1`);
-- coregistered image main annotation ADS, a copy of the secondary image L1a product main ADS XML file, with DSR content updated where needed and new DSR, specific for the coregistration process, added (see {sec}`6.3.3`);
-- coregistered image Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary NetCDF file (see. {sec}`6.3.4`), i.e.:
+- a main product header, an XML file including high-level information about the product origin, structure and main metadata (see {sec}`Sec. 6.1 <6.1>`);
+- SAR (coregistered) image MDS, including the coregistered image binary raster data for the three or four BIOMASS polarisations (depending on configuration), organised in two Cloud Optimized GeoTIFF (COG) files, one for amplitude and one for phase components (see {sec}`Sec. 6.2 <6.2>`);
+- primary image main annotation ADS, a copy of the primary image L1a product main ADS XML file, including only relevant DSR (see {sec}`Sec. 6.3.1 <6.3.1>`);
+- coregistered image main annotation ADS, a copy of the secondary image L1a product main ADS XML file, with DSR content updated where needed and new DSR, specific for the coregistration process, added (see {sec}`Sec. 6.3.3 <6.3.3>`);
+- coregistered image Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary NetCDF file (see. {sec}`Sec. 6.3.4 <6.3.4>`), i.e.:
     - copy of secondary image L1a product LUT radiometric calibration and denoising DSR, resampled over coregistration grid;
     - new coregistration (range and azimuth coregistration shifts and quality index maps) and InSAR DSR (RFI impact, residual fast-varying ionospheric phase and ground calibration phase maps, plus related quality indexes maps)
     - copy of primary image L1a product LUT geometry DSR;
-- orbit and attitude ADS, including orbit and attitude information, both for primary and coregistered images, in dedicated XML files (see {sec}`6.3.2` and {sec}`6.3.5` respectively);
-- quick-look and overlay ADS, including an averaged and decimated preview of the coregistered SAR image data set and information about its geographic coverage (see {sec}`6.3.6` and {sec}`6.3.7`);
+- orbit and attitude ADS, including orbit and attitude information, both for primary and coregistered images, in dedicated XML files (see {sec}`Sec. 6.3.2 <6.3.2>` and {sec}`6.3.5 <6.3.5>` respectively);
+- quick-look and overlay ADS, including an averaged and decimated preview of the coregistered SAR image data set and information about its geographic coverage (see {sec}`Sec. 6.3.6 <6.3.6>` and {sec}`6.3.7 <6.3.7>`);
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
 (fig:pfd-l1-34)=
@@ -68,7 +68,7 @@ BIOMASS L1c Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 78</span><span class="caption-text"> — L1c product structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS L1c Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |
@@ -101,7 +101,7 @@ BIOMASS L1c Product/
 (sec:pfd-l1-5-1)=
 ### 5.1 Product format definition guidelines
 
-Refer to {sec}`3.1`.
+Refer to {sec}`Sec. 3.1 <3.1>`.
 
 (sec:pfd-l1-5-2)=
 ### 5.2 L1M products
@@ -115,7 +115,7 @@ L1M products are identical to L1S ones except for SAR image MDS (and ‘measurem
 (sec:pfd-l1-5-3)=
 ### 5.3 Naming convention
 
-The naming convention for the BIOMASS L1c products and their related data are described in details in {ad}`2` and briefly recalled in {sec}`Section|3.4`. In summary, L1c product names differs from L1a/b products names in what follows:
+The naming convention for the BIOMASS L1c products and their related data are described in details in {ad}`2` and briefly recalled in {sec}`Section 3.4 <3.4>`. In summary, L1c product names differs from L1a/b products names in what follows:
 
 - `<TTTTTTTTTT>`: Product Type/File Type:
     - `S[1,2,3]_STA__1S`: Stripmap L1 Coregistered stack - Standard product;
@@ -123,4 +123,4 @@ The naming convention for the BIOMASS L1c products and their related data are de
 - `<yyyymmddThhmmss>`: UTC start date and time after coregistration;
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time after coregistation.
 
-Note that start and end times of L1c products do not necessarily coincide with those of the source L1a products since L1c products are coregistered on the primary image grid (see Stack ATBD, {sec}`Section|4`). Consequently, start and end times are updated according to the azimuth coregistration shifts estimated by the stack.
+Note that start and end times of L1c products do not necessarily coincide with those of the source L1a products since L1c products are coregistered on the primary image grid (see Stack ATBD, {sec}`Section 4 <4>`). Consequently, start and end times are updated according to the azimuth coregistration shifts estimated by the stack.

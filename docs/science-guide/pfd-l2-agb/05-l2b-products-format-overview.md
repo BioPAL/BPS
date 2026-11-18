@@ -19,12 +19,12 @@ The declination and customisation of this format structure for BIOMASS Above Gro
 - `BPS_FNF` image annotation: this is the mask applied; if the L2b FD product is provided as input, `BPS_FNF` is the CFM pre-computed contained in L2b FD product {ad}`8`, otherwise it is the FNF from L2a annotation LUT. In a Cloud Optimized GeoTIFF (COG) file;
 - Heat Map annotation, a map of integers which stores, pixel wise, how many L1c images have been used to compute each L2b pixel, in a Cloud Optimized GeoTIFF (COG) file;
 - main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file;
-- STAC metadata ADS (see {sec}`section|3`) ;
+- STAC metadata ADS (see {sec}`section 3 <3>`) ;
 - quick-look ADS, including an averaged and decimated previews of measurement MDS;
 - Overlay ADS, for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications);
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
-No need for Look-Up Tables (LUT) ADS in L2b products.
+*No need for Look-Up Tables (LUT) ADS in L2b products.*
 
 **No Data Value**
 
@@ -69,7 +69,7 @@ BIOMASS L2b Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 40</span><span class="caption-text"> — Above Ground Biomass L2b products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS Above Ground Biomass L2b Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |
@@ -96,7 +96,7 @@ BIOMASS L2b Product/
 (sec:pfd-agb-5-1)=
 ### 5.1 Product format definition guidelines
 
-Refer to {sec}`3.1`.
+Refer to {sec}`Sec. 3.1 <3.1>`.
 
 (sec:pfd-agb-5-2)=
 ### 5.2 Naming convention
@@ -140,12 +140,12 @@ The internal files in the product inherit the same naming convention, with the f
     - `.xsd` for support schemas RDS;
     - `*.json` for STAC.
 
-For basins, the following notation is used:
+*For basins, the following notation is used:*
 
-- • South America tropical: 100
-- • South America temperate: 200
-- • Africa tropical/temperate: 300
-- • Asia temperate: 400
-- • Asia tropical: 500
-- • Oceania tropical/temperate: 600
-- • Exclusion zone: 700
+- • *South America tropical: 100*
+- • *South America temperate: 200*
+- • *Africa tropical/temperate: 300*
+- • *Asia temperate: 400*
+- • *Asia tropical: 500*
+- • *Oceania tropical/temperate: 600*
+- • *Exclusion zone: 700*

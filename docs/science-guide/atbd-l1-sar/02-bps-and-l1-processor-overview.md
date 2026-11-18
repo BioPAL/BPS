@@ -13,11 +13,11 @@
 
 The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 data up to Level-3, generating a wide set of products. Product generation scheme is depicted in the following two figures respectively for TOM phase and for INT phase. The processing foresees the following steps:
 
-- L1 processing: the BIOMASS image formation step, taking in input 1 L0 slice and generating in output N\>=1 L1 frames;
-- Stack Processing: the coregistration and stacking processing step that will define the required 7-images Tomographic stacks or the 3-images Interferometric stacks. It includes stack phase calibration;
-- L2a Processing: processing step for each stack that provides the inputs to the further products Tile Generation performed by the L2b processors. For one global cycle the number of stacks varies mainly with latitude, approximately from a minimum of two at the Equator (ascending/descending) to about six at higher latitudes (three ascending/descending pairs);
-- L2b Processing: processing that aggregates all the stack-based L2a products insisting on the same location on ground (Tile) in the same time interval and generates a single BIOMASS L2b product. A different number of stacks may be available for each DGG tile, based on tile dimensions and swath coverage (which is not related to DGG tiling pattern);
-- L3 Processing: consolidation processing removing discontinuities in L2b products.
+- **L1 processing**: the BIOMASS image formation step, taking in input 1 L0 slice and generating in output N\>=1 L1 frames;
+- **Stack Processing**: the coregistration and stacking processing step that will define the required 7-images Tomographic stacks or the 3-images Interferometric stacks. It includes stack phase calibration;
+- **L2a Processing**: processing step for each stack that provides the inputs to the further products Tile Generation performed by the L2b processors. For one global cycle the number of stacks varies mainly with latitude, approximately from a minimum of two at the Equator (ascending/descending) to about six at higher latitudes (three ascending/descending pairs);
+- **L2b Processing**: processing that aggregates all the stack-based L2a products insisting on the same location on ground (Tile) in the same time interval and generates a single BIOMASS L2b product. A different number of stacks may be available for each DGG tile, based on tile dimensions and swath coverage (which is not related to DGG tiling pattern);
+- **L3 Processing**: consolidation processing removing discontinuities in L2b products.
 
 (fig:atbd-l1-sar-1)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -382,9 +382,9 @@ The BPS L1 Processor is able to ingest BIOMASS Level-0 products, acquired in Str
 
 The whole processing chain is organized into three main steps:
 
-- L1 Pre-Processor, responsible of checking, ingesting and decoding the input L0 product and of analysing the dedicated Internal Calibration packets;
-- L1 Core Processor, responsible of implementing the L1 processing chain kernel;
-- L1 Post-Processor, responsible of formatting the processor outputs into official L1a (SCS) and L1b (DGM) products, depending on the performed processing chain.
+- **L1 Pre-Processor**, responsible of checking, ingesting and decoding the input L0 product and of analysing the dedicated Internal Calibration packets;
+- **L1 Core Processor**, responsible of implementing the L1 processing chain kernel;
+- **L1 Post-Processor**, responsible of formatting the processor outputs into official L1a (SCS) and L1b (DGM) products, depending on the performed processing chain.
 
 (fig:atbd-l1-sar-3)=
 :::{div} atbd-mermaid-figure atbd-drawn-figure

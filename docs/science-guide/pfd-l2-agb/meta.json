@@ -12,9 +12,9 @@
  "backend": "docx",
  "license": "Apache-2.0",
  "pipeline_version": "0.1.0",
- "conversion_date": "2026-11-17",
+ "conversion_date": "2026-11-18",
  "checks": {
-  "V1": "FAIL",
+  "V1": "PASS",
   "V2": "PASS",
   "V3": "PASS",
   "V4": "PASS",

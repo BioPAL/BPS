@@ -12,10 +12,10 @@
  "backend": "docx",
  "license": "Apache-2.0",
  "pipeline_version": "0.1.0",
- "conversion_date": "2026-11-17",
+ "conversion_date": "2026-11-18",
  "checks": {
   "V1": "PASS",
-  "V2": "REVIEW",
+  "V2": "PASS",
   "V3": "PASS",
   "V4": "PASS",
   "V5": "PASS",
@@ -29,8 +29,8 @@
  },
  "counts": {
   "headings": 108,
-  "paragraphs": 293,
-  "list_items": 187,
+  "paragraphs": 294,
+  "list_items": 188,
   "tables": 28,
   "figures": 15,
   "equations": 125,

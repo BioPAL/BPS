@@ -24,11 +24,11 @@ The purpose of this document is to provide the “Stack Processor Algorithms The
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and Stack Processor;
-- {sec}`Section|3`: Description of the Pre-processing algorithms;
-- {sec}`Section|4`: Description of the Stacking algorithms;
-- {sec}`Section|5`: Description of the Calibration algorithms;
-- {sec}`Section|6`: Description of configurable input parameters.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and Stack Processor;
+- {sec}`Section 3 <3>`: Description of the Pre-processing algorithms;
+- {sec}`Section 4 <4>`: Description of the Stacking algorithms;
+- {sec}`Section 5 <5>`: Description of the Calibration algorithms;
+- {sec}`Section 6 <6>`: Description of configurable input parameters.
 
 (sec:atbd-l1-stack-1-3)=
 ### 1.3 Acronyms
@@ -39,9 +39,9 @@ This document is organized as follows:
 | AD | Applicable Document |
 | AGB | Above Ground Biomass |
 | ARESYS | Advanced Remote Sensing and Systems |
-| AT | Along-track (e.g. along-track direction) |
+| AT | Along-track (*e.g.* along-track direction) |
 | ATBD | Algorithm Theoretical Baseline Document |
-| AUX | Auxiliary (e.g `AUX_PPS`) |
+| AUX | Auxiliary (*e.g* `AUX_PPS`) |
 | AWGN | Additive White Gaussian Noise |
 | AZF | Azimuth Spectral Filtering |
 | BIODEMPP | Biomass DEM Prototype Processor |
@@ -52,7 +52,7 @@ This document is organized as follows:
 | DSI | DEM Synthetic Interferogram |
 | DTM | Digital Terrain Model |
 | ESA | European Space Agency |
-| FNF | Forest/Non-forest (e.g. mask) |
+| FNF | Forest/Non-forest (*e.g.* mask) |
 | FR | Faraday Rotation |
 | InSAR | Interferometric Synthetic Aperture Radar |
 | INT | Interferometric Phase |
@@ -65,7 +65,7 @@ This document is organized as follows:
 | LUT | Look-Up Table |
 | MB | Multi-baseline |
 | MPMB | Multi-polarimetric Multi-baseline |
-| MS | Multi-Squint (e.g. coherence) |
+| MS | Multi-Squint (*e.g.* coherence) |
 | MSC | Multi-Squint Calibration |
 | PFD | Product Format Specification Document |
 | RD | Reference Document |
@@ -92,10 +92,10 @@ This document is organized as follows:
 
 | Code | Document |
 |---|---|
-| <span id="rd1"></span>`[RD1]` | BIOMASS DEM Product Processor Prototype, CoSCS Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-ATBD-01, Issue 4.0, June 07th 2021. |
+| <span id="rd1"></span>`[RD1]` | BIOMASS DEM Product Processor Prototype, CoSCS Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-ATBD-01, Issue 4.0, June 07{sup}`th` 2021. |
 | <span id="rd2"></span>`[RD2]` | BIOMASS Report for Mission Selection; SP-1341/1, May 2012 |
 | <span id="rd3"></span>`[RD3]` | BIOMASS L2 Implementation Study, Integrated R&D Report. Report to ESA, 2018. |
-| <span id="rd4"></span>`[RD4]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07th 2021. |
+| <span id="rd4"></span>`[RD4]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07{sup}`th` 2021. |
 | <span id="rd5"></span>`[RD5]` | BIOMASS DEM Product Prototype Processor, Critical review of CoSCS and DEM algorithms, BIODEMPP-TN-01, Issue of 07th of February 2020. |
 | <span id="rd6"></span>`[RD6]` | M. Liao, H. Jiang, Y. Wang, T. Wang, L. Zhang, “Improved topographic mapping through high-resolution SAR interferometry with atmospheric effect removal”, ISPRS Journal of Photogrammetry and Remote Sensing, Volume 80, 2013, Pages 72-79 |
 | <span id="rd7"></span>`[RD7]` | Z. Hu, J. J. Mallorquí, G. Centolanza and J. Duro, "InSAR atmospheric delays compensation: Case study in Tenerife island," 2017 IEEE International Geoscience and Remote Sensing Symposium (IGARSS), Fort Worth, TX, 2017, pp. 3167-3170. |
@@ -107,7 +107,7 @@ This document is organized as follows:
 | <span id="rd13"></span>`[RD13]` | Tebaldini, Stefano, et al. "Phase calibration of airborne tomographic SAR data via phase center double localization." IEEE Transactions on Geoscience and Remote Sensing 54.3 (2016): 1775-1792. |
 | <span id="rd14"></span>`[RD14]` | Bamler, Richard und Hartl, Philip (1998) Synthetic Aperture Radar Interferometry. Inverse Problems, 14 (4). |
 | <span id="rd15"></span>`[RD15]` | F. Gatelli, A. Monti Guamieri, F. Parizzi, P. Pasquali, C. Prati and F. Rocca, "The wavenumber shift in SAR interferometry," in IEEE Transactions on Geoscience and Remote Sensing, vol. 32, no. 4, pp. 855-865, July 1994. |
-| <span id="rd16"></span>`[RD16]` | A. Reigber, "Range dependent spectral filtering to minimize the baseline decorrelation in airborne SAR interferometry," IEEE 1999 International Geoscience and Remote Sensing Symposium. IGARSS'99 (Cat. No.99CH36293), Hamburg, Germany, 1999, pp. 1721-1723 vol.3. |
+| <span id="rd16"></span>`[RD16]` | A. Reigber, "Range dependent spectral filtering to minimize the baseline decorrelation in airborne SAR interferometry," *IEEE 1999 International Geoscience and Remote Sensing Symposium. IGARSS'99 (Cat. No.99CH36293)*, Hamburg, Germany, 1999, pp. 1721-1723 vol.3. |
 | <span id="rd17"></span>`[RD17]` | Ferretti, A., Monti-Guarnieri A., Prati, C., Rocca, F., Massonnet, D. (2007). InSAR Principles: Guidelines for SAR Interferometry Processing and Interpretation. ESA Publications, TM-19. ISBN 92-9092-233-8. |
 | <span id="rd18"></span>`[RD18]` | [`BPS_AUX_FMT`] BPS Auxiliary Product Format, I/R 1/1 |
 | <span id="rd19"></span>`[RD19]` | [`BPS_L1_PFD`] BIOMASS L1a/b/c Products Format Specification, I/R 1/1 |
@@ -115,7 +115,7 @@ This document is organized as follows:
 | <span id="rd21"></span>`[RD21]` | Miguel Arevallilo Herraez, David R. Burton, Michael J. Lalor, and Munther A. Gdeisat, “Fast two-dimensional phase-unwrapping algorithm based on sorting by reliability following a noncontinuous path”, Journal Applied Optics, Vol. 41, No. 35, pp. 7437, 2002 |
 | <span id="rd22"></span>`[RD22]` | Laakso, Timo I., et al. “Splitting the unit delay [FIR/all pass filters design].” IEEE Signal Processing Magazine 13.1 (1996): 30-60. |
 | <span id="rd23"></span>`[RD23]` | S. Tebaldini, A. M. Guarnieri, and F. Rocca, “Recovering time and space varying phase screens through SAR multi-squint differential interferometry,” in EUSAR 2012; 9th European Conference on Synthetic Aperture Radar, Apr. 2012, pp. 16–19. |
-| <span id="rd24"></span>`[RD24]` | [`BPS_IODD`] BIOMASS Processors Input & Output Data Definition, Issue 3.0.5, February 2nd 2024. |
-| <span id="rd25"></span>`[RD25]` | [`BIOTOMEX_TN`] BIOTOMEX TN, Technical Note on Performance Analysis, Issue 1.1, November 26th, 2024 |
+| <span id="rd24"></span>`[RD24]` | [`BPS_IODD`] BIOMASS Processors Input & Output Data Definition, Issue 3.0.5, February 2{sup}`nd` 2024. |
+| <span id="rd25"></span>`[RD25]` | [`BIOTOMEX_TN`] BIOTOMEX TN, Technical Note on Performance Analysis, Issue 1.1, November 26{sup}`th`, 2024 |
 | <span id="rd26"></span>`[RD26]` | R. Lanari et al. "Generation of digital elevation models by using SIR-C/X-SAR multifrequency two-pass interferometry: The Etna case study." IEEE Transactions on Geoscience and Remote Sensing (1996) |
-| <span id="rd27"></span>`[RD27]` | S. Tebaldini, F. Salvaterra, F. Banda, and M. Pinheiro, “Multi-layer ionosphere correction in low-frequency interferometric SAR: modeling, inversion, and application to BIOMASS”. Authorea Preprints (2025) |
+| <span id="rd27"></span>`[RD27]` | S. Tebaldini, F. Salvaterra, F. Banda, and M. Pinheiro, “Multi-layer ionosphere correction in low-frequency interferometric SAR: modeling, inversion, and application to BIOMASS”. *Authorea Preprints* (2025) |

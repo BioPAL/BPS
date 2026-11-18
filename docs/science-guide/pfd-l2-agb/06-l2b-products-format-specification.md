@@ -31,7 +31,7 @@ For the detailed description of the MPH content and format refer to {ad}`3`. It 
 
 Instead, it has a new field “`agbTileStatus`” (see the “l2b only” comment reported also in 4.1), the field is under eop:`metaDataProperty`/bio:EarthObservationMetaData as:
 
-eop:`metaDataProperty` Observation metadata
+eop:`metaDataProperty` *Observation metadata*
 
 bio:EarthObservationMetaData
 
@@ -61,15 +61,15 @@ For all the images, following considerations are the same.
 
 All the L2b image products are geocoded to specific BIOMASS tiling latitude-longitude geographic DGG, described in {rd}`9`, ensuring a ground sampling always better than the resolution.
 
-In particular, we have that L2b images are aggregations of the L2a products insisting on the same location on ground (a single tile of the above DGG); a different number of L2a products may be available for the MDS geographic grid tile, based on tile dimensions and swath coverage.
+In particular, we have that L2b images are aggregations of the L2a products insisting on the same location on ground (a single *tile* of the above DGG); a different number of L2a products may be available for the MDS geographic grid tile, based on tile dimensions and swath coverage.
 
 The format used to store the L2b images is again the Cloud Optimized GeoTIFF (COG) {rd}`1`.
 
-Details about COG format and its usage to store images are already explained in {sec}`4.2` for L2a products and apply as well to L2b products;
+Details about COG format and its usage to store images are already explained in {sec}`Sec. 4.2 <4.2>` for L2a products and apply as well to L2b products;
 
 **Metadata**
 
-Metadata is the same of the L2a one, already described in {sec}`4.2` and {ref}`Tab.2 <tab:pfd-agb-2>`. the only difference is the absence of “`MATRIX_REPRESENTATION`”, “PolarisationsSequence”, “Swath”, and “`POLARIMETRIC_INTERP`” metadata in L2b.
+Metadata is the same of the L2a one, already described in {sec}`Sec. 4.2 <4.2>` and {ref}`Tab.2 <tab:pfd-agb-2>`. the only difference is the absence of “`MATRIX_REPRESENTATION`”, “PolarisationsSequence”, “Swath”, and “`POLARIMETRIC_INTERP`” metadata in L2b.
 
 **Overviews**
 
@@ -124,7 +124,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 41</span><span class="caption-text"> — Main L2b ADS</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | product | Product L2b DSR. This DSR contains the L2b product information. | `productL2bType` | 1 |
 | `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2b raster images. | `rasterImageType` | 1 |
@@ -186,7 +186,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 42</span><span class="caption-text"> — Product L2b DSR (productL2Type)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | mission | Mission (BIOMASS). | `missionType` | 1 |
 | tileID | DGG geographic cell (tile) identifier (one element list). | `xsd:string` | 1 |
@@ -209,9 +209,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 43</span><span class="caption-text"> — Product L2b DSR (calABcoverageTilesListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| ID | Tile ID | `xsd:string` | 1 |
+| *ID* | *Tile ID* | `xsd:string` | *1* |
 | tile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation | calABcoverageType | 0..25 |
 
 :::
@@ -221,7 +221,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 44</span><span class="caption-text"> — Product L2b DSR (calABcoverageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `originalCoverage` | `CAL_AB` original coverage, percentage and number of pixel values | `percentPixelsType` | 1 |
 | `filteredCoverage` | `CAL_AB` filtered coverage, percentage and number of pixel values after each filtering. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | calABfilteredCoverageType | 1 |
@@ -233,7 +233,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 45</span><span class="caption-text"> — Product L2b DSR (calABfilteredCoverageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `afterGlobalFiltering` | `CAL_AB` filtered coverage, percentage and number of pixel values after all filtering concatenated.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
 | afterAGBvalueFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for mean AGB values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
@@ -248,9 +248,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Product L2b DSR (GNcoverageTilesListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| ID | Tile ID | `xsd:string` | 1 |
+| *ID* | *Tile ID* | `xsd:string` | *1* |
 | tile | Input GN products coverage, for each tile | GNcoverageListType | 0..25 |
 
 :::
@@ -260,9 +260,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Product L2b DSR (GNcoverageListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| acquisitionID | GN product acquisition ID | `xsd:string` | 1 |
+| *acquisitionID* | *GN product acquisition ID* | `xsd:string` | *1* |
 | GN | Input GN product coverage, for each input GN (unbounded) and current tile | GNcoverageType | 1 unbounded |
 
 :::
@@ -272,7 +272,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Product L2b DSR (GNcoverageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `originalCoverage` | Input GN product original coverage (current GN and current tile) percentage and number of pixel values | `percentPixelsType` | 1 |
 | `filteredCoverage` | Input GN product filtered (current GN and current tile) percentage and number of pixel values after each filtering.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | GNfilteredCoverageType | 1 |
@@ -284,7 +284,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Product L2b DSR (GNfilteredCoverageType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `afterGlobalFiltering` | Input GN product filtered coverage, percentage and number of pixel values after all filtering concatenate.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | `percentPixelsType` | 1 |
 | `afterSigmaFiltering` | Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Sigma (backscatter) values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5, σ\_p^0 | `percentPixelsType` | 1 |
@@ -297,7 +297,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Product L2b DSR (percentPixelType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | percentage | Coverage in percentage of the whole Tile | `xsd:float` | 1 |
 | pixels | Coverage in number of pixels of the whole Tile | `xsd:unsignedInt` | 1 |
@@ -307,7 +307,7 @@ classDiagram
 (sec:pfd-agb-6-3-1-2)=
 ##### 6.3.1.2 Raster Image L2b DSR
 
-This DSR contains all the necessary information to exploit the raster images of all the L2b MDS, it is already described in {fig}`Fig.|4`, {ref}`Tab.10 <tab:pfd-agb-10>`, {ref}`Tab.11 <tab:pfd-agb-11>`, {ref}`Tab.12 <tab:pfd-agb-12>`, {ref}`Tab.13 <tab:pfd-agb-13>`, the differences are:
+This DSR contains all the necessary information to exploit the raster images of all the L2b MDS, it is already described in {fig}`4`, {ref}`Tab.10 <tab:pfd-agb-10>`, {ref}`Tab.11 <tab:pfd-agb-11>`, {ref}`Tab.12 <tab:pfd-agb-12>`, {ref}`Tab.13 <tab:pfd-agb-13>`, the differences are:
 
 - the projection which here is the specific “DGG” described in {rd}`9`.
 - {ref}`Tab.11 <tab:pfd-agb-11>` is replaced by {ref}`Tab.51 <tab:pfd-agb-51>` for the L2b AGB choice
@@ -317,7 +317,7 @@ This DSR contains all the necessary information to exploit the raster images of 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — pixelRepresentationChoiceType (only L2b AGB choice described here)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | AGB | Representation of the image pixels within the image MDS: Above Ground Biomass [t/ha] | `pixelRepresentationType` | 1 |
 | `AGB_STANDARD_DEVIATION` | Representation of the image pixels within the image MDS: Above Ground Biomass quality [t/ha] | `pixelRepresentationType` | 1 |
@@ -333,9 +333,9 @@ This DSR contains all the necessary information to exploit the raster images of 
 This DSR contains, for each of the L2a Product in input to L2b processor:
 
 - the folder name of L2a product;
-- the L1c acquisitions used to generate that L2a product; it is an InputInformationL2aType, see description in 4.3.1.3 and {ref}`Tab.14 <tab:pfd-agb-14>`, {ref}`Tab.15 <tab:pfd-agb-15>`.
+- the L1c acquisitions used to generate that L2a product; it is an *InputInformationL2aType*, see description in 4.3.1.3 and {ref}`Tab.14 <tab:pfd-agb-14>`, {ref}`Tab.15 <tab:pfd-agb-15>`.
 
-An overview is provided by figure below and in the table below for the L2inputs.
+An overview is provided by figure below and in the table below for the *L2inputs*.
 
 (fig:pfd-agb-21)=
 :::{div} atbd-mermaid-figure
@@ -392,9 +392,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 52</span><span class="caption-text"> — Input information L2b DSR (InputInformationL2bL3ListType )</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count | XML attribute. | `xsd:unsignedInt` | required |
+| *count* | XML attribute. | `xsd:unsignedInt` | *required* |
 | L2aInputs | One entry for each L2a product in input to L2b. Each entry contains two elements: L2aProductFolderName and L1inputs. | L2aInputsType | 1..N |
 
 :::
@@ -404,7 +404,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 53</span><span class="caption-text"> — Input information L2b DSR (L2aInputsType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | L2aProductFolderName | Folder name of each L2a product, as defined in {sec}`3.2` (One string for each “L2aInputs" entry). | `xsd:string` | 1 |
 | L2aProductDate | Product date for each L2a product | `xsd:string` | 1 |
@@ -471,7 +471,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 54</span><span class="caption-text"> — Processing parameters L2b DSR</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `processorVersion` | Version of the processor used to generate the product. | `xsd:string` | 1 |
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
@@ -502,7 +502,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 55</span><span class="caption-text"> — BackscatterLimitsType L2b DSR</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | BackscatterLimitsType | Used lower and upper limits on backscatter in linear units: three enumerates elements “HH”, “VH”, “VV”, each of MinMaxType | MinMaxType | 3…3 |
 
@@ -580,26 +580,26 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 56</span><span class="caption-text"> — Processing parameters L2b DSR (estimatedParametersL2bAGBType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | rho | AGB estimation Rho value: logarithmic bias correction as the ratio of the average reference AGB to the average estimated AGB | `xsd:float` | 1 |
-| polarisations | Attribute of beow described “Polarisation” element; possible values: “HH”, “VH”, “VV”, “HH VH VV” | `xsd:string` | 1 |
+| *polarisations* | *Attribute of beow described “Polarisation” element;* *possible values: “HH”, “VH”, “VV”, “HH VH VV”* | `xsd:string` | *1* |
 | Polarisation | Parameters estimated during AGB processing | `estimatedParametersPolarisationType` | 1 or 3 |
 
 :::
 
 **Note on `estimatedParametersPolarisationType`**
 
-It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` of “LCM” elements, which contains an `xsd:sequence` of “date” elements, which contains `xsd:all` “N”, “A”, and “L” elements, each of them each composed by the final `xsd:sequence` with “mean” and “std” elementary “`xsd:float`” elements)
+It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “**LCM”** elements, which contains an `xsd:sequence` of “**date”** elements, which contains `xsd:all` **“N”, “A”,** and **“L”** elements, each of them each composed by the final `xsd:sequence` with “**mean”** and “**std”** elementary “`xsd:float`” elements)
 
 (tab:pfd-agb-57)=
 :::{div} atbd-table
 
 <p class="atbd-table-caption"><span class="caption-number">Table 57</span><span class="caption-text"> — Processing parameters L2b DSR (estimatedParametersPolarisationType )</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| classes | String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3” | `xsd:string` | required |
+| *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | `xsd:string` | *required* |
 | LCM | Sequence of “LCM” elements. Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType` (LCM) | 1..unbounded |
 
 :::
@@ -609,9 +609,9 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 
 <p class="atbd-table-caption"><span class="caption-number">Table 58</span><span class="caption-text"> — Processing parameters L2b DSR (xsd:complexType (LCM))</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| dates | String containing two dates (in the `timeType` format), separated by a space: start and stop date to describe an interval. | `xsd:string` | required |
+| *dates* | *String containing two dates (in the* `timeType` *format*)*, separated by a space: start and stop date to describe an interval.* | `xsd:string` | *required* |
 | date | Sequence of “date” elements. Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType` (date) | 1..unbounded |
 
 :::
@@ -621,7 +621,7 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 
 <p class="atbd-table-caption"><span class="caption-number">Table 59</span><span class="caption-text"> — Processing parameters L2b DSR ((sd:complexType (date))</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType` (N, A, L) | 1 |
 | A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType` (N, A, L) | 1 |
@@ -634,7 +634,7 @@ It is a unique complex type (see {fig}`Fig.|23`), containing an `xsd:sequence` o
 
 <p class="atbd-table-caption"><span class="caption-number">Table 60</span><span class="caption-text"> — Processing parameters L2b DSR (xsd:complexType (N, A, L))</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | mean | Mean value for the estimated regression parameter | `xsd:float` | 1 |
 | std | Standard deviation value for the estimated regression parameter | `xsd:float` | 1 |
@@ -712,7 +712,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 61</span><span class="caption-text"> — Processing parameters L2b DSR (compressionOptionsL2bType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | MDS → AGB → `compressionFactor` MDS → AGBstandardDeviation → `compressionFactor` MDS →`BPS_FNF` → `compressionFactor` MDS → HeatMap → `compressionFactor` MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | MDS → AGB → `MAX_Z_ERROR` MDS → AGBstandardDeviation → `MAX_Z_ERROR` MDS → HeatMap → `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). Zero means loss-less compression. | `xsd:float` | 1 |
@@ -730,11 +730,11 @@ This has no difference respect to the one already described in 4.3.2.
 
 The Quick-look ADS is composed by lower resolution versions of all the MDS images.
 
-The details about Quick-look ADS already explained in {sec}`4.3.1` for L2a products apply as well to L2b products.
+The details about Quick-look ADS already explained in {sec}`Sec. 4.3.1 <4.3.1>` for L2a products apply as well to L2b products.
 
 (sec:pfd-agb-6-3-2)=
 #### 6.3.2 Overlay ADS
 
 The Overlay ADS is a Keyhole Markup Language (KML) file that describes the product coverage area and is suitable for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications).
 
-The details about Quick-look ADS already explained in {sec}`4.3.2` for L2a products apply as well to L2b products.
+The details about Quick-look ADS already explained in {sec}`Sec.4.3.2 <4.3.2>` for L2a products apply as well to L2b products.

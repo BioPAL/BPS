@@ -19,7 +19,7 @@ The MPH main scope is to provide all the information related to the:
 - Identification of the product for example for cataloguing purposes;
 - Product consistency (file size).
 
-For the detailed description of the MPH content and format refer to {ad}`3`. For a schematic representation see {sec}`4.1`.
+For the detailed description of the MPH content and format refer to {ad}`3`. For a schematic representation see {sec}`Sec. 4.1 <4.1>`.
 
 (sec:pfd-l1-6-2)=
 ### 6.2 Measurement data sets (MDS)
@@ -34,7 +34,7 @@ The SAR image MDS is used to store the SAR image binary raster data as generated
 
 The format used to store the SAR (coregistered) image MDS is again the Cloud Optimized GeoTIFF (COG) {rd}`1`.
 
-All the details about COG format and about its usage to store SAR image MDS already explained in {sec}`4.2.1` for L1a products (compression strategy, usage of VRT files, metadata, overviews, …) apply as well to L1c products.
+All the details about COG format and about its usage to store SAR image MDS already explained in {sec}`Sec. 4.2.1 <4.2.1>` for L1a products (compression strategy, usage of VRT files, metadata, overviews, …) apply as well to L1c products.
 
 (sec:pfd-l1-6-3)=
 ### 6.3 Annotation data sets (ADS)
@@ -49,21 +49,21 @@ This ADS is an exact copy of the main ADS included in the L1a product (primary o
 
 The primary image Orbit and Attitude ADS will be included as dedicated files in L1c products.
 
-These files are also a exact copies of the homonymous files included in the L1a product (primary one) received in input by the Stack processor and described in {sec}`4.3.3`.
+These files are also a exact copies of the homonymous files included in the L1a product (primary one) received in input by the Stack processor and described in {sec}`Sec. 4.3.3 <4.3.3>`.
 
 (sec:pfd-l1-6-3-3)=
 #### 6.3.3 Coregistered image main ADS
 
-This ADS is a copy of the main ADS included in the L1a product (secondary one) received in input by the Stack processor with some modifications. Details are reported in the following table, taking as reference the similar list described in {sec}`4.3.1`.
+This ADS is a copy of the main ADS included in the L1a product (secondary one) received in input by the Stack processor with some modifications. Details are reported in the following table, taking as reference the similar list described in {sec}`Sec. 4.3.1 <4.3.1>`.
 
 (tab:pfd-l1-79)=
 :::{div} atbd-table
 
 <p class="atbd-table-caption"><span class="caption-number">Table 79</span><span class="caption-text"> — Coregistered image main ADS</span></p>
 
-| Name | Description | Differences between L1a and L1c |
+| **Name** | **Description** | **Differences between L1a and L1c** |
 |---|---|---|
-| `schemaVersion` | PFD version | No differences |
+| `schemaVersion` | *PFD version* | *No differences* |
 | `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields: `productType` becomes STA `startTime` and `stopTime` updated after coregistration `polarisationList` will cointain the output polarization |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | Copied from primary image main ADS (considering that the coregistered image is resampled over the same sampling grid of the primary image and a different `noDataValue` can be selected) |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | No differences |
@@ -163,7 +163,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 80</span><span class="caption-text"> — STA processing parameters DSR (staProcessingParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `processorVersion` | Version of the processor used to generate the product. | `xsd:string` | 1 |
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
@@ -251,7 +251,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 81</span><span class="caption-text"> — STA processing parameters DSR (staCoregistrationParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | datum | Datum used during coregistration. | `datumType` | 1 |
 | `primaryImage` | Product name of coregistration primary image. | `xsd:string` | 1 |
@@ -322,7 +322,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 82</span><span class="caption-text"> — STA processing parameters DSR (staInSARParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `calibrationPrimaryImage` | Product name of multi-baseline calibration steps primary image (or, simply, calibration primary image). | `xsd:string` | 1 |
 | `azimuthCommonBandwidth` | Azimuth bandwidth in common with primary image after azimuth spectral filtering step [Hz]. | `floatWithUnit` | 1 |
@@ -352,10 +352,10 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 83</span><span class="caption-text"> — STA processing parameters DSR (interferometricPairListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
-| `interferometricPairListType` | List of interferometric pairs expressed as indices. | `interferometricPairType` | $\geq$0 |
+| *count* |   | `xsd:unsignedInt` | *required* |
+| `interferometricPairListType` | List of interferometric pairs expressed as indices. | `interferometricPairType` | $\geq$ 0 |
 
 :::
 
@@ -399,7 +399,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 84</span><span class="caption-text"> — STA quality DSR (staQualityType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `overallProductQualityIndex` | Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value for the product. | `xsd:unsignedInt` | 1 |
 | `staQualityParametersList` | Quality parameters list. The list contains an entry for each output product’s polarisation. | `staQualityParametersListType` | 1 |
@@ -411,9 +411,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 85</span><span class="caption-text"> — STA quality DSR (staQualityParametersListType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| count |   | `xsd:unsignedInt` | required |
+| *count* |   | `xsd:unsignedInt` | *required* |
 | `staQualityParameters` | Quality parameters for the current polarisation. | `staQualityParametersType` | 1 .. 4 |
 
 :::
@@ -474,9 +474,9 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 86</span><span class="caption-text"> — STA quality DSR (staQualityParametersType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| polarisation |   | `polarisationType` | required |
+| *polarisation* |   | `polarisationType` | *required* |
 | `invalidL1aDataSamples` | Number of invalid L1a data samples (according to their mean and standard deviation), expressed as a normalized fraction of the total number of samples. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelation` | Decorrelation factor due to RFI strength. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelationThreshold` | Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image. The value is between 0 and 1 and copied from the AUX-PPS. | `xsd:float` | 1 |
@@ -501,7 +501,7 @@ classDiagram
 
 <p class="atbd-table-caption"><span class="caption-number">Table 87</span><span class="caption-text"> — The histogramType.</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | bins | The bins of the histogram | `floatArray` | 1 |
 | `pdfValues` | The PDF values of the histograms | `floatArray` | 1 |
@@ -511,44 +511,44 @@ classDiagram
 (sec:pfd-l1-6-3-3-4-1)=
 ###### 6.3.3.4.1 Overall Product Quality Index
 
-As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the `overallProductQualityIndex` is an unsigned integer value (i.e. a 32-bit integer ranging from 0 to 232 – 1) that summarizes the execution history of the Stack Processor as well as a high-level information on the quality of the input stack. Similarly to that of the `L1_P` processor, the Stack’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
+As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the `overallProductQualityIndex` is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the Stack Processor as well as a high-level information on the quality of the input stack. Similarly to that of the `L1_P` processor, the Stack’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
 
 | Bit # | Module/Sub-step | Bit-Flipping Condition |
 |---|---|---|
-| 0 | L1a input | Nonzero if the `overallQualityIndex` is nonzero for the source L1a input⁽¹⁾ product (see {sec}`4.3.1.13.1`) |
-| 1 | Pre-processor | At least 1 expected LUT is missing from the source L1a input product (e.g. FR LUT is missing, and primary selection uses FR index) |
-| 2 |   | Source L1a input product has a non-nominal set of polarizations (i.e. it’s not a quad-pol HH,HV,VH,VV) |
-| 3 |   | Source L1a input product has non-nominal swath duration, i.e. not between 20.5s and 21.5s |
-| 4 |   | Source L1a input product has inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`4.3.2`, and L1 ATBD Section 4.10.3.5) |
-| 5 | Coregistrator | Coregistration from data failed due to fitting quality index below `fittingQualityThreshold` (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
-| 6 |   | Shift accuracy below `residualShiftsQualityThreshold` for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
-| 7 |   | - Intentionally left blank, i.e. 0 - |
-| 8 |   | - Intentionally left blank, i.e. 0 - |
-| 9 | AZF | - Intentionally left blank, i.e. 0 - |
-| 10 |   | - Intentionally left blank, i.e. 0 - |
-| 11 | IOB | `phaseScreen` and/or `rangeShifts` LUTs (see {sec}`4.3.2.3`) are missing from the source L1a input product and `compensateIonoPhaseScreenFlag` is set to true in `AUX_PPS` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
-| 12 |   | Estimation quality below `slowIonosphereQualityThreshold` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
-| 13 |   | Failed Single-baseline estimation for at least 1 interferometric pair containing the current frame (Multi-baseline mode only, see Stack ATBD Section 5.2.5)⁽²⁾ |
-| 14 |   | Current frame outside of region affected by slow-varying ionosphere, that is, above `latitudeThreshold` (see Stack ATBD {sec}`5.2` and `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
-| 15 | MSC | - Intentionally left blank, i.e. 0 - |
-| 16 |   | - Intentionally left blank, i.e. 0 - |
-| 17 |   | - Intentionally left blank, i.e. 0 - |
-| 18 |   | - Intentionally left blank, i.e. 0 - |
-| 19 |   | - Intentionally left blank, i.e. 0 - |
-| 20 |   | - Intentionally left blank, i.e. 0 - |
-| 21 |   | - Intentionally left blank, i.e. 0 - |
-| 22 |   | - Intentionally left blank, i.e. 0 - |
-| 23 | SKP | DEM resolution too coarse with respect to the selected `estimationWindowSize` (see `AUX_FMT`, {ref}`Table 90 <tab:pfd-l1-90>`) |
-| 24 |   | SKP estimation failure, i.e. it failed to compute the SKP decomposition or failed to compute the scattering mechanisms (e.g. due to invalid SVD decomposition or inadmissible ranges, see Stack ATBD Section 5.5.2.3 and Section 5.4.2.4). |
-| 25 |   | SKP correction failure, i.e. the same failures reported in Bit #24 occurred and `phaseCorrection` is not “None” (see `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`). |
-| 26 |   | Fraction of SKP valid phase screen estimations, i.e. above `groundPhasesScreenQualityThreshold`, is below `overallProductQualityThreshold` (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`) |
-| 27 |   | Invalid number of polarizations (i.e. neither 3 nor 4) |
-| 28 |   | - Intentionally left blank, i.e. 0 - |
-| 29 | Stack | Coregistration primary L1a product had nonzero `overallQualityIndex`  (see {sec}`4.3.1.13.1`) |
-| 30 |   | Calibration reference L1a product had nonzero `overallQualityIndex` (see {sec}`4.3.1.13.1`) |
-| 31 |   | At least 1 L1a input product other than the source L1a input product had nonzero `overallQualityIndex` (see {sec}`4.3.1.13.1`) |
+| **0** | **L1a input** | Nonzero if the `overallQualityIndex` is nonzero for the source L1a input⁽¹⁾ product (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **1** | **Pre-processor** | At least 1 expected LUT is missing from the source L1a input product (*e.g.* FR LUT is missing, and primary selection uses FR index) |
+| **2** |   | Source L1a input product has a non-nominal set of polarizations (*i.e.* it’s not a quad-pol HH,HV,VH,VV) |
+| **3** |   | Source L1a input product has non-nominal swath duration, *i.e.* not between 20.5s and 21.5s |
+| **4** |   | Source L1a input product has inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Section 4.3.2 <4.3.2>`, and L1 ATBD Section 4.10.3.5) |
+| **5** | **Coregistrator** | Coregistration from data failed due to fitting quality index below `fittingQualityThreshold` (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
+| **6** |   | Shift accuracy below `residualShiftsQualityThreshold` for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
+| **7** |   | *- Intentionally left blank, i.e. 0 -* |
+| **8** |   | *- Intentionally left blank, i.e. 0 -* |
+| **9** | **AZF** | *- Intentionally left blank, i.e. 0 -* |
+| **10** |   | *- Intentionally left blank, i.e. 0 -* |
+| **11** | **IOB** | `phaseScreen` and/or `rangeShifts` LUTs (see {sec}`Section 4.3.2.3 <4.3.2.3>`) are missing from the source L1a input product and `compensateIonoPhaseScreenFlag` is set to true in `AUX_PPS` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
+| **12** |   | Estimation quality below `slowIonosphereQualityThreshold` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
+| **13** |   | Failed Single-baseline estimation for at least 1 interferometric pair containing the current frame (Multi-baseline mode only, see Stack ATBD Section 5.2.5)⁽²⁾ |
+| **14** |   | Current frame outside of region affected by slow-varying ionosphere, that is, above `latitudeThreshold` (see Stack ATBD {sec}`Section 5.2 <5.2>` and `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
+| **15** | **MSC** | *- Intentionally left blank, i.e. 0 -* |
+| **16** |   | *- Intentionally left blank, i.e. 0 -* |
+| **17** |   | *- Intentionally left blank, i.e. 0 -* |
+| **18** |   | *- Intentionally left blank, i.e. 0 -* |
+| **19** |   | *- Intentionally left blank, i.e. 0 -* |
+| **20** |   | *- Intentionally left blank, i.e. 0 -* |
+| **21** |   | *- Intentionally left blank, i.e. 0 -* |
+| **22** |   | *- Intentionally left blank, i.e. 0 -* |
+| **23** | **SKP** | DEM resolution too coarse with respect to the selected `estimationWindowSize` (see `AUX_FMT`, {ref}`Table 90 <tab:pfd-l1-90>`) |
+| **24** |   | SKP estimation failure, *i.e.* it failed to compute the SKP decomposition or failed to compute the scattering mechanisms (*e.g.* due to invalid SVD decomposition or inadmissible ranges, see Stack ATBD Section 5.5.2.3 and Section 5.4.2.4). |
+| **25** |   | SKP correction failure, *i.e.* the same failures reported in Bit #24 occurred and `phaseCorrection` is not “None” (see `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`). |
+| **26** |   | Fraction of SKP valid phase screen estimations, *i.e.* above `groundPhasesScreenQualityThreshold`, is below `overallProductQualityThreshold` (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`) |
+| **27** |   | Invalid number of polarizations (*i.e.* neither 3 nor 4) |
+| **28** |   | *- Intentionally left blank, i.e. 0 -* |
+| **29** | **Stack** | Coregistration primary L1a product had nonzero `overallQualityIndex`  (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **30** |   | Calibration reference L1a product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **31** |   | At least 1 L1a input product other than the source L1a input product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
 
-[1] By source L1a input product, we refer to the L1a product from which the L1c product is generated, and similarly for coregistration primary and calibration reference L1a products.
+[1] By *source L1a* input product, we refer to the L1a product from which the L1c product is generated, and similarly for *coregistration primary* and *calibration reference* L1a products.
 
 [2] The calibration reference image is not updated; thus, this bit will be always populated with a 0 even if a SB estimation failed for a pair containing the calibration reference index. This is to prevent the user or L2 processor to consider this a potentially faulty product.
 
@@ -559,21 +559,21 @@ Note that some bits are intentionally left blank to support user-defined custom 
 
 This section describes in details the content of Coregistered image Look-Up Tables (LUT) ADS.
 
-Adopting the same strategy described in {sec}`4.3.2` for L1a/b products, this ADS complements the Main ADS one, including all those annotations that can be represented as 2D maps of values. We chose this approach in order to avoid worsening the Main ADS readability and handling, and to provide an easier access to such information.
+Adopting the same strategy described in {sec}`Sec. 4.3.2 <4.3.2>` for L1a/b products, this ADS complements the Main ADS one, including all those annotations that can be represented as 2D maps of values. We chose this approach in order to avoid worsening the Main ADS readability and handling, and to provide an easier access to such information.
 
-This ADS is a copy of the LUT ADS included in the L1a product (secondary one) received in input by the Stack processor with some modifications that mostly affect variable groups and grids (see {sec}`Section|6.3.4.1`). A detailed description of the content of the LUTs are reported in the following table.
+This ADS is a copy of the LUT ADS included in the L1a product (secondary one) received in input by the Stack processor with some modifications that mostly affect variable groups and grids (see {sec}`Section 6.3.4.1 <6.3.4.1>`). A detailed description of the content of the LUTs are reported in the following table.
 
 (tab:pfd-l1-88)=
 :::{div} atbd-table
 
 <p class="atbd-table-caption"><span class="caption-number">Table 88</span><span class="caption-text"> — Coregistered image LUT ADS variables</span></p>
 
-| Name | Description | Differences between L1a and L1c |
+| **Name** | **Description** | **Differences between L1a and L1c** |
 |---|---|---|
 | `rfiTimeMaskHH` `rfiTimeMaskHV` `rfiTimeMaskVH` `rfiTimeMaskVV` | Binary masks (one per polarisation) describing where RFI time-domain mitigation has been / has not been applied. | Not copied |
 | `rfiFreqMaskHH` `rfiFreqMaskHV` `rfiFreqMaskVH` `rfiFreqMaskVV` | Binary masks (one per polarisation) describing where RFI frequency-domain mitigation has been / has not been applied. | Not copied |
-| `sigmaNought` | Two-dimensional map describing the conversion factor to translate the beta-nought values into sigma-nought ones. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`6.3.4.1`). |
-| `gammaNought` | Two-dimensional map describing the conversion factor to translate the beta-nought values into gamma-nought ones. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`6.3.4.1`) |
+| `sigmaNought` | Two-dimensional map describing the conversion factor to translate the beta-nought values into sigma-nought ones. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`). |
+| `gammaNought` | Two-dimensional map describing the conversion factor to translate the beta-nought values into gamma-nought ones. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`) |
 | `faradayRotationPlane` | Two-dimensional map describing the Faraday Rotation plane computed during L1 ionospheric processing. | Not copied |
 | `faradayRotation` | Two-dimensional map describing the Faraday Rotation (final one, including plane) computed during L1 ionospheric processing. | Not copied |
 | `faradayRotationStd` | Two-dimensional map describing the Faraday Rotation expected standard deviation computed during L1 ionospheric processing. | Not copied |
@@ -583,8 +583,8 @@ This ADS is a copy of the LUT ADS included in the L1a product (secondary one) re
 | `azimuthShifts` | Two-dimensional map describing the azimuth shifts computed during L1 ionospheric processing. | Not copied |
 | `autofocusPhaseScreen` | Two-dimensional map describing the autofocus phase screen computed during L1 ionospheric processing. | Not copied |
 | `autofocusPhaseScreenStd` | Two-dimensional map describing the autofocus phase screen standard deviation computed during L1 ionospheric processing. | Not copied |
-| denoisingHH denoisingXX denoisingHV denoisingVH denoisingVV | Two-dimensional maps (one per polarisation) describing the conversion factor to translate the SAR image values into denoised values. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`6.3.4.1`). The denoising maps reflect the output polarization of the stack (e.g. if cross-pol merging is active, the LUT will contain a denoising term for X/X but not for H/V and V/H). |
-| latitude | Two-dimensional map describing the latitude coordinates of each (sub-sampled) pixel. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`6.3.4.1`) |
+| denoisingHH denoisingXX denoisingHV denoisingVH denoisingVV | Two-dimensional maps (one per polarisation) describing the conversion factor to translate the SAR image values into denoised values. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`). The denoising maps reflect the output polarization of the stack (*e.g.* if cross-pol merging is active, the LUT will contain a denoising term for X/X but not for H/V and V/H). |
+| latitude | Two-dimensional map describing the latitude coordinates of each (sub-sampled) pixel. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`) |
 | longitude | Two-dimensional map describing the longitude coordinates of each (sub-sampled) pixel. |   |
 | height | Two-dimensional map describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. |   |
 | `incidenceAngle` | Two-dimensional map describing the incidence angle of each (sub-sampled) pixel. |   |
@@ -594,9 +594,9 @@ This ADS is a copy of the LUT ADS included in the L1a product (secondary one) re
 | `waveNumbers` | Two-dimensional map describing the wavenumbers computed w.r.t. the incidence angles map. | New |
 | `flatteningPhaseScreen` | Two-dimensional map containing the estimated phase contributions due to the topography. | New |
 | `rangeCoregistrationShifts` | Two-dimensional map describing the coregistration shifts in slant-range direction. This LUT contains the shifts applied to the image. | New |
-| `rangeOrbitCoregistrationShifts` | Two-dimensional map describing the coregistration shfits in slant-range direction obtained only from orbit and scene geometry (see {sec}`4.1` of the Stack ATBD) | New |
+| `rangeOrbitCoregistrationShifts` | Two-dimensional map describing the coregistration shfits in slant-range direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD) | New |
 | `azimuthCoregistrationShifts` | Two-dimensional map describing the coregistration shifts in azimuth direction. This LUT contains the shifts applied to the image. | New |
-| `azimuthOrbitCoregistrationShifts` | Two-dimensional map descrbing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`4.1` of the Stack ATBD) | New |
+| `azimuthOrbitCoregistrationShifts` | Two-dimensional map descrbing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD) | New |
 | `coregistrationShiftsQuality` | Two-dimensional map describing the quality of residual coregistration shifts estimated from data. | New |
 | coherence | Two-dimensional map storing the coherence of secondary images with respect to the coregistration primary. | New |
 | Interferogram | Two-dimensional map storing the interferometric phases with respect to the coregistration primary. | New |
@@ -613,18 +613,18 @@ In the following table the new variables are described in detail. Note that the 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 89</span><span class="caption-text"> — Coregistered image LUT ADS new components variables with their groups. Variables inherited from L1a LUTs will preserve their original group.</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | group: coregistration `rangeCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along range direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see {sec}`4.1` of the Stack ATBD). Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD). Values are expressed in [m]. | matrix (float) | 1 |
 | group: coregistration `azimuthCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along azimuth direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`4.1` of the Stack ATBD). Values are expressed in [m]. | matrix(float) | 1 |
+| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD). Values are expressed in [m]. | matrix(float) | 1 |
 | group: coregistration `flatteningPhaseScreen` | Two-dimensional map covering the whole SAR image and representing the sole phase contribution due to the DEM. As per `STA_P` convention, the DEM phase compensation shall be executed using the ‘+’ convention, that is, as $CoSCS\cdot{}e^{+j\Delta\phi_{flat}}$, where $\Delta\phi_{flat}$ is the content of this LUT (converted into radians). Values are expressed in [rad]. | matrix (float) | 1 |
 | group: coregistration `waveNumbers` | Two-dimensional map covering the whole SAR image and representing the vertical wavenumbers. Values are expressed in [rad/m]. | matrix (float) | 1 |
 | group: interferometry coherence | Two-dimensional map covering the whole SAR image and storing the coherence with respect to the coregistration primary. | matrix(float) | 1 (only for secondary images) |
 | group: interferometry interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. Values are expressed in [rad]. | matrix(float) | 1 (only for secondary images) |
 | group: `multiSquintCalibration` `ionospherePhaseScreens` | Stack of one (single-layer) or more (multi-layer) two-dimensional map that stores the onospheric phase screens estimated by the Multi-Squint Calibration module (MSC). Values are expressed in [rad]. | 3d array (float) | 1 (only if the MSC’s ionosphere correction is activated) |
-| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see e.g. the `flatteningPhaseScreen` LUT). Values are expressed in [rad]. | matrix (float) | 1 (only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT). Values are expressed in [rad]. | matrix (float) | 1 (only if the SKP module is successfully executed) |
 | group: `skpPhaseCalibration` `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen. Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1 (only if the SKP module is successfully executed) |
 
 :::
@@ -634,14 +634,14 @@ In the following table the new variables are described in detail. Note that the 
 
 Except for the `ionospherePhaseScreens` LUT, the sampling grid for all LUTs is that of the geometric LUTs of the L1a product used as coregistration primary. Under default configuration of the `L1_P` processor, that sampling grid has a ground resolution of approximately 90m x 90m (range x azimuth), which is the resolution of the DEM used (Copernicus DEM). More in details, it’s the grid obtained by subsampling the primary data grid using range and azimuth subsampling steps that best approximate the target resolution for each axis. The `ionospherePhaseScreens` LUT is defined on the ionosphere estimation grid, which is the along-track azimuth axis of the Multi-Squint coherence matrix at a ionosphere reference altitude, inflated by the squint aperture of the RADAR, and the slant-range axis of the Multi-Squint coherence matrix, which is a subsampling of the SAR slant-range axis. Size and resolution of the `ionospherePhaseScreen` LUTs ultimately depends on the estimation parameters selected by the user in the `AUX_PPS___`.
 
-Note that since the L1a product provides different subsampling factors for geometric LUTs and for all other LUTs, L1c denoising\*, `gammaNought`, and `sigmaNought` LUTs may have different subsampling factors than those of the source L1a products, even for the coregistration primary image. Conversely, geometric LUTs are expected to have the same subsampling step as the L1a coregistration primary image.
+Note that since the L1a product provides different subsampling factors for geometric LUTs and for all other LUTs, L1c *denoising\*,* `gammaNought`, and `sigmaNought` LUTs may have different subsampling factors than those of the source L1a products, even for the coregistration primary image. Conversely, geometric LUTs are expected to have the same subsampling step as the L1a coregistration primary image.
 
 (sec:pfd-l1-6-3-4-2)=
 ##### 6.3.4.2 Dimension / Coordinate Variables
 
 The following table reports the dimensions and coordinate variables, which are similar (but not identical) to those in the L1a/b LUT.
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `slantRangeTime` | LUT slant range time axis associated to the stack sampling step (i.e. approximately 90m under default configuration). Values are expressed in [s]. | double | 1 |
 | `relativeAzimuthTime` | LUT azimuth relative time axis associated to the stack sampling step (i.e. approximately 90m under default configuration). As for L1a/b, the reference UTC time is `firstLineAzimuthTime` value in SAR image DSR. Values are expressed in [s]. | double | 1 |
@@ -962,14 +962,14 @@ float `skpCalibrationPhaseScreenQuality`(`relativeAzimuthTime`, `slantRangeTime`
 
 The coregistered image Orbit and Attitude ADS will be included as dedicated files in L1c products.
 
-These files are an exact copy of the homonymous files included in the L1a product (secondary one) received in input by the Stack processor and described in {sec}`4.3.3`.
+These files are an exact copy of the homonymous files included in the L1a product (secondary one) received in input by the Stack processor and described in {sec}`Sec. 4.3.3 <4.3.3>`.
 
 (sec:pfd-l1-6-3-6)=
 #### 6.3.6 Quick-look ADS
 
 The Quick-look ADS is a lower resolution version of the SAR (coregistered) image MDS and, optionally, the coherence and the interferogram with respect to the coregistration primary. Coherence and interferogram are exported only for secondary images, since for coregistration primary they are trivial.
 
-As for the coregistered SAR image, Quick-look ADS are identical to those of L1a products; therefore we refer to {sec}`Section|4.3.4` for more details on the color coding. Note that, in cases where cross-polarizations are combined, the conversion to RGB is identical to that described in {sec}`Section|4.3.4`, setting $HV\mathrel{:=}2\cdot{}XX$ and $VH\mathrel{:=}0$ in case of the Pauli and $HV\mathrel{:=}{}XX$ in case of HSV. Pixels with missing data are shown in black.
+As for the coregistered SAR image, Quick-look ADS are identical to those of L1a products; therefore we refer to {sec}`Section 4.3.4 <4.3.4>` for more details on the color coding. Note that, in cases where cross-polarizations are combined, the conversion to RGB is identical to that described in {sec}`Section 4.3.4 <4.3.4>`, setting $HV\mathrel{:=}2\cdot{}XX$ and $VH\mathrel{:=}0$ in case of the Pauli and $HV\mathrel{:=}{}XX$ in case of HSV. Pixels with missing data are shown in black.
 
 As for the interferometric Quick-Looks, the coherence image is a grayscale image with the same size of the SAR image Quick-Look ADS. The color scheme maps linearly the 0-1 (min/max coherence) interval onto black/white. The interferogram uses OpenCV’s JET color scheme⁽³⁾ with boundaries $(-\pi,\pi)$, $-\pi$ being blue and $\pi$ being red. Similarly to the coregistered Quick-Look ADS, missing data is shown in black.
 
@@ -978,4 +978,4 @@ As for the interferometric Quick-Looks, the coherence image is a grayscale image
 (sec:pfd-l1-6-3-7)=
 #### 6.3.7 Overlay ADS
 
-All the details about Overlay ADS already explained in {sec}`4.3.5` for L1a products apply as well to L1c products for all Quick-Look ADS.
+All the details about Overlay ADS already explained in {sec}`Sec. 4.3.5 <4.3.5>` for L1a products apply as well to L1c products for all Quick-Look ADS.

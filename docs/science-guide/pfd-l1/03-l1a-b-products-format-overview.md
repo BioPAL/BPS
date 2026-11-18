@@ -18,12 +18,12 @@ These products contain 3 kinds of datasets:
 
 The declination and customisation of this format structure for BIOMASS L1a and L1b products is summarised in the following figure and table. In particular, a typical product contains:
 
-- a main product header, an XML file including high-level information about the product origin, structure and main metadata (see {sec}`4.1`);
-- SAR image MDS, including the SAR image binary raster data for all the four BIOMASS polarisations, organised in two Cloud Optimized GeoTIFF (COG) files, one for amplitude and one for phase (only for L1a products) components (see {sec}`4.2`);
-- main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file (see {sec}`4.3.1`);
-- Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary NetCDF file (see. {sec}`4.3.2`);
-- orbit and attitude ADS, including orbit and attitude information in dedicated XML files (see {sec}`4.3.3`);
-- quick-look and overlay ADS, including an averaged and decimated preview of the SAR image data set and information about its geographic coverage (see {sec}`4.3.4` and {sec}`4.3.5`);
+- a main product header, an XML file including high-level information about the product origin, structure and main metadata (see {sec}`Sec. 4.1 <4.1>`);
+- SAR image MDS, including the SAR image binary raster data for all the four BIOMASS polarisations, organised in two Cloud Optimized GeoTIFF (COG) files, one for amplitude and one for phase (only for L1a products) components (see {sec}`Sec. 4.2 <4.2>`);
+- main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file (see {sec}`Sec. 4.3.1 <4.3.1>`);
+- Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary NetCDF file (see. {sec}`Sec. 4.3.2 <4.3.2>`);
+- orbit and attitude ADS, including orbit and attitude information in dedicated XML files (see {sec}`Sec. 4.3.3 <4.3.3>`);
+- quick-look and overlay ADS, including an averaged and decimated preview of the SAR image data set and information about its geographic coverage (see {sec}`Sec. 4.3.4 <4.3.4>` and {sec}`4.3.5 <4.3.5>`);
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
 (fig:pfd-l1-1)=
@@ -63,7 +63,7 @@ BIOMASS L1a/b Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — L1a/b products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS L1a/b Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |
@@ -99,7 +99,7 @@ The BIOMASS L1a/b products format here described has been defined following a se
 
 Starting from this consolidated “background”, several new features, aimed at improving in particular the products usability, have been introduced, in particular:
 
-- the way SAR data are stored, with one COG file for amplitudes and one for phase values (with one component for each of the four data polarisation), differently from the standard approach based on real and imaginary parts. This choice presents a wide set of advantages for the users, as described in {sec}`4.2`);
+- the way SAR data are stored, with one COG file for amplitudes and one for phase values (with one component for each of the four data polarisation), differently from the standard approach based on real and imaginary parts. This choice presents a wide set of advantages for the users, as described in {sec}`Sec. 4.2 <4.2>`);
 - only one file for all the annotations instead of one per polarization, reducing as much as possible information duplication and spreading into several positions;
 - only one file for all the LUTs, reducing annotation file dimensions and easing their access, management and applicability to SAR data.
 
@@ -113,7 +113,7 @@ The structure described in the previous section is valid both for L1a and L1b pr
 - SAR image MDS is composed by two files for L1a products (amplitude and phase components) and by just one file for L1b ones (amplitude component);
 - Main ADS includes the same DSR for both L1a and L1b products, but some specific fields (e.g., `rangeCoordinateConversion`, …) will be filled only for L1a or L1b ones. Single cases are detailed in format specification, described in the next section.
 
-Note that all L1a products share the same format, then both SCS and SCS-CAL ones. They can be distinguished through their product type, as defined in {sec}`3.4`.
+Note that all L1a products share the same format, then both SCS and SCS-CAL ones. They can be distinguished through their product type, as defined in {sec}`Sec. 3.4 <3.4>`.
 
 (sec:pfd-l1-3-3)=
 ### 3.3 L1M products

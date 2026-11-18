@@ -20,7 +20,7 @@ The declination and customisation of this format structure for BIOMASS Forest He
 
 - a main product header (MPH), an XML file including high-level information about the product origin, structure and main metadata;
 - STAC metadata: the SpatioTemporal Asset Catalog specification (https://stacspec.org/en) provides a common structure for describing and cataloging spatiotemporal assets (it is a file that represents information about the earth captured in a certain space and time);
-- Forest Height image MDS, including the Forest Height image binary raster data and quality layer, organised in two Cloud Optimized GeoTIFF (COG) files (specific coding information in {sec}`section|4.2`);
+- Forest Height image MDS, including the Forest Height image binary raster data and quality layer, organised in two Cloud Optimized GeoTIFF (COG) files (specific coding information in {sec}`section 4.2 <4.2>`);
 - main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file;
 - Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary file;
 - quick-look ADS, including an averaged and decimated previews of measurement MDS;
@@ -66,7 +66,7 @@ BIOMASS FH L2a Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Forest Height L2a products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
 | BIOMASS Forest Height L2a Product |   | Folder |   |
 | ∟ main product header | 1 | XML | Main product header |

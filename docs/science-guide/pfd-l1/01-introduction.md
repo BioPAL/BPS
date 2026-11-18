@@ -24,12 +24,12 @@ The purpose of this document is to provide the “L1a/b/c Products Format Specif
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and L1 products;
-- {sec}`Section|3`: Overview of L1a/b products format;
-- {sec}`Section|4`: Detailed description of L1a/b products format specifications;
-- {sec}`Section|5`: Overview of L1c products format;
-- {sec}`Section|6`: Detailed description of L1c products format specifications;
-- {sec}`Section|7` (Appendix): Detailed description of common products format specifications.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and L1 products;
+- {sec}`Section 3 <3>`: Overview of L1a/b products format;
+- {sec}`Section 4 <4>`: Detailed description of L1a/b products format specifications;
+- {sec}`Section 5 <5>`: Overview of L1c products format;
+- {sec}`Section 6 <6>`: Detailed description of L1c products format specifications;
+- {sec}`Section 7 <7>` (Appendix): Detailed description of common products format specifications.
 
 (sec:pfd-l1-1-3)=
 ### 1.3 Acronyms

@@ -63,7 +63,7 @@ The interpolation technique is based on piecewise cubic (or higher order) spline
 - velocity and acceleration are computed in a similar manner, but evaluating the first and second derivative polynomials respectively;
 - note that $v_s(t\left[ 1 \right])$..$v_s(t\left[ N-2 \right])$ are not used to perform interpolation and evaluation.
 
-Note that the degree of the spline interpolator can be easily increased in case of need, if deemed necessary to ensure accuracy of L1 Processor or of following processing steps (Stack Processor). For L1 Processor, by default 5th order is used.
+Note that the degree of the spline interpolator can be easily increased in case of need, if deemed necessary to ensure accuracy of L1 Processor or of following processing steps (Stack Processor). For L1 Processor, by default 5{sup}`th` order is used.
 
 (sec:atbd-l1-sar-6-4)=
 ### 6.4 Attitude Interpolation
@@ -72,7 +72,7 @@ In the SAR Focusing Kernel attitude interpolation operations are performed using
 
 As for the orbit, in order to retrieve the sensor attitude (Euler angles) at a generic azimuth time $t$ the attitude must be interpolated starting from the available discrete set of yaw, pitch and roll angles and the related times.
 
-The procedure is similar to the one described in the previous section, with the difference that the interpolation is based on piecewise 4th-order polynomials, instead than on splines, then 5 constraints are needed to fit them.
+The procedure is similar to the one described in the previous section, with the difference that the interpolation is based on piecewise 4{sup}`th`-order polynomials, instead than on splines, then 5 constraints are needed to fit them.
 
 (sec:atbd-l1-sar-6-5)=
 ### 6.5 Weighting Functions
@@ -82,7 +82,7 @@ Weighting is applied after SAR processing in order to reduce side-lobes and the 
 - Raised cosine, with a spectral shape of the form
 
 $$
-W_{RC}\left[ n \right]=\alpha+(1-\alpha)\cdot\cos (\frac{2\pi\cdot{}n}{N-1})\ ,
+W_{RC}\left[ n \right]=\alpha+(1-\alpha)\cdot\cos \left( \frac{2\pi\cdot{}n}{N-1} \right)\ ,
 \tag{6.1}
 $$ (eq:atbd-l1-sar-6-1)
 
@@ -91,7 +91,7 @@ where $n$ represents the discrete frequency variable, $N$ the total, number of s
 - Kaiser whose spectral shape of the form
 
 $$
-W_K\left[ n \right]=\frac{I_0(\alpha\cdot\sqrt{1-(2\cdot\frac{n}{N-1}-1)^2})}{I_0(\alpha)},
+W_K\left[ n \right]=\frac{I_0\left( \alpha\cdot\sqrt{1-\left( 2\cdot\frac{n}{N-1}-1 \right)^2}\ \right)}{I_0(\alpha)},
 \tag{6.2}
 $$ (eq:atbd-l1-sar-6-2)
 
@@ -100,7 +100,7 @@ where $I_0(\cdot)$ is the zero-th order modified Bessel function, and the parame
 - Chebyshev, with a spectral shape of the form
 
 $$
-W_C\left[ n \right]=\frac{\cos\left\{ N\cdot\arccos \left[ \cosh (\frac{\cosh^{-1}{10^{\alpha}}}{N})\cdot\cos (\frac{\pi\cdot{}n}{N}) \right] \right\}}{\cosh^{-1}{10^{\alpha}}}\ ,
+W_C\left[ n \right]=\frac{\cos\left\{ N\cdot\arccos \left[ \cosh \left( \frac{\cosh^{-1}{10^{\alpha}}}{N} \right)\cdot\cos \left( \frac{\pi\cdot{}n}{N} \right) \right] \right\}}{\cosh^{-1}{10^{\alpha}}}\ ,
 \tag{6.3}
 $$ (eq:atbd-l1-sar-6-3)
 
