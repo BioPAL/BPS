@@ -140,20 +140,49 @@ def _latex_label(docname: str, ident: str) -> str:
     return r"\phantomsection\label{\detokenize{%s:%s}}" % (docname, ident)
 
 
+_FORMAT_TAGS = {"sub": nodes.subscript, "sup": nodes.superscript, "em": nodes.emphasis,
+                "i": nodes.emphasis, "strong": nodes.strong, "b": nodes.strong}
+_TAG_RE = re.compile(r"<(/?)(\w+)[^>]*>")
+
+
+def _formatted(text: str) -> list[nodes.Node]:
+    """Text of a caption with its <sub>, <sup>, <em>, <strong> as docutils nodes
+    (other tags are dropped)."""
+    root: nodes.Element = nodes.inline()
+    stack = [root]
+    pos = 0
+    for m in _TAG_RE.finditer(text):
+        if m.start() > pos:
+            stack[-1] += nodes.Text(html.unescape(text[pos:m.start()]))
+        pos = m.end()
+        closing, name = m.group(1), m.group(2).lower()
+        cls = _FORMAT_TAGS.get(name)
+        if cls is None:
+            continue
+        if not closing:
+            node = cls()
+            stack[-1] += node
+            stack.append(node)
+        elif len(stack) > 1 and isinstance(stack[-1], cls):
+            stack.pop()
+    if pos < len(text):
+        stack[-1] += nodes.Text(html.unescape(text[pos:]))
+    return list(root.children)
+
+
 def _caption_inlines(fragment: str) -> list[nodes.Node]:
-    """Inline nodes (text and math) for a raw-HTML caption fragment."""
+    """Inline nodes (text, sub/superscripts, emphasis and math) for a raw-HTML
+    caption fragment."""
     out: list[nodes.Node] = []
     pos = 0
     for match in _MATH_SPAN_RE.finditer(fragment):
-        before = html.unescape(_HTML_TAG_RE.sub("", fragment[pos:match.start()]))
-        if before:
-            out.append(nodes.Text(before))
+        out.extend(_formatted(fragment[pos:match.start()]))
         tex = _tex_math(html.unescape(match.group("tex")))
         out.append(nodes.math(tex, tex))
         pos = match.end()
-    rest = html.unescape(_HTML_TAG_RE.sub("", fragment[pos:]))
-    if rest:
-        out.append(nodes.Text(rest))
+    out.extend(_formatted(fragment[pos:]))
+    for n in out:
+        n.parent = None
     return out
 
 
