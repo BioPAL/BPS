@@ -658,6 +658,7 @@ class AtbdLatexContent(SphinxPostTransform):
         return self.app.builder.format == "latex"
 
     def run(self, **kwargs: Any) -> None:
+        _cell_fills(self.document)  # before the raw HTML is dropped
         found: dict[str, list[tuple[nodes.Node, str]]] = {
             "figure": [], "table": [], "math": [], "raw": [], "literal": [],
             "tables": [], "dropdown": [], "reference": [], "text": [],
@@ -751,7 +752,6 @@ class AtbdLatexContent(SphinxPostTransform):
             if "longtable" in table["classes"]:
                 _split_tall_rows(table, budget)
         _drop_empty_chapters(self.document)
-        _cell_fills(self.document)
 
     # -- text ----------------------------------------------------------
     def _text(self, text: nodes.Text) -> None:
