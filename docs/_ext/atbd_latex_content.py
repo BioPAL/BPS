@@ -859,7 +859,10 @@ class AtbdLatexContent(SphinxPostTransform):
             if i == last and caption is not None:
                 figure += nodes.caption("", "", *caption[1])
             figures.append(figure)
-        container.replace_self([*figures, *extra])
+        # the parts stay together and in place: no float of them drifts past the
+        # text that follows the figure (placeins, loaded in setup())
+        barrier = nodes.raw("", r"\FloatBarrier", format="latex")
+        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
         return figures[0]
 
     def _mermaid_font(self, code: str, options: Any, height: float) -> float | None:
@@ -1157,6 +1160,7 @@ def _write_trims(app: Sphinx, exception: Exception | None) -> None:
 
 def setup(app: Sphinx) -> dict[str, Any]:
     app.add_post_transform(AtbdLatexContent)
+    app.add_latex_package("placeins")  # \FloatBarrier around a figure in parts
     # Tables also use the left indent of the headings (as in the original
     # PFDs and L1 SAR ATBD; the other ATBDs keep them in the text width).
     app.add_config_value("atbd_wide_tables", False, "env", bool)

@@ -1855,3 +1855,17 @@ html[data-theme="dark"] .bps-chapters__time {
   font-size: 0.8rem;
   color: var(--pst-color-text-muted);
 }
+
+/* Phones: the two partner logos share the width instead of overflowing it
+   (the ESA logo was cut on the right at 375 px). */
+@media (max-width: 575.98px) {
+  .atbd-logo-banner__link {
+    flex: 0 1 45%;
+    min-width: 0;
+  }
+  .atbd-logo-banner__img {
+    height: auto;
+    max-height: 3rem;
+    max-width: 100%;
+  }
+}
