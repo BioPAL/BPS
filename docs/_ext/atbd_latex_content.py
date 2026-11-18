@@ -420,6 +420,8 @@ _NO_LONGTABLE_IN = (nodes.Admonition, nodes.footnote, nodes.table, nodes.sidebar
 
 
 def _can_break(table: nodes.table) -> bool:
+    if "atbd-in-minipage" in table.get("classes", []):
+        return False  # a figure redrawn as a table, kept with its caption
     if any(True for _ in table.findall(nodes.table, include_self=False)):
         return False
     parent = table.parent
@@ -476,6 +478,28 @@ def _unescape_uri(reference: nodes.reference) -> None:
     for text in list(reference.findall(nodes.Text)):
         if "\\_" in text:
             text.parent.replace(text, nodes.Text(text.replace("\\_", "_")))
+
+
+_CELL_FILL = re.compile(r'<span class="atbd-cell-fill" style="background-color:#([0-9A-Fa-f]{6});'
+                        r'color:#([0-9A-Fa-f]{6})">')
+
+
+def _cell_fills(document: nodes.document) -> None:
+    """``<span class="atbd-cell-fill" …>`` of a converted table (raw HTML, lost in
+    LaTeX) -> ``\cellcolor`` and the text colour of the cell."""
+    for raw in list(document.findall(nodes.raw)):
+        if "html" not in raw.get("format", ""):
+            continue
+        text = raw.astext().strip()
+        m = _CELL_FILL.fullmatch(text)
+        if m:
+            raw.replace_self(nodes.raw("", r"\cellcolor[HTML]{%s}\color[HTML]{%s}"
+                                       % (m.group(1).upper(), m.group(2).upper()),
+                                       format="latex"))
+        elif text == "</span>" and isinstance(raw.parent, nodes.paragraph) \
+                and any(isinstance(n, nodes.raw) and "cellcolor" in n.astext()
+                        for n in raw.parent.children):
+            raw.parent.remove(raw)
 
 
 def _drop_empty_chapters(document: nodes.document) -> None:
@@ -727,6 +751,7 @@ class AtbdLatexContent(SphinxPostTransform):
             if "longtable" in table["classes"]:
                 _split_tall_rows(table, budget)
         _drop_empty_chapters(self.document)
+        _cell_fills(self.document)
 
     # -- text ----------------------------------------------------------
     def _text(self, text: nodes.Text) -> None:
@@ -797,6 +822,12 @@ class AtbdLatexContent(SphinxPostTransform):
                 lines = -(-len(text) // 95)
                 single_share = min(single_share, 0.98 - 0.03 * max(lines, 1))
 
+        tables = [x for x in extra if isinstance(x, nodes.table)]
+        if (not visuals and len(tables) == 1 and caption is not None
+                and "atbd-drawn-figure" in container.get("classes", [])
+                and "longtable" not in tables[0].get("classes", [])):
+            return self._table_figure(container, docname, tables[0], caption, extra)
+
         if (has_mermaid and len(visuals) > 1 and "atbd-drawn-figure" in container.get("classes", [])
                 and all(isinstance(v, mermaid_cls) for v in visuals)):
             return self._figure_parts(container, docname, visuals, caption, extra)
@@ -835,6 +866,27 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += nodes.caption("", "", *inlines)
         container.replace_self([figure, *extra])
         return figure
+
+    def _table_figure(self, container: nodes.container, docname: str, table: nodes.table,
+                      caption: Any, extra: list[nodes.Node]) -> nodes.Node:
+        """A figure redrawn as a table (AGB/FD Fig. 4 and 5): no float, the table
+        then its caption below it, as in the original, on the same page (a float
+        holding only the caption left the table behind)."""
+        number, inlines = caption
+        label = "".join(_latex_label(docname, i) for i in container["ids"])
+        head = nodes.raw("", r"\par\noindent\begin{minipage}{\linewidth}\centering ",
+                         format="latex")
+        cap = nodes.paragraph("", "")
+        cap += nodes.raw("", (r"\renewcommand{\thefigure}{%s}" % number if number else "")
+                         + r"\captionof{figure}{", format="latex")
+        cap.extend(inlines)
+        cap += nodes.raw("", "}" + label, format="latex")
+        tail = nodes.raw("", r"\end{minipage}\par\medskip", format="latex")
+        others = [x for x in extra if x is not table]
+        table["classes"].append("atbd-in-minipage")
+        table.parent.remove(table)
+        container.replace_self([head, table, cap, tail, *others])
+        return table
 
     def _figure_parts(self, container: nodes.container, docname: str,
                       visuals: list[nodes.Node], caption: Any,
@@ -1160,7 +1212,8 @@ def _write_trims(app: Sphinx, exception: Exception | None) -> None:
 
 def setup(app: Sphinx) -> dict[str, Any]:
     app.add_post_transform(AtbdLatexContent)
-    app.add_latex_package("placeins")  # \FloatBarrier around a figure in parts
+    app.add_latex_package("placeins")
+    app.add_latex_package("colortbl")  # \cellcolor of a table colour key  # \FloatBarrier around a figure in parts
     # Tables also use the left indent of the headings (as in the original
     # PFDs and L1 SAR ATBD; the other ATBDs keep them in the text width).
     app.add_config_value("atbd_wide_tables", False, "env", bool)

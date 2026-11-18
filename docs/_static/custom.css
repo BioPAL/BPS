@@ -1869,3 +1869,22 @@ html[data-theme="dark"] .bps-chapters__time {
     max-width: 100%;
   }
 }
+
+/* Colour key of a converted table (cell shading of the source, e.g. the FD
+   truth table): the span fills its whole cell, in both themes. */
+.bd-content td .atbd-cell-fill,
+.bd-content th .atbd-cell-fill {
+  display: block;
+  margin: -0.25rem -0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Converted documents: long identifiers in table cells (parameter names,
+   XPaths) may break, so that a table fits its column instead of hiding its
+   last columns behind a horizontal scroll. */
+.bd-content table.docutils td code,
+.bd-content table.docutils td .pre {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
