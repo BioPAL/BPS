@@ -71,7 +71,7 @@ BPS supports Python 3.12, 3.13, and 3.14. Python 3.14 is the recommended version
     conda install biomass-bps::bps-l2b_agb_processor      # only for BPS L2B AGB Processor
     ```
 
-3. Check proper installation runnin help command:
+3. Check proper installation running help command:
 
     ```bash
     bps_l1_processor --help
