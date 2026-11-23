@@ -63,7 +63,11 @@
 \begin{longtable}<%= table.get_colspec() %>
 <%- if table.caption and not below -%>
 \sphinxthelongtablecaptionisattop
+<%- if 'atbd-lead' in table.classes %>
+\atbdleadcaption\caption*{<%= ''.join(table.caption) %>\strut}<%= labels %>\\*
+<%- else %>
 \caption{<%= ''.join(table.caption) %>\strut}<%= labels %>\\*[\sphinxlongtablecapskipadjust]
+<%- endif %>
 <% elif labels -%>
 \noalign{\phantomsection<%= labels %>}%
 <% endif -%>

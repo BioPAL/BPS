@@ -112,12 +112,19 @@
   \ifdim\wd\@tempboxa>\hsize #1\enspace #2\par
   \else\global\@minipagefalse\hb@xt@\hsize{\hfil\box\@tempboxa\hfil}\fi
   \vskip\belowcaptionskip}
+% \atbdleadcaption: the next caption is the lead-in of the table ("Inputs"),
+% left aligned, without number (longtable.tex.jinja).
+\newif\ifatbd@lead
+\newcommand\atbdleadcaption{\global\atbd@leadtrue}
 \def\LT@makecaption#1#2#3{%
+  \ifatbd@lead\global\atbd@leadfalse
+  \LT@mcol\LT@cols l{\sphinxnorowcolor\parbox[t]\LTcapwidth{\raggedright #3\strut}}%
+  \else
   \LT@mcol\LT@cols c{\sphinxnorowcolor\hbox to\z@{\hss\parbox[t]\LTcapwidth{%
     \sbox\@tempboxa{#1{#2\enspace}#3}%
     \ifdim\wd\@tempboxa>\hsize #1{#2\enspace}#3%
     \else\hbox to\hsize{\hfil\box\@tempboxa\hfil}\fi
-    \endgraf\vskip\baselineskip}\hss}}}
+    \endgraf\vskip\baselineskip}\hss}}\fi}
 
 % ---------------------------------------------------------------------------
 % Figures: floating ([!htp]), at the size of the original rendering

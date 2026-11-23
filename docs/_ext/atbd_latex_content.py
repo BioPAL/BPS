@@ -908,9 +908,22 @@ class AtbdLatexContent(SphinxPostTransform):
                     table["classes"].append("atbd-caption-below")
         for table, _docname in found["tables"]:
             lead = _lead_paragraph(table)
-            if lead is not None:
+            if lead is None:
+                continue
+            if not any(isinstance(c, nodes.title) for c in table.children):
                 # Keep a short lead-in ("Inputs", "... as follows:") with the
-                # start of its table.
+                # table: it becomes the first line of the table (head of the
+                # first page), as the page cannot then break between them.
+                # (Left apart, the page break before it was taken while the
+                # table output routine was already active, and the repeated
+                # header of the table was left alone at the top of the page.)
+                inlines = list(lead.children)
+                for child in inlines:
+                    lead.remove(child)
+                table.insert(0, nodes.title("", "", *inlines))
+                table["classes"].append("atbd-lead")
+                lead.parent.remove(lead)
+            else:
                 lead.parent.insert(lead.parent.index(lead), nodes.raw(
                     "", r"\needspace{4\baselineskip}", format="latex"))
         for figure in figures:
