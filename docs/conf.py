@@ -156,9 +156,9 @@ _secondary_sidebar_items = {
     # every page of a document (index and chapters): the PDF button sits right
     # under "Edit on GitHub" and takes its style (template atbd-download-pdf.html)
     "science-guide/*/*": [
-        "page-toc",
         "edit-this-page",
         "atbd-download-pdf.html",
+        "page-toc",
     ],
 }
 
