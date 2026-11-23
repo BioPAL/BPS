@@ -326,7 +326,7 @@ def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
         literal = isinstance(parent, nodes.literal)
         for word in str(text).split():
             if isinstance(parent, nodes.math):
-                pieces = [word[:12]]
+                pieces = [word[:14]]
             elif literal and len(word) > _LONG_TABLE_LITERAL:
                 pieces = _LITERAL_BREAK_RE.split(word)
             elif not literal and len(word) > _LONG_TABLE_WORD:
