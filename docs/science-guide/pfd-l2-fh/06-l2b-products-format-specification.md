@@ -23,11 +23,11 @@ The MPH main scope is to provide all the information related to the:
 
 For the detailed description of the MPH content and format refer to {ad}`3`. It is very similar to the one described in 4.1, without following fields, which are <u>not present</u> in L2b:
 
-- eop:`swathIdentifier` Swath identifier
-- eop:`orbitDirection` Orbit direction
-- eop:`wrsLongitudeGrid` Track number
-- eop:`wrsLatitudeGrid` Frame number
-- sar:`antennaLookDirection` SAR antenna look direction
+- `eop:swathIdentifier` Swath identifier
+- `eop:orbitDirection` Orbit direction
+- `eop:wrsLongitudeGrid` Track number
+- `eop:wrsLatitudeGrid` Frame number
+- `sar:antennaLookDirection` SAR antenna look direction
 
 (sec:pfd-fh-6-2)=
 ### 6.2 Measurement data sets (MDS)
@@ -336,7 +336,7 @@ classDiagram
 | `forestMaskingFlag` | The minimum percentage of tile coverage used to trigger the computation. | bool | 1 |
 | `rollOffFactorAzimuth` | True if forest/non-forest map masking has been performed during L2a products merging, false otherwise. | `xsd:float` | 1 |
 | `rollOffFactorRange` | Feathering roll-off factor used. | `xsd:float` | 1 |
-| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | <u>`compressionOptionsL2b`</u><u> Type</u> | 1 |
+| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | `compressionOptionsL2b`<u> Type</u> | 1 |
 
 :::
 

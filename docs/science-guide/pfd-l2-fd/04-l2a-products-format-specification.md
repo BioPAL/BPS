@@ -127,94 +127,92 @@ This element or block of elements is optional
             <span style="color:#C00000"><b>bio:refDoc</b></span> <b>Reference document</b></pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-bio:EarthObservation Root element of metadata representation tailored for BIOMASS SAR products
-    om:phenomenonTime Time coverage of the product
-        gml:TimePeriod Time coverage of the product as a period
-            gml:beginPosition Start date and time of the product
-            gml:endPosition Stop date and time of the product
-    om:resultTime Time when the sensing data has become available
-        gml:TimeInstant Identifiable position in time
-            gml:timePosition Date and time of data availability
-    om:validTime Time validity of the product
-        gml:TimePeriod Time validity of the product as a period
-            gml:beginPosition Validity start date and time of the product
-            gml:endPosition Validity stop date and time of the product
-    om:procedure Procedure used to sense the data
-        eop:EarthObservationEquipment Equipment used to sense the data
-            eop:platform Platform description
-                eop:Platform Nested element for platform description
-                    eop:shortName Satellite name
-            eop:instrument Instrument description
-                eop:Instrument Nested element for instrument description
-                    eop:shortName Sensor name
-            eop:sensor Sensor description
-                eop:Sensor Nested element for sensor description
-                    eop:sensorType Sensor type
-                    eop:operationalMode Sensor operational mode
-                    eop:swathIdentifier Swath identifier
-            eop:acquisitionParameters Acquisition parameters
-                bio:Acquisition Acquisition description
-                    eop:orbitDirection Orbit direction
-                    eop:wrsLongitudeGrid Track number
-                    eop:wrsLatitudeGrid Frame number
-                    sar:antennaLookDirection SAR antenna look direction
-                    bio:missionPhase BIOMASS mission phase
-                    bio:globalCoverageID BIOMASS global coverage identifier
-                    bio:majorCycleID BIOMASS major cycle identifier
-                    bio:tileID List of DGG geographic cell (tile) identifiers
-                    bio:basinID Retrieval basin identifier
-    om:observedProperty Observed property (empty)
-    om:featureOfInterest Observed area
-        eop:Footprint Footprint description
-            eop:multiExtentOf Footprint representation structure, coordinates in posList
-                gml:MultiSurface
-                    gml:surfaceMember
-                        gml:Polygon
-                            gml:exterior
-                                gml:LinearRing
-                                    gml:posList Footprint points in NE,SE,SW,NW,NE order
-            eop:centerOf Acquisition centre representation structure
-                gml:Point
-                    gml:pos Coordinates of the centre of the acquisition
-    om:result Observation result
-        eop:EarthObservationResult
-            eop:product
-                bio:ProductInformation
-                    eop:fileName
-                        ows:ServiceReference Product filename
-                            ows:RequestMessage download request (empty)
-            eop:version Product baseline
-            eop:product (list)
-                bio:ProductInformation
-                    eop:fileName
-                        ows:ServiceReference Product filename (internal files)
-                            ows:RequestMessage download request (empty)
-                    eop:size Product size
-                    bio:rds Product schema
-    eop:metaDataProperty Observation metadata
-        bio:EarthObservationMetaData
-            eop:identifier Product identifier
-            eop:doi Digital Object Identifier
-            eop:acquisitionType Type of acquisition
-            eop:productType Product type
-            eop:status Status of the product
-                eop:processing Data processing information
-                    bio:ProcessingInformation
-                        eop:processingCenter Processing centre code
-                        eop:processingDate Processing date and time
-                        eop:processorName Processor name
-                        eop:processorVersion Processor version
-                        eop:processingLevel Processing level
-                        eop:auxiliaryDataSetFileName Auxiliary DS filename
-                        eop:processingMode File Class
-                        bio:sourceProduct BIOMASS source product identifier
-            bio:refDoc Reference document
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\textcolor[HTML]{0070C0}{bio:EarthObservation }\textit{Root element of metadata representation tailored for BIOMASS SAR products}
+    \textcolor[HTML]{0070C0}{om:phenomenonTime} \textit{Time coverage of the product}
+        \textcolor[HTML]{0070C0}{gml:TimePeriod} \textit{Time coverage of the product as a period}
+            \textcolor[HTML]{C00000}{\textbf{gml:beginPosition}}\textcolor[HTML]{C00000}{ }\textbf{Start date and time of the product}
+            \textcolor[HTML]{C00000}{\textbf{gml:endPosition}} \textbf{Stop date and time of the product}
+    \textcolor[HTML]{0070C0}{om:resultTime} \textit{Time when the sensing data has become available}
+        \textcolor[HTML]{0070C0}{gml:TimeInstant} \textit{Identifiable position in time}
+            \textcolor[HTML]{C00000}{\textbf{gml:timePosition}} \textbf{Date and time of data availability}
+    \textcolor[HTML]{0070C0}{om:validTime} \textit{Time validity of the product}
+        \textcolor[HTML]{0070C0}{gml:TimePeriod} \textit{Time validity of the product as a period}
+            \textcolor[HTML]{C00000}{\textbf{gml:beginPosition }}\textbf{Validity start date and time of the product}
+            \textcolor[HTML]{C00000}{\textbf{gml:endPosition}} \textbf{Validity stop date and time of the product}
+    \textcolor[HTML]{0070C0}{om:procedure} \textit{Procedure used to sense the data}
+        \textcolor[HTML]{0070C0}{eop:EarthObservationEquipment} \textit{Equipment used to sense the data}
+            \textcolor[HTML]{0070C0}{eop:platform} \textit{Platform description}
+                \textcolor[HTML]{0070C0}{eop:Platform} \textit{Nested element for platform description}
+                    \textcolor[HTML]{C00000}{\textbf{eop:shortName}} \textbf{Satellite name}
+            \textcolor[HTML]{0070C0}{eop:instrument} \textit{Instrument description}
+                \textcolor[HTML]{0070C0}{eop:Instrument} \textit{Nested element for instrument description}
+                    \textcolor[HTML]{C00000}{\textbf{eop:shortName}} \textbf{Sensor name}
+            \textcolor[HTML]{0070C0}{eop:sensor} \textit{Sensor description}
+                \textcolor[HTML]{0070C0}{eop:Sensor} \textit{Nested element for sensor description}
+                    \textcolor[HTML]{C00000}{\textbf{eop:sensorType}} \textbf{Sensor type}
+                    \textcolor[HTML]{C00000}{\textbf{eop:operationalMode}} \textbf{Sensor operational mode}
+                    \textcolor[HTML]{C00000}{\textbf{eop:swathIdentifier}} \textbf{Swath identifier}
+            \textcolor[HTML]{0070C0}{eop:acquisitionParameters} \textit{Acquisition parameters}
+                \textcolor[HTML]{0070C0}{bio:Acquisition} \textit{Acquisition description}
+                    \textcolor[HTML]{C00000}{\textbf{eop:orbitDirection}} \textbf{Orbit direction}
+                    \textcolor[HTML]{C00000}{\textbf{eop:wrsLongitudeGrid}} \textbf{Track number}
+                    \textcolor[HTML]{C00000}{\textbf{eop:wrsLatitudeGrid}} \textbf{Frame number}
+                    \textcolor[HTML]{C00000}{\textbf{sar:antennaLookDirection}} \textbf{SAR antenna look direction}
+                    \textcolor[HTML]{C00000}{\textbf{bio:missionPhase}} \textbf{BIOMASS mission phase}
+                    \textcolor[HTML]{C00000}{\textbf{bio:globalCoverageID}} \textbf{BIOMASS global coverage identifier} 
+                    \textcolor[HTML]{C00000}{\textbf{bio:majorCycleID}} \textbf{BIOMASS major cycle identifier}
+                    \textcolor[HTML]{C00000}{\textbf{bio:}}\textcolor[HTML]{C00000}{\textbf{t}}\textcolor[HTML]{C00000}{\textbf{ileID}} \textbf{List of DGG geographic cell (tile) identifiers}
+                    \textcolor[HTML]{C00000}{\textbf{bio:basinID}} \textbf{Retrieval basin identifier}
+    \textcolor[HTML]{C00000}{om:observedProperty }\textit{Observed property (empty)}
+    \textcolor[HTML]{0070C0}{om:featureOfInterest} \textit{Observed area}
+        \textcolor[HTML]{0070C0}{eop:Footprint} \textit{Footprint description}
+            \textcolor[HTML]{0070C0}{eop:multiExtentOf }\textit{Footprint representation structure, coordinates in posList}
+                \textcolor[HTML]{0070C0}{gml:MultiSurface}
+                    \textcolor[HTML]{0070C0}{gml:surfaceMember}
+                        \textcolor[HTML]{0070C0}{gml:Polygon}
+                            \textcolor[HTML]{0070C0}{gml:exterior}
+                                \textcolor[HTML]{0070C0}{gml:LinearRing}
+                                    \textcolor[HTML]{C00000}{\textbf{gml:posList}}\textcolor[HTML]{0070C0}{ }\textbf{Footprint points in NE,SE,SW,NW}\textbf{,}\textbf{NE}\textbf{ order}
+            \textcolor[HTML]{0070C0}{eop:centerOf }\textit{Acquisition centre representation structure}
+                \textcolor[HTML]{0070C0}{gml:Point}
+                    \textcolor[HTML]{C00000}{\textbf{gml:pos}} \textbf{Coordinates of the centre of the acquisition}
+    \textcolor[HTML]{0070C0}{om:result }\textit{Observation result}
+        \textcolor[HTML]{0070C0}{eop:EarthObservationResult}
+            \textcolor[HTML]{0070C0}{eop:product}
+                \textcolor[HTML]{0070C0}{bio:ProductInformation}
+                    \textcolor[HTML]{0070C0}{eop:fileName}
+                        \textcolor[HTML]{C00000}{\textbf{ows:ServiceReference}} \textbf{Product filename}
+                            \textcolor[HTML]{C00000}{ows:RequestMessage} \textbf{download request (empty)}
+            \textcolor[HTML]{C00000}{\textbf{eop:version}} \textbf{Product baseline}
+            \textcolor[HTML]{0070C0}{eop:product }(list)
+                \textcolor[HTML]{0070C0}{bio:ProductInformation}
+                    \textcolor[HTML]{0070C0}{eop:fileName}
+                        \textcolor[HTML]{C00000}{\textbf{ows:ServiceReference}} \textbf{Product filename (internal files)}
+                            \textcolor[HTML]{C00000}{ows:RequestMessage} \textbf{download request (empty)}
+                    \textcolor[HTML]{C00000}{\textbf{eop:size}} \textbf{Product size}
+                    \textcolor[HTML]{C00000}{\textbf{bio}}\textcolor[HTML]{C00000}{\textbf{:rds }}\textbf{Product schema}
+    \textcolor[HTML]{0070C0}{eop:metaDataProperty }\textit{Observation metadata}
+        \textcolor[HTML]{0070C0}{bio:EarthObservationMetaData}
+            \textcolor[HTML]{C00000}{\textbf{eop:identifier}} \textbf{Product identifier}
+            \textcolor[HTML]{C00000}{\textbf{eop:doi}} \textbf{Digital Object Identifier}
+            \textcolor[HTML]{C00000}{\textbf{eop:acquisitionType}} \textbf{Type of acquisition}
+            \textcolor[HTML]{C00000}{\textbf{eop:productType}} \textbf{Product type}
+            \textcolor[HTML]{C00000}{\textbf{eop:status}} \textbf{Status of the product}
+                \textcolor[HTML]{0070C0}{eop:processing }\textit{Data processing information}
+                    \textcolor[HTML]{0070C0}{bio:ProcessingInformation}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processingCenter}} \textbf{Processing centre code}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processingDate}} \textbf{Processing date and time}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processorName}} \textbf{Processor name}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processorVersion}} \textbf{Processor version}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processingLevel}} \textbf{Processing level}
+                        \textcolor[HTML]{C00000}{\textbf{eop:auxiliaryDataSetFileName}} \textbf{Auxiliary DS filename}
+                        \textcolor[HTML]{C00000}{\textbf{eop:processingMode}} \textbf{File Class}
+                        \textcolor[HTML]{C00000}{\textbf{bio:sourceProduct}} \textbf{BIOMASS source product identifier}
+            \textcolor[HTML]{C00000}{\textbf{bio:refDoc}} \textbf{Reference document}
+\end{Verbatim}
 ```
-
-::::
 
 </div>
 
@@ -1012,7 +1010,7 @@ classDiagram
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
 | `generalConfigurationParameters` | General processing flags (not specific to the Forest Disturbance processing). | <u>`generalConfigurationParametersType`</u> | 1 |
 | `emphasizedForestHeight` | Value of the height [m] which has been emphasized during ground cancellation {ad}`8`. | `floatWithUnit` | 1 |
-| `operationalMode` | Ground Cancellation method used between the followings. <br> “single reference”: direct computation with a preliminary automatic reference image selection. <br> *or* <br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element *`imagesPairSelection`*. <br> Note: <br> in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of *`imagesPairSelection`* element). | <u>`operationalModeType`</u> | 1 |
+| `operationalMode` | Ground Cancellation method used between the followings. <br> “single reference”: direct computation with a preliminary automatic reference image selection. <br> *or* <br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`. <br> Note: <br> in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | <u>`operationalModeType`</u> | 1 |
 | `imagesPairSelection` | Optional: <br> if *`operationalMode`* is “insar pair” and if this element is present, this means that ground cancellation has being performed using only the two images specified here. | `acquisitionListType` | 0..1 |
 | `disableGroundCancellationFlag` | False, if the ground cancellation has been performed. <br> True, if ground cancellation has been disabled. <br> Optional, default is False. | bool | 0..1 |
 | `significanceLevel` | Significance level, expressed as a percentage, applied in the change detection algorithm {ad}`8`. | `xsd:float` | 1 |
@@ -1366,35 +1364,33 @@ The content of L2a LUT ADS is reported hereafter, where:
         <b>acquisition_id_reference_image</b><b> </b><i>Optional</i><i> </i><i>[</i><i>str</i><i>]</i><i> Acquisition folder name, to better identify the input image referred by the </i><i>selectedReferenceImag</i><i>e</i></pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        mission: “BIOMASS”
-        tileID: [string] json encoded list of DGG geographic tile identifiers (NxxEyyy))
-        basinID: [string] json encoded list of DGG Basin identifiers
-        productType: “FP_FD__L2A”
-        startTime: [str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC
-        stopTime: [str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC
-        radarCarrierFrequency: [float32] Radar carrier frequency [Hz]
-        missionPhaseID: [str: COM, TOM or INT] Mission phase identifier
-        sensorMode: “Measurement”
-        globalCoverageID: [uint16] Global coverage identifier
-        swath: [str: S1, S2 or S3] BIOMASS swath identifier
-        majorCycleID: [uint16] Major cycle identifier
-        absoluteOrbitNumber: [list of uint32] List of absolute orbit numbers at start time (one for each input L1c)
-        relativeOrbitNumber: [uint16] Relative orbit number (track) at start time
-        orbitPass: [str: Ascending or Descending] Orbit pass
-        dataTakeID: [string] json encoded list of data take identifiers (one for each input L1c)
-        frame: [uint16] Frame identifier
-        platform_heading: [float32] Platform heading relative to North, deg
-        forest_coverage_percentage: [float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the         STA footprint
-        selected_reference_image Optional [uint16] Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and  operationalMode configuration has been set to “single reference”
-        acquisition_id_reference_image Optional [str] Acquisition folder name, to better identify the input image referred by the selectedReferenceImage
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        \textbf{mission}: “BIOMASS”
+        \textbf{t}\textbf{ileID}: \textit{[}\textit{string] json encoded list of }\textit{DGG geographic tile identifiers}\textit{ (}\textit{NxxEyyy)}\textit{)}
+        \textbf{b}\textbf{asinID}: \textit{[}\textit{string] json encoded list of }\textit{DGG Basin identifier}\textit{s}\textit{ }
+        \textbf{pro}\textbf{d}\textbf{uctType}: “FP_FD__L2A”
+        \textbf{startTime}: \textit{[str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC}
+        \textbf{stopTime}\textit{: [str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC} 
+        \textbf{radarCarrierFrequency}: \textit{[float}\textit{32}\textit{] Radar carrier frequency [Hz]}
+        \textbf{missionPhaseID}: \textit{[str: COM, TOM or INT] Mission phase identifier}
+        \textbf{sensorMode}: “Measurement”
+        \textbf{globalCoverageID}: \textit{[uint16] Global coverage identifier}
+        \textbf{swath}: \textit{[str: S1, S2 or S3] BIOMASS swath identifier}
+        \textbf{majorCycleID}: \textit{[uint16] Major cycle identifier}
+        \textbf{absoluteOrbitNumber}: \textit{[list of uint32] List of absolute orbit numbers at start time (one for each input L1c)}
+        \textbf{relativeOrbitNumber}: \textit{[uint16] Relative orbit number (track) at start time}
+        \textbf{orbitPass}\textit{: [str: Ascending or Descending] Orbit pass}
+        \textbf{dataTakeID}\textbf{:}\textit{ }\textit{[string] json encoded list of }\textit{data take identifiers (one for each input L1c)}\textit{ }
+        \textbf{frame}: \textit{[uint16] Frame identifier}
+        \textbf{platform}\textbf{_h}\textbf{eading}: \textit{[}\textit{float32}\textit{] Platform heading relative to North, deg}
+        \textbf{forest}\textbf{_c}\textbf{overage}\textbf{_p}\textbf{ercentage}: \textit{[}\textit{float32}\textit{] }\textit{Forest coverage of the input STA products, compute as a percentage of all the pixels in the }        \textit{STA footprint}
+        \textbf{selected}\textbf{_r}\textbf{eference}\textbf{_i}\textbf{mage}\textbf{ }\textit{Optional}\textit{ }\textit{[uint16]}\textit{ }\textit{Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage), used during ground cancellation. Optional element, present only when ground cancellation is performed (FD, GN) and  operationalMode configuration has been set to “single reference”}
+        \textbf{acquisition_id_reference_image}\textbf{ }\textit{Optional}\textit{ }\textit{[}\textit{str}\textit{]}\textit{ Acquisition folder name, to better identify the input image referred by the }\textit{selectedReferenceImag}\textit{e}
+\end{Verbatim}
 ```
 
-::::
-
-**`formatVersion`** *[str]* *Version of the product*
+`formatVersion` *[str]* *Version of the product*
 
 <u>LUT ADS Dimensions / Coordinate variables</u>:
 
@@ -1411,22 +1407,20 @@ The content of L2a LUT ADS is reported hereafter, where:
                 description: LUTs longitude axis</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Name: Latitude
-                size: [int] size
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Name: \textbf{Latitude}
+                size: \textit{[int] size}
                 type: dtype(float32)
                 units: deg
                 description: LUTs latitude axis
-        Name: Longitude
-                size: [int] size
+        Name: \textbf{Longitude}
+                size\textit{: [int] size}
                 type: dtype(float32)
                 units: deg
                 description: LUTs longitude axis
+\end{Verbatim}
 ```
-
-::::
 
 <u>LUT ADS group of variables</u>:
 
@@ -1666,245 +1660,243 @@ The content of L2a LUT ADS is reported hereafter, where:
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name: FNF
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{FNF}
         FNF group contents:
-                Name: FNF
+                Name: \textbf{FNF}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(ubyte)
                         description: Forest/Non-Forest mask: this is an external image, defined outside of BPS from aggregated C3S LCM, representing the initial two-dimensional mask, here defined in the same latitude-longitude based on DGG projection used for L2a images and cropped to have a coverage containing the L2a product image boundaries. It defines, for each geographical pixel, the initial presence or absence of forest.
-                Name: firstSample
+                Name: \textbf{firstSample}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS sample the first LUT sample corresponds to
-                Name: firstLine
+                Name: \textbf{firstLine}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS line the first LUT line corresponds to
-                Name: samplesInterval
+                Name: \textbf{samplesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS samples one LUT sample corresponds to
-                Name: linesInterval
+                Name: \textbf{linesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS lines one LUT line corresponds to
-                Name: pixelType
+                Name: \textbf{pixelType}
                         shape: (1, 1)
                         type: <class str>
                         description: Data type of output LUT pixels
-                Name: noDataValue
+                Name: \textbf{noDataValue}
                         shape: (1, 1)
                         type: dtype(ubyte)
                         description: Pixel value in case of invalid data. The value is always set to 255. (See 3)
-                Name: projection
+                Name: \textbf{projection}
                         shape: (1, 1)
                         type: <class str>
                         description: LUT projection, is the latitude-longitude based on DGG
-                Name: coordinateReferenceSystem
+                Name: \textbf{coordinateReferenceSystem}
                         shape: (1, 1)
                         type: <class str>
                         description: Coordinate reference systems, as per WKT representation [RD7]
-                Name: geodeticReferenceFrame
+                Name: \textbf{geodeticReferenceFrame}
                         shape: (1, 1)
                         type: <class str>
                         description: Geodetic reference frame
-        Group Name: ACM
-                group description: ACM represents the covariance history of all previous cycles (see also numberOfAverages variable): it is obtained by averaging the covariance computed with FD algorithm at the given Global cycle with the previous ACM in input to the processor [AD8]. At first Global cycle it is the current covariance. It consists of six images of which three real and three complex, stored in nine NetCDF layers as three layers for the three real images and three complex images, each split in the amplitude value layer and the phase value (radians) layer.
+        Group Name: \textbf{ACM}
+                group description: ACM represents the covariance history of all previous cycles (see also \textit{numberOfAverages} variable): it is obtained by averaging the covariance computed with FD algorithm at the given Global cycle with the previous ACM in input to the processor [AD8]. At first Global cycle it is the current covariance. It consists of six images of which three real and three complex, stored in nine NetCDF layers as three layers for the three real images and three complex images, each split in the amplitude value layer and the phase value (radians) layer.
         ACM group contents:
-                Name: layer1
+                Name: \textbf{layer1}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 1: ACM image 1 of 6, real, HH-HH
-                Name: layer2
+                Name: \textbf{layer2}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 2: ACM image 2 of 6, amplitude value of complex image, HH-XP
-                Name: layer3
+                Name: \textbf{layer3}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 3: ACM image 2 of 6, phase value of complex image [rad], HH-XP
      units: rad
-                Name: layer4
+                Name: \textbf{layer4}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
-                        description: layer 4: ACM image 3 of 6, amplitude value of complex image, HH-VV
-                Name: layer5
+                        description: layer 4: ACM image 3 of 6, amplitude value of complex image, HH-VV 
+                Name: \textbf{layer5}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 5: ACM image 3 of 6, phase value of complex image [rad], HH-VV
       units: rad
-                Name: layer6
+                Name: \textbf{layer6}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 6: ACM image 4 of 6, real, XP-XP
-                Name: layer7
+                Name: \textbf{layer7}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 7: ACM image 5 of 6, amplitude value of complex image, XP-VV
-                Name: layer8
+                Name: \textbf{layer8}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 8: ACM image 5 of 6, phase value of complex image [rad], XP-VV
      units: rad
-                Name: layer9
+                Name: \textbf{layer9}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: layer 9: ACM image 6 of 6, real, VV-VV
-                Name: firstSample
+                Name: \textbf{firstSample}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS sample the first LUT sample corresponds to
-                Name: firstLine
+                Name: \textbf{firstLine}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS line the first LUT line corresponds to
-                Name: samplesInterval
+                Name: \textbf{samplesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS samples one LUT sample corresponds to
-                Name: linesInterval
+                Name: \textbf{linesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS lines one LUT line corresponds to
-                Name: pixelType
+                Name: \textbf{pixelType}
                         shape: (1, 1)
                         type: <class str>
                         description: Data type of output LUT pixels
-                Name: noDataValue
+                Name: \textbf{noDataValue}
                         shape: (1, 1)
                         type: dtype(float32)
                         description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
-                Name: projection
+                Name: \textbf{projection}
                         shape: (1, 1)
                         type: <class str>
                         description: LUT projection, is the latitude-longitude based on DGG
-                Name: coordinateReferenceSystem
+                Name: \textbf{coordinateReferenceSystem}
                         shape: (1, 1)
                         type: <class str>
                         description: Coordinate reference systems, as per WKT representation [RD7]
-                Name: geodeticReferenceFrame
+                Name: \textbf{geodeticReferenceFrame}
                         shape: (1, 1)
                         type: <class str>
                         description: Geodetic reference frame
-                Name: least_significant_digit
+                Name: \textbf{least_significant_digit}
                         shape: (1, 1)
                         type: unsignedByte
                         description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
-        Group Name: numberOfAverages
+        Group Name: \textbf{numberOfAverages}
         numberOfAverages group contents:
-                Name: numberOfAverages
+                Name: \textbf{numberOfAverages}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape: \textit{([int] x shape, [int] y shape)}
                         type: dtype(ubyte)
-                        description: It represents, for the ACM, the number of covariances averaged so far at given Global cycle, pixel wise (see also ACM variable and [AD8]). At first Global cycle it is zero for each pixel.
-                Name: firstSample
+                        description: It represents, for the ACM, the number of covariances averaged so far at given Global cycle, pixel wise (see also \textit{ACM} variable and [AD8]). At first Global cycle it is zero for each pixel.
+                Name: \textbf{firstSample}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS sample the first LUT sample corresponds to
-                Name: firstLine
+                Name: \textbf{firstLine}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS line the first LUT line corresponds to
-                Name: samplesInterval
+                Name: \textbf{samplesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS samples one LUT sample corresponds to
-                Name: linesInterval
+                Name: \textbf{linesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS lines one LUT line corresponds to
-                Name: pixelType
+                Name: \textbf{pixelType}
                         shape: (1, 1)
                         type: <class str>
                         description: Data type of output LUT pixels
-                Name: noDataValue
+                Name: \textbf{noDataValue}
                         shape: (1, 1)
                         type: dtype(ubyte)
                         description: Pixel value in case of invalid data. The value is always set to float 255. (See 3)
-                Name: projection
+                Name: \textbf{projection}
                         shape: (1, 1)
                         type: <class str>
                         description: LUT projection, is the latitude-longitude based on DGG
-                Name: coordinateReferenceSystem
+                Name: \textbf{coordinateReferenceSystem}
                         shape: (1, 1)
                         type: <class str>
                         description: Coordinate reference systems, as per WKT representation [RD7]
-                Name: geodeticReferenceFrame
+                Name: \textbf{geodeticReferenceFrame}
                         shape: (1, 1)
                         type: <class str>
                         description: Geodetic reference frame
-        Group Name:  height
+        Group Name: \textbf{ }\textbf{height}
         height group contents:
-                Name:  height
+                Name: \textbf{ }\textbf{height}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]
     units: m
-                Name: firstSample
+                Name: \textbf{firstSample}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS sample the first LUT sample corresponds to
-                Name: firstLine
+                Name: \textbf{firstLine}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Product image MDS line the first LUT line corresponds to
-                Name: samplesInterval
+                Name: \textbf{samplesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS samples one LUT sample corresponds to
-                Name: linesInterval
+                Name: \textbf{linesInterval}
                         shape: (1, 1)
                         type: dtype(uint32)
                         description: Number of product image MDS lines one LUT line corresponds to
-                Name: pixelType
+                Name: \textbf{pixelType}
                         shape: (1, 1)
                         type: <class str>
                         description: Data type of output LUT pixels
-                Name: noDataValue
+                Name: \textbf{noDataValue}
                         shape: (1, 1)
                         type: dtype(float32)
                         description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
-                Name: projection
+                Name: \textbf{projection}
                         shape: (1, 1)
                         type: <class str>
                         description: LUT projection, DGG, as described in [RD8]
-                Name: coordinateReferenceSystem
+                Name: \textbf{coordinateReferenceSystem}
                         shape: (1, 1)
                         type: <class str>
                         description: Coordinate reference systems, as per WKT representation [RD7]
-                Name: geodeticReferenceFrame
+                Name: \textbf{geodeticReferenceFrame}
                         shape: (1, 1)
                         type: <class str>
                         description: Geodetic reference frame
-                Name: least_significant_digit
+                Name: \textbf{least_significant_digit}
                         shape: (1, 1)
                         type: unsignedByte
                         description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
-        Group Name:  latitude
+        Group Name: \textbf{ }\textbf{latitude}
         height group contents:
-                Name:  latitude
+                Name: \textbf{ }\textbf{latitude}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -1919,20 +1911,18 @@ The remaining variables, which are identical across all geometric LUTs, are omit
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name:  longitude
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{ }\textbf{longitude}
         height group contents:
-                Name:  longitude
+                Name: \textbf{ }\textbf{longitude}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -1947,20 +1937,18 @@ The remaining variables, which are identical across all geometric LUTs, are omit
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name:  incidenceAngle
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{ }\textbf{incidenceAngle}
         height group contents:
-                Name:  incidenceAngle
+                Name: \textbf{ }\textbf{incidenceAngle}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -1975,20 +1963,18 @@ The remaining variables, which are identical across all geometric LUTs, are omit
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name:  elevationAngle
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{ }\textbf{elevationAngle}
         height group contents:
-                Name:  elevationAngle
+                Name: \textbf{ }\textbf{elevationAngle}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -2003,20 +1989,18 @@ The remaining variables, which are identical across all geometric LUTs, are omit
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name:  rangeTerrainSlope
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{ }\textbf{rangeTerrainSlope}
         height group contents:
-                Name:  rangeTerrainSlope
+                Name: \textbf{ }\textbf{rangeTerrainSlope}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -2031,20 +2015,18 @@ The remaining variables, which are identical across all geometric LUTs, are omit
     units: deg</pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-        Group Name:  azimuthTerrainSlope
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+        Group Name: \textbf{ }\textbf{azimuthTerrainSlope}
         height group contents:
-                Name:  azimuthTerrainSlope
+                Name: \textbf{ }\textbf{azimuthTerrainSlope}
                         dimensions: (Longitude, Latitude)
-                        shape: ([int] x shape, [int] y shape)
+                        shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
     units: deg
+\end{Verbatim}
 ```
-
-::::
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 

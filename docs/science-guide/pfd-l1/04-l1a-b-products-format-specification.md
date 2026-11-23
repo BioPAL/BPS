@@ -391,7 +391,7 @@ This section describes in details the content of main ADS and of all its DSR.
 An overview is provided by figure and table below.
 
 (fig:pfd-l1-3)=
-:::{div} atbd-mermaid-figure
+::::{div} atbd-mermaid-figure
 
 <div class="atbd-figure-content">
 
@@ -428,13 +428,15 @@ classDiagram
 
 <p class="xsd-diagram-source"><small>Generated from biomass-xsd v4.5.0, bio-l1ab-main-annotation.xsd (<code>mainAnnotationType</code>).</small></p>
 
-<p class="xsd-diagram-legend"><small>Diagram notation: <code>@name</code> attribute; <code>[min..max]</code> occurrences; <code>⊞</code> named type not expanded here; <code>«inline»</code> type declared in place, drawn as an «anonymous» class; <code>choice n ·</code> alternative n of a choice; <code>all ·</code> elements in any order.</small></p>
+:::{div} xsd-diagram-legend
+Diagram notation: `@name` attribute; `[min..max]` occurrences; `⊞` named type not expanded here; `«inline»` type declared in place, drawn as an «anonymous» class; `choice n ·` alternative n of a choice; `all ·` elements in any order.
+:::
 
 </div>
 
 <p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — Main ADS</span></p>
 
-:::
+::::
 
 (tab:pfd-l1-4)=
 :::{div} atbd-table
@@ -443,21 +445,21 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `schemaVersion` | *PFD version* | `xsd:token` | *1* |
-| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | `acquisitionInformationType` | 1 |
-| `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | `sarImageType` | 1 |
-| `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | `instrumentParametersType` | 1 |
-| `rawDataAnalysis` | RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor. | `rawDataAnalysisType` | 1 |
-| `processingParameters` | Processing parameters DSR. This DSR contains the exhaustive list of static SAR processing parameters and of corrections applied. | `processingParametersType` | 1 |
-| `internalCalibration` | Internal calibration DSR. This DSR contains the results of the internal calibration analysis performed by the processor. | `internalCalibrationType` | 1 |
-| `rfiMitigation` | Radio Frequency Interference mitigation DSR. This DSR contains information on detected RFI and on their mitigation. | `rfiMitigationType` | 1 |
-| `dopplerParameters` | Doppler parameters DSR. This DSR contains the Doppler Centroid (DC) and Frequency Modulation rate (FM) parameters estimated and used during processing. | `dopplerParametersType` | 1 |
-| `radiometricCalibration` | Radiometric calibration DSR. This DSR contains all the necessary information to absolutely calibrate the data pixels. | `radiometricCalibrationType` | 1 |
-| `polarimetricDistortion` | Polarimetric distortion DSR. This DSR contains the necessary information e.g. receive and transmit polarisation distortion matrix, allowing users to correct for them if not applied at processing level. | `polarimetricDistortionType` | 1 |
-| `ionosphereCorrection` | Ionosphere correction DSR. This DSR contains the results of the ionosphere correction estimated and applied by the processor. | `ionosphereCorrectionType` | 1 |
-| geometry | Geometry DSR. This DSR contains all the necessary information to understand the Earth model/geometry used in the image and its geolocation. | `geometryType` | 1 |
-| quality | Quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level. | `qualityType` | 1 |
-| annotationLUT | Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations. | `layerListType` | 1 |
+| *`schemaVersion`* | *PFD version* | *`xsd:token`* | *1* |
+| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | <u>`acquisitionInformationType`</u> | 1 |
+| `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | <u>`sarImageType`</u> | 1 |
+| `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | <u>`instrumentParametersType`</u> | 1 |
+| `rawDataAnalysis` | RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor. | <u>`rawDataAnalysisType`</u> | 1 |
+| `processingParameters` | Processing parameters DSR. This DSR contains the exhaustive list of static SAR processing parameters and of corrections applied. | <u>`processingParametersType`</u> | 1 |
+| `internalCalibration` | Internal calibration DSR. This DSR contains the results of the internal calibration analysis performed by the processor. | <u>`internalCalibrationType`</u> | 1 |
+| `rfiMitigation` | Radio Frequency Interference mitigation DSR. This DSR contains information on detected RFI and on their mitigation. | <u>`rfiMitigationType`</u> | 1 |
+| `dopplerParameters` | Doppler parameters DSR. This DSR contains the Doppler Centroid (DC) and Frequency Modulation rate (FM) parameters estimated and used during processing. | <u>`dopplerParametersType`</u> | 1 |
+| `radiometricCalibration` | Radiometric calibration DSR. This DSR contains all the necessary information to absolutely calibrate the data pixels. | <u>`radiometricCalibrationType`</u> | 1 |
+| `polarimetricDistortion` | Polarimetric distortion DSR. This DSR contains the necessary information e.g. receive and transmit polarisation distortion matrix, allowing users to correct for them if not applied at processing level. | <u>`polarimetricDistortionType`</u> | 1 |
+| `ionosphereCorrection` | Ionosphere correction DSR. This DSR contains the results of the ionosphere correction estimated and applied by the processor. | <u>`ionosphereCorrectionType`</u> | 1 |
+| geometry | Geometry DSR. This DSR contains all the necessary information to understand the Earth model/geometry used in the image and its geolocation. | <u>`geometryType`</u> | 1 |
+| quality | Quality DSR. This DSR contains in a single DSR quality flags and thresholds for basic quality assessment done at processing level. | <u>`qualityType`</u> | 1 |
+| annotationLUT | Annotation LUT DSR. This DSR contains the list of Look-Up Tables (LUTs) complementing product main annotations. | <u>`layerListType`</u> | 1 |
 
 :::
 
@@ -470,7 +472,7 @@ The content of each DSR is described making use of tables as the one here above.
 
 In general, elements are displayed in normal font, attributes are displayed in *italics*.
 
-Data types requiring a dedicated definition table are underlined, for all the others the common reference is {sec}`Sec. 7.1.1 <7.1.1>`.
+Data types requiring a dedicated definition table are <u>underlined</u>, for all the others the common reference is {sec}`Sec. 7.1.1 <7.1.1>`.
 
 (sec:pfd-l1-4-3-1-1)=
 ##### 4.3.1.1 Acquisition information DSR
@@ -534,7 +536,7 @@ classDiagram
 | mission | Mission (BIOMASS). | `missionType` | 1 |
 | swath | Swath (S1, S2, S3). | `swathType` | 1 |
 | `productType` | Product type (SCS, DGM). | `productType` | 1 |
-| `polarisationList` | List of polarisations. | `polarisationListType` | 1 |
+| `polarisationList` | List of polarisations. | <u>`polarisationListType`</u> | 1 |
 | `startTime` | Zero Doppler start time of the image [UTC]. | `timeType` | 1 |
 | `stopTime` | Zero Doppler stop time of the image [UTC]. | `timeType` | 1 |
 | `missionPhaseID` | Mission phase identifier (COM, TOM, INT). | `missionPhaseIDType` | 1 |
@@ -634,8 +636,8 @@ classDiagram
 | `numberOfSamples` | Total number of samples in the image (image width). | `xsd:unsignedInt` | 1 |
 | `numberOfLines` | Total number of lines in the image (image length). | `xsd:unsignedInt` | 1 |
 | projection | Projection of the image, either Slant Range or Ground Range. | `projectionType` | 1 |
-| `rangeCoordinateConversion` | List of `coordinateConversion` records that describe conversion between the slant range and ground range coordinate systems. The list contains an entry for each 10 seconds. This list applies to and is filled in only for DGM products and therefore has a length of zero for SCS products. | `coordinateConversionListType` | 1 |
-| datum | Datum used during processing. | `datumType` | 1 |
+| `rangeCoordinateConversion` | List of `coordinateConversion` records that describe conversion between the slant range and ground range coordinate systems. The list contains an entry for each 10 seconds. This list applies to and is filled in only for DGM products and therefore has a length of zero for SCS products. | <u>`coordinateConversionListType`</u> | 1 |
+| datum | Datum used during processing. | <u>`datumType`</u> | 1 |
 | footprint | Image footprint, expressed as a list of latitude and longitude values separated by spaces [deg]. Values are specified for each of the 4 corner coordinates of the scene quicklook, starting with the first-right in flight direction and proceeding CCW (same convention used in MPH and overlay ADS). | `floatArrayWithUnits` | 1 |
 | `pixelRepresentation` | Representation of the image pixels within the image MDS (I Q, Abs Phase, Abs, Pow Phase, Pow). | `pixelRepresentationType` | 1 |
 | `pixelType` | Data type of output pixels within the image MDS. | `pixelTypeType` | 1 |
@@ -652,7 +654,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of coordinate conversion records within the list.* | `xsd:unsignedInt` | *required* |
-| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. <br> Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
+| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. <br> Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | <u>`coordinateConversionType`</u> | 0 .. 15 |
 
 :::
 
@@ -762,22 +764,22 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `firstLineSensingTimeList` | Sensing time of first line of the input RAW data for all the polarisations [UTC]. | `firstLineSensingTimeListType` | 1 |
-| `lastLineSensingTimeList` | Sensing time of last line of the input RAW data for all the polarisations [UTC]. | `lastLineSensingTimeListType` | 1 |
+| `firstLineSensingTimeList` | Sensing time of first line of the input RAW data for all the polarisations [UTC]. | <u>`firstLineSensingTimeListType`</u> | 1 |
+| `lastLineSensingTimeList` | Sensing time of last line of the input RAW data for all the polarisations [UTC]. | <u>`lastLineSensingTimeListType`</u> | 1 |
 | `numberOfInputSamples` | Number of samples of the input RAW data. | `xsd:unsignedInt` | 1 |
 | `numberOfInputLines` | Number of lines of the input RAW data. | `xsd:unsignedInt` | 1 |
-| `swpList` | List of Sampling Window Position changes (SWP) [s]. The list contains an entry for each on-board SWP update. | `swpListType` | 1 |
-| `swlList` | List of Sampling Window Length changes (SWL) [s]. The list contains an entry for each on-board SWL update. | `swlListType` | 1 |
-| `prfList` | List of Pulse Repetition Frequency changes (PRF) [Hz]. The list contains an entry for each on-board PRF update. | `prfListType` | 1 |
+| `swpList` | List of Sampling Window Position changes (SWP) [s]. The list contains an entry for each on-board SWP update. | <u>`swpListType`</u> | 1 |
+| `swlList` | List of Sampling Window Length changes (SWL) [s]. The list contains an entry for each on-board SWL update. | <u>`swlListType`</u> | 1 |
+| `prfList` | List of Pulse Repetition Frequency changes (PRF) [Hz]. The list contains an entry for each on-board PRF update. | <u>`prfListType`</u> | 1 |
 | rank | Number of PRIs between transmitted pulse and received echo. | `xsd:unsignedShort` | 1 |
-| `txPulseList` | List of transmitted pulses. The list contains an entry for each on-board transmitted pulse update. | `txPulseListType` | 1 |
+| `txPulseList` | List of transmitted pulses. The list contains an entry for each on-board transmitted pulse update. | <u>`txPulseListType`</u> | 1 |
 | `instrumentConfigurationID` | Instrument configuration identifier. | `xsd:unsignedInt` | 1 |
 | `radarCarrierFrequency` | Radar carrier frequency [Hz]. | `doubleWithUnit` | 1 |
-| `rxGainList` | RX gain list. | `rxGainListType` | 1 |
+| `rxGainList` | RX gain list. | <u>`rxGainListType`</u> | 1 |
 | `preambleFlag` | True if input RAW data contain preamble sequence, False otherwise. | bool | 1 |
 | `postambleFlag` | True if input RAW data contain postamble sequence, False otherwise. | bool | 1 |
 | `interleavedCalibrationFlag` | True if input RAW data contain interleaved calibration sequences, False otherwise. | bool | 1 |
-| `dataFormat` | Data format for instrument samples. There is one element corresponding to the data format for each packet type in the segment. | `dataFormatType` | 1 |
+| `dataFormat` | Data format for instrument samples. There is one element corresponding to the data format for each packet type in the segment. | <u>`dataFormatType`</u> | 1 |
 
 :::
 
@@ -849,7 +851,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of transmitted pulse records within the list.* | `xsd:unsignedInt` | *required* |
-| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. <br> List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
+| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. <br> List `maxOccurs` is set to 5, considered as worst case. | <u>`txPulseType`</u> | 1.. 5 |
 
 :::
 
@@ -1031,9 +1033,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `errorCounters` | Error counters computed starting from input Instrument Source Packets stream. | `errorCountersType` | 1 |
-| `rawDataStatisticsList` | Extracted RAW data I and Q channels statistics for all the polarisations. | `rawDataStatisticsListType` | 1 |
-| `inOutBandPowerRatioList` | In/out-of-band power ratio list. This element contains lists of in/out-of-band power ratio measurements. The list contains an entry for each measurement made along azimuth and it is organised per polarisation. | `inOutBandPowerRatioListType` | 1 |
+| `errorCounters` | Error counters computed starting from input Instrument Source Packets stream. | <u>`errorCountersType`</u> | 1 |
+| `rawDataStatisticsList` | Extracted RAW data I and Q channels statistics for all the polarisations. | <u>`rawDataStatisticsListType`</u> | 1 |
+| `inOutBandPowerRatioList` | In/out-of-band power ratio list. This element contains lists of in/out-of-band power ratio measurements. The list contains an entry for each measurement made along azimuth and it is organised per polarisation. | <u>`inOutBandPowerRatioListType`</u> | 1 |
 
 :::
 
@@ -1087,7 +1089,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `rawDataStatistics` | Extracted RAW data I and Q channels statistics for the current polarisation. | `rawDataStatisticsType` | 1 .. 4 |
+| `rawDataStatistics` | Extracted RAW data I and Q channels statistics for the current polarisation. | <u>`rawDataStatisticsType`</u> | 1 .. 4 |
 
 :::
 
@@ -1131,7 +1133,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | `iBias` | Calculated I bias. | `xsd:double` | 1 |
 | `qBias` | Calculated Q bias. | `xsd:double` | 1 |
 | `iqQuadratureDeparture` | Calculated I/Q quadrature departure. | `xsd:double` | 1 |
@@ -1158,9 +1160,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | *count* | *Number of in/out-of-band power ratio measurements for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `powerRatio` | In/out-of-band power ratio measurements. <br> Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
+| `powerRatio` | In/out-of-band power ratio measurements. <br> Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | <u>`powerRatioType`</u> | 1 .. 30 |
 
 :::
 
@@ -1311,13 +1313,13 @@ classDiagram
 | `antennaPatternCorrection1Flag` | True if antenna pattern correction (first step) was applied, False otherwise. | bool | 1 |
 | `antennaPatternCorrection2Flag` | True if antenna pattern correction (second step) was applied, False otherwise. | bool | 1 |
 | `antennaCrossTalkCorrectionFlag` | True if antenna cross-talk correction was applied, False otherwise. | bool | 1 |
-| `rangeProcessingParameters` | Parameters used during range processing. | `spectrumProcessingParametersType` | 1 |
-| `azimuthProcessingParameters` | Parameters used during azimuth processing. | `spectrumProcessingParametersType` | 1 |
+| `rangeProcessingParameters` | Parameters used during range processing. | <u>`spectrumProcessingParametersType`</u> | 1 |
+| `azimuthProcessingParameters` | Parameters used during azimuth processing. | <u>`spectrumProcessingParametersType`</u> | 1 |
 | `bistaticDelayCorrectionFlag` | True if bistatic delay correction was applied, False otherwise. | bool | 1 |
 | `bistaticDelayCorrectionMethod` | Method used for bistatic delay correction (Bulk or Full). | `bistaticDelayCorrectionMethodType` | 1 |
 | `rangeSpreadingLossCompensationFlag` | True if range spreading loss compensation was performed, False otherwise. | bool | 1 |
 | `referenceRange` | Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by `1/Grsl(R)`, where: <br> - `Grsl(R) = cuberoot(rRef/R)` <br> - `R` = slant range of sample. | `doubleWithUnit` | 1 |
-| `processingGainList` | Processing gain computed and applied multiplicatively to the image during processing for all the polarisations. | `processingGainListType` | 1 |
+| `processingGainList` | Processing gain computed and applied multiplicatively to the image during processing for all the polarisations. | <u>`processingGainListType`</u> | 1 |
 | `polarimetricCorrectionFlag` | True if polarimetric correction has been performed, False otherwise. | bool | 1 |
 | `ionosphereHeightDefocusingFlag` | True if defocusing at ionosphere height has been performed, False otherwise. | bool | 1 |
 | `ionosphereHeightEstimationMethod` | Ionosphere height estimation method (Automatic, Feature Tracking, Squint Sensitivity, Model, Fixed). | `ionosphereHeightEstimationMethodType` | 1 |
@@ -1328,7 +1330,7 @@ classDiagram
 | `autofocusMethod` | Autofocus method used during processing (Map Drift). | `autofocusMethodType` | 1 |
 | `detectionFlag` | True if detection has been performed, False otherwise. | bool | 1 |
 | `thermalDenoisingFlag` | True if thermal denoising has been performed, False otherwise. | bool | 1 |
-| `noiseGainList` | Processing gain computed and applied multiplicatively to the thermal noise level before using it during denoising step for all the polarisations. | `noiseGainListType` | 1 |
+| `noiseGainList` | Processing gain computed and applied multiplicatively to the thermal noise level before using it during denoising step for all the polarisations. | <u>`noiseGainListType`</u> | 1 |
 | `groundProjectionFlag` | True if slant range to ground range conversion has been performed, False otherwise. | bool | 1 |
 
 :::
@@ -1457,8 +1459,8 @@ classDiagram
 | `internalCalibrationParametersUsed` | Internal calibration parameters effectively used during processing (Model or Extracted). | `internalCalibrationSourceType` | 1 |
 | `rangeReferenceFunctionUsed` | Chirp source effectively used for range compression (Nominal, Replica or Internal). Can be different from `rangeReferenceFunctionSource`. | `rangeReferenceFunctionType` | 1 |
 | `noiseParametersUsed` | Noise parameters used during processing (Model or Extracted). | `internalCalibrationSourceType` | 1 |
-| `internalCalibrationParametersList` | Internal calibration parameters list. This element contains lists of internal calibration parameters calculated from the calibration pulses extracted from the downlink. The list contains an entry for each calibration sequence contained in the input data and it is organised per polarisation. If the list is empty, the nominal parameters values in the instrument auxiliary data file will be used instead. | `internalCalibrationParametersListType` | 1 |
-| `noiseList` | Noise list. This element contains lists of noise parameters derived from the noise ISPs. The list contains an entry for each noise sequence contained in the input data and it is organised per polarisation. If the list is empty, the nominal noise value in the instrument auxiliary data file will be used instead. | `noiseListType` | 1 |
+| `internalCalibrationParametersList` | Internal calibration parameters list. This element contains lists of internal calibration parameters calculated from the calibration pulses extracted from the downlink. The list contains an entry for each calibration sequence contained in the input data and it is organised per polarisation. If the list is empty, the nominal parameters values in the instrument auxiliary data file will be used instead. | <u>`internalCalibrationParametersListType`</u> | 1 |
+| `noiseList` | Noise list. This element contains lists of noise parameters derived from the noise ISPs. The list contains an entry for each noise sequence contained in the input data and it is organised per polarisation. If the list is empty, the nominal noise value in the instrument auxiliary data file will be used instead. | <u>`noiseListType`</u> | 1 |
 
 :::
 
@@ -1470,7 +1472,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `internalCalibrationSequenceList` | Internal calibration parameters derived from the calibration pulses for the current polarisation. | `internalCalibrationSequenceListType` | 1 .. 4 |
+| `internalCalibrationSequenceList` | Internal calibration parameters derived from the calibration pulses for the current polarisation. | <u>`internalCalibrationSequenceListType`</u> | 1 .. 4 |
 
 :::
 
@@ -1481,9 +1483,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | *count* | *Number of internal calibration sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses. <br> Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
+| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses. <br> Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | <u>`internalCalibrationSequenceType`</u> | 0 .. 60 |
 
 :::
 
@@ -1583,7 +1585,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `noiseSequenceList` | Noise parameters derived from the noise packets for the current polarisation. | `noiseSequenceListType` | 1 .. 4 |
+| `noiseSequenceList` | Noise parameters derived from the noise packets for the current polarisation. | <u>`noiseSequenceListType`</u> | 1 .. 4 |
 
 :::
 
@@ -1594,9 +1596,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | *count* | *Number of noise sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `noiseSequence` | Noise parameters derived from noise packets. <br> List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
+| `noiseSequence` | Noise parameters derived from noise packets. <br> List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | <u>`noiseSequenceType`</u> | 0 .. 2 |
 
 :::
 
@@ -1687,9 +1689,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| rfiTMReportList | Time-domain RFI mitigation report list. This element is present only if time-domain RFI mitigation is performed. | rfiTMReportListType | 0 .. 1 |
-| `rfiIsolatedFMReportList` | Frequency-domain isolated RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed. | `rfiIsolatedFMReportListType` | 0 .. 1 |
-| `rfiPersistentFMReportList` | Frequency-domain persistent RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed. | `rfiPersistentFMReportListType` | 0 .. 1 |
+| rfiTMReportList | Time-domain RFI mitigation report list. This element is present only if time-domain RFI mitigation is performed. | <u>rfiTMReportListType</u> | 0 .. 1 |
+| `rfiIsolatedFMReportList` | Frequency-domain isolated RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed. | <u>`rfiIsolatedFMReportListType`</u> | 0 .. 1 |
+| `rfiPersistentFMReportList` | Frequency-domain persistent RFI mitigation report list. This element is present only if frequency-domain RFI mitigation is performed. | <u>`rfiPersistentFMReportListType`</u> | 0 .. 1 |
 
 :::
 
@@ -1701,7 +1703,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| rfiTMReport | Time-domain RFI mitigation report. | rfiTMReportType | 1 .. 4 |
+| rfiTMReport | Time-domain RFI mitigation report. | <u>rfiTMReportType</u> | 1 .. 4 |
 
 :::
 
@@ -1744,7 +1746,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | `percentageAffectedLines` | Percentage of input RAW data lines affected by RFI. | `xsd:float` | 1 |
 | `avgPercentageAffectedSamples` | Average percentage of affected input RAW data samples in the lines containing RFI. | `xsd:float` | 1 |
 | `maxPercentageAffectedSamples` | Maximum percentage of input RAW data samples affected by RFI in the same line. | `xsd:float` | 1 |
@@ -1759,7 +1761,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `rfiIsolatedFMReport` | Frequency-domain isolated RFI mitigation report. | `rfiIsolatedFMReportType` | 1 .. 4 |
+| `rfiIsolatedFMReport` | Frequency-domain isolated RFI mitigation report. | <u>`rfiIsolatedFMReportType`</u> | 1 .. 4 |
 
 :::
 
@@ -1802,7 +1804,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | `percentageAffectedLines` | Percentage of input RAW data lines affected by isolated RFI. | `xsd:float` | 1 |
 | `maxPercentageAffectedBW` | Max percentage of bandwidth affected by isolated RFI in a single line. | `xsd:float` | 1 |
 | `avgPercentageAffectedBW` | Average percentage of bandwidth affected by isolated RFI | `xsd:float` | 1 |
@@ -1817,7 +1819,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `rfiPersistentFMReport` | Frequency-domain persistent RFI mitigation report. | `rfiPersistentFMReportType` | 1 .. 4 |
+| `rfiPersistentFMReport` | Frequency-domain persistent RFI mitigation report. | <u>`rfiPersistentFMReportType`</u> | 1 .. 4 |
 
 :::
 
@@ -1860,7 +1862,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | `maxPercentageAffectedBW` | Max percentage of bandwidth affected by persistent RFI. | `xsd:float` | 1 |
 | `avgPercentageAffectedBW` | Average percentage of bandwidth affected by persistent RFI. | `xsd:float` | 1 |
 | `percentageAffectedLines` | Percentage of lines affected by persistent RFI. | `xsd:float` | 1 |
@@ -1909,8 +1911,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `dcEstimateList` | List of Doppler Centroid estimates that have been calculated during image processing. The list contains an entry for each Doppler Centroid estimate made along azimuth, i.e., each N seconds, where N is configurable. | `dcEstimateListType` | 1 |
-| `fmRateEstimateList` | List of Frequency Modulation rate estimates that have been calculated during image processing. The list contains an entry for each Frequency Modulation rate estimate made along azimuth, i.e., each N seconds, where N is configurable. | `fmRateEstimatesListType` | 1 |
+| `dcEstimateList` | List of Doppler Centroid estimates that have been calculated during image processing. The list contains an entry for each Doppler Centroid estimate made along azimuth, i.e., each N seconds, where N is configurable. | <u>`dcEstimateListType`</u> | 1 |
+| `fmRateEstimateList` | List of Frequency Modulation rate estimates that have been calculated during image processing. The list contains an entry for each Frequency Modulation rate estimate made along azimuth, i.e., each N seconds, where N is configurable. | <u>`fmRateEstimatesListType`</u> | 1 |
 
 :::
 
@@ -1922,7 +1924,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of* `dcEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
-| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
+| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | <u>`dcEstimateType`</u> | 1.. 150 |
 
 :::
 
@@ -2033,7 +2035,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `absoluteCalibrationConstantList` | Absolute calibration constant. Already applied to the image during processing for all the polarisations. | `calibrationConstantListType` | 1 |
+| `absoluteCalibrationConstantList` | Absolute calibration constant. Already applied to the image during processing for all the polarisations. | <u>`calibrationConstantListType`</u> | 1 |
 
 :::
 
@@ -2287,7 +2289,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `overallProductQualityIndex` | Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value to the product. | `xsd:unsignedInt` | 1 |
-| `qualityParametersList` | Quality parameters list. The list contains an entry for each polarisation. | `qualityParametersListType` | 1 |
+| `qualityParametersList` | Quality parameters list. The list contains an entry for each polarisation. | <u>`qualityParametersListType`</u> | 1 |
 
 :::
 
@@ -2299,7 +2301,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `qualityParameters` | Quality parameters for the current polarisation. | `qualityParametersType` | 1 .. 4 |
+| `qualityParameters` | Quality parameters for the current polarisation. | <u>`qualityParametersType`</u> | 1 .. 4 |
 
 :::
 
@@ -2359,7 +2361,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | missingISPFraction | Number of missing ISP, expressed as a normalized fraction of the total number of ISP. | `xsd:float` | 1 |
 | maxISPGap | Maximum number of gaps between science data ISPs. | `xsd:unsignedInt` | 1 |
 | maxISPGapThreshold | Threshold on maxISPGap. If maxISPGap exceeds this parameter, the processing will not continue. | `xsd:unsignedInt` | 1 |
@@ -2386,7 +2388,7 @@ classDiagram
 (sec:pfd-l1-4-3-1-13-1)=
 ###### 4.3.1.13.1 Overall Product Quality Index
 
-As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex` is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the L1 Processor. The L1’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
+As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the *`overallProductQualityIndex`* is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the L1 Processor. The L1’s *`overallProductQualityIndex`* is the decimal representation of a 32-bit array that is defined as follows:
 
 | Bit # | Module/Sub-step | Bit-Flipping Condition |
 |---|---|---|
@@ -2394,11 +2396,11 @@ As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex`
 | **1** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
 | **2** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
 | **3** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
-| **4** | RAW data analysis | RAW data statistics out of boundaries (set to 1 if `invalidRawDataSamples`\>0, otherwise set to 0) |
+| **4** | RAW data analysis | RAW data statistics out of boundaries (set to 1 if *`invalidRawDataSamples`*\>0, otherwise set to 0) |
 | **5** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
 | **6** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
 | **7** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
-| **8** | Internal calibration | Invalid calibration sequences above threshold (set to 1 if `invalidDriftFraction`\>0 or if `invalidReplicaFraction`\>0, otherwise set to 0) |
+| **8** | Internal calibration | Invalid calibration sequences above threshold (set to 1 if *`invalidDriftFraction`*\>0 or if *`invalidReplicaFraction`*\>0, otherwise set to 0) |
 | **9** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
 | **10** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
 | **11** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
@@ -2414,13 +2416,13 @@ As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex`
 | **21** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
 | **22** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
 | **23** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
-| **24** | Polarimetric and ionospheric corrections | Ionosphere height estimation failing (set to 1 if `ionosphereHeightEstimationFlag`==False, otherwise set to 0) |
+| **24** | Polarimetric and ionospheric corrections | Ionosphere height estimation failing (set to 1 if *`ionosphereHeightEstimationFlag`*==False, otherwise set to 0) |
 | **25** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | IRI model used (set to 1 if IRI model is used as fallback solution, due to failure of ionosphere height estimation, or set to 0 if it is used on purpose or not used) |
-| **26** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Gaussian filter size out of boundaries (set to 1 if `gaussianFilterComputationFlag`==False, otherwise set to 0) |
+| **26** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Gaussian filter size out of boundaries (set to 1 if *`gaussianFilterComputationFlag`*==False, otherwise set to 0) |
 | **27** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Sec. 4.3.2 <4.3.2>` and L1 ATBD Sec. 4.10.3.5) (set to 1 in case of inconsistency, otherwise set to 0) |
 | **28** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Geomagnetic equator crossing fallback activated, i.e., phase screen and group delay corrections not applied (set to 1 if activated, otherwise set to 0) |
 | **29** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | *- Intentionally left blank, i.e. 0 -* |
-| **30** | Autofocus | Number of failing estimations above threshold (set to 1 if `autofocusShiftsApplied`==False, otherwise set to 0) |
+| **30** | Autofocus | Number of failing estimations above threshold (set to 1 if *`autofocusShiftsApplied`*==False, otherwise set to 0) |
 | **31** | <span class="atbd-rowspan-copy">Autofocus</span> | *- Intentionally left blank, i.e. 0 -* |
 
 Note that some bits are intentionally left blank to support user-defined custom information. The quality index bits aim at providing the user with hints for tracing possible problems in case of failures in the processing.
@@ -2467,7 +2469,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* | *Number of layers.* | `unsignedInt` | *required* |
+| *count* | *Number of layers.* | *`unsignedInt`* | *required* |
 | layer | LUT layer content. | `layerType` | 1 .. 30 |
 
 :::
@@ -2508,7 +2510,7 @@ It must be noticed that considering that (see also {sec}`Sec. 4.3.2.3 <4.3.2.3>`
 - the decimation ratio for a LUT is of a factor 20x120, except for geometry-based LUT for which a factor 2x12 is used;
 
 ```{note}
-Factor 2x12 allows to get a sampling close to DEM posting, i.e., ~90m for Copernicus DEM;
+factor 2x12 allows to get a sampling close to DEM posting, i.e., ~90m for Copernicus DEM;
 ```
 
 - LUT are typically (except `rfiTimeMask`\*, `rfiFreqMask`\*, latitude, longitude and height ones) stored using float precision;

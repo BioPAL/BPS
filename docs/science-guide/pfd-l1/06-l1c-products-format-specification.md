@@ -63,7 +63,7 @@ This ADS is a copy of the main ADS included in the L1a product (secondary one) r
 
 | **Name** | **Description** | **Differences between L1a and L1c** |
 |---|---|---|
-| `schemaVersion` | *PFD version* | *No differences* |
+| *`schemaVersion`* | *PFD version* | *No differences* |
 | `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields: <br> • `productType` becomes STA <br> • `startTime` and `stopTime` updated after coregistration <br> • `polarisationList` will cointain the output polarization |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | Copied from primary image main ADS (considering that the coregistered image is resampled over the same sampling grid of the primary image and a different `noDataValue` can be selected) |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | No differences |
@@ -354,7 +354,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* |   | `xsd:unsignedInt` | *required* |
+| *count* |   | *`xsd:unsignedInt`* | *required* |
 | `interferometricPairListType` | List of interferometric pairs expressed as indices. | `interferometricPairType` | $\geq$ 0 |
 
 :::
@@ -402,7 +402,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `overallProductQualityIndex` | Overall product quality index. This annotation is calculated based on specific quality parameters and gives an overall quality value for the product. | `xsd:unsignedInt` | 1 |
-| `staQualityParametersList` | Quality parameters list. The list contains an entry for each output product’s polarisation. | `staQualityParametersListType` | 1 |
+| `staQualityParametersList` | Quality parameters list. The list contains an entry for each output product’s polarisation. | <u>`staQualityParametersListType`</u> | 1 |
 
 :::
 
@@ -414,7 +414,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* |   | `xsd:unsignedInt` | *required* |
-| `staQualityParameters` | Quality parameters for the current polarisation. | `staQualityParametersType` | 1 .. 4 |
+| `staQualityParameters` | Quality parameters for the current polarisation. | <u>`staQualityParametersType`</u> | 1 .. 4 |
 
 :::
 
@@ -476,7 +476,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *polarisation* |   | `polarisationType` | *required* |
+| *polarisation* |   | *`polarisationType`* | *required* |
 | `invalidL1aDataSamples` | Number of invalid L1a data samples (according to their mean and standard deviation), expressed as a normalized fraction of the total number of samples. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelation` | Decorrelation factor due to RFI strength. The value is between 0 and 1. | `xsd:float` | 1 |
 | `rfiDecorrelationThreshold` | Maximum decorrelation factor due to RFI strength admissible to use the image as the primary image. The value is between 0 and 1 and copied from the AUX-PPS. | `xsd:float` | 1 |
@@ -511,25 +511,25 @@ classDiagram
 (sec:pfd-l1-6-3-3-4-1)=
 ###### 6.3.3.4.1 Overall Product Quality Index
 
-As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the `overallProductQualityIndex` is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the Stack Processor as well as a high-level information on the quality of the input stack. Similarly to that of the `L1_P` processor, the Stack’s `overallProductQualityIndex` is the decimal representation of a 32-bit array that is defined as follows:
+As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the *`overallProductQualityIndex`* is an unsigned integer value (*i.e.* a 32-bit integer ranging from 0 to 2{sup}`32` – 1) that summarizes the execution history of the Stack Processor as well as a high-level information on the quality of the input stack. Similarly to that of the `L1_P` processor, the Stack’s *`overallProductQualityIndex`* is the decimal representation of a 32-bit array that is defined as follows:
 
 | Bit # | Module/Sub-step | Bit-Flipping Condition |
 |---|---|---|
-| **0** | **L1a input** | Nonzero if the `overallQualityIndex` is nonzero for the source L1a input⁽¹⁾ product (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **0** | **L1a input** | Nonzero if the *`overallQualityIndex`* is nonzero for the source L1a input⁽¹⁾ product (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
 | **1** | **Pre-processor** | At least 1 expected LUT is missing from the source L1a input product (*e.g.* FR LUT is missing, and primary selection uses FR index) |
 | **2** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has a non-nominal set of polarizations (*i.e.* it’s not a quad-pol HH,HV,VH,VV) |
 | **3** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has non-nominal swath duration, *i.e.* not between 20.5s and 21.5s |
-| **4** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Section 4.3.2 <4.3.2>`, and L1 ATBD Section 4.10.3.5) |
-| **5** | **Coregistrator** | Coregistration from data failed due to fitting quality index below `fittingQualityThreshold` (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` Table 84) |
-| **6** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | Shift accuracy below `residualShiftsQualityThreshold` for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` Table 84) |
+| **4** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has inconsistent *`phaseScreen`* and *`rangeShifts`* LUTs (see {sec}`Section 4.3.2 <4.3.2>`, and L1 ATBD Section 4.10.3.5) |
+| **5** | **Coregistrator** | Coregistration from data failed due to fitting quality index below *`fittingQualityThreshold`* (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` Table 84) |
+| **6** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | Shift accuracy below *`residualShiftsQualityThreshold`* for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` Table 84) |
 | **7** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **8** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **9** | **AZF** | *- Intentionally left blank, i.e. 0 -* |
 | **10** | <span class="atbd-rowspan-copy">**AZF**</span> | *- Intentionally left blank, i.e. 0 -* |
-| **11** | **IOB** | `phaseScreen` and/or `rangeShifts` LUTs (see {sec}`Section 4.3.2.3 <4.3.2.3>`) are missing from the source L1a input product and `compensateIonoPhaseScreenFlag` is set to true in `AUX_PPS` (see `AUX_FMT` Table 88) |
-| **12** | <span class="atbd-rowspan-copy">**IOB**</span> | Estimation quality below `slowIonosphereQualityThreshold` (see `AUX_FMT` Table 88) |
+| **11** | **IOB** | *`phaseScreen`* and/or *`rangeShifts`* LUTs (see {sec}`Section 4.3.2.3 <4.3.2.3>`) are missing from the source L1a input product and *`compensateIonoPhaseScreenFlag`* is set to true in `AUX_PPS` (see `AUX_FMT` Table 88) |
+| **12** | <span class="atbd-rowspan-copy">**IOB**</span> | Estimation quality below *`slowIonosphereQualityThreshold`* (see `AUX_FMT` Table 88) |
 | **13** | <span class="atbd-rowspan-copy">**IOB**</span> | Failed Single-baseline estimation for at least 1 interferometric pair containing the current frame (Multi-baseline mode only, see Stack ATBD Section 5.2.5)⁽²⁾ |
-| **14** | <span class="atbd-rowspan-copy">**IOB**</span> | Current frame outside of region affected by slow-varying ionosphere, that is, above `latitudeThreshold` (see Stack ATBD Section 5.2 and `AUX_FMT` Table 88) |
+| **14** | <span class="atbd-rowspan-copy">**IOB**</span> | Current frame outside of region affected by slow-varying ionosphere, that is, above *`latitudeThreshold`* (see Stack ATBD Section 5.2 and `AUX_FMT` Table 88) |
 | **15** | **MSC** | *- Intentionally left blank, i.e. 0 -* |
 | **16** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **17** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
@@ -538,15 +538,15 @@ As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the `overallProductQualityIndex`
 | **20** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **21** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **22** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
-| **23** | **SKP** | DEM resolution too coarse with respect to the selected `estimationWindowSize` (see `AUX_FMT`, Table 90) |
+| **23** | **SKP** | DEM resolution too coarse with respect to the selected *`estimationWindowSize`* (see `AUX_FMT`, Table 90) |
 | **24** | <span class="atbd-rowspan-copy">**SKP**</span> | SKP estimation failure, *i.e.* it failed to compute the SKP decomposition or failed to compute the scattering mechanisms (*e.g.* due to invalid SVD decomposition or inadmissible ranges, see Stack ATBD Section 5.5.2.3 and Section 5.4.2.4). |
-| **25** | <span class="atbd-rowspan-copy">**SKP**</span> | SKP correction failure, *i.e.* the same failures reported in Bit #24 occurred and `phaseCorrection` is not “None” (see `AUX_FMT` Table 90). |
-| **26** | <span class="atbd-rowspan-copy">**SKP**</span> | Fraction of SKP valid phase screen estimations, *i.e.* above `groundPhasesScreenQualityThreshold`, is below `overallProductQualityThreshold` (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` Table 90) |
+| **25** | <span class="atbd-rowspan-copy">**SKP**</span> | SKP correction failure, *i.e.* the same failures reported in Bit #24 occurred <u>and</u> `phaseCorrection` is not “None” (see `AUX_FMT` Table 90). |
+| **26** | <span class="atbd-rowspan-copy">**SKP**</span> | Fraction of SKP valid phase screen estimations, *i.e.* above `groundPhasesScreenQualityThreshold`, is below *`overallProductQualityThreshold`* (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` Table 90) |
 | **27** | <span class="atbd-rowspan-copy">**SKP**</span> | Invalid number of polarizations (*i.e.* neither 3 nor 4) |
 | **28** | <span class="atbd-rowspan-copy">**SKP**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **29** | **Stack** | Coregistration primary L1a product had nonzero `overallQualityIndex`  (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
-| **30** | <span class="atbd-rowspan-copy">**Stack**</span> | Calibration reference L1a product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
-| **31** | <span class="atbd-rowspan-copy">**Stack**</span> | At least 1 L1a input product other than the source L1a input product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **30** | <span class="atbd-rowspan-copy">**Stack**</span> | Calibration reference L1a product had nonzero *`overallQualityIndex`* (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **31** | <span class="atbd-rowspan-copy">**Stack**</span> | At least 1 L1a input product other than the source L1a input product had nonzero *`overallQualityIndex`* (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
 
 [1] By *source L1a* input product, we refer to the L1a product from which the L1c product is generated, and similarly for *coregistration primary* and *calibration reference* L1a products.
 
@@ -624,17 +624,17 @@ In the following table the new variables are described in detail. Note that the 
 | group: interferometry <br> coherence | Two-dimensional map covering the whole SAR image and storing the coherence with respect to the coregistration primary. | matrix(float) | 1 <br> (only for secondary images) |
 | group: interferometry <br> interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. <br> Values are expressed in [rad]. | matrix(float) | 1 <br> (only for secondary images) |
 | group: `multiSquintCalibration` <br> `ionospherePhaseScreens` | Stack of one (single-layer) or more (multi-layer) two-dimensional map that stores the onospheric phase screens estimated by the Multi-Squint Calibration module (MSC). <br> Values are expressed in [rad]. | 3d array (float) | 1 <br> (only if the MSC’s ionosphere correction is activated) |
-| group: `skpPhaseCalibration` <br> `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT). <br> Values are expressed in [rad]. | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
-| group: `skpPhaseCalibration` <br> `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen. <br> Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` <br> `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the *`flatteningPhaseScreen`* LUT). <br> Values are expressed in [rad]. | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` <br> `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen. <br> Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to *`noDataValue`* (see `AUX_FMT`). | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
 
 :::
 
 (sec:pfd-l1-6-3-4-1)=
 ##### 6.3.4.1 Grids and Axes
 
-Except for the `ionospherePhaseScreens` LUT, the sampling grid for all LUTs is that of the geometric LUTs of the L1a product used as coregistration primary. Under default configuration of the `L1_P` processor, that sampling grid has a ground resolution of approximately 90m x 90m (range x azimuth), which is the resolution of the DEM used (Copernicus DEM). More in details, it’s the grid obtained by subsampling the primary data grid using range and azimuth subsampling steps that best approximate the target resolution for each axis. The `ionospherePhaseScreens` LUT is defined on the ionosphere estimation grid, which is the along-track azimuth axis of the Multi-Squint coherence matrix at a ionosphere reference altitude, inflated by the squint aperture of the RADAR, and the slant-range axis of the Multi-Squint coherence matrix, which is a subsampling of the SAR slant-range axis. Size and resolution of the `ionospherePhaseScreen` LUTs ultimately depends on the estimation parameters selected by the user in the `AUX_PPS___`.
+Except for the *`ionospherePhaseScreens`* LUT, the sampling grid for all LUTs is that of the geometric LUTs of the L1a product used as coregistration primary. Under default configuration of the `L1_P` processor, that sampling grid has a ground resolution of approximately 90m x 90m (range x azimuth), which is the resolution of the DEM used (Copernicus DEM). More in details, it’s the grid obtained by subsampling the primary data grid using range and azimuth subsampling steps that best approximate the target resolution for each axis. The *`ionospherePhaseScreens`* LUT is defined on the ionosphere estimation grid, which is the along-track azimuth axis of the Multi-Squint coherence matrix at a ionosphere reference altitude, inflated by the squint aperture of the RADAR, and the slant-range axis of the Multi-Squint coherence matrix, which is a subsampling of the SAR slant-range axis. Size and resolution of the *`ionospherePhaseScreen`* LUTs ultimately depends on the estimation parameters selected by the user in the `AUX_PPS___`.
 
-Note that since the L1a product provides different subsampling factors for geometric LUTs and for all other LUTs, L1c *denoising\*,* `gammaNought`, and `sigmaNought` LUTs may have different subsampling factors than those of the source L1a products, even for the coregistration primary image. Conversely, geometric LUTs are expected to have the same subsampling step as the L1a coregistration primary image.
+Note that since the L1a product provides different subsampling factors for geometric LUTs and for all other LUTs, L1c *denoising\*,* `gammaNought`, and *`sigmaNought`* LUTs may have different subsampling factors than those of the source L1a products, even for the coregistration primary image. Conversely, geometric LUTs are expected to have the same subsampling step as the L1a coregistration primary image.
 
 (sec:pfd-l1-6-3-4-2)=
 ##### 6.3.4.2 Dimension / Coordinate Variables
@@ -644,10 +644,10 @@ The following table reports the dimensions and coordinate variables, which are s
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `slantRangeTime` | LUT slant range time axis associated to the stack sampling step (i.e. approximately 90m under default configuration). <br> Values are expressed in [s]. | double | 1 |
-| `relativeAzimuthTime` | LUT azimuth relative time axis associated to the stack sampling step (i.e. approximately 90m under default configuration). As for L1a/b, the reference UTC time is `firstLineAzimuthTime` value in SAR image DSR. <br> Values are expressed in [s]. | double | 1 |
-| `ionosphereSlantRangeTime` | Slant-range axis associate to the `ionospherePhaseScrens` LUT. This corresponds to the slant-range axis of the Multi-Squint coherence matrix. <br> Values are expressed in [s]. | float | 1 |
-| `ionosphereRelativeAzimuthTime` | Along-track axis associated to the `ionospherePhaseScreens` LUT. This corresponds to the inflated along-track axis of the Multi-Squint coherence at the reference ionospheric altitude. As for the `relativeAzimuthTimeAxis`, the reference UTC time is `firstLineAzimuthTime` in the SAR image DSR. <br> Values are expressed in [s]. | float | 1 |
-| `ionosphereLayers` | A dimension that refers to the ionosphere layers, used to define the three-dimensional array of the `ionospherePhaseScreens` LUT. | N/A | 1 |
+| `relativeAzimuthTime` | LUT azimuth relative time axis associated to the stack sampling step (i.e. approximately 90m under default configuration). As for L1a/b, the reference UTC time is *`firstLineAzimuthTime`* value in SAR image DSR. <br> Values are expressed in [s]. | double | 1 |
+| `ionosphereSlantRangeTime` | Slant-range axis associate to the *`ionospherePhaseScrens`* LUT. This corresponds to the slant-range axis of the Multi-Squint coherence matrix. <br> Values are expressed in [s]. | float | 1 |
+| `ionosphereRelativeAzimuthTime` | Along-track axis associated to the *`ionospherePhaseScreens`* LUT. This corresponds to the inflated along-track axis of the Multi-Squint coherence at the reference ionospheric altitude. As for the *`relativeAzimuthTimeAxis`*, the reference UTC time is *`firstLineAzimuthTime`* in the SAR image DSR. <br> Values are expressed in [s]. | float | 1 |
+| `ionosphereLayers` | A dimension that refers to the ionosphere layers, used to define the three-dimensional array of the *`ionospherePhaseScreens`* LUT. | N/A | 1 |
 
 (sec:pfd-l1-6-3-4-3)=
 ##### 6.3.4.3 Attributes

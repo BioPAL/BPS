@@ -1266,7 +1266,7 @@ $$ (eq:atbd-l1-sar-4-41)
 
 The two-way diagram $P^{2way}(\theta,\beta,t)=\prod_{C\in\{Tx,Rx\}}^{}{P^C(\theta,\beta,t)}$ is in in linear units, such that the corresponding gain in `dBi` is given by $20\ \log_{10}\left\vert P^{2way}(\theta,\beta,t) \right\vert$.
 
-Pre-computation of 1D and 2D off-nadir angles (APC0):
+<u>Pre-computation of 1D and 2D off-nadir angles (APC0):</u>
 
 As a pre-processing step to the two-stage antenna pattern correction, the back-geocoded slant-range DEM is combined with the orbit and attitudes to yield a 2D map of off-nadir angles $\theta_{el,topo}(\tau,t)$ as well as an average profile $\theta_{el,avg}(\tau)$:
 
@@ -1300,7 +1300,7 @@ $$
 \tag{4.45}
 $$ (eq:atbd-l1-sar-4-45)
 
-AP compensation for an average off-nadir profile (APC1):
+<u>AP compensation for an average off-nadir profile (APC1):</u>
 
 The antenna pattern correction operates on blocks of range-compressed SAR data $B_{RGC}$. It corrects the shape of the azimuth pattern for the reference off-nadir variation $\theta_{el,avg}(\tau)$ as a function of azimuth frequency.
 
@@ -1359,7 +1359,7 @@ $$ (eq:atbd-l1-sar-4-52)
 
 At this step, the processor continues with the azimuth compression (see next Section), and afterwards, once the image is focused, the second step takes place, which is described in the following.
 
-Topography adaptive compensation of radiometric bias (APC2):
+<u>Topography adaptive compensation of radiometric bias (APC2):</u>
 
 In order to accommodate the topography, a residual radiometric correction after image focusing (i.e., together with the corrections presented in {sec}`Sec. 4.8 <4.8>`) is performed. The steps are the following:
 
@@ -1634,7 +1634,7 @@ where:
 c. the weighting window (e.g. Hamming) in azimuth direction;
 
 ```{note}
-The azimuth antenna gain compensation is performed in a dedicated step described in {sec}`Sec. 4.6 <4.6>`, while the range weighting window is applied during the Range Compression step described in {sec}`Sec. 4.2.1 <4.2.1>`;
+the azimuth antenna gain compensation is performed in a dedicated step described in {sec}`Sec. 4.6 <4.6>`, while the range weighting window is applied during the Range Compression step described in {sec}`Sec. 4.2.1 <4.2.1>`;
 ```
 
 3. the data are inverse transformed along range direction;

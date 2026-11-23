@@ -216,9 +216,9 @@ flowchart TB
 
 This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on *`applyCalibrationScreen`* configuration, the used screen is:
 
-$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if *`applyCalibrationScreen`**= “skp”*
+$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`*= “skp”*
 
-$\varphi=\ \varphi_{flattening}$ if *`applyCalibrationScreen`**= “geometry”*
+$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`*= “geometry”*
 
 The operation implemented in the calibration step of the L2 processor is simply the subtraction of the selected calibration phase screens from the input image stack phase. The operation can be expressed as:
 

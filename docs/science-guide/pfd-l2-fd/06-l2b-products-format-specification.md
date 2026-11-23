@@ -23,11 +23,11 @@ The MPH main scope is to provide all the information related to the:
 
 For the detailed description of the MPH content and format refer to {ad}`3`. It is very similar to the one described in 4.1, without following fields, which are <u>not present</u> in L2b:
 
-- eop:`swathIdentifier` Swath identifier
-- eop:`orbitDirection` Orbit direction
-- eop:`wrsLongitudeGrid` Track number
-- eop:`wrsLatitudeGrid` Frame number
-- sar:`antennaLookDirection` SAR antenna look direction
+- `eop:swathIdentifier` Swath identifier
+- `eop:orbitDirection` Orbit direction
+- `eop:wrsLongitudeGrid` Track number
+- `eop:wrsLatitudeGrid` Frame number
+- `sar:antennaLookDirection` SAR antenna look direction
 
 (sec:pfd-fd-6-2)=
 ### 6.2 Measurement data sets (MDS)

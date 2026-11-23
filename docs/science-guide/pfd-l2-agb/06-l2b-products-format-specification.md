@@ -23,13 +23,13 @@ The MPH main scope is to provide all the information related to the:
 
 For the detailed description of the MPH content and format refer to {ad}`3`. It is very similar to the one described in 4.1, without following fields, which are <u>not present</u> in L2b:
 
-- eop:`swathIdentifier` Swath identifier
-- eop:`orbitDirection` Orbit direction
-- eop:`wrsLongitudeGrid` Track number
-- eop:`wrsLatitudeGrid` Frame number
-- sar:`antennaLookDirection` SAR antenna look direction
+- `eop:swathIdentifier` Swath identifier
+- `eop:orbitDirection` Orbit direction
+- `eop:wrsLongitudeGrid` Track number
+- `eop:wrsLatitudeGrid` Frame number
+- `sar:antennaLookDirection` SAR antenna look direction
 
-Instead, it has a new field “`agbTileStatus`” (see the “l2b only” comment reported also in 4.1), the field is under eop:`metaDataProperty`/bio:EarthObservationMetaData as:
+Instead, it has a new field “`agbTileStatus`” (see the “l2b only” comment reported also in 4.1), the field is under `eop:metaDataProperty`/bio:EarthObservationMetaData as:
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">    <span style="color:#0070C0">eop:metaDataProperty </span><i>Observation metadata</i>
@@ -39,17 +39,15 @@ Instead, it has a new field “`agbTileStatus`” (see the “l2b only” commen
             <span style="color:#C00000"><b>bio:agbTile</b></span><span style="color:#C00000"><b>Iteration </b></span><b>iteration index (integer value, starting form 1)</b><b> (l2b only)</b></pre></div></div>
 ```
 
-::::{only} latex
-
-```text
-    eop:metaDataProperty Observation metadata
-        bio:EarthObservationMetaData
+```{raw} latex
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+    \textcolor[HTML]{0070C0}{eop:metaDataProperty }\textit{Observation metadata}
+        \textcolor[HTML]{0070C0}{bio:EarthObservationMetaData}
             […] (see 4.1)
-            bio:agbTileStatus Flag raised when a new iteration is needed (l2b only)
-            bio:agbTileIteration iteration index (integer value, starting form 1) (l2b only)
+            \textcolor[HTML]{C00000}{\textbf{bio:agbTileStatus}}\textcolor[HTML]{C00000}{\textbf{ }}\textbf{Flag raised when a new iteration is needed (l2b only)}
+            \textcolor[HTML]{C00000}{\textbf{bio:agbTile}}\textcolor[HTML]{C00000}{\textbf{Iteration }}\textbf{iteration index (integer value, starting form 1)}\textbf{ (l2b only)}
+\end{Verbatim}
 ```
-
-::::
 
 The field is a string, with following possible values ‘Complete’,, “NotComplete’, ‘Partial’ {ad}`10`
 
@@ -598,7 +596,7 @@ classDiagram
 
 :::
 
-**Note on **`estimatedParametersPolarisationType`****
+**Note on `estimatedParametersPolarisationType`**
 
 It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of “**LCM”** elements, which contains an *`xsd:sequence`* of “**date”** elements, which contains *`xsd:all`* **“N”, “A”,** and **“L”** elements, each of them each composed by the final *`xsd:sequence`* with “**mean”** and “**std”** elementary “`xsd:float`” elements)
 
@@ -610,7 +608,7 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | *`xsd:string`* | *required* |
-| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | <u>`xsd:complexType`</u><u> (LCM)</u> | 1..unbounded |
+| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType`<u> (LCM)</u> | 1..unbounded |
 
 :::
 
@@ -621,8 +619,8 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *dates* | *String containing two dates (in the* *`timeType`* *format*<u>)</u>*, separated by a space: start and stop date to describe an interval.* | *`xsd:string`* | *required* |
-| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | <u>`xsd:complexType`</u><u> (date)</u> | 1..unbounded |
+| *dates* | *String containing two dates (in the* `timeType` *format*<u>)</u>*, separated by a space: start and stop date to describe an interval.* | *`xsd:string`* | *required* |
+| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType`<u> (date)</u> | 1..unbounded |
 
 :::
 
@@ -633,9 +631,9 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
-| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
-| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
+| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
+| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
+| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
 
 :::
 

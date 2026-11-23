@@ -199,7 +199,7 @@ The following tables describe common product types used throughout the document.
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -211,7 +211,7 @@ The following tables describe common product types used throughout the document.
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::
@@ -223,8 +223,8 @@ The following tables describe common product types used throughout the document.
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* | *counter* | `xsd:unsignedInt` | *1* |
-| *units* | *units* | `uomType` | *1* |
+| *count* | *counter* | *`xsd:unsignedInt`* | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `doubleArrayWithUnits` | String containing an array of double precision floating point values separated by spaces. The mandatory count attribute defines the number of elements in the array. | `xsd:string` | 1 |
 
 :::
