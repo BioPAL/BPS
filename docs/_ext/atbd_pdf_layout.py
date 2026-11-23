@@ -364,7 +364,7 @@ def _split_change_items(para: nodes.paragraph) -> None:
     para.replace_self([*new, bullets])
 
 
-_ROW_ITEMS = 8  # bullets per table row (a longtable row cannot break)
+_ROW_ITEMS = 4  # bullets per table row (a longtable row cannot break)
 
 # Geometry (pt) of the grid tables of the originals; every cell is
 # ``_ROW_PITCH`` high (rule included), the first column starts at the left
