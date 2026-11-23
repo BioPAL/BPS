@@ -76,7 +76,12 @@ _COVER_REF_ASCENT = 0.905 * 11
 _WIDE_TABLE_DOCS = ("atbd-l1-sar",)
 # Table font of the originals: ATBD 9 pt, PFD 10 pt (single line spacing),
 # and the row padding of their Word tables (\arraystretch).
-_TABLE_FONTS = {"atbd": (9, 10.5, 2.0), "pfd": (10, 11.5, 2.0)}
+# L1 Stack: 7 pt (17 400 characters of its tables, measured on the original).
+_TABLE_FONTS = {"atbd": (9, 10.5, 2.0), "pfd": (10, 11.5, 2.0),
+                "atbd-l1-stack": (7, 8.4, 1.5)}
+# Rules of the table grid: grey 0.48 pt (ATBD), black 0.72 pt and a grey
+# header row (PFD), measured on the originals.
+_TABLE_RULES = {"atbd": ("A6A6A6", 0.48, "F2F2F2"), "pfd": ("000000", 0.72, "D9D9D9")}
 _WEB_ONLY_ADMONITIONS = ("draft", "authoritative document")
 _LATEX_SPECIALS = {
     "\\": r"\textbackslash{}",
@@ -236,7 +241,14 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
     definitions += "\n" + _cover_definitions(folder)
     if folder in _NO_TOC_DOT_DOCS:
         definitions += "\n\\newcommand\\atbdtocnodot{}"
-    size, leading, stretch = _TABLE_FONTS["pfd" if folder.startswith("pfd-") else "atbd"]
+    kind = "pfd" if folder.startswith("pfd-") else "atbd"
+    size, leading, stretch = _TABLE_FONTS.get(folder, _TABLE_FONTS[kind])
+    rule, rule_width, head_fill = _TABLE_RULES[kind]
+    definitions += (
+        f"\n\\definecolor{{atbdtablerule}}{{HTML}}{{{rule}}}"
+        f"\n\\definecolor{{atbdtablehead}}{{HTML}}{{{head_fill}}}"
+        f"\n\\newcommand\\atbdtableruledth{{{rule_width}bp}}"
+    )
     definitions += (
         "\n\\newcommand\\atbdtablefont{\\linespread{1}"
         f"\\fontsize{{{size}}}{{{leading}}}\\selectfont"
@@ -269,6 +281,7 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
             *(str(docs_dir / "_templates" / "latex" / f"{name}.sty") for name in _STY_FILES),
         ],
         "atbd_wide_tables": folder.startswith("pfd-") or folder in _WIDE_TABLE_DOCS,
+        "atbd_table_font_pt": float(size),
         "latex_domain_indices": False,
         "latex_show_urls": "no",
         "latex_show_pagerefs": False,

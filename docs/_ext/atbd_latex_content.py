@@ -268,10 +268,21 @@ def _header_only(table: nodes.table) -> None:
         tgroup.replace(thead, tbody)
 
 
-# Inputs / Outputs tables of the ATBDs (Symbol | Name | Origin | Size |
-# Variability | Default | Description): column widths of the originals
-# (equal columns; a wider Description when the table uses the indent).
-_IO_TABLE_WIDTHS = {False: (1, 1, 1, 1, 1, 1, 1), True: (13, 14, 13, 13, 13, 13, 19)}
+# Advance widths (1/1000 em) of Liberation Sans Regular and Bold for ASCII 32..126
+# (metrics of Arial, the font of the table text of the originals).
+_SANS_WIDTHS = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584]
+_SANS_BOLD_WIDTHS = [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,556,556,778,556,556,500,389,280,389,584]
+# Padding of the table cells (\tabcolsep, atbdfloats.sty).
+_TABCOLSEP_PT = 5.4
+# A "character" of the column budgets is half an em of the table font.
+_CHAR_EM = 0.5
+
+
+def _wlen(word: str, bold: bool = False) -> float:
+    """Width of ``word`` in the table font, in characters (half an em)."""
+    widths = _SANS_BOLD_WIDTHS if bold else _SANS_WIDTHS
+    total = sum(widths[ord(c) - 32] if 32 <= ord(c) < 127 else 600 for c in word)
+    return total / 1000.0 / _CHAR_EM
 
 
 def _header_texts(tgroup: nodes.tgroup) -> list[str]:
@@ -282,21 +293,21 @@ def _header_texts(tgroup: nodes.tgroup) -> list[str]:
     return [" ".join(entry.astext().split()) for entry in row.children]
 
 
-def _cell_blocks(entry: nodes.Element) -> list[list[int]]:
-    """Word lengths of each paragraph (or line block) of a table cell."""
+def _cell_blocks(entry: nodes.Element, bold: bool = False) -> list[list[float]]:
+    """Word widths of each paragraph (or line block) of a table cell."""
     blocks = [p for p in entry.findall(nodes.TextElement)
               if isinstance(p, (nodes.paragraph, nodes.line, nodes.literal_block))]
     texts = [p.astext() for p in blocks] or [entry.astext()]
-    return [[len(w) for w in t.split()] or [0] for t in texts]
+    return [[_wlen(w, bold) for w in t.split()] or [0] for t in texts]
 
 
-def _cell_atom(entry: nodes.Element) -> int:
+def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
     """Longest piece of a table cell that cannot wrap.
 
     Long words and inline literals get break points (``_text`` and
     ``_breakable_literal``), and formulas are scaled down to the column.
     """
-    longest = 1
+    longest = 1.0
     for text in entry.findall(nodes.Text):
         parent = text.parent
         literal = isinstance(parent, nodes.literal)
@@ -309,7 +320,7 @@ def _cell_atom(entry: nodes.Element) -> int:
                 pieces = _WORD_BREAK_RE.split(word)
             else:
                 pieces = [word]
-            longest = max(longest, *(len(p) for p in pieces))
+            longest = max(longest, *(_wlen(p, bold) for p in pieces))
     return longest
 
 
@@ -397,11 +408,16 @@ def _fit_columns(rows: list[list[tuple[int, list[list[int]]]]], minimum: list[fl
     return scores
 
 
-def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False) -> None:
+def _column_widths(table: nodes.table, budget: float = 100.0, pad: float = 2.5,
+                   centered: bool = False) -> None:
     """Replace ``colwidths-auto`` by widths proportional to the cell contents.
 
-    ``budget`` is the number of characters of the table font that fit in the
-    table width; ``wide`` tables also use the heading indent.
+    ``budget`` is the number of characters (half an em) of the table font
+    that fit in the table width, ``pad`` the characters taken by the padding
+    and rule of each column. Every column is wide enough for its longest word
+    (``_wlen``: widths of the Arial metrics), or when these do not fit, for
+    its longest unbreakable piece. ``centered`` tables (the input and output
+    tables of the ATBDs) also get ``atbd-centered`` (centred cells).
     """
     classes = table["classes"]
     if "colwidths-given" in classes:
@@ -412,23 +428,15 @@ def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False)
         if not ncols:
             continue
         header = _header_texts(tgroup)
-        io_widths = _IO_TABLE_WIDTHS[wide]
-        if (ncols == len(io_widths) and header
-                and header[0] == "Symbol" and header[-1] == "Description"):
-            for spec, width in zip(colspecs, io_widths):
-                spec["colwidth"] = width
-            if "colwidths-auto" in classes:
-                classes.remove("colwidths-auto")
-            classes.append("colwidths-given")
-            return
-        # Cells of each row: blocks (paragraphs, list items) of word lengths.
-        rows: list[list[tuple[int, list[list[int]]]]] = []
+        if centered and header and header[0] == "Symbol" and header[-1] == "Description":
+            classes.append("atbd-centered")
+        # Cells of each row: blocks (paragraphs, list items) of word widths.
+        rows: list[list[tuple[int, list[list[float]]]]] = []
         words = [1.0] * ncols
         atoms = [1.0] * ncols
-        natural = [3] * ncols
+        natural = [3.0] * ncols
         for row in tgroup.findall(nodes.row):
-            # Bold header: wider characters.
-            scale = 1.2 if isinstance(row.parent, nodes.thead) else 1.0
+            bold = isinstance(row.parent, nodes.thead)
             cells = []
             col = 0
             for entry in row.children:
@@ -436,31 +444,33 @@ def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False)
                     break
                 span = 1 + entry.get("morecols", 0)
                 if span == 1:
-                    blocks = _cell_blocks(entry)
+                    blocks = _cell_blocks(entry, bold)
                     cells.append((col, blocks))
                     longest = max((w for b in blocks for w in b), default=1)
-                    words[col] = max(words[col], scale * min(longest, 28))
-                    atoms[col] = max(atoms[col], scale * min(_cell_atom(entry), 28))
+                    words[col] = max(words[col], min(longest, 30.0))
+                    atoms[col] = max(atoms[col], min(_cell_atom(entry, bold), 30.0))
                     for b in blocks:
-                        natural[col] = max(natural[col], min(sum(b) + len(b) - 1, 80))
+                        natural[col] = max(natural[col], min(sum(b) + len(b) - 1, 80.0))
                 col += span
             rows.append(cells)
-        # Each column also pays its \tabcolsep padding. Keep every column
-        # wide enough for its longest word (or, when these do not fit, for
-        # its longest unbreakable piece), then give the rest, a few
-        # characters at a time, to the column that saves the most wrapped
-        # lines and broken words; what no column can use goes to the columns
-        # not yet at their one-line width, then in proportion to the widths.
-        budget = budget - 2.0 * ncols
-        minimum = [w + 1.0 for w in words]
-        if sum(minimum) >= budget:
-            minimum = [a + 1.0 for a in atoms]
-        if sum(minimum) >= budget:
+        # Keep every column wide enough for its longest word (or, when these
+        # do not fit, for its longest unbreakable piece), then give the rest
+        # to the columns that save the most wrapped lines and broken words;
+        # what no column can use goes to the columns not yet at their
+        # one-line width, then in proportion to the widths. The weights of
+        # the columns include their padding, so that the text of each gets
+        # exactly its share of characters.
+        text_budget = budget - pad * ncols
+        minimum = [w + 0.6 for w in words]
+        if sum(minimum) >= text_budget:
+            minimum = [a + 0.6 for a in atoms]
+        if sum(minimum) >= text_budget:
             scores = minimum
         else:
-            scores = _fit_columns(rows, minimum, natural, budget)
-        total = sum(scores)
-        widths = [max(1, round(1000 * s / total)) for s in scores]
+            scores = _fit_columns(rows, minimum, natural, text_budget)
+        weights = [s + pad for s in scores]
+        total = sum(weights)
+        widths = [max(1, round(1000 * w / total)) for w in weights]
         for spec, width in zip(colspecs, widths):
             spec["colwidth"] = width
         if "colwidths-auto" in classes:
@@ -619,13 +629,13 @@ _ROW_SPLIT_LINES = 60  # estimated lines of the tallest cell before splitting
 _ROW_CHUNK_LINES = 24  # estimated lines of each row the cell is split into
 
 
-def _column_chars(tgroup: nodes.tgroup, budget: float) -> list[float]:
-    """Width in characters of each column (``budget``: table width)."""
+def _column_chars(tgroup: nodes.tgroup, budget: float, pad: float = 2.0) -> list[float]:
+    """Width in characters of each column (``budget``: table width; the
+    column weights include ``pad`` characters of padding)."""
     specs = [c for c in tgroup.children if isinstance(c, nodes.colspec)]
     weights = [float(s.get("colwidth", 1) or 1) for s in specs]
     total = sum(weights) or 1.0
-    usable = budget - 2.0 * len(specs)
-    return [max(1.0, usable * w / total) for w in weights]
+    return [max(1.0, budget * w / total - pad) for w in weights]
 
 
 def _tokens(paragraph: nodes.paragraph) -> list[tuple[nodes.Node, int]]:
@@ -694,12 +704,12 @@ def _cell_chunks(entry: nodes.entry, width: float, chunk: int) -> list[list[node
     return chunks
 
 
-def _split_tall_rows(table: nodes.table, budget: float) -> int:
+def _split_tall_rows(table: nodes.table, budget: float, pad: float = 2.0) -> int:
     """Set each row taller than most of a page as several rows; return
     the number of rows split."""
     split = 0
     for tgroup in table.findall(nodes.tgroup):
-        widths = _column_chars(tgroup, budget)
+        widths = _column_chars(tgroup, budget, pad)
         for tbody in [c for c in tgroup.children if isinstance(c, nodes.tbody)]:
             for row in list(tbody.children):
                 entries = [e for e in row.children if isinstance(e, nodes.entry)]
@@ -868,14 +878,18 @@ class AtbdLatexContent(SphinxPostTransform):
             _drop_dropdown_title(dropdown)
         pfd = "/pfd-" in f"/{self.env.docname}"
         wide = bool(self.config.atbd_wide_tables)
-        # Characters of the table font in the table width: ATBD 9 pt,
-        # PFD 10 pt; wide tables also use the heading indent.
-        budget = (85.0 if pfd else 94.0) * (1.0 if wide else 450 / 485)
-        if wide and not pfd:
-            budget *= 1.047  # L1 SAR tables also run 22.7 pt right (atbdwideextra)
+        # Characters (half an em) of the table font in the table width; wide
+        # tables also use the heading indent (35 pt; L1 SAR: 22.7 pt more on
+        # the right, see atbdwideextra). Each column pays 2 \tabcolsep and a rule.
+        size = float(self.config.atbd_table_font_pt)
+        width_pt = 449.9 + (35.1 if wide else 0.0)
+        if wide and not pfd and "atbd-l1-sar" in self.env.docname:
+            width_pt += 22.7
+        budget = width_pt / (_CHAR_EM * size)
+        pad = (2 * _TABCOLSEP_PT + 0.5) / (_CHAR_EM * size)
         for table, _docname in found["tables"]:
             _header_only(table)
-            _column_widths(table, budget, wide)
+            _column_widths(table, budget, pad, centered=not pfd)
             if _can_break(table):
                 for cls in ("longtable", "atbd-wide") if wide else ("longtable",):
                     if cls not in table["classes"]:
@@ -922,7 +936,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 literal.replace_self(nodes.raw("", latex, format="latex"))
         for table, _docname in found["tables"]:
             if "longtable" in table["classes"]:
-                _split_tall_rows(table, budget)
+                _split_tall_rows(table, budget, pad)
         _drop_empty_chapters(self.document)
 
     # -- text ----------------------------------------------------------
@@ -1500,6 +1514,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     # Tables also use the left indent of the headings (as in the original
     # PFDs and L1 SAR ATBD; the other ATBDs keep them in the text width).
     app.add_config_value("atbd_wide_tables", False, "env", bool)
+    app.add_config_value("atbd_table_font_pt", 9.0, "env", float)
     app.connect("config-inited", _default_figure_align)
     app.connect("build-finished", _write_trims)
     return {

@@ -33,13 +33,31 @@
   \advance\linewidth\atbdheadindent
   \advance\linewidth\atbdwideextra
   \advance\@totalleftmargin-\atbdheadindent}
+% Grid of the originals: rule colour and width, header fill and cell padding
+% (atbd_pdf_layout.py defines atbdtablerule, atbdtablehead, \atbdtableruledth).
+\providecolor{atbdtablerule}{HTML}{A6A6A6}
+\providecolor{atbdtablehead}{HTML}{F2F2F2}
+\providecommand\atbdtableruledth{0.48bp}
+\newcommand\atbdtablegrid{%
+  \arrayrulecolor{atbdtablerule}\setlength\arrayrulewidth{\atbdtableruledth}%
+  \setlength\tabcolsep{5.4bp}%
+  \colorlet{sphinxTableRowColorHeader}{atbdtablehead}}
 % Bold header row, as in the originals.
 \renewcommand\sphinxstyletheadfamily{\sffamily\bfseries}
+% Input and output tables of the ATBDs: header and cells centred.
+\newcommand\atbdcenteredcells{%
+  \renewcommand\sphinxstyletheadfamily{\sffamily\bfseries\centering\arraybackslash}%
+  \newcolumntype{\X}[2]{>{\centering\arraybackslash}p{\dimexpr
+      (\linewidth-\spx@arrayrulewidth)*##1/##2-\tw@\tabcolsep-\spx@arrayrulewidth\relax}}}
 \newlength\atbdcaptionskip
 \setlength\atbdcaptionskip{4pt}
 % Underscores of long identifiers may break the line inside table cells.
+% Identifiers (inline literals) are set in the font of the table text, as
+% in the originals (Arial), not in Courier.
+\protected\def\atbd@plaincode#1{#1}
 \AtBeginEnvironment{longtable}{%
   \hyphenpenalty=10000 \exhyphenpenalty=10000 % no hyphenation in cells (Word)
+  \let\sphinxcode\atbd@plaincode%
   \let\atbd@underscore\_%
   \def\_{\atbd@underscore\allowbreak}}
 
