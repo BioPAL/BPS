@@ -167,3 +167,9 @@ def test_formula_of_a_cell_breaks_after_commas_and_has_a_width():
     assert _breakable(r"yaw,\ pitch") == r"yaw,\allowbreak{}\ pitch"
     assert _breakable(r"N_{lat,L2b}") == r"N_{lat,L2b}"
     assert _math_atom(r"yaw,\ pitch,{}roll") < _math_atom(r"FD_{map}^{aggregated}")
+
+
+def test_cell_line_breaks_become_latex_newlines():
+    from atbd_latex_content import _BR_RE
+    assert _BR_RE.fullmatch("<br>") and _BR_RE.fullmatch("<br />") and _BR_RE.fullmatch("<BR/>")
+    assert not _BR_RE.fullmatch("<b>")

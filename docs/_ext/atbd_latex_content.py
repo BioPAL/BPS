@@ -100,6 +100,7 @@ _EQUATION_BODY_RE = re.compile(
     re.DOTALL,
 )
 _TAG_RE = re.compile(r"\\tag\*?\{(?P<num>[^{}]*)\}")
+_BR_RE = re.compile(r"<br\s*/?>", re.I)
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 # ``x^{'}`` is fine for MathJax but TeX wants ``\prime``; and ``{{\widehat{s}}^{'}}^2``
 # is a "Double superscript" for TeX, which unwraps a group holding a single
@@ -1973,6 +1974,11 @@ class AtbdLatexContent(SphinxPostTransform):
     # -- raw HTML --------------------------------------------------------
     def _raw_html(self, raw: nodes.raw, docname: str) -> None:
         if "html" not in raw.get("format", "").split():
+            return
+        if _BR_RE.fullmatch(raw.astext().strip()):
+            # <br> of a converted table cell: a line break, as in the original
+            # (dropped, it glued the words: "ones.The")
+            raw.replace_self(nodes.raw("", r"\newline{}", format="latex"))
             return
         match = _SPAN_ID_RE.match(raw.astext().strip())
         if match is not None:
