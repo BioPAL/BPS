@@ -769,12 +769,336 @@ def _readable_scripts(code: str) -> str:
     return init + "\n" + code
 
 
-def _pack_parts(sizes: list[tuple[float, float]], scale: float
+# XSD class diagrams (``classDiagram``, "direction LR") whose text would print
+# under 6 pt are cut by sub-trees: a first part holds the root and the levels
+# below it that fit, the types at the cut are drawn by their name only, and
+# each of them heads a part of its own with its descendants.
+_CLASS_RE = re.compile(r'^  class (\S+?)(?:\["(.*?)"\])? \{\n(.*?)^  \}[ \t]*\n?',
+                       re.DOTALL | re.MULTILINE)
+_EDGE_RE = re.compile(r"^  (\S+) --> (\S+) : (.*)$", re.MULTILINE)
+# What a part may take at the smallest scale of _PARTS_SCALES (text of 6 pt).
+_CLASS_PART_WIDTH_PT = 1000.0  # estimate; the real size (about 5 % less) is checked
+_CLASS_PART_HEIGHT_PT = 1000.0
+
+
+def _parse_classes(code: str):
+    """(preamble, ids in order, {id: (label, member lines)}, edges) of a class
+    diagram written by the XSD converter; None when it is some other shape."""
+    if "classDiagram" not in code or "--|>" in code or "..>" in code:
+        return None
+    classes: dict[str, tuple[str, list[str]]] = {}
+    order: list[str] = []
+    first = None
+    for match in _CLASS_RE.finditer(code):
+        first = match.start() if first is None else first
+        cid = match.group(1)
+        classes[cid] = (match.group(2) or cid, match.group(3).rstrip("\n").split("\n"))
+        order.append(cid)
+    if len(order) < 2 or first is None:
+        return None
+    edges = [(a, b, label) for a, b, label in _EDGE_RE.findall(code)
+             if a in classes and b in classes]
+    return code[:first], order, classes, edges
+
+
+def _class_box(label: str, lines: list[str]) -> tuple[float, float]:
+    """Estimated (width, height) in pt of one class box (calibrated on mmdc)."""
+    longest = max([len(label) * 1.1] + [len(x.strip()) for x in lines])
+    return 7.0 * longest + 30, 18.0 * max(len(lines), 1) + 96
+
+
+def _class_extent(classes: dict, edges: list, root: str) -> tuple[float, float]:
+    """Estimated size of a left-to-right class diagram rooted at ``root``."""
+    depth = {root: 0}
+    for _ in range(len(classes)):
+        for a, b, _label in edges:
+            if a in depth and depth.get(b, -1) < depth[a] + 1:
+                depth[b] = depth[a] + 1
+    ranks: dict[int, list[str]] = {}
+    for cid in classes:
+        if cid in depth:
+            ranks.setdefault(depth[cid], []).append(cid)
+    width = height = 0.0
+    for d, ids in sorted(ranks.items()):
+        boxes = [_class_box(*classes[i]) for i in ids]
+        width += max(w for w, _h in boxes)
+        height = max(height, sum(h - 60 for _w, h in boxes) + 50 * (len(ids) - 1) + 60)
+        if d:
+            width += 60 + 7.0 * max([len(lab) for _a, b, lab in edges if b in ids] or [0])
+    return width, height
+
+
+def _class_part(preamble: str, classes: dict, edges: list, root: str,
+                levels: int | None, leaf_cut: tuple[str, ...] = ()
+                ) -> tuple[str, list[str], dict, list]:
+    """Mermaid code of the part rooted at ``root``: the types of the first
+    ``levels`` levels in full, the next one by name only when it has a sub-tree
+    of its own (``None``: everything). Returns the code, the types at the cut,
+    and the (classes, edges) drawn, for the estimate."""
+    children: dict[str, list[tuple[str, str]]] = {}
+    for a, b, label in edges:
+        children.setdefault(a, []).append((b, label))
+    drawn: dict[str, tuple[str, list[str]]] = {}
+    shown_edges: list[tuple[str, str, str]] = []
+    cut: list[str] = []
+    stack = [(root, 0)]
+    seen: set[str] = set()
+    while stack:
+        cid, depth = stack.pop(0)
+        if cid in seen:
+            continue
+        seen.add(cid)
+        label, lines = classes[cid]
+        if levels is not None and depth == levels and (children.get(cid) or cid in leaf_cut):
+            drawn[cid] = (label, [])
+            if cid != root:
+                cut.append(cid)
+            continue
+        drawn[cid] = (label, lines)
+        for child, edge_label in children.get(cid, []):
+            shown_edges.append((cid, child, edge_label))
+            stack.append((child, depth + 1))
+    out = [preamble.rstrip("\n")]
+    for cid, (label, lines) in drawn.items():
+        title = cid if label == cid else '%s["%s"]' % (cid, label)
+        if lines:
+            out.append("  class %s {\n%s\n  }" % (title, "\n".join(lines)))
+        else:
+            out.append("  class %s" % title)
+    out.extend("  %s --> %s : %s" % e for e in dict.fromkeys(shown_edges))
+    return "\n".join(out) + "\n", cut, drawn, shown_edges
+
+
+def _split_class_diagram(code: str, width: float = _CLASS_PART_WIDTH_PT,
+                         height: float = _CLASS_PART_HEIGHT_PT) -> list[str] | None:
+    """The sub-tree parts of a class diagram (see above); None if it is not a
+    tree-shaped XSD diagram or fits as it is."""
+    parsed = _parse_classes(code)
+    if parsed is None:
+        return None
+    preamble, order, classes, edges = parsed
+    levels_max = len(order)
+    parts: list[str] = []
+    todo = [order[0]]
+    done: set[str] = set()
+    while todo:
+        root = todo.pop(0)
+        if root in done:
+            continue
+        done.add(root)
+        chosen = None
+        for levels in [None, *range(levels_max, 0, -1)]:
+            candidate = _class_part(preamble, classes, edges, root, levels)
+            w, h = _class_extent(candidate[2], candidate[3], root)
+            chosen = candidate
+            if w <= width and h <= height:
+                break
+        else:
+            # the root and its direct children are still too big: the largest
+            # childless ones are drawn apart as well, until the rest fits
+            leaves = sorted((c for a, c, _l in edges if a == root and not any(
+                x == c for x, _y, _z in edges)),
+                key=lambda c: -len(classes[c][1]) * max(len(x) for x in classes[c][1] or [""]))
+            for count in range(1, len(leaves) + 1):
+                candidate = _class_part(preamble, classes, edges, root, 1, tuple(leaves[:count]))
+                w, h = _class_extent(candidate[2], candidate[3], root)
+                chosen = candidate
+                if w <= width and h <= height:
+                    break
+        parts.append(chosen[0])
+        todo[:0] = chosen[1]
+    return parts if len(parts) > 1 else None
+
+
+# A flowchart drawn in lanes (``subgraph``) whose text would print under 6 pt
+# is cut between lanes: each part keeps some lanes, and a lane left out that is
+# linked to a kept one stays as a box of that kind at the end of the link.
+_SUBGRAPH_RE = re.compile(r"^(\s*)subgraph\s+([A-Za-z0-9_]+)")
+_FLOW_NODE_RE = re.compile(r'^\s*([A-Za-z0-9_]+)(\[.*\])(?::::([A-Za-z0-9_]+))?\s*$')
+_FLOW_EDGE_RE = re.compile(
+    r'^(\s*)([A-Za-z0-9_]+)(\s+(?:-->|==>|~~~|---|--\s+".*"\s+-->|--\s+".*"\s+==>)\s+)'
+    r'([A-Za-z0-9_]+)\s*$')
+_STYLE_RE = re.compile(r"^\s*style\s+([A-Za-z0-9_]+)\s")
+_LINKSTYLE_RE = re.compile(r"^\s*linkStyle\s+(\d+)(\s.*)$")
+
+
+class _Lane:
+    def __init__(self, ident: str, header: str) -> None:
+        self.ident, self.header = ident, header
+        self.items: list[Any] = []  # lines (str) and nested _Lane
+
+
+def _parse_flow(code: str):
+    """(preamble, top-level lanes, loose nodes, edges, styles, link styles) of a
+    flowchart of the converter's layout; None when it has no lane."""
+    lines = code.split("\n")
+    first = next((i for i, x in enumerate(lines) if _SUBGRAPH_RE.match(x)), None)
+    if first is None or not re.search(r"^flowchart\s", code, re.MULTILINE):
+        return None
+    preamble: list[str] = []
+    top: list[Any] = []
+    loose: dict[str, str] = {}
+    stack: list[_Lane] = []
+    edges: list[tuple[str, str, str, str]] = []
+    styles: list[str] = []
+    links: dict[int, str] = {}
+    for line in lines:
+        match = _SUBGRAPH_RE.match(line)
+        if match:
+            lane = _Lane(match.group(2), line)
+            (stack[-1].items if stack else top).append(lane)
+            stack.append(lane)
+        elif line.strip() == "end" and stack:
+            stack.pop()
+        elif _FLOW_NODE_RE.match(line):
+            if stack:
+                stack[-1].items.append(line)
+            else:
+                loose[_FLOW_NODE_RE.match(line).group(1)] = line
+        elif _FLOW_EDGE_RE.match(line):
+            m = _FLOW_EDGE_RE.match(line)
+            edges.append((m.group(2), m.group(4), line, ""))
+        elif _LINKSTYLE_RE.match(line):
+            m = _LINKSTYLE_RE.match(line)
+            links[int(m.group(1))] = m.group(2)
+        elif _STYLE_RE.match(line):
+            styles.append(line)
+        elif not top and not loose and not stack:
+            preamble.append(line)
+    return preamble, top, loose, edges, styles, links
+
+
+def _flow_lanes(items: list[Any]) -> list[_Lane]:
+    """Lanes in reading order: a subgraph holding nodes, or no other subgraph
+    (a wrapper of lanes only is looked through)."""
+    out: list[_Lane] = []
+    for item in items:
+        if isinstance(item, _Lane):
+            if any(isinstance(x, str) for x in item.items) or not any(
+                    isinstance(x, _Lane) for x in item.items):
+                out.append(item)
+            else:
+                out.extend(_flow_lanes(item.items))
+    return out
+
+
+def _lane_nodes(lane: _Lane) -> dict[str, str]:
+    nodes_: dict[str, str] = {}
+    for item in lane.items:
+        if isinstance(item, _Lane):
+            nodes_.update(_lane_nodes(item))
+        else:
+            nodes_[_FLOW_NODE_RE.match(item).group(1)] = item
+    return nodes_
+
+
+def _emit_lane(lane: _Lane, keep: set[str]) -> list[str]:
+    """Lines of a lane kept whole, or of the wrapper around the kept lanes."""
+    if lane.ident in keep:
+        return _lane_lines(lane)
+    inner: list[str] = []
+    for item in lane.items:
+        if isinstance(item, _Lane):
+            inner.extend(_emit_lane(item, keep))
+    return [lane.header, *inner, "  end"] if inner else []
+
+
+def _lane_lines(lane: _Lane) -> list[str]:
+    out = [lane.header]
+    for item in lane.items:
+        out.extend(_lane_lines(item) if isinstance(item, _Lane) else [item])
+    return [*out, "  end"]
+
+
+def _flow_owners(parsed, lanes: list[_Lane]) -> dict[str, int]:
+    """Index of the lane each node belongs to; a loose node goes with the first
+    lane it is linked to."""
+    _pre, _top, loose, edges, _styles, _links = parsed
+    owner = {n: i for i, lane in enumerate(lanes) for n in _lane_nodes(lane)}
+    pending = set(loose) - set(owner)
+    for _round in range(len(pending) + 1):
+        for node in sorted(pending):
+            near = [owner[o] for a, b, _l, _x in edges
+                    for n, o in ((a, b), (b, a)) if n == node and o in owner]
+            if near:
+                owner[node] = min(near)
+        pending -= set(owner)
+    for node in pending:
+        owner[node] = 0
+    return owner
+
+
+def _flow_part(parsed, lanes: list[_Lane], owner: dict[str, int], keep: set[int]) -> str:
+    """Mermaid code of the flowchart restricted to the lanes ``keep`` (indexes)
+    and the loose nodes that go with them."""
+    preamble, top, loose, edges, styles, links = parsed
+    names = {lanes[i].ident for i in keep}
+    inside = {n for n, i in owner.items() if i in keep}
+    everything = dict(loose)
+    for lane in lanes:
+        everything.update(_lane_nodes(lane))
+    body: list[str] = [loose[n] for n in loose if n in inside]
+    for item in top:
+        if isinstance(item, _Lane):
+            body.extend(_emit_lane(item, names))
+    stubs: dict[str, str] = {}
+    kept_edges: list[str] = []
+    kept_index: dict[int, int] = {}
+    for index, (src, dst, line, _x) in enumerate(edges):
+        ends = [e in inside for e in (src, dst)]
+        if not any(ends):
+            continue
+        for end, ok in ((src, ends[0]), (dst, ends[1])):
+            if not ok and end in everything and end not in stubs:
+                m = _FLOW_NODE_RE.match(everything[end])
+                stubs[end] = "  stub_%s%s%s" % (
+                    end, m.group(2), ":::" + m.group(3) if m.group(3) else "")
+        m = _FLOW_EDGE_RE.match(line)
+        a = src if ends[0] else "stub_" + src
+        b = dst if ends[1] else "stub_" + dst
+        kept_index[index] = len(kept_edges)
+        kept_edges.append("%s%s%s%s" % (m.group(1), a, m.group(3), b))
+    present = set(inside) | {m.group(2) for m in map(_SUBGRAPH_RE.match, body) if m}
+    out = [*preamble, *body, *stubs.values(), *kept_edges]
+    out += [x for x in styles if _STYLE_RE.match(x).group(1) in present]
+    out += ["  linkStyle %d%s" % (kept_index[i], rest)
+            for i, rest in sorted(links.items()) if i in kept_index]
+    return "\n".join(out) + "\n"
+
+
+def _split_flow_lanes(code: str, count: int) -> list[str] | None:
+    """The flowchart in ``count`` parts of consecutive lanes (with the nodes
+    between them), the parts holding about as many nodes as one another; None
+    if it has no such lanes."""
+    parsed = _parse_flow(code)
+    if parsed is None:
+        return None
+    lanes = _flow_lanes(parsed[1])
+    if len(lanes) < count or count < 2:
+        return None
+    owner = _flow_owners(parsed, lanes)
+    weights = [sum(1 for i in owner.values() if i == k) for k in range(len(lanes))]
+    from itertools import combinations
+    best, cuts = None, None
+    for cut in combinations(range(1, len(lanes)), count - 1):
+        edges_ = [0, *cut, len(lanes)]
+        sums = [sum(weights[a:b]) for a, b in zip(edges_, edges_[1:])]
+        if best is None or max(sums) < best:
+            best, cuts = max(sums), edges_
+    return [_flow_part(parsed, lanes, owner, set(range(a, b)))
+            for a, b in zip(cuts, cuts[1:])]
+
+
+def _pack_parts(sizes: list[tuple[float, float]], scale: float,
+                each_caption: bool = False
                 ) -> tuple[list[float], list[list[list[int]]]]:
     """Parts (width, height) in pt at a common scale: per-part scales (a part
     wider than a row is scaled down to it), rows of one or two neighbours,
     rows grouped in floats."""
     scales = [min(scale, _PARTS_ROW_PT / w) for w, _h in sizes]
+    if each_caption:  # a part is not taller than a page with its label and caption
+        room = _PARTS_FLOAT_PT - _PARTS_LABEL_PT - _PARTS_CAPTION_PT
+        scales = [min(sc, room / h) for sc, (_w, h) in zip(scales, sizes)]
     rows: list[list[int]] = []
     i = 0
     while i < len(sizes):
@@ -790,14 +1114,15 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float
     heights = [max(sizes[k][1] * scales[k] for k in row) + _PARTS_LABEL_PT for row in rows]
     groups: list[list[list[int]]] = []
     used = 0.0
+    room = _PARTS_FLOAT_PT - (_PARTS_CAPTION_PT if each_caption else 0.0)
     for row, height in zip(rows, heights):
-        if groups and used + height <= _PARTS_FLOAT_PT:
+        if groups and used + height <= room:
             groups[-1].append(row)
             used += height
         else:
             groups.append([row])
             used = height
-    if len(groups) > 1 or groups:
+    if not each_caption and groups:
         last = groups[-1]
         total = sum(heights[rows.index(r)] for r in last)
         while len(last) > 1 and total + _PARTS_CAPTION_PT > _PARTS_FLOAT_PT:
@@ -809,10 +1134,10 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float
     return scales, groups
 
 
-def _plan_parts(sizes: list[tuple[float, float]]
+def _plan_parts(sizes: list[tuple[float, float]], each_caption: bool = False
                 ) -> tuple[float, list[float], list[list[list[int]]]]:
     """The largest scale of _PARTS_SCALES giving the fewest floats."""
-    plans = [(s, *_pack_parts(sizes, s)) for s in _PARTS_SCALES]
+    plans = [(s, *_pack_parts(sizes, s, each_caption)) for s in _PARTS_SCALES]
     fewest = min(len(groups) for _s, _sc, groups in plans)
     return next(p for p in plans if len(p[2]) == fewest)
 
@@ -984,6 +1309,15 @@ class AtbdLatexContent(SphinxPostTransform):
         for visual in visuals:
             if mermaid_cls is not None and isinstance(visual, mermaid_cls):
                 visual["code"] = _readable_scripts(visual["code"])
+        if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
+            parts = self._class_parts(visuals[0])
+            if parts:
+                return self._figure_parts(container, docname, parts, caption, extra,
+                                          each_caption=True)
+            parts = self._lane_parts(visuals[0])
+            if parts:
+                return self._figure_parts(container, docname, parts, caption, extra,
+                                          each_caption=True)
         original = False
         single_share = _MERMAID_SHARE
         if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
@@ -1100,13 +1434,16 @@ class AtbdLatexContent(SphinxPostTransform):
 
     def _figure_parts(self, container: nodes.container, docname: str,
                       visuals: list[nodes.Node], caption: Any,
-                      extra: list[nodes.Node]) -> nodes.figure:
+                      extra: list[nodes.Node], each_caption: bool = False) -> nodes.figure:
         """A complex figure redrawn in parts (a), (b)...: the parts are set side
         by side where two fit in a row, in as few floats (pages) as the text
-        size allows, the caption under the last one (see _pack_parts)."""
+        size allows, the caption under the last one (see _pack_parts).
+        ``each_caption``: every float carries the caption, with the letters of
+        its parts, under the same figure number (sub-trees of an XSD diagram)."""
         sizes = []
         for visual in visuals:
-            self._fit_mermaid(visual, container)  # may lay the part out top to bottom
+            if not each_caption:
+                self._fit_mermaid(visual, container)  # may lay the part out top to bottom
             box = self._mermaid_box(visual["code"], visual.get("options", {}))
             if box is None:
                 sizes = []
@@ -1114,13 +1451,13 @@ class AtbdLatexContent(SphinxPostTransform):
             sizes.append(box)
         if not sizes:
             return self._figure_parts_stacked(container, docname, visuals, caption, extra)
-        scale, scales, groups = _plan_parts(sizes)
+        scale, scales, groups = _plan_parts(sizes, each_caption)
         figures = []
         for g, rows in enumerate(groups):
             figure = nodes.figure("")
             last_group = g == len(groups) - 1
             setup = ""
-            if last_group and caption is not None and caption[0]:
+            if (last_group or each_caption) and caption is not None and caption[0]:
                 setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
             figure += nodes.raw("", setup, format="latex")
             for r, row in enumerate(rows):
@@ -1136,18 +1473,91 @@ class AtbdLatexContent(SphinxPostTransform):
                         r"\def\atbdfigscale{%.4f}\def\atbdfigmaxwidth{\linewidth}"
                         % (w * s * 1.004 + 1, chr(97 + i), h * s * 1.01 + 2, s))
                     figure += nodes.raw("", head, format="latex")
-                    visuals[i].parent.remove(visuals[i])
+                    if visuals[i].parent is not None:
+                        visuals[i].parent.remove(visuals[i])
                     figure += visuals[i]
                     figure += nodes.raw("", r"\end{minipage}", format="latex")
                 figure += nodes.raw("", "}", format="latex")
-            if last_group and caption is not None:
-                figure += nodes.caption("", "", *caption[1])
-                figure += nodes.raw("", "".join(_latex_label(docname, x)
-                                                for x in container["ids"]), format="latex")
+            if (last_group or each_caption) and caption is not None:
+                inlines = [n.deepcopy() for n in caption[1]]
+                if each_caption:
+                    letters = sorted(i for row in rows for i in row)
+                    inlines.append(nodes.Text(" (%s)" % (
+                        chr(97 + letters[0]) if len(letters) == 1 else
+                        "%s%s%s" % (chr(97 + letters[0]),
+                                    "–" if letters[-1] - letters[0] == len(letters) - 1 else ", ",
+                                    chr(97 + letters[-1])))))
+                figure += nodes.caption("", "", *inlines)
+                if g == 0 or not each_caption:
+                    figure += nodes.raw("", "".join(_latex_label(docname, x)
+                                                    for x in container["ids"]), format="latex")
             figures.append(figure)
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
         container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
         return figures[0]
+
+    def _class_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
+        """An XSD class diagram whose text would print under 6 pt, cut by
+        sub-trees into mermaid nodes (None: print it as it is)."""
+        code, options = diagram["code"], diagram.get("options", {})
+        if "classDiagram" not in code:
+            return None
+        font = self._mermaid_font(code, options, _MERMAID_SHARE)
+        if font is None or font >= _LANDSCAPE_BELOW_PT:
+            return None
+        width = _CLASS_PART_WIDTH_PT
+        for _attempt in range(4):
+            codes = _split_class_diagram(code, width)
+            if not codes:
+                return None
+            boxes = [self._mermaid_box(c, options) for c in codes]
+            if any(b is None for b in boxes):
+                return None
+            worst = max(b[0] for b in boxes)
+            if worst <= _PARTS_ROW_PT / 0.508 and all(
+                    b[1] <= _CLASS_PART_HEIGHT_PT * 1.05 for b in boxes):
+                break
+            width *= 0.88  # the estimate was short: cut finer
+        parts = []
+        for part_code in codes:
+            part = diagram.deepcopy()
+            part["code"] = part_code
+            parts.append(part)
+        return parts
+
+    def _lane_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
+        """A flowchart in lanes whose text would print under 6 pt even on a page
+        of its own, cut between lanes (None: print it as it is)."""
+        code, options = diagram["code"], diagram.get("options", {})
+        if not code.lstrip().startswith("%%{init") and "flowchart" not in code:
+            return None
+        if _parse_flow(code) is None:
+            return None
+        font = self._mermaid_font(code, options, _MERMAID_TALL_SHARE)
+        if font is None or font >= _LANDSCAPE_BELOW_PT:
+            return None
+        best = None
+        for count in (2, 3, 4):
+            candidate = _split_flow_lanes(code, count)
+            if not candidate:
+                break
+            boxes = [self._mermaid_box(c, options) for c in candidate]
+            if any(b is None for b in boxes):
+                return None
+            _scale, scales, groups = _plan_parts(boxes, True)
+            if _MERMAID_FONT_PT * min(scales) < _LANDSCAPE_BELOW_PT:
+                continue
+            if best is None or len(groups) < best[0]:
+                best = (len(groups), candidate)
+        if best is None:
+            return None
+        codes = best[1]
+        parts = []
+        for part_code in codes:
+            part = diagram.deepcopy()
+            part["code"] = part_code
+            parts.append(part)
+        return parts
 
     def _figure_parts_stacked(self, container: nodes.container, docname: str,
                               visuals: list[nodes.Node], caption: Any,
