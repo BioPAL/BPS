@@ -1888,3 +1888,10 @@ html[data-theme="dark"] .bps-chapters__time {
   overflow-wrap: anywhere;
   word-break: normal;
 }
+
+/* The last column of a converted table (usually "Description") keeps room for
+   its text instead of being squeezed by the identifier columns (FH 3.5.2). */
+.bd-content .pst-scrollable-table-container table td:last-child,
+.bd-content table td:last-child {
+  min-width: 16rem;
+}
