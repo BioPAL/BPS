@@ -897,8 +897,17 @@ _PARTS_ROW_PT = 490.0
 _PART_GAP_PT = 8
 _PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51, 0.505)  # text of 6 pt or more
 _PARTS_LABEL_PT = 22.0
-_PARTS_FLOAT_PT = 0.95 * _TEXT_HEIGHT_PT
-_PARTS_CAPTION_PT = 40.0
+_PARTS_FLOAT_PT = 0.93 * _TEXT_HEIGHT_PT  # 0.95 let a part and its caption reach the page foot (L1 SAR Fig. 4)
+_PARTS_CAPTION_PT = 40.0  # a caption of up to two lines and its skip
+
+
+def _caption_pt(text: str) -> float:
+    """Height kept for a figure caption under its parts: the label and text at
+    11 pt (15.8 pt leading, ~80 characters a line), plus the caption skip. A
+    long caption (L1 SAR Fig. 16: five lines) would otherwise run over the
+    page foot."""
+    lines = -(-(len(text) + 12) // 80)
+    return max(_PARTS_CAPTION_PT, 12.0 + 15.8 * lines)
 
 
 # Subscripts, superscripts and small text of the labels of a Mermaid flowchart are drawn
@@ -1249,15 +1258,16 @@ def _split_flow_lanes(code: str, count: int) -> list[str] | None:
 
 
 def _pack_parts(sizes: list[tuple[float, float]], scale: float,
-                each_caption: bool = False
+                each_caption: bool = False, caption_pt: float = _PARTS_CAPTION_PT
                 ) -> tuple[list[float], list[list[list[int]]]]:
     """Parts (width, height) in pt at a common scale: per-part scales (a part
     wider than a row is scaled down to it), rows of one or two neighbours,
     rows grouped in floats."""
     scales = [min(scale, _PARTS_ROW_PT / w) for w, _h in sizes]
-    if each_caption:  # a part is not taller than a page with its label and caption
-        room = _PARTS_FLOAT_PT - _PARTS_LABEL_PT - _PARTS_CAPTION_PT
-        scales = [min(sc, room / h) for sc, (_w, h) in zip(scales, sizes)]
+    # a part is not taller than a page with its label and caption (every
+    # float carries the caption)
+    room = _PARTS_FLOAT_PT - _PARTS_LABEL_PT - caption_pt
+    scales = [min(sc, room / h) for sc, (_w, h) in zip(scales, sizes)]
     rows: list[list[int]] = []
     i = 0
     while i < len(sizes):
@@ -1273,7 +1283,7 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float,
     heights = [max(sizes[k][1] * scales[k] for k in row) + _PARTS_LABEL_PT for row in rows]
     groups: list[list[list[int]]] = []
     used = 0.0
-    room = _PARTS_FLOAT_PT - _PARTS_CAPTION_PT  # every float carries a caption
+    room = _PARTS_FLOAT_PT - caption_pt  # every float carries a caption
     for row, height in zip(rows, heights):
         if groups and used + height <= room:
             groups[-1].append(row)
@@ -1284,10 +1294,11 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float,
     return scales, groups
 
 
-def _plan_parts(sizes: list[tuple[float, float]], each_caption: bool = False
+def _plan_parts(sizes: list[tuple[float, float]], each_caption: bool = False,
+                caption_pt: float = _PARTS_CAPTION_PT
                 ) -> tuple[float, list[float], list[list[list[int]]]]:
     """The largest scale of _PARTS_SCALES giving the fewest floats."""
-    plans = [(s, *_pack_parts(sizes, s, each_caption)) for s in _PARTS_SCALES]
+    plans = [(s, *_pack_parts(sizes, s, each_caption, caption_pt)) for s in _PARTS_SCALES]
     fewest = min(len(groups) for _s, _sc, groups in plans)
     return next(p for p in plans if len(p[2]) == fewest)
 
@@ -1628,7 +1639,9 @@ class AtbdLatexContent(SphinxPostTransform):
             sizes.append(box)
         if not sizes:
             return self._figure_parts_stacked(container, docname, visuals, caption, extra)
-        scale, scales, groups = _plan_parts(sizes, each_caption)
+        caption_text = ("".join(n.astext() for n in caption[1])
+                        if caption is not None else "")
+        scale, scales, groups = _plan_parts(sizes, each_caption, _caption_pt(caption_text))
         figures = []
         for g, rows in enumerate(groups):
             figure = nodes.figure("")
