@@ -37,6 +37,7 @@ from __future__ import annotations
 import html
 import math
 import os
+import json
 import re
 import struct
 import zlib
@@ -735,10 +736,37 @@ def _split_tall_rows(table: nodes.table, budget: float) -> int:
 # of the last one (_PARTS_CAPTION_PT) included.
 _PARTS_ROW_PT = 490.0
 _PART_GAP_PT = 8
-_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.5)
+_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51)  # text of 6 pt or more
 _PARTS_LABEL_PT = 22.0
 _PARTS_FLOAT_PT = 0.88 * _TEXT_HEIGHT_PT
 _PARTS_CAPTION_PT = 40.0
+
+
+# Subscripts, superscripts and small text of the labels of a Mermaid flowchart are drawn
+# at 83 % of the text (the browser default), which puts them under 6 pt when
+# the diagram is scaled down to the page: they are set at the size of the text.
+_SCRIPT_CSS = "sub,sup,small{font-size:100%}"
+_INIT_RE = re.compile(r"^%%\{init:\s*(\{.*\})\s*\}%%[ \t]*$", re.MULTILINE)
+
+
+def _readable_scripts(code: str) -> str:
+    """Mermaid code whose <sub> and <sup> labels print at the size of the text."""
+    if not any(tag in code for tag in ("<sub>", "<sup>", "<small>")):
+        return code
+    match = _INIT_RE.search(code)
+    config: dict[str, Any] = {}
+    if match:
+        try:
+            config = json.loads(match.group(1))
+        except ValueError:
+            return code
+    if "themeCSS" in config:
+        return code
+    config["themeCSS"] = _SCRIPT_CSS
+    init = "%%{init: " + json.dumps(config) + "}%%"
+    if match:
+        return code[:match.start()] + init + code[match.end():]
+    return init + "\n" + code
 
 
 def _pack_parts(sizes: list[tuple[float, float]], scale: float
@@ -951,6 +979,9 @@ class AtbdLatexContent(SphinxPostTransform):
             else:
                 extra.append(child)
 
+        for visual in visuals:
+            if mermaid_cls is not None and isinstance(visual, mermaid_cls):
+                visual["code"] = _readable_scripts(visual["code"])
         original = False
         single_share = _MERMAID_SHARE
         if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
