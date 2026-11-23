@@ -214,11 +214,11 @@ flowchart TB
 (sec:atbd-fh-3-3-4)=
 #### 3.3.4 Algorithm mathematical background
 
-This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on `applyCalibrationScreen` configuration, the used screen is:
+This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on *`applyCalibrationScreen`* configuration, the used screen is:
 
-$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`*= “skp”*
+$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if *`applyCalibrationScreen`**= “skp”*
 
-$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`*= “geometry”*
+$\varphi=\ \varphi_{flattening}$ if *`applyCalibrationScreen`**= “geometry”*
 
 The operation implemented in the calibration step of the L2 processor is simply the subtraction of the selected calibration phase screens from the input image stack phase. The operation can be expressed as:
 
@@ -465,7 +465,7 @@ flowchart TB
 | *SCS* | L1c | *Calibration step* | M, each acquisition <br> $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 | - | `spectralDecorrelationCompensationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | True (default value) if range spectral decorrelation compensation has to be performed, False otherwise |
 | - | SNRDecorrelationCompensationFlag | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | True (default value) if SNR decorrelation compensation has to be performed, False otherwise |
-| `pRes` | ProductResolution | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | - | 200.0 | Value in [m] to be used as the resolution on ground grange map and also to perform the coherence averaging in radar coordinates |
+| *`pRes`* | ProductResolution | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | - | 200.0 | Value in [m] to be used as the resolution on ground grange map and also to perform the coherence averaging in radar coordinates |
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsampling factor, that modules the overall decimation in multilooking within coherence computation |
 | $\sigma_{LUT}^{noise}$ | denoising | L1c Stack ADS (`L1_PFD`) | M, each acquisition <br> $\left[ N_{rg,noise}\times{}N_{az,noise} \right]$ | - | - | denoising LUT |
 | $\sigma_{LUT}^0$ | `sigmaNought` | L1c Stack ADS (`L1_PFD`) | M, each acquisition <br> $\left[ N_{rg,sigma}\times{}N_{az,sigma} \right]$ | - | - | `sigmaNought` LUT |
@@ -511,7 +511,7 @@ $$
 \left\vert \Omega_a \right\vert=\left\lceil \frac{pRes}{\rho_a}(\Delta_aB_a)^{-1} \right\rceil
 $$
 
-where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta_0(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor.. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid coherence sample.
+where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, *`pRes`* is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta_0(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor.. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid coherence sample.
 
 (sec:atbd-fh-3-4-4-2)=
 ##### 3.4.4.2 Vertical wavenumbers terrain correction
@@ -541,7 +541,7 @@ where $r$ and $a$ denote the range and azimuth indices for acquisition $n$. A pr
 (sec:atbd-fh-3-4-4-3)=
 ##### 3.4.4.3 Coherence calibration
 
-Non-volumetric SNR ${\widetilde{\gamma}}_{\mathrm{SNR}}$ and range spectral decorrelation ${\widetilde{\gamma}}_{\mathrm{Rg}}$ are compensated (each subsampled range-azimuth position is processed separately; notation is simplified omitting range-azimuth indexes for the sake of clarity)
+Non-volumetric SNR ${\widetilde{\gamma}}_{\mathrm{SNR}}$ and range spectral decorrelation ${\widetilde{\gamma}}_{\mathrm{Rg}}$ are compensated (<u>each subsampled range-azimuth position is processed separately</u>; notation is simplified omitting range-azimuth indexes for the sake of clarity)
 
 $$
 {\widetilde{\gamma}}_{\mathrm{Obs}}({k_z}^{nm},\mathrm{w}^{pq})=\frac{{\widetilde{\gamma}}_{\mathrm{Obs}}({k_z}^{nm},\mathrm{w}^{pq})}{{\widetilde{\gamma}}_{\mathrm{Rg}}({k_z}^{nm}){\widetilde{\gamma}}_{\mathrm{SNR}}({k_z}^{nm},\mathrm{w}^{pq})}

@@ -31,7 +31,7 @@ The following table summarizes and describes primitive product types used throug
 | `missionType` | Enumeration of valid BIOMASS mission names. | `xsd:string` | BIOMASS |
 | `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 <br> S2 <br> S3 |
 | `productType` | Enumeration of valid product types. | `xsd:string` | SCS <br> DGM <br> STA <br> `FH_L2A` <br> `FH_L2B` <br> `FD_L2A` <br> `FD_L2B` <br> `GN_L2A` <br> `AGB_L2B` |
-| `polarisationType` | Enumeration of valid polarisations. | `xsd:string` HH <br> HV <br> VH <br> VV <br> XX |   |
+| `polarisationType` | Enumeration of valid polarisations. | `xsd:string` | HH <br> HV <br> VH <br> VV <br> XX |
 | `timeType` | UTC time expressed according to ISO 8601 standard (1 microsecond resolution). | `xsd:dateTime` |   |
 | `missionPhaseIDType` | Enumeration of all valid BIOMASS mission phases. | `xsd:string` | COM <br> INT <br> TOM |
 | `sensorModeType` | Enumeration of valid sensor mode abbreviations. | `xsd:string` | Measurement <br> Rx Only <br> External Calibration |
@@ -57,7 +57,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Base Type** | **Attributes** |
 |---|---|---|---|
-| `acquisitionType` | String containing an acquisition folder name; <br> The mandatory `referenceImage` attribute is a *bool* to indicate if the acquisition is the reference one. <br> The optional `averageWavenumber` attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in image pair acquisitions (`imagesPairSelection` in 4.3.1.4) | `xsd:string` | `referenceImage` (mandatory, bool) <br> `averageWavenumber` <br> (optional, float) |
+| `acquisitionType` | String containing an acquisition folder name; <br> The mandatory *`referenceImage`* attribute is a *bool* to indicate if the acquisition is the reference one. <br> The optional *`averageWavenumber`* attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in image pair acquisitions (`imagesPairSelection` in 4.3.1.4) | `xsd:string` | `referenceImage` (mandatory, bool) <br> `averageWavenumber` <br> (optional, float) |
 
 :::
 
@@ -105,7 +105,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -117,7 +117,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::

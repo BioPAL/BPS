@@ -59,7 +59,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Base Type** | **Attributes** |
 |---|---|---|---|
-| `acquisitionType` | String containing an acquisition folder name; <br> The mandatory `referenceImage` attribute is a *bool* to indicate if the acquisition is the reference one. <br> The optional `averageWavenumber` attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in FH. | `xsd:string` | `referenceImage` (mandatory, bool) <br> `averageWavenumber` <br> (optional, float) |
+| `acquisitionType` | String containing an acquisition folder name; <br> The mandatory *`referenceImage`* attribute is a *bool* to indicate if the acquisition is the reference one. <br> The optional *`averageWavenumber`* attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in FH. | `xsd:string` | `referenceImage` (mandatory, bool) <br> `averageWavenumber` <br> (optional, float) |
 
 :::
 
@@ -108,7 +108,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -120,7 +120,7 @@ The following table summarizes and describes those primitive product types for w
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *units* | *units* | `uomType` | *1* |
+| *units* | *units* | *`uomType`* | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::

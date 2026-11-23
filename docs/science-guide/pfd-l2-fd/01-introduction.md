@@ -96,12 +96,7 @@ This document is organized as follows:
 | <span id="rd4"></span>`[RD4]` | LibTIFF - TIFF Library and Utilities, https://libtiff.gitlab.io/libtiff/ |
 | <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml |
 | <span id="rd6"></span>`[RD6]` | Network Common Data Form (NetCDF) format, https://www.unidata.ucar.edu/software/netcdf/ |
-| <span id="rd7"></span>`[RD7]` | Network Common Data Form (NetCDF), Python |
-
-https://unidata.github.io/netcdf4-python/
-
-| Code | Document |
-|---|---|
+| <span id="rd7"></span>`[RD7]` | Network Common Data Form (NetCDF), Python <br> https://unidata.github.io/netcdf4-python/ |
 | <span id="rd8"></span>`[RD8]` | Well-Known Text representation of coordinate reference systems, https://www.iso.org/standard/63094.html |
 | <span id="rd9"></span>`[RD9]` | [PDD] `BIO-BPS-PPD-ARE-010083`, BIOMASS Product Performance Description, I/R 3/0/1 |
 | <span id="rd10"></span>`[RD10]` | [L1PFD] `BIO-BPS-L1PFD-ARE-010076`, BIOMASS L1 Product Format Specification, I/R 1/2/8 |

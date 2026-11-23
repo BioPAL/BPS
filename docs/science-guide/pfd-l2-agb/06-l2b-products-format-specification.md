@@ -21,7 +21,7 @@ The MPH main scope is to provide all the information related to the:
 - Identification of the product for example for cataloguing purposes;
 - Product consistency (filesize).
 
-For the detailed description of the MPH content and format refer to {ad}`3`. It is very similar to the one described in 4.1, without following fields, which are not present in L2b:
+For the detailed description of the MPH content and format refer to {ad}`3`. It is very similar to the one described in 4.1, without following fields, which are <u>not present</u> in L2b:
 
 - eop:`swathIdentifier` Swath identifier
 - eop:`orbitDirection` Orbit direction
@@ -31,6 +31,16 @@ For the detailed description of the MPH content and format refer to {ad}`3`. It 
 
 Instead, it has a new field “`agbTileStatus`” (see the “l2b only” comment reported also in 4.1), the field is under eop:`metaDataProperty`/bio:EarthObservationMetaData as:
 
+```{raw} html
+<div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">    <span style="color:#0070C0">eop:metaDataProperty </span><i>Observation metadata</i>
+        <span style="color:#0070C0">bio:EarthObservationMetaData</span>
+            […] (see 4.1)
+            <span style="color:#C00000"><b>bio:agbTileStatus</b></span><span style="color:#C00000"><b> </b></span><b>Flag raised when a new iteration is needed (l2b only)</b>
+            <span style="color:#C00000"><b>bio:agbTile</b></span><span style="color:#C00000"><b>Iteration </b></span><b>iteration index (integer value, starting form 1)</b><b> (l2b only)</b></pre></div></div>
+```
+
+::::{only} latex
+
 ```text
     eop:metaDataProperty Observation metadata
         bio:EarthObservationMetaData
@@ -38,6 +48,8 @@ Instead, it has a new field “`agbTileStatus`” (see the “l2b only” commen
             bio:agbTileStatus Flag raised when a new iteration is needed (l2b only)
             bio:agbTileIteration iteration index (integer value, starting form 1) (l2b only)
 ```
+
+::::
 
 The field is a string, with following possible values ‘Complete’,, “NotComplete’, ‘Partial’ {ad}`10`
 
@@ -124,10 +136,10 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| product | Product L2b DSR. This DSR contains the L2b product information. | `productL2bType` | 1 |
-| `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2b raster images. | `rasterImageType` | 1 |
-| InputInformation | Input Information L2b DSR. This DSR contains the necessary information to identify the L2a products in input to L2b processor and also a list of all the L1c acquisitions used to generate those L2a products. | InputInformationL2bL3ListType | 1 |
-| `processingParameters` | Processing parameters DSR. This DSR contains the description of L2b processing parameters. | `processingParametersL2bType` | 1 |
+| product | Product L2b DSR. This DSR contains the L2b product information. | <u>`productL2bType`</u> | 1 |
+| `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2b raster images. | <u>`rasterImageType`</u> | 1 |
+| InputInformation | Input Information L2b DSR. This DSR contains the necessary information to identify the L2a products in input to L2b processor and also a list of all the L1c acquisitions used to generate those L2a products. | <u>InputInformationL2bL3ListType</u> | 1 |
+| `processingParameters` | Processing parameters DSR. This DSR contains the description of L2b processing parameters. | <u>`processingParametersL2bType`</u> | 1 |
 
 :::
 
@@ -188,7 +200,7 @@ classDiagram
 |---|---|---|---|
 | mission | Mission (BIOMASS). | `missionType` | 1 |
 | tileID | DGG geographic cell (tile) identifier (one element list). | `xsd:string` | 1 |
-| basinID | List of DGG basin identifiers. | `stringListType` | 1 |
+| basinID | List of DGG basin identifiers. | <u>`stringListType`</u> | 1 |
 | `productType` | Product type (`AGB_L2B`). | `productType` | 1 |
 | `startTime` | Start time of the image [UTC]. | `timeType` | 1 |
 | `stopTime` | Stop time of the image [UTC]. | `timeType` | 1 |
@@ -196,9 +208,9 @@ classDiagram
 | `missionPhaseID` | Mission phase identifier. | `missionPhaseIDType` | 1 |
 | `sensorMode` | Sensor mode (always Measurement). | `sensorModeType` | 1 |
 | `globalCoverageID` | Global coverage identifier. | `xsd:unsignedShort` | 1 |
-| `contributingTiles` | List of all the DGG tiles in the input neighbourhood, contributing for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | `stringListType` | 0,1 |
-| calABcoveragePerTile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | calABcoverageTilesListType | 0,1 |
-| GNcoveragePerTile | Input GN products coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | GNcoverageTilesListType | 0,1 |
+| `contributingTiles` | List of all the DGG tiles in the input neighbourhood, contributing for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | <u>`stringListType`</u> | 0,1 |
+| calABcoveragePerTile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | <u>calABcoverageTilesListType</u> | 0,1 |
+| GNcoveragePerTile | Input GN products coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | <u>GNcoverageTilesListType</u> | 0,1 |
 
 :::
 
@@ -209,8 +221,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *ID* | *Tile ID* | `xsd:string` | *1* |
-| tile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation | calABcoverageType | 0..25 |
+| *ID* | *Tile ID* | *`xsd:string`* | *1* |
+| tile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation | <u>calABcoverageType</u> | 0..25 |
 
 :::
 
@@ -221,8 +233,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `originalCoverage` | `CAL_AB` original coverage, percentage and number of pixel values | `percentPixelsType` | 1 |
-| `filteredCoverage` | `CAL_AB` filtered coverage, percentage and number of pixel values after each filtering. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | calABfilteredCoverageType | 1 |
+| `originalCoverage` | `CAL_AB` original coverage, percentage and number of pixel values | <u>`percentPixelsType`</u> | 1 |
+| `filteredCoverage` | `CAL_AB` filtered coverage, percentage and number of pixel values after each filtering. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | <u>calABfilteredCoverageType</u> | 1 |
 
 :::
 
@@ -233,11 +245,11 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `afterGlobalFiltering` | `CAL_AB` filtered coverage, percentage and number of pixel values after all filtering concatenated.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
-| afterAGBvalueFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for mean AGB values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
-| afterAGBstdFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB STD limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
-| afterAGBrelativeStdFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB relative STD limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | `percentPixelsType` | 1 |
-| afterLCMClassFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for LCM class. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6, | `percentPixelsType` | 1 |
+| `afterGlobalFiltering` | `CAL_AB` filtered coverage, percentage and number of pixel values after all filtering concatenated.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | <u>`percentPixelsType`</u> | 1 |
+| afterAGBvalueFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for mean AGB values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | <u>`percentPixelsType`</u> | 1 |
+| afterAGBstdFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB STD limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | <u>`percentPixelsType`</u> | 1 |
+| afterAGBrelativeStdFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for AGB relative STD limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6 | <u>`percentPixelsType`</u> | 1 |
+| afterLCMClassFiltering | `CAL_AB` filtered coverage, disaggregated percentage and number of pixel values after filtering only for LCM class. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.6, | <u>`percentPixelsType`</u> | 1 |
 
 :::
 
@@ -248,8 +260,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *ID* | *Tile ID* | `xsd:string` | *1* |
-| tile | Input GN products coverage, for each tile | GNcoverageListType | 0..25 |
+| *ID* | *Tile ID* | *`xsd:string`* | *1* |
+| tile | Input GN products coverage, for each tile | <u>GNcoverageListType</u> | 0..25 |
 
 :::
 
@@ -260,8 +272,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *acquisitionID* | *GN product acquisition ID* | `xsd:string` | *1* |
-| GN | Input GN product coverage, for each input GN (unbounded) and current tile | GNcoverageType | 1 unbounded |
+| *acquisitionID* | *GN product acquisition ID* | *`xsd:string`* | *1* |
+| GN | Input GN product coverage, for each input GN (unbounded) and current tile | <u>GNcoverageType</u> | 1 unbounded |
 
 :::
 
@@ -272,8 +284,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `originalCoverage` | Input GN product original coverage (current GN and current tile) percentage and number of pixel values | `percentPixelsType` | 1 |
-| `filteredCoverage` | Input GN product filtered (current GN and current tile) percentage and number of pixel values after each filtering.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | GNfilteredCoverageType | 1 |
+| `originalCoverage` | Input GN product original coverage (current GN and current tile) percentage and number of pixel values | <u>`percentPixelsType`</u> | 1 |
+| `filteredCoverage` | Input GN product filtered (current GN and current tile) percentage and number of pixel values after each filtering.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | <u>GNfilteredCoverageType</u> | 1 |
 
 :::
 
@@ -284,9 +296,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `afterGlobalFiltering` | Input GN product filtered coverage, percentage and number of pixel values after all filtering concatenate.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | `percentPixelsType` | 1 |
-| `afterSigmaFiltering` | Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Sigma (backscatter) values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5, σ\_p^0 | `percentPixelsType` | 1 |
-| `afterAngleFiltering` | Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Incidence Angle values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5, ϑ | `percentPixelsType` | 1 |
+| `afterGlobalFiltering` | Input GN product filtered coverage, percentage and number of pixel values after all filtering concatenate.[RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5 | <u>`percentPixelsType`</u> | 1 |
+| `afterSigmaFiltering` | Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Sigma (backscatter) values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5, σ\_p^0 | <u>`percentPixelsType`</u> | 1 |
+| `afterAngleFiltering` | Input GN product filtered coverage, disaggregated percentage and number of pixel values after filtering only for GN Incidence Angle values limits. [RD] `BPS_AGB_ATBD` v3.1.2, equation 4.5, ϑ | <u>`percentPixelsType`</u> | 1 |
 
 :::
 
@@ -392,7 +404,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* | XML attribute. | `xsd:unsignedInt` | *required* |
+| *count* | XML attribute. | *`xsd:unsignedInt`* | *required* |
 | L2aInputs | One entry for each L2a product in input to L2b. Each entry contains two elements: L2aProductFolderName and L1inputs. | L2aInputsType | 1..N |
 
 :::
@@ -406,7 +418,7 @@ classDiagram
 |---|---|---|---|
 | L2aProductFolderName | Folder name of each L2a product, as defined in {sec}`3.2` (One string for each “L2aInputs" entry). | `xsd:string` | 1 |
 | L2aProductDate | Product date for each L2a product | `xsd:string` | 1 |
-| L1inputs | L1c acquisitions used to generate the L2a product. See 4.3.1.3 and {ref}`Tab.14 <tab:pfd-agb-14>`, {ref}`Tab.15 <tab:pfd-agb-15>`, {ref}`Tab.20 <tab:pfd-agb-20>`. (One element for each “L2aInputs" entry). | InputInformationL2aType | 1 |
+| L1inputs | L1c acquisitions used to generate the L2a product. See 4.3.1.3 and {ref}`Tab.14 <tab:pfd-agb-14>`, {ref}`Tab.15 <tab:pfd-agb-15>`, {ref}`Tab.20 <tab:pfd-agb-20>`. (One element for each “L2aInputs" entry). | <u>InputInformationL2aType</u> | 1 |
 
 :::
 
@@ -476,22 +488,22 @@ classDiagram
 | `forestMaskingFlag` | True if Forest/Non-Forest map masking has been performed during L2a products merging, false otherwise. | bool | 1 |
 | `minimumL2aCoverage` | The minimum percentage of tile coverage used to trigger the computation. | `xsd:float` | 1 |
 | `rejectedLandcoverClasses` | Set of landcover class indices ignored | `intArray` | 1 |
-| `backscatterLimits` | Lower and upper limits on backscatter in linear units. Default values are 0.0001,100 for all polarisations) | BackscatterLimitsType | 1 |
+| `backscatterLimits` | Lower and upper limits on backscatter in linear units. Default values are 0.0001,100 for all polarisations) | <u>BackscatterLimitsType</u> | 1 |
 | `angleLimits` | Used lower and upper limits on the local incidence angle [rad]. | `minMaxTypeWithUnit` | 1 |
 | meanAGBLimits | Used lower and upper limits on the AGB mean in [t/ha]. | `minMaxTypeWithUnit` | 1 |
 | stdAGBLimits | Used lower and upper limits on the AGB std in [t/ha] | `minMaxTypeWithUnit` | 1 |
 | relativeAGBLimits | Used lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units. | `minMaxType` | 1 |
-| `referenceSelection` | Selection of reference data (second iteration only). String with following possible values: <br> ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | `referenceSelectionType` | 1 |
-| indexingL | Used “L” parameter variability with polarization ’p’, date ’j’, forest class ’k’ | `agbIndexingType` | 1 |
-| indexingA | Used “a” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | `agbIndexingType` | 1 |
-| indexingN | Used “n” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | `agbIndexingType` | 1 |
+| `referenceSelection` | Selection of reference data (second iteration only). String with following possible values: <br> ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | <u>`referenceSelectionType`</u> | 1 |
+| indexingL | Used “L” parameter variability with polarization ’p’, date ’j’, forest class ’k’ | <u>`agbIndexingType`</u> | 1 |
+| indexingA | Used “a” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | <u>`agbIndexingType`</u> | 1 |
+| indexingN | Used “n” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | <u>`agbIndexingType`</u> | 1 |
 | `useConstantN` | If True, indexingN=p has been forced (for all polarisations). | bool | 1 |
 | `valuesConstantN` | Values used if `useConstantN`=True. | `floatArray` | 1 |
 | `regressionSolver` | Computational complexity used for the regression: <br> “double” <br> “float” | `xsd:string` | 1 |
 | `regressionMatrixSubsamplingFactor` | Subsampling factor used during AGB regression, computed live basing on available RAM remaining (starting from job order Amount\_of\_RAM) | `xsd:unsignedByte` | 1 |
 | `minimumPercentageOfFillableVoids` | The minimum percentage of invalid pixels which triggered a new iteration. | `xsd:float` | 1 |
-| `estimatedParameters` | L2B AGB algorithm estimated inversion parameters “N”, “A”, “L”: the parameters can have variability along polarisations, LCM classes and temporal dates. | `estimatedParametersL2bAGBType` | 1 |
-| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | `compressionOptionsL2bType` | 1 |
+| `estimatedParameters` | L2B AGB algorithm estimated inversion parameters “N”, “A”, “L”: the parameters can have variability along polarisations, LCM classes and temporal dates. | <u>`estimatedParametersL2bAGBType`</u> | 1 |
+| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | <u>`compressionOptionsL2bType`</u> | 1 |
 
 :::
 
@@ -512,12 +524,12 @@ classDiagram
 <div class="atbd-figure-content">
 
 <div class="xsd-diagram" style="overflow-x: auto">
-<div style="min-width: 2059px">
+<div style="min-width: 1243px">
 
 ```{mermaid}
 %%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
 classDiagram
-  direction LR
+  direction TB
   class estimatedParametersL2bAGB {
     <<complexType>>
     rho : float [1]
@@ -581,14 +593,14 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | rho | AGB estimation Rho value: logarithmic bias correction as the ratio of the average reference AGB to the average estimated AGB | `xsd:float` | 1 |
-| *polarisations* | *Attribute of beow described “Polarisation” element;* <br> *possible values: “HH”, “VH”, “VV”, “HH VH VV”* | `xsd:string` | *1* |
-| Polarisation | Parameters estimated during AGB processing | `estimatedParametersPolarisationType` | 1 or 3 |
+| *polarisations* | *Attribute of beow described “Polarisation” element;* <br> *possible values: “HH”, “VH”, “VV”, “HH VH VV”* | *`xsd:string`* | *1* |
+| Polarisation | Parameters estimated during AGB processing | <u>`estimatedParametersPolarisationType`</u> | 1 or 3 |
 
 :::
 
-**Note on `estimatedParametersPolarisationType`**
+**Note on **`estimatedParametersPolarisationType`****
 
-It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “**LCM”** elements, which contains an `xsd:sequence` of “**date”** elements, which contains `xsd:all` **“N”, “A”,** and **“L”** elements, each of them each composed by the final `xsd:sequence` with “**mean”** and “**std”** elementary “`xsd:float`” elements)
+It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of “**LCM”** elements, which contains an *`xsd:sequence`* of “**date”** elements, which contains *`xsd:all`* **“N”, “A”,** and **“L”** elements, each of them each composed by the final *`xsd:sequence`* with “**mean”** and “**std”** elementary “`xsd:float`” elements)
 
 (tab:pfd-agb-57)=
 :::{div} atbd-table
@@ -597,8 +609,8 @@ It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | `xsd:string` | *required* |
-| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType` (LCM) | 1..unbounded |
+| *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | *`xsd:string`* | *required* |
+| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | <u>`xsd:complexType`</u><u> (LCM)</u> | 1..unbounded |
 
 :::
 
@@ -609,8 +621,8 @@ It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *dates* | *String containing two dates (in the* `timeType` *format*)*, separated by a space: start and stop date to describe an interval.* | `xsd:string` | *required* |
-| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType` (date) | 1..unbounded |
+| *dates* | *String containing two dates (in the* *`timeType`* *format*<u>)</u>*, separated by a space: start and stop date to describe an interval.* | *`xsd:string`* | *required* |
+| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | <u>`xsd:complexType`</u><u> (date)</u> | 1..unbounded |
 
 :::
 
@@ -621,9 +633,9 @@ It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType` (N, A, L) | 1 |
-| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType` (N, A, L) | 1 |
-| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType` (N, A, L) | 1 |
+| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
+| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
+| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType`</u><u> (N, A, L)</u> | 1 |
 
 :::
 
@@ -733,6 +745,6 @@ The details about Quick-look ADS already explained in {sec}`Sec. 4.3.1 <4.3.1>` 
 (sec:pfd-agb-6-3-2)=
 #### 6.3.2 Overlay ADS
 
-The Overlay ADS is a Keyhole Markup Language (KML) file that describes the product coverage area and is suitable for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications).
+The Overlay ADS is a Keyhole <u>Markup</u> Language (KML) file that describes the product coverage area and is suitable for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications).
 
 The details about Quick-look ADS already explained in {sec}`Sec.4.3.2 <4.3.2>` for L2a products apply as well to L2b products.
