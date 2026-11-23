@@ -1930,3 +1930,10 @@ html[data-theme="dark"] .bps-chapters__time {
   overflow-y: hidden;
   vertical-align: middle;
 }
+
+/* Notation key under the first XSD diagram of a converted document: a Markdown
+   block (it is printed in the PDF too), set small like a figure note. */
+.bd-content .xsd-diagram-legend {
+  font-size: 0.85em;
+  color: var(--pst-color-text-muted);
+}
