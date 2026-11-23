@@ -1905,3 +1905,18 @@ html[data-theme="dark"] .bps-chapters__time {
     min-width: 16rem;
   }
 }
+
+/* Converted documents: text blocks typed line by line in the source (product
+   header tree, VRT and ncdump examples) wrap their long lines instead of
+   scrolling thousands of pixels; the indentation of each line is kept
+   (L1 PFD review W5-4). */
+.bd-content div.highlight-text pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Converted documents: the first column of a dropdown table (the dates of the
+   Change history) is never cut at its hyphens (W5-7). */
+.bd-content details.sd-dropdown table td:first-child {
+  white-space: nowrap;
+}
