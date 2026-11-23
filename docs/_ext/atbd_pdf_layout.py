@@ -242,6 +242,10 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
         f"\\fontsize{{{size}}}{{{leading}}}\\selectfont"
         f"\\renewcommand\\arraystretch{{{stretch}}}}}"
     )
+    # L1 SAR: the wide tables of the original run to x = 564 pt (headings
+    # start at 56 pt), i.e. 22.7 pt beyond the text width on the right.
+    extra = "22.7pt" if folder in _WIDE_TABLE_DOCS else "0pt"
+    definitions += f"\n\\newcommand\\atbdwideextra{{{extra}}}"
     logos = [
         str(docs_dir / "_static" / "logos" / name)
         for name in _LOGOS

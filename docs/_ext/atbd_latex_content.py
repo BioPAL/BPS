@@ -843,6 +843,8 @@ class AtbdLatexContent(SphinxPostTransform):
         # Characters of the table font in the table width: ATBD 9 pt,
         # PFD 10 pt; wide tables also use the heading indent.
         budget = (85.0 if pfd else 94.0) * (1.0 if wide else 450 / 485)
+        if wide and not pfd:
+            budget *= 1.047  # L1 SAR tables also run 22.7 pt right (atbdwideextra)
         for table, _docname in found["tables"]:
             _header_only(table)
             _column_widths(table, budget, wide)
