@@ -974,7 +974,8 @@ class AtbdLatexContent(SphinxPostTransform):
         if caption is not None:
             figure += nodes.caption("", "", *inlines)
         landscape = False
-        if mermaid_only and not original and len(visuals) == 1:
+        if (mermaid_only and not original and len(visuals) == 1
+                and "atbd-drawn-figure" not in container.get("classes", [])):
             landscape = self._wants_landscape(visuals[0], single_share)
         if landscape:
             # a diagram too wide for its text to stay readable on a portrait
