@@ -74,11 +74,14 @@ _COVER_RULE_GAP = 3.8  # grey rule below the bottom of the last title line
 _COVER_REF_ASCENT = 0.905 * 11
 # ATBDs whose tables use the left indent of the headings (all PFDs do).
 _WIDE_TABLE_DOCS = ("atbd-l1-sar",)
-# Table font of the originals: ATBD 9 pt, PFD 10 pt (single line spacing),
-# and the row padding of their Word tables (\arraystretch).
-# L1 Stack: 7 pt (17 400 characters of its tables, measured on the original).
-_TABLE_FONTS = {"atbd": (9, 10.5, 2.0), "pfd": (10, 11.5, 2.0),
-                "atbd-l1-stack": (7, 8.4, 1.5)}
+# Table font of the originals: size, leading and \arraystretch such that the
+# rows have the height of the originals (a row of n lines is (stretch + n - 1)
+# leadings high in LaTeX): ATBD 9 pt, 12.9 pt per line, 15.5 pt for one line
+# (measured on AGB ATBD p. 27); PFD 10 pt, 11.5 pt per line, 26 pt for one
+# line (AGB PFD p. 31); L1 Stack 7 pt (17 400 characters of its tables, 8.05 pt
+# per line, 42.7 pt for 5 lines).
+_TABLE_FONTS = {"atbd": (9, 12.9, 1.2), "pfd": (10, 11.5, 2.26),
+                "atbd-l1-stack": (7, 8.1, 1.3)}
 # Rules of the table grid: grey 0.48 pt (ATBD), black 0.72 pt and a grey
 # header row (PFD), measured on the originals.
 _TABLE_RULES = {"atbd": ("A6A6A6", 0.48, "F2F2F2"), "pfd": ("000000", 0.72, "D9D9D9")}
