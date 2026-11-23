@@ -1,0 +1,86 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Cover page, front-matter pages and table of contents of the Science Guide
+% PDF exports.
+% Loaded by atbdlayout.sty (colours and document metadata are defined there).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdcover}[2026/11/23 BPS Science Guide PDF layout]
+
+% Front-matter headings (Document information, Change history, contents).
+\newcommand\atbdfrontheading[1]{%
+  \par\vspace*{0pt}%
+  {\noindent\hspace*{-\atbdheadindent}\color{atbdblue}%
+   \fontsize{16}{19}\selectfont #1\par}%
+  \vspace{12pt}}
+
+% ---------------------------------------------------------------------------
+% Table of contents: unnumbered entries carrying their source numbers.
+% ---------------------------------------------------------------------------
+\renewcommand\cftchapfont{\bfseries}
+\renewcommand\cftchappagefont{\bfseries}
+\renewcommand\cftchapleader{\cftdotfill{\cftdotsep}}
+\setlength\cftbeforechapskip{4pt}
+\setlength\cftchapindent{-\atbdheadindent}
+\setlength\cftsecindent{\dimexpr-\atbdheadindent+1.0em\relax}
+\setlength\cftsubsecindent{\dimexpr-\atbdheadindent+2.0em\relax}
+\setlength\cftsubsubsecindent{\dimexpr-\atbdheadindent+3.0em\relax}
+\renewcommand\cfttoctitlefont{\hspace*{-\atbdheadindent}\color{atbdblue}%
+  \fontsize{16}{19}\selectfont}
+\renewcommand\cftaftertoctitle{}
+\setlength\cftbeforetoctitleskip{0pt}
+\setlength\cftaftertoctitleskip{12pt}
+\renewcommand\cftpnumalign{r}
+
+\newcommand\atbdtableofcontents{%
+  \clearpage
+  \begingroup
+    \parskip\z@skip
+    \renewcommand\contentsname{Table of contents}%
+    \hypersetup{linkcolor=black}%
+    \tableofcontents
+  \endgroup
+  \clearpage}
+
+% ---------------------------------------------------------------------------
+% Cover page
+% ---------------------------------------------------------------------------
+\newcommand\atbdmaketitle{%
+  \begingroup
+  \thispagestyle{empty}%
+  \hypersetup{pdftitle={\atbdtitle},pdfsubject={\atbdcode}}%
+  \noindent\hspace*{-\atbdheadindent}%
+  \begin{minipage}[t]{\dimexpr\textwidth+\atbdheadindent\relax}
+    \vspace*{-1.2cm}%
+    \IfFileExists{Aresys_light.png}{%
+      \includegraphics[height=1.9cm]{Aresys_light.png}}{}%
+    \hfill
+    \IfFileExists{ESA_light.png}{%
+      \includegraphics[height=1.9cm]{ESA_light.png}}{}%
+    \par\vspace*{3.2cm}%
+    \raggedright
+    {\color{atbdtitlegrey}\fontsize{40}{48}\selectfont\atbdcovertitle\par}%
+    \vspace*{0.35cm}%
+    {\color{atbdgrey}\rule{\linewidth}{0.8pt}\par}%
+  \end{minipage}%
+  \vfill
+  \noindent\hspace*{-\atbdheadindent}%
+  {\setlength\fboxsep{0pt}%
+   \colorbox{atbdbox}{\makebox[\dimexpr\textwidth+\atbdheadindent\relax]{%
+     \rule{0pt}{0.38cm}}}}\par\nointerlineskip
+  \noindent\hspace*{-\atbdheadindent}%
+  {\setlength\fboxsep{0pt}%
+   \colorbox{atbdcover}{%
+     \begin{minipage}[b][4.6cm][b]{\dimexpr\textwidth+\atbdheadindent\relax}
+       \raggedleft\fontsize{11}{15}\selectfont
+       \begin{tabular}{@{}l@{}}
+         \textbf{Ref}: \atbdcode\\
+         \textbf{Issue}: \atbdissue\\
+         \textbf{Date}: \atbddate\\[3pt]
+         \atbdissueline
+       \end{tabular}\hspace*{0.5cm}\par\vspace*{0.45cm}%
+     \end{minipage}}}\par
+  \clearpage
+  \endgroup}
+
+\endinput

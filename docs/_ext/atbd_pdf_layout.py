@@ -12,7 +12,7 @@ LaTeX builder only:
   front-matter pages, followed by the table of contents.
 
 The page style itself (cover, header, footer, fonts, headings) lives in
-``_templates/latex/atbdlayout.sty``.
+``_templates/latex/atbdlayout.sty`` and the packages it loads.
 """
 
 from __future__ import annotations
@@ -27,6 +27,8 @@ from docutils import nodes
 from sphinx.transforms.post_transforms import SphinxPostTransform
 
 _LOGOS = ("Aresys_light.png", "ESA_light.png")
+# Layout packages (_templates/latex): atbdlayout loads the others.
+_STY_FILES = ("atbdlayout", "atbdbody", "atbdfloats", "atbdmath", "atbdcover")
 _FRONT_HEADINGS = ("Document information", "Change history")
 # Full-width grid tables in the front matter (column specs as Sphinx
 # ``tabularcolumns``): Field | Value, Name | Organisation, Change history.
@@ -188,7 +190,7 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
         ],
         "latex_additional_files": [
             *logos,
-            str(docs_dir / "_templates" / "latex" / "atbdlayout.sty"),
+            *(str(docs_dir / "_templates" / "latex" / f"{name}.sty") for name in _STY_FILES),
         ],
         "atbd_wide_tables": folder.startswith("pfd-") or folder in _WIDE_TABLE_DOCS,
         "latex_domain_indices": False,

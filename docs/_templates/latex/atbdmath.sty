@@ -1,0 +1,37 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Formulas of the Science Guide PDF exports (atbd_latex_content.py).
+% Loaded by atbdlayout.sty (colours and document metadata are defined there).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdmath}[2026/11/23 BPS Science Guide PDF layout]
+
+% Inline formulas wider than their column are scaled down to it, to 70 % at
+% most (smaller would not be legible).
+\newcommand\atbdfitmath[1]{%
+  \allowbreak\sbox\z@{#1}%
+  \ifdim\wd\z@>\linewidth
+    % scaled to the column width down to 60 % of its size; wider, it is set
+    % at its own size and breaks after its operators (x, +, =) like the
+    % approved PDFs, instead of overflowing the cell (FD "Size" columns)
+    \dimen@=0.6\wd\z@
+    \ifdim\dimen@>\linewidth #1%
+    \else\resizebox{\linewidth}{!}{\usebox\z@}\fi
+  \else\usebox\z@\fi}
+% Numbered equations (atbd_latex_content.py): multi-line body aligned on &
+% like split, scaled down when wider than the text minus the tag.
+\newcommand\atbdfitdisplay[1]{%
+  \sbox\z@{$\displaystyle\begin{aligned}#1\end{aligned}$}%
+  \ifdim\wd\z@>\dimexpr\linewidth-4em\relax
+    \resizebox{\dimexpr\linewidth-4em\relax}{!}{\usebox\z@}%
+  \else\usebox\z@\fi}
+% Math: upright letters and Greek capitals (\Delta, \mathrm, \mathbf) from
+% Computer Modern like the rest of the formulas. fontspec would take them
+% from the text font, which has no glyph in those 8-bit slots (U+0001...).
+\AtBeginDocument{%
+  \DeclareSymbolFont{operators}{OT1}{cmr}{m}{n}%
+  \SetSymbolFont{operators}{bold}{OT1}{cmr}{bx}{n}%
+  \DeclareMathAlphabet{\mathrm}{OT1}{cmr}{m}{n}%
+  \DeclareMathAlphabet{\mathbf}{OT1}{cmr}{bx}{n}%
+  \SetMathAlphabet{\mathrm}{bold}{OT1}{cmr}{bx}{n}}
+\endinput

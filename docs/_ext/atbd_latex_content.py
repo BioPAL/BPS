@@ -1103,7 +1103,7 @@ class AtbdLatexContent(SphinxPostTransform):
         label = ""
         if math.get("label"):
             label = r"\label{equation:%s:%s}" % (math["docname"], math["label"])
-        # \atbdfitdisplay (atbdlayout.sty) sets the body like ``split`` and
+        # \atbdfitdisplay (atbdmath.sty) sets the body like ``split`` and
         # scales it down when it is wider than the text.
         latex = (
             f"{labels}\n\\begin{{equation}}{label}\n\\atbdfitdisplay{{\n{body}\n"
