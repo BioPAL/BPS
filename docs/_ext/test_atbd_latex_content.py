@@ -150,3 +150,20 @@ def test_flowchart_is_cut_between_lanes():
     assert "linkStyle 0 stroke:#f00" in second and "linkStyle 3 stroke:#f00" in first
     assert "style B" in second and "style A" not in second
     assert _split_flow_lanes("flowchart TB\n  a --> b\n", 2) is None
+
+
+def test_multi_line_equation_is_also_offered_as_rows():
+    from atbd_latex_content import _alternative, _rows
+
+    body = r"A&=\frac{1}{2}\left\{\begin{matrix}x\\y\end{matrix}\right. \\ &=B+C."
+    assert _rows(body) == [r"A=\frac{1}{2}\left\{\begin{matrix}x\\y\end{matrix}\right.", "=B+C."]
+    assert _alternative(body).startswith(r"[\atbdrow{A=")
+    assert _alternative(r"a&=b") == ""
+
+
+def test_formula_of_a_cell_breaks_after_commas_and_has_a_width():
+    from atbd_latex_content import _breakable, _math_atom
+
+    assert _breakable(r"yaw,\ pitch") == r"yaw,\allowbreak{}\ pitch"
+    assert _breakable(r"N_{lat,L2b}") == r"N_{lat,L2b}"
+    assert _math_atom(r"yaw,\ pitch,{}roll") < _math_atom(r"FD_{map}^{aggregated}")
