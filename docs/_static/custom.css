@@ -1885,13 +1885,14 @@ html[data-theme="dark"] .bps-chapters__time {
   color: var(--pst-color-text-muted);
 }
 
-/* Converted documents: long identifiers in table cells (parameter names,
-   XPaths) may break, so that a table fits its column instead of hiding its
-   last columns behind a horizontal scroll. */
+/* Converted documents: identifiers in table cells (parameter names, xsd types,
+   XPaths) wrap like words and break inside only when one alone is wider than
+   its column: "doubleWithUnit" is never cut into "doub / leWi / thUn / it"
+   (L1 PFD review W5-1); a table wider than the page scrolls. */
 .bd-content table td code,
 .bd-content table td .pre {
   white-space: normal !important;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
 }
 
