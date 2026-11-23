@@ -162,4 +162,20 @@
     color: inherit;
     text-decoration: none;
   }
+
+  /* wide display equations: no scroll bar on paper, the MathJax output is
+     shrunk to the page width instead of being cut on the right */
+  .math-wrapper,
+  div.math,
+  mjx-container[display="true"] {
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+  mjx-container[display="true"] > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  mjx-container[display="true"] {
+    font-size: 90% !important;
+  }
 }

@@ -79,6 +79,8 @@
   \nointerlineskip
   \vbox to #1{%
     \hbox{\color{atbdblue}\fontsize{16bp}{19bp}\selectfont\rule{0bp}{14.5bp}#2}\vss}%
+  % bookmark of the front-matter page (Document information, Change history)
+  \ifdefined\pdfbookmark\pdfbookmark[0]{#2}{atbdfront.\the\inputlineno}\fi
   \nointerlineskip}
 
 % Web export notice (D-pdf-1): grey box between the heading and the first
