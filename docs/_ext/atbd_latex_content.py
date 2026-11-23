@@ -1471,6 +1471,10 @@ class AtbdLatexContent(SphinxPostTransform):
             if _is_caption(child, "atbd-figure-caption"):
                 caption = _parse_caption(child)
             elif isinstance(child, nodes.raw):
+                if "latex" in child.get("format", "").split():
+                    # a coloured text tree (fancyvrb Verbatim) is the figure itself
+                    # (L2 PFD Fig. 2, relecture W3-14)
+                    visuals.append(child)
                 continue  # <div class="atbd-figure-content"> wrappers, comments
             elif isinstance(child, nodes.paragraph) and child.children and all(
                 isinstance(c, nodes.image)
@@ -1481,7 +1485,8 @@ class AtbdLatexContent(SphinxPostTransform):
             elif isinstance(child, nodes.image):
                 visuals.append(child)
             elif isinstance(child, nodes.literal_block) and (
-                    "atbd-drawn-figure" in container.get("classes", [])):
+                    "atbd-drawn-figure" in container.get("classes", [])
+                    or "atbd-text-figure" in container.get("classes", [])):
                 visuals.append(child)  # a redrawn folder tree: inside the float, captioned
             elif mermaid_cls is not None and isinstance(child, mermaid_cls):
                 visuals.append(child)
@@ -1519,6 +1524,11 @@ class AtbdLatexContent(SphinxPostTransform):
                 text = "".join(n.astext() for n in caption[1])
                 lines = -(-len(text) // 95)
                 single_share = min(single_share, 0.98 - 0.03 * max(lines, 1))
+
+        if ("atbd-text-figure" in container.get("classes", []) and caption is not None
+                and visuals and all(isinstance(v, (nodes.raw, nodes.literal_block))
+                                    for v in visuals)):
+            return self._text_figure(container, docname, visuals, caption, extra)
 
         tables = [x for x in extra if isinstance(x, nodes.table)]
         if (not visuals and len(tables) == 1 and caption is not None
@@ -1599,6 +1609,25 @@ class AtbdLatexContent(SphinxPostTransform):
         portrait = min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width, share * _TEXT_HEIGHT_PT / tall)
         land = min(_MERMAID_SCALE, _TEXT_HEIGHT_PT / width, _LANDSCAPE_SHARE * _TEXT_WIDTH_PT / tall)
         return _MERMAID_FONT_PT * portrait < _LANDSCAPE_BELOW_PT and land > 1.15 * portrait
+
+    def _text_figure(self, container: nodes.container, docname: str,
+                     visuals: list[nodes.Node], caption: Any,
+                     extra: list[nodes.Node]) -> nodes.Node:
+        """A figure typed as text (the product header tree of the PFDs, 80 to
+        120 lines): no float, which cannot break across pages and overflowed the
+        page foot; the block then its caption below it, as in the original."""
+        number, inlines = caption
+        label = "".join(_latex_label(docname, i) for i in container["ids"])
+        cap = nodes.paragraph("", "")
+        cap += nodes.raw("", (_set_number("figure", number) if number else "")
+                         + r"\captionof{figure}{", format="latex")
+        cap.extend(inlines)
+        cap += nodes.raw("", "}" + label, format="latex")
+        for v in visuals:
+            v.parent.remove(v)
+        out = [*visuals, cap, *extra]
+        container.replace_self(out)
+        return cap
 
     def _table_figure(self, container: nodes.container, docname: str, table: nodes.table,
                       caption: Any, extra: list[nodes.Node]) -> nodes.Node:
