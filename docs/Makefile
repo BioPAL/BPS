@@ -20,11 +20,12 @@ else
   PIP         ?= $(VENV)/bin/pip
 endif
 
+PYTHON        ?= python3
 SPHINXOPTS    ?=
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-.PHONY: help install html html-all clean livehtml linkcheck diagrams sync-bib atbd-pdf atbd-pdf-all presentation presentation-shared
+.PHONY: help install html html-all clean livehtml linkcheck diagrams sync-bib atbd-pdf atbd-pdf-all check-pdf-links test-tools presentation presentation-shared
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
@@ -34,6 +35,8 @@ help:
 	@echo "  make presentation-shared Sync shared logos only (after editing _shared/logos/)"
 	@echo "  make atbd-pdf     Build web-export PDF of one document (ATBD=<folder>, default atbd-l2-agb; requires LaTeX)"
 	@echo "  make atbd-pdf-all Build web-export PDFs of every Science Guide document"
+	@echo "  make check-pdf-links  Fail on a PDF button pointing to a PDF absent from _build/html (EXPECT_ALL=1: also on a missing button)"
+	@echo "  make test-tools   Unit tests of the PDF helpers (docs/_ext, docs/tools)"
 	@echo "  make html-all     atbd-pdf-all + html"
 	@echo "  make sync-bib     Copy references.bib from the private conversion pipeline"
 
@@ -207,6 +210,17 @@ atbd-pdf-all:
 	  else printf '  FAILED  %-16s see %s\n' "$$d" "$(ATBD_PDF_BUILDDIR)/$$d/$$d.log"; fi; \
 	done; \
 	test -z "$$failed"
+
+# Check the "Download PDF" buttons of the built site (after `make html`): a
+# button must not point to a PDF missing from _build/html. With EXPECT_ALL=1
+# (every PDF built, e.g. after atbd-pdf-all) every page of a document must have
+# its button.
+EXPECT_ALL ?=
+check-pdf-links:
+	@python3 tools/check_pdf_links.py --html "$(BUILDDIR)/html" $(if $(EXPECT_ALL),--expect-all)
+
+test-tools:
+	@$(PYTHON) -m pytest -q _ext tools
 
 # Catch-all: route any unknown target to sphinx-build via the M shortcut
 %:

@@ -28,7 +28,7 @@ from sphinx.transforms.post_transforms import SphinxPostTransform
 
 _LOGOS = ("Aresys_light.png", "ESA_light.png")
 # Layout packages (_templates/latex): atbdlayout loads the others.
-_STY_FILES = ("atbdlayout", "atbdbody", "atbdfloats", "atbdmath", "atbdcover")
+_STY_FILES = ("atbdlayout", "atbdbody", "atbdfloats", "atbdmath", "atbdcover", "atbdmeta")
 _FRONT_HEADINGS = ("Document information", "Change history")
 # Full-width grid tables in the front matter (column specs as Sphinx
 # ``tabularcolumns``): Field | Value, Name | Organisation, Change history.

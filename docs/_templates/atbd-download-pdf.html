@@ -1,10 +1,11 @@
 {# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) #}
 {# SPDX-License-Identifier: Apache-2.0 #}
+{# Same markup (and so same style) as the theme's "Edit on GitHub" link. #}
 {% if atbd_pdf_url %}
-<div class="tocsection atbd-download-pdf">
+<div class="tocsection editthispage atbd-download-pdf">
   <a href="{{ atbd_pdf_url }}" download>
     <i class="fa-solid fa-file-pdf"></i>
-    Download PDF export
+    Download PDF{% if atbd_pdf_size %} ({{ atbd_pdf_size }}){% endif %}
   </a>
 </div>
 {% endif %}

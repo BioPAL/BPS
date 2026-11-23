@@ -1,0 +1,131 @@
+/* SPDX-FileCopyrightText: 2026 European Space Agency (ESA) */
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Ctrl+P from the browser: the page content only, on A4. */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 15mm 18mm 15mm;
+  }
+
+  /* navigation, sidebars, buttons, theme footer */
+  .bd-header,
+  .bd-header-announcement,
+  .bd-sidebar-primary,
+  .bd-sidebar-secondary,
+  .bd-footer,
+  .bd-footer-article,
+  .prev-next-area,
+  .prev-next-footer,
+  .headerlink,
+  .search-button,
+  .search-button__wrapper,
+  .theme-switch-button,
+  .scroll-to-top,
+  #pst-back-to-top,
+  .back-to-top,
+  .edit-this-page,
+  .editthispage,
+  .atbd-download-pdf,
+  .bd-toc,
+  button.copybtn {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000;
+  }
+
+  /* the article takes the whole page width */
+  .bd-container,
+  .bd-container__inner,
+  .bd-page-width,
+  .bd-main,
+  .bd-content,
+  .bd-article-container,
+  .bd-article {
+    display: block !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* folded menus: content always visible */
+  details:not([open]) > *:not(summary) {
+    display: block !important;
+  }
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker,
+  details > summary .sd-summary-state-marker {
+    display: none !important;
+  }
+  .sd-dropdown .sd-summary-content {
+    display: block !important;
+  }
+
+  /* do not cut figures, tables, code, admonitions */
+  figure,
+  img,
+  svg,
+  table,
+  pre,
+  blockquote,
+  .figure,
+  .admonition,
+  .math-wrapper,
+  .mermaid,
+  .sd-card,
+  .sd-dropdown,
+  div.highlight {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  img,
+  svg {
+    max-width: 100% !important;
+    height: auto;
+  }
+  figcaption,
+  caption,
+  .caption {
+    break-before: avoid;
+    break-after: auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr {
+    break-inside: avoid;
+  }
+  /* scroll containers of the screen layout: show everything */
+  .pst-scrollable-table-container,
+  .table-wrapper,
+  div.highlight,
+  .bd-article-container {
+    overflow: visible !important;
+  }
+  table {
+    max-width: 100%;
+    table-layout: auto;
+  }
+
+  /* wide tables and code: wrap rather than run off the page */
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* links read as plain text (no URL expansion: tables hold many) */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
