@@ -69,15 +69,15 @@ BIOMASS L1a/b Product/
 | ∟ main product header | 1 | XML | Main product header |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 1 or 2 | COG | SAR image MDS 2 files = 1 for amplitude + 1 for phase (only for L1a products) 4 components each (1 per polarization) |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 0 or 1 | VRT | SAR image MDS (support)<br>Present only for L1a products |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 0 or 1 | VRT | SAR image MDS (support) <br> Present only for L1a products |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: - Acquisition information DSR - SAR image DSR - Instrument parameters DSR - RAW data analysis DSR - Processing parameters DSR - Internal calibration DSR - RFI mitigation DSR - Doppler parameters DSR - Radiometric calibration DSR - Polarimetric distortion DSR - Ionosphere correction DSR - Geometry DSR - Quality DSR - Annotation LUT DSR |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: - RFI time-domain masks DSR (one per polarisation) - RFI frequency-domain masks DSR (one per polarisation)<br>- Radiometric calibration DSR (sigma-nought and gamma-nought maps) - Ionosphere correction DSR (FR, phase screen, TEC, range and azimuth shifts and autofocus phase screen maps) - Denoising DSR (one per polarisation) - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: - RFI time-domain masks DSR (one per polarisation) - RFI frequency-domain masks DSR (one per polarisation) <br> - Radiometric calibration DSR (sigma-nought and gamma-nought maps) - Ionosphere correction DSR (FR, phase screen, TEC, range and azimuth shifts and autofocus phase screen maps) - Denoising DSR (one per polarisation) - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;∟ navigation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ attitude | 1 | XML (EOF) | Attitude DSR |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 1 or 2 | PNG | Quick-look ADS<br>L1a can have 2 files (Pauli decomposition and HSV representation) or just 1 (selected between these two)<br>L1b has 1 file (Lexicographic representation) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 1 or 2 | PNG | Quick-look ADS <br> L1a can have 2 files (Pauli decomposition and HSV representation) or just 1 (selected between these two) <br> L1b has 1 file (Lexicographic representation) |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
@@ -137,10 +137,10 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `S[1,2,3]_SCS__1S`: Stripmap L1 Single-look Complex Slant - Standard product;
-    - `S[1,2,3]_SCS[1,2,X,Y]_1S`: Stripmap L1 Single-look Complex Slant Calibration (`1: Gt1, 2:Gt2, X, Y`) - Standard product;
-    - `S[1,2,3]_DGM__1S`: Stripmap L1 Detected Ground Multi-look - Standard product;
-    - `S[1,2,3]_SCS__1M`: Stripmap L1 Single-look Complex Slant - Monitoring Product;
+  - `S[1,2,3]_SCS__1S`: Stripmap L1 Single-look Complex Slant - Standard product;
+  - `S[1,2,3]_SCS[1,2,X,Y]_1S`: Stripmap L1 Single-look Complex Slant Calibration (`1: Gt1, 2:Gt2, X, Y`) - Standard product;
+  - `S[1,2,3]_DGM__1S`: Stripmap L1 Detected Ground Multi-look - Standard product;
+  - `S[1,2,3]_SCS__1M`: Stripmap L1 Single-look Complex Slant - Monitoring Product;
 - `<yyyymmddThhmmss>`: UTC start date and time (acquisition Zero Doppler Time);
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time (acquisition Zero Doppler Time);
 - `<P>`: Mission phase identifier;
@@ -157,15 +157,15 @@ The internal files in the L1 product inherit the same naming convention, with th
 - capital letters conversion to lowercase;
 - “Baseline Identifier and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[abs,phase].tiff` for SAR image MDS;
-    - `*_i.vrt` for VRT file;
-    - `*_annot.xml` for main ADS;
-    - `*_lut.nc` for Look-Up Tables ADS;
-    - `*_orb.xml` for orbit ADS;
-    - `*_att.xml` for attitude ADS;
-    - `*_ql_pauli.png` for quick-look ADS with Pauli decomposition;
-    - `*_ql_hsv.png` for quick-look ADS with HSV representation;
-    - `*_ql_lexicographic.png` for quick-look ADS with Lexicographic representation;
-    - `*_map.kml` for overlay ADS;
-    - `*.xsd` for support schemas RDS.
+  - `*.xml` for main product header;
+  - `*_i_[abs,phase].tiff` for SAR image MDS;
+  - `*_i.vrt` for VRT file;
+  - `*_annot.xml` for main ADS;
+  - `*_lut.nc` for Look-Up Tables ADS;
+  - `*_orb.xml` for orbit ADS;
+  - `*_att.xml` for attitude ADS;
+  - `*_ql_pauli.png` for quick-look ADS with Pauli decomposition;
+  - `*_ql_hsv.png` for quick-look ADS with HSV representation;
+  - `*_ql_lexicographic.png` for quick-look ADS with Lexicographic representation;
+  - `*_map.kml` for overlay ADS;
+  - `*.xsd` for support schemas RDS.

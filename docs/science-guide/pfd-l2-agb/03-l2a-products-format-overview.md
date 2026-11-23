@@ -73,8 +73,8 @@ BIOMASS L2a Product/
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ Ground cancelled backscatter | 3 | COG | Ground cancelled backscatter images MDS (HH/VH/VV, three layers in a single COG file) |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including:<br>• Product DSR<br>• Raster image DSR<br>• Input information DSR<br>• Processing parameters DSR<br>• Annotation LUT DSR |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including:<br>• FNF, generated outside BPS <br>• Local incidence angle |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: <br> • Product DSR <br> • Raster image DSR <br> • Input information DSR <br> • Processing parameters DSR <br> • Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: <br> • FNF, generated outside BPS <br> • Local incidence angle |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 1 | PNG | Quick-look ADS, one RGB from measurement |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS for the quicklook |
@@ -112,7 +112,7 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_GN__L2A`: Ground cancellation L2a product;
+  - `FP_GN__L2A`: Ground cancellation L2a product;
 - `<yyyymmddThhmmss>`: UTC start date and time (min time validity of the stack);
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time (max time validity of the stack);
 - `<P>`: Mission phase identifier;
@@ -129,11 +129,11 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_gn.tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_lut.nc` for Look-Up Tables ADS;
-    - `*_gn_ql.png` for quick-look ADS;
-    - `*_map.kml` for overlay ADS;
-    - `*.xsd` for support schemas RDS;
-    - `*.json` for STAC.
+  - `*.xml` for main product header;
+  - `*_i_gn.tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_lut.nc` for Look-Up Tables ADS;
+  - `*_gn_ql.png` for quick-look ADS;
+  - `*_map.kml` for overlay ADS;
+  - `*.xsd` for support schemas RDS;
+  - `*.json` for STAC.

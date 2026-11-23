@@ -210,7 +210,7 @@ If the sum is odd, detection is assumed, and the resulting probability of change
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Truth table for the example of three FDs. The color coding for FD t1/3 is the same of Fig.16, where black is the absence of validity.</span></p>
 
-| FD t1 | FD t2 | FD t3 | FD steps count | FD map aggregated | HM:<br>contributing | HM:<br>agreeing |
+| FD t1 | FD t2 | FD t3 | FD steps count | FD map aggregated | HM: <br> contributing | HM: <br> agreeing |
 |---|---|---|---|---|---|---|
 | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | 0 | 0 | 3 | 3 |
 | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#0000FF;color:#FFFFFF">1</span> | 1 | 1 | 3 | 1 |

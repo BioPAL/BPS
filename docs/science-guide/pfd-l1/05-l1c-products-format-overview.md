@@ -19,9 +19,9 @@ The declination and customisation of this format structure for BIOMASS L1c produ
 - primary image main annotation ADS, a copy of the primary image L1a product main ADS XML file, including only relevant DSR (see {sec}`Sec. 6.3.1 <6.3.1>`);
 - coregistered image main annotation ADS, a copy of the secondary image L1a product main ADS XML file, with DSR content updated where needed and new DSR, specific for the coregistration process, added (see {sec}`Sec. 6.3.3 <6.3.3>`);
 - coregistered image Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary NetCDF file (see. {sec}`Sec. 6.3.4 <6.3.4>`), i.e.:
-    - copy of secondary image L1a product LUT radiometric calibration and denoising DSR, resampled over coregistration grid;
-    - new coregistration (range and azimuth coregistration shifts and quality index maps) and InSAR DSR (RFI impact, residual fast-varying ionospheric phase and ground calibration phase maps, plus related quality indexes maps)
-    - copy of primary image L1a product LUT geometry DSR;
+  - copy of secondary image L1a product LUT radiometric calibration and denoising DSR, resampled over coregistration grid;
+  - new coregistration (range and azimuth coregistration shifts and quality index maps) and InSAR DSR (RFI impact, residual fast-varying ionospheric phase and ground calibration phase maps, plus related quality indexes maps)
+  - copy of primary image L1a product LUT geometry DSR;
 - orbit and attitude ADS, including orbit and attitude information, both for primary and coregistered images, in dedicated XML files (see {sec}`Sec. 6.3.2 <6.3.2>` and {sec}`6.3.5 <6.3.5>` respectively);
 - quick-look and overlay ADS, including an averaged and decimated preview of the coregistered SAR image data set and information about its geographic coverage (see {sec}`Sec. 6.3.6 <6.3.6>` and {sec}`6.3.7 <6.3.7>`);
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
@@ -87,7 +87,7 @@ BIOMASS L1c Product/
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ attitude | 1 | XML (EOF) | Attitude DSR |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ quicklook | 1 to 4 | PNG | Quick-look ADS<br>L1c can have up to 4 quick-look files: - At least 1 of Pauli and HSV decomposition - Optionally, and for secondary images only, the coherence vs primary - Optionally, and for secondary images only, the flattened interferogram vs primary |
+| ∟ quicklook | 1 to 4 | PNG | Quick-look ADS <br> L1c can have up to 4 quick-look files: - At least 1 of Pauli and HSV decomposition - Optionally, and for secondary images only, the coherence vs primary - Optionally, and for secondary images only, the flattened interferogram vs primary |
 | ∟ overlay | 1 to 4 | KML | Overlay ADS. 1 overlay per quick-look file. |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main `annotation.xsd` | 1 | XSD | RDS |
@@ -118,8 +118,8 @@ L1M products are identical to L1S ones except for SAR image MDS (and ‘measurem
 The naming convention for the BIOMASS L1c products and their related data are described in details in {ad}`2` and briefly recalled in {sec}`Section 3.4 <3.4>`. In summary, L1c product names differs from L1a/b products names in what follows:
 
 - `<TTTTTTTTTT>`: Product Type/File Type:
-    - `S[1,2,3]_STA__1S`: Stripmap L1 Coregistered stack - Standard product;
-    - `S[1,2,3]_STA__1M`: Stripmap L1 Coregistered stack - Monitoring Product;
+  - `S[1,2,3]_STA__1S`: Stripmap L1 Coregistered stack - Standard product;
+  - `S[1,2,3]_STA__1M`: Stripmap L1 Coregistered stack - Monitoring Product;
 - `<yyyymmddThhmmss>`: UTC start date and time after coregistration;
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time after coregistation.
 

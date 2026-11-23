@@ -13,9 +13,9 @@ BIOMASS is a fully polarimetric SAR mission with its radar instrument relying on
 The Forest Disturbance product family is composed by:
 
 - Level-2a (L2a): product composed by three stack-based images with different resolution and projection (latitude-longitude) with respect to the L1c source data:
-    - one image representing the probability of change at a given Global cycle, obtained from L1c processing and auxiliary data;
-    - one image representing the forest disturbance, a binary classification of intact/deforested areas, obtained from the probability of change;
-    - the CFM (Computed Forest Mask) image which is an update, based on disturbance, of the FNF mask given as input, generated outside of BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9`.
+  - one image representing the probability of change at a given Global cycle, obtained from L1c processing and auxiliary data;
+  - one image representing the forest disturbance, a binary classification of intact/deforested areas, obtained from the probability of change;
+  - the CFM (Computed Forest Mask) image which is an update, based on disturbance, of the FNF mask given as input, generated outside of BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9`.
 
 The algorithms are envisaged to generate the product in INT phase with the optional possibility of having it also from TOM phase: in this case the FD product family will be empty but for the ADS ACM (see 4.3).
 

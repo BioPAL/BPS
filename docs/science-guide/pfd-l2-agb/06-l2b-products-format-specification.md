@@ -196,9 +196,9 @@ classDiagram
 | `missionPhaseID` | Mission phase identifier. | `missionPhaseIDType` | 1 |
 | `sensorMode` | Sensor mode (always Measurement). | `sensorModeType` | 1 |
 | `globalCoverageID` | Global coverage identifier. | `xsd:unsignedShort` | 1 |
-| `contributingTiles` | List of all the DGG tiles in the input neighbourhood, contributing for AGB parameter estimation (5x5 neighbourhood).<br>Mandatory only in L2B AGB products. | `stringListType` | 0,1 |
-| calABcoveragePerTile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood).<br>Mandatory only in L2B AGB products. | calABcoverageTilesListType | 0,1 |
-| GNcoveragePerTile | Input GN products coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood).<br>Mandatory only in L2B AGB products. | GNcoverageTilesListType | 0,1 |
+| `contributingTiles` | List of all the DGG tiles in the input neighbourhood, contributing for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | `stringListType` | 0,1 |
+| calABcoveragePerTile | `CAL_AB` coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | calABcoverageTilesListType | 0,1 |
+| GNcoveragePerTile | Input GN products coverage per tile [% and absolute numbers], for each of the tiles in the input neighbourhood for AGB parameter estimation (5x5 neighbourhood). <br> Mandatory only in L2B AGB products. | GNcoverageTilesListType | 0,1 |
 
 :::
 
@@ -481,13 +481,13 @@ classDiagram
 | meanAGBLimits | Used lower and upper limits on the AGB mean in [t/ha]. | `minMaxTypeWithUnit` | 1 |
 | stdAGBLimits | Used lower and upper limits on the AGB std in [t/ha] | `minMaxTypeWithUnit` | 1 |
 | relativeAGBLimits | Used lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units. | `minMaxType` | 1 |
-| `referenceSelection` | Selection of reference data (second iteration only). String with following possible values:<br>‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | `referenceSelectionType` | 1 |
+| `referenceSelection` | Selection of reference data (second iteration only). String with following possible values: <br> ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | `referenceSelectionType` | 1 |
 | indexingL | Used “L” parameter variability with polarization ’p’, date ’j’, forest class ’k’ | `agbIndexingType` | 1 |
 | indexingA | Used “a” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | `agbIndexingType` | 1 |
 | indexingN | Used “n” parameter variability with polarization ’p’, date ’j’, forest class ’k’. | `agbIndexingType` | 1 |
 | `useConstantN` | If True, indexingN=p has been forced (for all polarisations). | bool | 1 |
 | `valuesConstantN` | Values used if `useConstantN`=True. | `floatArray` | 1 |
-| `regressionSolver` | Computational complexity used for the regression:<br>“double”<br>“float” | `xsd:string` | 1 |
+| `regressionSolver` | Computational complexity used for the regression: <br> “double” <br> “float” | `xsd:string` | 1 |
 | `regressionMatrixSubsamplingFactor` | Subsampling factor used during AGB regression, computed live basing on available RAM remaining (starting from job order Amount\_of\_RAM) | `xsd:unsignedByte` | 1 |
 | `minimumPercentageOfFillableVoids` | The minimum percentage of invalid pixels which triggered a new iteration. | `xsd:float` | 1 |
 | `estimatedParameters` | L2B AGB algorithm estimated inversion parameters “N”, “A”, “L”: the parameters can have variability along polarisations, LCM classes and temporal dates. | `estimatedParametersL2bAGBType` | 1 |
@@ -581,7 +581,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | rho | AGB estimation Rho value: logarithmic bias correction as the ratio of the average reference AGB to the average estimated AGB | `xsd:float` | 1 |
-| *polarisations* | *Attribute of beow described “Polarisation” element;*<br>*possible values: “HH”, “VH”, “VV”, “HH VH VV”* | `xsd:string` | *1* |
+| *polarisations* | *Attribute of beow described “Polarisation” element;* <br> *possible values: “HH”, “VH”, “VV”, “HH VH VV”* | `xsd:string` | *1* |
 | Polarisation | Parameters estimated during AGB processing | `estimatedParametersPolarisationType` | 1 or 3 |
 
 :::
@@ -598,7 +598,7 @@ It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | `xsd:string` | *required* |
-| LCM | Sequence of “LCM” elements.<br>Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType` (LCM) | 1..unbounded |
+| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType` (LCM) | 1..unbounded |
 
 :::
 
@@ -610,7 +610,7 @@ It is a unique complex type (see {fig}`23`), containing an `xsd:sequence` of “
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *dates* | *String containing two dates (in the* `timeType` *format*)*, separated by a space: start and stop date to describe an interval.* | `xsd:string` | *required* |
-| date | Sequence of “date” elements.<br>Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType` (date) | 1..unbounded |
+| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType` (date) | 1..unbounded |
 
 :::
 
@@ -712,8 +712,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| MDS → AGB → `compressionFactor`<br>MDS → AGBstandardDeviation → `compressionFactor`<br>MDS →`BPS_FNF` → `compressionFactor`<br>MDS → HeatMap → `compressionFactor`<br>MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS → AGB → `MAX_Z_ERROR`<br>MDS → AGBstandardDeviation → `MAX_Z_ERROR`<br>MDS → HeatMap → `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). <br>Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → AGB → `compressionFactor` <br> MDS → AGBstandardDeviation → `compressionFactor` <br> MDS →`BPS_FNF` → `compressionFactor` <br> MDS → HeatMap → `compressionFactor` <br> MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factors used for all the images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → AGB → `MAX_Z_ERROR` <br> MDS → AGBstandardDeviation → `MAX_Z_ERROR` <br> MDS → HeatMap → `MAX_Z_ERROR` | Used absolute maximum error admitted (which defines exactly how lossy has been the LERC compression algorithm). <br> Zero means loss-less compression. | `xsd:float` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::

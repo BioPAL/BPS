@@ -64,7 +64,7 @@ This ADS is a copy of the main ADS included in the L1a product (secondary one) r
 | **Name** | **Description** | **Differences between L1a and L1c** |
 |---|---|---|
 | `schemaVersion` | *PFD version* | *No differences* |
-| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields:<br>• `productType` becomes STA<br>• `startTime` and `stopTime` updated after coregistration<br>• `polarisationList` will cointain the output polarization |
+| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields: <br> • `productType` becomes STA <br> • `startTime` and `stopTime` updated after coregistration <br> • `polarisationList` will cointain the output polarization |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | Copied from primary image main ADS (considering that the coregistered image is resampled over the same sampling grid of the primary image and a different `noDataValue` can be selected) |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | No differences |
 | `rawDataAnalysis` | RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor. | No differences |
@@ -615,17 +615,17 @@ In the following table the new variables are described in detail. Note that the 
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| group: coregistration `rangeCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along range direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data.<br>Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br>Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `azimuthCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along azimuth direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data.<br>Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br>Values are expressed in [m]. | matrix(float) | 1 |
+| group: coregistration `rangeCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along range direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. <br> Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br> Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `azimuthCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along azimuth direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. <br> Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br> Values are expressed in [m]. | matrix(float) | 1 |
 | group: coregistration `flatteningPhaseScreen` | Two-dimensional map covering the whole SAR image and representing the sole phase contribution due to the DEM. As per `STA_P` convention, the DEM phase compensation shall be executed using the ‘+’ convention, that is, as $CoSCS\cdot{}e^{+j\Delta\phi_{flat}}$, where $\Delta\phi_{flat}$ is the content of this LUT (converted into radians). Values are expressed in [rad]. | matrix (float) | 1 |
 | group: coregistration `waveNumbers` | Two-dimensional map covering the whole SAR image and representing the vertical wavenumbers. Values are expressed in [rad/m]. | matrix (float) | 1 |
 | group: interferometry coherence | Two-dimensional map covering the whole SAR image and storing the coherence with respect to the coregistration primary. | matrix(float) | 1 (only for secondary images) |
-| group: interferometry<br>interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. Values are expressed in [rad]. | matrix(float) | 1 (only for secondary images) |
+| group: interferometry <br> interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. Values are expressed in [rad]. | matrix(float) | 1 (only for secondary images) |
 | group: `multiSquintCalibration` `ionospherePhaseScreens` | Stack of one (single-layer) or more (multi-layer) two-dimensional map that stores the onospheric phase screens estimated by the Multi-Squint Calibration module (MSC). Values are expressed in [rad]. | 3d array (float) | 1 (only if the MSC’s ionosphere correction is activated) |
-| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT).<br>Values are expressed in [rad]. | matrix (float) | 1<br>(only if the SKP module is successfully executed) |
-| group: `skpPhaseCalibration` `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen.<br>Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1<br>(only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT). <br> Values are expressed in [rad]. | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen. <br> Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1 <br> (only if the SKP module is successfully executed) |
 
 :::
 
@@ -659,11 +659,9 @@ The L1c LUT annotation will contain the same attributes as in the L1a LUT with t
 
 Below a sample LUT ADS is reported (obtained with ncdump command).
 
-netcdf bio\_s3\_sta\_\_1s\_20170225t094535\_20170225t094556\_i\_g01\_m02\_c01\_t017\_f001\_lut {
-
-dimensions:
-
 ```text
+netcdf bio_s3_sta__1s_20170225t094535_20170225t094556_i_g01_m02_c01_t017_f001_lut {
+dimensions:
         relativeAzimuthTime = 1785 ;
         slantRangeTime = 818 ;
         ionosphereRelativeAzimuthTime = 1320 ;

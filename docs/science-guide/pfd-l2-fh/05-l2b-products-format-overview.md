@@ -76,12 +76,12 @@ BIOMASS FH L2b Product/
 | &nbsp;&nbsp;&nbsp;∟ FH | 1 | COG | Forest Height image MDS |
 | &nbsp;&nbsp;&nbsp;∟ Quality | 1 | COG | Forest Height Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including:<br>• Product DSR<br>• Raster Image DSR<br>• Input information DSR<br>• Processing parameters DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including: <br> • Product DSR <br> • Raster Image DSR <br> • Input information DSR <br> • Processing parameters DSR |
 | &nbsp;&nbsp;&nbsp;∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
 | &nbsp;&nbsp;&nbsp;∟ Heat Map | 1 | COG | Pixel wise: sum of weights |
 | &nbsp;&nbsp;&nbsp;∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 4 | PNG | Quick-look ADS, for:<br>• FH (from measurement)<br>• FH Quality (from measurement)<br>• `BPS_FNF` (from annotations)<br>• Heat Map (from annotations) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 4 | PNG | Quick-look ADS, for: <br> • FH (from measurement) <br> • FH Quality (from measurement) <br> • `BPS_FNF` (from annotations) <br> • Heat Map (from annotations) |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 4 | KML | Overlay ADS, for each quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
@@ -109,14 +109,14 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_FH__L2B`: Forest Height L2b product;
+  - `FP_FH__L2B`: Forest Height L2b product;
 - `<P>`: Mission phase identifier;
 - `<CC>`: Global Coverage identifier;
 - `<TTTTTTT>`: Tile number of the product, the seven digits are `[N|S]aa[E|W]bbb`, where:
-    - `N|S:` stands for North or South;
-    - `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
-    - `E|W:` stands for East or West;
-    - `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
+  - `N|S:` stands for North or South;
+  - `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
+  - `E|W:` stands for East or West;
+  - `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
 - `<BBB>`: Basin literal identifier of the product (string);
 - `<BB>:` Baseline Identifier;
 - `<DDDDDD>`: Compact creation date.
@@ -126,14 +126,14 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[fh|fhquality].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_i_[acquisition_id_image|heatmap|bps_fnf].tiff` for images in annotations;
-    - `*_[bps_fnf|fh|heatmap]_ql.png` for quick-look ADS;
-    - `*_[bps_fnf|fh|heatmap]_map.kml` for overlay ADS;
-    - `*.xsd` for support schemas RDS.
-    - `*.json` for STAC
+  - `*.xml` for main product header;
+  - `*_i_[fh|fhquality].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_i_[acquisition_id_image|heatmap|bps_fnf].tiff` for images in annotations;
+  - `*_[bps_fnf|fh|heatmap]_ql.png` for quick-look ADS;
+  - `*_[bps_fnf|fh|heatmap]_map.kml` for overlay ADS;
+  - `*.xsd` for support schemas RDS.
+  - `*.json` for STAC
 
 *For basins, the following notation is used:*
 

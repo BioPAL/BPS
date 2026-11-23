@@ -273,7 +273,7 @@ The incoherent speckle tracking step exploits the cross correlation between two 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Matrix of estimation accuracies (all values between [0, 1]). |
-| $s_{az}$ | - | [BREAKPOINT]<br>Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
+| $s_{az}$ | - | [BREAKPOINT] <br> Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
 | $s_{rg}$ | - | [BREAKPOINT] Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in range direction (orbit + cross-correlation) |
 
 (sec:atbd-l1-stack-4-2-1-2)=

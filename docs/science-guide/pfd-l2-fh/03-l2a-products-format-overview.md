@@ -75,8 +75,8 @@ BIOMASS FH L2a Product/
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Height | 1 | COG | Forest Height image MDS |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ Quality | 1 | COG | Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including:<br>• Product DSR<br>• Raster image DSR<br>• Input information DSR<br>• Processing parameters DSR<br>• Annotation LUT DSR |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including:<br>• FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: <br> • Product DSR <br> • Raster image DSR <br> • Input information DSR <br> • Processing parameters DSR <br> • Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: <br> • FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 2 | PNG | Quick-look ADS, for each measurement |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS, for each quicklook |
@@ -114,7 +114,7 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_FH__L2A`: Forest Height L2a product;
+  - `FP_FH__L2A`: Forest Height L2a product;
 - `<yyyymmddThhmmss>`: UTC start date and time (min time validity of the stack);
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time (max time validity of the stack);
 - `<P>`: Mission phase identifier;
@@ -131,11 +131,11 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[fh|quality].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_lut.nc` for Look-Up Tables ADS;
-    - `*_[fh|fhquality]_ql.png` for quick-look ADS
-    - `*_[fh|fhquality]_map.kml `for overlay ADS
-    - `*.xsd` for support schemas RDS.
-    - `*.json` for STAC
+  - `*.xml` for main product header;
+  - `*_i_[fh|quality].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_lut.nc` for Look-Up Tables ADS;
+  - `*_[fh|fhquality]_ql.png` for quick-look ADS
+  - `*_[fh|fhquality]_map.kml `for overlay ADS
+  - `*.xsd` for support schemas RDS.
+  - `*.json` for STAC

@@ -599,12 +599,12 @@ This module ingests the input L0 and auxiliary products and performs the followi
 - Raw data correction (I/Q bias, imbalance and orthogonality correction (the last two if required));
 - SWL equalization;
 - Internal calibration information retrieval, i.e.:
-    - Drifts;
-    - Replica;
-    - Internal delays;
-    - Internal channel imbalance between polarizations;
-    - Transmit power tracking;
-    - Instrument noise level;
+  - Drifts;
+  - Replica;
+  - Internal delays;
+  - Internal channel imbalance between polarizations;
+  - Transmit power tracking;
+  - Instrument noise level;
 - Orbit and attitude files ingestion;
 - 2D antenna patterns ingestion;
 - Back-geocoding (i.e., the retrieval of the X,Y,Z matrices of the external map in radar coordinates, necessary for the DC/FR estimation and the antenna pattern compensation steps).
@@ -673,4 +673,4 @@ Inputs and outputs for each processing sub-step are summarized in specific subse
 
 | Symbol | Name | Origin/ Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| Mathematical symbol of the quantity appearing in formulas | Name of the quantity as related to other BPS documentation (e.g., `AUX_FMT`, L1 ATBDs, …) | BPS document name describing the origin of the quantity or processing step of origin/destination or BPS product of destination | Dimensions of the quantity | Range of values or update rate of an internal resource | Default value for configuration parameters | Verbal description of the quantity and its characteristics (e.g., measure units, …)<br>If the quantity is stored in an intermediate product, its name is indicated here too, in order to have a link with the complete list reported in {rd}`39` |
+| Mathematical symbol of the quantity appearing in formulas | Name of the quantity as related to other BPS documentation (e.g., `AUX_FMT`, L1 ATBDs, …) | BPS document name describing the origin of the quantity or processing step of origin/destination or BPS product of destination | Dimensions of the quantity | Range of values or update rate of an internal resource | Default value for configuration parameters | Verbal description of the quantity and its characteristics (e.g., measure units, …) <br> If the quantity is stored in an intermediate product, its name is indicated here too, in order to have a link with the complete list reported in {rd}`39` |

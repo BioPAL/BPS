@@ -78,12 +78,12 @@ BIOMASS L2b Product/
 | ∟ Above Ground Biomass | 1 | COG | Above Ground Biomass image MDS |
 | ∟ Quality | 1 | COG | Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including:<br>• Product DSR<br>• Raster Image DSR<br>• Input information DSR<br>• Processing parameters DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including: <br> • Product DSR <br> • Raster Image DSR <br> • Input information DSR <br> • Processing parameters DSR |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ Heat Maps | 3 | COG | Three Heat Maps in a single COG, one for each layer:<br>• Heat Map<br>• Heat Map reference<br>• Heat Map additional reference |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Heat Maps | 3 | COG | Three Heat Maps in a single COG, one for each layer: <br> • Heat Map <br> • Heat Map reference <br> • Heat Map additional reference |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
 | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 5 | PNG | Quick-look ADS, for:<br>• AGB (from measurement)<br>• AGB quality (from measurement)<br>• Heat Map (from annotation)<br>• Heat Map reference (from annotation)<br>• Heat Map additional reference (from annotation) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 5 | PNG | Quick-look ADS, for: <br> • AGB (from measurement) <br> • AGB quality (from measurement) <br> • Heat Map (from annotation) <br> • Heat Map reference (from annotation) <br> • Heat Map additional reference (from annotation) |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 5 | KML | Overlay ADS, for each quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
@@ -111,17 +111,17 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_AGB_L2B`: Above Ground Biomass L2b product;
+  - `FP_AGB_L2B`: Above Ground Biomass L2b product;
 - `<P>`: Mission phase identifier;
 - `<CC>`: Global Coverage identifier;
 - `<TTTTTTT>`: Tile number of the product, the seven digits are `[N|S]aa[E|W]bbb`,
 
 where:
 
-    - `N|S:` stands for North or South;
-    - `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
-    - `E|W:` stands for East or West;
-    - `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
+- `N|S:` stands for North or South;
+- `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
+- `E|W:` stands for East or West;
+- `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
 - `<BBB>`: Basin literal identifier of the product (string);
 - `<BB>:` Baseline Identifier;
 - `<DDDDDD>`: Compact creation date.
@@ -131,14 +131,14 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[agb|agb_std_dev].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_i_[acquisition_id_image|heatmap|bps_fnf].tiff` for images in annotations;
-    - `*_[agb|agb_std_dev|hm_hm_additional_reference|hm_reference]_ql.png` for quick-look ADS;
-    - `*_[agb|agb_std_dev|hm_hm_additional_reference|hm_reference]_map.kml` for overlay ADS;
-    - `.xsd` for support schemas RDS;
-    - `*.json` for STAC.
+  - `*.xml` for main product header;
+  - `*_i_[agb|agb_std_dev].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_i_[acquisition_id_image|heatmap|bps_fnf].tiff` for images in annotations;
+  - `*_[agb|agb_std_dev|hm_hm_additional_reference|hm_reference]_ql.png` for quick-look ADS;
+  - `*_[agb|agb_std_dev|hm_hm_additional_reference|hm_reference]_map.kml` for overlay ADS;
+  - `.xsd` for support schemas RDS;
+  - `*.json` for STAC.
 
 *For basins, the following notation is used:*
 

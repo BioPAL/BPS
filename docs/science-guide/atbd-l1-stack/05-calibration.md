@@ -350,12 +350,12 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 | $\Delta\phi_{L1a}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Ionospheric phase screen estimated by L1 processor and shifted onto the primary grid |
 | $\delta_{\phi_{L1a}}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Spatial range shifts due to ionosphere estimated by the L1 processor and shifted onto the primary grid |
-| $n^*$ | `calibrationReferenceImage` | Job\_Order (*ProcParameter – calibration\_primary\_imge*)<br>or `AUX_PPS` (`primaryImageFlag`). See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
-|   | `slowIonosphereRemovalFlag` | `AUX_PPS`<br>(`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the IOB module |
-| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS`<br>(`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
-| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS`<br>(`AUX_FMT`) | Float value [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
+| $n^*$ | `calibrationReferenceImage` | Job\_Order (*ProcParameter – calibration\_primary\_imge*) <br> or `AUX_PPS` (`primaryImageFlag`). See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
+|   | `slowIonosphereRemovalFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the IOB module |
+| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS` <br> (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
+| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS` <br> (`AUX_FMT`) | Float value [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
 |   | `polarisationUsed`⁽⁵⁾ | `AUX_PPS` (`AUX_FMT`) |   | HH / HV / VH / VV / XX | HH | Reference polarization used in the pre-processing step |
-|   | `phaseUnwrappingFlag` | `AUX_PPS`<br>(`AUX_FMT`) | Boolean switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
+|   | `phaseUnwrappingFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
 |   | `latitudeThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [deg] | 0 - $\infty$ | 40.0 | Latitude (N/S) below (above) which IOB is skipped |
 |   | `baselineMethod` | `AUX_PPS` (`AUX_FMT`) | Literal | Multi-Basline, Single-Baseline | Mutli-Baseline | As to whether MB or SB estimation is executed |
 |   | `unweightedMulitBaselineEstimation` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | In MB, equally weigh all estimations. If False, use weights from the coherence map |
@@ -365,7 +365,7 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 |   | `multiBaselineCriticalBaselineThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.45 | In MB, Interferometric pairs with baseline exceeding this percentage of the critical baseline are ignored |
 | $\theta_{PU}$ | `maxDeltaPhaseUnwrapTest` | `AUX_PPS` (`AUX_FMT`) | Float | 0 - $\infty$ | 0.5 rad | Threshold for the phase unwrapping test |
 | $\theta_{\gamma}$ | `minCoherenceThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.0 | Threshold on the coherence that specifies which pixels should be used or not for phase-plane fitting. |
-| $\theta_{PV}$ | `minUsablePixelRatio` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 0 – 1 | 0.05 | Minimum fraction of valid pixels according to coherence and phase unwrapping test to perform the phase-plane fitting |
+| $\theta_{PV}$ | `minUsablePixelRatio` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0 – 1 | 0.05 | Minimum fraction of valid pixels according to coherence and phase unwrapping test to perform the phase-plane fitting |
 |   | `slowIonosphereQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0 – 1 | 0.0 | Estimations with quality below this threshold are ignored |
 
 [5] Note that this parameter is configurable only at the calibration level and not module by module. In other words, the selected value is common to all calibration modules (but not necessarily the same used for coregistration).
@@ -1028,9 +1028,9 @@ where $\boldsymbol{x}_{\boldsymbol{a}}$ is the spatial axis in along-track direc
 To estimate the ionospheric layers, MSC uses a set of ionospheric layer heights and identifies those that most effectively explain the phase distortions observed in the Multi‑Squint Coherence. The algorithm evaluates a predefined set of range candidates and iteratively selects the most informative ones using a greedy, score‑driven procedure. More in details, given a set of range candidates $R_{iono}\mathrel{:=}(r_{\min},r_{\min}+\delta{}r,r_{\min}+2\delta{}r,\ldots,r_{\max}),$ with $r_{\min}$, $r_{max}$ and step $\delta{}r$ tunable by user via `AUX_PPS`, the ionospheric layers $L_{iono}$ are obtained with an iterative procedure as follows: Given a set of test set $R_{test}$ of slant-range samples, loop until there are no more candidate left in $R_{iono}$:
 
 - For each $r_{iter}$ in $R_{iono}$
-    - Define the test layers $L_{iter}\mathrel{:=}{}L_{iono}\cup\left\{ r_{iter} \right\}$
-    - Compute the residuals $\rho_{iono}\mathrel{:=}\mathfrak{R}\langle\sum_{{r\in{}R}_{test}}^{}{MSCoh_{test}\cdot{}e^{-j\Delta\phi_r}}\rangle$, where $\mathfrak{R}$ denotes the real part, $\langle\cdot\rangle$ the average over all entries, $MSCoh_{test}$ is the Multi-Squint Coherence matrix $MSCoh_{ps}$ restricted over the slant-range samples $R_{test}$, and $\Delta\phi_r$ are the phase residual associated to $R_{test}$ and $L_{iter}$ obtained via *composite iterative inversion* (see Section 5.3.3.4)
-    - Define the scores $\alpha(r_{iono})\mathrel{:=}\rho_{iono}/\vert{}R_{test}\vert$
+  - Define the test layers $L_{iter}\mathrel{:=}{}L_{iono}\cup\left\{ r_{iter} \right\}$
+  - Compute the residuals $\rho_{iono}\mathrel{:=}\mathfrak{R}\langle\sum_{{r\in{}R}_{test}}^{}{MSCoh_{test}\cdot{}e^{-j\Delta\phi_r}}\rangle$, where $\mathfrak{R}$ denotes the real part, $\langle\cdot\rangle$ the average over all entries, $MSCoh_{test}$ is the Multi-Squint Coherence matrix $MSCoh_{ps}$ restricted over the slant-range samples $R_{test}$, and $\Delta\phi_r$ are the phase residual associated to $R_{test}$ and $L_{iter}$ obtained via *composite iterative inversion* (see Section 5.3.3.4)
+  - Define the scores $\alpha(r_{iono})\mathrel{:=}\rho_{iono}/\vert{}R_{test}\vert$
 - Select the $r_{iter}^*\mathrel{:=}{}argmax\ \alpha(r_{iter})$
 - Move $r_{iter}^*$ from $R_{iono}$ to $L_{iter}$, *i.e.*, $R_{iono}\mathrel{:=}{}R_{iono}\smallsetminus\{r_{iter}^*\}$ and $L_{iono}\mathrel{:=}{}L_{iono}\cup\{r_{iter}^*\}$.
 
@@ -1349,12 +1349,12 @@ flowchart TB
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 |   | `skpPhaseEstimationFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the SKP module |
 |   | `phaseCorrection` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | Type of phase correction that needs to be applied by the SKP (“None”, “FlatteningPhaseScreen” or “Ground Phase Screen”) |
-| $w_{est}$ | `estimationWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 1 -- $\infty$ | 500 | Size of the estimation window [m]. |
-|   | `calibrationPhasePostprocessing` | `AUX_PPS`<br>(`AUX_FMT`) | Enumeration | Goldstein Boxcar Median None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD Section 5.4.2.6), or no filtering ("None"). It defaults to "None". |
-| $w_f$ | `postprocessingFilterWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 1 -- $\infty$ | 1000 | Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). Recommended value is 1,000 meters. |
-| $w_G$ | `goldsteinFilterWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Int | $1-\infty$ | 5 | Size of the filtering frequency window applied to the Golstein filter weights to be used for post-processing the SKP phase screen [px] (only "Goldstein"). Recommended value is 5 pixels (5 frequency bins). |
+| $w_{est}$ | `estimationWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 -- $\infty$ | 500 | Size of the estimation window [m]. |
+|   | `calibrationPhasePostprocessing` | `AUX_PPS` <br> (`AUX_FMT`) | Enumeration | Goldstein Boxcar Median None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD Section 5.4.2.6), or no filtering ("None"). It defaults to "None". |
+| $w_f$ | `postprocessingFilterWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 -- $\infty$ | 1000 | Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). Recommended value is 1,000 meters. |
+| $w_G$ | `goldsteinFilterWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Int | $1-\infty$ | 5 | Size of the filtering frequency window applied to the Golstein filter weights to be used for post-processing the SKP phase screen [px] (only "Goldstein"). Recommended value is 5 pixels (5 frequency bins). |
 | $\alpha_G$ | `goldsteinFilterAlpha` | `AUX_PPS` (`AUX_FMT`) | Float | 0-1 | 0.5 | Parameter that controls the filtering level of the Goldstein filter. $0$ is no filterimg, $1$ is maximum filtering. Recommended values are between $0.2$ and $1$. |
-|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` (`AUX_FMT`) | Boolean<br>Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
+|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` (`AUX_FMT`) | Boolean <br> Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
 |   | `crossPolMergingFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean Switch | True/False | False | If true, merge the cross-polarizations before estimating the SKP calibration phase screen. |
 | $q_{thresh}$ | `skpCalibrationPhaseScreenQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.5 | Apply the phase correction only if the estimated qualities are above this threshold |
 | $Q_{thresh}$ | `overallProductQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 |   | If the fraction of valid ionosphere estimation is below this threshold, the fast-ionosphere estimation is flagged as failed |

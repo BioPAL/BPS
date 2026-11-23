@@ -188,18 +188,18 @@ The TIFF and GeoTIFF tags used to annotate the MDS files are described in the fo
 | ImageWidth | 256 | Variable | Number of columns in the image, i.e. the number of pixels per row. |
 | ImageLength | 257 | Variable | Number of rows of pixels in the image. |
 | BitsPerSample | 258 | 32 or 8 | Number of bits per component. |
-| Compression | 259 | 34887, <br>34926 | Compression scheme used on the image data (LERC and ZSTD) |
-| PhotometricInterpretation | 262 | 1 | Colour space of the image.<br>Always set to 1 (minimum value is black). |
-| ImageDescription | 270 | Variable | A string that describes the image. Valid Strings are composed by prefix:<br>“BIOMASS L2a FP\_FD\_\_L2A: ” or “BIOMASS L2b FP\_FD\_\_L2B: ” and:<br>“Probability of change”<br>“Computed forest mask”<br>“Forest Disturbance”<br>“Heat Map” (L2b only)<br>"acquisition id image" (L2b only) |
-| SamplesPerPixel | 277 | 1 | The number of components per pixel.<br>Always set to 1, since each product is stored in a different file. |
-| PlanarConfiguration | 284 | 1 | How the components of each pixel are stored.<br>Always set to 1 (contiguous). |
+| Compression | 259 | 34887, <br> 34926 | Compression scheme used on the image data (LERC and ZSTD) |
+| PhotometricInterpretation | 262 | 1 | Colour space of the image. <br> Always set to 1 (minimum value is black). |
+| ImageDescription | 270 | Variable | A string that describes the image. Valid Strings are composed by prefix: <br> “BIOMASS L2a FP\_FD\_\_L2A: ” or “BIOMASS L2b FP\_FD\_\_L2B: ” and: <br> “Probability of change” <br> “Computed forest mask” <br> “Forest Disturbance” <br> “Heat Map” (L2b only) <br> "acquisition id image" (L2b only) |
+| SamplesPerPixel | 277 | 1 | The number of components per pixel. <br> Always set to 1, since each product is stored in a different file. |
+| PlanarConfiguration | 284 | 1 | How the components of each pixel are stored. <br> Always set to 1 (contiguous). |
 | Software | 305 | Variable | Software name and version that created the image. |
-| DateTime | 306 | Variable | Date and time of image creation in the format:<br>YYYY:MM:DD HH:MM:SS |
-| TileWidth | 322 | Variable | The tile width in pixels.<br>This is the number of columns in each tile. |
-| TileLength | 323 | Variable | The tile length (height) in pixels.<br>This is the number of rows in each tile. |
+| DateTime | 306 | Variable | Date and time of image creation in the format: <br> YYYY:MM:DD HH:MM:SS |
+| TileWidth | 322 | Variable | The tile width in pixels. <br> This is the number of columns in each tile. |
+| TileLength | 323 | Variable | The tile length (height) in pixels. <br> This is the number of rows in each tile. |
 | TileOffsets | 324 | Variable | For each tile, the byte offset of that tile, as compressed and stored on disk. |
 | TileByteCounts | 325 | Variable | For each tile, the number of (compressed) bytes in that tile. |
-| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel.<br>Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
+| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel. <br> Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
 | ModelPixelScaleTag | 33550 | Variable | List of doubles, (ScaleX, ScaleY, ScaleZ) where ScaleX and ScaleY give the horizontal and vertical spacing of raster pixels. The ScaleZ is zero. |
 | ModelTiePointTag | 33922 | N \* (pixel, line, 0, lat, long, 0) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene. |
 | GeoKeyDirectoryTag | 34735 | Variable | Contains the value of all GeoTIFF keys of type SHORT and the location of the values for GeoTIFF keys of other types. |
@@ -207,7 +207,7 @@ The TIFF and GeoTIFF tags used to annotate the MDS files are described in the fo
 | GeoAsciiParamsTag | 34737 | Variable | Contains the value of all GeoTIFF keys of type ASCII. |
 | `GDAL_METADATA` | 42112 | Variable | Contains GDAL metadata (see table below) |
 | `GDAL_NODATA` | 42113 | “-9999.0” or “255” | Pixel value used in case of invalid data. ASCII string encoded value. (See 3) |
-| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD<br>Not present in binary tiffs (FD and CFM) |
+| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD <br> Not present in binary tiffs (FD and CFM) |
 | Predictor | 317 | Variable | Integer of value “1” (`PREDICTOR_NONE`), meaning that no prediction scheme is used before coding. Present only in binary tiffs (FD and CFM) |
 
 :::
@@ -394,7 +394,7 @@ classDiagram
 | frame | Frame identifier. | `xsd:unsignedShort` | 1 |
 | `platformHeading` | Platform heading relative to North [deg]. | `doubleWithUnit` | 1 |
 | `forestCoveragePercentage` | Forest coverage of the input STA products, compute as a percentage of all the pixels in the STA footprint. | double | 1 |
-| `selectedReferenceImage` | Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage),used during ground cancellation. <br>Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “***single reference***”. | `selectedReferenceImageType` | 0,1 |
+| `selectedReferenceImage` | Index of the input STA acquisition selected as optimal reference image (guaranteeing the widest scene coverage),used during ground cancellation. <br> Optional element, present only when ground cancellation is performed (FD, GN) and `operationalMode` configuration has been set to “***single reference***”. | `selectedReferenceImageType` | 0,1 |
 
 :::
 
@@ -564,7 +564,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `floatNoDataValue` | Pixel value in case of invalid data. The value is always set to <br>-9999.0 | `xsd:float` | 1 |
+| `floatNoDataValue` | Pixel value in case of invalid data. The value is always set to <br> -9999.0 | `xsd:float` | 1 |
 | `intNoDataValue` | Pixel value in case of invalid data. The value is always set to 255 | `xsd:unsignedByte` | 1 |
 
 :::
@@ -934,9 +934,9 @@ classDiagram
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
 | `generalConfigurationParameters` | General processing flags (not specific to the Forest Disturbance processing). | `generalConfigurationParametersType` | 1 |
 | `emphasizedForestHeight` | Value of the height [m] which has been emphasized during ground cancellation {ad}`8`. | `floatWithUnit` | 1 |
-| `operationalMode` | Ground Cancellation method used between the followings.<br>“single reference”: direct computation with a preliminary automatic reference image selection.<br>*or*<br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`.<br>Note: <br>in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | `operationalModeType` | 1 |
-| `imagesPairSelection` | Optional:<br>if `operationalMode` is “insar pair” and if this element is present, this means that ground cancellation has being performed using only the two images specified here. | `acquisitionListType` | 0..1 |
-| `disableGroundCancellationFlag` | False, if the ground cancellation has been performed.<br>True, if ground cancellation has been disabled. <br>Optional, default is False. | bool | 0..1 |
+| `operationalMode` | Ground Cancellation method used between the followings. <br> “single reference”: direct computation with a preliminary automatic reference image selection. <br> *or* <br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`. <br> Note: <br> in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | `operationalModeType` | 1 |
+| `imagesPairSelection` | Optional: <br> if `operationalMode` is “insar pair” and if this element is present, this means that ground cancellation has being performed using only the two images specified here. | `acquisitionListType` | 0..1 |
+| `disableGroundCancellationFlag` | False, if the ground cancellation has been performed. <br> True, if ground cancellation has been disabled. <br> Optional, default is False. | bool | 0..1 |
 | `significanceLevel` | Significance level, expressed as a percentage, applied in the change detection algorithm {ad}`8`. | `xsd:float` | 1 |
 | `productResolution` | Value in [m] used as the resolution on ground grange map and also to perform the covariance averaging in radar coordinates. | `floatWithUnit` | 1 |
 | `numericalDeterminantLimit` | Lower threshold to avoid numerical errors when computing pol covariance matrices determinants. Positive float number, | `xsd:float` | 1 |
@@ -985,9 +985,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `applyCalibrationScreen` | Phase calibration performed: <br>“none”: no phase screen has been applied<br>“geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry)<br>“skp”: complete phase screen has been applied (default) | `calibrationScreenType` | 1 |
+| `applyCalibrationScreen` | Phase calibration performed: <br> “none”: no phase screen has been applied <br> “geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry) <br> “skp”: complete phase screen has been applied (default) | `calibrationScreenType` | 1 |
 | `forestCoverageThreshold` | Minimum percentage forest coverage in L2a product footprint, used to trigger L2a processing. | `xsd:float` | 1 |
-| `forestMaskInterpolationThreshold` | This parameter is a threshold which has been used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid.<br>This created a safety buffer around forest border. | `xsd:float` | 1 |
+| `forestMaskInterpolationThreshold` | This parameter is a threshold which has been used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid. <br> This created a safety buffer around forest border. | `xsd:float` | 1 |
 | `subsettingRule` | In case of more than three acquisitions the user selected subsetting rule is here annotated (always “geometry” for FD L2a processor). | `subsettingRuleType` | 1 |
 | `polarisationCombinationMethod` | Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarizations are used). | `polarisationCombinationMethodType` | 1 |
 
@@ -1086,11 +1086,11 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | MDS → `probabilityOfChange` → `compressionFactor` | `LERC_ZSTD` algorithm compression factor for the probability of change image MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS → `probabilityOfChange` → `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. <br>Zero means loss-less compression. | `xsd:float` | 1 |
-| MDS → FD → `compressionFactor`<br>and<br>MDS → CFM → `compressionFactor` | ZSTD algorithm compression factor for the FD and CFM binary images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS →FNF → `compressionFactor`<br>and<br>ADS →`numberOfAverages` → `compressionFactor` | ZLIB algorithm compression factor for the FNF and `numberOfAverages` ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → `probabilityOfChange` → `MAX_Z_ERROR` | For the probability of change image MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. <br> Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → FD → `compressionFactor` <br> and <br> MDS → CFM → `compressionFactor` | ZSTD algorithm compression factor for the FD and CFM binary images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| ADS →FNF → `compressionFactor` <br> and <br> ADS →`numberOfAverages` → `compressionFactor` | ZLIB algorithm compression factor for the FNF and `numberOfAverages` ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS → ACM → `compressionFactor` | ZLIB algorithm compression factor valid for all the ACM ADS LUT layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| ADS → ACM → least\_significant\_digit | For all the layers of ACM LUT ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value.<br>See 4.3.2. | `xsd:unsignedByte` | 1 |
+| ADS → ACM → least\_significant\_digit | For all the layers of ACM LUT ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. <br> See 4.3.2. | `xsd:unsignedByte` | 1 |
 | ADS → GeometricLuts → `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS → GeometricLuts → least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
@@ -1182,8 +1182,8 @@ The LUT ADS provides:
 - a *Dimensions* group, where *names* and *lengths* of the dimensions used when creating data arrays are here defined;
 - a series of *Coordinate variables*, special variables to store the axis data values, for each dimension in the *Dimensions* group;
 - a series of components (groups of variables), one for each LUT stored in the ADS. Each component is composed by a group of variables which can be divided in:
-    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *Dimensions* group;
-    - ancillary scalar variables containing other useful metadata to complete the LUT definition.
+  - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *Dimensions* group;
+  - ancillary scalar variables containing other useful metadata to complete the LUT definition.
 
 (fig:pfd-fd-16)=
 :::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -1256,9 +1256,9 @@ The content of L2a LUT ADS is reported hereafter, where:
 - there are three components, FNF, ACM and `numberOfAverages` matrices
 - for the geometric LUTs (local incidence angle, height, latitude, longitude, incidence/elevation angles, range/azimuth terrain slopes), the repeated variables are described only once.
 - this notation is applicable:
-    - **this is the attribute or variable name**
-    - this is the actual content of constant values over the mission
-    - *this is a description of values content which depends on the processing*
+  - **this is the attribute or variable name**
+  - this is the actual content of constant values over the mission
+  - *this is a description of values content which depends on the processing*
 
 LUT ADS Attributes:
 
@@ -1766,7 +1766,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form:<br>*lon,lat lon,lat lon,lat lon,lat lon,lat*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: <br> *lon,lat lon,lat lon,lat lon,lat lon,lat* <br> The coordinates must appear in the following order: <br> *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -1874,6 +1874,6 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form:<br>*lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: <br> *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* <br> The coordinates must appear in the following order: <br> *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::

@@ -201,9 +201,8 @@ For the sake of “retro-compatibility” and to ease the management of BIOMASS 
 
 Here below a sample VRT file is reported:
 
-\<\<?xml version="1.0" encoding="utf-8"?\>
-
 ```text
+<<?xml version="1.0" encoding="utf-8"?>
 <VRTDataset rasterXSize="1380" rasterYSize="21265">
   <GCPList Projection="GEOGCRS[&quot;WGS 84&quot;,ENSEMBLE[&quot;World Geodetic System 1984 ensemble&quot;,MEMBER[&quot;World Geodetic System 1984 (Transit)&quot;],MEMBER[&quot;World Geodetic System 1984 (G730)&quot;],MEMBER[&quot;World Geodetic System 1984 (G873)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1150)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1674)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1762)&quot;],MEMBER[&quot;World Geodetic System 1984 (G2139)&quot;],ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,LENGTHUNIT[&quot;metre&quot;,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[&quot;Greenwich&quot;,0,ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],CS[ellipsoidal,3],AXIS[&quot;geodetic latitude (Lat)&quot;,north,ORDER[1],ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],AXIS[&quot;geodetic longitude (Lon)&quot;,east,ORDER[2],ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],AXIS[&quot;ellipsoidal height (h)&quot;,up,ORDER[3],LENGTHUNIT[&quot;metre&quot;,1]],USAGE[SCOPE[&quot;Geodesy. Navigation and positioning using GPS satellite system.&quot;],AREA[&quot;World.&quot;],BBOX[-90,-180,90,180]],ID[&quot;EPSG&quot;,4979]]">
     <GCP Id="1" Info="GCP1" Pixel="0" Line="0" X="2.766610117165289" Y="40.867629249542226" Z="47.44995130971074"/>
@@ -327,18 +326,18 @@ The TIFF and GeoTIFF tags used to annotate SAR image MDS are described in the fo
 | BitsPerSample | 258 | 32 or 16 | Number of bits per component. |
 | Compression | 259 | 32946 (DEFLATE), 34887 (LERC), 50000 (ZSTD) | Compression scheme used on the image data. |
 | LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD |
-| PhotometricInterpretation | 262 | 1 | Colour space of the image.<br>Always set to 1 (minimum value is black). |
-| ImageDescription | 270 | Variable | A string that describes the image.<br>Examples: “BIOMASS L1a” and “BIOMASS L1b”. |
-| SamplesPerPixel | 277 | 3, 4 | The number of components per pixel.<br>Always set to 4 for L1a/b, i.e., one per polarisation in the order defined by PolarisationsSequence, can be 3 or 4 for L1c. |
-| PlanarConfiguration | 284 | 2 | How the components of each pixel are stored.<br>Always set to 2 (separate). |
+| PhotometricInterpretation | 262 | 1 | Colour space of the image. <br> Always set to 1 (minimum value is black). |
+| ImageDescription | 270 | Variable | A string that describes the image. <br> Examples: “BIOMASS L1a” and “BIOMASS L1b”. |
+| SamplesPerPixel | 277 | 3, 4 | The number of components per pixel. <br> Always set to 4 for L1a/b, i.e., one per polarisation in the order defined by PolarisationsSequence, can be 3 or 4 for L1c. |
+| PlanarConfiguration | 284 | 2 | How the components of each pixel are stored. <br> Always set to 2 (separate). |
 | Software | 305 | Variable | Software name and version that created the image. |
-| DateTime | 306 | Variable | Date and time of image creation in the format:<br>YYYY:MM:DD HH:MM:SS |
-| TileWidth | 322 | Variable | The tile width in pixels.<br>This is the number of columns in each tile. |
-| TileLength | 323 | Variable | The tile length (height) in pixels.<br>This is the number of rows in each tile. |
+| DateTime | 306 | Variable | Date and time of image creation in the format: <br> YYYY:MM:DD HH:MM:SS |
+| TileWidth | 322 | Variable | The tile width in pixels. <br> This is the number of columns in each tile. |
+| TileLength | 323 | Variable | The tile length (height) in pixels. <br> This is the number of rows in each tile. |
 | TileOffsets | 324 | Variable | For each tile, the byte offset of that tile, as compressed and stored on disk. |
 | TileByteCounts | 325 | Variable | For each tile, the number of (compressed) bytes in that tile. |
-| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel.<br>Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
-| ModelTiePointTag | 33922 | N \* (pixel, line, lat, long, h) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene, i.e.:<br>- 5 tie points along range direction<br>- 1 tie point each 10 seconds along azimuth direction<br>Note: values have been computed in order to have an overall accuracy not worse than 100m (above ellipsoid). |
+| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel. <br> Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
+| ModelTiePointTag | 33922 | N \* (pixel, line, lat, long, h) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene, i.e.: <br> - 5 tie points along range direction <br> - 1 tie point each 10 seconds along azimuth direction <br> Note: values have been computed in order to have an overall accuracy not worse than 100m (above ellipsoid). |
 | GeoKeyDirectoryTag | 34735 | Variable | Contains the value of all GeoTIFF keys of type SHORT and the location of the values for GeoTIFF keys of other types. |
 | `GDAL_METADATA` | 42112 | Variable | Contains GDAL metadata (see table below) |
 | `GDAL_NODATA` | 42113 | Variable | ASCII encoded nodata or background pixel value. |
@@ -371,15 +370,15 @@ Overviews are sub-sampled versions of a SAR image. Adding one or more overviews 
 The following (minimum) number of overviews is foreseen:
 
 - for L1a products:
-    1. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x17m)
-    2. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x42m)
-    3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x83m)
-    4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1kmx167m)
+  1. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x17m)
+  2. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x42m)
+  3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x83m)
+  4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1kmx167m)
 - for L1b products:
-    1. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x100m)
-    2. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x250m)
-    3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x500m)
-    4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1x1km)
+  1. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x100m)
+  2. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x250m)
+  3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x500m)
+  4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1x1km)
 
 (sec:pfd-l1-4-3)=
 ### 4.3 Annotation data sets (ADS)
@@ -653,7 +652,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of coordinate conversion records within the list.* | `xsd:unsignedInt` | *required* |
-| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values.<br>Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
+| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. <br> Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
 
 :::
 
@@ -701,9 +700,9 @@ classDiagram
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for coordinate conversion polynomial [s]. | `doubleWithUnit` | 1 |
 | sr0 | Slant range origin used for ground range calculation [m]. | `doubleWithUnit` | 1 |
-| `slantToGroundCoefficients` | Coefficients to convert from slant range to ground range.<br>`Ground range = g0 + g1(sr-sr0) + g2(sr-sr0)^2 + g3(sr-sr0)^3 + g4(sr-sr0)^4 + ... + gN(sr-sr0)^N`<br>where `sr` is the slant range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
+| `slantToGroundCoefficients` | Coefficients to convert from slant range to ground range. <br> `Ground range = g0 + g1(sr-sr0) + g2(sr-sr0)^2 + g3(sr-sr0)^3 + g4(sr-sr0)^4 + ... + gN(sr-sr0)^N` <br> where `sr` is the slant range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
 | gr0 | Ground range origin used for slant range calculation [m]. | `doubleWithUnit` | 1 |
-| `groundToSlantCoefficients` | Coefficients to convert from ground range to slant range coefficients.<br>`Slant range = s0 + s1(gr-gr0) + s2(gr-gr0)^2 + s3(gr-gr0)^3 + s4(gr-gr0)^4 + ... + sN(gr-gr0)^N`<br>where `gr` is the ground range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
+| `groundToSlantCoefficients` | Coefficients to convert from ground range to slant range coefficients. <br> `Slant range = s0 + s1(gr-gr0) + s2(gr-gr0)^2 + s3(gr-gr0)^3 + s4(gr-gr0)^4 + ... + sN(gr-gr0)^N` <br> where `gr` is the ground range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
 
 :::
 
@@ -814,7 +813,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of SWP records within the list.* | `xsd:unsignedInt` | *required* |
-| swp | SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time.<br>Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
+| swp | SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time. <br> Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
 
@@ -826,7 +825,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of SWL records within the list.* | `xsd:unsignedInt` | *required* |
-| swl | SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time.<br>Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
+| swl | SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time. <br> Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
 
@@ -838,7 +837,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of PRF records within the list.* | `xsd:unsignedInt` | *required* |
-| prf | PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time.<br>List `maxOccurs` is set to 5, considered as worst case. | `stateType` | 1.. 5 |
+| prf | PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time. <br> List `maxOccurs` is set to 5, considered as worst case. | `stateType` | 1.. 5 |
 
 :::
 
@@ -850,7 +849,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of transmitted pulse records within the list.* | `xsd:unsignedInt` | *required* |
-| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time.<br>List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
+| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. <br> List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
 
 :::
 
@@ -1161,7 +1160,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of in/out-of-band power ratio measurements for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `powerRatio` | In/out-of-band power ratio measurements.<br>Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
+| `powerRatio` | In/out-of-band power ratio measurements. <br> Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
 
 :::
 
@@ -1317,7 +1316,7 @@ classDiagram
 | `bistaticDelayCorrectionFlag` | True if bistatic delay correction was applied, False otherwise. | bool | 1 |
 | `bistaticDelayCorrectionMethod` | Method used for bistatic delay correction (Bulk or Full). | `bistaticDelayCorrectionMethodType` | 1 |
 | `rangeSpreadingLossCompensationFlag` | True if range spreading loss compensation was performed, False otherwise. | bool | 1 |
-| `referenceRange` | Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by `1/Grsl(R)`, where: <br>- `Grsl(R) = cuberoot(rRef/R)`<br>- `R` = slant range of sample. | `doubleWithUnit` | 1 |
+| `referenceRange` | Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by `1/Grsl(R)`, where: <br> - `Grsl(R) = cuberoot(rRef/R)` <br> - `R` = slant range of sample. | `doubleWithUnit` | 1 |
 | `processingGainList` | Processing gain computed and applied multiplicatively to the image during processing for all the polarisations. | `processingGainListType` | 1 |
 | `polarimetricCorrectionFlag` | True if polarimetric correction has been performed, False otherwise. | bool | 1 |
 | `ionosphereHeightDefocusingFlag` | True if defocusing at ionosphere height has been performed, False otherwise. | bool | 1 |
@@ -1484,7 +1483,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of internal calibration sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses.<br>Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
+| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses. <br> Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
 
 :::
 
@@ -1597,7 +1596,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of noise sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `noiseSequence` | Noise parameters derived from noise packets.<br>List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
+| `noiseSequence` | Noise parameters derived from noise packets. <br> List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
 
 :::
 
@@ -1923,7 +1922,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of* `dcEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
-| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing.<br>Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
+| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
 
 :::
 
@@ -1972,8 +1971,8 @@ classDiagram
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for polynomial [s]. | `doubleWithUnit` | 1 |
-| geometryDCPolynomial | Doppler Centroid estimated from orbit and attitude, expressed as the following polynomial (assuming 5 coefficients):<br>`DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4`<br>where `tSR` is the two-way slant range time. | `floatArray` | 1 |
-| combinedDCPolynomial | Doppler Centroid estimated from both orbit and attitude and data, expressed as the following polynomial (assuming 5 coefficients):<br>`DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4`<br>where `tSR` is the two-way slant range time. | `floatArray` | 1 |
+| geometryDCPolynomial | Doppler Centroid estimated from orbit and attitude, expressed as the following polynomial (assuming 5 coefficients): <br> `DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4` <br> where `tSR` is the two-way slant range time. | `floatArray` | 1 |
+| combinedDCPolynomial | Doppler Centroid estimated from both orbit and attitude and data, expressed as the following polynomial (assuming 5 coefficients): <br> `DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4` <br> where `tSR` is the two-way slant range time. | `floatArray` | 1 |
 | combinedDCValues | Combined Doppler Centroid estimates [Hz]. Each estimate represents the Doppler Centroid frequency at the slant range time specified by combinedDCSlantRangeTimes, estimated within the current block. The values are averaged on all the polarisations used for estimation. | `doubleArrayWithUnits` | 1 |
 | combinedDCSlantRangeTimes | Two-way slant range times combinedDCValues are referred to [s]. | `doubleArrayWithUnits` | 1 |
 | combinedDCRMSError | The RMS error of the Doppler Centroid estimate [Hz]. It is calculated as the average of the individual RMS residual errors between input fine Doppler Centroid estimates and the fitted polynomial. If the Doppler Centroid was not estimated with combined approach, this is set to 0. | `doubleWithUnit` | 1 |
@@ -1989,7 +1988,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of* `fmRateEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
-| `fmRateEstimate` | Frequency Modulation rate estimate record.<br>Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
+| `fmRateEstimate` | Frequency Modulation rate estimate record. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
 
 :::
 
@@ -2494,8 +2493,8 @@ The LUT ADS file is organised as follows:
 - a *dimensions* group, where names and lengths of the dimensions used when creating data arrays (variables) are defined;
 - a series of *coordinate variables*, containing special variables to store the axes data values for each dimension in the *dimensions* group;
 - a series of *components*, each one composed by a group of variables which can be divided in:
-    - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *dimensions* group;
-    - ancillary scalar variables containing other useful metadata to complete the data definition.
+  - the data arrays, storing the annotation Look-Up Tables themselves. A variable represents an array of values of the same data type and it is defined over two or more dimensions from the *dimensions* group;
+  - ancillary scalar variables containing other useful metadata to complete the data definition.
 
 Note that the LUT are defined over different sampling grids, depending on their specific definition, on the point in the processing chain where they have been computed (e.g., RFI masks are defined over a sub-sampled version of the RAW data sampling grid) and on the configured decimation factors.
 
@@ -2533,8 +2532,8 @@ In addition, those included in the following table are added.
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `noDataValueBool` | Pixel value in case of LUT invalid data.<br>Used for Boolean LUT (RFI masks). | bool | 1 |
-| `noDataValueFloat` | Pixel value in case of LUT invalid data.<br>Used for float and double LUT. | float | 1 |
+| `noDataValueBool` | Pixel value in case of LUT invalid data. <br> Used for Boolean LUT (RFI masks). | bool | 1 |
+| `noDataValueFloat` | Pixel value in case of LUT invalid data. <br> Used for float and double LUT. | float | 1 |
 | `referenceAzimuthTime` | Reference azimuth time to be used together with LUT relative azimuth time axes [UTC]. | `timeType` | 1 |
 | `formatVersion` | PFD version | string | 1 |
 
@@ -2574,27 +2573,27 @@ The table below describes the groups of variables. It shall be kept into account
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| group: `rfiMitigation`<br>variables: `rfiTimeMaskHH`, `rfiTimeMaskHV`, `rfiTimeMaskVH`, `rfiTimeMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI time-domain mitigation has been applied (ones) or not (zeros) during L1 processing.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4<br>(only if RFI mitigation step is activated) |
-| group: `rfiMitigation`<br>variables: `rfiFreqMaskHH`, `rfiFreqMaskHV`, `rfiFreqMaskVH`, `rfiFreqMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI frequency-domain mitigation has been applied (ones) or not (zeros) during L1 processing.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4<br>(only if RFI mitigation step is activated) |
-| group: radiometry<br>variable: `sigmaNought` | Two-dimensional map covering the whole SAR image and describing the conversion factor to translate the beta-nought values into sigma-nought ones.<br>The conversion shall be performed in the following way:<br>$\sigma^0=\beta^0\bullet\sigma_{LUT}^0$<br>where:<br>• $\beta^0$ are the values stored in the SAR image MDS (amplitudes) squared;<br>• $\sigma_{LUT}^0$ is this LUT (amplitudes) squared;<br>• $\sigma^0$ are the sigma-nought values after the conversion.<br>Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: radiometry<br>variable: `gammaNought` | As the sigma-nought map, but to translate the beta-nought values into gamma-nought ones.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: `ionosphereCorrection`<br>variable: `faradayRotationPlane` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation plane computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `faradayRotation` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation (final one, including plane) computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `faradayRotationStd` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation expected standard deviation.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `phaseScreen` | Two-dimensional map covering the whole SAR image and describing the phase screen computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: tec | Two-dimensional map covering the whole SAR image and describing the TEC map computed during L1 ionospheric processing.<br>Values are expressed in [TECU].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `rangeShifts` | Two-dimensional map covering the whole SAR image and describing the range shifts computed during L1 ionospheric processing.<br>Values are expressed in [m].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `azimuthShifts` | Two-dimensional map covering the whole SAR image and describing the azimuth shifts computed during L1 ionospheric processing.<br>Values are expressed in [m].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection`<br>variable: `autofocusPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if autofocus step is activated) |
-| group: `ionosphereCorrection`<br>variable: `autofocusPhaseScreenStd` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen standard deviation based on the WLS double integration.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if autofocus step is activated) |
-| group: denoising<br>variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values.<br>Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as amplitudes.<br>The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used):<br>$\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$<br>where:<br>• $\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT;<br>• $\sigma_{LUT}^{noise}$ is this LUT;<br>• $\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion.<br>Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
-| group: geometry<br>variable: latitude | Two-dimensional map covering the whole SAR image and describing the latitude coordinates of each (sub-sampled) pixel.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry<br>variable: longitude | Two-dimensional map covering the whole SAR image and describing the longitude coordinates of each (sub-sampled) pixel.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry<br>variable: height | Two-dimensional map covering the whole SAR image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing.<br>Values are expressed in [m], with the same reference of the used DEM.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry<br>variable: `incidenceAngle` | Two-dimensional map covering the whole SAR image and describing the incidence angle of each (sub-sampled) pixel.<br>Values are computed during L1 processing considering an average height.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry<br>variable: `elevationAngle` | Two-dimensional map covering the whole SAR image and describing the elevation angle of each (sub-sampled) pixel.<br>Values are computed during L1 processing considering an average height.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry<br>variable: `rangeTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along range direction computed using the Digital Elevation Model (DEM).<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry<br>variable: `azimuthTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along azimuth direction computed using the Digital Elevation Model (DEM).<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: `rfiMitigation` <br> variables: `rfiTimeMaskHH`, `rfiTimeMaskHV`, `rfiTimeMaskVH`, `rfiTimeMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI time-domain mitigation has been applied (ones) or not (zeros) during L1 processing. <br> One mask per polarisation is foreseen (by default, 4 in total). <br> `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 <br> (only if RFI mitigation step is activated) |
+| group: `rfiMitigation` <br> variables: `rfiFreqMaskHH`, `rfiFreqMaskHV`, `rfiFreqMaskVH`, `rfiFreqMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI frequency-domain mitigation has been applied (ones) or not (zeros) during L1 processing. <br> One mask per polarisation is foreseen (by default, 4 in total). <br> `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 <br> (only if RFI mitigation step is activated) |
+| group: radiometry <br> variable: `sigmaNought` | Two-dimensional map covering the whole SAR image and describing the conversion factor to translate the beta-nought values into sigma-nought ones. <br> The conversion shall be performed in the following way: <br> $\sigma^0=\beta^0\bullet\sigma_{LUT}^0$ <br> where: <br> • $\beta^0$ are the values stored in the SAR image MDS (amplitudes) squared; <br> • $\sigma_{LUT}^0$ is this LUT (amplitudes) squared; <br> • $\sigma^0$ are the sigma-nought values after the conversion. <br> Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: radiometry <br> variable: `gammaNought` | As the sigma-nought map, but to translate the beta-nought values into gamma-nought ones. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: `ionosphereCorrection` <br> variable: `faradayRotationPlane` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation plane computed during L1 ionospheric processing. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `faradayRotation` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation (final one, including plane) computed during L1 ionospheric processing. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `faradayRotationStd` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation expected standard deviation. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `phaseScreen` | Two-dimensional map covering the whole SAR image and describing the phase screen computed during L1 ionospheric processing. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: tec | Two-dimensional map covering the whole SAR image and describing the TEC map computed during L1 ionospheric processing. <br> Values are expressed in [TECU]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `rangeShifts` | Two-dimensional map covering the whole SAR image and describing the range shifts computed during L1 ionospheric processing. <br> Values are expressed in [m]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `azimuthShifts` | Two-dimensional map covering the whole SAR image and describing the azimuth shifts computed during L1 ionospheric processing. <br> Values are expressed in [m]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection` <br> variable: `autofocusPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen computed during L1 ionospheric processing. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if autofocus step is activated) |
+| group: `ionosphereCorrection` <br> variable: `autofocusPhaseScreenStd` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen standard deviation based on the WLS double integration. <br> Values are expressed in [rad]. <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 <br> (only if autofocus step is activated) |
+| group: denoising <br> variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values. <br> Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as amplitudes. <br> The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used): <br> $\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$ <br> where: <br> • $\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT; <br> • $\sigma_{LUT}^{noise}$ is this LUT; <br> • $\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion. <br> Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. <br> One mask per polarisation is foreseen (by default, 4 in total). <br> `AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
+| group: geometry <br> variable: latitude | Two-dimensional map covering the whole SAR image and describing the latitude coordinates of each (sub-sampled) pixel. <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry <br> variable: longitude | Two-dimensional map covering the whole SAR image and describing the longitude coordinates of each (sub-sampled) pixel. <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry <br> variable: height | Two-dimensional map covering the whole SAR image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. <br> Values are expressed in [m], with the same reference of the used DEM. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry <br> variable: `incidenceAngle` | Two-dimensional map covering the whole SAR image and describing the incidence angle of each (sub-sampled) pixel. <br> Values are computed during L1 processing considering an average height. <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry <br> variable: `elevationAngle` | Two-dimensional map covering the whole SAR image and describing the elevation angle of each (sub-sampled) pixel. <br> Values are computed during L1 processing considering an average height. <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry <br> variable: `rangeTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along range direction computed using the Digital Elevation Model (DEM). <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry <br> variable: `azimuthTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along azimuth direction computed using the Digital Elevation Model (DEM). <br> Values are expressed in [deg]. <br> `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
 
 :::
 
@@ -2609,11 +2608,9 @@ These parameters are configurable.
 
 Here below a sample LUT ADS is reported (obtained with ncdump command).
 
-netcdf bio\_s2\_scs\_\_1s\_20170111t050609\_20170111t050630\_i\_g03\_m03\_c03\_t010\_f001\_lut {
-
-dimensions:
-
 ```text
+netcdf bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_lut {
+dimensions:
         slantRangeTimeRAW = 87 ;
         relativeAzimuthTimeRAW = 322 ;
         rangeFreqRAW = 87 ;
@@ -2829,12 +2826,12 @@ The Overlay ADS is a Keyhole Markup Language (KML) file that describes the produ
 <div class="atbd-figure-content">
 
 <div class="xsd-diagram" style="overflow-x: auto">
-<div style="min-width: 2202px">
+<div style="min-width: 1450px">
 
 ```{mermaid}
 %%{init: {"class": {"useMaxWidth": false}, "state": {"useMaxWidth": false}}}%%
 classDiagram
-  direction LR
+  direction TB
   class kmlType {
     <<complexType>>
     Document : DocumentType [1]
@@ -2996,7 +2993,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form:<br>*lon,lat lon,lat lon,lat lon,lat lon,lat*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: <br> *lon,lat lon,lat lon,lat lon,lat lon,lat* <br> The coordinates must appear in the following order: <br> *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -3104,6 +3101,6 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form:<br>*lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: <br> *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* <br> The coordinates must appear in the following order: <br> *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
