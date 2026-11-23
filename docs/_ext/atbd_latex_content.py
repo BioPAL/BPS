@@ -131,8 +131,65 @@ def _breakable_delimiters(tex: str) -> str:
     return _RIGHT_BRACKET_RE.sub(r"\\bigr", tex)
 
 
+_ENV_RE = re.compile(r"\\(begin|end)\{")
+
+
+def _rows(tex: str) -> list[str]:
+    """Rows of an aligned body: split at the ``\\\\`` of the top level (not inside
+    a group or an environment), alignment marks (``&``) of the top level dropped."""
+    rows: list[str] = []
+    depth = envs = start = 0
+    out: list[str] = []
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        m = _ENV_RE.match(tex, i)
+        if m:
+            envs += 1 if m.group(1) == "begin" else -1
+            close = tex.find("}", m.end())
+            i = len(tex) if close < 0 else close + 1
+            continue
+        if ch == "\\" and tex.startswith("\\\\", i):
+            if depth == 0 and envs == 0:
+                out.append(tex[start:i])
+                rows.append("".join(out))
+                out = []
+                i += 2
+                start = i
+                continue
+            i += 2
+            continue
+        if ch == "\\":
+            i += 2
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+        elif ch == "&" and depth == 0 and envs == 0:
+            out.append(tex[start:i])
+            start = i + 1
+        i += 1
+    out.append(tex[start:])
+    rows.append("".join(out))
+    return [r.strip() for r in rows if r.strip()]
+
+
+def _rows_alternative(tex: str) -> str:
+    """Optional argument of ``\\atbdfitdisplay``: the rows of an aligned body, each
+    broken after its operators (a body too wide to be scaled is set that way)."""
+    rows = _rows(tex)
+    if len(rows) < 2:
+        return ""
+    return "[%s]" % "".join(
+        "\\atbdrow{%s}" % (_breakable_delimiters(r) or r) for r in rows)
+
+
 def _alternative(tex: str) -> str:
-    """Optional argument of the atbdmath.sty macros: the breakable variant."""
+    """Optional argument of the atbdmath.sty macros: the breakable variant
+    (fixed-size brackets, or the rows of a multi-line body)."""
+    if "&" in tex or "\\\\" in tex:
+        return _rows_alternative(tex)
     alt = _breakable_delimiters(tex)
     return "[{%s}]" % alt if alt else ""
 
@@ -228,14 +285,80 @@ _TALL = re.compile(r"\\(?:d?frac|sum|prod|int|begin|binom|sqrt)(?![A-Za-z])")
 _LONG_INLINE_MATH = 30  # characters of TeX: shorter formulas keep their delimiters
 
 
+def _comma_breaks(tex: str) -> str:
+    """``tex`` with a break allowed after each comma of its top level (a list
+    ``yaw, pitch, roll`` wraps in a narrow cell; TeX does not break at the glue
+    of a formula)."""
+    out: list[str] = []
+    depth = 0
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        if ch == "\\":
+            out.append(tex[i:i + 2])
+            i += 2
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+        out.append(ch)
+        if ch == "," and depth == 0 and not tex[i + 1:i + 2].isdigit():
+            out.append("\\allowbreak{}")
+        i += 1
+    return "".join(out)
+
+
 def _breakable(tex: str) -> str:
     """A formula of a table cell without growing delimiters when nothing tall
     needs them: TeX cannot break a line inside ``\\left[ … \\right]``, so a
     long ``[N_pol × N_pol × …]`` overflowed its cell (FH p. 30)."""
-    if _TALL.search(tex):
-        return tex
-    return re.sub(r"\\(?:left|right)(?![A-Za-z])\s*(\\[{}|]|\\[A-Za-z]+|[.\[\]()|])",
-                  lambda m: "" if m.group(1) == "." else m.group(1), tex)
+    if not _TALL.search(tex):
+        tex = re.sub(r"\\(?:left|right)(?![A-Za-z])\s*(\\[{}|]|\\[A-Za-z]+|[.\[\]()|])",
+                     lambda m: "" if m.group(1) == "." else m.group(1), tex)
+    return _comma_breaks(tex)
+
+
+_MATH_BREAK_RE = re.compile(r"(?<=,)|(?<=[=+\-])|(?<=\\times)|(?<=\\cdot)|(?<=\\ )")
+
+
+def _math_atom(tex: str) -> float:
+    """Width, in characters (half an em), of the longest piece of a formula that
+    cannot break (between its commas and operators): letters and digits of the
+    first level 1.1, of the scripts 0.75, of the second level 0.55."""
+    best = width = 0.0
+    depth = 0
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        if ch == "\\":
+            m = re.match(r"\\([A-Za-z]+|.)", tex[i:])
+            name = m.group(1)
+            i += len(m.group(0))
+            if name in ("times", "cdot", " "):
+                width += 0.9 * (0.75 ** min(depth, 2))
+                if depth == 0:
+                    best, width = max(best, width), 0.0
+                continue
+            if name in ("left", "right", "bigl", "bigr", "mathrm", "mathit",
+                        "text", "operatorname", "frac", "mathbf", "allowbreak"):
+                continue
+            width += 1.1 * (0.75 ** min(depth, 2))
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth = max(0, depth - 1)
+        elif ch in "^_":
+            pass
+        elif ch == " ":
+            pass
+        else:
+            width += (0.55 if ch in "[](),.;" else 1.1) * (0.75 ** min(depth, 2))
+            if ch in ",=+-" and depth == 0:
+                best, width = max(best, width), 0.0
+        i += 1
+    return min(13.0, 1.1 * max(best, width))
 
 
 def _caption_inlines(fragment: str) -> list[nodes.Node]:
@@ -329,7 +452,7 @@ def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
         literal = isinstance(parent, nodes.literal)
         for word in str(text).split():
             if isinstance(parent, nodes.math):
-                pieces = [word[:12]]
+                continue
             elif literal and len(word) > _LONG_TABLE_LITERAL:
                 pieces = _LITERAL_BREAK_RE.split(word)
             elif not literal and len(word) > _LONG_TABLE_WORD:
@@ -337,6 +460,8 @@ def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
             else:
                 pieces = [word]
             longest = max(longest, *(_wlen(p, bold) for p in pieces))
+    for math in entry.findall(nodes.math):
+        longest = max(longest, _math_atom(_breakable(math.astext())))
     # A short word cut in several text nodes (``N`` + subscript + ``-N``...)
     # does not break between them.
     for block in entry.findall(nodes.TextElement):
@@ -1808,12 +1933,15 @@ class AtbdLatexContent(SphinxPostTransform):
             # Same width limit as the numbered equations below.
             fitted = text
             if text.count(r"\begin{aligned}") == 1 and text.count(r"\end{aligned}") == 1:
-                fitted = text.replace(r"\begin{aligned}", r"\atbdfitdisplay{").replace(
-                    r"\end{aligned}", "}")
+                inner = text.split(r"\begin{aligned}", 1)[1].split(r"\end{aligned}", 1)[0]
+                fitted = text.replace(
+                    r"\begin{aligned}", r"\atbdfitdisplay%s{" % _rows_alternative(inner)
+                ).replace(r"\end{aligned}", "}")
             elif r"\begin{aligned}" not in text:
                 fitted = _EQUATION_BODY_RE.sub(
-                    lambda m: "%s\\%s{%s}%s" % (m.group(1), _display_macro(m.group(2)),
-                                               m.group(2), m.group(3)),
+                    lambda m: "%s\\%s%s{%s}%s" % (
+                        m.group(1), _display_macro(m.group(2)),
+                        _alternative(m.group(2)), m.group(2), m.group(3)),
                     text, count=1)
             if fitted != text:
                 math.children = []
