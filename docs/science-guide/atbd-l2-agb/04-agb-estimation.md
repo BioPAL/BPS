@@ -188,10 +188,10 @@ flowchart TB
 | *BB* {sup}`t` | Footprint | L2a main product header (`AGB_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates in a 5°×5° neighborhood |
 | *mDGG* | `minimumL2aCoverage` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
 | `refSel` | `referenceSeelection` | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | ‘`refOnly`’ | Combinatorial behaviour for multiple reference data at second iteration |
-| *LCM* | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product classifying the type of land and forest |
+| *LCM* | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product<br>classifying the type of land and forest |
 | $\Omega_{fcrej}$ | `rejectedLandcover` Classes | `AUX_PP2_AGB` (`AUX_FMT`) | List of integers | - | - | Set of landcover class indices to ignore. LCM description can be found in (IODD) |
 | ${\underline{\sigma}}_p^0,\ {\overline{\sigma}}_p^0$ | `backscatterLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}\times$2 float value [scalar] | $0<{\underline{\sigma}}_p^0<{\overline{\sigma}}_p^0<\infty$ | 0.0001,100 for all polarisations | Lower and upper limits on backscatter in linear units |
-| $\underline{\vartheta},\overline{\vartheta}$ | `angleLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{\vartheta}<\overline{\vartheta}{}\leq\frac{\pi}{2}$ | 0,π/2 | Lower and upper limits on the local incidence angle in radians |
+| $\underline{\vartheta},\overline{\vartheta}$ | `angleLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{\vartheta}<\overline{\vartheta}$<br>$\leq\frac{\pi}{2}$ | 0,π/2 | Lower and upper limits on the local incidence angle in radians |
 | $\underline{W},\overline{W}$ | meanAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{W}<\overline{W}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB mean in t/ha |
 | $\underline{U},\overline{U}$ | stdAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{U}<\overline{U}<\infty$ | $10^{-3},10^3$ | Lower and upper limits on the AGB std in t/ha |
 | $\underline{R},\overline{R}$ | relativeAGBLimits | `AUX_PP2_AGB` (`AUX_FMT`) | 2 float value [scalar] | $0\leq\underline{R}<\overline{R}<\infty$ | 0,0.3 | Lower and upper limits on AGB standard deviation relative AGB mean (coefficient of variability), in linear units |
@@ -201,7 +201,7 @@ flowchart TB
 | `useConstantN` | `useConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | Boolean [scalar] | - | False | If True, indexingN=p is forced |
 | $n_p$ | `valuesConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}$floats | (-∞,∞) | (1.0,1.0,1.0) | Values to use if `useConstantN`=True |
 | *mFV* | `minimumPercentageOfFillableVoids` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] of invalid pixels that triggers a new iteration |
-| - | `regressionSolver` | `AUX_PP2_AGB` (`AUX_FMT`) | string | ‘double’, ’float’ | double | Numerical precision of the regression |
+| - | `regressionSolver` | `AUX_PP2_AGB` (`AUX_FMT`) | string | ‘double’,<br>’float’ | double | Numerical precision of the regression |
 
 (sec:atbd-agb-4-1-3)=
 #### 4.1.3 Outputs

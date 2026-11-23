@@ -171,7 +171,7 @@ Let $(t_i,\tau_i)$ be respectively the fast (range) and slow (azimuth) time coor
 (equation-eq-atbd-l1-stack-3-1)=
 \begin{equation}
 \begin{aligned}
-f_{\mathrm{r,\ i}}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\frac{r}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\cos(\psi(\tau_i;r,a)) \\
+f_{\mathrm{r},\ \mathrm{i}}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\frac{r}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\cos(\psi(\tau_i;r,a)) \\
 f_{a,i}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\frac{S_a(\tau_i)-a}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\sin(\psi(\tau_i;r,a))
 \end{aligned}
 \tag{3.1}

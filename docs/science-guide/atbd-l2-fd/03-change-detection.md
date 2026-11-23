@@ -72,7 +72,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
 | - | `subsettingRule` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “geometry” | Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase. |
 
 (sec:atbd-fd-3-2-3)=
@@ -80,7 +80,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | *Calibration step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
 
 (sec:atbd-fd-3-2-4)=
 #### 3.2.4 Algorithm mathematical background
@@ -198,17 +198,17 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor, or *INT subsetting step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
-| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each $\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
-| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each $\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
-| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | string | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed: skp or geometry if phase screens calibration should be applied, none otherwise. |
+| *SCS* | L1c | Stack processor, or<br>*INT subsetting step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
+| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
+| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
+| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | string | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed:<br>skp or geometry if phase screens calibration should be applied, none otherwise. |
 
 (sec:atbd-fd-3-3-3)=
 #### 3.3.3 Outputs
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 
 (sec:atbd-fd-3-3-4)=
 #### 3.3.4 Algorithm mathematical background
@@ -250,8 +250,8 @@ Ground cancellation {rd}`4` is the interferometric combination of two or more im
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration processing step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
-| $k_z$ | Wavenumber | L1c Stack ADS (`L1_PFD`) | M, each $\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
+| *SCS* | L1c | *Calibration processing step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| $k_z$ | Wavenumber | L1c Stack ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
 | $z_0$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value{sup}`*` for all polarizations and all pixels | 30.0 | Desired elevation emphasized from ground cancellation, meters [m] |
 | - | `disableGroundCancellationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | False | True to disable ground cancellation: for debug. |
 | - | `operationalMode` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “single reference” | Choose the Ground Cancellation method to use |
@@ -611,7 +611,7 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $Cov\rightarrow{}Rd$ | - | *Polarimetric covariance matrix computation* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case the polarimetric covariance of the ground cancelled complex data of current stack |
-| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude longitude height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,\mathrm{llh}}\times{}N_{az,\mathrm{llh}} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
+| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude<br>longitude<br>height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,\mathrm{llh}}\times{}N_{az,\mathrm{llh}} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
 | $z_0\rightarrow\delta{}z_{tomo}$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value (see previous note) for all polarizations and all pixels | 30.0 | Tomographic 3D forest points elevation [m], in this case the desired elevation emphasized from ground cancellation |
 | *DGG* | *DGG* | Internal lookup table | - | - | - | DGG sampling |
 | ${\widehat{i}}_{az}$ | Orbit ADS | L1c reference acquisition ADS | - | - | - | L1c stack reference acquisition orbit annotation |

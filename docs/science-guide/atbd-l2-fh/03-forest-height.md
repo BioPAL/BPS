@@ -27,7 +27,7 @@ The availability of a general FNF map allows to predetermine which input data (a
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *FNF* | FNF | Internal resource (IODD) | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
+| *FNF* | FNF | Internal resource<br>(IODD) | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
 | *mF* | `forestCoverageThreshold` | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] relative forest coverage that triggers the computations |
 | *BB* | Footprint | L1c main product header (`L1_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L1c input data in geographical coordinates |
 
@@ -70,7 +70,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
 | - | `subsettingRule` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “geometry” | Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase. |
 
 (sec:atbd-fh-3-2-3)=
@@ -78,7 +78,7 @@ The algorithm applies only to TOM stacks and subsets the stack in order to selec
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | *Calibration step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions, with two CP and one XP | - | L1c stack |
 
 (sec:atbd-fh-3-2-4)=
 #### 3.2.4 Algorithm mathematical background
@@ -197,10 +197,10 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor, or *INT subsetting step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3{sup}`*` acquisitions with two CP and one XP | - | L1c stack |
-| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each $\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
-| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each $\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
-| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | string | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed: skp or geometry if phase screens calibration should be applied, none otherwise. |
+| *SCS* | L1c | Stack processor, or<br>*INT subsetting step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3{sup}`*` acquisitions with two CP and one XP | - | L1c stack |
+| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
+| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
+| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | string | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed:<br>skp or geometry if phase screens calibration should be applied, none otherwise. |
 
 {sup}`*`The nominal case is M=3 acquisitions, but the algorithm works also in contingency case when M=2
 
@@ -209,7 +209,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 
 (sec:atbd-fh-3-3-4)=
 #### 3.3.4 Algorithm mathematical background
@@ -462,16 +462,16 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration step* | M, each acquisition $\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Calibration step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3 acquisitions with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 | - | `spectralDecorrelationCompensationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | True (default value) if range spectral decorrelation compensation has to be performed, False otherwise |
 | - | SNRDecorrelationCompensationFlag | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | True (default value) if SNR decorrelation compensation has to be performed, False otherwise |
 | `pRes` | ProductResolution | `AUX_PP2_2A` (`AUX_FMT`) | float value [scalar] | - | 200.0 | Value in [m] to be used as the resolution on ground grange map and also to perform the coherence averaging in radar coordinates |
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsampling factor, that modules the overall decimation in multilooking within coherence computation |
-| $\sigma_{LUT}^{noise}$ | denoising | L1c Stack ADS (`L1_PFD`) | M, each acquisition $\left[ N_{rg,noise}\times{}N_{az,noise} \right]$ | - | - | denoising LUT |
-| $\sigma_{LUT}^0$ | `sigmaNought` | L1c Stack ADS (`L1_PFD`) | M, each acquisition $\left[ N_{rg,sigma}\times{}N_{az,sigma} \right]$ | - | - | `sigmaNought` LUT |
+| $\sigma_{LUT}^{noise}$ | denoising | L1c Stack ADS (`L1_PFD`) | M, each acquisition<br>$\left[ N_{rg,noise}\times{}N_{az,noise} \right]$ | - | - | denoising LUT |
+| $\sigma_{LUT}^0$ | `sigmaNought` | L1c Stack ADS (`L1_PFD`) | M, each acquisition<br>$\left[ N_{rg,sigma}\times{}N_{az,sigma} \right]$ | - | - | `sigmaNought` LUT |
 | $\alpha$ | `terrainSlope` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\alpha}\times{}N_{az,\alpha} \right]$ | - | - | Terrain slope [rad] |
 | $\theta_0$ | `incidenceAngle` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\theta}\times{}N_{az,\theta} \right]$ | - | - | L1c stack reference acquisition incidence angle [deg] (on inflated ellipsoid) annotation |
-| $k_z$ | wavenumber | L1c Stack ADS (`L1_PFD`) | M, each $\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
+| $k_z$ | wavenumber | L1c Stack ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
 | $\mathrm{B}_r$ | L1c range- bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
 | $B_a$ | L1c azimuth bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
 | $\mathrm{v}_a$ | L1c velocity annotation | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | Average azimuth velocity [m/s] |
@@ -485,7 +485,7 @@ flowchart TB
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | ${\widetilde{\gamma}}_{\mathrm{Obs}}$ | - | *Forest height inversion step* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{bas}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Polarimetric-interferometric coherence for three spatial baselines |
-| $k_z$ | wavenumber | *Forest height inversion step* | M, each $\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Terrain corrected vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
+| $k_z$ | wavenumber | *Forest height inversion step* | M, each<br>$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Terrain corrected vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
 
 (sec:atbd-fh-3-4-4)=
 #### 3.4.4 Algorithm mathematical background
@@ -688,16 +688,16 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | ${\widetilde{\gamma}}_{\mathrm{Obs}}$ | - | *Coherence estimation step* | $\left[ N_{pol}\times{}N_{pol}\times{}N_{bas}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Polarimetric-interferometric coherence for three spatial baselines |
-| $k_z$ | wavenumber | *Coherence estimation step* | M, each $\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Terrain corrected vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
+| $k_z$ | wavenumber | *Coherence estimation step* | M, each<br>$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Terrain corrected vertical wavenumbers [rad/m] computed with respect to incidence on inflated ellipsoid |
 | ${\widetilde{\gamma}}_{\mathrm{deco}}$ | `residualDecorrelation` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value for all pixels ranging 0.0-1.0 | 0.97 | Residual non-volumetric decorrelation to be used in error model computation |
 | $\mathrm{P}_{\mathrm{V}}$ | `verticalReflectivityDefaultProfile` | `AUX_PP2_2A` (`AUX_FMT`) | $N_{\mathrm{h}}$ | deterministic and fixed for all the globe | - | Modeled tomographic volume-only reflectivity profile normalized to unit height |
 | - | `verticalReflectivityOption` | `AUX_PP2_2` A (`AUX_FMT`) | string | - | “default profile” | Specify which vertical reflectivity profile to use: default modelled profile or tomographic profile (out of BPS scope) |
 | - | `modelInversion` | `AUX_PP2_2` A (`AUX_FMT`) | string | - | “dual baseline” | Model inversion algorithm to be used among single or dual baseline |
 | $\alpha$ | `terrainSlope` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\alpha}\times{}N_{az,\alpha} \right]$ | - | - | Terrain slope [deg] |
 | $\mathrm{h}$ | `normalisedHeightEstimationRange` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float value `minMax` | - | [0.0, 1.0] | Range of normalized height values where the canopy height estimation process has to be performed |
-| $k_{\mathrm{h}}$ | `normalisedWavenumberEstimationRange` | `AUX_PP2_2` A (`AUX_FMT`) | 32 float, 1 int `minMax` Num$=N_{k_{\mathrm{h}}}$ | - | [0.0, 2π, 125.0] | Range of normalized wavenumbers values where the canopy height estimation process has to be performed: Num to set sensitivity of 1 [m] for smaller $k_z$ value of 0.05 [1/m] |
-| $\mathrm{m}$ | `groundToVolumeRatioRange` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float , 1 int `minMax` Num$=N_{\mathrm{m}}$ | - | [-20.0, 20.0, 30] | Range of ground to volume ratio values to be used as valid ones [dB] |
-| $\gamma_{\mathrm{TempV}}$ | `temporalDecorrelationEstimationRange` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float, 1 int `minMax` Num${=N}_{\mathrm{TempV}}$ | - | [0.3, 1.0, 30] | Range of temporal decorrelation values to be used as valid ones |
+| $k_{\mathrm{h}}$ | `normalisedWavenumberEstimationRange` | `AUX_PP2_2` A (`AUX_FMT`) | 32 float, 1 int `minMax`<br>Num$=N_{k_{\mathrm{h}}}$ | - | [0.0, 2π, 125.0] | Range of normalized wavenumbers values where the canopy height estimation process has to be performed: Num to set sensitivity of 1 [m] for smaller $k_z$ value of 0.05 [1/m] |
+| $\mathrm{m}$ | `groundToVolumeRatioRange` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float , 1 int `minMax`<br>Num$=N_{\mathrm{m}}$ | - | [-20.0, 20.0, 30] | Range of ground to volume ratio values to be used as valid ones [dB] |
+| $\gamma_{\mathrm{TempV}}$ | `temporalDecorrelationEstimationRange` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float, 1 int `minMax`<br>Num${=N}_{\mathrm{TempV}}$ | - | [0.3, 1.0, 30] | Range of temporal decorrelation values to be used as valid ones |
 | $\mathrm{R}_{\mathrm{TempGV}}$ | `temporalDecorrelationGroundToVolumeRatio` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0, 1.0 | 1.0 | Ratio of temporal decorrelation between ground and volume (0.0 means no temporal decorrelation for ground, while 1.0 means ground and volume are equally impacted by temporal decorrelation) |
 | - | `uncertaintyValidvaluesLimits` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float value | - | [0.0%, 100.0%] | Uncertainty valid values limits: FH estimates are put to no data when corresponding uncertainty values are out of these limits |
 | - | `verticalWavenumberValidvaluesLimits` | `AUX_PP2_2` A (`AUX_FMT`) | 2 float value | - | [0.01, 0.19] | Vertical wavenumber valid values limits in [1/m]: FH estimates are put to no data when corresponding wavenumber values are out of these limits |
@@ -754,18 +754,18 @@ where ${\widetilde{\gamma}}_{\mathrm{Obs}}({k_z}^{nm},\mathrm{w}^{pq})$ denote c
 The inversion relies on the generation of a look-up table containing forward modelled coherence for each value of normalized vertical wavenumber $k_{\mathrm{h}}=k_zz$, scalar temporal decorrelation $\gamma_{\mathrm{TempV}}$ (ancillary parameter) and ground-to-volume ratio $\mathrm{m}$ (ancillary parameter converted between decibels and a linear scale). Mathematically:
 
 $$
-{\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}},\mathrm{m})=\frac{\gamma_{\mathrm{TempV}}{\ \widetilde{\gamma}}_{\mathrm{V0}}(k_{\mathrm{h}})\mathrm{+m-}\mathrm{R}_{\mathrm{TempGV}}(1-\gamma_{\mathrm{TempV}}\mathrm{)m}}{\mathrm{1+m}}
+{\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}},\mathrm{m})=\frac{\gamma_{\mathrm{TempV}}{\ \widetilde{\gamma}}_{\mathrm{V}0}(k_{\mathrm{h}})+\mathrm{m}-\mathrm{R}_{\mathrm{TempGV}}(1-\gamma_{\mathrm{TempV}})\mathrm{m}}{1+\mathrm{m}}
 \tag{3.13}
 $$ (eq:atbd-fh-3-13)
 
 where
 
 $$
-{\widetilde{\gamma}}_{\mathrm{V0}}(k_{\mathrm{h}})=\frac{\sum_{N_{\mathrm{h}}}^{}{\mathrm{P}_{\mathrm{V}}(\mathrm{h})\exp(\mathrm{i}k_{\mathrm{h}}\mathrm{\ h})}}{\sum_{N_{\mathrm{h}}}^{}{\mathrm{P}_{\mathrm{V}}(\mathrm{h})}}
+{\widetilde{\gamma}}_{\mathrm{V}0}(k_{\mathrm{h}})=\frac{\sum_{N_{\mathrm{h}}}^{}{\mathrm{P}_{\mathrm{V}}(\mathrm{h})\exp(\mathrm{i}k_{\mathrm{h}}\ \mathrm{h})}}{\sum_{N_{\mathrm{h}}}^{}{\mathrm{P}_{\mathrm{V}}(\mathrm{h})}}
 \tag{3.14}
 $$ (eq:atbd-fh-3-14)
 
-where from default configuration $\mathrm{h\in}\left[ 0,1 \right]$, $k_{\mathrm{h}}\in\left[ 0,2\pi \right]$, $\mathrm{m\in}\left[ 0.01,100 \right]$, $\gamma_{\mathrm{TempV}}\in\left[ 0.3,1 \right]$, $\mathrm{P}_{\mathrm{V}}(\mathrm{h})$ is the volume-only tomographic reflectivity profile normalised to unit height, $N_{\mathrm{h}}$ the number of height samples (ruling also $\mathrm{h}$ vectors size). The parameter intervals are sampled to generate the LUT with dimensions: $\left[ N_{k_{\mathrm{h}}}\times{}N_{\mathrm{TempV}}\times{}N_{\mathrm{m}} \right]$. For single baseline case the LUT assumes $\mathrm{m=}0$, ${\widetilde{\gamma}}_{\mathrm{VolT}}=1$, the LUT has dimension: $\left[ N_{k_{\mathrm{h}}} \right]$.
+where from default configuration $\mathrm{h}\in\left[ 0,1 \right]$, $k_{\mathrm{h}}\in\left[ 0,2\pi \right]$, $\mathrm{m}\in\left[ 0.01,100 \right]$, $\gamma_{\mathrm{TempV}}\in\left[ 0.3,1 \right]$, $\mathrm{P}_{\mathrm{V}}(\mathrm{h})$ is the volume-only tomographic reflectivity profile normalised to unit height, $N_{\mathrm{h}}$ the number of height samples (ruling also $\mathrm{h}$ vectors size). The parameter intervals are sampled to generate the LUT with dimensions: $\left[ N_{k_{\mathrm{h}}}\times{}N_{\mathrm{TempV}}\times{}N_{\mathrm{m}} \right]$. For single baseline case the LUT assumes $\mathrm{m}=0$, ${\widetilde{\gamma}}_{\mathrm{VolT}}=1$, the LUT has dimension: $\left[ N_{k_{\mathrm{h}}} \right]$.
 
 (sec:atbd-fh-3-5-4-1-3)=
 ###### 3.5.4.1.3 Dual-baseline inversion
@@ -789,9 +789,9 @@ where $\widetilde{k_{\mathrm{h}}}$ results from cost function minimization.
 (sec:atbd-fh-3-5-4-1-4)=
 ###### 3.5.4.1.4 Notes on efficient implementation
 
-{eq}`Relation 3.15 <3.15>` implies the minimization of a compound cost function (sum of two real-valued semi-positive terms) in a 4-dimensional space: $k_{\mathrm{h}},{{\gamma_{\mathrm{TempV}}}^{\min},\gamma_{\mathrm{TempV}}}^{\max}\mathrm{,m}$. The chosen inversion strategy is based on a brute-force approach (note that the terms that depend on the parameters to be minimized are precomputed and available in a LUT, {eq}`relation 3.13 <3.13>`).
+{eq}`Relation 3.15 <3.15>` implies the minimization of a compound cost function (sum of two real-valued semi-positive terms) in a 4-dimensional space: $k_{\mathrm{h}},{{\gamma_{\mathrm{TempV}}}^{\min},\gamma_{\mathrm{TempV}}}^{\max},\mathrm{m}$. The chosen inversion strategy is based on a brute-force approach (note that the terms that depend on the parameters to be minimized are precomputed and available in a LUT, {eq}`relation 3.13 <3.13>`).
 
-As the minimum of any sum of semi-positive real functions is equivalent to the sum of the minima, the minimization problem can be re-expressed as a separable two-stage linear search, each one in a 3-dimensional space: $k_{\mathrm{h}},\gamma_{\mathrm{TempV}}\mathrm{,\ m}$.
+As the minimum of any sum of semi-positive real functions is equivalent to the sum of the minima, the minimization problem can be re-expressed as a separable two-stage linear search, each one in a 3-dimensional space: $k_{\mathrm{h}},\gamma_{\mathrm{TempV}},\ \mathrm{m}$.
 
 Nonetheless, the original formulation requires $\left[ N_{k_{\mathrm{h}}}\times{}N_{\mathrm{TempV}}\times\ N_{\mathrm{TempV}}\ \times{}N_{\mathrm{m}} \right]$ evaluations of the cost function, while the separable one requires only $\left[ {2\ \times{}N}_{k_{\mathrm{h}}}\times{}N_{\mathrm{m}} \right]$ minimizations of 1D arrays of size $N_{\mathrm{TempV}}$, followed by a minimization over a 2D array of size $\left[ N_{k_{\mathrm{h}}}\times{}N_{\mathrm{m}} \right]$.
 
@@ -803,7 +803,7 @@ As an example, with a LUT of size $\left[ N_{k_{\mathrm{h}}}=125,\ \ N_{\mathrm{
 The alternative forest height inversion method is single-baseline {rd}`6` {rd}`9`, inversion is computed for each baseline. For each baseline cost function minimized is:
 
 $$
-\min_{k_{\mathrm{h}}}\left\vert t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}}=1,\mathrm{m=0}) \right]-t\left[ {\widetilde{\gamma}}_c({k_z}^{nm}) \right] \right\vert
+\min_{k_{\mathrm{h}}}\left\vert t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}}=1,\mathrm{m}=0) \right]-t\left[ {\widetilde{\gamma}}_c({k_z}^{nm}) \right] \right\vert
 \tag{3.17}
 $$ (eq:atbd-fh-3-17)
 
@@ -839,14 +839,14 @@ where $\varepsilon=0.01$ is an adjustment factor.
 The theoretical forward modelled volume-only coherence after applying a residual non-volumetric decorrelation is calculated for normalized vertical wavenumber $\widetilde{k_{\mathrm{h}}}$ resulting from estimation described in {sec}`3.5.4.1.3` for dual-baseline and in {sec}`3.5.4.1.5` for each single-baseline, as
 
 $$
-{{\widetilde{\gamma}}_{\mathrm{VolT}\mathrm{deco}}=\widetilde{\gamma}}_{\mathrm{VolT}}(\widetilde{k_{\mathrm{h}}}\ ,\gamma_{\mathrm{TempV}}=1,\mathrm{m=0}){\widetilde{\gamma}}_{\mathrm{deco}}
+{{\widetilde{\gamma}}_{\mathrm{VolT}\mathrm{deco}}=\widetilde{\gamma}}_{\mathrm{VolT}}(\widetilde{k_{\mathrm{h}}}\ ,\gamma_{\mathrm{TempV}}=1,\mathrm{m}=0){\widetilde{\gamma}}_{\mathrm{deco}}
 \tag{3.20}
 $$ (eq:atbd-fh-3-20)
 
 where ${\widetilde{\gamma}}_{\mathrm{deco}}\in(0,1)$ is a configuration parameter and ${\widetilde{\gamma}}_{\mathrm{VolT}}$ denotes forward modelled coherence as in {sec}`section 3.5.4.1.2 <3.5.4.1.2>`. ${\widetilde{\gamma}}_{\mathrm{VolT}\mathrm{deco}}$ is inverted following the single-baseline approach in {sec}`3.5.4.1.5` and ${k_{\mathrm{h}}}^{\mathrm{b}}$ results from cost function minimization:
 
 $$
-\min_{k_{\mathrm{h}}}\left\vert t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}}=1,\mathrm{m=0}) \right]-t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}\mathrm{deco}} \right] \right\vert
+\min_{k_{\mathrm{h}}}\left\vert t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}}(k_{\mathrm{h}},\gamma_{\mathrm{TempV}}=1,\mathrm{m}=0) \right]-t\left[ {\widetilde{\gamma}}_{\mathrm{VolT}\mathrm{deco}} \right] \right\vert
 \tag{3.21}
 $$ (eq:atbd-fh-3-21)
 
@@ -943,7 +943,7 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $\mathrm{H}_{\mathrm{F}},\ \mathrm{h}_{\mathrm{b}}\rightarrow{}Rd$ | - | *Forest height inversion step* | 2x $\left[ N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case forest height map and quality index of current stack |
-| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude longitude height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,\mathrm{llh}}\times{}N_{az,\mathrm{llh}} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
+| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude<br>longitude<br>height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,\mathrm{llh}}\times{}N_{az,\mathrm{llh}} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
 | $\mathrm{H}_{\mathrm{F}}\rightarrow\delta{}z_{tomo}$ | - | *Forest height inversion step* | $\left[ N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Tomographic 3D forest points elevation [m], in this case forest height map |
 | *DGG* | *DGG* | Internal lookup table | - | - | - | DGG sampling |
 | ${\widehat{i}}_{az}$ | Orbit ADS | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c stack reference acquisition orbit annotation |

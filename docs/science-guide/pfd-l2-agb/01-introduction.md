@@ -94,7 +94,7 @@ This document is organized as follows:
 | <span id="rd2"></span>`[RD2]` | GDAL library, https://gdal.org/ |
 | <span id="rd3"></span>`[RD3]` | GDAL library Wiki - Cloud Optimized GeoTIFF section, https://trac.osgeo.org/gdal/wiki/CloudOptimizedGeoTIFF#HowtoreaditwithGDAL |
 | <span id="rd4"></span>`[RD4]` | LibTIFF - TIFF Library and Utilities, https://libtiff.gitlab.io/libtiff/ |
-| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff\_tags.shtml |
+| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml |
 | <span id="rd6"></span>`[RD6]` | Network Common Data Form (NetCDF) format, https://www.unidata.ucar.edu/software/netcdf/ |
 | <span id="rd7"></span>`[RD7]` | Network Common Data Form (NetCDF), Python |
 
@@ -105,4 +105,4 @@ https://unidata.github.io/netcdf4-python/
 | <span id="rd8"></span>`[RD8]` | Well-Known Text representation of coordinate reference systems, https://www.iso.org/standard/63094.html |
 | <span id="rd9"></span>`[RD9]` | [PDD] `BIO-BPS-PPD-ARE-010083`, BIOMASS Product Performance Description, I/R 3/0 |
 | <span id="rd10"></span>`[RD10]` | [L1PDF] `BIO-BPS-L1PFD-ARE-010076`, BIOMASS L1 Product Format Specification, I/R 1/2/6 |
-| <span id="rd11"></span>`[RD11]` | https://docs.ogc.org/is/19-008r4/19-008r4.html#\_geotiff\_configuration\_geokeys |
+| <span id="rd11"></span>`[RD11]` | https://docs.ogc.org/is/19-008r4/19-008r4.html#_geotiff_configuration_geokeys |

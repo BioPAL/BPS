@@ -73,21 +73,21 @@ BIOMASS FH L2b Product/
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
-| ∟ FH | 1 | COG | Forest Height image MDS |
-| ∟ Quality | 1 | COG | Forest Height Quality image MDS |
+| &nbsp;&nbsp;&nbsp;∟ FH | 1 | COG | Forest Height image MDS |
+| &nbsp;&nbsp;&nbsp;∟ Quality | 1 | COG | Forest Height Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main | 1 | \| | Main ADS, including: Product DSR Raster Image DSR Input information DSR Processing parameters DSR |
-| ∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
-| ∟ Heat Map | 1 | COG | Pixel wise: sum of weights |
-| ∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including:<br>• Product DSR<br>• Raster Image DSR<br>• Input information DSR<br>• Processing parameters DSR |
+| &nbsp;&nbsp;&nbsp;∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
+| &nbsp;&nbsp;&nbsp;∟ Heat Map | 1 | COG | Pixel wise: sum of weights |
+| &nbsp;&nbsp;&nbsp;∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
-| ∟ quicklook | 4 | PNG | Quick-look ADS, for: FH (from measurement) FH Quality (from measurement) `BPS_FNF` (from annotations) Heat Map (from annotations) |
-| ∟ overlay | 4 | KML | Overlay ADS, for each quicklook |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 4 | PNG | Quick-look ADS, for:<br>• FH (from measurement)<br>• FH Quality (from measurement)<br>• `BPS_FNF` (from annotations)<br>• Heat Map (from annotations) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 4 | KML | Overlay ADS, for each quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fh-proc-annotiations.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fh-proc-annotiations.xsd` | 1 | XSD | RDS |
 
 :::
 

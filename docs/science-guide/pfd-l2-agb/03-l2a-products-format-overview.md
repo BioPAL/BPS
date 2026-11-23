@@ -71,18 +71,18 @@ BIOMASS L2a Product/
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ Ground cancelled backscatter | 3 | COG | Ground cancelled backscatter images MDS (HH/VH/VV, three layers in a single COG file) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Ground cancelled backscatter | 3 | COG | Ground cancelled backscatter images MDS (HH/VH/VV, three layers in a single COG file) |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main | 1 | XML | Main ADS, including: Product DSR Raster image DSR Input information DSR Processing parameters DSR Annotation LUT DSR |
-| ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: FNF, generated outside BPS Local incidence angle |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including:<br>• Product DSR<br>• Raster image DSR<br>• Input information DSR<br>• Processing parameters DSR<br>• Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including:<br>• FNF, generated outside BPS <br>• Local incidence angle |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
-| ∟ quicklook | 1 | PNG | Quick-look ADS, one RGB from measurement |
-| ∟ overlay | 1 | KML | Overlay ADS for the quicklook |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 1 | PNG | Quick-look ADS, one RGB from measurement |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS for the quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `agb-proc-annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `agb-proc-annotation.xsd` | 1 | XSD | RDS |
 
 :::
 

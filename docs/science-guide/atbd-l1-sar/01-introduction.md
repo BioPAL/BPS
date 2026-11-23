@@ -107,7 +107,7 @@ This document is organized as follows:
 (sec:atbd-l1-sar-1-4)=
 ### 1.4 Symbols and Variables
 
-:::{dropdown} Acronyms
+:::{dropdown} Symbols and Variables
 | Acronym | Description |
 |---|---|
 | $f_{\mathrm{r}}$ | Range frequency |
@@ -125,7 +125,7 @@ This document is organized as follows:
 | $\omega_0$ | Wavenumber at carrier frequency |
 | $\lambda$ | The wavelength |
 | $f_{\mathrm{s}}$ | Range sampling frequency |
-| $\mathrm{PRF\ }$ | Pulse repetition frequency |
+| $\mathrm{PRF}$ | Pulse repetition frequency |
 | $K_{\mathrm{r}}$ | Chirp rate |
 | $K_{\mathrm{a}}$ | Doppler rate |
 | $f_{\mathrm{DC}}$ | Doppler centroid |

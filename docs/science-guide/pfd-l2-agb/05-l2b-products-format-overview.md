@@ -78,18 +78,18 @@ BIOMASS L2b Product/
 | ∟ Above Ground Biomass | 1 | COG | Above Ground Biomass image MDS |
 | ∟ Quality | 1 | COG | Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main | 1 | \| | Main ADS, including: Product DSR Raster Image DSR Input information DSR Processing parameters DSR |
-| ∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
-| ∟ Heat Maps | 3 | COG | Three Heat Maps in a single COG, one for each layer: Heat Map Heat Map reference Heat Map additional reference |
-| ∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including:<br>• Product DSR<br>• Raster Image DSR<br>• Input information DSR<br>• Processing parameters DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `BPS_FNF` | 1 | COG | FNF or CFM mask |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Heat Maps | 3 | COG | Three Heat Maps in a single COG, one for each layer:<br>• Heat Map<br>• Heat Map reference<br>• Heat Map additional reference |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Acquisition ID Image | 1 | COG | Pixel wise binary indicator of contributing images |
 | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFC000;color:#000000"> </span> |
-| ∟ quicklook | 5 | PNG | Quick-look ADS, for: AGB (from measurement) AGB quality (from measurement) Heat Map (from annotation) Heat Map reference (from annotation) Heat Map additional reference (from annotation) |
-| ∟ overlay | 5 | KML | Overlay ADS, for each quicklook |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 5 | PNG | Quick-look ADS, for:<br>• AGB (from measurement)<br>• AGB quality (from measurement)<br>• Heat Map (from annotation)<br>• Heat Map reference (from annotation)<br>• Heat Map additional reference (from annotation) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 5 | KML | Overlay ADS, for each quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `agb-proc-annotations.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `agb-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 

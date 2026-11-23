@@ -21,241 +21,136 @@ The MPH main scope is to provide all the information related to the:
 
 For the detailed description of the MPH content and format refer to {ad}`3`. Here just a schematic representation is reported.
 
+(fig:pfd-l1-2)=
+:::{div} atbd-mermaid-figure atbd-text-figure
+
+<div class="atbd-figure-content">
+
+```text
 bio:EarthObservation Root element of metadata representation tailored for BIOMASS SAR products
-
-om:`phenomenonTime` Time coverage of the product
-
-gml:TimePeriod Time coverage of the product as a period
-
-gml:`beginPosition` Start date and time of the product
-
-gml:`endPosition` Stop date and time of the product
-
-om:`resultTime` Time when the sensing data has become available
-
-gml:TimeInstant Identifiable position in time
-
-gml:`timePosition` Date and time of data availability
-
-om:`validTime` Time validity of the product
-
-gml:TimePeriod Time validity of the product as a period
-
-gml:`beginPosition` Validity start date and time of the product
-
-gml:`endPosition` Validity stop date and time of the product
-
-om:procedure Procedure used to sense the data
-
-eop:EarthObservationEquipment Equipment used to sense the data
-
-eop:platform Platform description
-
-eop:Platform Nested element for platform description
-
-eop:`shortName` Satellite name
-
-eop:instrument Instrument description
-
-eop:Instrument Nested element for instrument description
-
-eop:`shortName` Sensor name
-
-eop:sensor Sensor description
-
-eop:Sensor Nested element for sensor description
-
-eop:`sensorType` Sensor type
-
-eop:`operationalMode` Sensor operational mode
-
-eop:`swathIdentifier` Swath identifier
-
-eop:`acquisitionParameters` Acquisition parameters
-
-bio:Acquisition Acquisition description
-
-eop:`orbitNumber` Acquisition orbit number (orbit start)
-
-eop:`lastOrbitNumber` Last orbit number (orbit stop)
-
-eop:`orbitDirection` Orbit direction
-
-eop:`wrsLongitudeGrid` Track number
-
-eop:`wrsLatitudeGrid` Frame number
-
-eop:`ascendingNodeDate` Date and time of ANX
-
-eop:`startTimeFromAscendingNode` Start time from ANX
-
-eop:`completionTimeFromAscendingNode` Stop time from ANX
-
-sar:`polarisationMode` SAR Polarisation mode
-
-sar:`polarisationChannels` SAR Polarisation channels
-
-sar:`antennaLookDirection` SAR antenna look direction
-
-bio:`missionPhase` BIOMASS mission phase
-
-bio:`instrumentConfID` BIOMASS instrument configuration identifier
-
-bio:`dataTakeID` BIOMASS data take identifier
-
-bio:`orbitDriftFlag` BIOMASS orbit drift flag
-
-bio:`globalCoverageID` BIOMASS global coverage identifier
-
-bio:`majorCycleID` BIOMASS major cycle identifier
-
-bio:`repeatCycleID` BIOMASS repeat cycle identifier
-
-om:`observedProperty` Observed property (empty)
-
-om:`featureOfInterest` Observed area
-
-eop:Footprint Footprint description
-
-eop:`multiExtentOf` Footprint representation structure, coordinates in `posList`
-
-gml:MultiSurface
-
-gml:`surfaceMember`
-
-gml:Polygon
-
-gml:exterior
-
-gml:LinearRing
-
-gml:`posList` Footprint points, i.e. 4 corner coordinates of the scene starting with the first-right in flight direction and proceeding CCW (first point to be added as fifth point to close the polygon)
-
-eop:`centerOf` Acquisition centre representation structure
-
-gml:Point
-
-gml:pos Coordinates of the centre of the acquisition
-
-om:result Observation result
-
-eop:EarthObservationResult
-
-eop:browse
-
-eop:BrowseInformation
-
-eop:type Browse type
-
-eop:`referenceSystemIdentifier` Coordinate reference system name
-
-eop:`fileName`
-
-ows:ServiceReference Browse Image filename
-
-ows:RequestMessage download request (empty)
-
-eop:product
-
-bio:ProductInformation
-
-eop:`fileName`
-
-ows:ServiceReference Product filename
-
-ows:RequestMessage download request (empty)
-
-eop:version Product baseline
-
-eop:product (list)
-
-bio:ProductInformation
-
-eop:`fileName`
-
-ows:ServiceReference Product filename (internal files)
-
-ows:RequestMessage download request (empty)
-
-eop:size Product size
-
-bio:rds Representation data file related to xml product
-
-eop:`metaDataProperty` Observation metadata
-
-bio:EarthObservationMetaData
-
-eop:identifier Product identifier
-
-eop:doi Digital Object Identifier
-
-eop:`acquisitionType` Type of acquisition
-
-eop:`productType` Product type
-
-eop:status Status of the product
-
-eop:`downlinkedTo` Downlink information
-
-eop:DownlinkInformation
-
-eop:`acquisitionStation` Acquisition station
-
-eop:`acquisitionDate` Downlink date time
-
-eop:processing Data processing information
-
-bio:ProcessingInformation
-
-eop:`processingCenter` Processing centre
-
-eop:`processingDate` Processing date and time
-
-eop:`processorName` Processor name
-
-eop:`processorVersion` Processor version
-
-eop:`processingLevel` Processing level
-
-eop:`auxiliaryDataSetFileName` Auxiliary DS file name
-
-eop:`processingMode` File Class
-
-bio:`sourceProduct` BIOMASS source product identifier
-
-bio:TAI-UTC Difference between TAI and UTC times of product
-
-bio:`numOfTFs` Number of transfer frames
-
-bio:`numOfTFsWithErrors` Number of transfer frames with errors
-
-bio:`numOfCorruptedTFs` Number of corrupted transfer frames
-
-bio:`numOfISPs` Number of instrument source packets
-
-bio:`numOfISPsWithErrors` Number of instrument source packets with errors
-
-bio:`numOfCorruptedISPs` Number of corrupted instrument source packets
-
-bio:`numOfLines` Number of L0 lines
-
-bio:`numOfMissingLines` Number of L0 missing lines
-
-bio:`numOfCorruptedLines` Number of L0 corrupted lines
-
-bio:`incompleteSlice` Incomplete L0 slice flag
-
-bio:`partialSlice` Partial L0 slice flag
-
-bio:`framesList` List of L1 frames contained in L0
-
-bio:`incompleteFrame` Incomplete L1 frame flag
-
-bio:`partialFrame` Partial L1 frame flag
-
-bio:`refDoc` Reference document
-
-*Main product header (metadata schematic representation)*
+    om:phenomenonTime Time coverage of the product
+        gml:TimePeriod Time coverage of the product as a period
+            gml:beginPosition Start date and time of the product
+            gml:endPosition Stop date and time of the product
+    om:resultTime Time when the sensing data has become available
+        gml:TimeInstant Identifiable position in time
+            gml:timePosition Date and time of data availability
+    om:validTime Time validity of the product
+        gml:TimePeriod Time validity of the product as a period
+            gml:beginPosition Validity start date and time of the product
+            gml:endPosition Validity stop date and time of the product
+    om:procedure Procedure used to sense the data
+        eop:EarthObservationEquipment Equipment used to sense the data
+            eop:platform Platform description
+                eop:Platform Nested element for platform description
+                    eop:shortName Satellite name
+            eop:instrument Instrument description
+                eop:Instrument Nested element for instrument description
+                    eop:shortName Sensor name
+            eop:sensor Sensor description
+                eop:Sensor Nested element for sensor description
+                    eop:sensorType Sensor type
+                    eop:operationalMode Sensor operational mode
+                    eop:swathIdentifier Swath identifier
+            eop:acquisitionParameters Acquisition parameters
+                bio:Acquisition Acquisition description
+                    eop:orbitNumber Acquisition orbit number (orbit start)
+                    eop:lastOrbitNumber Last orbit number (orbit stop)
+                    eop:orbitDirection Orbit direction
+                    eop:wrsLongitudeGrid Track number
+                    eop:wrsLatitudeGrid Frame number
+                    eop:ascendingNodeDate Date and time of ANX
+                    eop:startTimeFromAscendingNode Start time from ANX
+                    eop:completionTimeFromAscendingNode Stop time from ANX
+                    sar:polarisationMode SAR Polarisation mode
+                    sar:polarisationChannels SAR Polarisation channels
+                    sar:antennaLookDirection SAR antenna look direction
+                    bio:missionPhase BIOMASS mission phase
+                    bio:instrumentConfID BIOMASS instrument configuration identifier
+                    bio:dataTakeID BIOMASS data take identifier
+                    bio:orbitDriftFlag BIOMASS orbit drift flag
+                    bio:globalCoverageID BIOMASS global coverage identifier
+                    bio:majorCycleID BIOMASS major cycle identifier
+                    bio:repeatCycleID BIOMASS repeat cycle identifier
+    om:observedProperty Observed property (empty)
+    om:featureOfInterest Observed area
+        eop:Footprint Footprint description
+            eop:multiExtentOf Footprint representation structure, coordinates in posList
+                gml:MultiSurface
+                    gml:surfaceMember
+                        gml:Polygon
+                            gml:exterior
+                                gml:LinearRing
+                                    gml:posList Footprint points, i.e. 4 corner coordinates of the scene starting with the first-right in flight direction and proceeding CCW (first point to be added as fifth point to close the polygon)
+        eop:centerOf Acquisition centre representation structure
+            gml:Point
+                gml:pos Coordinates of the centre of the acquisition
+    om:result Observation result
+        eop:EarthObservationResult
+            eop:browse
+                eop:BrowseInformation
+                    eop:type Browse type
+                    eop:referenceSystemIdentifier Coordinate reference system name
+                    eop:fileName
+                        ows:ServiceReference Browse Image filename
+                            ows:RequestMessage download request (empty)
+            eop:product
+                bio:ProductInformation
+                    eop:fileName
+                        ows:ServiceReference Product filename
+                            ows:RequestMessage download request (empty)
+            eop:version Product baseline
+            eop:product (list)
+                bio:ProductInformation
+                    eop:fileName
+                        ows:ServiceReference Product filename (internal files)
+                            ows:RequestMessage download request (empty)
+                    eop:size Product size
+                    bio:rds Representation data file related to xml product
+    eop:metaDataProperty Observation metadata
+        bio:EarthObservationMetaData
+            eop:identifier Product identifier
+            eop:doi Digital Object Identifier
+            eop:acquisitionType Type of acquisition
+            eop:productType Product type
+            eop:status Status of the product
+                eop:downlinkedTo Downlink information
+                    eop:DownlinkInformation
+                        eop:acquisitionStation Acquisition station
+                        eop:acquisitionDate Downlink date time
+                eop:processing Data processing information
+                    bio:ProcessingInformation
+                        eop:processingCenter Processing centre
+                        eop:processingDate Processing date and time
+                        eop:processorName Processor name
+                        eop:processorVersion Processor version
+                        eop:processingLevel Processing level
+                        eop:auxiliaryDataSetFileName Auxiliary DS file name
+                        eop:processingMode File Class
+                        bio:sourceProduct BIOMASS source product identifier
+            bio:TAI-UTC Difference between TAI and UTC times of product
+            bio:numOfTFs Number of transfer frames
+            bio:numOfTFsWithErrors Number of transfer frames with errors
+            bio:numOfCorruptedTFs Number of corrupted transfer frames
+            bio:numOfISPs Number of instrument source packets
+            bio:numOfISPsWithErrors Number of instrument source packets with errors
+            bio:numOfCorruptedISPs Number of corrupted instrument source packets
+            bio:numOfLines Number of L0 lines
+            bio:numOfMissingLines Number of L0 missing lines
+            bio:numOfCorruptedLines Number of L0 corrupted lines
+            bio:incompleteSlice Incomplete L0 slice flag
+            bio:partialSlice Partial L0 slice flag
+            bio:framesList List of L1 frames contained in L0
+            bio:incompleteFrame Incomplete L1 frame flag
+            bio:partialFrame Partial L1 frame flag
+            bio:refDoc Reference document
+```
+
+</div>
+
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 2</span><span class="caption-text"> — Main product header (metadata schematic representation)</span></p>
+
+:::
 
 (sec:pfd-l1-4-2)=
 ### 4.2 Measurement data sets (MDS)
@@ -308,215 +203,113 @@ Here below a sample VRT file is reported:
 
 \<\<?xml version="1.0" encoding="utf-8"?\>
 
-\<VRTDataset rasterXSize="1380" rasterYSize="21265"\>
-
-\<GCPList Projection="GEOGCRS[&amp;quot;WGS 84&amp;quot;,ENSEMBLE[&amp;quot;World Geodetic System 1984 ensemble&amp;quot;,MEMBER[&amp;quot;World Geodetic System 1984 (Transit)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G730)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G873)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G1150)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G1674)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G1762)&amp;quot;],MEMBER[&amp;quot;World Geodetic System 1984 (G2139)&amp;quot;],ELLIPSOID[&amp;quot;WGS 84&amp;quot;,6378137,298.257223563,LENGTHUNIT[&amp;quot;metre&amp;quot;,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0,ANGLEUNIT[&amp;quot;degree&amp;quot;,0.0174532925199433]],CS[ellipsoidal,3],AXIS[&amp;quot;geodetic latitude (Lat)&amp;quot;,north,ORDER[1],ANGLEUNIT[&amp;quot;degree&amp;quot;,0.0174532925199433]],AXIS[&amp;quot;geodetic longitude (Lon)&amp;quot;,east,ORDER[2],ANGLEUNIT[&amp;quot;degree&amp;quot;,0.0174532925199433]],AXIS[&amp;quot;ellipsoidal height (h)&amp;quot;,up,ORDER[3],LENGTHUNIT[&amp;quot;metre&amp;quot;,1]],USAGE[SCOPE[&amp;quot;Geodesy. Navigation and positioning using GPS satellite system.&amp;quot;],AREA[&amp;quot;World.&amp;quot;],BBOX[-90,-180,90,180]],ID[&amp;quot;EPSG&amp;quot;,4979]]"\>
-
-\<GCP Id="1" Info="GCP1" Pixel="0" Line="0" X="2.766610117165289" Y="40.867629249542226" Z="47.44995130971074"/\>
-
-\<GCP Id="2" Info="GCP2" Pixel="0" Line="2000" X="2.7229108886640847" Y="40.9850029875603" Z="47.6954053286463"/\>
-
-\<!-- omissis --\>
-
-\<GCP Id="46" Info="GCP46" Pixel="1379" Line="18000" X="1.7056110678368939" Y="41.777702020736534" Z="527.1823539100587"/\>
-
-\<GCP Id="47" Info="GCP47" Pixel="1379" Line="20000" X="1.657004737026843" Y="41.8941560464991" Z="652.2788440166041"/\>
-
-\<GCP Id="48" Info="GCP48" Pixel="1379" Line="21264" X="1.6270188350235635" Y="41.96792825220514" Z="688.6636372571811"/\>
-
-\</GCPList\>
-
-\<Metadata\>
-
-\<MDIType key="`AREA_OR_POINT`"\>Area\</MDIType\>
-
-\<MDIType key="`MATRIX_REPRESENTATION`"\>SCATTERING\</MDIType\>
-
-\<MDIType key="`ABS_MAX_Z_ERROR`"\>0.0001\</MDIType\>
-
-\<MDIType key="`PHASE_MAX_Z_ERROR`"\>0.001\</MDIType\>
-
-\<MDIType key="PolarisationsSequence"\>HH HV VH VV\</MDIType\>
-
-\<MDIType key="Swath"\>S2\</MDIType\>
-
-\<MDIType key="DATETIME"\>2024-05-31T13:19:44.034802\</MDIType\>
-
-\<MDIType key="IMAGEDESCRIPTION"\>BIOMASS L1\</MDIType\>
-
-\<MDIType key="SOFTWARE"\>BPS-Biomass L1 Processor-2.2.3\</MDIType\>
-
-\</Metadata\>
-
-\<VRTRasterBand `dataType`="CFloat32" band="1" `subClass`="VRTDerivedRasterBand"\>
-
-\<Description\>HH\</Description\>
-
-\<NoDataValue\>-9999.0\</NoDataValue\>
-
-\<Metadata\>
-
-\<MDIType key="`POLARIMETRIC_INTERP`"\>HH\</MDIType\>
-
-\</Metadata\>
-
-\<ColorInterp\>Gray\</ColorInterp\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff`\</SourceFilename\>
-
-\<SourceBand\>1\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff`\</SourceFilename\>
-
-\<SourceBand\>1\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<PixelFunctionType\>polar\</PixelFunctionType\>
-
-\<SourceTransferType\>Float32\</SourceTransferType\>
-
-\<PixelFunctionArguments amplitude\_type="AMPLITUDE"/\>
-
-\</VRTRasterBand\>
-
-\<VRTRasterBand `dataType`="CFloat32" band="2" `subClass`="VRTDerivedRasterBand"\>
-
-\<Description\>HV\</Description\>
-
-\<NoDataValue\>-9999.0\</NoDataValue\>
-
-\<Metadata\>
-
-\<MDIType key="`POLARIMETRIC_INTERP`"\>HV\</MDIType\>
-
-\</Metadata\>
-
-\<ColorInterp\>Gray\</ColorInterp\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff`\</SourceFilename\>
-
-\<SourceBand\>2\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff`\</SourceFilename\>
-
-\<SourceBand\>2\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<PixelFunctionType\>polar\</PixelFunctionType\>
-
-\<SourceTransferType\>Float32\</SourceTransferType\>
-
-\<PixelFunctionArguments amplitude\_type="AMPLITUDE"/\>
-
-\</VRTRasterBand\>
-
-\<VRTRasterBand `dataType`="CFloat32" band="3" `subClass`="VRTDerivedRasterBand"\>
-
-\<Description\>VH\</Description\>
-
-\<NoDataValue\>-9999.0\</NoDataValue\>
-
-\<Metadata\>
-
-\<MDIType key="`POLARIMETRIC_INTERP`"\>VH\</MDIType\>
-
-\</Metadata\>
-
-\<ColorInterp\>Gray\</ColorInterp\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff`\</SourceFilename\>
-
-\<SourceBand\>3\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff`\</SourceFilename\>
-
-\<SourceBand\>3\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<PixelFunctionType\>polar\</PixelFunctionType\>
-
-\<SourceTransferType\>Float32\</SourceTransferType\>
-
-\<PixelFunctionArguments amplitude\_type="AMPLITUDE"/\>
-
-\</VRTRasterBand\>
-
-\<VRTRasterBand `dataType`="CFloat32" band="4" `subClass`="VRTDerivedRasterBand"\>
-
-\<Description\>VV\</Description\>
-
-\<NoDataValue\>-9999.0\</NoDataValue\>
-
-\<Metadata\>
-
-\<MDIType key="`POLARIMETRIC_INTERP`"\>VV\</MDIType\>
-
-\</Metadata\>
-
-\<ColorInterp\>Gray\</ColorInterp\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff`\</SourceFilename\>
-
-\<SourceBand\>4\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<SimpleSource\>
-
-\<SourceFilename `relativeToVRT`="1"\>`bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff`\</SourceFilename\>
-
-\<SourceBand\>4\</SourceBand\>
-
-\<SourceProperties RasterXSize="1380" RasterYSize="21265"/\>
-
-\</SimpleSource\>
-
-\<PixelFunctionType\>polar\</PixelFunctionType\>
-
-\<SourceTransferType\>Float32\</SourceTransferType\>
-
-\<PixelFunctionArguments amplitude\_type="AMPLITUDE"/\>
-
-\</VRTRasterBand\>
-
-\</VRTDataset\>
+```text
+<VRTDataset rasterXSize="1380" rasterYSize="21265">
+  <GCPList Projection="GEOGCRS[&quot;WGS 84&quot;,ENSEMBLE[&quot;World Geodetic System 1984 ensemble&quot;,MEMBER[&quot;World Geodetic System 1984 (Transit)&quot;],MEMBER[&quot;World Geodetic System 1984 (G730)&quot;],MEMBER[&quot;World Geodetic System 1984 (G873)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1150)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1674)&quot;],MEMBER[&quot;World Geodetic System 1984 (G1762)&quot;],MEMBER[&quot;World Geodetic System 1984 (G2139)&quot;],ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,LENGTHUNIT[&quot;metre&quot;,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[&quot;Greenwich&quot;,0,ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],CS[ellipsoidal,3],AXIS[&quot;geodetic latitude (Lat)&quot;,north,ORDER[1],ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],AXIS[&quot;geodetic longitude (Lon)&quot;,east,ORDER[2],ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],AXIS[&quot;ellipsoidal height (h)&quot;,up,ORDER[3],LENGTHUNIT[&quot;metre&quot;,1]],USAGE[SCOPE[&quot;Geodesy. Navigation and positioning using GPS satellite system.&quot;],AREA[&quot;World.&quot;],BBOX[-90,-180,90,180]],ID[&quot;EPSG&quot;,4979]]">
+    <GCP Id="1" Info="GCP1" Pixel="0" Line="0" X="2.766610117165289" Y="40.867629249542226" Z="47.44995130971074"/>
+    <GCP Id="2" Info="GCP2" Pixel="0" Line="2000" X="2.7229108886640847" Y="40.9850029875603" Z="47.6954053286463"/>
+    <!-- omissis -->
+    <GCP Id="46" Info="GCP46" Pixel="1379" Line="18000" X="1.7056110678368939" Y="41.777702020736534" Z="527.1823539100587"/>
+    <GCP Id="47" Info="GCP47" Pixel="1379" Line="20000" X="1.657004737026843" Y="41.8941560464991" Z="652.2788440166041"/>
+    <GCP Id="48" Info="GCP48" Pixel="1379" Line="21264" X="1.6270188350235635" Y="41.96792825220514" Z="688.6636372571811"/>
+  </GCPList>
+  <Metadata>
+    <MDIType key="AREA_OR_POINT">Area</MDIType>
+    <MDIType key="MATRIX_REPRESENTATION">SCATTERING</MDIType>
+    <MDIType key="ABS_MAX_Z_ERROR">0.0001</MDIType>
+    <MDIType key="PHASE_MAX_Z_ERROR">0.001</MDIType>
+    <MDIType key="PolarisationsSequence">HH HV VH VV</MDIType>
+    <MDIType key="Swath">S2</MDIType>
+    <MDIType key="DATETIME">2024-05-31T13:19:44.034802</MDIType>
+    <MDIType key="IMAGEDESCRIPTION">BIOMASS L1</MDIType>
+    <MDIType key="SOFTWARE">BPS-Biomass L1 Processor-2.2.3</MDIType>
+  </Metadata>
+  <VRTRasterBand dataType="CFloat32" band="1" subClass="VRTDerivedRasterBand">
+    <Description>HH</Description>
+    <NoDataValue>-9999.0</NoDataValue>
+    <Metadata>
+      <MDIType key="POLARIMETRIC_INTERP">HH</MDIType>
+    </Metadata>
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <PixelFunctionType>polar</PixelFunctionType>
+    <SourceTransferType>Float32</SourceTransferType>
+    <PixelFunctionArguments amplitude_type="AMPLITUDE"/>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="CFloat32" band="2" subClass="VRTDerivedRasterBand">
+    <Description>HV</Description>
+    <NoDataValue>-9999.0</NoDataValue>
+    <Metadata>
+      <MDIType key="POLARIMETRIC_INTERP">HV</MDIType>
+    </Metadata>
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff</SourceFilename>
+      <SourceBand>2</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff</SourceFilename>
+      <SourceBand>2</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <PixelFunctionType>polar</PixelFunctionType>
+    <SourceTransferType>Float32</SourceTransferType>
+    <PixelFunctionArguments amplitude_type="AMPLITUDE"/>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="CFloat32" band="3" subClass="VRTDerivedRasterBand">
+    <Description>VH</Description>
+    <NoDataValue>-9999.0</NoDataValue>
+    <Metadata>
+      <MDIType key="POLARIMETRIC_INTERP">VH</MDIType>
+    </Metadata>
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff</SourceFilename>
+      <SourceBand>3</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff</SourceFilename>
+      <SourceBand>3</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <PixelFunctionType>polar</PixelFunctionType>
+    <SourceTransferType>Float32</SourceTransferType>
+    <PixelFunctionArguments amplitude_type="AMPLITUDE"/>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="CFloat32" band="4" subClass="VRTDerivedRasterBand">
+    <Description>VV</Description>
+    <NoDataValue>-9999.0</NoDataValue>
+    <Metadata>
+      <MDIType key="POLARIMETRIC_INTERP">VV</MDIType>
+    </Metadata>
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_abs.tiff</SourceFilename>
+      <SourceBand>4</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">bio_s2_scs__1s_20170111t050609_20170111t050630_i_g03_m03_c03_t010_f001_i_phase.tiff</SourceFilename>
+      <SourceBand>4</SourceBand>
+      <SourceProperties RasterXSize="1380" RasterYSize="21265"/>
+    </SimpleSource>
+    <PixelFunctionType>polar</PixelFunctionType>
+    <SourceTransferType>Float32</SourceTransferType>
+    <PixelFunctionArguments amplitude_type="AMPLITUDE"/>
+  </VRTRasterBand>
+</VRTDataset>
+```
 
 **Metadata**
 
@@ -534,18 +327,18 @@ The TIFF and GeoTIFF tags used to annotate SAR image MDS are described in the fo
 | BitsPerSample | 258 | 32 or 16 | Number of bits per component. |
 | Compression | 259 | 32946 (DEFLATE), 34887 (LERC), 50000 (ZSTD) | Compression scheme used on the image data. |
 | LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD |
-| PhotometricInterpretation | 262 | 1 | Colour space of the image. Always set to 1 (minimum value is black). |
-| ImageDescription | 270 | Variable | A string that describes the image. Examples: “BIOMASS L1a” and “BIOMASS L1b”. |
-| SamplesPerPixel | 277 | 3, 4 | The number of components per pixel. Always set to 4 for L1a/b, i.e., one per polarisation in the order defined by PolarisationsSequence, can be 3 or 4 for L1c. |
-| PlanarConfiguration | 284 | 2 | How the components of each pixel are stored. Always set to 2 (separate). |
+| PhotometricInterpretation | 262 | 1 | Colour space of the image.<br>Always set to 1 (minimum value is black). |
+| ImageDescription | 270 | Variable | A string that describes the image.<br>Examples: “BIOMASS L1a” and “BIOMASS L1b”. |
+| SamplesPerPixel | 277 | 3, 4 | The number of components per pixel.<br>Always set to 4 for L1a/b, i.e., one per polarisation in the order defined by PolarisationsSequence, can be 3 or 4 for L1c. |
+| PlanarConfiguration | 284 | 2 | How the components of each pixel are stored.<br>Always set to 2 (separate). |
 | Software | 305 | Variable | Software name and version that created the image. |
-| DateTime | 306 | Variable | Date and time of image creation in the format: YYYY:MM:DD HH:MM:SS |
-| TileWidth | 322 | Variable | The tile width in pixels. This is the number of columns in each tile. |
-| TileLength | 323 | Variable | The tile length (height) in pixels. This is the number of rows in each tile. |
+| DateTime | 306 | Variable | Date and time of image creation in the format:<br>YYYY:MM:DD HH:MM:SS |
+| TileWidth | 322 | Variable | The tile width in pixels.<br>This is the number of columns in each tile. |
+| TileLength | 323 | Variable | The tile length (height) in pixels.<br>This is the number of rows in each tile. |
 | TileOffsets | 324 | Variable | For each tile, the byte offset of that tile, as compressed and stored on disk. |
 | TileByteCounts | 325 | Variable | For each tile, the number of (compressed) bytes in that tile. |
-| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel. Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
-| ModelTiePointTag | 33922 | N \* (pixel, line, lat, long, h) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene, i.e.: - 5 tie points along range direction - 1 tie point each 10 seconds along azimuth direction Note: values have been computed in order to have an overall accuracy not worse than 100m (above ellipsoid). |
+| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel.<br>Set to 3 (IEEE floating point data) or 1 (unsigned integer data). |
+| ModelTiePointTag | 33922 | N \* (pixel, line, lat, long, h) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene, i.e.:<br>- 5 tie points along range direction<br>- 1 tie point each 10 seconds along azimuth direction<br>Note: values have been computed in order to have an overall accuracy not worse than 100m (above ellipsoid). |
 | GeoKeyDirectoryTag | 34735 | Variable | Contains the value of all GeoTIFF keys of type SHORT and the location of the values for GeoTIFF keys of other types. |
 | `GDAL_METADATA` | 42112 | Variable | Contains GDAL metadata (see table below) |
 | `GDAL_NODATA` | 42113 | Variable | ASCII encoded nodata or background pixel value. |
@@ -583,10 +376,10 @@ The following (minimum) number of overviews is foreseen:
     3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x83m)
     4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1kmx167m)
 - for L1b products:
-    5. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x100m)
-    6. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x250m)
-    7. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x500m)
-    8. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1x1km)
+    1. multi-look factors (range x azimuth): 2x2 (ground resolution ~ 100x100m)
+    2. multi-look factors (range x azimuth): 5x5 (ground resolution ~ 250x250m)
+    3. multi-look factors (range x azimuth): 10x10 (ground resolution ~ 500x500m)
+    4. multi-look factors (range x azimuth): 20x20 (ground resolution ~ 1x1km)
 
 (sec:pfd-l1-4-3)=
 ### 4.3 Annotation data sets (ADS)
@@ -860,7 +653,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of coordinate conversion records within the list.* | `xsd:unsignedInt` | *required* |
-| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
+| `coordinateConversion` | Polynomial used to convert image pixels between slant range and ground range. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values.<br>Considering the worst case (entire slice processed non-framed, one entry each 10 seconds), list `maxOccurs` is set to 15. | `coordinateConversionType` | 0 .. 15 |
 
 :::
 
@@ -908,9 +701,9 @@ classDiagram
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for coordinate conversion polynomial [s]. | `doubleWithUnit` | 1 |
 | sr0 | Slant range origin used for ground range calculation [m]. | `doubleWithUnit` | 1 |
-| `slantToGroundCoefficients` | Coefficients to convert from slant range to ground range. `Ground range = g0 + g1(sr-sr0) + g2(sr-sr0)^2 + g3(sr-sr0)^3 + g4(sr-sr0)^4 + ... + gN(sr-sr0)^N` where `sr` is the slant range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
+| `slantToGroundCoefficients` | Coefficients to convert from slant range to ground range.<br>`Ground range = g0 + g1(sr-sr0) + g2(sr-sr0)^2 + g3(sr-sr0)^3 + g4(sr-sr0)^4 + ... + gN(sr-sr0)^N`<br>where `sr` is the slant range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
 | gr0 | Ground range origin used for slant range calculation [m]. | `doubleWithUnit` | 1 |
-| `groundToSlantCoefficients` | Coefficients to convert from ground range to slant range coefficients. `Slant range = s0 + s1(gr-gr0) + s2(gr-gr0)^2 + s3(gr-gr0)^3 + s4(gr-gr0)^4 + ... + sN(gr-gr0)^N` where `gr` is the ground range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
+| `groundToSlantCoefficients` | Coefficients to convert from ground range to slant range coefficients.<br>`Slant range = s0 + s1(gr-gr0) + s2(gr-gr0)^2 + s3(gr-gr0)^3 + s4(gr-gr0)^4 + ... + sN(gr-gr0)^N`<br>where `gr` is the ground range distance to the desired pixel and `N` is the number of coefficients in the array minus one. | `doubleArray` | 1 |
 
 :::
 
@@ -1021,7 +814,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of SWP records within the list.* | `xsd:unsignedInt` | *required* |
-| swp | SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
+| swp | SWP record [s]. This record holds the SWP for the given Zero Doppler azimuth time.<br>Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
 
@@ -1033,7 +826,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of SWL records within the list.* | `xsd:unsignedInt` | *required* |
-| swl | SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time. Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
+| swl | SWL record [s]. This record holds the SWL for the given Zero Doppler azimuth time.<br>Considering the worst case (entire slice processed non-framed, one change each 10 seconds), list `maxOccurs` is set to 15. | `stateType` | 1.. 15 |
 
 :::
 
@@ -1045,7 +838,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of PRF records within the list.* | `xsd:unsignedInt` | *required* |
-| prf | PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time. List `maxOccurs` is set to 5, considered as worst case. | `stateType` | 1.. 5 |
+| prf | PRF record [Hz]. This record holds the PRF for the given Zero Doppler azimuth time.<br>List `maxOccurs` is set to 5, considered as worst case. | `stateType` | 1.. 5 |
 
 :::
 
@@ -1057,7 +850,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of transmitted pulse records within the list.* | `xsd:unsignedInt` | *required* |
-| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time. List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
+| `txPulse` | Transmitted pulse record. This record holds the nominal transmitted pulse information for the given Zero Doppler azimuth time.<br>List `maxOccurs` is set to 5, considered as worst case. | `txPulseType` | 1.. 5 |
 
 :::
 
@@ -1368,7 +1161,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of in/out-of-band power ratio measurements for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `powerRatio` | In/out-of-band power ratio measurements. Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
+| `powerRatio` | In/out-of-band power ratio measurements.<br>Considering the worst case (entire slice processed non-framed, one entry each 5 seconds), list `maxOccurs` is set to 30. | `powerRatioType` | 1 .. 30 |
 
 :::
 
@@ -1524,7 +1317,7 @@ classDiagram
 | `bistaticDelayCorrectionFlag` | True if bistatic delay correction was applied, False otherwise. | bool | 1 |
 | `bistaticDelayCorrectionMethod` | Method used for bistatic delay correction (Bulk or Full). | `bistaticDelayCorrectionMethodType` | 1 |
 | `rangeSpreadingLossCompensationFlag` | True if range spreading loss compensation was performed, False otherwise. | bool | 1 |
-| `referenceRange` | Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by `1/Grsl(R)`, where: - `Grsl(R) = cuberoot(rRef/R)` - `R` = slant range of sample. | `doubleWithUnit` | 1 |
+| `referenceRange` | Range spreading loss reference slant range [m]. The range spreading loss is compensated by amplitude scaling each range sample by `1/Grsl(R)`, where: <br>- `Grsl(R) = cuberoot(rRef/R)`<br>- `R` = slant range of sample. | `doubleWithUnit` | 1 |
 | `processingGainList` | Processing gain computed and applied multiplicatively to the image during processing for all the polarisations. | `processingGainListType` | 1 |
 | `polarimetricCorrectionFlag` | True if polarimetric correction has been performed, False otherwise. | bool | 1 |
 | `ionosphereHeightDefocusingFlag` | True if defocusing at ionosphere height has been performed, False otherwise. | bool | 1 |
@@ -1691,7 +1484,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of internal calibration sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses. Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
+| `internalCalibrationSequence` | Internal calibration parameters derived from the calibration pulses.<br>Considering the worst case (10 minutes datatake, one entry each 10 seconds), list `maxOccurs` is set to 60. | `internalCalibrationSequenceType` | 0 .. 60 |
 
 :::
 
@@ -1804,7 +1597,7 @@ classDiagram
 |---|---|---|---|
 | *polarisation* |   | `polarisationType` | *required* |
 | *count* | *Number of noise sequences for the current polarisation within the list.* | `xsd:unsignedInt` | *required* |
-| `noiseSequence` | Noise parameters derived from noise packets. List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
+| `noiseSequence` | Noise parameters derived from noise packets.<br>List `maxOccurs` is set to 2 considering one entry for preamble and one for postamble noise sequences. | `noiseSequenceType` | 0 .. 2 |
 
 :::
 
@@ -2130,7 +1923,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of* `dcEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
-| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
+| `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing.<br>Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `dcEstimateType` | 1.. 150 |
 
 :::
 
@@ -2179,8 +1972,8 @@ classDiagram
 |---|---|---|---|
 | `azimuthTime` | Zero Doppler azimuth time corresponding to the start of the current polynomial validity area [UTC]. | `timeType` | 1 |
 | t0 | Two-way slant range time origin for polynomial [s]. | `doubleWithUnit` | 1 |
-| geometryDCPolynomial | Doppler Centroid estimated from orbit and attitude, expressed as the following polynomial (assuming 5 coefficients): `DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4` where `tSR` is the two-way slant range time. | `floatArray` | 1 |
-| combinedDCPolynomial | Doppler Centroid estimated from both orbit and attitude and data, expressed as the following polynomial (assuming 5 coefficients): `DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4` where `tSR` is the two-way slant range time. | `floatArray` | 1 |
+| geometryDCPolynomial | Doppler Centroid estimated from orbit and attitude, expressed as the following polynomial (assuming 5 coefficients):<br>`DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4`<br>where `tSR` is the two-way slant range time. | `floatArray` | 1 |
+| combinedDCPolynomial | Doppler Centroid estimated from both orbit and attitude and data, expressed as the following polynomial (assuming 5 coefficients):<br>`DC = d0 + d1(tSR-t0) + d2(tSR-t0)^2 + d3(tSR-t0)^3 + d4(tSR-t0)^4`<br>where `tSR` is the two-way slant range time. | `floatArray` | 1 |
 | combinedDCValues | Combined Doppler Centroid estimates [Hz]. Each estimate represents the Doppler Centroid frequency at the slant range time specified by combinedDCSlantRangeTimes, estimated within the current block. The values are averaged on all the polarisations used for estimation. | `doubleArrayWithUnits` | 1 |
 | combinedDCSlantRangeTimes | Two-way slant range times combinedDCValues are referred to [s]. | `doubleArrayWithUnits` | 1 |
 | combinedDCRMSError | The RMS error of the Doppler Centroid estimate [Hz]. It is calculated as the average of the individual RMS residual errors between input fine Doppler Centroid estimates and the fitted polynomial. If the Doppler Centroid was not estimated with combined approach, this is set to 0. | `doubleWithUnit` | 1 |
@@ -2196,7 +1989,7 @@ classDiagram
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *count* | *Number of* `fmRateEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
-| `fmRateEstimate` | Frequency Modulation rate estimate record. Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
+| `fmRateEstimate` | Frequency Modulation rate estimate record.<br>Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
 
 :::
 
@@ -2599,37 +2392,37 @@ As mentioned in {ref}`Tab. 54 <tab:pfd-l1-54>`, the `overallProductQualityIndex`
 | Bit # | Module/Sub-step | Bit-Flipping Condition |
 |---|---|---|
 | **0** | Input products and auxiliary files ingestion | *- Intentionally left blank, i.e. 0 -* |
-| **1** |   | *- Intentionally left blank, i.e. 0 -* |
-| **2** |   | *- Intentionally left blank, i.e. 0 -* |
-| **3** |   | *- Intentionally left blank, i.e. 0 -* |
+| **1** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
+| **2** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
+| **3** | <span class="atbd-rowspan-copy">Input products and auxiliary files ingestion</span> | *- Intentionally left blank, i.e. 0 -* |
 | **4** | RAW data analysis | RAW data statistics out of boundaries (set to 1 if `invalidRawDataSamples`\>0, otherwise set to 0) |
-| **5** |   | *- Intentionally left blank, i.e. 0 -* |
-| **6** |   | *- Intentionally left blank, i.e. 0 -* |
-| **7** |   | *- Intentionally left blank, i.e. 0 -* |
+| **5** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
+| **6** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
+| **7** | <span class="atbd-rowspan-copy">RAW data analysis</span> | *- Intentionally left blank, i.e. 0 -* |
 | **8** | Internal calibration | Invalid calibration sequences above threshold (set to 1 if `invalidDriftFraction`\>0 or if `invalidReplicaFraction`\>0, otherwise set to 0) |
-| **9** |   | *- Intentionally left blank, i.e. 0 -* |
-| **10** |   | *- Intentionally left blank, i.e. 0 -* |
-| **11** |   | *- Intentionally left blank, i.e. 0 -* |
+| **9** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
+| **10** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
+| **11** | <span class="atbd-rowspan-copy">Internal calibration</span> | *- Intentionally left blank, i.e. 0 -* |
 | **12** | RFI mitigation | *- Intentionally left blank, i.e. 0 -* |
-| **13** |   | *- Intentionally left blank, i.e. 0 -* |
-| **14** |   | *- Intentionally left blank, i.e. 0 -* |
-| **15** |   | *- Intentionally left blank, i.e. 0 -* |
+| **13** | <span class="atbd-rowspan-copy">RFI mitigation</span> | *- Intentionally left blank, i.e. 0 -* |
+| **14** | <span class="atbd-rowspan-copy">RFI mitigation</span> | *- Intentionally left blank, i.e. 0 -* |
+| **15** | <span class="atbd-rowspan-copy">RFI mitigation</span> | *- Intentionally left blank, i.e. 0 -* |
 | **16** | Doppler Centroid estimation | Doppler Centroid estimation fallback from Combined method to Geometry method activated (set to 1 if activated, otherwise set to 0) |
-| **17** |   | Doppler Centroid estimation root mean squared (RMS) error above threshold (set to 1 if *invalidDCEstimatesFraction*\>0, otherwise set to 0) |
-| **18** |   | *- Intentionally left blank, i.e. 0 -* |
-| **19** |   | *- Intentionally left blank, i.e. 0 -* |
+| **17** | <span class="atbd-rowspan-copy">Doppler Centroid estimation</span> | Doppler Centroid estimation root mean squared (RMS) error above threshold (set to 1 if *invalidDCEstimatesFraction*\>0, otherwise set to 0) |
+| **18** | <span class="atbd-rowspan-copy">Doppler Centroid estimation</span> | *- Intentionally left blank, i.e. 0 -* |
+| **19** | <span class="atbd-rowspan-copy">Doppler Centroid estimation</span> | *- Intentionally left blank, i.e. 0 -* |
 | **20** | Range and azimuth compression | *- Intentionally left blank, i.e. 0 -* |
-| **21** |   | *- Intentionally left blank, i.e. 0 -* |
-| **22** |   | *- Intentionally left blank, i.e. 0 -* |
-| **23** |   | *- Intentionally left blank, i.e. 0 -* |
+| **21** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
+| **22** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
+| **23** | <span class="atbd-rowspan-copy">Range and azimuth compression</span> | *- Intentionally left blank, i.e. 0 -* |
 | **24** | Polarimetric and ionospheric corrections | Ionosphere height estimation failing (set to 1 if `ionosphereHeightEstimationFlag`==False, otherwise set to 0) |
-| **25** |   | IRI model used (set to 1 if IRI model is used as fallback solution, due to failure of ionosphere height estimation, or set to 0 if it is used on purpose or not used) |
-| **26** |   | Gaussian filter size out of boundaries (set to 1 if `gaussianFilterComputationFlag`==False, otherwise set to 0) |
-| **27** |   | Inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Sec. 4.3.2 <4.3.2>` and L1 ATBD Sec. 4.10.3.5) (set to 1 in case of inconsistency, otherwise set to 0) |
-| **28** |   | Geomagnetic equator crossing fallback activated, i.e., phase screen and group delay corrections not applied (set to 1 if activated, otherwise set to 0) |
-| **29** |   | *- Intentionally left blank, i.e. 0 -* |
+| **25** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | IRI model used (set to 1 if IRI model is used as fallback solution, due to failure of ionosphere height estimation, or set to 0 if it is used on purpose or not used) |
+| **26** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Gaussian filter size out of boundaries (set to 1 if `gaussianFilterComputationFlag`==False, otherwise set to 0) |
+| **27** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Sec. 4.3.2 <4.3.2>` and L1 ATBD Sec. 4.10.3.5) (set to 1 in case of inconsistency, otherwise set to 0) |
+| **28** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | Geomagnetic equator crossing fallback activated, i.e., phase screen and group delay corrections not applied (set to 1 if activated, otherwise set to 0) |
+| **29** | <span class="atbd-rowspan-copy">Polarimetric and ionospheric corrections</span> | *- Intentionally left blank, i.e. 0 -* |
 | **30** | Autofocus | Number of failing estimations above threshold (set to 1 if `autofocusShiftsApplied`==False, otherwise set to 0) |
-| **31** |   | *- Intentionally left blank, i.e. 0 -* |
+| **31** | <span class="atbd-rowspan-copy">Autofocus</span> | *- Intentionally left blank, i.e. 0 -* |
 
 Note that some bits are intentionally left blank to support user-defined custom information. The quality index bits aim at providing the user with hints for tracing possible problems in case of failures in the processing.
 
@@ -2740,8 +2533,8 @@ In addition, those included in the following table are added.
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `noDataValueBool` | Pixel value in case of LUT invalid data. Used for Boolean LUT (RFI masks). | bool | 1 |
-| `noDataValueFloat` | Pixel value in case of LUT invalid data. Used for float and double LUT. | float | 1 |
+| `noDataValueBool` | Pixel value in case of LUT invalid data.<br>Used for Boolean LUT (RFI masks). | bool | 1 |
+| `noDataValueFloat` | Pixel value in case of LUT invalid data.<br>Used for float and double LUT. | float | 1 |
 | `referenceAzimuthTime` | Reference azimuth time to be used together with LUT relative azimuth time axes [UTC]. | `timeType` | 1 |
 | `formatVersion` | PFD version | string | 1 |
 
@@ -2781,27 +2574,27 @@ The table below describes the groups of variables. It shall be kept into account
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| group: `rfiMitigation` variables: `rfiTimeMaskHH`, `rfiTimeMaskHV`, `rfiTimeMaskVH`, `rfiTimeMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI time-domain mitigation has been applied (ones) or not (zeros) during L1 processing. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 (only if RFI mitigation step is activated) |
-| group: `rfiMitigation` variables: `rfiFreqMaskHH`, `rfiFreqMaskHV`, `rfiFreqMaskVH`, `rfiFreqMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI frequency-domain mitigation has been applied (ones) or not (zeros) during L1 processing. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4 (only if RFI mitigation step is activated) |
-| group: radiometry variable: `sigmaNought` | Two-dimensional map covering the whole SAR image and describing the conversion factor to translate the beta-nought values into sigma-nought ones. The conversion shall be performed in the following way: $\sigma^0=\beta^0\bullet\sigma_{LUT}^0$ where: $\beta^0$ are the values stored in the SAR image MDS (amplitudes) squared; $\sigma_{LUT}^0$ is this LUT (amplitudes) squared; $\sigma^0$ are the sigma-nought values after the conversion. Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: radiometry variable: `gammaNought` | As the sigma-nought map, but to translate the beta-nought values into gamma-nought ones. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: `ionosphereCorrection` variable: `faradayRotationPlane` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation plane computed during L1 ionospheric processing. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `faradayRotation` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation (final one, including plane) computed during L1 ionospheric processing. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `faradayRotationStd` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation expected standard deviation. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `phaseScreen` | Two-dimensional map covering the whole SAR image and describing the phase screen computed during L1 ionospheric processing. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: tec | Two-dimensional map covering the whole SAR image and describing the TEC map computed during L1 ionospheric processing. Values are expressed in [TECU]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `rangeShifts` | Two-dimensional map covering the whole SAR image and describing the range shifts computed during L1 ionospheric processing. Values are expressed in [m]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `azimuthShifts` | Two-dimensional map covering the whole SAR image and describing the azimuth shifts computed during L1 ionospheric processing. Values are expressed in [m]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if ionospheric correction step is activated) |
-| group: `ionosphereCorrection` variable: `autofocusPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen computed during L1 ionospheric processing. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if autofocus step is activated) |
-| group: `ionosphereCorrection` variable: `autofocusPhaseScreenStd` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen standard deviation based on the WLS double integration. Values are expressed in [rad]. `AUX_FMT` LUT group: Image based LUT | matrix (float) | 1 (only if autofocus step is activated) |
-| group: denoising variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values. Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as amplitudes. The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used): $\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$ where: $\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT; $\sigma_{LUT}^{noise}$ is this LUT; $\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion. Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data. One mask per polarisation is foreseen (by default, 4 in total). `AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
-| group: geometry variable: latitude | Two-dimensional map covering the whole SAR image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry variable: longitude | Two-dimensional map covering the whole SAR image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry variable: height | Two-dimensional map covering the whole SAR image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m], with the same reference of the used DEM. `AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
-| group: geometry variable: `incidenceAngle` | Two-dimensional map covering the whole SAR image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry variable: `elevationAngle` | Two-dimensional map covering the whole SAR image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry variable: `rangeTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
-| group: geometry variable: `azimuthTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg]. `AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: `rfiMitigation`<br>variables: `rfiTimeMaskHH`, `rfiTimeMaskHV`, `rfiTimeMaskVH`, `rfiTimeMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI time-domain mitigation has been applied (ones) or not (zeros) during L1 processing.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4<br>(only if RFI mitigation step is activated) |
+| group: `rfiMitigation`<br>variables: `rfiFreqMaskHH`, `rfiFreqMaskHV`, `rfiFreqMaskVH`, `rfiFreqMaskVV` | Two-dimensional masks covering the whole SAR image and describing the areas where RFI frequency-domain mitigation has been applied (ones) or not (zeros) during L1 processing.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: RFI based LUT | matrix (bool) | 4<br>(only if RFI mitigation step is activated) |
+| group: radiometry<br>variable: `sigmaNought` | Two-dimensional map covering the whole SAR image and describing the conversion factor to translate the beta-nought values into sigma-nought ones.<br>The conversion shall be performed in the following way:<br>$\sigma^0=\beta^0\bullet\sigma_{LUT}^0$<br>where:<br>• $\beta^0$ are the values stored in the SAR image MDS (amplitudes) squared;<br>• $\sigma_{LUT}^0$ is this LUT (amplitudes) squared;<br>• $\sigma^0$ are the sigma-nought values after the conversion.<br>Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: radiometry<br>variable: `gammaNought` | As the sigma-nought map, but to translate the beta-nought values into gamma-nought ones.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: `ionosphereCorrection`<br>variable: `faradayRotationPlane` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation plane computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `faradayRotation` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation (final one, including plane) computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `faradayRotationStd` | Two-dimensional map covering the whole SAR image and describing the Faraday Rotation expected standard deviation.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `phaseScreen` | Two-dimensional map covering the whole SAR image and describing the phase screen computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: tec | Two-dimensional map covering the whole SAR image and describing the TEC map computed during L1 ionospheric processing.<br>Values are expressed in [TECU].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `rangeShifts` | Two-dimensional map covering the whole SAR image and describing the range shifts computed during L1 ionospheric processing.<br>Values are expressed in [m].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `azimuthShifts` | Two-dimensional map covering the whole SAR image and describing the azimuth shifts computed during L1 ionospheric processing.<br>Values are expressed in [m].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if ionospheric correction step is activated) |
+| group: `ionosphereCorrection`<br>variable: `autofocusPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen computed during L1 ionospheric processing.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if autofocus step is activated) |
+| group: `ionosphereCorrection`<br>variable: `autofocusPhaseScreenStd` | Two-dimensional map covering the whole SAR image and describing the autofocus phase screen standard deviation based on the WLS double integration.<br>Values are expressed in [rad].<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 1<br>(only if autofocus step is activated) |
+| group: denoising<br>variables: denoisingHH, denoisingHV, denoisingVH, denoisingVV | Two-dimensional maps covering the whole SAR image and describing the conversion factor to translate the SAR image values into denoised values.<br>Note that, depending on the quantity the denoising shall be applied to (beta/sigma/gamma-nought), the denoising map shall be previously converted to the same quantity. This can be done applying the conversion above described for the sigma-nought map, considering that denoising map values are to be interpreted as amplitudes.<br>The denoising operation shall be performed in the following way (assuming sigma-nought quantity is used):<br>$\widetilde{\sigma^0}=\sigma^0-\sigma_{LUT}^{noise}$<br>where:<br>• $\sigma^0$ are the values stored in the SAR image MDS squared and converted into sigma-nought through the dedicated LUT;<br>• $\sigma_{LUT}^{noise}$ is this LUT;<br>• $\widetilde{\sigma^0}$ are the sigma-nought powers after the conversion.<br>Being this LUT defined over a sub-sampled grid with respect to the SAR image, a bilinear interpolation of the LUT is required before its application on the data.<br>One mask per polarisation is foreseen (by default, 4 in total).<br>`AUX_FMT` LUT group: Image based LUT | matrix (float) | 4 |
+| group: geometry<br>variable: latitude | Two-dimensional map covering the whole SAR image and describing the latitude coordinates of each (sub-sampled) pixel.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry<br>variable: longitude | Two-dimensional map covering the whole SAR image and describing the longitude coordinates of each (sub-sampled) pixel.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry<br>variable: height | Two-dimensional map covering the whole SAR image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing.<br>Values are expressed in [m], with the same reference of the used DEM.<br>`AUX_FMT` LUT group: DEM based LUT | matrix (double) | 1 |
+| group: geometry<br>variable: `incidenceAngle` | Two-dimensional map covering the whole SAR image and describing the incidence angle of each (sub-sampled) pixel.<br>Values are computed during L1 processing considering an average height.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry<br>variable: `elevationAngle` | Two-dimensional map covering the whole SAR image and describing the elevation angle of each (sub-sampled) pixel.<br>Values are computed during L1 processing considering an average height.<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry<br>variable: `rangeTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along range direction computed using the Digital Elevation Model (DEM).<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
+| group: geometry<br>variable: `azimuthTerrainSlope` | Two-dimensional map covering the whole SAR image and describing the local terrain slopes along azimuth direction computed using the Digital Elevation Model (DEM).<br>Values are expressed in [deg].<br>`AUX_FMT` LUT group: DEM based LUT | matrix (float) | 1 |
 
 :::
 
@@ -2820,339 +2613,175 @@ netcdf bio\_s2\_scs\_\_1s\_20170111t050609\_20170111t050630\_i\_g03\_m03\_c03\_t
 
 dimensions:
 
-`slantRangeTimeRAW` = 87 ;
-
-`relativeAzimuthTimeRAW` = 322 ;
-
-`rangeFreqRAW` = 87 ;
-
-`slantRangeTimeRGC` = 72 ;
-
-`relativeAzimuthTimeRGC` = 214 ;
-
-`slantRangeTimeSLC` = 69 ;
-
-`relativeAzimuthTimeSLC` = 180 ;
-
+```text
+        slantRangeTimeRAW = 87 ;
+        relativeAzimuthTimeRAW = 322 ;
+        rangeFreqRAW = 87 ;
+        slantRangeTimeRGC = 72 ;
+        relativeAzimuthTimeRGC = 214 ;
+        slantRangeTimeSLC = 69 ;
+        relativeAzimuthTimeSLC = 180 ;
 variables:
-
-float `slantRangeTimeRAW`(`slantRangeTimeRAW`) ;
-
-`slantRangeTimeRAW`:units = "s" ;
-
-float `relativeAzimuthTimeRAW`(`relativeAzimuthTimeRAW`) ;
-
-`relativeAzimuthTimeRAW`:units = "s" ;
-
-float `rangeFreqRAW`(`rangeFreqRAW`) ;
-
-`rangeFreqRAW`:units = "Hz" ;
-
-double `slantRangeTimeRGC`(`slantRangeTimeRGC`) ;
-
-`slantRangeTimeRGC`:units = "s" ;
-
-double `relativeAzimuthTimeRGC`(`relativeAzimuthTimeRGC`) ;
-
-`relativeAzimuthTimeRGC`:units = "s" ;
-
-float `slantRangeTimeSLC`(`slantRangeTimeSLC`) ;
-
-`slantRangeTimeSLC`:units = "s" ;
-
-float `relativeAzimuthTimeSLC`(`relativeAzimuthTimeSLC`) ;
-
-`relativeAzimuthTimeSLC`:units = "s" ;
-
+        float slantRangeTimeRAW(slantRangeTimeRAW) ;
+                slantRangeTimeRAW:units = "s" ;
+        float relativeAzimuthTimeRAW(relativeAzimuthTimeRAW) ;
+                relativeAzimuthTimeRAW:units = "s" ;
+        float rangeFreqRAW(rangeFreqRAW) ;
+                rangeFreqRAW:units = "Hz" ;
+        double slantRangeTimeRGC(slantRangeTimeRGC) ;
+                slantRangeTimeRGC:units = "s" ;
+        double relativeAzimuthTimeRGC(relativeAzimuthTimeRGC) ;
+                relativeAzimuthTimeRGC:units = "s" ;
+        float slantRangeTimeSLC(slantRangeTimeSLC) ;
+                slantRangeTimeSLC:units = "s" ;
+        float relativeAzimuthTimeSLC(relativeAzimuthTimeSLC) ;
+                relativeAzimuthTimeSLC:units = "s" ;
 // global attributes:
-
-:mission = "BIOMASS" ;
-
-:swath = "S2" ;
-
-:`productType` = "SCS" ;
-
-string :`polarisationList` = "H/H", "H/V", "V/H", "V/V" ;
-
-:`startTime` = "2017-01-11T05:06:09.332291" ;
-
-:`stopTime` = "2017-01-11T05:06:30.423772" ;
-
-:`missionPhaseID` = "INT" ;
-
-:`driftPhaseFlag` = "False" ;
-
-:`sensorMode` = "Measurement" ;
-
-:`globalCoverageID` = 3US ;
-
-:`majorCycleID` = 3US ;
-
-:`repeatCycleID` = 3US ;
-
-:`absoluteOrbitNumber` = 10US ;
-
-:`relativeOrbitNumber` = 10US ;
-
-:`orbitPass` = "Ascending" ;
-
-:`platformHeading` = 0. ;
-
-:`dataTakeID` = 1234US ;
-
-:frame = 1US ;
-
-:`productComposition` = "Nominal" ;
-
-:`noDataValueBool` = "False" ;
-
-:`noDataValueFloat` = -9999. ;
-
-:`referenceAzimuthTime` = "2017-01-11T05:06:09.332291" ;
-
-:`formatVersion` = "V1.7.0" ;
-
-:\_NCProperties = "version=2,netcdf=4.9.0,hdf5=1.12.2" ;
-
-group: `rfiMitigation` {
-
-variables:
-
-ubyte `rfiTimeMaskHH`(`relativeAzimuthTimeRAW`, `slantRangeTimeRAW`) ;
-
-`rfiTimeMaskHH`:\_FillValue = 0UB ;
-
-`rfiTimeMaskHH`:description = "RFI Time Domain Mask H/H" ;
-
-ubyte `rfiTimeMaskHV`(`relativeAzimuthTimeRAW`, `slantRangeTimeRAW`) ;
-
-`rfiTimeMaskHV`:\_FillValue = 0UB ;
-
-`rfiTimeMaskHV`:description = "RFI Time Domain Mask H/V" ;
-
-ubyte `rfiTimeMaskVH`(`relativeAzimuthTimeRAW`, `slantRangeTimeRAW`) ;
-
-`rfiTimeMaskVH`:\_FillValue = 0UB ;
-
-`rfiTimeMaskVH`:description = "RFI Time Domain Mask V/H" ;
-
-ubyte `rfiTimeMaskVV`(`relativeAzimuthTimeRAW`, `slantRangeTimeRAW`) ;
-
-`rfiTimeMaskVV`:\_FillValue = 0UB ;
-
-`rfiTimeMaskVV`:description = "RFI Time Domain Mask V/V" ;
-
-ubyte `rfiFreqMaskHH`(`relativeAzimuthTimeRAW`, `rangeFreqRAW`) ;
-
-`rfiFreqMaskHH`:\_FillValue = 0UB ;
-
-`rfiFreqMaskHH`:description = "RFI Frequency Domain Mask H/H" ;
-
-ubyte `rfiFreqMaskHV`(`relativeAzimuthTimeRAW`, `rangeFreqRAW`) ;
-
-`rfiFreqMaskHV`:\_FillValue = 0UB ;
-
-`rfiFreqMaskHV`:description = "RFI Frequency Domain Mask H/V" ;
-
-ubyte `rfiFreqMaskVH`(`relativeAzimuthTimeRAW`, `rangeFreqRAW`) ;
-
-`rfiFreqMaskVH`:\_FillValue = 0UB ;
-
-`rfiFreqMaskVH`:description = "RFI Frequency Domain Mask V/H" ;
-
-ubyte `rfiFreqMaskVV`(`relativeAzimuthTimeRAW`, `rangeFreqRAW`) ;
-
-`rfiFreqMaskVV`:\_FillValue = 0UB ;
-
-`rfiFreqMaskVV`:description = "RFI Frequency Domain Mask V/V" ;
-
-} // group `rfiMitigation`
-
-group: `ionosphereCorrection` {
-
-variables:
-
-float `phaseScreen`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`phaseScreen`:\_FillValue = -9999.f ;
-
-`phaseScreen`:description = "Phase Screen (Bickel & Bates)" ;
-
-`phaseScreen`:units = "rad" ;
-
-float `faradayRotationPlane`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`faradayRotationPlane`:\_FillValue = -9999.f ;
-
-`faradayRotationPlane`:description = "Faraday Rotation Plane" ;
-
-`faradayRotationPlane`:units = "rad" ;
-
-float `faradayRotation`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`faradayRotation`:\_FillValue = -9999.f ;
-
-`faradayRotation`:description = "Faraday Rotation" ;
-
-`faradayRotation`:units = "rad" ;
-
-float `faradayRotationStd`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`faradayRotationStd`:\_FillValue = -9999.f ;
-
-`faradayRotationStd`:description = "Faraday Rotation Std" ;
-
-`faradayRotationStd`:units = "rad" ;
-
-float tec(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-tec:\_FillValue = -9999.f ;
-
-tec:description = "TEC" ;
-
-tec:units = "TECU" ;
-
-float `rangeShifts`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`rangeShifts`:\_FillValue = -9999.f ;
-
-`rangeShifts`:description = "Range Shifts" ;
-
-`rangeShifts`:units = "m" ;
-
-float `azimuthShifts`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`azimuthShifts`:\_FillValue = -9999.f ;
-
-`azimuthShifts`:description = "Azimuth Shifts" ;
-
-`azimuthShifts`:units = "m" ;
-
-float `autofocusPhaseScreen`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`autofocusPhaseScreen`:\_FillValue = -9999.f ;
-
-`autofocusPhaseScreen`:description = "Phase Screen (Autofocus)" ;
-
-`autofocusPhaseScreen`:units = "rad" ;
-
-float `autofocusPhaseScreenStd`(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-`autofocusPhaseScreenStd`:\_FillValue = -9999.f ;
-
-`autofocusPhaseScreenStd`:description = "Phase Screen Std (Autofocus)" ;
-
-`autofocusPhaseScreenStd`:units = "rad" ;
-
-} // group `ionosphereCorrection`
-
+                :mission = "BIOMASS" ;
+                :swath = "S2" ;
+                :productType = "SCS" ;
+                string :polarisationList = "H/H", "H/V", "V/H", "V/V" ;
+                :startTime = "2017-01-11T05:06:09.332291" ;
+                :stopTime = "2017-01-11T05:06:30.423772" ;
+                :missionPhaseID = "INT" ;
+                :driftPhaseFlag = "False" ;
+                :sensorMode = "Measurement" ;
+                :globalCoverageID = 3US ;
+                :majorCycleID = 3US ;
+                :repeatCycleID = 3US ;
+                :absoluteOrbitNumber = 10US ;
+                :relativeOrbitNumber = 10US ;
+                :orbitPass = "Ascending" ;
+                :platformHeading = 0. ;
+                :dataTakeID = 1234US ;
+                :frame = 1US ;
+                :productComposition = "Nominal" ;
+                :noDataValueBool = "False" ;
+                :noDataValueFloat = -9999. ;
+                :referenceAzimuthTime = "2017-01-11T05:06:09.332291" ;
+                :formatVersion = "V1.7.0" ;
+                :_NCProperties = "version=2,netcdf=4.9.0,hdf5=1.12.2" ;
+group: rfiMitigation {
+  variables:
+        ubyte rfiTimeMaskHH(relativeAzimuthTimeRAW, slantRangeTimeRAW) ;
+                rfiTimeMaskHH:_FillValue = 0UB ;
+                rfiTimeMaskHH:description = "RFI Time Domain Mask H/H" ;
+        ubyte rfiTimeMaskHV(relativeAzimuthTimeRAW, slantRangeTimeRAW) ;
+                rfiTimeMaskHV:_FillValue = 0UB ;
+                rfiTimeMaskHV:description = "RFI Time Domain Mask H/V" ;
+        ubyte rfiTimeMaskVH(relativeAzimuthTimeRAW, slantRangeTimeRAW) ;
+                rfiTimeMaskVH:_FillValue = 0UB ;
+                rfiTimeMaskVH:description = "RFI Time Domain Mask V/H" ;
+        ubyte rfiTimeMaskVV(relativeAzimuthTimeRAW, slantRangeTimeRAW) ;
+                rfiTimeMaskVV:_FillValue = 0UB ;
+                rfiTimeMaskVV:description = "RFI Time Domain Mask V/V" ;
+        ubyte rfiFreqMaskHH(relativeAzimuthTimeRAW, rangeFreqRAW) ;
+                rfiFreqMaskHH:_FillValue = 0UB ;
+                rfiFreqMaskHH:description = "RFI Frequency Domain Mask H/H" ;
+        ubyte rfiFreqMaskHV(relativeAzimuthTimeRAW, rangeFreqRAW) ;
+                rfiFreqMaskHV:_FillValue = 0UB ;
+                rfiFreqMaskHV:description = "RFI Frequency Domain Mask H/V" ;
+        ubyte rfiFreqMaskVH(relativeAzimuthTimeRAW, rangeFreqRAW) ;
+                rfiFreqMaskVH:_FillValue = 0UB ;
+                rfiFreqMaskVH:description = "RFI Frequency Domain Mask V/H" ;
+        ubyte rfiFreqMaskVV(relativeAzimuthTimeRAW, rangeFreqRAW) ;
+                rfiFreqMaskVV:_FillValue = 0UB ;
+                rfiFreqMaskVV:description = "RFI Frequency Domain Mask V/V" ;
+  } // group rfiMitigation
+group: ionosphereCorrection {
+  variables:
+        float phaseScreen(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                phaseScreen:_FillValue = -9999.f ;
+                phaseScreen:description = "Phase Screen (Bickel & Bates)" ;
+                phaseScreen:units = "rad" ;
+        float faradayRotationPlane(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                faradayRotationPlane:_FillValue = -9999.f ;
+                faradayRotationPlane:description = "Faraday Rotation Plane" ;
+                faradayRotationPlane:units = "rad" ;
+        float faradayRotation(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                faradayRotation:_FillValue = -9999.f ;
+                faradayRotation:description = "Faraday Rotation" ;
+                faradayRotation:units = "rad" ;
+        float faradayRotationStd(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                faradayRotationStd:_FillValue = -9999.f ;
+                faradayRotationStd:description = "Faraday Rotation Std" ;
+                faradayRotationStd:units = "rad" ;
+        float tec(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                tec:_FillValue = -9999.f ;
+                tec:description = "TEC" ;
+                tec:units = "TECU" ;
+        float rangeShifts(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                rangeShifts:_FillValue = -9999.f ;
+                rangeShifts:description = "Range Shifts" ;
+                rangeShifts:units = "m" ;
+        float azimuthShifts(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                azimuthShifts:_FillValue = -9999.f ;
+                azimuthShifts:description = "Azimuth Shifts" ;
+                azimuthShifts:units = "m" ;
+        float autofocusPhaseScreen(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                autofocusPhaseScreen:_FillValue = -9999.f ;
+                autofocusPhaseScreen:description = "Phase Screen (Autofocus)" ;
+                autofocusPhaseScreen:units = "rad" ;
+        float autofocusPhaseScreenStd(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                autofocusPhaseScreenStd:_FillValue = -9999.f ;
+                autofocusPhaseScreenStd:description = "Phase Screen Std (Autofocus)" ;
+                autofocusPhaseScreenStd:units = "rad" ;
+  } // group ionosphereCorrection
 group: denoising {
-
-variables:
-
-float denoisingHH(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-denoisingHH:\_FillValue = -9999.f ;
-
-denoisingHH:description = "Denoising H/H" ;
-
-float denoisingHV(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-denoisingHV:\_FillValue = -9999.f ;
-
-denoisingHV:description = "Denoising H/V" ;
-
-float denoisingVH(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-denoisingVH:\_FillValue = -9999.f ;
-
-denoisingVH:description = "Denoising V/H" ;
-
-float denoisingVV(`relativeAzimuthTimeSLC`, `slantRangeTimeSLC`) ;
-
-denoisingVV:\_FillValue = -9999.f ;
-
-denoisingVV:description = "Denoising V/V" ;
-
-} // group denoising
-
+  variables:
+        float denoisingHH(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                denoisingHH:_FillValue = -9999.f ;
+                denoisingHH:description = "Denoising H/H" ;
+        float denoisingHV(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                denoisingHV:_FillValue = -9999.f ;
+                denoisingHV:description = "Denoising H/V" ;
+        float denoisingVH(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                denoisingVH:_FillValue = -9999.f ;
+                denoisingVH:description = "Denoising V/H" ;
+        float denoisingVV(relativeAzimuthTimeSLC, slantRangeTimeSLC) ;
+                denoisingVV:_FillValue = -9999.f ;
+                denoisingVV:description = "Denoising V/V" ;
+  } // group denoising
 group: geometry {
-
-variables:
-
-double latitude(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-latitude:\_FillValue = -9999. ;
-
-latitude:description = "Latitude" ;
-
-latitude:units = "deg" ;
-
-double longitude(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-longitude:\_FillValue = -9999. ;
-
-longitude:description = "Longitude" ;
-
-longitude:units = "deg" ;
-
-double height(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-height:\_FillValue = -9999. ;
-
-height:description = "Height" ;
-
-height:units = "m" ;
-
-float `incidenceAngle`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`incidenceAngle`:\_FillValue = -9999.f ;
-
-`incidenceAngle`:description = "Incidence Angle" ;
-
-`incidenceAngle`:units = "deg" ;
-
-float `elevationAngle`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`elevationAngle`:\_FillValue = -9999.f ;
-
-`elevationAngle`:description = "Elevation Angle" ;
-
-`elevationAngle`:units = "deg" ;
-
-float `rangeTerrainSlope`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`rangeTerrainSlope`:\_FillValue = -9999.f ;
-
-`rangeTerrainSlope`:description = "Range Terrain Slope" ;
-
-float `azimuthTerrainSlope`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`azimuthTerrainSlope`:\_FillValue = -9999.f ;
-
-`azimuthTerrainSlope`:description = "Azimuth Terrain Slope" ;
-
-} // group geometry
-
+  variables:
+        double latitude(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                latitude:_FillValue = -9999. ;
+                latitude:description = "Latitude" ;
+                latitude:units = "deg" ;
+        double longitude(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                longitude:_FillValue = -9999. ;
+                longitude:description = "Longitude" ;
+                longitude:units = "deg" ;
+        double height(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                height:_FillValue = -9999. ;
+                height:description = "Height" ;
+                height:units = "m" ;
+        float incidenceAngle(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                incidenceAngle:_FillValue = -9999.f ;
+                incidenceAngle:description = "Incidence Angle" ;
+                incidenceAngle:units = "deg" ;
+        float elevationAngle(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                elevationAngle:_FillValue = -9999.f ;
+                elevationAngle:description = "Elevation Angle" ;
+                elevationAngle:units = "deg" ;
+        float rangeTerrainSlope(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                rangeTerrainSlope:_FillValue = -9999.f ;
+                rangeTerrainSlope:description = "Range Terrain Slope" ;
+        float azimuthTerrainSlope(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                azimuthTerrainSlope:_FillValue = -9999.f ;
+                azimuthTerrainSlope:description = "Azimuth Terrain Slope" ;
+  } // group geometry
 group: radiometry {
-
-variables:
-
-float `sigmaNought`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`sigmaNought`:\_FillValue = -9999.f ;
-
-`sigmaNought`:description = "Sigma Nought" ;
-
-float `gammaNought`(`relativeAzimuthTimeRGC`, `slantRangeTimeRGC`) ;
-
-`gammaNought`:\_FillValue = -9999.f ;
-
-`gammaNought`:description = "Gamma Nought" ;
-
-} // group radiometry
-
+  variables:
+        float sigmaNought(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                sigmaNought:_FillValue = -9999.f ;
+                sigmaNought:description = "Sigma Nought" ;
+        float gammaNought(relativeAzimuthTimeRGC, slantRangeTimeRGC) ;
+                gammaNought:_FillValue = -9999.f ;
+                gammaNought:description = "Gamma Nought" ;
+  } // group radiometry
 }
+```
 
 (sec:pfd-l1-4-3-3)=
 #### 4.3.3 Orbit and attitude ADS
@@ -3173,11 +2802,11 @@ The following rules and properties apply to Quick-look ADS:
 
 BIOMASS products can contain one or two quick-look images, depending on the product type and on the selected colour coding method, which are a combination of the imagery from all the four polarisation channels. This is done exploiting the three Red-Green-Blue (RGB) channels of the PNG image and the Pauli decomposition colour coding scheme, i.e.:
 
-- Red channel: $\left\vert \mathrm{HH-VV} \right\vert$ (double bounce);
-- Green channel: $\left\vert \mathrm{HV+VH} \right\vert$ (volume scattering);
-- Blue channel: $\left\vert \mathrm{HH+VV} \right\vert$ (surface scattering).
+- Red channel: $\left\vert \mathrm{HH}-\mathrm{VV} \right\vert$ (double bounce);
+- Green channel: $\left\vert \mathrm{HV}+\mathrm{VH} \right\vert$ (volume scattering);
+- Blue channel: $\left\vert \mathrm{HH}+\mathrm{VV} \right\vert$ (surface scattering).
 
-or the HSV one, i.e. (see also https://en.wikipedia.org/wiki/HSL\_and\_HSV):
+or the HSV one, i.e. (see also https://en.wikipedia.org/wiki/HSL_and_HSV):
 
 - H: hue values;
 - S: saturation values;
@@ -3367,7 +2996,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: *lon,lat lon,lat lon,lat lon,lat lon,lat* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form:<br>*lon,lat lon,lat lon,lat lon,lat lon,lat*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -3475,6 +3104,6 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form:<br>*lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::

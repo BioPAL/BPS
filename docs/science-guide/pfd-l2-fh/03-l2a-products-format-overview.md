@@ -72,19 +72,19 @@ BIOMASS FH L2a Product/
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ Forest Height | 1 | COG | Forest Height image MDS |
-| ∟ Quality | 1 | COG | Quality image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Height | 1 | COG | Forest Height image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Quality | 1 | COG | Quality image MDS |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main | 1 | XML | Main ADS, including: Product DSR Raster image DSR Input information DSR Processing parameters DSR Annotation LUT DSR |
-| ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including:<br>• Product DSR<br>• Raster image DSR<br>• Input information DSR<br>• Processing parameters DSR<br>• Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including:<br>• FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
 | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
-| ∟ quicklook | 2 | PNG | Quick-look ADS, for each measurement |
-| ∟ overlay | 1 | KML | Overlay ADS, for each quicklook |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 2 | PNG | Quick-look ADS, for each measurement |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS, for each quicklook |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fh-proc-annotations.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fh-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 

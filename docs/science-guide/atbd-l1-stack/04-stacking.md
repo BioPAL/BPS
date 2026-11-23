@@ -158,10 +158,10 @@ where $\left[ \tau_{az,0},\ \tau_{rg,0} \right]^n$ are the acquisition start tim
 (sec:atbd-l1-stack-4-1-3-3)=
 ##### 4.1.3.3 Synthetic Interferogram Computation and Debiasing
 
-By *synthetic interferogram* $\Delta\varphi_{\mathrm{syn,n,r}}$ (or henceforth *DSI*), we refer to the difference, expressed as a phase delay, of the absolute LOS distances at 0-Doppler between a ground target and the orbital positions of the RADAR in two acquisitions. The purpose of this step is to provide the geometrical quantities that are necessary to flatten the raw interferograms, that is, to remove all possible contributions of the DEM, and thus to make it easier for the calibration modules to isolate other possible sources of phase delays, such as ionosphere or baseline errors. For this, we use the results of the coregistration shifts as described in {sec}`Section 4.1.3.2 <4.1.3.2>`., that is, set $\tau_{rg}^r$ and $\tau_{rg}^n$ to be respectively the range time coordinates of primary and secondary frames, computed via inverse geocoding, it is straightforward to compute the distance between the two sensors and the ground target and accordingly convert it into phase delay by applying the following pixelwise conversion:
+By *synthetic interferogram* $\Delta\varphi_{\mathrm{syn},\mathrm{n},\mathrm{r}}$ (or henceforth *DSI*), we refer to the difference, expressed as a phase delay, of the absolute LOS distances at 0-Doppler between a ground target and the orbital positions of the RADAR in two acquisitions. The purpose of this step is to provide the geometrical quantities that are necessary to flatten the raw interferograms, that is, to remove all possible contributions of the DEM, and thus to make it easier for the calibration modules to isolate other possible sources of phase delays, such as ionosphere or baseline errors. For this, we use the results of the coregistration shifts as described in {sec}`Section 4.1.3.2 <4.1.3.2>`., that is, set $\tau_{rg}^r$ and $\tau_{rg}^n$ to be respectively the range time coordinates of primary and secondary frames, computed via inverse geocoding, it is straightforward to compute the distance between the two sensors and the ground target and accordingly convert it into phase delay by applying the following pixelwise conversion:
 
 $$
-{\Delta{}\varphi}_{\mathrm{syn,n},r}(i,j)=\ 2\pi\cdot{}f_c\cdot(\tau_{rg}^n(i,j)-\tau_{rg}^r(i,j))
+{\Delta{}\varphi}_{\mathrm{syn},\mathrm{n},r}(i,j)=\ 2\pi\cdot{}f_c\cdot(\tau_{rg}^n(i,j)-\tau_{rg}^r(i,j))
 \tag{4.4}
 $$ (eq:atbd-l1-stack-4-4)
 
@@ -273,7 +273,7 @@ The incoherent speckle tracking step exploits the cross correlation between two 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Matrix of estimation accuracies (all values between [0, 1]). |
-| $s_{az}$ | - | [BREAKPOINT] Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
+| $s_{az}$ | - | [BREAKPOINT]<br>Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
 | $s_{rg}$ | - | [BREAKPOINT] Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in range direction (orbit + cross-correlation) |
 
 (sec:atbd-l1-stack-4-2-1-2)=
