@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from atbd_latex_content import _LR_RE  # noqa: E402
+from atbd_latex_content import _LR_RE, _SCRIPT_CSS, _readable_scripts  # noqa: E402
 
 
 def test_left_to_right_diagrams_are_recognised_and_turned_top_down():
@@ -41,3 +41,14 @@ def test_display_formulas_pick_the_fitting_macro():
     assert _alternative(r"\left( \frac{a}{b} \right)") == ""
     assert _alternative(r"\left. f \right\vert_{x}") == ""
     assert _alternative(r"\left( a \right.") == ""
+
+
+def test_mermaid_scripts_are_set_at_the_size_of_the_text():
+    with_init = '%%{init: {"theme": "default"}}%%\nflowchart TB\n  a["A<sub>i</sub>"]'
+    fixed = _readable_scripts(with_init)
+    assert '"themeCSS": "%s"' % _SCRIPT_CSS in fixed and '"theme": "default"' in fixed
+    assert fixed.endswith("\nflowchart TB\n  a[\"A<sub>i</sub>\"]")
+    bare = _readable_scripts("flowchart TB\n  a[\"x<sup>2</sup>\"]")
+    assert bare.startswith("%%{init: ") and "themeCSS" in bare
+    assert _readable_scripts("classDiagram\n  class A") == "classDiagram\n  class A"
+    assert _readable_scripts(fixed) == fixed
