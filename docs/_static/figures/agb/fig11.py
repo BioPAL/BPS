@@ -74,7 +74,7 @@ LABEL_AT = {
     "P0": (335, 524), "P1": (479, 399), "psi": (395, 492), "dem": (160, 468),
     "Er": (232, 513), "tomo": (610, 490), "dz": (692, 562),
 }
-ELL_AT, ELL_ROT = (548, 664), -10  # "Ellipsoid", right of the DEM curve, touching nothing
+ELL_AT, ELL_ROT = (452, 556), -19  # "Ellipsoid": under the ellipsoid line, right of P0
 LABEL_SIZE = {"dem": 1.35, "ell": 1.15, "range": 1.15}
 
 # -- drawing -------------------------------------------------------------------
