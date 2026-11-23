@@ -743,21 +743,48 @@ def _cell_fills(document: nodes.document) -> None:
             raw.parent.remove(raw)
 
 
+def _parents(node: nodes.Node):
+    while node.parent is not None:
+        node = node.parent
+        yield node
+
+
 def _underlines(document: nodes.document) -> None:
-    r"""``<u>…</u>`` of a converted page (raw HTML: the PFDs underline type
-    names) -> ``\underline{…}``, when both tags sit in the same paragraph."""
+    r"""Inline formatting tags of a converted page (raw HTML, lost in LaTeX):
+    ``<u>`` (the PFDs underline type names), ``<b>``, ``<i>`` and
+    ``<span style="color:#RRGGBB">`` (the coloured key of a typed tree) ->
+    ``\underline``, ``\textbf``, ``\textit``, ``\textcolor``; only when every tag
+    of the paragraph is one of these and they balance, and not in a table cell
+    (``\underline`` does not break: a type name would be cut at the column edge,
+    L2 FH PFD Tab. 19, relecture W4-7)."""
+    opening = {"u": r"\underline{", "b": r"\textbf{", "i": r"\textit{"}
     for para in list(document.findall(nodes.TextElement)):
-        kids = list(para.children)
-        opens = [k for k in kids if isinstance(k, nodes.raw)
-                 and "html" in k.get("format", "") and k.astext().strip() == "<u>"]
-        closes = [k for k in kids if isinstance(k, nodes.raw)
-                  and "html" in k.get("format", "") and k.astext().strip() == "</u>"]
-        if not opens or len(opens) != len(closes):
+        raws = [k for k in para.children if isinstance(k, nodes.raw)
+                and "html" in k.get("format", "")]
+        if not raws or any(isinstance(a, nodes.entry) for a in _parents(para)):
             continue
-        for k in opens:
-            k.replace_self(nodes.raw("", r"\underline{", format="latex"))
-        for k in closes:
-            k.replace_self(nodes.raw("", "}", format="latex"))
+        latex: list[str] = []
+        depth, ok = 0, True
+        for k in raws:
+            out = ""
+            for tag in re.findall(r"<[^>]*>|[^<]+", k.astext()):
+                m = re.fullmatch(r'<span style="color:#([0-9A-Fa-f]{6})">', tag)
+                if m:
+                    out += r"\textcolor[HTML]{%s}{" % m.group(1).upper()
+                    depth += 1
+                elif tag.strip("<>") in opening:
+                    out += opening[tag.strip("<>")]
+                    depth += 1
+                elif tag in ("</u>", "</b>", "</i>", "</span>"):
+                    out += "}"
+                    depth -= 1
+                else:
+                    ok = False
+            latex.append(out)
+        if not ok or depth != 0:
+            continue
+        for k, out in zip(raws, latex):
+            k.replace_self(nodes.raw("", out, format="latex"))
 
 
 def _drop_empty_chapters(document: nodes.document) -> None:

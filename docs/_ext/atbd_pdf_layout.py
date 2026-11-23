@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS
 # SPDX-License-Identifier: Apache-2.0
 """PDF (LaTeX) layout of a single Science Guide document (ATBD / PFD).
 
@@ -471,6 +471,27 @@ def _cell_text(node: nodes.Node) -> str:
     return " ".join(node.astext().split())
 
 
+def _cell_lines(node: nodes.Node) -> list[tuple[int, str]]:
+    """(depth, text) of each line of a cell whose lines are separated by
+    ``<br>`` (raw HTML); the depth counts the leading no-break spaces by 4."""
+    parts: list[str] = [""]
+    for n in node.findall(lambda x: isinstance(x, (nodes.Text, nodes.raw))):
+        if isinstance(n, nodes.raw):
+            if re.fullmatch(r"\s*<br\s*/?>\s*", n.astext()):
+                parts.append("")
+            continue
+        if isinstance(n.parent, nodes.raw):
+            continue  # the text of a raw node, handled above
+        parts[-1] += n.astext()
+    out = []
+    for p in parts:
+        nb = len(p) - len(p.lstrip("\u00a0 "))
+        text = " ".join(p.split())
+        if text:
+            out.append((p[:nb].count("\u00a0") // 4, text))
+    return out
+
+
 def _tex(text: str) -> str:
     return latex_escape(text)
 
@@ -538,15 +559,25 @@ def _change_rows(container: nodes.Element, known: set[str]) -> list[dict[str, An
                 entries = list(row.findall(nodes.entry))
                 if len(entries) != 4:
                     continue
-                # The conversion joins the whole cell into one paragraph
-                # (the bullet lists of the original are lost): rebuild them.
-                title, bullets = _change_items(_cell_text(entries[2]))
+                lines = _cell_lines(entries[2])
+                if len(lines) > 1:
+                    # the conversion keeps the lines of the cell (<br>) and the
+                    # bullets with their depth (relecture D-rev-18, W1-7)
+                    title, bullets = lines[0][1], [
+                        (min(level + 1, 2), re.sub(r"^[•\-]\s*", "", text))
+                        for level, text in lines[1:]]
+                else:
+                    # an older conversion joins the whole cell into one paragraph
+                    # (the bullet lists of the original are lost): rebuild them.
+                    title, bullets = _change_items(_cell_text(entries[2]))
+                author_lines = [t for _l, t in _cell_lines(entries[3])]
                 rows.append({
                     "date": _format_date(_cell_text(entries[0])),
                     "issue": _cell_text(entries[1]),
                     "title": title,
                     "bullets": bullets,
-                    "authors": _split_authors(_cell_text(entries[3]), known),
+                    "authors": author_lines if len(author_lines) > 1
+                    else _split_authors(_cell_text(entries[3]), known),
                 })
     return rows
 
