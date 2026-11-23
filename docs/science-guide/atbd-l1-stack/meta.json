@@ -10,7 +10,7 @@
  "source": "BPS_L1_STACK_ATBD_v1_4_0.docx",
  "source_sha256": "9d87e31a8a0f7cf0a6838d25db2683b1ff55d37dfcc02eaee129c1ba07d6dfe4",
  "backend": "docx",
- "license": "Apache-2.0",
+ "license": "CC-BY-4.0",
  "pipeline_version": "0.1.0",
  "conversion_date": "2026-11-23",
  "checks": {

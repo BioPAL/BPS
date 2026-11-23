@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -34,6 +34,7 @@ The algorithm performs up to two iterations for each processing block. The follo
 1. perform first iteration for all blocks: during first iteration, only external reference AGB mean and standard error are present as input over all the 5°x5° neighbourhood.
 
    a. the invalid AGB estimates (where corresponding regression parameters cannot be estimated) are tagged in output at a pixel level **AND** a flag is raised.
+
 2. perform second iteration only for all blocks where invalid AGB (but still recoverable) estimates are present (based on the flag).The second iteration uses the output from the first iteration as reference (as an addition to external AGB estimates). Only pixels tagged as invalid form first iteration are recomputed.
 
 {fig}`13` shows the flow chart for Level 2b processing for one processing block. Input reference AGB mean and std differs from first and second iteration:

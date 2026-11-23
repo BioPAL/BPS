@@ -10,7 +10,7 @@
  "source": "BPS_FD_ATBD_v2.1.8.docx",
  "source_sha256": "0201ac373fc95e9fd03ba980496534653b71a289e7f0b410ea5b554df0341118",
  "backend": "docx",
- "license": "Apache-2.0",
+ "license": "CC-BY-4.0",
  "pipeline_version": "0.1.0",
  "conversion_date": "2026-11-23",
  "checks": {

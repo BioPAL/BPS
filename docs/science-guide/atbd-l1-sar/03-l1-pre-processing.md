@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -16,11 +16,13 @@
 The ISP Filtering step is in charge of filtering the input L0 product Instrument Source Packets (ISP) by performing the following checks for anomalies. The filtering is applied distinguishably for the SAR Packets and the Ancillary Packets, as follows:
 
 a. SAR Packets:
+
 - Corrupted packets (those ones for which the CRC check is failed) are detected and discarded. Duplicated packets are detected and discarded. The detection is based on the comparison of the Sequence Count and the APID with the same values of the previous ISP. If both values are the same the packet is discarded;
 - Missing packets are detected by checking the Sequence Count of each ISP. If the difference of the Sequence Count values of two successive packets for the same APID is not equal to 1 this means that one or more missing ISPs have been detected. The data of the missing packets are replaced by zeroes;
 - The number of consecutive missing packets per APID and the equivalent time gap are computed. If one of these two values exceeds the corresponding configuration thresholds MaxISPGap or MaxTimeGap, the processing will not continue;
 
 b. ANC Packets:
+
 - The instrument HK parameters are checked against configurable validity thresholds and any deviation is reported.
 
 **Inputs**
@@ -139,6 +141,7 @@ The algorithm for a given coded echo is organized in the following steps:
    i. Multiply the normalized thresholds LUT by the ASM and by a factor of $\sqrt{\frac{\pi}{2}}$ to to get the up-scaled thresholds LUT;
 
    ii. For each echo in the block, for both I and Q values:
+
    1. Extract the BAQ code and sign;
    2. Use the code as an index to retrieve the magnitude in the up-scaled thresholds LUT;
    3. Multiply the magnitude by the sign to get the float echo value;
@@ -147,6 +150,7 @@ The algorithm for a given coded echo is organized in the following steps:
    c. In the case ASM is lower than the given ASM small value limit for the selected BAQ mode:
 
    i. For each echo in the block, for both I and Q values:
+
    1. Extract the BAQ code and sign;
    2. If the magnitude is lower than 7/15/31 for BAQ 4/5/6 respectively, the compressed I and Q values are already the final values;
    3. If the magnitude is 7/15/31 for BAQ 4/5/6 respectively, use the ASM value to retrieve the uncompressed I and Q values from small ASM LUT;
@@ -180,13 +184,13 @@ The above is summarized in the following table, where note that the STYP 14 and 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Rationale to identify the type of pulse being evaluated for the current PRI.</span></p>
 
-|   |   | <span class="atbd-cell-fill" style="background-color:#9BBB59;color:#000000">Even Rank Case</span> | <span class="atbd-cell-fill" style="background-color:#E6B8B7;color:#000000">Odd Rank Case</span> |
-|---|---|---|---|
-| **STYP Code** | **STYP description** | **H-Chanel RX** **V-Chanel Rx** | **H-Chanel RX** **V-Chanel Rx** |
-| 0 | TxV&Rx | Cross-Polar (VH) Co-Polar (VV) | Co-Polar (HH) Cross-Polar (HV) |
-| 1 | TxH&Rx | Co-Polar (HH) Cross-Polar (HV) | Cross-Polar (VH) Co-Polar (VV) |
-| 14 | TxV&Rx\_S | Cross-Polar (VH) Co-Polar (VV) | Co-Polar (HH) Cross-Polar (HV) |
-| 15 | TxH&Rx\_S | Co-Polar (HH) Cross-Polar (HV) | Cross-Polar (VH) Co-Polar (VV) |
+|   |   | <span class="atbd-cell-fill" style="background-color:#9BBB59;color:#000000">Even Rank Case</span> |   | <span class="atbd-cell-fill" style="background-color:#E6B8B7;color:#000000">Odd Rank Case</span> |   |
+|---|---|---|---|---|---|
+| **STYP Code** | **STYP description** | **H-Chanel RX** | **V-Chanel Rx** | **H-Chanel RX** | **V-Chanel Rx** |
+| 0 | TxV&Rx | Cross-Polar (VH) | Co-Polar (VV) | Co-Polar (HH) | Cross-Polar (HV) |
+| 1 | TxH&Rx | Co-Polar (HH) | Cross-Polar (HV) | Cross-Polar (VH) | Co-Polar (VV) |
+| 14 | TxV&Rx\_S | Cross-Polar (VH) | Co-Polar (VV) | Co-Polar (HH) | Cross-Polar (HV) |
+| 15 | TxH&Rx\_S | Co-Polar (HH) | Cross-Polar (HV) | Cross-Polar (VH) | Co-Polar (VV) |
 
 :::
 
@@ -969,9 +973,7 @@ For what concern attitude, on the other hand some more operations are required. 
 \begin{equation}
 \begin{aligned}
 {Z2S}_{1,:}=\frac{v_{\mathrm{s},:}}{norm(v_{\mathrm{s}})} \\
-{Z2S}_{2,:}=cross({Z2S}_{1,i},\ \widehat{p_s}) \\
-\widehat{p_{s,1}}=p_{s,1} \\
-\widehat{p_{s,2}}=p_{s,2} \\
+{Z2S}_{2,:}=cross({Z2S}_{1,i},\ \widehat{p_s}) , \widehat{p_{s,1}}=p_{s,1} , \widehat{p_{s,2}}=p_{s,2} , \\
 \widehat{p_{s,3}}=p_{s,3}\bullet1.0060611 \\
 {Z2S}_{3,:}=cross({Z2S}_{1,:},\ {Z2S}_{2,:})
 \end{aligned}

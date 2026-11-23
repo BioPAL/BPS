@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -150,13 +150,13 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $m_{RFI}$ |   | L1a | M masks of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated at L1 |
+| $m_{RFI}$ |   | L1a | M masks of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated at L1 |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\gamma_{RFI}$ |   | Primary image selection | M Float values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
+| $\gamma_{RFI}$ |   | Primary image selection | M Float <br> values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
 
 (sec:atbd-l1-stack-3-1-3)=
 #### 3.1.3 Mathematical Description
@@ -186,7 +186,7 @@ where:
 - $f_{\mathrm{RFI}}$ is the temporal frequency suppressed by the RFI, which depends on $t_i$ and the chirp rate $\alpha$ as follows
 
 $$
-f_{\mathrm{RFI}}(t_i,\ \tau_i;r,\ a)=\alpha\bullet\left( t_i-\frac{2}{c}R(\tau_i;r,a) \right)
+f_{\mathrm{RFI}}(t_i,\ \tau_i;r,\ a)=\alpha\bullet\left( t_i-\frac{2}{c}R(\tau_i;r,a) \right) .
 \tag{3.2}
 $$ (eq:atbd-l1-stack-3-2)
 
@@ -289,17 +289,17 @@ For monostatic SAR acquisition focused on natural targets (forest and ice) we ca
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $m_{RFI}$ |   | L1a | M Boolean masks of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated by `L1_P` |
-| $\Sigma_n$ |   | L1a | M Float matrices of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps estimated by `L1_P` |
-| $SCS_n$ |   | L1a | N images of size $[N_{az}\times{}N_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | SCS images |
+| $m_{RFI}$ |   | L1a | M Boolean masks of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated by `L1_P` |
+| $\Sigma_n$ |   | L1a | M Float matrices of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps estimated by `L1_P` |
+| $SCS_n$ |   | L1a | N images of size <br> $[N_{az}\times{}N_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | SCS images |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\gamma_{RFI}$ |   | Primary image selection | M Float values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
-| $\Sigma_n$ |   | L1a | M Float matrices of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps with (optionally) merged cross-polarizations |
-| $SCS_n$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) | - | The SCS with (optionally) merged cross-polarizations |
+| $\gamma_{RFI}$ |   | Primary image selection | M Float <br> values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
+| $\Sigma_n$ |   | L1a | M Float matrices of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps with (optionally) merged cross-polarizations |
+| $SCS_n$ |   | [BREAKPOINT] <br> Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) | - | The SCS with (optionally) merged cross-polarizations |
 
 (sec:atbd-l1-stack-3-2-3)=
 #### 3.2.3 Mathematical description
@@ -436,8 +436,8 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS_n$ |   | L1a | M stack images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | The input stack |
-| $\gamma_{RFI}$ |   | Pre-procesor quality measure | M Float values | M=3 (INT) or M=7 (TOM) | - | The RFI decorrelation indices |
+| $SCS_n$ |   | L1a | M stack images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | The input stack |
+| $\gamma_{RFI}$ |   | Pre-procesor <br> quality measure | M Float values | M=3 (INT) or M=7 (TOM) | - | The RFI decorrelation indices |
 | $\gamma_{far}$ |   | L1a | M Float values | M=3 (INT) or M=7 (TOM) | - | The decorrelation from Faraday rotation coming from L1a |
 | $\gamma_{RFI}^{ref}$ |   | `AUX_PPS` | Float | 1 | 0.9 | Threshold on the RFI to discard a coregistration primary candidate |
 | $\gamma_{far}^{ref}$ |   | `AUX_PPS` | Float | 1 | 0.9 | Threshold on the FR to discard a coregistration primary candidate |
@@ -446,7 +446,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $n_{ref}$ |   | Stacking and calibration module | Integer value | 1 | - | The index of the coregistration primary image |
+| $n_{ref}$ |   | Stacking and calibration <br> module | Integer value | 1 | - | The index of the coregistration primary image |
 
 (sec:atbd-l1-stack-3-3-3)=
 #### 3.3.3 Mathematical Description
@@ -521,7 +521,7 @@ The algorithm takes as input the sub-sampled Lat-Lon-Height LUTs related to the 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-|   | latitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The latitude LUT |
+|   | latitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The latitude <br> LUT |
 |   | longitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The longitude LUT |
 |   | height | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The altitude LUT |
 |   | `relativeAzimuthTimeRGC` | L1a | $\left[ 1\times{N^{'}}_{az} \right]$ | 1 | - | The LUT's azimuth time axis |
@@ -532,7 +532,7 @@ The algorithm takes as input the sub-sampled Lat-Lon-Height LUTs related to the 
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-|   | latitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The latitude LUT upsampled on the grid on the coregistration primary data |
+|   | latitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The latitude <br> LUT upsampled on the grid on the coregistration primary data |
 |   | longitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The longitude LUT upsampled on the grid on the coregistration primary data |
 |   | height | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The altitude LUT upsampled on the grid on the coregistration primary data |
 |   | XYZ | [BREAKPOINT] | $\left[ N_{az}\times{}N_{rg} \right]$ | 1 | - | DEM product, *i.e.* 3 channel product containing a fill resolution upsampled DEM. |

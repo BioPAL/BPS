@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -208,7 +208,7 @@ The TIFF and GeoTIFF tags used to annotate the MDS files are described in the fo
 | GeoAsciiParamsTag | 34737 | Variable | Contains the value of all GeoTIFF keys of type ASCII. |
 | `GDAL_METADATA` | 42112 | Variable | Contains GDAL metadata (see table below) |
 | `GDAL_NODATA` | 42113 | “-9999” or “255” | Pixel value used in case of invalid data. ASCII string encoded value. (See 3) |
-| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD |
+| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. <br> e.g. 4,2 for LERC v4 with ZSTD |
 
 :::
 

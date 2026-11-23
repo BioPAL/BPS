@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -106,19 +106,19 @@ The algorithm for coregistration from geometric information uses the orbits and 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS_n$ |   | Cross-pol merging step | M stack images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The input stack |
-| DEM |   | Upsampling step | 1 image of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) single channel matrices | - | Height of scattering surfaces of the input stack |
-|   | `flatteningPhaseBiasCompensationFlag` | `AUX_PPS` (`AIX_FMT`) | Bool switch | True/False | False | Optionally, compensate phase residuals due to residuals in DEM upsampling |
+| $SCS_n$ |   | Cross-pol merging step | M stack images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The input stack |
+| DEM |   | Upsampling step | 1 image of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) single channel matrices | - | Height of scattering surfaces of the input stack |
+|   | `flatteningPhaseBiasCompensationFlag` | `AUX_PPS` <br> (`AIX_FMT`) | Bool <br> switch | True/False | False | Optionally, compensate phase residuals due to residuals in DEM upsampling |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $CoSCS_n$ |   | [BREAKPOINT] Stacking and calibration module | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistered images. This is a breakpoint file onky if coreg mode is Geometry. |
-| $\tau_{rg}^n$ |   | [BREAKPOINT] Stacking and calibration module | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistration shifts in range component. This is a breakpoint file only if coreg mode is Geometry. |
-| $\tau_{az}^n$ |   | [BREAKPOINT] Stacking and calibration module. | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistration shifts in azimuth component. This is a breakpoint file only if coreg mode is Geometry. |
-| $\Delta\varphi_n$ |   | [BREAKPOINT] Coregistration Step, L1c, and remainder of the stacking | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition. |
-| $k_z$ |   | [BREAKPOINT] Calibration and L1c product | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Vertical wavenumbers associated to each frame. |
+| $CoSCS_n$ |   | [BREAKPOINT] <br> Stacking and calibration <br> module | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistered images. This is a breakpoint file onky if coreg mode is Geometry. |
+| $\tau_{rg}^n$ |   | [BREAKPOINT] <br> Stacking and calibration <br> module | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistration shifts in range component. This is a breakpoint file only if coreg mode is Geometry. |
+| $\tau_{az}^n$ |   | [BREAKPOINT] <br> Stacking and calibration <br> module. | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices with 3 or 4 polarizations | - | The coregistration shifts in azimuth component. This is a breakpoint file only if coreg mode is Geometry. |
+| $\Delta\varphi_n$ |   | [BREAKPOINT] <br> Coregistration Step, L1c, and remainder of the stacking | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition. |
+| $k_z$ |   | [BREAKPOINT] <br> Calibration and L1c product | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Vertical wavenumbers associated to each frame. |
 
 (sec:atbd-l1-stack-4-1-3)=
 #### 4.1.3 Mathematical Description
@@ -263,18 +263,18 @@ The incoherent speckle tracking step exploits the cross correlation between two 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS_{n,m}$ |   | Stacking | 2 stack images of size $[N_{az}\times{}N_{rg}]$ | 2 | - | A stack primary/secondary SCS interferometric pair |
-| $\tau_{rg}^{}$ |   | Stacking | 1 image of size $[N_{az}\times{}N_{rg}]$ | 1 | - | The coregistration shifts in range component |
-| $\tau_{az}^{}$ |   | Stacking | 1 image of size $[N_{az}\times{}N_{rg}]$ | 1 | - | The coregistration shifts in azimuth component |
-|   | `blockQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value | 0 – 1 | 0.0 | Threshold on the block quality estimation to consider the shifts estimated on an estimation block valid. |
+| $SCS_{n,m}$ |   | Stacking | 2 stack images of size <br> $[N_{az}\times{}N_{rg}]$ | 2 | - | A stack primary/secondary SCS interferometric pair |
+| $\tau_{rg}^{}$ |   | Stacking | 1 image of size <br> $[N_{az}\times{}N_{rg}]$ | 1 | - | The coregistration shifts in range component |
+| $\tau_{az}^{}$ |   | Stacking | 1 image of size <br> $[N_{az}\times{}N_{rg}]$ | 1 | - | The coregistration shifts in azimuth component |
+|   | `blockQualityThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 0 – 1 | 0.0 | Threshold on the block quality estimation to consider the shifts estimated on an estimation block valid. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Matrix of estimation accuracies (all values between [0, 1]). |
-| $s_{az}$ | - | [BREAKPOINT] <br> Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
-| $s_{rg}$ | - | [BREAKPOINT] Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in range direction (orbit + cross-correlation) |
+| $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Matrix of estimation accuracies (all values between [0, 1]). |
+| $s_{az}$ | - | [BREAKPOINT] <br> Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
+| $s_{rg}$ | - | [BREAKPOINT] <br> Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | Coregistration shifts in range direction (orbit + cross-correlation) |
 
 (sec:atbd-l1-stack-4-2-1-2)=
 ##### 4.2.1.2 Mathematical Description
@@ -334,9 +334,9 @@ In this modality, the coregistration shifts in {eq}`Equation (4.12) <4.12>` are 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $s_{az}$ | - | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
-| $s_{rg}$ | - | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in range direction (orbit + cross-correlation) |
-|   | `lowPassFilterType` | `AUX_PPS` |   | Average Gaussian | Average | Kernel of the low-pass filter utilized before upsampling. |
+| $s_{az}$ | - | Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
+| $s_{rg}$ | - | Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in range direction (orbit + cross-correlation) |
+|   | `lowPassFilterType` | `AUX_PPS` |   | Average <br> Gaussian | Average | Kernel of the low-pass filter utilized before upsampling. |
 |   | `lowPassFilterOrder` | `AUX_PPS` | Integer value | $1-\infty$ | 9 | Window size of the boxcar filter used in case “Average” is selected as low-pass filter method. |
 |   | `lowPassFilterStdDev` | `AUX_PPS` | Float value | $0-\infty$ | 0.840892 | Standard deviation of the Gaussian kernel used in case the selected low-pass filter is “Gaussian” |
 
@@ -344,8 +344,8 @@ In this modality, the coregistration shifts in {eq}`Equation (4.12) <4.12>` are 
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\tau_{az}$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
-| $\tau_{rg}$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
+| $\tau_{az}$ |   | [BREAKPOINT] <br> Stacking | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
+| $\tau_{rg}$ |   | [BREAKPOINT] <br> Stacking | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
 
 (sec:atbd-l1-stack-4-2-3)=
 #### 4.2.3 Model-based Inversion of the Residual Shifts
@@ -359,18 +359,18 @@ With this modality, the final shifts are obtained by a model-based inversion of 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | M images of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Map of mis-registration shifts |
-| $M_{az}$ | `azimuthMaxShift` | `AUX_PPS` (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration shift magnitude that can be estimated in azimuth direction |
-| $M_{rg}$ | `rangeMaxShift` | `AUX_PPS` (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration shift magnitude that can be estimated in range direction |
-| $s_{az}$ | - | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
-| $s_{rg}$ | - | Stacking | 1 image of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in range direction (orbit + cross-correlation) |
+| $W_{n,m}$ | `coregistrationShiftsQuality` | Stacking | M images of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Map of mis-registration shifts |
+| $M_{az}$ | `azimuthMaxShift` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration shift magnitude that can be estimated in azimuth direction |
+| $M_{rg}$ | `rangeMaxShift` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration shift magnitude that can be estimated in range direction |
+| $s_{az}$ | - | Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in azimuth direction (orbit + cross-correlation) |
+| $s_{rg}$ | - | Stacking | 1 image of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts in range direction (orbit + cross-correlation) |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\tau_{az}$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
-| $\tau_{rg}$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
+| $\tau_{az}$ |   | [BREAKPOINT] <br> Stacking | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
+| $\tau_{rg}$ |   | [BREAKPOINT] <br> Stacking | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Coregistration shifts |
 
 (sec:atbd-l1-stack-4-2-3-2)=
 ##### 4.2.3.2 Mathematical Description
@@ -395,14 +395,14 @@ where $s_{rg}^{iono}$ is the constant residual shift due to the background ionos
 Assuming at the most a linear baseline error in the image the general model of the baseline error valid for each component ($x,y$ and $z$) is:
 
 $$
-\delta{}B(\tau_{az})=\ \delta{}B_{const}+\tau_{az}\cdot{}\delta{}B_{linear}
+\delta{}B(\tau_{az})=\ \delta{}B_{const}+\tau_{az}\cdot{}\delta{}B_{linear} .
 \tag{4.11}
 $$ (eq:atbd-l1-stack-4-11)
 
 As for the mis-registration in azimuth direction ($S_{az}$), the combination of a constant and a linear error (both in azimuth and in range) will be assumed:
 
 $$
-S_{az}(\tau_{az},\ \tau_{rg})=m_{rg}\cdot\tau_{rg}\ +m_{az}\cdot\tau_{az}+s_{az}
+S_{az}(\tau_{az},\ \tau_{rg})=m_{rg}\cdot\tau_{rg}\ +m_{az}\cdot\tau_{az}+s_{az} ,
 \tag{4.12}
 $$ (eq:atbd-l1-stack-4-12)
 
@@ -425,11 +425,11 @@ The purpose of this step is to provide a quality measure of the model-based resi
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $r_{rg}$ |   | Stacking | M images of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Difference between the fitted model and the shifts estimated from data-based coregistration in range direction (in pixels) for the reference polarization channel |
-| $r_{az}$ |   | Stacking | M images of size $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Difference between the fitted model and the shifts estimated from data-based coregistration in azimuth direction (in pixels) for the reference polarization channel |
-| $M_{az}$ | `azimuthMaxShift` | `AUX_PPS` (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration residual shift magnitude that can be estimated in azimuth direction |
-| $M_{rg}$ | `rangeMaxShift` | `AUX_PPS` (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration residual shift magnitude that can be estimated in range direction |
-|   | `fittingQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value | 0.0 – 1.0 | 0.0 | Threshold on the fitting quality index $Q_{shifts}$ to consider a coregistration valid |
+| $r_{rg}$ |   | Stacking | M images of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Difference between the fitted model and the shifts estimated from data-based coregistration in range direction (in pixels) for the reference polarization channel |
+| $r_{az}$ |   | Stacking | M images of size <br> $[{N'}_{az}\times{N'}_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Difference between the fitted model and the shifts estimated from data-based coregistration in azimuth direction (in pixels) for the reference polarization channel |
+| $M_{az}$ | `azimuthMaxShift` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration residual shift magnitude that can be estimated in azimuth direction |
+| $M_{rg}$ | `rangeMaxShift` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 1 | 5 | Maximum coregistration residual shift magnitude that can be estimated in range direction |
+|   | `fittingQualityThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float value | 0.0 – 1.0 | 0.0 | Threshold on the fitting quality index $Q_{shifts}$ to consider a coregistration valid |
 
 **Outputs**
 

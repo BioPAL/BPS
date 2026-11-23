@@ -10,7 +10,7 @@
  "source": "BPS_AGB_PFD_v3_5_0.docx",
  "source_sha256": "d8dbf1f3fc7031b6cdb7592d6ccbf7b92110780469bf4368cbc67f7485d89753",
  "backend": "docx",
- "license": "Apache-2.0",
+ "license": "CC-BY-4.0",
  "pipeline_version": "0.1.0",
  "conversion_date": "2026-11-23",
  "checks": {

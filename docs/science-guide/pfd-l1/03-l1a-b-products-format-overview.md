@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -68,11 +68,11 @@ BIOMASS L1a/b Product/
 | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS L1a/b Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 1 or 2 | COG | SAR image MDS 2 files = 1 for amplitude + 1 for phase (only for L1a products) 4 components each (1 per polarization) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 1 or 2 | COG | SAR image MDS <br> 2 files = 1 for amplitude + 1 for phase (only for L1a products) <br> 4 components each (1 per polarization) |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟ sar image | 0 or 1 | VRT | SAR image MDS (support) <br> Present only for L1a products |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: - Acquisition information DSR - SAR image DSR - Instrument parameters DSR - RAW data analysis DSR - Processing parameters DSR - Internal calibration DSR - RFI mitigation DSR - Doppler parameters DSR - Radiometric calibration DSR - Polarimetric distortion DSR - Ionosphere correction DSR - Geometry DSR - Quality DSR - Annotation LUT DSR |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: - RFI time-domain masks DSR (one per polarisation) - RFI frequency-domain masks DSR (one per polarisation) <br> - Radiometric calibration DSR (sigma-nought and gamma-nought maps) - Ionosphere correction DSR (FR, phase screen, TEC, range and azimuth shifts and autofocus phase screen maps) - Denoising DSR (one per polarisation) - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: <br> - Acquisition information DSR <br> - SAR image DSR <br> - Instrument parameters DSR <br> - RAW data analysis DSR <br> - Processing parameters DSR <br> - Internal calibration DSR <br> - RFI mitigation DSR <br> - Doppler parameters DSR <br> - Radiometric calibration DSR <br> - Polarimetric distortion DSR <br> - Ionosphere correction DSR <br> - Geometry DSR <br> - Quality DSR <br> - Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: <br> - RFI time-domain masks DSR (one per polarisation) <br> - RFI frequency-domain masks DSR (one per polarisation) <br> - Radiometric calibration DSR (sigma-nought and gamma-nought maps) <br> - Ionosphere correction DSR (FR, phase screen, TEC, range and azimuth shifts and autofocus phase screen maps) <br> - Denoising DSR (one per polarisation) <br> - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) |
 | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;∟ navigation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∟ attitude | 1 | XML (EOF) | Attitude DSR |

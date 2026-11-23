@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -308,6 +308,7 @@ F_r(RAW(\tau,\mathrm{t}))=\begin{Bmatrix} 0,\ if\ Mask(f_r,\mathrm{t})=1 \\ F(RA
 \end{equation}
 
 b. or, interpolated using a nearest neighbour approach;
+
 3. the data are then inverse transformed in range direction.
 
 The following statistics are annotated in L1 products for detected frequency-domain RFI (separately for isolated and persistent ones) starting from computed masks:
@@ -1336,7 +1337,7 @@ Note that these interpolated doublet patterns can be pre-computed, they are the 
 4. The effective two-way complex gain is obtained combining transmit and receive contributions that take into account the mean transmit and receive power tracking coefficients
 
 $$
-P_{int}^C(\tau,f_a)=\ \frac{\sum_{D\in\{D1,D2\}}^{}{\left\langle a_D^C \right\rangle_t\ P_{D,int}^C(\tau,f_a)}}{\sqrt{\sum_{D\in\{D1,D2\}}^{}{\left\vert \left\langle a_D^C \right\rangle_t \right\vert^2}}}
+P_{int}^C(\tau,f_a)=\ \frac{\sum_{D\in\{D1,D2\}}^{}{\left\langle a_D^C \right\rangle_t\ P_{D,int}^C(\tau,f_a)}}{\sqrt{\sum_{D\in\{D1,D2\}}^{}{\left\vert \left\langle a_D^C \right\rangle_t \right\vert^2}}} ,
 \tag{4.50}
 $$ (eq:atbd-l1-sar-4-50)
 
@@ -1365,14 +1366,14 @@ In order to accommodate the topography, a residual radiometric correction after 
 1. The effective elevation pattern in each azimuth block is computed as follows:
 
 $$
-P^{APC2}(\theta)=\ BC\left[ \prod_{C\in\{Tx,Rx\}}^{}{\frac{\sum_{D\in\{D1,D2\}}^{}{\left\langle a_D^C \right\rangle_t\ P_D^C(\theta,\beta(f_a))}}{\sqrt{\sum_{D\in\{D1,D2\}}^{}{\left\vert \left\langle a_D^C \right\rangle_t \right\vert^2}}}} \right]
+P^{APC2}(\theta)=\ BC\left[ \prod_{C\in\{Tx,Rx\}}^{}{\frac{\sum_{D\in\{D1,D2\}}^{}{\left\langle a_D^C \right\rangle_t\ P_D^C(\theta,\beta(f_a))}}{\sqrt{\sum_{D\in\{D1,D2\}}^{}{\left\vert \left\langle a_D^C \right\rangle_t \right\vert^2}}}} \right] ,
 \tag{4.53}
 $$ (eq:atbd-l1-sar-4-53)
 
 where $BC\left[ \ldots \right]$ denotes the operator that reduces a two-dimensional antenna pattern to the corresponding effective azimuth beam-center pattern over elevation, taking into account the weighting function $W(f_a)$ applied for sidelobe suppression:
 
 $$
-BC\left[ P(X,f_a) \right]=\ \frac{\exp\left[ \mathrm{j}\cdot\arg \left\{ P(X,\ 0) \right\} \right]}{\sqrt{\sum_{f_a}^{}{{W(f_a)}^2}}}\sqrt{\sum_{f_a}^{}{\left\vert W(f_a)\cdot{}P(X,f_a) \right\vert^2}}
+BC\left[ P(X,f_a) \right]=\ \frac{\exp\left[ \mathrm{j}\cdot\arg \left\{ P(X,\ 0) \right\} \right]}{\sqrt{\sum_{f_a}^{}{{W(f_a)}^2}}}\sqrt{\sum_{f_a}^{}{\left\vert W(f_a)\cdot{}P(X,f_a) \right\vert^2}} ,
 \tag{4.54}
 $$ (eq:atbd-l1-sar-4-54)
 
@@ -1385,14 +1386,10 @@ $$ (eq:atbd-l1-sar-4-55)
 
 3. Interpolate $P^{APC2}(\theta)$ to obtain the complex amplification corresponding to the precise, local topography of a given azimuth block:
 
-(equation-eq-atbd-l1-sar-4-56)=
-\begin{equation}
-\begin{aligned}
-P_{topo}^{APC2}(\tau,t)= \\
-P^{APC2}(\theta_{el,topo}(\tau,t))
-\end{aligned}
+$$
+P_{topo}^{APC2}(\tau,t)= P^{APC2}(\theta_{el,topo}(\tau,t))
 \tag{4.56}
-\end{equation}
+$$ (eq:atbd-l1-sar-4-56)
 
 4. Finally, the focused SAR data block $B_{SCS}$ is corrected for the radiometric and phase bias according to:
 
@@ -2005,12 +2002,12 @@ The number of looks is then used to compute the gaussian filter used to smooth F
 
 The required FR estimation accuracy is not difficult to be achieved, because FR can be estimated very accurately. The backscatter at P-band from bare-surface can be very small. The required numbers of looks to reach 0.05˚-accuracy (as 1- and 3-sigma) of FR are calculated for three different levels of SNR, 3, 8, and 13 dB:
 
-| **SNR** | $\boldsymbol{\gamma}_{\boldsymbol{pol}}$ | **1 sigma** | **3-sigma** |
-|---|---|---|---|
-| <span class="atbd-rowspan-copy">**SNR**</span> | <span class="atbd-rowspan-copy">$\boldsymbol{\gamma}_{\boldsymbol{pol}}$</span> | N Size of Est. Window [km{sup}`2`] | N Size of Est. Window [km{sup}`2`] |
-| **3 dB** | 0.666 | 51.44 K 4.47 x 4.47 | 462.96 K 13.41 x 13.41 |
-| **8 dB** | 0.863 | 14.038 K 2.33 x 2.33 | 126.342 K 7.01 x 7.01 |
-| **13 dB** | 0.952 | 4.216K 1.28 x 1.28 | 37.947 K 3.84 x 3.84 |
+| **SNR** | $\boldsymbol{\gamma}_{\boldsymbol{pol}}$ | **1 sigma** |   | **3-sigma** |   |
+|---|---|---|---|---|---|
+| <span class="atbd-rowspan-copy">**SNR**</span> | <span class="atbd-rowspan-copy">$\boldsymbol{\gamma}_{\boldsymbol{pol}}$</span> | N | Size of Est. Window [km{sup}`2`] | N | Size of Est. Window [km{sup}`2`] |
+| **3 dB** | 0.666 | 51.44 K | 4.47 x 4.47 | 462.96 K | 13.41 x 13.41 |
+| **8 dB** | 0.863 | 14.038 K | 2.33 x 2.33 | 126.342 K | 7.01 x 7.01 |
+| **13 dB** | 0.952 | 4.216K | 1.28 x 1.28 | 37.947 K | 3.84 x 3.84 |
 
 (The conversion of number of looks to the length of side, the range and the azimuth postings of independent samplings are set to be 51.63 m and 7.53 m, respectively.)
 
@@ -2414,6 +2411,7 @@ Note that this step is done on range time axis of the data;
    i. retrieve the ionospheric height for the current range time;
 
    ii. evaluate the geomagnetic field component Bk at the current point with the proper ionospheric height;
+
 4. Bk is interpolated onto the original SAR coordinates grid:
 
    a. for each azimuth, range times in the data grid:
@@ -2779,11 +2777,12 @@ with the subscripts $x,r$ indicating the azimuth and range position in seconds o
 
 (equation-eq-atbd-l1-sar-4-103)=
 \begin{equation}
-W=\begin{bmatrix} \left\vert \gamma_1 \right\vert^2 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & \left\vert \gamma_p \right\vert^2 \end{bmatrix}
+W=\begin{bmatrix} \left\vert \gamma_1 \right\vert^2 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & \left\vert \gamma_p \right\vert^2 \end{bmatrix} .
 \tag{4.103}
 \end{equation}
 
 h. Once the plane coefficients are estimated, the corresponding FR angle surface is computed to the same sampling as the image, i.e., at full resolution, and used it in the following steps;
+
 3. Apply a weighted Gaussian filter to the data in order to mitigate scintillations as follows:
 
    a. Similar as before, compute the LR and RL images based on the images computed in the previous step and estimate the complex coherence between the LR/RL images, $\gamma_{LR-RL}$. In this case, a smaller window of 16x16 is used. Note that this resolution loss does not have a relevant impact in the estimation of the scintillations, since the Gaussian filter is anyway always larger than this value. Prior to the multilooking, the FR plane, ${\widehat{\Omega}}_{plane}$, estimated in step 2 is subtracted. Note that the $\gamma_{LR-RL}$ image is multilooked and therefore smaller in size than the full resolution image. In addition, focusing margins are not considered for the computation, to avoid polluting it;
@@ -2947,6 +2946,7 @@ Example of $b$ distribution is shown in figure below.
 :::
 
 d. References for Step 2.b and 2.c are found at E.J.Fremouw and J.A.Secan, “Modeling and scientific application of Scintillation Results,” Radio Science, Vol. 19, No. 3, pp. 687—694, 1984.
+
 2. Step 3: Calculation of directions of ellipse for the gaussian filter
 
    a. The ellipsoid is defined on B-aligned coordinate, where the $x$-direction to be the vertical projection of the geomagnetic field onto horizontal plane, the $z$-direction to be vertical downward direction, and $y$-direction to cross-product of $z$- and $x$-direction. The ellipsoid is expressed as
@@ -3448,14 +3448,14 @@ $$ (eq:atbd-l1-sar-4-142)
 gets an estimate of the phase,  $\widehat{\overrightarrow{\phi}}$, as:
 
 $$
-\widehat{\overrightarrow{\phi}}=({\overline{\overline{A}}}^T\overline{\overline{W}}\overline{\overline{A}})^{-1}{\overline{\overline{A}}}^T\overline{\overline{W}}\overrightarrow{b}
+\widehat{\overrightarrow{\phi}}=({\overline{\overline{A}}}^T\overline{\overline{W}}\overline{\overline{A}})^{-1}{\overline{\overline{A}}}^T\overline{\overline{W}}\overrightarrow{b} ,
 \tag{4.143}
 $$ (eq:atbd-l1-sar-4-143)
 
 $\widehat{\overrightarrow{\phi}}$ has to be reshaped to the size of the autofocus grid. The covariance of error is the reshaped diagonal of
 
 $$
-M=\ ({\overline{\overline{A}}}^T\overline{\overline{W}}\overline{\overline{A}})^{-1}
+M=\ ({\overline{\overline{A}}}^T\overline{\overline{W}}\overline{\overline{A}})^{-1} .
 \tag{4.144}
 $$ (eq:atbd-l1-sar-4-144)
 
@@ -3767,7 +3767,7 @@ where $\sigma_{noise}^2$ is the noise power measurement derived from internal ca
 The denoised data (${ML}_d$, where *d* stands for “denoised”) is then obtained starting from the data in output from the multilooking step applying the following correction:
 
 $$
-{ML}_d(\tau,t)=\sqrt{{{ML}_n(\tau,t)}^2-I_{noise}(\tau,t)}
+{ML}_d(\tau,t)=\sqrt{{{ML}_n(\tau,t)}^2-I_{noise}(\tau,t)} .
 \tag{4.151}
 $$ (eq:atbd-l1-sar-4-151)
 

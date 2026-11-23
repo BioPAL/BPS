@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -525,7 +525,7 @@ where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ den
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Acquisition geometry with terrain slope α <a class="reference internal" href="01-introduction.html#rd6">[RD6]</a>. (a) Positive terrain slope. (b) Negative terrain slope. B<sub>H</sub> is the horizontal baseline, H is the flight height, θ<sub>0</sub> the incidence angle between radar beam and the local normal to the inflated ellipsoid (tangent plane to ellipsoid represented by horizontal line), Δθ the angle difference induced by the baseline, h<sub>V</sub> the height of the volume and H<sub>F</sub> the height of the forest.</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 8</span><span class="caption-text"> — Acquisition geometry with terrain slope α <a class="reference internal" href="01-introduction.html#rd6">[RD6]</a>. (a) Positive terrain slope. (b) Negative terrain slope. B<sub>H</sub> is the horizontal baseline, H is the flight height, θ<sub>0</sub> the incidence angle between radar beam and the local normal to the inflated ellipsoid (tangent plane to ellipsoid represented by horizontal line), Δθ the angle difference induced by the baseline, h<sub>V</sub> the height of the volume and H<sub>F</sub> the height of the forest. <span class="atbd-figure-credit">Reproduced from <a class="reference internal" href="01-introduction.html#rd6">[RD6]</a>.</span></span></p>
 
 :::
 

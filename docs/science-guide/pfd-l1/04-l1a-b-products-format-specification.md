@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -325,7 +325,7 @@ The TIFF and GeoTIFF tags used to annotate SAR image MDS are described in the fo
 | ImageLength | 257 | Variable | Number of rows of pixels in the image. |
 | BitsPerSample | 258 | 32 or 16 | Number of bits per component. |
 | Compression | 259 | 32946 (DEFLATE), 34887 (LERC), 50000 (ZSTD) | Compression scheme used on the image data. |
-| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. e.g. 4,2 for LERC v4 with ZSTD |
+| LercParameters | 50674 | Variable | LERC compression parameters: version, additional compression. <br> e.g. 4,2 for LERC v4 with ZSTD |
 | PhotometricInterpretation | 262 | 1 | Colour space of the image. <br> Always set to 1 (minimum value is black). |
 | ImageDescription | 270 | Variable | A string that describes the image. <br> Examples: “BIOMASS L1a” and “BIOMASS L1b”. |
 | SamplesPerPixel | 277 | 3, 4 | The number of components per pixel. <br> Always set to 4 for L1a/b, i.e., one per polarisation in the order defined by PolarisationsSequence, can be 3 or 4 for L1c. |

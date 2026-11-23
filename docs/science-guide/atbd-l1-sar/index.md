@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -12,7 +12,7 @@ doc_code: BIO-BPS-L1-SAR-ATBD-ARE-010165
 version: 1.2.5
 date: 06/11/2026
 family: atbd
-license: Apache-2.0
+license: CC-BY-4.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0

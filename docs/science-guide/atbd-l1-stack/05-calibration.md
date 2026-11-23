@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -198,20 +198,20 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $CoSCS$ |   | Coregistration Step or AZF | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | Coregistered SCS frames |
-| $\Delta\Phi$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition |
-| $f_D$ |   | Coregistration Step | M of size $[1\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) vectors | - | Doppler centroids associated to each acquisition |
-|   | `azimuthSpectralFilterFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Enable the AZF module |
-|   | `usePrimarySpectralWeightingFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Use the azimuth spectral window of the coregistration primary as common spectral window |
-| $W_{\alpha}$ | `spectralWeightingWindow` | `AUX_PPS` (`AUX_FMT`) |   | Kaiser/Hamming | Hamming | A user defined common spectral window that is used for azimuth spectral windowing |
-| $\alpha$ | `spectralWeightingWindowParameter` | `AUX_PPS` (`AUX_FMT`) |   | $0-\infty$ |   | Parameter assiciated to the user provided window $W_{\alpha}$ |
+| $\Delta\Phi$ |   | Coregistration Step | M of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition |
+| $f_D$ |   | Coregistration <br> Step | M of size <br> $[1\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) vectors | - | Doppler centroids associated to each acquisition |
+|   | `azimuthSpectralFilterFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Enable the AZF module |
+|   | `usePrimarySpectralWeightingFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Use the azimuth spectral window of the coregistration primary as common spectral window |
+| $W_{\alpha}$ | `spectralWeightingWindow` | `AUX_PPS` <br> (`AUX_FMT`) |   | Kaiser/Hamming | Hamming | A user defined common spectral window that is used for azimuth spectral windowing |
+| $\alpha$ | `spectralWeightingWindowParameter` | `AUX_PPS` <br> (`AUX_FMT`) |   | $0-\infty$ |   | Parameter assiciated to the user provided window $W_{\alpha}$ |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $CalCoSCS$ |   | Stack Processor (next active module) or L1c output product | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | SCS with common bandwidth |
-| ${\overline{B}}_{az,\ common}$ | `azimuthCommomBandwidth` | L1c output product | Float value [Hz] | 0.0 -- $\infty$ | - | Common bandwidth estimated by the AZF |
-| ${\overline{f}}_{az,center}$ | `azimuthCentralFrequency` | L1c output product | Float value [Hz] | -$\infty$ -- $\infty$ | - | Central frequency in azimuth estimated by the AZF |
+| ${\overline{B}}_{az,\ common}$ | `azimuthCommomBandwidth` | L1c output product | Float <br> value <br> [Hz] | 0.0 -- $\infty$ | - | Common bandwidth estimated by the AZF |
+| ${\overline{f}}_{az,center}$ | `azimuthCentralFrequency` | L1c output product | Float <br> value <br> [Hz] | -$\infty$ -- $\infty$ | - | Central frequency in azimuth estimated by the AZF |
 
 (sec:atbd-l1-stack-5-1-2)=
 #### 5.1.2 Mathematical description
@@ -350,23 +350,23 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 | $\Delta\phi_{L1a}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Ionospheric phase screen estimated by L1 processor and shifted onto the primary grid |
 | $\delta_{\phi_{L1a}}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Spatial range shifts due to ionosphere estimated by the L1 processor and shifted onto the primary grid |
-| $n^*$ | `calibrationReferenceImage` | Job\_Order (*ProcParameter – calibration\_primary\_imge*) <br> or `AUX_PPS` (`primaryImageFlag`). See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
-|   | `slowIonosphereRemovalFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the IOB module |
-| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS` <br> (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
-| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS` <br> (`AUX_FMT`) | Float value [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
-|   | `polarisationUsed`⁽⁵⁾ | `AUX_PPS` (`AUX_FMT`) |   | HH / HV / VH / VV / XX | HH | Reference polarization used in the pre-processing step |
-|   | `phaseUnwrappingFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
-|   | `latitudeThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [deg] | 0 - $\infty$ | 40.0 | Latitude (N/S) below (above) which IOB is skipped |
-|   | `baselineMethod` | `AUX_PPS` (`AUX_FMT`) | Literal | Multi-Basline, Single-Baseline | Mutli-Baseline | As to whether MB or SB estimation is executed |
-|   | `unweightedMulitBaselineEstimation` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | In MB, equally weigh all estimations. If False, use weights from the coherence map |
-|   | `compensateL1PhaseScreenFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Pre-compensate phase screen correction from L1, if set to True |
-|   | `sublookWindowAzimuthSize` | `AUX_PPS` (`AUX_FMT`) | Float | 1 - $\infty$ | 201 | Number of looks in azimuth direction for computing the low/high sub-looks |
-|   | `sublookWindowRangeSize` | `AUX_PPS` (`AUX_FMT`) | Float | 1 - $\infty$ | 41 | Number of looks in direction range for computing the low/high sub-looks |
-|   | `multiBaselineCriticalBaselineThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.45 | In MB, Interferometric pairs with baseline exceeding this percentage of the critical baseline are ignored |
-| $\theta_{PU}$ | `maxDeltaPhaseUnwrapTest` | `AUX_PPS` (`AUX_FMT`) | Float | 0 - $\infty$ | 0.5 rad | Threshold for the phase unwrapping test |
-| $\theta_{\gamma}$ | `minCoherenceThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.0 | Threshold on the coherence that specifies which pixels should be used or not for phase-plane fitting. |
+| $n^*$ | `calibrationReferenceImage` | Job\_Order <br> (*ProcParameter – calibration\_primary\_imge*) <br> or `AUX_PPS` <br> (`primaryImageFlag`). <br> See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M <br> with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
+|   | `slowIonosphereRemovalFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Enable/disable the IOB module |
+| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
+| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
+|   | `polarisationUsed`⁽⁵⁾ | `AUX_PPS` <br> (`AUX_FMT`) |   | HH / HV / VH / VV / XX | HH | Reference polarization used in the pre-processing step |
+|   | `phaseUnwrappingFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
+|   | `latitudeThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [deg] | 0 - $\infty$ | 40.0 | Latitude (N/S) below (above) which IOB is skipped |
+|   | `baselineMethod` | `AUX_PPS` <br> (`AUX_FMT`) | Literal | Multi-Basline, <br> Single-Baseline | Mutli-Baseline | As to whether MB or SB estimation is executed |
+|   | `unweightedMulitBaselineEstimation` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | False | In MB, equally weigh all estimations. If False, use weights from the coherence map |
+|   | `compensateL1PhaseScreenFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Pre-compensate phase screen correction from L1, if set to True |
+|   | `sublookWindowAzimuthSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 - $\infty$ | 201 | Number of looks in azimuth direction for computing the low/high sub-looks |
+|   | `sublookWindowRangeSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 - $\infty$ | 41 | Number of looks in direction range for computing the low/high sub-looks |
+|   | `multiBaselineCriticalBaselineThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0 – 1 | 0.45 | In MB, Interferometric pairs with baseline exceeding this percentage of the critical baseline are ignored |
+| $\theta_{PU}$ | `maxDeltaPhaseUnwrapTest` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0 - $\infty$ | 0.5 rad | Threshold for the phase unwrapping test |
+| $\theta_{\gamma}$ | `minCoherenceThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0 – 1 | 0.0 | Threshold on the coherence that specifies which pixels should be used or not for phase-plane fitting. |
 | $\theta_{PV}$ | `minUsablePixelRatio` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0 – 1 | 0.05 | Minimum fraction of valid pixels according to coherence and phase unwrapping test to perform the phase-plane fitting |
-|   | `slowIonosphereQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0 – 1 | 0.0 | Estimations with quality below this threshold are ignored |
+|   | `slowIonosphereQualityThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0 – 1 | 0.0 | Estimations with quality below this threshold are ignored |
 
 [5] Note that this parameter is configurable only at the calibration level and not module by module. In other words, the selected value is common to all calibration modules (but not necessarily the same used for coregistration).
 
@@ -375,9 +375,9 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $CalCoSCS_n$ |   | Stack Processor (next active module) or L1c output | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | SCS with no slow varying ionosphere phase |
-| ${\partial_t}_{az}\phi_n$ | `slowIonosphereAzimuthPhaseScreen` | L1c output product | Float value [rad/s] | M real numbers | - | The azimuth slope of the slow-varying phase screen estimated by the IOB (1 per input frame) |
-| $\partial_{t_{rg}}\phi_n$ | `slowIonosphereRangePhaseScreen` | L1c output product | Float value [rad/s] | M real numbers | - | The range slope of the slow-varying phase screen estimated by the IOB (1 per input frame) |
-| $q_n$ | `slowIonosphereQuality` | L1c output product | Float value [%] | M values in 0.0 – 1.0 | - | The estimation qualities (1 per input frame) |
+| ${\partial_t}_{az}\phi_n$ | `slowIonosphereAzimuthPhaseScreen` | L1c output product | Float <br> value <br> [rad/s] | M real numbers | - | The azimuth slope of the slow-varying phase screen estimated by the IOB (1 per input frame) |
+| $\partial_{t_{rg}}\phi_n$ | `slowIonosphereRangePhaseScreen` | L1c output product | Float <br> value <br> [rad/s] | M real numbers | - | The range slope of the slow-varying phase screen estimated by the IOB (1 per input frame) |
+| $q_n$ | `slowIonosphereQuality` | L1c output product | Float <br> value <br> [%] | M values in <br> 0.0 – 1.0 | - | The estimation qualities (1 per input frame) |
 
 (sec:atbd-l1-stack-5-2-2)=
 #### 5.2.2 Single-Baseline Estimator
@@ -763,7 +763,7 @@ In the reminder of this section, we will describe in detail all steps of the alg
 |---|---|---|---|---|---|---|
 | $CoSCS_n$ |   | Coregistration Step or previous active calibration module | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | Coregistered SCS frames, possibly from previous calibration step (i.e. AZF, IOB, BAE, or IOS) |
 | $\Delta\Phi_n$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition |
-| $p$ | `polarisationUsed` | `AUX_PPS` | HH,HV,VH, VV, XX | 1 | HH | Polarization used to estimate the phase screen. |
+| $p$ | `polarisationUsed` | `AUX_PPS` | HH,HV,VH, <br> VV, XX | 1 | HH | Polarization used to estimate the phase screen. |
 | $r_{\min}$ |   | `AUX_PPS` | Float | $0-\infty$ | 100,000 | Minimum ionospheric range candidate [m] |
 | $r_{\max}$ |   | `AUX_PPS` | Float | $0-\infty$ | 700,000 | Maximum ionospheric range candidate [m] |
 | $\rho_{\psi}$ | `multiSquintCoherenceSubbandResolution` | `AUX_PPS` | Float | $0-\infty$ | 300 | Sub-band azimuth resolution for MS coherence [m]. |
@@ -774,12 +774,12 @@ In the reminder of this section, we will describe in detail all steps of the alg
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $CalCoSCS_n$ |   | L1c output product | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | Calibrated SCS with compensated dominant phase plane |
-| $ds$ |   | L1c output product | Float [m] | M float values | - | The constant along-track baseline errors |
-| $f_x$ |   | L1c output product | Float [1/m] | M float values | - | The estimated azimuth frequency centroid |
-| $\Delta\phi_l$ |   | L1c output product | Float array [rad] | M 3D LUTs | - | The ionospheric phase screens associated to the ionosphere |
-| $\partial_{t_{az}}\phi_n$ |   | L1c output product | Float [rad/s] | M float values | - | The slope of the phase plane in along-track direction (1 per input frame) |
-| $\partial_{t_{rg}}\phi_n$ |   | L1c output product | Float [rad/s] | M float values | - | The of the phase plane in slant-range direction (1 per input frame) |
+| $CalCoSCS_n$ |   | L1c output product | M acquisition of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | Calibrated SCS with compensated dominant phase plane |
+| $ds$ |   | L1c output product | Float <br> [m] | M float values | - | The constant along-track baseline errors |
+| $f_x$ |   | L1c output product | Float <br> [1/m] | M float values | - | The estimated azimuth frequency centroid |
+| $\Delta\phi_l$ |   | L1c output product | Float array <br> [rad] | M 3D LUTs | - | The ionospheric phase screens associated to the ionosphere |
+| $\partial_{t_{az}}\phi_n$ |   | L1c output product | Float <br> [rad/s] | M float values | - | The slope of the phase plane in along-track direction (1 per input frame) |
+| $\partial_{t_{rg}}\phi_n$ |   | L1c output product | Float <br> [rad/s] | M float values | - | The of the phase plane in slant-range direction (1 per input frame) |
 
 (sec:atbd-l1-stack-5-3-2)=
 #### 5.3.2 Workflow
@@ -1347,25 +1347,25 @@ flowchart TB
 | $CoSCS_n$ |   | Coregistration Step or previous active calibration module | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | Coregistered SCS frames, possibly from previous calibration step (i.e. AZF, IOB, BAE, or IOS) |
 | $\Delta\Phi_n$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Synthetic phases from DEM associated to each acquisition |
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
-|   | `skpPhaseEstimationFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the SKP module |
-|   | `phaseCorrection` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | Type of phase correction that needs to be applied by the SKP (“None”, “FlatteningPhaseScreen” or “Ground Phase Screen”) |
+|   | `skpPhaseEstimationFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Enable/disable the SKP module |
+|   | `phaseCorrection` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | False | Type of phase correction that needs to be applied by the SKP (“None”, “FlatteningPhaseScreen” or “Ground Phase Screen”) |
 | $w_{est}$ | `estimationWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 -- $\infty$ | 500 | Size of the estimation window [m]. |
-|   | `calibrationPhasePostprocessing` | `AUX_PPS` <br> (`AUX_FMT`) | Enumeration | Goldstein Boxcar Median None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD Section 5.4.2.6), or no filtering ("None"). It defaults to "None". |
+|   | `calibrationPhasePostprocessing` | `AUX_PPS` <br> (`AUX_FMT`) | Enumeration | Goldstein <br> Boxcar <br> Median <br> None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD Section 5.4.2.6), or no filtering ("None"). It defaults to "None". |
 | $w_f$ | `postprocessingFilterWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 1 -- $\infty$ | 1000 | Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). Recommended value is 1,000 meters. |
 | $w_G$ | `goldsteinFilterWindowSize` | `AUX_PPS` <br> (`AUX_FMT`) | Int | $1-\infty$ | 5 | Size of the filtering frequency window applied to the Golstein filter weights to be used for post-processing the SKP phase screen [px] (only "Goldstein"). Recommended value is 5 pixels (5 frequency bins). |
-| $\alpha_G$ | `goldsteinFilterAlpha` | `AUX_PPS` (`AUX_FMT`) | Float | 0-1 | 0.5 | Parameter that controls the filtering level of the Goldstein filter. $0$ is no filterimg, $1$ is maximum filtering. Recommended values are between $0.2$ and $1$. |
-|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` (`AUX_FMT`) | Boolean <br> Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
-|   | `crossPolMergingFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean Switch | True/False | False | If true, merge the cross-polarizations before estimating the SKP calibration phase screen. |
-| $q_{thresh}$ | `skpCalibrationPhaseScreenQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.5 | Apply the phase correction only if the estimated qualities are above this threshold |
-| $Q_{thresh}$ | `overallProductQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 |   | If the fraction of valid ionosphere estimation is below this threshold, the fast-ionosphere estimation is flagged as failed |
+| $\alpha_G$ | `goldsteinFilterAlpha` | `AUX_PPS` <br> (`AUX_FMT`) | Float | 0-1 | 0.5 | Parameter that controls the filtering level of the Goldstein filter. $0$ is no filterimg, $1$ is maximum filtering. Recommended values are between $0.2$ and $1$. |
+|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
+|   | `crossPolMergingFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> Switch | True/False | False | If true, merge the cross-polarizations before estimating the SKP calibration phase screen. |
+| $q_{thresh}$ | `skpCalibrationPhaseScreenQualityThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 1.0 | 0.5 | Apply the phase correction only if the estimated qualities are above this threshold |
+| $Q_{thresh}$ | `overallProductQualityThreshold` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 1.0 |   | If the fraction of valid ionosphere estimation is below this threshold, the fast-ionosphere estimation is flagged as failed |
 
 **Output**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $CalCoSCS_n$ |   | L1c output product | M acquisition of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | SCS with *optionally* no ground phase screen (depending on whether phase removal is enabled by `AUX_PPS__`) |
+| $CalCoSCS_n$ |   | L1c output product | M acquisition of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), each with 3 or 4 polarizations (2CP + 1XP or 2CP + 2XP) | - | SCS with *optionally* no ground phase screen (depending on whether phase removal is enabled by `AUX_PPS__`) |
 | $\varphi_{skp}$ | `skpCalibrationPhaseScreen` | L1c output product - | M images of size $[N_{az}\times{}N_{rg}]$[rad] | M=3 (INT) or M=7 (TOM), with estimated phase | - | The phase screen that is estimated by the SKP |
-| $q_n$ | `skpCalibrationPhaseScreenQuality` | L1c output product | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), with the estimation quality | - | The phase quality associated with the FNF map |
+| $q_n$ | `skpCalibrationPhaseScreenQuality` | L1c output product | M images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM), with the estimation quality | - | The phase quality associated with the FNF map |
 
 (sec:atbd-l1-stack-5-4-2)=
 #### 5.4.2 Mathematical Description
