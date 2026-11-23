@@ -114,6 +114,13 @@ def _atbd_pdf_path(app: Any, root: str = ATBD_ROOT) -> Path:
     return Path(app.srcdir) / "_static" / "pdf" / _pdf_filename(root)
 
 
+def _human_size(size: int) -> str:
+    """File size for the download button: ``1.5 MB``, ``320 kB``."""
+    if size >= 1_000_000:
+        return f"{size / 1_000_000:.1f} MB"
+    return f"{max(1, round(size / 1000))} kB"
+
+
 def _static_pdf_uri(builder: Any, docname: str, pdf_name: str) -> str:
     """Relative link from ``docname`` to ``_static/pdf/<pdf_name>``.
 
@@ -193,8 +200,10 @@ def _inject_atbd_sidebar_toc(
         context["atbd_pdf_url"] = _static_pdf_uri(
             app.builder, pagename, _pdf_filename(root)
         )
+        context["atbd_pdf_size"] = _human_size(pdf_path.stat().st_size)
     else:
         context["atbd_pdf_url"] = None
+        context["atbd_pdf_size"] = ""
 
 
 def _silence_sidebar_wildcard_warnings(_app: Any, _config: Any) -> None:
