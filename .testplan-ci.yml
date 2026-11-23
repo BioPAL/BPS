@@ -73,8 +73,8 @@ create_env:
         echo "Creating conda env called pipeline-$CI_PIPELINE_ID"
         mkdir -p local_channel/noarch
         mkdir -p local_channel/linux-64
-        find $CI_PROJECT_DIR/bps-dockerfiles/bundle -type f \( -name '*-py_0.tar.bz2' -o -name '*-py_0.conda' \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/noarch/\"") }'
-        find $CI_PROJECT_DIR/bps-dockerfiles/bundle -type f \( -name '*-py[0-9]*_0.tar.bz2' -o -name '*-py[0-9]*_0.conda' -o -name '*-0.conda' \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/linux-64/\"") }'
+        find "$CI_PROJECT_DIR/bps-dockerfiles/bundle" -type f \( -path '*/pkgs/noarch/*.conda' -o -path '*/pkgs/noarch/*.tar.bz2' -o \( ! -path '*/pkgs/*' \( -name '*-py_0.tar.bz2' -o -name '*-py_0.conda' \) \) \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/noarch/\"") }'
+        find "$CI_PROJECT_DIR/bps-dockerfiles/bundle" -type f \( -path '*/pkgs/linux-64/*.conda' -o -path '*/pkgs/linux-64/*.tar.bz2' \) | awk -F/ '!seen[$NF]++ { system("cp \"" $0 "\" \"local_channel/linux-64/\"") }'
         conda index ./local_channel
         conda config --prepend channels conda-forge
         conda config --prepend channels ${PWD}/local_channel

@@ -19,13 +19,18 @@ function download(){
 			echo "Downloading $i for $folder"
 			cd noarch && curl --show-error --fail -q -O ${i} && cd -
 		else
-			for file in "$REPO_ROOT/$i/dist"/*; do
+			for file in "$REPO_ROOT/$i/dist"/*.conda; do
 				echo "Copying $file for $folder"
-				if [[ $file == *"py_0"* ]]
+				filename=$(basename "$file")
+				if [[ -f "$REPO_ROOT/local_channel/noarch/$filename" && ! -f "$REPO_ROOT/local_channel/linux-64/$filename" ]]
 				then
-					cp $file noarch
+					cp "$file" noarch
+				elif [[ -f "$REPO_ROOT/local_channel/linux-64/$filename" && ! -f "$REPO_ROOT/local_channel/noarch/$filename" ]]
+				then
+					cp "$file" linux-64
 				else
-					cp $file linux-64
+					echo "Cannot determine channel subdirectory for $file" >&2
+					return 1
 				fi
 			done
 		fi

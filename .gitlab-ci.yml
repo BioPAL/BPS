@@ -545,14 +545,18 @@ conda_deploy:
     - eval "$(ssh-agent -s)"
     - |
       for file in ./*/dist/*.conda; do
-        eo_pgp-signme ${file} > ${file}.asc
-        if [[ $file == *"py_0.conda" ]]; then
-          ./.gitlab/ci/dashboard-copy.sh ${file} ${INTERNAL_CONDA_CHANNEL_PATH}/noarch &&
-          ./.gitlab/ci/dashboard-copy.sh ${file}.asc ${INTERNAL_CONDA_CHANNEL_PATH}/noarch;
+        filename=$(basename "$file")
+        if [[ -f "local_channel/noarch/$filename" && ! -f "local_channel/linux-64/$filename" ]]; then
+          subdir=noarch
+        elif [[ -f "local_channel/linux-64/$filename" && ! -f "local_channel/noarch/$filename" ]]; then
+          subdir=linux-64
         else
-          ./.gitlab/ci/dashboard-copy.sh ${file} ${INTERNAL_CONDA_CHANNEL_PATH}/linux-64 &&
-          ./.gitlab/ci/dashboard-copy.sh ${file}.asc ${INTERNAL_CONDA_CHANNEL_PATH}/linux-64;
+          echo "Cannot determine channel subdirectory for $file" >&2
+          exit 1
         fi
+        eo_pgp-signme "$file" > "$file.asc"
+        ./.gitlab/ci/dashboard-copy.sh "$file" "${INTERNAL_CONDA_CHANNEL_PATH}/${subdir}" &&
+        ./.gitlab/ci/dashboard-copy.sh "$file.asc" "${INTERNAL_CONDA_CHANNEL_PATH}/${subdir}"
       done
     - ./.gitlab/ci/conda-forge-update.sh ${INTERNAL_CONDA_CHANNEL_PATH}
   needs:
