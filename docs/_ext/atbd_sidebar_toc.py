@@ -162,14 +162,16 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             f'<i class="fa-solid fa-file-pdf"></i> '
             "Download this document as PDF</a> "
             "(generated from the same MyST source as this website).</p>"
-            + ("<p>The "
+            # the same wording as the "Authoritative document" box of the
+            # document's first page: this PDF is an export, not the approved
+            # document (relecture, final W5)
+            + ("<p>This export is not the approved document: the "
                '<a class="reference external" '
                f'href="{official}">'
-               "official archival PDF</a> on biomass-disc.info remains authoritative "
-               "until Aresys and ESA approve this web conversion.</p>"
+               "official ESA PDF</a> is.</p>"
                if official else
-               "<p>The approved ESA document remains authoritative until Aresys "
-               "and ESA approve this web conversion.</p>")
+               "<p>This export is not the approved document; the approved ESA "
+               "document is the reference.</p>")
             + "</div>"
         )
     # no PDF built: nothing on the published page (the build command is a
