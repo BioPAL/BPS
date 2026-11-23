@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+// SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS
 // SPDX-License-Identifier: Apache-2.0
 // Ctrl+P: open the folded menus (<details>, sphinx-design dropdowns) so that
 // their content is printed, and fold them back afterwards.
@@ -65,7 +65,13 @@
       pending().forEach(function (el) {
         chain = chain.then(function () {
           var code = el.getAttribute("data-original-code");
-          if (code !== null) { el.textContent = code; }
+          if (code !== null) {
+            // the attribute keeps the source HTML-escaped ("--&gt;"): decode it,
+            // or Mermaid reads "&gt;" and fails ("Syntax error in text")
+            var box = document.createElement("textarea");
+            box.innerHTML = code;
+            el.textContent = box.value;
+          }
           el.removeAttribute("data-processed");
           el.removeAttribute("data-mermaid-render-failed");
           return mermaid.run({ nodes: [el] }).then(function () {
