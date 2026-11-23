@@ -85,3 +85,68 @@ def test_captions_carry_the_number_of_the_original():
     from atbd_latex_content import _set_number
     assert _set_number("table", "71") == r"\setcounter{table}{70}"
     assert _set_number("figure", "A.1") == r"\renewcommand{\thefigure}{A.1}"
+
+
+def _chain(depth, members=3):
+    body = "".join("    m%d : string [1]\n" % i for i in range(members))
+    code = "%%{init: {}}%%\nclassDiagram\n  direction LR\n"
+    for d in range(depth):
+        code += "  class T%d {\n%s  }\n" % (d, body)
+    for d in range(depth - 1):
+        code += "  T%d --> T%d : child%d\n" % (d, d + 1, d)
+    return code
+
+
+def test_class_diagram_is_cut_by_subtrees():
+    from atbd_latex_content import _class_extent, _parse_classes, _split_class_diagram
+    code = _chain(8)
+    _pre, order, classes, edges = _parse_classes(code)
+    assert _class_extent(classes, edges, order[0])[0] > 1000
+    parts = _split_class_diagram(code)
+    assert parts and len(parts) > 1
+    # the first part draws its last type by name only, the next one heads on it
+    assert "  class T1\n" in _split_class_diagram(code, width=300.0)[0]
+    for part in parts:
+        pre, ids, cls, edg = _parse_classes(part) or ("", [], {}, [])
+        assert part.startswith("%%{init: {}}%%\nclassDiagram\n  direction LR\n")
+    # a diagram that fits stays whole
+    assert _split_class_diagram(_chain(2)) is None
+
+
+_FLOW = """%%{init: {}}%%
+flowchart TB
+  accTitle: t
+  classDef data fill:#fff
+  src[/"in"/]:::data
+  subgraph A["lane A"]
+    a1["a1"]
+    a2["a2"]
+  end
+  mid[/"mid"/]:::data
+  subgraph B["lane B"]
+    b1["b1"]
+  end
+  out[/"out"/]:::data
+  src --> a1
+  a1 --> a2
+  a2 -- "x" --> mid
+  mid --> b1
+  b1 --> out
+  linkStyle 3 stroke:#f00
+  style A fill:#eee
+  style B fill:#ddd
+"""
+
+
+def test_flowchart_is_cut_between_lanes():
+    from atbd_latex_content import _split_flow_lanes
+    first, second = _split_flow_lanes(_FLOW, 2)
+    # loose nodes go with the first lane they are linked to
+    assert 'src[/"in"/]:::data' in first and 'mid[/"mid"/]:::data' in first
+    assert 'out[/"out"/]:::data' in second and "subgraph B" not in first
+    # a link to a lane left out ends on a copy of its node, and link styles follow
+    assert 'stub_b1["b1"]' in first and "mid --> stub_b1" in first
+    assert 'stub_mid[/"mid"/]:::data' in second and "stub_mid --> b1" in second
+    assert "linkStyle 0 stroke:#f00" in second and "linkStyle 3 stroke:#f00" in first
+    assert "style B" in second and "style A" not in second
+    assert _split_flow_lanes("flowchart TB\n  a --> b\n", 2) is None
