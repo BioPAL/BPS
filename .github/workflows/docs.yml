@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
 # SPDX-License-Identifier: Apache-2.0
 #
-# Build the Sphinx site and publish to GitHub Pages on every push to develop.
-# Preview builds run on pull requests (no deploy).
-# The biomass-disc production frontend is rebuilt on every push to develop.
+# Build the Sphinx site on every pull request and every push to develop.
+# The documentation is published on biomass-disc.info only: every push to
+# develop rebuilds the biomass-disc production frontend (no GitHub Pages).
 
 name: Documentation
 
@@ -118,33 +118,8 @@ jobs:
 
       - name: Build HTML
         env:
-          DOCS_BASEURL: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'https://biopal.github.io/BPS/' || '' }}
           DOCS_GITHUB_VERSION: develop
         run: make -C docs html
-
-      - name: Upload Pages artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/_build/html
-
-  deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
 
   # Trigger the biomass-disc frontend rebuild on the ACRI GitLab pipeline.
   # The trigger token is write-only (cannot read pipeline status from here);
