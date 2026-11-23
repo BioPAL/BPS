@@ -174,6 +174,16 @@ def _breakable_literal(text: str, engine: str, longest: int = _LONG_LITERAL) -> 
     return r"\sphinxcode{\sphinxupquote{%s}}" % body
 
 
+def _set_number(kind: str, number: str) -> str:
+    """LaTeX that makes the next caption of ``kind`` ("figure", "table") carry the
+    number of the original document. The counter itself is set (and not only
+    the printed number), so that a caption without a source number goes on
+    from the numbered ones instead of from the count of the export."""
+    if number.isdigit():
+        return r"\setcounter{%s}{%d}" % (kind, int(number) - 1)
+    return r"\renewcommand{\the%s}{%s}" % (kind, number)
+
+
 def _latex_label(docname: str, ident: str) -> str:
     return r"\phantomsection\label{\detokenize{%s:%s}}" % (docname, ident)
 
@@ -1044,7 +1054,7 @@ class AtbdLatexContent(SphinxPostTransform):
         if caption is not None:
             number, inlines = caption
             if number:
-                setup += r"\renewcommand{\thefigure}{%s}" % number
+                setup += _set_number("figure", number)
         else:
             setup += "".join(_latex_label(docname, i) for i in container["ids"])
         figure += nodes.raw("", setup, format="latex")
@@ -1101,7 +1111,7 @@ class AtbdLatexContent(SphinxPostTransform):
         head = nodes.raw("", r"\par\noindent\begin{minipage}{\linewidth}\centering ",
                          format="latex")
         cap = nodes.paragraph("", "")
-        cap += nodes.raw("", (r"\renewcommand{\thefigure}{%s}" % number if number else "")
+        cap += nodes.raw("", (_set_number("figure", number) if number else "")
                          + r"\captionof{figure}{", format="latex")
         cap.extend(inlines)
         cap += nodes.raw("", "}" + label, format="latex")
@@ -1135,7 +1145,7 @@ class AtbdLatexContent(SphinxPostTransform):
             last_group = g == len(groups) - 1
             setup = ""
             if last_group and caption is not None and caption[0]:
-                setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
+                setup += _set_number("figure", caption[0])
             figure += nodes.raw("", setup, format="latex")
             for r, row in enumerate(rows):
                 row_tex = r"\par\noindent\makebox[\linewidth][c]{" if r == 0 else (
@@ -1177,7 +1187,7 @@ class AtbdLatexContent(SphinxPostTransform):
             if i == 0:
                 setup += "".join(_latex_label(docname, x) for x in container["ids"])
             if i == last and caption is not None and caption[0]:
-                setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
+                setup += _set_number("figure", caption[0])
             setup += r"{\small (%s)}\par\smallskip " % chr(97 + i)
             figure += nodes.raw("", setup, format="latex")
             visual.parent.remove(visual)
@@ -1324,7 +1334,7 @@ class AtbdLatexContent(SphinxPostTransform):
             if number:
                 # Source number, for this table only.
                 before.append(nodes.raw(
-                    "", r"\begingroup\renewcommand{\thetable}{%s}" % number,
+                    "", r"\begingroup" + _set_number("table", number),
                     format="latex"))
                 after.append(nodes.raw("", r"\endgroup", format="latex"))
         targets = _preceding_targets(container)

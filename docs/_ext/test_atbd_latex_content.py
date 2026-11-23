@@ -52,3 +52,36 @@ def test_mermaid_scripts_are_set_at_the_size_of_the_text():
     assert bare.startswith("%%{init: ") and "themeCSS" in bare
     assert _readable_scripts("classDiagram\n  class A") == "classDiagram\n  class A"
     assert _readable_scripts(fixed) == fixed
+
+
+def test_table_columns_are_as_wide_as_their_longest_word():
+    from docutils import nodes
+    from atbd_latex_content import _column_widths, _wlen
+
+    # Arial metrics: "i" is narrower and "W" wider than the half em of a character.
+    assert _wlen("iiii") < 4 < _wlen("WWWW") and _wlen("Name", bold=True) > _wlen("Name")
+
+    def table(rows):
+        tgroup = nodes.tgroup(cols=len(rows[0]))
+        for _ in rows[0]:
+            tgroup += nodes.colspec(colwidth=1)
+        tbody = nodes.tbody()
+        for cells in rows:
+            tbody += nodes.row("", *(nodes.entry("", nodes.paragraph("", text)) for text in cells))
+        tgroup += tbody
+        return nodes.table("", tgroup, classes=["colwidths-auto"])
+
+    word = "meanAGBLimitsAUXPP2Name"
+    tab = table([["x", "y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y"],
+                 [word, "z"]])
+    _column_widths(tab, budget=60.0, pad=2.5)
+    first, second = [int(c["colwidth"]) for c in tab.findall(nodes.colspec)]
+    assert "colwidths-given" in tab["classes"]
+    # the first column holds the whole identifier: its share is at least its width
+    assert first / (first + second) * 60.0 >= _wlen(word) + 2.5
+
+
+def test_captions_carry_the_number_of_the_original():
+    from atbd_latex_content import _set_number
+    assert _set_number("table", "71") == r"\setcounter{table}{70}"
+    assert _set_number("figure", "A.1") == r"\renewcommand{\thefigure}{A.1}"
