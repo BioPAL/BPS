@@ -88,25 +88,81 @@
 % "1.1 Context"), so LaTeX numbering is switched off. Headings hang 1.25 cm
 % into the left margin, as in the original where the body text is indented.
 % ---------------------------------------------------------------------------
+
+% Number of a heading (E-12): the originals print "2.3." (L1 SAR: "2.3"), then
+% a tab to a fixed stop (measured on the originals, from the heading's left
+% edge: 36.1 / 45.4 / 51.1 bp), where the source titles have "2.3 Title"
+% with a single space. The title text of the page is rewritten here, in
+% the PDF only; the table of contents does the same (atbdcover.sty).
+\newif\ifatbd@headnodot
+\ifdefined\atbdtocnodot\atbd@headnodottrue\fi
+\ExplSyntaxOn
+\seq_new:N \l__atbd_head_seq
+\tl_new:N \l__atbd_headnum_tl
+\tl_new:N \l__atbd_headtext_tl
+\int_new:N \l__atbd_headdepth_int
+\dim_new:N \l__atbd_headstop_dim
+\box_new:N \l__atbd_head_box
+\cs_new_protected:Npn \atbd@headtitle #1
+  {
+    \regex_extract_once:nnNTF
+      { \A ( [0-9]+ (?: \. [0-9]+ )* ) \.? \x{20} (.*) \Z } {#1} \l__atbd_head_seq
+      {
+        \seq_pop_left:NN \l__atbd_head_seq \l_tmpa_tl
+        \seq_pop_left:NN \l__atbd_head_seq \l__atbd_headnum_tl
+        \seq_pop_left:NN \l__atbd_head_seq \l__atbd_headtext_tl
+        \regex_count:nVN { \. } \l__atbd_headnum_tl \l__atbd_headdepth_int
+        \int_incr:N \l__atbd_headdepth_int
+        \ifatbd@headnodot \else \tl_put_right:Nn \l__atbd_headnum_tl { . } \fi
+        \tl_if_in:NnTF \atbdcode { PFD }
+          { \int_case:nnF { \l__atbd_headdepth_int }
+              { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                {2}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                {3}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } } }
+              { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } } }
+          { \ifatbd@headnodot
+              \int_case:nnF { \l__atbd_headdepth_int }
+                { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {2}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } }
+                  {3}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } } }
+                { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } }
+            \else
+              \int_case:nnF { \l__atbd_headdepth_int }
+                { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {2}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {3}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } }
+                  {4}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } } }
+                { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } }
+            \fi }
+        \hbox_set:Nn \l__atbd_head_box { \l__atbd_headnum_tl }
+        \dim_set:Nn \l__atbd_headstop_dim
+          { \dim_max:nn { \l__atbd_headstop_dim } { \box_wd:N \l__atbd_head_box + 0.9bp } }
+        \hbox_to_wd:nn { \l__atbd_headstop_dim } { \box_use:N \l__atbd_head_box \hfil }
+        \l__atbd_headtext_tl
+      }
+      { #1 }
+  }
+\ExplSyntaxOff
+
 \setcounter{secnumdepth}{-1}
 \setcounter{tocdepth}{3}
 \newlength\atbdheadindent
 \setlength\atbdheadindent{1.25cm}
 
 \titleformat{\chapter}[block]
-  {\color{atbdblue}\fontsize{24bp}{28bp}\selectfont\bfseries}{}{0pt}{}
+  {\color{atbdblue}\fontsize{24bp}{28bp}\selectfont\bfseries}{}{0pt}{\atbd@headtitle}
 \titlespacing*{\chapter}{-\atbdheadindent}{-22.9bp}{18.4bp}
 \titleformat{\section}[block]
-  {\color{atbdblue}\fontsize{16bp}{19bp}\selectfont}{}{0pt}{}
+  {\color{atbdblue}\fontsize{16bp}{19bp}\selectfont}{}{0pt}{\atbd@headtitle}
 \titlespacing*{\section}{-\atbdheadindent}{20bp}{13.4bp}
 \titleformat{\subsection}[block]
-  {\color{atbdblue}\fontsize{14bp}{17bp}\selectfont}{}{0pt}{}
+  {\color{atbdblue}\fontsize{14bp}{17bp}\selectfont}{}{0pt}{\atbd@headtitle}
 \titlespacing*{\subsection}{-\atbdheadindent}{11.3bp}{11.8bp}
 \titleformat{\subsubsection}[block]
-  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{}
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{\atbd@headtitle}
 \titlespacing*{\subsubsection}{-\atbdheadindent}{13bp}{10.1bp}
 \titleformat{\paragraph}[block]
-  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{}
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{\atbd@headtitle}
 \titlespacing*{\paragraph}{-\atbdheadindent}{13bp}{10.1bp}
 \titleformat{\subparagraph}[block]
   {\color{atbdblue}\normalsize\itshape}{}{0pt}{}
@@ -177,14 +233,55 @@
   \apptocmd\atbdmaketitle{\atbd@decortrue\pagenumbering{arabic}}{}{}}
 
 % ---------------------------------------------------------------------------
+% Text height. conf.py asks geometry for height=684.7bp, but Sphinx has already
+% fixed the bottom margin, so geometry drops it and the text ran down to
+% y = 769.8 bp, through the yellow footer rule (y = 764.5). The body of the
+% originals ends at y = 758: set the height here (after geometry) so that the
+% bottom of the last line stays clear of the rule.
+% ---------------------------------------------------------------------------
+\newdimen\atbd@bodybottom
+\atbd@bodybottom=757.6bp
+\AtBeginDocument{%
+  \setlength\textheight{\dimexpr\atbd@bodybottom-1in-\voffset-\topmargin-\headheight-\headsep\relax}%
+  \@colht\textheight \@colroom\textheight \vsize\textheight}
+
+% ---------------------------------------------------------------------------
+% Cross-references (E-15): [RD10], [AD1], "Section 3.3.4", "Fig.12" are black
+% and upright in the originals. They stay links, without colour or frame
+% (colorlinks, set by Sphinx from these colours); external URLs are blue as
+% in the originals (0000FF).
+% ---------------------------------------------------------------------------
+\definecolor{InnerLinkColor}{rgb}{0,0,0}
+\definecolor{OuterLinkColor}{HTML}{0000FF}
+\protected\def\sphinxcrossref#1{#1}
+\AtBeginDocument{\hypersetup{linkcolor=black,citecolor=black,filecolor=black,
+  urlcolor=OuterLinkColor,linkbordercolor={0 0 0},citebordercolor={0 0 0}}}
+
+% ---------------------------------------------------------------------------
 % Body spacing: Word paragraphs of the originals (6 pt after), compact lists
 % and displayed equations.
 % ---------------------------------------------------------------------------
-\setlength\parskip{1.5pt plus 0.5pt}
-\def\@listi{\leftmargin\leftmargini\topsep 0pt plus 1pt\parsep\z@\itemsep 0.7bp}
+% Word "6 pt after" of the originals between paragraphs (E-14).
+\setlength\parskip{6bp plus 0.5bp}
+% Lists (E-13): bullet at 18 bp from the text edge (x = 110 in the originals)
+% and text at 36 bp (x = 128); level 2 "o" 18 bp further in, text 36 bp in the
+% parent. \makelabel puts the right edge of the label at leftmargin - labelsep:
+% labelsep = 36 bp - 18 bp - width of the bullet (3.85 bp; "o" 6.62 bp).
+\setlength\leftmargini{36bp}
+\setlength\leftmarginii{36bp}
+\setlength\leftmarginiii{36bp}
+\setlength\leftmarginiv{36bp}
+\renewcommand\labelitemi{\textbullet}
+\renewcommand\labelitemii{\texttt{o}}
+\renewcommand\labelitemiii{\textbullet}
+\renewcommand\labelitemiv{\textbullet}
+\def\@listi{\leftmargin\leftmargini \labelsep 14.15bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 0pt plus 1pt\parsep\z@\itemsep 0.7bp}
 \let\@listI\@listi
-\def\@listii{\leftmargin\leftmarginii\topsep 1pt\parsep\z@\itemsep\z@}
-\def\@listiii{\leftmargin\leftmarginiii\topsep 1pt\parsep\z@\itemsep\z@}
+\def\@listii{\leftmargin\leftmarginii \labelsep 11.4bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 1pt\parsep\z@\itemsep\z@}
+\def\@listiii{\leftmargin\leftmarginiii \labelsep 11.4bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 1pt\parsep\z@\itemsep\z@}
 \AtBeginDocument{%
   \setlength\abovedisplayskip{8pt plus 2pt}%
   \setlength\belowdisplayskip{8pt plus 2pt}%

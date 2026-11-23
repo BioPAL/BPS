@@ -225,6 +225,9 @@ def _formatted(text: str) -> list[nodes.Node]:
 _TALL = re.compile(r"\\(?:d?frac|sum|prod|int|begin|binom|sqrt)(?![A-Za-z])")
 
 
+_LONG_INLINE_MATH = 30  # characters of TeX: shorter formulas keep their delimiters
+
+
 def _breakable(tex: str) -> str:
     """A formula of a table cell without growing delimiters when nothing tall
     needs them: TeX cannot break a line inside ``\\left[ … \\right]``, so a
@@ -958,6 +961,15 @@ class AtbdLatexContent(SphinxPostTransform):
                 math.replace_self(nodes.raw(
                     "", r"\atbdfitmath{\(%s\)}" % _breakable(math.astext()),
                     format="latex"))
+            elif (math.parent is not None and isinstance(math.parent, nodes.paragraph)
+                  and len(math.astext()) > _LONG_INLINE_MATH
+                  and _LEFT_ANY_RE.search(math.astext())
+                  and r"\middle" not in math.astext()):
+                # A long formula of running text with \left...\right cannot
+                # break: it stuck out of the column (AGB p. 27, x1 = 583).
+                tex = _breakable(math.astext())
+                if tex != math.astext():
+                    math.replace_self(nodes.math(tex, tex))
         engine = self.config.latex_engine
         for literal, _docname in found["literal"]:
             if isinstance(literal.parent, (nodes.title, nodes.caption)):
