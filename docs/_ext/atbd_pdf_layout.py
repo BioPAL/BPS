@@ -50,6 +50,11 @@ _COVER_TITLES = {
     "pfd-l2-fd": ("BIOMASS Forest", "Disturbance Products", "Format Specification"),
     "pfd-l2-fh": ("BIOMASS Forest", "Height Products", "Format Specification"),
 }
+# Page header title of the originals where it differs from the title of the
+# Document information (the L1 Stack ATBD page header is "BPS L1 STACK ATBD").
+_HEADER_TITLES = {
+    "atbd-l1-stack": "BPS L1 STACK ATBD - Algorithms Theoretical Baseline Document",
+}
 # Cover geometry measured on the originals (pt from the top-left corner of
 # the page): top of the Aresys logo, top of the title's first line, top of
 # the BIOMASS mission logo, left edge and top of the "Ref:" line of the
@@ -232,7 +237,7 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
     definitions = "\n".join(
         rf"\newcommand\atbd{name}{{{value}}}"
         for name, value in (
-            ("title", latex_escape(meta["title"])),
+            ("title", latex_escape(_HEADER_TITLES.get(folder, meta["title"]))),
             ("code", latex_escape(meta["code"])),
             ("issue", latex_escape(meta["issue"])),
             ("date", latex_escape(meta["date"])),
@@ -360,55 +365,99 @@ def _front_nodes(top: nodes.Node):
 
 # Start of an item of a Change history entry: a ticket key ("BPSPDR3-61:",
 # "BPS-393 / BPS-392:", "BPS-FTO-BATCH4:") or an "Updated ..." line. The
-# conversion joins the bullet list of the original into one paragraph.
-_CHANGE_ITEM_RE = re.compile(
-    r"(?<=[^\s,/])\s+(?=(?:[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+"
-    r"(?:\s*[,/]\s*[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+)*\s*:)"
-    r"|(?:Updated|Added|Renamed|Removed|Expanded|Separated|Fixed)\b)"
+# conversion joins the bullet list of the original into one paragraph, so the
+# list is rebuilt from the text.
+_TICKET = r"[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+"
+_TICKET_KEYS = rf"{_TICKET}(?:\s*[,/]\s*{_TICKET})*\s*:"
+_CHANGE_VERBS = (
+    r"(?:Updated|Added|Renamed|Removed|Expanded|Separated|Fixed|Refactored|Revised|Finalized|Explained|"
+    r"Rewritten|Clarified|Corrected|Changed|Moved|Replaced|Improved|Reformulated|Reviewed|Modified|"
+    r"Specified|Addressed|Restructured|Major)\b"
+)
+_CHANGE_START_RE = re.compile(rf"(?<=[^\s,/])\s+(?=(?:{_TICKET_KEYS})|(?:{_CHANGE_VERBS}))")
+_TICKET_START_RE = re.compile(rf"\s*{_TICKET_KEYS}")
+# End of a sentence or of a "(Sec. 4.1)" reference followed by a capital letter.
+_SENTENCE_RE = re.compile(r"(?<=[.)])\s+(?=[A-Z][a-z])")
+# A colon after a few words ("... updates: Reference included ...") opens
+# a list of sub-items.
+_COLON_RE = re.compile(r"(?<=[a-z\)]:)\s+(?=(?!Section\b)[A-Z][a-z])")
+# "Stacking: Section 4.4 IOB: Section 5.2.5 ...": one sub-item per label.
+_LABEL_RE = re.compile(r"(?<=\d)\s+(?=[A-Z][A-Za-z]*:\s+Section\b)")
+_ABBREVIATIONS = ("Sec.", "Secs.", "Fig.", "Figs.", "Eq.", "Eqs.", "No.", "Tab.", "Ref.", "Refs.", "e.g.", "i.e.", "vs.", "w.r.t.", "Sect.")
+# Title of an entry, printed on its own line above the bullets.
+_CHANGE_TITLE_RE = re.compile(
+    r"^((?:[A-Za-z0-9_\-]+ ){1,3}(?:issue|version) of the document(?: \([^)]*\))?[:.]?)(?:\s+|$)"
 )
 
 
-# End of a ticket key followed by its colon: no new item right after it.
-_TICKET_COLON_END_RE = re.compile(
-    r"[A-Z][A-Za-z0-9]*-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]*\d+\s*:$"
-)
-
-
-def _split_change_items(para: nodes.paragraph) -> None:
-    """Rebuild the bullet list of a Change history cell."""
-    segments: list[list[nodes.Node]] = [[]]
-    for child in list(para.children):
-        if not isinstance(child, nodes.Text):
-            segments[-1].append(child.deepcopy())
-            continue
-        text, pos = str(child), 0
-        for match in _CHANGE_ITEM_RE.finditer(text):
-            if _TICKET_COLON_END_RE.search(text[:match.start()]):
+def _split_text(text: str) -> list[str]:
+    """Cut a flattened bullet list at the starts of its items."""
+    cuts: set[int] = set()
+    for regex in (_CHANGE_START_RE, _SENTENCE_RE, _COLON_RE, _LABEL_RE):
+        for match in regex.finditer(text):
+            before = text[:match.start()]
+            if before.endswith(_ABBREVIATIONS) or re.search(r"\b[A-Z]\.$", before):
                 continue
-            if text[pos:match.start()]:
-                segments[-1].append(nodes.Text(text[pos:match.start()]))
-            segments.append([])
-            pos = match.end()
-        if text[pos:]:
-            segments[-1].append(nodes.Text(text[pos:]))
-    if len(segments) < 3 or para.parent is None:
-        return  # a single change: keep the paragraph
-    intro, items = segments[0], segments[1:]
-    bullets = nodes.bullet_list(bullet="-")
-    for item in items:
-        bullets += nodes.list_item("", nodes.paragraph("", "", *item))
-    new: list[nodes.Node] = [nodes.paragraph("", "", *intro)] if intro else []
-    para.replace_self([*new, bullets])
+            if before.endswith(("-", "\u2013")):
+                continue  # "BPS-42: PDR1-2 - Updated ...": one item
+            if re.search(_TICKET_KEYS + r"$", before):
+                continue  # "PDR1-3-57:" is followed by its text
+            if regex is _COLON_RE and len(before.split()) < 3:
+                continue
+            cuts.add(match.end())
+    parts, pos = [], 0
+    for cut in sorted(cuts):
+        parts.append(text[pos:cut].strip())
+        pos = cut
+    parts.append(text[pos:].strip())
+    return [part for part in parts if part]
 
 
-_ROW_ITEMS = 4  # bullets per table row (a longtable row cannot break)
+def _change_items(text: str) -> tuple[str, list[tuple[int, str]]]:
+    """Title line and ``(level, text)`` bullets of a Change history cell.
+
+    An item ending with a colon (not a ticket key alone) opens a second
+    level, which lasts up to the next ticket key.
+    """
+    text = " ".join(text.split())
+    title = ""
+    match = _CHANGE_TITLE_RE.match(text)
+    if match and len(text) > match.end():
+        title, text = match.group(1), text[match.end():]
+    elif match:
+        return match.group(1), []
+    items: list[tuple[int, str]] = []
+    nested = False
+    labels = False  # the sub-items are "Label: Section x.y" lines
+    for part in _split_text(text):
+        label = bool(re.match(r"[A-Z][A-Za-z]*:\s+Section\b", part))
+        if _TICKET_START_RE.match(part) or (nested and labels and not label):
+            nested = False
+        level = 2 if nested else 1
+        items.append((level, part))
+        if part.endswith(":") and not _TICKET_START_RE.fullmatch(part):
+            nested, labels = True, False
+        elif label and nested:
+            labels = True
+    return title, items
+
 
 # Geometry (pt) of the grid tables of the originals; every cell is
 # ``_ROW_PITCH`` high (rule included), the first column starts at the left
 # margin of the body text.
 _INFO_COLUMNS = (127.3, 318.7)  # Title ... Pages
+_INFO_COLUMNS_BY_DOC = {"atbd-l1-stack": (108.2, 337.8)}  # narrower label column
 _BLOCK_COLUMNS = (254.9, 191.1)  # Recipients ... Approved by
-_CHANGE_COLUMNS = (63.7, 49.5, 256.4, 123.3)  # Date | Issue | Change | Author
+# Date | Issue | Change | Author widths and shift to the left (pt), measured
+# on the vertical rules of each original (Word fits the columns to the text).
+_CHANGE_COLUMNS = (60.8, 36.5, 337.4, 58.1, 0.0)
+_CHANGE_COLUMNS_BY_DOC = {
+    "atbd-l2-agb": (63.6, 49.6, 256.4, 123.2, 0.0),
+    "atbd-l2-fh": (60.8, 36.5, 312.2, 83.3, 0.0),
+    "atbd-l1-sar": (60.9, 36.4, 337.5, 58.1, 5.7),
+    "pfd-l2-fd": (62.2, 46.8, 336.0, 68.0, 5.7),
+    "pfd-l2-fh": (62.4, 71.2, 262.5, 95.8, 0.0),
+}
 # Rows of the "Name | Organisation" blocks of the originals (blank rows are
 # kept: the originals are filled in by hand).
 _BLOCKS = ("Recipients", "Prepared by", "Checked by", "Approved by")
@@ -486,43 +535,44 @@ def _change_rows(container: nodes.Element, known: set[str]) -> list[dict[str, An
                 entries = list(row.findall(nodes.entry))
                 if len(entries) != 4:
                     continue
-                for para in list(entries[2].findall(nodes.paragraph)):
-                    _split_change_items(para)
-                intro = [_cell_text(p) for p in entries[2].children if isinstance(p, nodes.paragraph)]
-                bullets = [
-                    _cell_text(item)
-                    for lst in entries[2].findall(nodes.bullet_list)
-                    for item in lst.children
-                ]
+                # The conversion joins the whole cell into one paragraph
+                # (the bullet lists of the original are lost): rebuild them.
+                title, bullets = _change_items(_cell_text(entries[2]))
                 rows.append({
                     "date": _format_date(_cell_text(entries[0])),
                     "issue": _cell_text(entries[1]),
-                    "intro": intro,
+                    "title": title,
                     "bullets": bullets,
                     "authors": _split_authors(_cell_text(entries[3]), known),
                 })
     return rows
 
 
-def _info_latex(heading: str, fields: dict[str, str], blocks: dict[str, list[list[str]]]) -> str:
+def _info_latex(heading: str, folder: str, fields: dict[str, str], blocks: dict[str, list[list[str]]]) -> str:
     """Single bordered Document information table, then the blocks."""
     pages = re.match(r"\d+", fields.get("pages", ""))
     external = fields.get("external reference") or fields.get("external ref.", "")
-    values = (
-        ("Title", fields.get("title", ""), True),
-        ("Internal Ref.", "", False),
-        ("External Ref.", external, False),
-        ("Date", _format_date(fields.get("date", "")), False),
-        ("Issue", fields.get("issue", ""), False),
-        ("Pages", pages.group(0) if pages else fields.get("pages", ""), False),
+    # Pages: the count of the approved document, then that of this export.
+    pages_tex = (
+        _tex(pages.group(0)) + r" (approved document); this export: \the\numexpr\getpagerefnumber{LastPage}+1\relax"
+        if pages else _tex(fields.get("pages", ""))
     )
-    out = [f"\\clearpage\n\\atbdfrontheading{{{_tex(heading)}}}"]
+    values = (
+        ("Title", _tex(fields.get("title", "")), True),
+        ("Internal Ref.", "", False),
+        ("External Ref.", _tex(external), False),
+        ("Date", _tex(_format_date(fields.get("date", ""))), False),
+        ("Issue", _tex(fields.get("issue", "")), False),
+        ("Pages", pages_tex, False),
+    )
+    out = [f"\\clearpage\n\\atbdfrontheading[24bp]{{{_tex(heading)}}}\n\\atbdexportnotice"]
     body = []
     for label, value, bold in values:
         shade = "\\atbdshade" if label == "Title" else ""
-        value_tex = f"\\bfseries {_tex(value)}" if bold else _tex(value)
+        value_tex = f"\\bfseries {value}" if bold else value
         body.append(f"{shade}\\atbdcell{{\\bfseries {label}}} & {shade}\\atbdcell{{{value_tex}}} \\\\ \\hline")
-    out.append(f"\\atbdgrid{{{_INFO_COLUMNS[0]}bp}}{{{_INFO_COLUMNS[1]}bp}}{{{' '.join(body)}}}")
+    columns = _INFO_COLUMNS_BY_DOC.get(folder, _INFO_COLUMNS)
+    out.append(f"\\atbdgrid{{{columns[0]}bp}}{{{columns[1]}bp}}{{{' '.join(body)}}}")
     for name in _BLOCKS:
         rows = blocks.get(name)
         if rows is None:
@@ -532,35 +582,88 @@ def _info_latex(heading: str, fields: dict[str, str], blocks: dict[str, list[lis
         body = [f"\\atbdshade\\atbdcell{{\\bfseries {name}}} & \\atbdshade\\atbdcell{{}} \\\\ \\hline"]
         body += [f"\\atbdcell{{{_tex(a)}}} & \\atbdcell{{{_tex(b)}}} \\\\ \\hline" for a, b in rows]
         out.append(f"\\vspace{{16bp}}\n\\atbdgrid{{{_BLOCK_COLUMNS[0]}bp}}{{{_BLOCK_COLUMNS[1]}bp}}{{{' '.join(body)}}}")
-    out.append("\\atbdexportnotice\n")
-    return "\n".join(out)
+    return "\n".join(out) + "\n"
 
 
-def _change_latex(heading: str, rows: list[dict[str, Any]]) -> str:
-    """Change history: Date | Issue | Change | Author, bullets, one author a line."""
+_CHANGE_SINGLE_ROW = 100.0  # estimated height (pt) up to which an entry is one row
+
+
+def _author_tex(name: str, width: float) -> str:
+    """Name of an author; words wider than the column break anywhere (as Word does)."""
+    words = []
+    for word in name.split():
+        if len(word) * 4.6 > width:
+            words.append("\\penalty0 ".join(_tex(char) for char in word))
+        else:
+            words.append(_tex(word))
+    return " ".join(words)
+
+
+def _change_line_chars(folder: str) -> int:
+    """Characters of a bullet line of the Change column (10 pt, 5.2 pt each)."""
+    return int((_CHANGE_COLUMNS_BY_DOC.get(folder, _CHANGE_COLUMNS)[2] - 10.8 - 18) / 5.6)
+
+
+def _change_latex(heading: str, folder: str, rows: list[dict[str, Any]]) -> str:
+    """Change history: Date | Issue | Change | Author.
+
+    The title of an entry is a line of its own, then one row per bullet
+    (levels 1 and 2); date, issue and authors sit in the row that holds the
+    middle of the entry, centred vertically as in the originals.
+    """
     body = []
     for row in rows:
-        bullets = row["bullets"]
-        chunks = [bullets[i:i + _ROW_ITEMS] for i in range(0, len(bullets), _ROW_ITEMS)] or [[]]
-        for index, chunk in enumerate(chunks):
-            first, last = index == 0, index == len(chunks) - 1
-            intro = [f"\\atbdchg{{{_tex(text)}}}" for text in (row["intro"] if first else [])]
-            bullets_tex = [f"\\atbdbullet{{{_tex(text)}}}" for text in chunk]
-            change = "\\par ".join(intro)
-            if bullets_tex:
-                # 2.5 pt between the intro line and the first bullet
-                change += ("\\par\\vspace{2.5bp}" if intro else "") + "\\par ".join(bullets_tex)
-            if not change:
-                change = "\\mbox{}"
-            authors = "\\newline ".join(_tex(name) for name in row["authors"]) if first else ""
-            rule = " \\hline" if last else ""
-            body.append(
-                f"\\atbdchangerow{{{_tex(row['date']) if first else ''}}}{{{_tex(row['issue']) if first else ''}}}"
-                f"{{{change}}}{{{authors}}}{rule}"
+        cells: list[tuple[float, str]] = []  # (height above the baseline, text)
+        if row["title"]:
+            cells.append((12.85, f"\\atbdchg{{{_tex(row['title'])}}}"))
+        for level, text in row["bullets"]:
+            top = 12.6 if len(cells) == 1 and row["title"] else (12.85 if not cells else 10.1)
+            cells.append((top, f"\\atbdbullet[{level}]{{{_tex(text)}}}"))
+        if not cells:
+            cells.append((12.85, "\\mbox{}"))
+        # estimated height of every cell (title line, bullets)
+        heights = [max(1, -(-len(text) // _change_line_chars(folder))) * 14.6 + (top - 10.1) for top, text in cells]
+        # authors: one per line, 15 pt a line
+        width = _CHANGE_COLUMNS_BY_DOC.get(folder, _CHANGE_COLUMNS)[3] - 10.8
+        names = row["authors"]
+        authors = "\\newline ".join(_author_tex(name, width) for name in names)
+        author_height = 15.0 * sum(max(1, -(-int(len(name) * 4.6) // int(width))) for name in names)
+        date, issue = _tex(row["date"]), _tex(row["issue"])
+
+        def joined(chunk: list[tuple[float, str]]) -> str:
+            return "\\par ".join(
+                ("\\vspace{2.4bp}" if i == 1 and row["title"] and chunk[0] is cells[0] else "") + text
+                for i, (_, text) in enumerate(chunk)
             )
+
+        # A short entry is one row: all cells are centred on it, as in the
+        # originals. A long entry is one row per bullet (an entry can break
+        # between two pages, a row cannot); its first row holds as many lines
+        # as the authors need, and the date and issue hang from the middle one.
+        first = len(cells) if sum(heights) <= _CHANGE_SINGLE_ROW else 1
+        while first < len(cells) and sum(heights[:first]) < author_height * 1.25 + 10:
+            first += 1
+        groups = [cells[:first]] + [[cell] for cell in cells[first:]]
+        group_heights = [sum(heights[:first])] + heights[first:]
+        total = sum(group_heights)
+        tops = [sum(group_heights[:i]) for i in range(len(groups))]
+        middle = min(range(len(groups)), key=lambda i: abs(tops[i] + group_heights[i] / 2 - total / 2))
+        for index, chunk in enumerate(groups):
+            end_row = "\\\\" + (" \\hline" if index == len(groups) - 1 else "")
+            if len(groups) == 1:
+                date_tex, issue_tex = date, issue
+            elif index == middle:
+                date_tex, issue_tex = "\\atbdflat{" + date + "}", "\\atbdflat{" + issue + "}"
+            else:
+                date_tex = issue_tex = ""
+            body.append(
+                f"\\atbdchangerow{{{date_tex}}}{{{issue_tex}}}{{{chunk[0][0]}}}{{{joined(chunk)}}}"
+                f"{{{authors if index == 0 else ''}}}{{{end_row}}}"
+            )
+    widths = "".join(f"{{{value}}}" for value in _CHANGE_COLUMNS_BY_DOC.get(folder, _CHANGE_COLUMNS))
     return (
         f"\\clearpage\n\\atbdfrontheading{{{_tex(heading)}}}\n"
-        f"\\begin{{atbdchange}}\n{chr(10).join(body)}\n\\end{{atbdchange}}\n"
+        f"\\begin{{atbdchange}}{widths}\n{chr(10).join(body)}\n\\end{{atbdchange}}\n"
     )
 
 
@@ -609,12 +712,12 @@ class AtbdLatexFrontMatter(SphinxPostTransform):
             container = info.parent
             fields, blocks = _front_blocks(container)
             known = {row[0] for rows in blocks.values() for row in rows if row[0]}
-            self._replace(container, _info_latex(info_label, fields, blocks))
+            self._replace(container, _info_latex(info_label, folder, fields, blocks))
             last_front = container
         change = rubrics.get("change history")
         if change is not None and change.parent is not None:
             container = change.parent
-            self._replace(container, _change_latex(change_label, _change_rows(container, known)))
+            self._replace(container, _change_latex(change_label, folder, _change_rows(container, known)))
             last_front = container
 
         toc = _raw_latex(f"\n\\atbdtableofcontents[{latex_escape(toc_label)}]\n")
