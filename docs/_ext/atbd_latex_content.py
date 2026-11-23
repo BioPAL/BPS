@@ -105,6 +105,39 @@ _PRIME_GROUP_RE = re.compile(r"(\^\{(?:\\prime)+\})\}(?=\s*[\^_])")
 _ARG_OP_RE = re.compile(r"\\arg(min|max)(?![A-Za-z])")
 
 
+# Content that a fixed-size delimiter would not fit (stacked material).
+_TALL_RE = re.compile(r"\\(?:d|t)?frac\b|\\(?:sum|prod|int|sqrt|binom|begin|over)\b")
+_LEFT_ANY_RE = re.compile(r"\\left(?![A-Za-z])")
+_RIGHT_ANY_RE = re.compile(r"\\right(?![A-Za-z])")
+_LEFT_BRACKET_RE = re.compile(r"\\left\s*(?=[(\[]|\\\{)")
+_RIGHT_BRACKET_RE = re.compile(r"\\right\s*(?=[)\]]|\\\})")
+
+
+def _breakable_delimiters(tex: str) -> str:
+    """``tex`` with its ``\\left( ... \\right)`` pairs as fixed-size ``\\bigl( ... \\bigr)``,
+    which TeX can break inside (after \\times, +, ...), or "" when that does not
+    apply (no pair, other delimiters such as ``\\left.``, stacked content)."""
+    lefts, rights = len(_LEFT_ANY_RE.findall(tex)), len(_RIGHT_ANY_RE.findall(tex))
+    if not lefts or _TALL_RE.search(tex):
+        return ""
+    if (len(_LEFT_BRACKET_RE.findall(tex)), len(_RIGHT_BRACKET_RE.findall(tex))) != (lefts, rights):
+        return ""
+    tex = _LEFT_BRACKET_RE.sub(r"\\bigl", tex)
+    return _RIGHT_BRACKET_RE.sub(r"\\bigr", tex)
+
+
+def _alternative(tex: str) -> str:
+    """Optional argument of the atbdmath.sty macros: the breakable variant."""
+    alt = _breakable_delimiters(tex)
+    return "[{%s}]" % alt if alt else ""
+
+
+def _display_macro(body: str) -> str:
+    """Macro of atbdmath.sty that fits a displayed formula to the text width:
+    one line breaks after its operators, an alignment (``&``, ``\\\\``) is scaled."""
+    return "atbdfitdisplay" if ("&" in body or "\\\\" in body) else "atbdfitline"
+
+
 def _tex_math(text: str) -> str:
     # Greek capital iota (from the DOCX equations) is a Latin I in TeX math.
     text = text.replace("\u0399", "I")
@@ -766,7 +799,8 @@ class AtbdLatexContent(SphinxPostTransform):
             if math.parent is not None and _in_table(math):
                 # Formulas wider than their column are scaled down to it.
                 math.replace_self(nodes.raw(
-                    "", r"\atbdfitmath{\(%s\)}" % math.astext(), format="latex"))
+                    "", r"\atbdfitmath%s{\(%s\)}" % (
+                        _alternative(r"\(%s\)" % math.astext()), math.astext()), format="latex"))
         engine = self.config.latex_engine
         for literal, _docname in found["literal"]:
             if isinstance(literal.parent, (nodes.title, nodes.caption)):
@@ -1090,7 +1124,10 @@ class AtbdLatexContent(SphinxPostTransform):
                 fitted = text.replace(r"\begin{aligned}", r"\atbdfitdisplay{").replace(
                     r"\end{aligned}", "}")
             elif r"\begin{aligned}" not in text:
-                fitted = _EQUATION_BODY_RE.sub(r"\1\\atbdfitdisplay{\2}\3", text, count=1)
+                fitted = _EQUATION_BODY_RE.sub(
+                    lambda m: "%s\\%s{%s}%s" % (m.group(1), _display_macro(m.group(2)),
+                                               m.group(2), m.group(3)),
+                    text, count=1)
             if fitted != text:
                 math.children = []
                 math += nodes.Text(fitted)
@@ -1103,10 +1140,11 @@ class AtbdLatexContent(SphinxPostTransform):
         label = ""
         if math.get("label"):
             label = r"\label{equation:%s:%s}" % (math["docname"], math["label"])
-        # \atbdfitdisplay (atbdmath.sty) sets the body like ``split`` and
-        # scales it down when it is wider than the text.
+        # \atbdfitline / \atbdfitdisplay (atbdmath.sty) fit the body to the text
+        # width (broken after its operators, or scaled when aligned).
         latex = (
-            f"{labels}\n\\begin{{equation}}{label}\n\\atbdfitdisplay{{\n{body}\n"
+            f"{labels}\n\\begin{{equation}}{label}\n\\{_display_macro(body)}{_alternative(body)}"
+            f"{{\n{body}\n"
             f"}}\\tag{{{tag.group('num')}}}\n\\end{{equation}}"
         )
         math.replace_self(nodes.raw("", latex, format="latex"))

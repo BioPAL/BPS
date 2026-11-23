@@ -28,3 +28,16 @@ def test_equation_tag_pattern_is_not_the_html_tag_pattern():
     match = _EQ_TAG_RE.search("a=b\n\\tag{3.1}")
     assert match is not None and match.group("num") == "3.1"
     assert _EQ_TAG_RE.sub("", "a=b\n\\tag*{(A)}").strip() == "a=b"
+
+
+def test_display_formulas_pick_the_fitting_macro():
+    from atbd_latex_content import _alternative, _display_macro
+    assert _display_macro("a=b+c") == "atbdfitline"
+    assert _display_macro("a&=b\\\\ c&=d") == "atbdfitdisplay"
+    assert _alternative("a=b") == ""
+    assert _alternative(r"\left[ N\times{}M \right]") == r"[{\bigl[ N\times{}M \bigr]}]"
+    assert _alternative(r"\left\{ a \right\}") == r"[{\bigl\{ a \bigr\}}]"
+    # stacked content or mixed delimiters keep their automatic size
+    assert _alternative(r"\left( \frac{a}{b} \right)") == ""
+    assert _alternative(r"\left. f \right\vert_{x}") == ""
+    assert _alternative(r"\left( a \right.") == ""

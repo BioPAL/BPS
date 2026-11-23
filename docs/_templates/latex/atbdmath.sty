@@ -6,26 +6,84 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{atbdmath}[2026/11/23 BPS Science Guide PDF layout]
 
-% Inline formulas wider than their column are scaled down to it, to 70 % at
+% Inline formulas wider than their column are scaled down to it, to 60 % at
 % most (smaller would not be legible).
-\newcommand\atbdfitmath[1]{%
-  \allowbreak\sbox\z@{#1}%
+% [#1] is the same formula with fixed-size brackets, which TeX can break inside.
+\newcommand\atbdfitmath[2][]{%
+  \allowbreak\sbox\z@{#2}%
   \ifdim\wd\z@>\linewidth
-    % scaled to the column width down to 60 % of its size; wider, it is set
-    % at its own size and breaks after its operators (x, +, =) like the
-    % approved PDFs, instead of overflowing the cell (FD "Size" columns)
-    \dimen@=0.6\wd\z@
-    \ifdim\dimen@>\linewidth #1%
+    \def\atbd@alt{#1}%
+    % scaled to the column width down to 60 % of its size (85 % when it
+    % can break inside its brackets); wider, it is set at its own size and
+    % breaks after its operators (x, +, =) like the approved PDFs, instead
+    % of overflowing the cell (FD "Size" columns)
+    \ifx\atbd@alt\@empty
+      \def\atbd@fm{#2}\dimen@=0.6\wd\z@
+    \else
+      \def\atbd@fm{#1}\sbox\z@{#1}\dimen@=0.85\wd\z@
+    \fi
+    \ifdim\dimen@>\linewidth \atbd@fm
     \else\resizebox{\linewidth}{!}{\usebox\z@}\fi
   \else\usebox\z@\fi}
-% Numbered equations (atbd_latex_content.py): multi-line body aligned on &
-% like split, scaled down when wider than the text minus the tag.
+% Displayed equations (atbd_latex_content.py). The number is set in the text
+% font, 12 pt inside the right margin like the approved PDFs.
+\renewcommand\tagform@[1]{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)\hspace{12pt}}}
+\newdimen\atbd@eqavail
+% Log line of each formula wider than the text (page, width, available width).
+\newcommand\atbd@eqlog[1]{\typeout{ATBDEQ #1 page \thepage: \the\wd\z@\space>\space\the\atbd@eqavail}}
+\newcommand\atbd@eqsetavail{\atbd@eqavail=\dimexpr\linewidth-6.2em\relax}
+% Multi-line body aligned on & like split, scaled down when wider than the text
+% minus the number.
 \newcommand\atbdfitdisplay[1]{%
+  \atbd@eqsetavail
   \sbox\z@{$\displaystyle\begin{aligned}#1\end{aligned}$}%
-  \ifdim\wd\z@>\dimexpr\linewidth-4em\relax
-    \resizebox{\dimexpr\linewidth-4em\relax}{!}{\usebox\z@}%
+  \ifdim\wd\z@>\atbd@eqavail
+    \atbd@eqlog{aligned scaled}%
+    \resizebox{\atbd@eqavail}{!}{\usebox\z@}%
   \else\usebox\z@\fi}
-% Math: upright letters and Greek capitals (\Delta, \mathrm, \mathbf) from
+% One-line body: kept at its size when it fits; slightly too wide (down to
+% 85 %), scaled; wider, broken after its relations and operators (=, +, -, x)
+% like the approved PDFs, in lines centred on the text width.
+\newcommand\atbdfitline[2][]{%
+  \atbd@eqsetavail
+  \sbox\z@{$\displaystyle#2$}%
+  \ifdim\wd\z@>\atbd@eqavail
+    \ifdim0.85\wd\z@>\atbd@eqavail
+      \atbd@eqlog{broken}%
+      \def\atbd@alt{#1}%
+      \ifx\atbd@alt\@empty\atbd@breakline{#2}\else\atbd@breakline{#1}\fi%
+    \else\atbd@eqlog{scaled}\resizebox{\atbd@eqavail}{!}{\usebox\z@}\fi
+  \else\usebox\z@\fi}
+% Lines of the broken formula: one that cannot be broken any further (a
+% \left...\right group) sticks out of the box; the whole is then scaled down
+% to the available width (natural width of the widest line measured below).
+\newdimen\atbd@maxline
+\def\atbd@scanlines{%
+  \unskip\unpenalty\global\setbox\thr@@\lastbox
+  \ifvoid\thr@@\else
+    \setbox\thr@@\hbox{\unhbox\thr@@}%
+    \ifdim\wd\thr@@>\atbd@maxline\global\atbd@maxline=\wd\thr@@\fi
+    \expandafter\atbd@scanlines
+  \fi}
+\newcommand\atbd@breakline[1]{%
+  \setbox\z@\vbox{%
+    \hsize=\atbd@eqavail \centering \noindent
+    \pretolerance=-1 \tolerance=10000 \emergencystretch=3em \hbadness=10000
+    \binoppenalty=100 \relpenalty=0
+    $\displaystyle#1$\par}%
+  \global\atbd@maxline=\z@
+  \setbox\tw@\vbox{\unvcopy\z@ \atbd@scanlines}%
+  \ifdim\atbd@maxline>\atbd@eqavail
+    \atbd@eqlog{broken, widest line}%
+    \resizebox{\atbd@eqavail}{!}{\hbox to\atbd@maxline{\box\z@\hss}}%
+  \else\box\z@\fi}
+% Math font: Cambria Math in the originals. STIX Two Math (TeX Live) is the
+% closest font shipped with it (scaled to the 11-12 pt of the originals,
+% Arial has a larger x-height); Computer Modern otherwise.
+\IfFontExistsTF{STIXTwoMath-Regular.otf}{%
+  \usepackage{unicode-math}%
+  \setmathfont{STIXTwoMath-Regular.otf}[Scale=1.08]}{%
+% Upright letters and Greek capitals (\Delta, \mathrm, \mathbf) from
 % Computer Modern like the rest of the formulas. fontspec would take them
 % from the text font, which has no glyph in those 8-bit slots (U+0001...).
 \AtBeginDocument{%
@@ -33,5 +91,5 @@
   \SetSymbolFont{operators}{bold}{OT1}{cmr}{bx}{n}%
   \DeclareMathAlphabet{\mathrm}{OT1}{cmr}{m}{n}%
   \DeclareMathAlphabet{\mathbf}{OT1}{cmr}{bx}{n}%
-  \SetMathAlphabet{\mathrm}{bold}{OT1}{cmr}{bx}{n}}
+  \SetMathAlphabet{\mathrm}{bold}{OT1}{cmr}{bx}{n}}}
 \endinput
