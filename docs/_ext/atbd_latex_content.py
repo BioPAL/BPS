@@ -159,6 +159,8 @@ _LONG_TABLE_LITERAL = 8  # table columns are narrow
 # Break opportunities in long words of running text (WKT strings, numbers):
 # after punctuation, and inside long digit runs (high-precision constants).
 _WORD_BREAK_RE = re.compile(r"(?<=[,;:/_.\[\](=&])(?=\S)|(?<=\d{4})(?=\d)")
+# In table cells, long words also break between the words of a camelCase identifier.
+_TABLE_WORD_BREAK_RE = re.compile(_WORD_BREAK_RE.pattern + r"|(?<=[a-z])(?=[A-Z])")
 _LONG_WORD = 40
 _LONG_TABLE_WORD = 15
 # C0 control characters left by the DOCX conversion (no glyph in any font).
@@ -327,7 +329,7 @@ def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
             elif literal and len(word) > _LONG_TABLE_LITERAL:
                 pieces = _LITERAL_BREAK_RE.split(word)
             elif not literal and len(word) > _LONG_TABLE_WORD:
-                pieces = _WORD_BREAK_RE.split(word)
+                pieces = _TABLE_WORD_BREAK_RE.split(word)
             else:
                 pieces = [word]
             longest = max(longest, *(_wlen(p, bold) for p in pieces))
@@ -977,7 +979,8 @@ class AtbdLatexContent(SphinxPostTransform):
                 parent.replace(text, nodes.Text(clean))
             return
         engine = self.config.latex_engine
-        parts = [p for p in _WORD_BREAK_RE.split(clean) if p]
+        in_table = _in_table(text)
+        parts = [p for p in (_TABLE_WORD_BREAK_RE if in_table else _WORD_BREAK_RE).split(clean) if p]
         latex = r"\allowbreak{}".join(tex_escape(p, engine) for p in parts)
         parent.replace(text, nodes.raw("", latex, format="latex"))
 
