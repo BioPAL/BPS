@@ -147,7 +147,11 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
     root = _atbd_root(self.builder.current_docname) or ATBD_ROOT
     pdf_name = _pdf_filename(root)
     build_cmd = ATBD_PDF_BUILD_CMD.format(folder=pdf_name.removesuffix(".pdf"))
-    official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
+    meta = _root_meta(self.builder.app.srcdir, root)
+    # a converted document without a published PDF (re-issued for BPS v4.5.0,
+    # D-v3-10) names the approved document without a link: the AGB default
+    # would send the reader to another document (relecture W1, pfd-l2-fd)
+    official = meta.get("pdf_url") or (None if meta else ATBD_PDF_URL)
     pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
         url = _static_pdf_uri(self.builder, self.builder.current_docname, pdf_name)
@@ -158,12 +162,15 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             f'<i class="fa-solid fa-file-pdf"></i> '
             "Download this document as PDF</a> "
             "(generated from the same MyST source as this website).</p>"
-            "<p>The "
-            '<a class="reference external" '
-            f'href="{official}">'
-            "official archival PDF</a> on biomass-disc.info remains authoritative "
-            "until Aresys and ESA approve this web conversion.</p>"
-            "</div>"
+            + ("<p>The "
+               '<a class="reference external" '
+               f'href="{official}">'
+               "official archival PDF</a> on biomass-disc.info remains authoritative "
+               "until Aresys and ESA approve this web conversion.</p>"
+               if official else
+               "<p>The approved ESA document remains authoritative until Aresys "
+               "and ESA approve this web conversion.</p>")
+            + "</div>"
         )
     # no PDF built: nothing on the published page (the build command is a
     # maintainer's note, in the Makefile, not for the readers)
