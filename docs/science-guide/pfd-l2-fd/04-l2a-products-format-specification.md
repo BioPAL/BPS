@@ -369,7 +369,7 @@ Diagram notation: `@name` attribute; `[min..max]` occurrences; `⊞` named type 
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *`schemaVersion`* | *PFD version* | *`xsd:token`* | *required* |
+| &nbsp;&nbsp;&nbsp;&nbsp;`schemaVersion` *PFD version* | *`xsd:token`* | *required* |   |
 | product | Product L2a DSR. This DSR contains the L2a product information. | <u>`productL2aType`</u> | 1 |
 | `rasterImage` | Raster image DSR. This DSR contains all the necessary information to exploit the L2a product raster images. | <u>`rasterImageType`</u> | 1 |
 | InputInformation | Input Information DSR. This DSR contains the necessary information to identify the input data set to the L2a processing. | <u>InputInformationL2aType</u> | 1 |
