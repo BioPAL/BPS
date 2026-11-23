@@ -6,21 +6,21 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{atbdmath}[2026/11/23 BPS Science Guide PDF layout]
 
-% Inline formulas wider than their column are scaled down to it, to 60 % at
-% most (smaller would not be legible).
+% Inline formulas wider than their column are scaled down to it, to 80 % at
+% most (smaller would shrink their subscripts below 5 pt).
 % [#1] is the same formula with fixed-size brackets, which TeX can break inside.
 \newcommand\atbdfitmath[2][]{%
   \allowbreak\sbox\z@{#2}%
   \ifdim\wd\z@>\linewidth
     \def\atbd@alt{#1}%
-    % scaled to the column width down to 60 % of its size (85 % when it
+    % scaled to the column width down to 80 % of its size (90 % when it
     % can break inside its brackets); wider, it is set at its own size and
     % breaks after its operators (x, +, =) like the approved PDFs, instead
     % of overflowing the cell (FD "Size" columns)
     \ifx\atbd@alt\@empty
-      \def\atbd@fm{#2}\dimen@=0.6\wd\z@
+      \def\atbd@fm{#2}\dimen@=0.8\wd\z@
     \else
-      \def\atbd@fm{#1}\sbox\z@{#1}\dimen@=0.85\wd\z@
+      \def\atbd@fm{#1}\sbox\z@{#1}\dimen@=0.9\wd\z@
     \fi
     \ifdim\dimen@>\linewidth \atbd@fm
     \else\resizebox{\linewidth}{!}{\usebox\z@}\fi
@@ -82,7 +82,23 @@
 % Arial has a larger x-height); Computer Modern otherwise.
 \IfFontExistsTF{STIXTwoMath-Regular.otf}{%
   \usepackage{unicode-math}%
-  \setmathfont{STIXTwoMath-Regular.otf}[Scale=1.08]}{%
+  \setmathfont{STIXTwoMath-Regular.otf}[Scale=1.08]%
+  % Script sizes (nominal, the font is then scaled by 1.08): second-level
+  % subscripts (r_{g,\varphi}, L_{2b}) came out at 4.4-5.8 pt; keep them
+  % at 6 pt or more at the sizes of the body (11 pt) and of the tables (9 pt).
+  \newcommand\atbd@mathsize[3]{%
+    \edef\atbd@tmp{\strip@pt\dimexpr#1\relax}%
+    \edef\atbd@tmp{\noexpand\DeclareMathSizes{\atbd@tmp}{\atbd@tmp}{#2}{#3}}%
+    \atbd@tmp}%
+  \atbd@mathsize{11bp}{8.4}{5.9}%
+  \atbd@mathsize{12bp}{8.8}{6.2}%
+  \atbd@mathsize{10bp}{7.6}{5.7}%
+  \atbd@mathsize{9pt}{7}{6}%
+  \atbd@mathsize{8pt}{6.4}{5.6}%
+  \atbd@mathsize{7pt}{5.8}{5.6}%
+  \atbd@mathsize{14bp}{10}{7}%
+  \atbd@mathsize{16bp}{11}{8}%
+  \atbd@mathsize{24bp}{16}{12}}{%
 % Upright letters and Greek capitals (\Delta, \mathrm, \mathbf) from
 % Computer Modern like the rest of the formulas. fontspec would take them
 % from the text font, which has no glyph in those 8-bit slots (U+0001...).
