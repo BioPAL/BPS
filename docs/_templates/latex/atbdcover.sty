@@ -2,85 +2,210 @@
 % SPDX-License-Identifier: Apache-2.0
 %
 % Cover page, front-matter pages and table of contents of the Science Guide
-% PDF exports.
+% PDF exports, modelled on the originals (Word / Aresys template, measured
+% in pt from the top-left corner of the A4 page).
 % Loaded by atbdlayout.sty (colours and document metadata are defined there).
+% The cover geometry (\atbdcover<name>, numbers in pt) is set by conf.py.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{atbdcover}[2026/11/23 BPS Science Guide PDF layout]
 
-% Front-matter headings (Document information, Change history, contents).
-\newcommand\atbdfrontheading[1]{%
-  \par\vspace*{0pt}%
-  {\noindent\hspace*{-\atbdheadindent}\color{atbdblue}%
-   \fontsize{16}{19}\selectfont #1\par}%
-  \vspace{12pt}}
+\RequirePackage{longtable}
+\RequirePackage{hyperref}
+\RequirePackage{expl3}
+
+\definecolor{atbdgridrule}{HTML}{A6A6A6}  % grid of the front-matter tables
+\definecolor{atbdgridhead}{HTML}{F2F2F2}  % shaded cells
+\definecolor{atbdtoc}{HTML}{3B3838}       % table of contents, levels 2 and 3
+\definecolor{atbdcoverrule}{HTML}{999999} % rule under the cover title
 
 % ---------------------------------------------------------------------------
-% Table of contents: unnumbered entries carrying their source numbers.
+% Cover page: everything is placed by absolute position on the page
+% background (origin at the top-left corner, y downwards in the macros).
 % ---------------------------------------------------------------------------
-\renewcommand\cftchapfont{\bfseries}
-\renewcommand\cftchappagefont{\bfseries}
-\renewcommand\cftchapleader{\cftdotfill{\cftdotsep}}
-\setlength\cftbeforechapskip{4pt}
-\setlength\cftchapindent{-\atbdheadindent}
-\setlength\cftsecindent{\dimexpr-\atbdheadindent+1.0em\relax}
-\setlength\cftsubsecindent{\dimexpr-\atbdheadindent+2.0em\relax}
-\setlength\cftsubsubsecindent{\dimexpr-\atbdheadindent+3.0em\relax}
-\renewcommand\cfttoctitlefont{\hspace*{-\atbdheadindent}\color{atbdblue}%
-  \fontsize{16}{19}\selectfont}
-\renewcommand\cftaftertoctitle{}
-\setlength\cftbeforetoctitleskip{0pt}
-\setlength\cftaftertoctitleskip{12pt}
-\renewcommand\cftpnumalign{r}
+\newcommand\atbd@at[3]{\put(#1,-#2){#3}}
+\newcounter{atbd@covline}
+\newcommand\atbdcoverline[1]{%
+  \atbd@at{64.3}{\fpeval{\atbdcovertitley+55.2*\value{atbd@covline}}}{\rlap{#1}}%
+  \stepcounter{atbd@covline}}
 
-\newcommand\atbdtableofcontents{%
-  \clearpage
-  \begingroup
-    \parskip\z@skip
-    \renewcommand\contentsname{Table of contents}%
-    \hypersetup{linkcolor=black}%
-    \tableofcontents
-  \endgroup
-  \clearpage}
+\newcommand\atbd@coverart{%
+  \unitlength=1bp
+  % logos: Aresys 215 x 76 pt at x = 64, ESA (trimmed image) at the right
+  \IfFileExists{Aresys_light.png}{%
+    \atbd@at{64.3}{\atbdcoveraresysy}{\includegraphics[width=214.6bp]{Aresys_light.png}}}{}%
+  \IfFileExists{ESA_light.png}{%
+    \atbd@at{379.25}{\atbdcoveresay}{\includegraphics[width=157.25bp]{ESA_light.png}}}{}%
+  % title: Arial 48 pt, leading 55.2 pt, first baseline at \atbdcovertitley
+  \setcounter{atbd@covline}{0}%
+  {\color{atbdtitlegrey}\linespread{1}\fontsize{48bp}{55.2bp}\selectfont\atbdcovertitle}%
+  % grey rule under the title
+  \atbd@at{64.3}{\atbdcoverruley}{\color{atbdcoverrule}\rule{475.7bp}{0.75bp}}%
+  % BIOMASS mission logo 375 x 118 pt
+  \IfFileExists{BIOMASS_mission.png}{%
+    \atbd@at{\atbdcovermissionx}{\atbdcovermissiony}{%
+      \includegraphics[width=375.3bp]{BIOMASS_mission.png}}}{}%
+  % bottom band: light grey strip, then the blue-grey block
+  \atbd@at{55.3}{640.1}{\color{atbdbox}\rule{484.7bp}{11.3bp}}%
+  \atbd@at{55.3}{784}{\color{atbdcover}\rule{484.7bp}{143.9bp}}%
+  % reference box: Arial Bold 11 pt labels, 15.75 pt leading
+  {\linespread{1}\fontsize{11bp}{13bp}\selectfont
+   \atbd@at{\atbdcoverrefx}{\atbdcoverrefy}{\rlap{\textbf{Ref}: \atbdcode}}%
+   \atbd@at{\atbdcoverrefx}{\fpeval{\atbdcoverrefy+15.75}}{\rlap{\textbf{Issue}: \atbdissue}}%
+   \atbd@at{\atbdcoverrefx}{\fpeval{\atbdcoverrefy+31.5}}{\rlap{\textbf{Date}: \atbddate}}}%
+  % version of the web export, discreet, at the bottom of the band
+  \atbd@at{64.3}{779}{\color{atbdbox}\fontsize{7bp}{8bp}\selectfont\atbdissueline}}
 
-% ---------------------------------------------------------------------------
-% Cover page
-% ---------------------------------------------------------------------------
 \newcommand\atbdmaketitle{%
   \begingroup
-  \thispagestyle{empty}%
   \hypersetup{pdftitle={\atbdtitle},pdfsubject={\atbdcode}}%
-  \noindent\hspace*{-\atbdheadindent}%
-  \begin{minipage}[t]{\dimexpr\textwidth+\atbdheadindent\relax}
-    \vspace*{-1.2cm}%
-    \IfFileExists{Aresys_light.png}{%
-      \includegraphics[height=1.9cm]{Aresys_light.png}}{}%
-    \hfill
-    \IfFileExists{ESA_light.png}{%
-      \includegraphics[height=1.9cm]{ESA_light.png}}{}%
-    \par\vspace*{3.2cm}%
-    \raggedright
-    {\color{atbdtitlegrey}\fontsize{40}{48}\selectfont\atbdcovertitle\par}%
-    \vspace*{0.35cm}%
-    {\color{atbdgrey}\rule{\linewidth}{0.8pt}\par}%
-  \end{minipage}%
-  \vfill
-  \noindent\hspace*{-\atbdheadindent}%
-  {\setlength\fboxsep{0pt}%
-   \colorbox{atbdbox}{\makebox[\dimexpr\textwidth+\atbdheadindent\relax]{%
-     \rule{0pt}{0.38cm}}}}\par\nointerlineskip
-  \noindent\hspace*{-\atbdheadindent}%
-  {\setlength\fboxsep{0pt}%
-   \colorbox{atbdcover}{%
-     \begin{minipage}[b][4.6cm][b]{\dimexpr\textwidth+\atbdheadindent\relax}
-       \raggedleft\fontsize{11}{15}\selectfont
-       \begin{tabular}{@{}l@{}}
-         \textbf{Ref}: \atbdcode\\
-         \textbf{Issue}: \atbdissue\\
-         \textbf{Date}: \atbddate\\[3pt]
-         \atbdissueline
-       \end{tabular}\hspace*{0.5cm}\par\vspace*{0.45cm}%
-     \end{minipage}}}\par
-  \clearpage
+  \thispagestyle{empty}%
+  \AddToHookNext{shipout/background}{\atbd@coverart}%
+  \null\clearpage
   \endgroup}
+
+% ---------------------------------------------------------------------------
+% Front-matter pages: heading 16 pt whose top is at y = 77 pt; the content
+% starts #1 below it (34.5 pt: tables, as in the originals).
+% ---------------------------------------------------------------------------
+\newcommand\atbd@bodytop{\dimexpr 1in+\voffset+\topmargin+\headheight+\headsep\relax}
+
+\newcommand\atbdfrontheading[2][34.5bp]{%
+  \par\vspace*{\dimexpr 77bp-\atbd@bodytop-\topskip\relax}%
+  \nointerlineskip
+  \vbox to #1{%
+    \hbox{\color{atbdblue}\fontsize{16bp}{19bp}\selectfont\rule{0bp}{14.5bp}#2}\vss}%
+  \nointerlineskip}
+
+% Web export notice at the bottom of the Document information page.
+\newcommand\atbd@today{%
+  \ifnum\day<10 0\fi\the\day/\ifnum\month<10 0\fi\the\month/\the\year}
+\newcommand\atbdexportnotice{%
+  \par\vfill
+  \noindent{\color{atbdgrey}\linespread{1}\fontsize{8bp}{10bp}\selectfont
+    Web export of \atbdcode\ issue \atbdissue
+    \ifdefempty{\atbdbpsversion}{}{\ (BPS v\atbdbpsversion)},
+    generated on \atbd@today\ from the BIOMASS BPS documentation site.
+    The authoritative document is the approved ESA PDF.\par}}
+
+% Grid tables of the Document information: 16.9 pt rows, 0.5 pt grey rules,
+% 10 pt Arial, cell text 5.9 pt from the rule.
+\newcommand\atbdinfofont{\linespread{1}\fontsize{10bp}{11.5bp}\selectfont}
+\newcommand\atbdshade{\cellcolor{atbdgridhead}}
+\newcommand\atbdcell[1]{\rule[-5.1bp]{0bp}{16.4bp}#1}
+\newcommand\atbdgrid[3]{%
+  \par\nointerlineskip
+  \hbox{\begingroup
+  \arrayrulecolor{atbdgridrule}\setlength\arrayrulewidth{0.5bp}%
+  \setlength\tabcolsep{5.4bp}\renewcommand\arraystretch{1}\atbdinfofont
+  \begin{tabular}[t]{|>{\raggedright\arraybackslash}p{\dimexpr#1-0.5bp-10.8bp\relax}%
+      |>{\raggedright\arraybackslash}p{\dimexpr#2-0.5bp-10.8bp\relax}|}
+  \hline #3\end{tabular}%
+  \endgroup}%
+  \nointerlineskip}
+
+% Change history: 4 columns, header repeated, bullets in the Change column.
+\newcommand\atbdchgfont{\linespread{1}\fontsize{10bp}{14.6bp}\selectfont
+  \setlength\parindent\z@\setlength\parskip\z@}
+\newcommand\atbdchg[1]{#1}
+\newcommand\atbdbullet[1]{\hangindent=18bp\hangafter=1\leavevmode\hbox to 18bp{\textbullet\hss}#1}
+\newcommand\atbdchangerow[4]{%
+  #1 & #2 & \rule{0bp}{12.85bp}#3\rule[-4.5bp]{0bp}{0bp} &
+  \rule{0bp}{11.85bp}#4\rule[-4.65bp]{0bp}{0bp} \\}
+\newenvironment{atbdchange}{%
+  \par\nointerlineskip
+  \begingroup
+  \LTpre\z@\LTpost\z@\LTleft=-\atbdheadindent\LTright=0bp plus 1fill
+  \arrayrulecolor{atbdgridrule}\setlength\arrayrulewidth{0.5bp}%
+  \setlength\tabcolsep{5.4bp}\renewcommand\arraystretch{1}\atbdinfofont
+  \def\atbd@head##1{\cellcolor{atbdgridhead}\rule[-5.1bp]{0bp}{16.4bp}\bfseries ##1}%
+  \def\atbd@headrow{%
+    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr63.7bp-0.5bp-10.8bp\relax}}{\atbd@head{Date}} &
+    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr49.5bp-0.5bp-10.8bp\relax}}{\atbd@head{Issue}} &
+    \atbd@head{Change} & \atbd@head{Author}}%
+  \begin{longtable}{|>{\centering\arraybackslash}m{\dimexpr63.7bp-0.5bp-10.8bp\relax}%
+      |>{\centering\arraybackslash}m{\dimexpr49.5bp-0.5bp-10.8bp\relax}%
+      |>{\raggedright\arraybackslash\atbdchgfont}p{\dimexpr256.4bp-0.5bp-10.8bp\relax}%
+      |>{\raggedright\arraybackslash\linespread{1}\fontsize{10bp}{16.5bp}\selectfont}%
+        p{\dimexpr123.3bp-0.5bp-10.8bp\relax}|}
+  \hline
+  \atbd@headrow\\
+  \hline
+  \endfirsthead
+  \hline
+  \atbd@headrow\\
+  \hline
+  \endhead
+  }{%
+  \end{longtable}%
+  \endgroup
+  \par}
+
+% ---------------------------------------------------------------------------
+% Table of contents: three levels, as in the originals. The entries of the
+% .toc file carry the numbers of the source titles ("1.1 Context"); the
+% number goes in a fixed column (92 pt from the left edge), then the text,
+% leaders and the page number at the right.
+% ---------------------------------------------------------------------------
+\newif\ifatbd@tocdot
+\ifdefined\atbdtocnodot\atbd@tocdotfalse\else\atbd@tocdottrue\fi
+\ExplSyntaxOn
+\seq_new:N \atbd@tocseq
+\tl_new:N \atbd@tocnum
+\tl_new:N \atbd@toctext
+\cs_new_protected:Npn \atbd@tocsplit #1
+  {
+    \regex_extract_once:nnNTF
+      { \A ( (?: [A-Z] \. )? [0-9]+ (?: \. [0-9]+ )* \.? | [A-Z] (?: \. [0-9]+ )+ \.? ) \x{20} (.*) \Z }
+      {#1} \atbd@tocseq
+      {
+        \seq_pop_left:NN \atbd@tocseq \l_tmpa_tl
+        \seq_pop_left:NN \atbd@tocseq \atbd@tocnum
+        \seq_pop_left:NN \atbd@tocseq \atbd@toctext
+        % the originals print "1.1." (L1 SAR: "1.1")
+        \ifatbd@tocdot
+          \regex_replace_once:nnN { ([0-9]) \Z } { \1 . } \atbd@tocnum
+        \fi
+      }
+      {
+        \tl_clear:N \atbd@tocnum
+        \tl_set:Nn \atbd@toctext {#1}
+      }
+  }
+\ExplSyntaxOff
+
+% #1 text indent, #2 font, #3 entry, #4 page, #5 anchor
+\newcommand\atbd@tocline[5]{%
+  \atbd@tocsplit{#3}%
+  \begingroup
+    \par\parindent\z@\linespread{1}\fontsize{11bp}{15.8bp}\selectfont #2%
+    \leftskip=#1\relax\rightskip=30bp\relax\parfillskip=-30bp\relax
+    \interlinepenalty\@M
+    \noindent\hskip-#1\relax
+    \hbox to #1{\hyperlink{#5}{\atbd@tocnum}\hss}%
+    \hyperlink{#5}{\atbd@toctext}\nobreak
+    \leaders\hbox to 3.06bp{\hss.}\hskip 0bp plus 1fill\nobreak
+    \hbox to 30bp{\hss\hyperlink{#5}{#4}}\par
+  \endgroup}
+
+\newcommand\atbd@toc@chapter[3]{%
+  \atbd@tocline{42bp}{\bfseries\color{black}}{#1}{#2}{#3}}
+\newcommand\atbd@toc@section[3]{%
+  \atbd@tocline{53bp}{\color{atbdtoc}}{#1}{#2}{#3}}
+\newcommand\atbd@toc@subsection[3]{%
+  \atbd@tocline{57bp}{\color{atbdtoc}}{#1}{#2}{#3}}
+\newcommand\atbd@contentsline[4]{%
+  \ifcsname atbd@toc@#1\endcsname
+    \csname atbd@toc@#1\endcsname{#2}{#3}{#4}%
+  \fi}
+
+\newcommand\atbdtableofcontents[1][Table of contents]{%
+  \clearpage
+  \begingroup
+    \hypersetup{linkcolor=black}%
+    \let\contentsline\atbd@contentsline
+    \atbdfrontheading[29.2bp]{#1}%
+    \@starttoc{toc}%
+  \endgroup
+  \clearpage}
 
 \endinput
