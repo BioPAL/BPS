@@ -770,9 +770,9 @@ def _split_tall_rows(table: nodes.table, budget: float, pad: float = 2.0) -> int
 # of the last one (_PARTS_CAPTION_PT) included.
 _PARTS_ROW_PT = 490.0
 _PART_GAP_PT = 8
-_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51)  # text of 6 pt or more
+_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51, 0.505)  # text of 6 pt or more
 _PARTS_LABEL_PT = 22.0
-_PARTS_FLOAT_PT = 0.88 * _TEXT_HEIGHT_PT
+_PARTS_FLOAT_PT = 0.95 * _TEXT_HEIGHT_PT
 _PARTS_CAPTION_PT = 40.0
 
 
@@ -1554,7 +1554,7 @@ class AtbdLatexContent(SphinxPostTransform):
                                                     for x in container["ids"]), format="latex")
             figures.append(figure)
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
-        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        container.replace_self([barrier, *figures, *extra])
         return figures[0]
 
     def _class_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
@@ -1643,7 +1643,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 figure += nodes.caption("", "", *caption[1])
             figures.append(figure)
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
-        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        container.replace_self([barrier, *figures, *extra])
         return figures[0]
 
     def _mermaid_box(self, code: str, options: Any) -> tuple[float, float] | None:
