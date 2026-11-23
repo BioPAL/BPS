@@ -743,6 +743,23 @@ def _cell_fills(document: nodes.document) -> None:
             raw.parent.remove(raw)
 
 
+def _underlines(document: nodes.document) -> None:
+    r"""``<u>…</u>`` of a converted page (raw HTML: the PFDs underline type
+    names) -> ``\underline{…}``, when both tags sit in the same paragraph."""
+    for para in list(document.findall(nodes.TextElement)):
+        kids = list(para.children)
+        opens = [k for k in kids if isinstance(k, nodes.raw)
+                 and "html" in k.get("format", "") and k.astext().strip() == "<u>"]
+        closes = [k for k in kids if isinstance(k, nodes.raw)
+                  and "html" in k.get("format", "") and k.astext().strip() == "</u>"]
+        if not opens or len(opens) != len(closes):
+            continue
+        for k in opens:
+            k.replace_self(nodes.raw("", r"\underline{", format="latex"))
+        for k in closes:
+            k.replace_self(nodes.raw("", "}", format="latex"))
+
+
 def _drop_empty_chapters(document: nodes.document) -> None:
     """Remove included chapters with a title only (empty References page)."""
     for sof in list(document.findall(addnodes.start_of_file)):
@@ -1315,6 +1332,7 @@ class AtbdLatexContent(SphinxPostTransform):
 
     def run(self, **kwargs: Any) -> None:
         _cell_fills(self.document)  # before the raw HTML is dropped
+        _underlines(self.document)
         found: dict[str, list[tuple[nodes.Node, str]]] = {
             "figure": [], "table": [], "math": [], "raw": [], "literal": [],
             "tables": [], "dropdown": [], "reference": [], "text": [],
