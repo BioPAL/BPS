@@ -56,7 +56,7 @@
 % in the originals (Arial), not in Courier.
 \protected\def\atbd@plaincode#1{#1}
 \AtBeginEnvironment{longtable}{%
-  \hyphenpenalty=10000 \exhyphenpenalty=10000 % no hyphenation in cells (Word)
+  \hyphenpenalty=10000 \exhyphenpenalty=50 % no hyphenation in cells (Word), but a break after a hyphen
   \let\sphinxcode\atbd@plaincode%
   \let\atbd@underscore\_%
   \def\_{\atbd@underscore\allowbreak}}
@@ -117,8 +117,8 @@
 \newif\ifatbd@lead
 \newcommand\atbdleadcaption{\global\atbd@leadtrue}
 \def\LT@makecaption#1#2#3{%
-  \ifatbd@lead\global\atbd@leadfalse
-  \LT@mcol\LT@cols l{\sphinxnorowcolor\parbox[t]\LTcapwidth{\raggedright #3\strut}}%
+  \ifatbd@lead
+  \LT@mcol\LT@cols l{\global\atbd@leadfalse\sphinxnorowcolor\parbox[t]\LTcapwidth{\raggedright #3\strut}}%
   \else
   \LT@mcol\LT@cols c{\sphinxnorowcolor\hbox to\z@{\hss\parbox[t]\LTcapwidth{%
     \sbox\@tempboxa{#1{#2\enspace}#3}%

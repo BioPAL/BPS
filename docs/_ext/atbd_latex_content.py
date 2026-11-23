@@ -160,7 +160,8 @@ _LONG_TABLE_LITERAL = 8  # table columns are narrow
 # after punctuation, and inside long digit runs (high-precision constants).
 _WORD_BREAK_RE = re.compile(r"(?<=[,;:/_.\[\](=&])(?=\S)|(?<=\d{4})(?=\d)")
 # In table cells, long words also break between the words of a camelCase identifier.
-_TABLE_WORD_BREAK_RE = re.compile(_WORD_BREAK_RE.pattern + r"|(?<=[a-z])(?=[A-Z])")
+# and after the hyphens of a long compound.
+_TABLE_WORD_BREAK_RE = re.compile(_WORD_BREAK_RE.pattern + r"|(?<=[a-z])(?=[A-Z])|(?<=[a-z]-)(?=[a-z])")
 _LONG_WORD = 40
 _LONG_TABLE_WORD = 15
 # C0 control characters left by the DOCX conversion (no glyph in any font).
@@ -333,6 +334,14 @@ def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
             else:
                 pieces = [word]
             longest = max(longest, *(_wlen(p, bold) for p in pieces))
+    # A short word cut in several text nodes (``N`` + subscript + ``-N``...)
+    # does not break between them.
+    for block in entry.findall(nodes.TextElement):
+        if isinstance(block, (nodes.paragraph, nodes.line)) and not any(
+                True for _ in block.findall(nodes.math)):
+            for word in block.astext().split():
+                if len(word) <= _LONG_TABLE_WORD:
+                    longest = max(longest, _wlen(word, bold))
     return longest
 
 
