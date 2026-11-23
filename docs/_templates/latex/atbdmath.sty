@@ -26,12 +26,12 @@
     \else\resizebox{\linewidth}{!}{\usebox\z@}\fi
   \else\usebox\z@\fi}
 % Displayed equations (atbd_latex_content.py). The number is set in the text
-% font, 12 pt inside the right margin like the approved PDFs.
-\renewcommand\tagform@[1]{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)\hspace{12pt}}}
+% font, 8 pt inside the right margin (right edge at 521-542 in the approved PDFs, median 536).
+\renewcommand\tagform@[1]{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)\hspace{8pt}}}
 \newdimen\atbd@eqavail
 % Log line of each formula wider than the text (page, width, available width).
 \newcommand\atbd@eqlog[1]{\typeout{ATBDEQ #1 page \thepage: \the\wd\z@\space>\space\the\atbd@eqavail}}
-\newcommand\atbd@eqsetavail{\atbd@eqavail=\dimexpr\linewidth-6.2em\relax}
+\newcommand\atbd@eqsetavail{\atbd@eqavail=\dimexpr\linewidth-5.6em\relax}
 % Multi-line body aligned on & like split, scaled down when wider than the text
 % minus the number.
 \newcommand\atbdfitdisplay[1]{%
