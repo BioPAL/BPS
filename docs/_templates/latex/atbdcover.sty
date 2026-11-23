@@ -31,10 +31,10 @@
 \newcommand\atbd@coverart{%
   \unitlength=1bp
   % logos: Aresys 215 x 76 pt at x = 64, ESA (trimmed image) at the right
-  \IfFileExists{Aresys_light.png}{%
-    \atbd@at{64.3}{\atbdcoveraresysy}{\includegraphics[width=214.6bp]{Aresys_light.png}}}{}%
-  \IfFileExists{ESA_light.png}{%
-    \atbd@at{379.25}{\atbdcoveresay}{\includegraphics[width=157.25bp]{ESA_light.png}}}{}%
+  \IfFileExists{Aresys_doc_cover.png}{%
+    \atbd@at{64.3}{\atbdcoveraresysy}{\includegraphics[width=214.6bp]{Aresys_doc_cover.png}}}{}%
+  \IfFileExists{ESA_doc_cover.png}{%
+    \atbd@at{379.25}{\atbdcoveresay}{\includegraphics[width=157.1bp]{ESA_doc_cover.png}}}{}%
   % title: Arial 48 pt, leading 55.2 pt, first baseline at \atbdcovertitley
   \setcounter{atbd@covline}{0}%
   {\color{atbdtitlegrey}\linespread{1}\fontsize{48bp}{55.2bp}\selectfont\atbdcovertitle}%
@@ -52,8 +52,12 @@
    \atbd@at{\atbdcoverrefx}{\atbdcoverrefy}{\rlap{\textbf{Ref}: \atbdcode}}%
    \atbd@at{\atbdcoverrefx}{\fpeval{\atbdcoverrefy+15.75}}{\rlap{\textbf{Issue}: \atbdissue}}%
    \atbd@at{\atbdcoverrefx}{\fpeval{\atbdcoverrefy+31.5}}{\rlap{\textbf{Date}: \atbddate}}}%
-  % version of the web export, discreet, at the bottom of the band
-  \atbd@at{64.3}{779}{\color{atbdbox}\fontsize{7bp}{8bp}\selectfont\atbdissueline}}
+  % web export label (D-pdf-6): white on the band, above the reference box,
+  % so that the cover cannot be taken for the approved document
+  \atbd@at{64.3}{662}{\rlap{\color{white}\fontsize{11bp}{13bp}\selectfont
+    \textbf{WEB EXPORT \textendash\ NOT THE APPROVED DOCUMENT}}}%
+  \atbd@at{64.3}{676}{\rlap{\color{white}\fontsize{8bp}{10bp}\selectfont
+    \atbdissueline, generated from the BIOMASS BPS documentation site}}}
 
 \newcommand\atbdmaketitle{%
   \begingroup

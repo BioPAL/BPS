@@ -26,7 +26,8 @@ from typing import Any
 from docutils import nodes
 from sphinx.transforms.post_transforms import SphinxPostTransform
 
-_LOGOS = ("Aresys_light.png", "ESA_light.png", "BIOMASS_mission.png")
+# Logos as printed in the approved documents (images taken from their PDFs).
+_LOGOS = ("Aresys_doc_cover.png", "Aresys_doc_header.png", "ESA_doc_cover.png", "BIOMASS_mission.png")
 # Layout packages (_templates/latex): atbdlayout loads the others.
 _STY_FILES = ("atbdlayout", "atbdbody", "atbdfloats", "atbdmath", "atbdcover", "atbdmeta")
 # Front-matter headings (document information, change history, contents) as
@@ -202,7 +203,7 @@ def _cover_definitions(folder: str) -> str:
     ref_x, ref_y = layout["ref"]
     values = {
         "aresysy": layout["logo_y"] + 76.2,  # bottom of the logos
-        "esay": layout["logo_y"] - 86.7 + 143.1,
+        "esay": layout["logo_y"] - 86.7 + 151.3,  # visible ESA logo of the originals: y 95.0-151.3
         "titley": title_base,
         "ruley": last_bottom + _COVER_RULE_GAP,
         "missionx": mission_x,
