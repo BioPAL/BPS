@@ -1,0 +1,40 @@
+schema_version: 1
+
+context:
+  name: bps-l1_binaries
+  version: 4.6.0.dev0
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  dynamic_linking:
+    binary_relocation: false
+    missing_dso_allowlist:
+      - libpthread.so.0
+      - libdl.so.2
+      - libc.so.6
+      - libm.so.6
+      - /lib64/ld-linux-x86-64.so.2
+
+requirements:
+  build:
+    - patchelf=0.15.0
+  run:
+    - libgomp
+    - libgcc-ng
+    - libstdcxx-ng
+    - libgfortran-ng
+
+about:
+  summary: Biomass L1 processor binaries
+  license: LicenseRef-CustomLicense
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

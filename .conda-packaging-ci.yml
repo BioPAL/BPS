@@ -6,31 +6,32 @@
     - BPS_CHANNEL=${PWD}/local_channel
     - mkdir -p ${BPS_CHANNEL}/linux-64
     - mkdir -p ${BPS_CHANNEL}/noarch
-    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
-    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
     - cd ${BPSPROJECT}
     - |
       if [[ "$BUILD_SDIST" == "true" ]]; then
-        conda install -y conda-build python-build
+        conda install -y rattler-build python-build
         python -m build --sdist
       else
-        conda install -y conda-build
+        conda install -y rattler-build
       fi
     - python -m conda_index ${BPS_CHANNEL}
-    - conda config --prepend channels ${BPS_CHANNEL}
-    - conda-build recipe --output-folder build_dir
+    - |
+      rattler-build build --recipe recipe/recipe.yaml --output-dir build_dir \
+        --channel "file://${BPS_CHANNEL}" \
+        --channel "${INTERNAL_CONDA_CHANNEL_URL%/}/${INTERNAL_CONDA_CHANNEL_NAME}" \
+        --channel conda-forge
     - |
       mkdir -p dist
       for file in build_dir/*/*.conda; do
-        cp $file dist
-        if [[ $file == *"py_0.conda" ]]; then
-          cp $file ${BPS_CHANNEL}/noarch
-        else
-          cp $file ${BPS_CHANNEL}/linux-64
-        fi
+        subdir=$(basename "$(dirname "$file")")
+        mkdir -p "${BPS_CHANNEL}/${subdir}"
+        cp "$file" dist
+        cp "$file" "${BPS_CHANNEL}/${subdir}/"
       done
     - cd -
     - python -m conda_index ${BPS_CHANNEL}
+    - find "${BPS_CHANNEL}" -type d -exec chmod 755 {} +
+    - find "${BPS_CHANNEL}" -type f -exec chmod 644 {} +
   timeout: 20 minutes
   retry: 2
   artifacts:

@@ -1,0 +1,47 @@
+schema_version: 1
+
+context:
+  name: bps-l1_pre_processor
+  version: 4.6.0.dev0
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  path: ../dist/bps_l1_pre_processor-${{ version }}.tar.gz
+  use_gitignore: false
+
+build:
+  number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python >=3.12
+    - hatchling
+    - pip
+  run:
+    - python >=3.12
+    - numpy
+    - arepytools >=1.9.0
+    - scipy >=1.10
+    - bps-common ==${{ version }}
+    - bps-transcoder ==${{ version }}
+    - perseo-core >=1.0.0
+
+tests:
+  - python:
+      imports:
+        - bps
+      pip_check: true
+
+about:
+  summary: Biomass L1 Pre Processor package.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl

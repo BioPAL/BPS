@@ -1,17 +1,21 @@
-{% set name = "bps-common" %}
-{% set version = "4.6.0.dev0" %}
+schema_version: 1
+
+context:
+  name: bps-common
+  version: 4.6.0.dev0
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: ${{ name|lower }}
+  version: ${{ version }}
 
 source:
-  url: file://{{ RECIPE_DIR }}/../dist/bps_common-{{ version }}.tar.gz
+  path: ../dist/bps_common-${{ version }}.tar.gz
+  use_gitignore: false
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
@@ -28,13 +32,11 @@ requirements:
     - gdal >=3.13,<3.14
     - perseo-core >=1.0.0
 
-test:
-  imports:
-    - bps
-  commands:
-    - pip check
-  requires:
-    - pip
+tests:
+  - python:
+      imports:
+        - bps
+      pip_check: true
 
 about:
   summary: Biomass common package.

@@ -1,0 +1,51 @@
+schema_version: 1
+
+context:
+  name: bps-transcoder
+  version: 4.6.0.dev0
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  path: ../dist/bps_transcoder-${{ version }}.tar.gz
+  use_gitignore: false
+
+build:
+  number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python >=3.12
+    - hatchling
+    - pip
+  run:
+    - python >=3.12
+    - numpy
+    - arepytools >=1.9.0
+    - gdal >=3.13,<3.14
+    - netcdf4
+    - py-opencv <4.14 headless*
+    - pystac
+    - scipy >=1.10
+    - pyproj
+    - bps-common ==${{ version }}
+    - perseo-core >=1.0.0
+
+tests:
+  - python:
+      imports:
+        - bps
+      pip_check: true
+
+about:
+  summary: Biomass Transcoder package.
+  license: MIT
+  license_file: LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - Aresys srl
