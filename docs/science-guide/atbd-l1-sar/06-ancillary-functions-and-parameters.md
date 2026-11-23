@@ -32,7 +32,7 @@ In order to preserve SAR signal characteristics (spatial resolution, 2D spectra 
     - the signal is then zero-padded at Nyquist frequency to reach the desired length ($M$ samples);
     - the signal is then inverse-transformed in time domain through an inverse-FFT operator ($f_{out}=\frac{M}{N}f_{in}$ sampling frequency, $M$ samples);
 - interpolation using a bank of FIR filters (FIR, SINC, GLS), if the data is generically sampled and shall be resampled to a generic sampling frequency and/or on a generic axis, also irregular. In this case the procedure applied is the following one:
-    - the bank of filter is generated creating a set of $N_F$ filters of length $L_F$. All the filters are of the same type (FIR, SINC, GLS), sampled at the frequency of the input signal ($f_{in}$) and with a bandwidth that can be the one of the input signal too ($B_{in}$) or lower in case it is required to apply a low-pass filtering in addition to the re-sampling ($B_{out}$). The filters are generated such that they are shifted between them of a fraction of sample (e.g., if $N_F=100$, the shift of two consecutive filters in the bank is equal to $\frac{1}{100}$ of sample);
+    - the bank of filter is generated creating a set of $N_F$ filters of length $L_F$. All the filters are of the same type (FIR, SINC, GLS), sampled at the frequency of the input signal ($f_{in}$) and with a bandwidth that can be the one of the input signal too ($B_{in}$) or lower in case it is required to apply a low-pass filtering in addition to the re-sampling ($B_{out}$). The filters are generated such that they are shifted between them of a fraction of sample (e.g., if $N_F=100$, the shift of two consecutive filters in the bank is equal to ${1}/{100}$ of sample);
     - each sample of the re-sampled signal is then computed through a correlation of the original signal with a properly selected filter in the bank. The selection is performed considering where the output sample falls with respect to the input sampling grid (e.g., if it falls exactly on the input sampling grid the first filter in the bank is selected, if it falls exactly in the middle between two samples of the input grid the central filter is selected, and so on ...).
 
 The second option is the one used in the most critical steps of the chain, as the two ones cited at the beginning of this section. The characteristics of the filter banks (type and number of filters, filters length, …) depend on the characteristics of the SAR signal to be interpolated (bandwidth vs sampling frequency ratio, …). For example, keeping fixed the filters length, GLS filters have a higher ripples suppression ratio with respect to SINC ones. A proper design of such filter banks is mandatory in order to ensure the best trade-off between data quality and computational performances. As per BPS requirements, the interpolation operations performed by L1 Processor shall satisfy the preservation of the following characteristics on L1a products:
@@ -82,7 +82,7 @@ Weighting is applied after SAR processing in order to reduce side-lobes and the 
 - Raised cosine, with a spectral shape of the form
 
 $$
-W_{RC}\left[ n \right]=\alpha+(1-\alpha)\cdot\cos \left( \frac{2\pi\cdot{}n}{N-1} \right)\ ,
+W_{\mathrm{RC}}\left[ n \right]=\alpha+(1-\alpha)\cdot\cos \left( \frac{2\pi\cdot{}n}{N-1} \right)\ ,
 \tag{6.1}
 $$ (eq:atbd-l1-sar-6-1)
 
@@ -91,7 +91,7 @@ where $n$ represents the discrete frequency variable, $N$ the total, number of s
 - Kaiser whose spectral shape of the form
 
 $$
-W_K\left[ n \right]=\frac{I_0\left( \alpha\cdot\sqrt{1-\left( 2\cdot\frac{n}{N-1}-1 \right)^2}\ \right)}{I_0(\alpha)},
+W_{\mathrm{K}}\left[ n \right]=\frac{I_0\left( \alpha\cdot\sqrt{1-\left( 2\cdot\frac{n}{N-1}-1 \right)^2}\ \right)}{I_0(\alpha)},
 \tag{6.2}
 $$ (eq:atbd-l1-sar-6-2)
 
@@ -100,7 +100,7 @@ where $I_0(\cdot)$ is the zero-th order modified Bessel function, and the parame
 - Chebyshev, with a spectral shape of the form
 
 $$
-W_C\left[ n \right]=\frac{\cos\left\{ N\cdot\arccos \left[ \cosh \left( \frac{\cosh^{-1}{10^{\alpha}}}{N} \right)\cdot\cos \left( \frac{\pi\cdot{}n}{N} \right) \right] \right\}}{\cosh^{-1}{10^{\alpha}}}\ ,
+W_{\mathrm{C}}\left[ n \right]=\frac{\cos\left\{ N\cdot\arccos \left[ \cosh \left( \frac{\cosh^{-1}{10^{\alpha}}}{N} \right)\cdot\cos \left( \frac{\pi\cdot{}n}{N} \right) \right] \right\}}{\cosh^{-1}{10^{\alpha}}}\ ,
 \tag{6.3}
 $$ (eq:atbd-l1-sar-6-3)
 

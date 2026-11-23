@@ -16,7 +16,7 @@ license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-18'
+conversion_date: '2026-11-23'
 source_sha256: 0201ac373fc95e9fd03ba980496534653b71a289e7f0b410ea5b554df0341118
 -->
 
@@ -26,17 +26,11 @@ source_sha256: 0201ac373fc95e9fd03ba980496534653b71a289e7f0b410ea5b554df0341118
 
 ::::{only} html
 
-:::{admonition} Draft, automatic web conversion
-:class: warning
-
-This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-[Download the PDF](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FD_ATBD_v2.1.8.pdf)
-:::
-
-:::{admonition} Source document
+:::{admonition} Authoritative document
 :class: tip
 
-This page reproduces `BIO-BPS-FD-ATBD-ARE-10344` issue **2.1.8** dated **30 April 2025**.
+This page is the web-rendered version of `BIO-BPS-FD-ATBD-ARE-10344` issue **2.1.8** dated **30 April 2025**.
+[Download the official ESA PDF (BPS v4.5.0)](https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FD_ATBD_v2.1.8.pdf)
 :::
 
 ::::

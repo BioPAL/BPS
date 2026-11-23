@@ -138,9 +138,9 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| ${{FD}_{map}}^{t^i}$ | Forest Disturbance | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | Forest Disturbance map |
-| ${CFM}^{t^i}$ | CFM | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | CFM |
-| ${P_c}^{t^i}$ | Probability of change | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{t^i}$ | - | - | Probability of change map |
+| ${{FD}_{map}}^{\mathrm{t}^{\mathrm{i}}}$ | Forest Disturbance | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{\mathrm{t}^{\mathrm{i}}}$ | - | - | Forest Disturbance map |
+| ${CFM}^{\mathrm{t}^{\mathrm{i}}}$ | CFM | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{\mathrm{t}^{\mathrm{i}}}$ | - | - | CFM |
+| ${P_{\mathrm{c}}}^{\mathrm{t}^{\mathrm{i}}}$ | Probability of change | FD L2a products in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{\mathrm{t}^{\mathrm{i}}}$ | - | - | Probability of change map |
 | *DGG* | DGG | Internal lookup table | - | - | - | DGG tile |
 | *BB*{sup}`i` | Footprint | L2a main product header (`FD_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates |
 | *mDGG* | `minimumL2aCoverage` | `AUX_PP2_` FD (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
@@ -152,7 +152,7 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | ${{FD}_{map}}^{aggregated}$ | Forest Disturbance | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | Forest Disturbance map aggregated |
 | ${CFM}^{aggregated}$ | CFM | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | CFM aggregated |
-| ${P_c}^{aggregated}$ | Probability of change | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | Probability of change map aggregated |
+| ${P_{\mathrm{c}}}^{aggregated}$ | Probability of change | FD L2 b product (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | Probability of change map aggregated |
 | *HM* | heat map | FD L2b product (`FD_PFD`) | $2\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | 0- | - | heat map (couple of integer values per pixel) |
 
 (sec:atbd-fd-4-1-4)=
@@ -170,21 +170,21 @@ where *BB*{sup}`i` are the L2a bounding boxes, *TT*{sup}`j` is the footprint of 
 The aggregation at pixel map level of the various L2a disturbance maps is done by examining the consistency of the time series of detections. First, the series of detection is temporally sorted, both ascending and descending orbits:
 
 $$
-{{FD}_{series}}^{sorted}(t)=\left\{ {{FD}_{map}}^{t^1},...,{{FD}_{map}}^{t^i}\ \right\}
+{{FD}_{series}}^{\mathrm{sorted}}(t)=\left\{ {{FD}_{map}}^{\mathrm{t}^1},...,{{FD}_{map}}^{\mathrm{t}^{\mathrm{i}}}\ \right\}
 \tag{4.2}
 $$ (eq:atbd-fd-4-2)
 
-$\left\{ t^1<...<t^i\ \right\}$ being the different times at which each product is acquired in a global cycle. Then the derivative of the sorted time series is computed with respect to time and thresholded
+$\left\{ \mathrm{t}^1<...<\mathrm{t}^{\mathrm{i}}\ \right\}$ being the different times at which each product is acquired in a global cycle. Then the derivative of the sorted time series is computed with respect to time and thresholded
 
 $$
-{{FD}_{series}}^{steps}=\left\vert \frac{d\left[ {{FD}_{series}}^{sorted}(t) \right]}{dt} \right\vert>0
+{{FD}_{series}}^{\mathrm{steps}}=\left\vert \frac{d\left[ {{FD}_{series}}^{\mathrm{sorted}}(t) \right]}{dt} \right\vert>0
 \tag{4.3}
 $$ (eq:atbd-fd-4-3)
 
 Finally, the number of transitions in the derivative vector is counted
 
 $$
-{{FD}_{steps}}^{count}=\sum_i^{}{{{FD}_{series}}^{steps}(i)}
+{{FD}_{steps}}^{\mathrm{count}}=\sum_{\mathrm{i}}^{}{{{FD}_{series}}^{\mathrm{steps}}(\mathrm{i})}
 \tag{4.4}
 $$ (eq:atbd-fd-4-4)
 
@@ -201,7 +201,7 @@ If the sum is odd, detection is assumed, and the resulting probability of change
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also Tab.1.</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Time of validity for each acquisition among two global cycles, with overlaps shown in RGB colours. The FD relative to various acquisition times within the global cycle are reported. See also <a class="reference internal" href="04-change-detection-aggregation.html#tab-atbd-fd-1">Tab.1</a>.</span></p>
 
 :::
 
@@ -212,13 +212,13 @@ If the sum is odd, detection is assumed, and the resulting probability of change
 
 | FD t1 | FD t2 | FD t3 | FD steps count | FD map aggregated | HM: contributing | HM: agreeing |
 |---|---|---|---|---|---|---|
-| 0 | 0 | 0 | 0 | 0 | 3 | 3 |
-| 0 | 0 | 1 | 1 | 1 | 3 | 1 |
-| 0 | 1 | 0 | 2 | 0 | 3 | 2 |
-| 1 | 0 | 0 | 1 | 1 | 3 | 1 |
-| 1 | 1 | 0 | 1 | 1 | 3 | 2 |
-| 1 | 0 | 1 | 2 | 0 | 3 | 1 |
-| 0 | 1 | 1 | 1 | 1 | 3 | 2 |
+| <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | 0 | 0 | 3 | 3 |
+| <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#0000FF;color:#FFFFFF">1</span> | 1 | 1 | 3 | 1 |
+| <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">1</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | 2 | 0 | 3 | 2 |
+| <span class="atbd-cell-fill" style="background-color:#FF0000;color:#FFFFFF">1</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | 1 | 1 | 3 | 1 |
+| <span class="atbd-cell-fill" style="background-color:#FFFF00;color:#000000">1</span> | <span class="atbd-cell-fill" style="background-color:#FFFF00;color:#000000">1</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | 1 | 1 | 3 | 2 |
+| <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">1</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">1</span> | 2 | 0 | 3 | 1 |
+| <span class="atbd-cell-fill" style="background-color:#000000;color:#FFFFFF">0</span> | <span class="atbd-cell-fill" style="background-color:#00FFFF;color:#000000">1</span> | <span class="atbd-cell-fill" style="background-color:#00FFFF;color:#000000">1</span> | 1 | 1 | 3 | 2 |
 | 1 | 1 | 1 | 0 | 1 | 3 | 3 |
 
 :::
@@ -231,8 +231,8 @@ A heat map *HM* is also stored representing at pixel level:
 From the disturbance map combined, the extraction of the forest mask is obtained by a simple update to the initial forest mask.
 
 $$
-{CFM}^{aggregated}=\left\{ 1-{{FD}_{map}}^{aggregated} \right\}\land\left\{ \cup_{t^i}{CFM}^{t^i} \right\}
+{CFM}^{aggregated}=\left\{ 1-{{FD}_{map}}^{aggregated} \right\}\land\left\{ \cup_{\mathrm{t}^{\mathrm{i}}}{CFM}^{\mathrm{t}^{\mathrm{i}}} \right\}
 \tag{4.5}
 $$ (eq:atbd-fd-4-5)
 
-$\left\{ t^1<...<t^i\ \right\}$ being the different times at which each product is acquired in a global cycle, where $\cup$ is the union operator.
+$\left\{ \mathrm{t}^1<...<\mathrm{t}^{\mathrm{i}}\ \right\}$ being the different times at which each product is acquired in a global cycle, where $\cup$ is the union operator.

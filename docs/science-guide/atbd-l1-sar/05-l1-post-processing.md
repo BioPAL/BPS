@@ -72,15 +72,15 @@ The quick-look is a lower resolution version of the SAR image included in each L
 
 BIOMASS products, being full-polarisation ones, contain only one quick-look image which is a combination of the imagery from all the four polarisation channels. This is done exploiting the three Red-Green-Blue (RGB) channels of the PNG image and the Pauli decomposition colour coding scheme for L1a products, i.e.:
 
-- Red channel: $\left\vert HH-VV \right\vert$ (double bounce);
-- Green channel: $\left\vert HV+VH \right\vert$ (volume scattering);
-- Blue channel: $\left\vert HH+VV \right\vert$ (surface scattering).
+- Red channel: $\left\vert \mathrm{HH-VV} \right\vert$ (double bounce);
+- Green channel: $\left\vert \mathrm{HV+VH} \right\vert$ (volume scattering);
+- Blue channel: $\left\vert \mathrm{HH+VV} \right\vert$ (surface scattering).
 
 and the Lexicographic one for L1b products, i.e.:
 
-- Red channel: $\left\vert HH \right\vert$;
-- Green channel: $\frac{1}{2}\sqrt{{HV}^2+{VH}^2}$;
-- Blue channel: $\left\vert VV \right\vert$.
+- Red channel: $\left\vert \mathrm{HH} \right\vert$;
+- Green channel: $\frac{1}{2}\sqrt{\mathrm{HV}^2+\mathrm{VH}^2}$;
+- Blue channel: $\left\vert \mathrm{VV} \right\vert$.
 
 The quick-look images are produced by basic sample averaging and decimation, in both azimuth and range directions. The number of averaging samples in range and azimuth as well as the range and azimuth decimation factors are configurable parameters.
 

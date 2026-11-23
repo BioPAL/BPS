@@ -1668,15 +1668,15 @@ The quantities are composed by real values, so the images are generated without 
 
 L2a GN product, being full-polarisation (one cross polarization, with HV=VH), contain only one quick-look image which is a combination of the imagery from all the three polarisation channels. This is done exploiting the three Red-Green-Blue (RGB) channels of the PNG image and the Pauli decomposition colour coding scheme for L2a products, i.e.:
 
-- Red channel: $\left\vert HH-VV \right\vert$ (double bounce);
-- Green channel: $\left\vert HV+VH \right\vert$ (volume scattering);
-- Blue channel: $\left\vert HH+VV \right\vert$ (surface scattering).
+- Red channel: $\left\vert \mathrm{HH-VV} \right\vert$ (double bounce);
+- Green channel: $\left\vert \mathrm{HV+VH} \right\vert$ (volume scattering);
+- Blue channel: $\left\vert \mathrm{HH+VV} \right\vert$ (surface scattering).
 
 and the Lexicographic one for L1b products, i.e.:
 
-- Red channel: $\left\vert HH \right\vert$;
-- Green channel: $\frac{1}{2}\sqrt{{HV}^2+{VH}^2}$;
-- Blue channel: $\left\vert VV \right\vert$.
+- Red channel: $\left\vert \mathrm{HH} \right\vert$;
+- Green channel: $\frac{1}{2}\sqrt{\mathrm{HV}^2+\mathrm{VH}^2}$;
+- Blue channel: $\left\vert \mathrm{VV} \right\vert$.
 
 (sec:pfd-agb-4-3-2-2)=
 #### 4.3.2 Overlay ADS

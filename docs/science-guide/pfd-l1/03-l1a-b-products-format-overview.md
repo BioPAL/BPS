@@ -65,21 +65,21 @@ BIOMASS L1a/b Product/
 
 | **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS L1a/b Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS L1a/b Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
-| ∟ measurement |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ sar image | 1 or 2 | COG | SAR image MDS 2 files = 1 for amplitude + 1 for phase (only for L1a products) 4 components each (1 per polarization) |
 | ∟ sar image | 0 or 1 | VRT | SAR image MDS (support) Present only for L1a products |
-| ∟ annotation |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main | 1 | XML | Main ADS, including: - Acquisition information DSR - SAR image DSR - Instrument parameters DSR - RAW data analysis DSR - Processing parameters DSR - Internal calibration DSR - RFI mitigation DSR - Doppler parameters DSR - Radiometric calibration DSR - Polarimetric distortion DSR - Ionosphere correction DSR - Geometry DSR - Quality DSR - Annotation LUT DSR |
 | ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: - RFI time-domain masks DSR (one per polarisation) - RFI frequency-domain masks DSR (one per polarisation) - Radiometric calibration DSR (sigma-nought and gamma-nought maps) - Ionosphere correction DSR (FR, phase screen, TEC, range and azimuth shifts and autofocus phase screen maps) - Denoising DSR (one per polarisation) - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) |
-| ∟ navigation |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ navigation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | ∟ attitude | 1 | XML (EOF) | Attitude DSR |
-| ∟ preview |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ quicklook | 1 or 2 | PNG | Quick-look ADS L1a can have 2 files (Pauli decomposition and HSV representation) or just 1 (selected between these two) L1b has 1 file (Lexicographic representation) |
 | ∟ overlay | 1 | KML | Overlay ADS |
-| ∟ schema |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main `annotation.xsd` | 1 | XSD | RDS |
 | ∟ `orbit.xsd` | 1 | XSD | RDS |
 | ∟ `attitude.xsd` | 1 | XSD | RDS |

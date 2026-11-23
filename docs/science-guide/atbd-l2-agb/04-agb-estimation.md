@@ -175,15 +175,15 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\sigma_{GN}$ | ground-notched backscatter coefficient | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]^t$ | - | - | ground-notched backscatter coefficient, in linear units |
-| $\vartheta$ | local incidence angle | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^t$ | - | - | local incidence angle [deg] |
-| $W_r$ | Reference AGB mean | Internal resource (IODD) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB mean used as reference [t/ha] in a 5°×5° neighborhood |
-| $U_r$ | Reference AGB std | Internal resource (IODD) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
-| $W_{fc}$ | “First cycle” AGB mean | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB mean used as reference [t/ha] in a 5°×5° neighborhood |
-| $U_{fc}$ | “First cycle” AGB std | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{t^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
+| $\sigma_{GN}$ | ground-notched backscatter coefficient | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]^{\mathrm{t}}$ | - | - | ground-notched backscatter coefficient, in linear units |
+| $\vartheta$ | local incidence angle | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{\mathrm{t}}$ | - | - | local incidence angle [deg] |
+| $W_r$ | Reference AGB mean | Internal resource (IODD) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{\mathrm{t}^W}$ | - | - | A map of AGB mean used as reference [t/ha] in a 5°×5° neighborhood |
+| $U_r$ | Reference AGB std | Internal resource (IODD) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{\mathrm{t}^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
+| $W_{fc}$ | “First cycle” AGB mean | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{\mathrm{t}^W}$ | - | - | A map of AGB mean used as reference [t/ha] in a 5°×5° neighborhood |
+| $U_{fc}$ | “First cycle” AGB std | AGB L2b product in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat,W}\times{}N_{lon,W} \right]^{\mathrm{t}^W}$ | - | - | A map of AGB std used as reference [t/ha] in a 5°×5° neighborhood |
 | *DGG* | DGG | Internal lookup table | - | - | - | DGG tiles in a 5°×5° neighborhood |
-| *FNF* {sup}`t` | FNF | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^t$ | - | - | Annotated forest-non-forest mask |
-| *CFM* | CFM | FD L2b product in a 5°×5° neighborhood in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | optional | not provided | Computed Forest Mask |
+| *FNF* {sup}`t` | FNF | GN L2a products in a 5°×5° neighborhood in a global cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^{\mathrm{t}}$ | - | - | Annotated forest-non-forest mask |
+| *CFM* | CFM | FD L2b product in a 5°×5° neighborhood in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | optional | not provided | Computed Forest Mask |
 | - | `forestMaskingFlag` | `AUX_PP2_AGB` (`AUX_FMT`) | bool | - | True | True if forest/non-forest map masking should be performed |
 | *BB* {sup}`t` | Footprint | L2a main product header (`AGB_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates in a 5°×5° neighborhood |
 | *mDGG* | `minimumL2aCoverage` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
@@ -208,11 +208,11 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\widehat{W}$ | Estimated AGB mean | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | - | - | AGB mean map [t/ha] for the 3°×3° processing block |
-| $\widehat{\sigma_W}$ | Estimated AGB std | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | - | - | AGB std map [t/ha] for the 3°×3° processing block |
+| $\widehat{W}$ | Estimated AGB mean | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | - | - | AGB mean map [t/ha] for the 3°×3° processing block |
+| $\widehat{\sigma_W}$ | Estimated AGB std | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | - | - | AGB std map [t/ha] for the 3°×3° processing block |
 | *rerun* | `agbTileStatus` | AGB L2b product (`AGB_PFD`) | String | ‘Complete’,, “NotComplete’, ‘Partial’ | - | Flag raised when a new iteration is needed |
-| *HM* | heat map | AGB L2b product (`AGB_PFD`) | $3\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | 0- | - | heat map (three values (1 float and 2 integers) per pixel) for the 3°×3° processing block |
-| `acquisitionIdImage` | `acquisitionIdImage` | AGB L2b product (`AGB_PFD`) | $N_{L2a}\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{t^{L2b}}$ | 0,1 | - | Incidence matrix for the contributing data |
+| *HM* | heat map | AGB L2b product (`AGB_PFD`) | $3\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | 0- | - | heat map (three values (1 float and 2 integers) per pixel) for the 3°×3° processing block |
+| `acquisitionIdImage` | `acquisitionIdImage` | AGB L2b product (`AGB_PFD`) | $N_{L2a}\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | 0,1 | - | Incidence matrix for the contributing data |
 
 (sec:atbd-agb-4-1-4)=
 #### 4.1.4 Algorithm mathematical background
@@ -277,7 +277,7 @@ $$
 \tag{4.6}
 $$ (eq:model-parameter-estimation-6)
 
-where $R(x,y)=\frac{U(x,y)}{W(x,y)}$ is the AGB coefficient of variation (standard deviation relative mean) and $\Omega_{fcrej}$ is the set of landcover class indices to ignore. The set of landcover classes to ignore shall be made consistent with the input FNF information $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-FNF}^t \right\}$ for all *t* L2a stacks, or CFM in case this is provided $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-CFM}^{L2b} \right\}$ for all $t^{L2b}$ L2b stacks.
+where $R(x,y)=\frac{U(x,y)}{W(x,y)}$ is the AGB coefficient of variation (standard deviation relative mean) and $\Omega_{fcrej}$ is the set of landcover class indices to ignore. The set of landcover classes to ignore shall be made consistent with the input FNF information $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-FNF}^t \right\}$ for all *t* L2a stacks, or CFM in case this is provided $\Omega_{fcrej}=\Omega_{fcrej}\cup\left\{ {1-CFM}^{L2b} \right\}$ for all $\mathrm{t}^{L2b}$ L2b stacks.
 
 From the four sets: $\Omega_B$, $\Omega_N$, $\Omega_{SAR}$, and $\Omega_{AGB}$ we compute the following:
 
@@ -448,7 +448,7 @@ $$
 $$
 A_l^{(r,c)}=\left\{ \begin{matrix}
 1 & c=c_l(j_r,p_r) \\
-0 & otherwise
+0 & \mathrm{otherwise}
 \end{matrix} \right.
 $$
 
@@ -473,7 +473,7 @@ $$
 $$
 A_a^{(r,c)}=\left\{ \begin{matrix}
 w_r & c=c_a(k_r,p_r) \\
-0 & otherwise
+0 & \mathrm{otherwise}
 \end{matrix} \right.
 $$
 
@@ -492,7 +492,7 @@ For each unique $p$, the corresponding instance index $c_n$ is simply $p$. The e
 $$
 A_n^{(r,c)}=\left\{ \begin{matrix}
 c_r & c=p_r \\
-0 & otherwise
+0 & \mathrm{otherwise}
 \end{matrix} \right.
 $$
 
@@ -508,7 +508,7 @@ $$ (eq:model-parameter-estimation-19)
 And their standard deviations to:
 
 $$
-\widehat{\boldsymbol{\delta}}=\sqrt{\frac{\left\Vert \mathbf{s}\mathbf{-}\mathbf{A}\widehat{\mathbf{x}} \right\Vert^2}{N_{meas}-N_l-N_a-N_n}\cdot{}diag\left[ (\mathbf{A}^T\mathbf{A})^{-1} \right]}
+\widehat{\boldsymbol{\delta}}=\sqrt{\frac{\left\Vert \mathbf{s}\mathbf{-}\mathbf{A}\widehat{\mathbf{x}} \right\Vert^2}{N_{meas}-N_l-N_a-N_n}\cdot\mathrm{diag}\left[ (\mathbf{A}^T\mathbf{A})^{-1} \right]}
 \tag{4.20}
 $$ (eq:model-parameter-estimation-20)
 
@@ -760,7 +760,7 @@ While the first condition cannot be overcome, for the latter condition the avail
 Thus, the number of invalid AGB estimates caused by missing regression parameters only shall be counted (i.e., meaning that only AGB estimates that cannot be computed due to lack of valid parameters while solving {eq}`4.30`), and a flag is raised asking to rerun the regression with enriched reference (i.e., second iteration taking advantage of the results of neighbouring processing blocks):
 
 $$
-rerun=\ \left( 100\times\frac{invalidEstimateNumber}{totalEstimateNumber} \right)>mFV
+rerun=\ \left( 100\times\frac{invalidEstimateNumber}{totalEstimateNumber} \right)>\mathrm{mFV}
 \tag{4.40}
 $$ (eq:model-parameter-estimation-40)
 

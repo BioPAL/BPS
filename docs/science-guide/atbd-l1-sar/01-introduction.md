@@ -110,29 +110,29 @@ This document is organized as follows:
 :::{dropdown} Acronyms
 | Acronym | Description |
 |---|---|
-| $f_r$ | Range frequency |
-| $f_a$ | Azimuth frequency |
-| $\omega_r$ | Range wavenumber |
-| $k_r$ | Range wavenumber after Stolt interpolation |
-| $k_a$ | Azimuth (Doppler) wavenumber |
+| $f_{\mathrm{r}}$ | Range frequency |
+| $f_{\mathrm{a}}$ | Azimuth frequency |
+| $\omega_{\mathrm{r}}$ | Range wavenumber |
+| $k_{\mathrm{r}}$ | Range wavenumber after Stolt interpolation |
+| $k_{\mathrm{a}}$ | Azimuth (Doppler) wavenumber |
 | $\tau$ | Fast time (slant range) |
 | $t$ | Slow time (azimuth) |
-| $\tau_r$ | Chirp duration in seconds |
-| $N_r$ | Chirp duration in samples |
-| $B_r$ | Chirp bandwidth |
-| $B_a$ | Azimuth bandwidth |
+| $\tau_{\mathrm{r}}$ | Chirp duration in seconds |
+| $N_{\mathrm{r}}$ | Chirp duration in samples |
+| $B_{\mathrm{r}}$ | Chirp bandwidth |
+| $B_{\mathrm{a}}$ | Azimuth bandwidth |
 | $f_0$ | Carrier frequency |
 | $\omega_0$ | Wavenumber at carrier frequency |
 | $\lambda$ | The wavelength |
-| $f_s$ | Range sampling frequency |
-| $PRF$ | Pulse repetition frequency |
-| $K_r$ | Chirp rate |
-| $K_a$ | Doppler rate |
-| $f_{DC}$ | Doppler centroid |
-| $v_s,\ v_s^i$ | Satellite velocity in ECEF and inertial reference frame, respectively |
-| $v_e,v_e^i$ | Effective velocity in ECEF and inertial reference frame, respectively |
+| $f_{\mathrm{s}}$ | Range sampling frequency |
+| $\mathrm{PRF\ }$ | Pulse repetition frequency |
+| $K_{\mathrm{r}}$ | Chirp rate |
+| $K_{\mathrm{a}}$ | Doppler rate |
+| $f_{\mathrm{DC}}$ | Doppler centroid |
+| $v_{\mathrm{s}},\ v_{\mathrm{s}}^{\mathrm{i}}$ | Satellite velocity in ECEF and inertial reference frame, respectively |
+| $v_{\mathrm{e}},v_{\mathrm{e}}^{\mathrm{i}}$ | Effective velocity in ECEF and inertial reference frame, respectively |
 | $v_{e0C}$ | Effective velocity at reference range |
-| $v_g$ | Ground velocity |
+| $v_{\mathrm{g}}$ | Ground velocity |
 | $r_0$ | Zero-Doppler closest approach distance |
 | $r$ | Slant-range vector |
 | $\beta$ | Squint angle |
@@ -141,11 +141,11 @@ This document is organized as follows:
 | $S_{xx}$ | Scattering coefficient at transmit/receive polarization $xx$ |
 | $\widehat{k}$ | Unit propagation vector of transmitted wave |
 | $\overrightarrow{B}$ | Earth’s magnetic field vector |
-| $TEC$ | Total Electron Content |
-| $h_{iono}$ | Ionospheric height (thin layer model) |
+| $\mathrm{TEC}$ | Total Electron Content |
+| $h_{\mathrm{iono}}$ | Ionospheric height (thin layer model) |
 | $\theta$ | Incidence angle |
-| $\theta_l$ | Off-nadir look angle |
-| $\varphi_{iono}$ | Ionospheric phase screen |
+| $\theta_{\mathrm{l}}$ | Off-nadir look angle |
+| $\varphi_{\mathrm{iono}}$ | Ionospheric phase screen |
 | $t_0$ | Zero-Doppler position for a given target |
 | $\boldsymbol{q}$ | Quaternions of the attitude product |
 | $\overrightarrow{p_{LOS}},\ \overrightarrow{p_{LOS,PF}}$ | Antenna pointing vector in the ECEF coordinates and in the pointing reference frame. |

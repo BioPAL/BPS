@@ -70,26 +70,26 @@ BIOMASS L1c Product/
 
 | **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS L1c Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS L1c Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
-| ∟ measurement |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ sar image | 2 | COG | SAR (coregistered) image MDS 2 files = 1 for amplitude + 1 for phase 3 or 4 components each (1 per polarization) |
 | ∟ sar image | 1 | VRT | SAR (coregistered) image MDS (support) |
-| ∟ annotation\_primary |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation\_primary</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main | 1 | XML | Primary image main ADS Copy of primary image L1a product main ADS, including only relevant DSR |
-| ∟ navigation |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ navigation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | ∟ attitude | 1 | XML (EOF) | Attitude DSR |
-| ∟ annotation\_coregistered |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation\_coregistered</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main | 1 | XML | Coregistered image main ADS Copy of secondary image L1a product main ADS, with DSR content updated where needed + - STA processing parameters DSR - STA coregistration parameters DSR - STA InSAR parameters DSR - STA quality DSR |
 | ∟ lut | 1 | NetCDF | Coregistered image Look-Up Tables ADS: - Copy of secondary image L1a product LUT DSR, resampled over coregistration grid: - Radiometric calibration DSR (sigma-nought and gamma-nought maps) - Denoising DSR (one per polarisation) - Copy of primary image L1a product LUT DSR: - Geometry DSR (latitude/longitude/height maps, incidence and elevation angles maps) Additionally: - Coregistration DSR (range and azimuth coregistration shifts and quality index maps, wavenumbers, flattening phase screens) - For secondary images only, Interferometric quantities (coherence and interferogram with respect to the coregistration primary). - Optionally, SKP DSR (SKP calibration phase screen and quality indicators) - Optionally, Multi-Squint Calibration DSR (ionospheric phase screens) |
-| ∟ navigation |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ navigation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ orbit | 1 | XML (EOF) | Orbit DSR |
 | ∟ attitude | 1 | XML (EOF) | Attitude DSR |
-| ∟ preview |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ quicklook | 1 to 4 | PNG | Quick-look ADS L1c can have up to 4 quick-look files: - At least 1 of Pauli and HSV decomposition - Optionally, and for secondary images only, the coherence vs primary - Optionally, and for secondary images only, the flattened interferogram vs primary |
 | ∟ overlay | 1 to 4 | KML | Overlay ADS. 1 overlay per quick-look file. |
-| ∟ schema |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
 | ∟ main `annotation.xsd` | 1 | XSD | RDS |
 | ∟ `orbit.xsd` | 1 | XSD | RDS |
 | ∟ `attitude.xsd` | 1 | XSD | RDS |

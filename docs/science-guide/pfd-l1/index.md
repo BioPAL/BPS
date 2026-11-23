@@ -16,7 +16,7 @@ license: Apache-2.0
 backend: docx
 status: draft
 pipeline_version: 0.1.0
-conversion_date: '2026-11-18'
+conversion_date: '2026-11-23'
 source_sha256: 0b1514b320fbf1523ddd4be9eaaa80680f0b4bac9969bfc0c90d41fc6592eed9
 -->
 
@@ -26,16 +26,10 @@ source_sha256: 0b1514b320fbf1523ddd4be9eaaa80680f0b4bac9969bfc0c90d41fc6592eed9
 
 ::::{only} html
 
-:::{admonition} Draft, automatic web conversion
-:class: warning
-
-This page is an **automatic web conversion** of the official document, pending review. The official PDF remains the authoritative reference.
-:::
-
-:::{admonition} Source document
+:::{admonition} Authoritative document
 :class: tip
 
-This page reproduces `BIO-BPS-L1PFD-ARE-010076` issue **1.7.0** dated **06 November 2026**.
+This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.7.0** dated **06 November 2026**.
 :::
 
 ::::
