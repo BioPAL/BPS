@@ -414,8 +414,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| MDS → FH → `compressionFactor` MDS → Quality → `compressionFactor` MDS → `BPS_FNF` → `compressionFactor` MDS → HeatMap → `compressionFactor` MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factor for the images MDS. From 0 to 9, where 0 means no compression. | `xsd:unsignedByte` | 1 |
-| MDS → FH → `MAX_Z_ERROR` MDS → Quality → `MAX_Z_ERROR` MDS → Heat Map → `MAX_Z_ERROR` | For the FH, Quality and Heat Map images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS → FH → `compressionFactor`<br>MDS → Quality → `compressionFactor`<br>MDS → `BPS_FNF` → `compressionFactor`<br>MDS → HeatMap → `compressionFactor`<br>MDS → `acquisitionIdImage` → `compressionFactor` | ZSTD algorithm compression factor for the images MDS. From 0 to 9, where 0 means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → FH → `MAX_Z_ERROR`<br>MDS → Quality → `MAX_Z_ERROR`<br>MDS → Heat Map → `MAX_Z_ERROR` | For the FH, Quality and Heat Map images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. <br>Zero means loss-less compression. | `xsd:float` | 1 |
 | `MDS_blockSize` | MDS COG blocking algorithm size. Same value is used for both data array dimensions. | `xsd:unsignedByte` | 1 |
 
 :::

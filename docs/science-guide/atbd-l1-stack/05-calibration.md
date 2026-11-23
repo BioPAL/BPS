@@ -224,21 +224,21 @@ The AZF consists of two main components: Computing the common azimuth bandwidth 
 A range dependent common azimuth bandwidth is computed via
 
 $$
-B_{az,common}\left[ r \right]\mathrel{:=}(B^+\left[ r \right]-B^-\left[ r \right]),
+B_{\mathrm{az},\mathrm{common}}\left[ r \right]\mathrel{:=}(B^+\left[ r \right]-B^-\left[ r \right]),
 \tag{5.1}
 $$ (eq:atbd-l1-stack-5-1)
 
 where
 
 $$
-B^+\left[ r \right]\mathrel{:=}\min_{i\in{}N} \left( f_{D,i}\left[ r,\overline{t_{az}} \right]+\frac{B_{az,i}}{2}+\frac{1}{2\pi}\left\langle \frac{\partial({\Delta{}\Phi}_i[t_{az,},r]-{\Delta{}\Phi}_p[t_{az},r])}{\partial{}t_{az}} \right\rangle \right)
+B^+\left[ r \right]\mathrel{:=}\min_{i\in\mathrm{N}} \left( f_{D,i}\left[ r,\overline{t_{az}} \right]+\frac{B_{az,i}}{2}+\frac{1}{2\pi}\left\langle \frac{\partial({\Delta{}\Phi}_i[t_{az,},r]-{\Delta{}\Phi}_p[t_{az},r])}{\partial{}t_{az}} \right\rangle \right)
 \tag{5.2}
 $$ (eq:atbd-l1-stack-5-2)
 
 and
 
 $$
-B^-\left[ r \right]\mathrel{:=}\max_{i\in{}N} \left( f_{D,i}\left[ r,\overline{t_{az}} \right]-\frac{B_{az,i}}{2}+\frac{1}{2\pi}\left\langle \frac{\partial({\Delta{}\Phi}_i[t_{az},r]-{\Delta{}\Phi}_p[t_{az,}r])}{\partial{}t_{az}} \right\rangle \right),
+B^-\left[ r \right]\mathrel{:=}\max_{i\in\mathrm{N}} \left( f_{D,i}\left[ r,\overline{t_{az}} \right]-\frac{B_{az,i}}{2}+\frac{1}{2\pi}\left\langle \frac{\partial({\Delta{}\Phi}_i[t_{az},r]-{\Delta{}\Phi}_p[t_{az,}r])}{\partial{}t_{az}} \right\rangle \right),
 \tag{5.3}
 $$ (eq:atbd-l1-stack-5-3)
 
@@ -265,7 +265,7 @@ I_i^{zp}(a,r)\ :=\left\{ \begin{matrix} \ {CoSCS}_i(a,r),\ \ \ \ \ \ \ 0\leq{}a<
 where $N_{az}$ is the number of the azimuth lines within the processed bandwidth and $N_{zp}$ is the number of zero-padded azimuth lines, defined as
 
 $$
-N_{zp}\mathrel{:=}{}round\left[ 2^{\left\lfloor \frac{ln({N)}{}}{\ln (2)} \right\rfloor} \right]
+N_{zp}\mathrel{:=}\mathrm{round}\left[ 2^{\left\lfloor \frac{\mathrm{ln}({N)}{}}{\ln (2)} \right\rfloor} \right]
 \tag{5.5}
 $$ (eq:atbd-l1-stack-5-5)
 
@@ -273,7 +273,7 @@ $$ (eq:atbd-l1-stack-5-5)
 3. 
 
 $$
-Ι_i(f_a,r)\mathrel{:=}{FFT(I}_i^{zp}(a,\ r)).
+Ι_i(f_a,r)\mathrel{:=}{\mathrm{FFT}(I}_i^{zp}(a,\ r)).
 \tag{5.6}
 $$ (eq:atbd-l1-stack-5-6)
 
@@ -284,7 +284,7 @@ $$
 \tag{5.7}
 $$ (eq:atbd-l1-stack-5-7)
 
-5. Roll the common spectral window to centre the spectrum at $f_{az,center}\left[ r \right]\mathrel{:=}{(B}^+\left[ r \right]+B^-[r])/2$, that is
+5. Roll the common spectral window to centre the spectrum at $f_{\mathrm{az},center}\left[ r \right]\mathrel{:=}{(B}^+\left[ r \right]+B^-[r])/2$, that is
 
 $$
 \ I_i^{bb}(f_a;r)=\ I_i^w(f_a+f_{az,center}[r];r),
@@ -294,14 +294,14 @@ $$ (eq:atbd-l1-stack-5-8)
 6. Multiply the line by the rolled common spectral window $W_c$, which can be either the window $W_{foc}$ used for focusing the data or a user provided window $W_{\alpha}$:
 
 $$
-I_i^{cb}(f_a,r)\mathrel{:=}{}I_i^{bb}(f_a,r)\bullet\ W_c(f_a+f_{az,center}[r]),
+I_i^{cb}(f_a,r)\mathrel{:=}\mathrm{I}_i^{bb}(f_a,r)\bullet\ W_c(f_a+f_{az,center}[r]),
 \tag{5.9}
 $$ (eq:atbd-l1-stack-5-9)
 
 7. Apply the *inverse Fourier transform*:
 
 $$
-I_i^{cb}(a;\ r)\mathrel{:=}{}iFFT(I_i^{cb}(f_a;r)),
+I_i^{cb}(a;\ r)\mathrel{:=}\mathrm{iFFT}(I_i^{cb}(f_a;r)),
 \tag{5.10}
 $$ (eq:atbd-l1-stack-5-10)
 
@@ -350,12 +350,12 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 | $\Delta\phi_{L1a}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Ionospheric phase screen estimated by L1 processor and shifted onto the primary grid |
 | $\delta_{\phi_{L1a}}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Spatial range shifts due to ionosphere estimated by the L1 processor and shifted onto the primary grid |
-| $n^*$ | `calibrationReferenceImage` | Job\_Order (*ProcParameter – calibration\_primary\_imge*) or `AUX_PPS` (`primaryImageFlag`). See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
-|   | `slowIonosphereRemovalFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the IOB module |
-| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
-| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
+| $n^*$ | `calibrationReferenceImage` | Job\_Order (*ProcParameter – calibration\_primary\_imge*)<br>or `AUX_PPS` (`primaryImageFlag`). See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
+|   | `slowIonosphereRemovalFlag` | `AUX_PPS`<br>(`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the IOB module |
+| $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS`<br>(`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
+| $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS`<br>(`AUX_FMT`) | Float value [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
 |   | `polarisationUsed`⁽⁵⁾ | `AUX_PPS` (`AUX_FMT`) |   | HH / HV / VH / VV / XX | HH | Reference polarization used in the pre-processing step |
-|   | `phaseUnwrappingFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
+|   | `phaseUnwrappingFlag` | `AUX_PPS`<br>(`AUX_FMT`) | Boolean switch | True/False | True | Unwrap interferogram phase during single baseline estimation |
 |   | `latitudeThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [deg] | 0 - $\infty$ | 40.0 | Latitude (N/S) below (above) which IOB is skipped |
 |   | `baselineMethod` | `AUX_PPS` (`AUX_FMT`) | Literal | Multi-Basline, Single-Baseline | Mutli-Baseline | As to whether MB or SB estimation is executed |
 |   | `unweightedMulitBaselineEstimation` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | In MB, equally weigh all estimations. If False, use weights from the coherence map |
@@ -365,7 +365,7 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 |   | `multiBaselineCriticalBaselineThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.45 | In MB, Interferometric pairs with baseline exceeding this percentage of the critical baseline are ignored |
 | $\theta_{PU}$ | `maxDeltaPhaseUnwrapTest` | `AUX_PPS` (`AUX_FMT`) | Float | 0 - $\infty$ | 0.5 rad | Threshold for the phase unwrapping test |
 | $\theta_{\gamma}$ | `minCoherenceThreshold` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.0 | Threshold on the coherence that specifies which pixels should be used or not for phase-plane fitting. |
-| $\theta_{PV}$ | `minUsablePixelRatio` | `AUX_PPS` (`AUX_FMT`) | Float | 0 – 1 | 0.05 | Minimum fraction of valid pixels according to coherence and phase unwrapping test to perform the phase-plane fitting |
+| $\theta_{PV}$ | `minUsablePixelRatio` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 0 – 1 | 0.05 | Minimum fraction of valid pixels according to coherence and phase unwrapping test to perform the phase-plane fitting |
 |   | `slowIonosphereQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0 – 1 | 0.0 | Estimations with quality below this threshold are ignored |
 
 [5] Note that this parameter is configurable only at the calibration level and not module by module. In other words, the selected value is common to all calibration modules (but not necessarily the same used for coregistration).
@@ -457,7 +457,7 @@ flowchart TB
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Block diagram representing the single-baseline IOB estimation.</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 11</span><span class="caption-text"> — Block diagram representing the <em>single-baseline</em> IOB estimation.</span></p>
 
 ::::
 
@@ -468,7 +468,7 @@ The range Split-Spectrum leverages the different frequency behavior of the two i
 
 The pre-processing step is applied independently to each coregistered image $CoSCS_n$ on a reference polarization, as specified in the AUX-PPS configuration, to obtain $M$ images $I_n$. The step consists of the following sub-steps:
 
-1. Focus range spectral weighting removal: $I_n\leftarrow{Win}_{rg}^{-1}[CoSCS_n]$
+1. Focus range spectral weighting removal: $I_n\leftarrow\mathrm{Win}_{rg}^{-1}[CoSCS_n]$
 2. Removal of the geometric phase screens from DEM: $I_n\leftarrow{}I_n\cdot{}e^{j\Delta\Phi_n}$
 
 (sec:atbd-l1-stack-5-2-2-2)=
@@ -498,16 +498,16 @@ Given the interferometric pair of preprocessed sub-looked images $I_{k,X}$ with 
 (equation-eq-atbd-l1-stack-5-15)=
 \begin{equation}
 \begin{aligned}
-\Delta\phi_L\mathrel{:=}\angle{}Coh(I_{n,L\ },I_{m,L}), \\
-\Delta\phi_H\mathrel{:=}\angle{}Coh(I_{n,H\ },I_{m,H}),
+\Delta\phi_L\mathrel{:=}\angle\mathrm{Coh}(I_{n,L\ },I_{m,L}), \\
+\Delta\phi_H\mathrel{:=}\angle\mathrm{Coh}(I_{n,H\ },I_{m,H}),
 \end{aligned}
 \tag{5.15}
 \end{equation}
 
-where $\cdot^*$ denotes the complex conjugation$,$ $\angle$ is the phase extraction operator, and $Coh$ represents the interferometric coherence associated to an image pair
+where $\cdot^*$ denotes the complex conjugation$,$ $\angle$ is the phase extraction operator, and $\mathrm{Coh}$ represents the interferometric coherence associated to an image pair
 
 $$
-Coh(I_p,I_s)\mathrel{:=}\frac{\left\langle I_s\cdot{}I_p^* \right\rangle}{\sqrt{\left\langle {\vert{}I}_s\left. \right\vert^2 \right\rangle\left\langle {\vert{}I}_p\left. \right\vert^2 \right\rangle}},
+\mathrm{Coh}(I_p,I_s)\mathrel{:=}\frac{\left\langle I_s\cdot{}I_p^* \right\rangle}{\sqrt{\left\langle {\vert{}I}_s\left. \right\vert^2 \right\rangle\left\langle {\vert{}I}_p\left. \right\vert^2 \right\rangle}},
 \tag{5.16}
 $$ (eq:atbd-l1-stack-5-16)
 
@@ -582,11 +582,11 @@ Due to the theoretical limitation in estimating the slow-varying ionosphere for 
 \partial_a\phi_{sb}^{p,s} \\
 \partial_r\phi_{sb}^{p,s} \\
 \phi_0
-\end{bmatrix}\mathrel{:=}(F^T\cdot{}W_{sb}\cdot{}F)^{-1}\cdot{}F^T\cdot{}W_{sb}\cdot{}vec(\Delta\phi_{iono}^{'}),
+\end{bmatrix}\mathrel{:=}(F^T\cdot{}W_{sb}\cdot{}F)^{-1}\cdot{}F^T\cdot{}W_{sb}\cdot\mathrm{vec}(\Delta\phi_{iono}^{'}),
 \tag{5.20}
 \end{equation}
 
-where $F$ is a $N_{az}N_{rg}\times3$ matrix so that $F_{i0}\mathrel{:=}\left\lfloor i/N_{rg} \right\rfloor$ , $F_{i1}\mathrel{:=}{}i\ (\mod\ N_{az})$, and $F_{i2}\mathrel{:=}1$, $W_{sb}$ is the $N_{az}N_{rg}\times{}N_{az}N_{rg}$ diagonal matrix so that $W_{sb,i,i}\mathrel{:=}\gamma_i\cdot{}T_{PU,i}\cdot(\gamma_i\geq\theta_{\gamma})$ with $\gamma_i$ the $i$-th pixel’s coherence of the interferometric pair $(p,s)$ computed as in {eq}`Equation 5.15 <5.15>` but with a finer resolution (*e.g.* using a $5\times5$ boxcar kernel), $T_{PU,i}\in\{0,\ 1\}$ is the $i$-th pixel’s validity associated to the phase unwrapping test described in {sec}`Section 5.2.2.3 <5.2.2.3>`, if applicable, and finally, $vec(\Delta\phi_{iono}^{'})$ is the $N_{az}N_{rg}\times1$ vector obtained by stretching the element of the ionosphere phase screen into a 1D column array.
+where $F$ is a $N_{az}N_{rg}\times3$ matrix so that $F_{i0}\mathrel{:=}\left\lfloor i/N_{rg} \right\rfloor$ , $F_{i1}\mathrel{:=}{}i\ (\mod\ N_{az})$, and $F_{i2}\mathrel{:=}1$, $W_{sb}$ is the $N_{az}N_{rg}\times{}N_{az}N_{rg}$ diagonal matrix so that $W_{sb,i,i}\mathrel{:=}\gamma_i\cdot{}T_{PU,i}\cdot(\gamma_i\geq\theta_{\gamma})$ with $\gamma_i$ the $i$-th pixel’s coherence of the interferometric pair $(p,s)$ computed as in {eq}`Equation 5.15 <5.15>` but with a finer resolution (*e.g.* using a $5\times5$ boxcar kernel), $T_{PU,i}\in\{0,\ 1\}$ is the $i$-th pixel’s validity associated to the phase unwrapping test described in {sec}`Section 5.2.2.3 <5.2.2.3>`, if applicable, and finally, $\mathrm{vec}(\Delta\phi_{iono}^{'})$ is the $N_{az}N_{rg}\times1$ vector obtained by stretching the element of the ionosphere phase screen into a 1D column array.
 
 Note that to convert $\partial_x\phi_n^{p,s}$ into $\partial_{t_x}\phi_n^{p,s}$, *i.e.* slopes expressed with respect to samples into slopes expressed with respect to time axes, it is enough to normalize the terms by the associated sampling steps.
 
@@ -787,7 +787,7 @@ In the reminder of this section, we will describe in detail all steps of the alg
 At a high level the MSC module consists of three (3) steps: First a pre-processing step executes the following operations on all the secondary stack’s frames:
 
 - First, a pre-processing step warps the input uncalibrated stack $SCS_n$ by applying the coregistration shifts both from orbit and data in range direction, but only the coregistration shifts from orbit in along-track direction, yielding a secondary stack $CoSCS_n^{\#}$. Henceforth we will refer to $CoSCS_n$ and $CoSCS_n^{\#}$ respectively as primary and secondary stacks
-- Then, compensate the flattening phases screen in both stacks, that is, update the stacks by setting $CoSCS_n\leftarrow{}CoSCS_n\cdot\exp (j\Delta\Phi_n)$ and $CoSCS_n^{\#}\leftarrow{}CoSCS_n^{\#}\cdot{}exp(j\Delta\Phi_n)$, where $\Delta\Phi_n$ are the flattening phase screens computed during the coregistration steps.
+- Then, compensate the flattening phases screen in both stacks, that is, update the stacks by setting $CoSCS_n\leftarrow{}CoSCS_n\cdot\exp (j\Delta\Phi_n)$ and $CoSCS_n^{\#}\leftarrow{}CoSCS_n^{\#}\cdot\mathrm{exp}(j\Delta\Phi_n)$, where $\Delta\Phi_n$ are the flattening phase screens computed during the coregistration steps.
 
 Next, given a calibration pair $(CoSCS_p,CoSCS_s^{\#})$ and a selected polarization:
 
@@ -1072,7 +1072,7 @@ while $n_{iter}<N_{iter}$
 for each estimated layer $l$
 
 - Compute $\widehat{\boldsymbol{\phi}}(x,\psi)\mathrel{:=}\Sigma_{r_{iono}}{\widehat{\boldsymbol{\phi}}}_{r_l}(x-r_l,\psi)$
-- $\boldsymbol{\gamma}_{MS}\mathrel{:=}\ MSCoh_{ps}\left[ \ldots,r,\ldots \right]\cdot{}exp\{-j\widehat{\boldsymbol{\phi}}\}$
+- $\boldsymbol{\gamma}_{MS}\mathrel{:=}\ MSCoh_{ps}\left[ \ldots,r,\ldots \right]\cdot\mathrm{exp}\{-j\widehat{\boldsymbol{\phi}}\}$
 - $\delta{\widehat{\boldsymbol{\phi}}}_{r_l}\boldsymbol{\mathrel{:=}}O_{method}(\boldsymbol{\gamma}_{MS})$
 - ${\widehat{\boldsymbol{\phi}}}_{r_l}\boldsymbol{\mathrel{:=}}{\widehat{\boldsymbol{\phi}}}_{r_l}\boldsymbol{+}\delta{\widehat{\boldsymbol{\phi}}}_{r_l}$
 
@@ -1147,7 +1147,7 @@ $$
 \tag{5.46}
 $$ (eq:atbd-l1-stack-5-46)
 
-where $Coh$ is defined as in {eq}`Equation (5.14) <5.14>`. To compute the phase slopes, we need to estimate the peak of the 2D spectrum of $\Delta\phi_n$. For that, we first zero-pad $CoCSC_s^{\#}$ to match the shape $\left\lceil N_{az}\ \alpha \right\rceil\times\left\lceil N_{rg}\ \alpha \right\rceil$⁽⁷⁾, where $N_{az}$ and $N_{rg}$ are respectively the stack size in along-track and slant-range direction. Then, we set
+where $\mathrm{Coh}$ is defined as in {eq}`Equation (5.14) <5.14>`. To compute the phase slopes, we need to estimate the peak of the 2D spectrum of $\Delta\phi_n$. For that, we first zero-pad $CoCSC_s^{\#}$ to match the shape $\left\lceil N_{az}\ \alpha \right\rceil\times\left\lceil N_{rg}\ \alpha \right\rceil$⁽⁷⁾, where $N_{az}$ and $N_{rg}$ are respectively the stack size in along-track and slant-range direction. Then, we set
 
 [7] Note that the shape is rounded to the next size that results in the most efficient execution of FFT.
 
@@ -1349,12 +1349,12 @@ flowchart TB
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 |   | `skpPhaseEstimationFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | True | Enable/disable the SKP module |
 |   | `phaseCorrection` | `AUX_PPS` (`AUX_FMT`) | Boolean switch | True/False | False | Type of phase correction that needs to be applied by the SKP (“None”, “FlatteningPhaseScreen” or “Ground Phase Screen”) |
-| $w_{est}$ | `estimationWindowSize` | `AUX_PPS` (`AUX_FMT`) | Float | 1 -- $\infty$ | 500 | Size of the estimation window [m]. |
-|   | `calibrationPhasePostprocessing` | `AUX_PPS` (`AUX_FMT`) | Enumeration | Goldstein Boxcar Median None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD {sec}`Section 5.4.2.6 <5.4.2.6>`), or no filtering ("None"). It defaults to "None". |
-| $w_f$ | `postprocessingFilterWindowSize` | `AUX_PPS` (`AUX_FMT`) | Float | 1 -- $\infty$ | 1000 | Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). Recommended value is 1,000 meters. |
-| $w_G$ | `goldsteinFilterWindowSize` | `AUX_PPS` (`AUX_FMT`) | Int | $1-\infty$ | 5 | Size of the filtering frequency window applied to the Golstein filter weights to be used for post-processing the SKP phase screen [px] (only "Goldstein"). Recommended value is 5 pixels (5 frequency bins). |
+| $w_{est}$ | `estimationWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 1 -- $\infty$ | 500 | Size of the estimation window [m]. |
+|   | `calibrationPhasePostprocessing` | `AUX_PPS`<br>(`AUX_FMT`) | Enumeration | Goldstein Boxcar Median None | None | Whether to post-process the SKP calibration phase screen via Goldstein filter (“Goldstein”), boxcar filter (“Boxcar”), or pivotal median filter (“Median”, see Stack ATBD Section 5.4.2.6), or no filtering ("None"). It defaults to "None". |
+| $w_f$ | `postprocessingFilterWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Float | 1 -- $\infty$ | 1000 | Size of the filtering window to be used for post-processing the SKP phase screen [m] (Only "Boxcar" and "Median"). Recommended value is 1,000 meters. |
+| $w_G$ | `goldsteinFilterWindowSize` | `AUX_PPS`<br>(`AUX_FMT`) | Int | $1-\infty$ | 5 | Size of the filtering frequency window applied to the Golstein filter weights to be used for post-processing the SKP phase screen [px] (only "Goldstein"). Recommended value is 5 pixels (5 frequency bins). |
 | $\alpha_G$ | `goldsteinFilterAlpha` | `AUX_PPS` (`AUX_FMT`) | Float | 0-1 | 0.5 | Parameter that controls the filtering level of the Goldstein filter. $0$ is no filterimg, $1$ is maximum filtering. Recommended values are between $0.2$ and $1$. |
-|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` (`AUX_FMT`) | Boolean Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
+|   | excludeMPMBPolarizationCrossCovarianceFlag | `AUX_PPS` (`AUX_FMT`) | Boolean<br>Switch | True/False | False | If MPMB coherence matrix should only contain autocovariances. |
 |   | `crossPolMergingFlag` | `AUX_PPS` (`AUX_FMT`) | Boolean Switch | True/False | False | If true, merge the cross-polarizations before estimating the SKP calibration phase screen. |
 | $q_{thresh}$ | `skpCalibrationPhaseScreenQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 | 0.5 | Apply the phase correction only if the estimated qualities are above this threshold |
 | $Q_{thresh}$ | `overallProductQualityThreshold` | `AUX_PPS` (`AUX_FMT`) | Float value [%] | 0.0 – 1.0 |   | If the fraction of valid ionosphere estimation is below this threshold, the fast-ionosphere estimation is flagged as failed |

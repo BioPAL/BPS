@@ -72,15 +72,15 @@ The algorithm applies to TOM stacks and subsets the stack in order to select (or
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
-| - | `subsettingRule` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “geometry” | Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase. A no selection rule (“maintain all”) is available for GN processing only |
+| *SCS* | L1c | Stack processor (`L1_PFD`) | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=7/8 acquisitions (TOM phase), with two CP and one XP | - | L1c stack |
+| - | `subsettingRule` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “geometry” | Select 3 acquisitions from the 7/8 of TOM phase, choosing, with a geometrical rule, the baselines corresponding to the ones of INT phase.<br>A no selection rule (“maintain all”) is available for GN processing only |
 
 (sec:atbd-agb-3-2-3)=
 #### 3.2.3 Outputs
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | L1c stack |
+| *SCS* | L1c | *Calibration step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | L1c stack |
 
 (sec:atbd-agb-3-2-4)=
 #### 3.2.4 Algorithm mathematical background
@@ -198,17 +198,17 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | Stack processor, or *INT subsetting step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | L1c stack |
-| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
-| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
-| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | String | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed: skp or geometry if phase screens calibration should be applied, none otherwise. |
+| *SCS* | L1c | Stack processor, or<br>*INT subsetting step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | L1c stack |
+| $\varphi_{skp}$ | `skpCalibrationPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | SKP calibration phase screens [rad] |
+| $\varphi_{flattening}$ | `flatteningPhasesScreen` | L1c reference acquisition ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,\varphi}\times{}N_{az,\varphi} \right]$ (zero for reference acquisition) | - | - | Ground steering (flattening) geometry phase screens [rad] |
+| - | `applyCalibrationScreen` | `AUX_PP2_2` A (`AUX_FMT`) | String | ‘skp’, ‘geometry’, ‘none’ | skp | Choose the phase calibration to be performed:<br>skp or geometry if phase screens calibration should be applied, none otherwise. |
 
 (sec:atbd-agb-3-3-3)=
 #### 3.3.3 Outputs
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| *SCS* | L1c | *Ground cancellation processing step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
 
 (sec:calibration-math)=
 #### 3.3.4 Algorithm mathematical background
@@ -250,8 +250,8 @@ Ground cancellation {rd}`4` is the interferometric combination of two or more im
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| *SCS* | L1c | *Calibration processing step* | M, each acquisition$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
-| $k_z$ | Wavenumber | L1c Stack ADS (`L1_PFD`) | M, each$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [1/m] computed with respect to incidence on inflated ellipsoid |
+| *SCS* | L1c | *Calibration processing step* | M, each acquisition<br>$\left[ N_{rg}\times{}N_{az} \right]$ | M=3…8 acquisitions, with two CP and one XP | - | Phase calibrated and ground steered (terrain at zero level) L1c stack |
+| $k_z$ | Wavenumber | L1c Stack ADS (`L1_PFD`) | M, each<br>$\left[ N_{rg,k}\times{}N_{az,k} \right]$ (zero for reference acquisition) | - | - | Vertical wavenumbers [1/m] computed with respect to incidence on inflated ellipsoid |
 | $z_0$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value{sup}`*` for all polarizations and all pixels | 30.0 | Desired elevation emphasized from ground cancellation, meters [m] |
 | - | `disableGroundCancellationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | False | True to disable ground cancellation: for debug. |
 | - | `operationalMode` | `AUX_PP2_2A` (`AUX_FMT`) | String | - | “multi reference” | Choose the Ground Cancellation method to use |
@@ -527,9 +527,9 @@ flowchart TB
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsamping factor, that modules the overall decimation in multilooking |
 | $\theta$ | `incidenceAngle` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\theta}\times{}N_{az,\theta} \right]$ | - | - | L1c stack reference acquisition incidence angle (on inflated ellipsoid) annotation [deg] |
 | $\alpha$ | `terrainSlope` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\alpha}\times{}N_{az,\alpha} \right]$ | - | - | Terrain slope [deg] |
-| $B_r$ | L1c range- bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
+| $\mathrm{B}_r$ | L1c range- bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
 | $B_a$ | L1c azimuth bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
-| $v_a$ | L1c velocity annotation | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | Average azimuth velocity [m/s] |
+| $\mathrm{v}_a$ | L1c velocity annotation | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | Average azimuth velocity [m/s] |
 | `rcFlag` | `radiometricCalibrationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | Flag to apply radiometric calibration |
 
 (sec:atbd-agb-3-5-3)=
@@ -563,7 +563,7 @@ $$
 \left\vert \Omega_a \right\vert=\left\lceil \frac{pRes}{\rho_a}(\Delta_aB_a)^{-1} \right\rceil
 $$
 
-where $\rho_r=\frac{c}{2B_r}$ and $\rho_a=\frac{v_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $v_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
+where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
 
 $$
 L=\left\lceil \frac{pRes^2}{\rho_r\rho_a}\sin{\theta_m} \right\rceil
@@ -637,8 +637,8 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\sigma_{GN},\ \vartheta\rightarrow{}Rd$ | - | *Sigma naught normalisation processing step* | $\left[ N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$,$\left[ N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case the ground-notched backscatter coefficient and local incidence angle of current stack |
-| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude longitude height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,llh}\times{}N_{az,llh} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
+| $\sigma_{GN},\ \vartheta\rightarrow{}Rd$ | - | *Sigma naught normalisation processing step* | $\left[ N_{pol}\times{}N_{rg,subs}\times{}N_{az,subs} \right]$,<br>$\left[ N_{rg,subs}\times{}N_{az,subs} \right]$ | - | - | Processed data, in this case the ground-notched backscatter coefficient and local incidence angle of current stack |
+| (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) | latitude<br>longitude<br>height | L1c reference acquisition ADS (`L1_PFD`) | 3x $\left[ N_{rg,\mathrm{llh}}\times{}N_{az,\mathrm{llh}} \right]$ | - | - | Reference DEM latitude-longitude-height coordinates |
 | $z_0\rightarrow\delta{}z_{tomo}$ | `emphasizedForestHeight` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | Global single value (see previous note) for all polarizations and all pixels | 30.0 | Tomographic 3D forest points elevation [m], in this case the desired elevation emphasized from ground cancellation |
 | *DGG* | *DGG* | Internal lookup table | - | - | - | DGG sampling |
 | ${\widehat{i}}_{az}$ | Orbit ADS | L1c reference acquisition ADS | - | - | - | L1c stack reference acquisition orbit annotation |
@@ -648,7 +648,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $Rd\boldsymbol{\rightarrow{}X}$ | - | *FNF annotation* *processing step* | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
+| $Rd\boldsymbol{\rightarrow{}X}$ | - | *FNF annotation* *processing step* | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,<br>$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
 
 (sec:atbd-agb-3-6-4)=
 #### 3.6.4 Algorithm mathematical background
@@ -673,12 +673,12 @@ flowchart TB
 
 This step aims to account for the different forest points location with respect to reference DEM. A preliminary interpolation step is needed to bring DEM latitude-longitude-height onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`). Determining the elevation of one forest point is shown in {fig}`11`:
 
-- (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) is the reference DEM for the point $\boldsymbol{P}_0$ , which can be converted to Cartesian coordinates ($X_{P_0}$, $Y_{P_0}$, $Z_{P_0}$)
+- (𝑙𝑎𝑡,𝑙𝑜𝑛,$z_{P_0}$) is the reference DEM for the point $\boldsymbol{P}_0$ , which can be converted to Cartesian coordinates ($\mathrm{X}_{P_0}$, $\mathrm{Y}_{P_0}$, $\mathrm{Z}_{P_0}$)
 - 𝑧 is normal direction to ellipsoid reported to DEM at point $\boldsymbol{P}_0$, i.e., given the tangent plane to ellipsoid 𝑎 X + 𝑏 Y + 𝑐 Z + 𝑑 = 0 then ${\widehat{i}}_z=\left[ a,b,\ c\ \right]$
 - ${\widehat{i}}_{az}$ is the azimuth sensor direction, determined from reference orbit annotation
 - ${\widehat{i}}_{LOS}=\frac{\boldsymbol{P}_0-\boldsymbol{S}_0}{\left\vert \boldsymbol{P}_0-\boldsymbol{S}_0 \right\vert}$ is line of sight vector, $\boldsymbol{S}_0$ is the sensor position for the considered azimuth
 - ${\widehat{i}}_{xr}={\widehat{i}}_{az}\times{\widehat{i}}_{LOS}$ is the cross range vector
-- the ellipsoid direction at reference DEM is ${\widehat{i}}_E\cdot{\widehat{i}}_z=0$, i.e., ${\widehat{i}}_E=\frac{d\left[ \boldsymbol{E}(r) \right]}{dr}$ and $\boldsymbol{E}(r)=\left[ X_E(r),\ Y_E(r),\ Z_E(r) \right]$ are ellipsoid coordinates as a function of range
+- the ellipsoid direction at reference DEM is ${\widehat{i}}_E\cdot{\widehat{i}}_z=0$, i.e., ${\widehat{i}}_E=\frac{d\left[ \boldsymbol{E}(r) \right]}{dr}$ and $\boldsymbol{E}(r)=\left[ \mathrm{X}_E(r),\ \mathrm{Y}_E(r),\ \mathrm{Z}_E(r) \right]$ are ellipsoid coordinates as a function of range
 - 𝛿𝑧{sub}`𝑡𝑜𝑚𝑜` is one tomographic forest point elevation, in this case the desired elevation emphasized from ground cancellation
 - 𝛿𝑧 is the elevation of point P1 versus DEM (with respect to WGS84 geodetic system). Note that while this is represented for completeness in {fig}`11`., it is not explicitly needed to compute P1 [x,y,z] position in the following {eq}`eq 3.17 <3.17>`.
 
@@ -725,14 +725,14 @@ The purpose of this step is to annotate the FNF in the L2a product.
 |---|---|---|---|---|---|---|
 | *FNF* | FNF | Internal resource (IODD) | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
 | *fMIT* | `forestMaskInterpolationThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.5 | Threshold to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid |
-| $Rd$ | - | *Geocoding step* | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
+| $Rd$ | - | *Geocoding step* | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,<br>$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
 
 (sec:atbd-agb-3-7-3)=
 #### 3.7.3 Outputs
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $Rd$ | - | GN L2a product of current cycle (`AGB_PFD`) | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
+| $Rd$ | - | GN L2a product of current cycle (`AGB_PFD`) | $\left[ N_{pol}\times{}N_{lat}\times{}N_{lon} \right]$,<br>$\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | ground-notched backscatter coefficient and local incidence angle of current stack projected onto a geographic map |
 | *FNF* | FNF | GN L2a product of current cycle (`AGB_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | - | - | Annotated forest-non-forest mask |
 
 (sec:atbd-agb-3-7-4)=

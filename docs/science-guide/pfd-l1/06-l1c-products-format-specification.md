@@ -64,7 +64,7 @@ This ADS is a copy of the main ADS included in the L1a product (secondary one) r
 | **Name** | **Description** | **Differences between L1a and L1c** |
 |---|---|---|
 | `schemaVersion` | *PFD version* | *No differences* |
-| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields: `productType` becomes STA `startTime` and `stopTime` updated after coregistration `polarisationList` will cointain the output polarization |
+| `acquisitionInformation` | Acquisition information DSR. This DSR contains information that applies to the entire data set. | Updated fields:<br>• `productType` becomes STA<br>• `startTime` and `stopTime` updated after coregistration<br>• `polarisationList` will cointain the output polarization |
 | `sarImage` | SAR image DSR. This DSR contains all the necessary information to exploit the measurement data set (i.e. SAR images). | Copied from primary image main ADS (considering that the coregistered image is resampled over the same sampling grid of the primary image and a different `noDataValue` can be selected) |
 | `instrumentParameters` | Instrument parameters DSR. This DSR contains the main instrument settings at the time of imaging. | No differences |
 | `rawDataAnalysis` | RAW data analysis DSR. This DSR contains the main elements related to the RAW data consolidation and analysis performed by the processor. | No differences |
@@ -517,36 +517,36 @@ As mentioned in {ref}`Tab. 72 <tab:pfd-l1-72>`, the `overallProductQualityIndex`
 |---|---|---|
 | **0** | **L1a input** | Nonzero if the `overallQualityIndex` is nonzero for the source L1a input⁽¹⁾ product (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
 | **1** | **Pre-processor** | At least 1 expected LUT is missing from the source L1a input product (*e.g.* FR LUT is missing, and primary selection uses FR index) |
-| **2** |   | Source L1a input product has a non-nominal set of polarizations (*i.e.* it’s not a quad-pol HH,HV,VH,VV) |
-| **3** |   | Source L1a input product has non-nominal swath duration, *i.e.* not between 20.5s and 21.5s |
-| **4** |   | Source L1a input product has inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Section 4.3.2 <4.3.2>`, and L1 ATBD Section 4.10.3.5) |
-| **5** | **Coregistrator** | Coregistration from data failed due to fitting quality index below `fittingQualityThreshold` (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
-| **6** |   | Shift accuracy below `residualShiftsQualityThreshold` for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` {ref}`Table 84 <tab:pfd-l1-84>`) |
-| **7** |   | *- Intentionally left blank, i.e. 0 -* |
-| **8** |   | *- Intentionally left blank, i.e. 0 -* |
+| **2** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has a non-nominal set of polarizations (*i.e.* it’s not a quad-pol HH,HV,VH,VV) |
+| **3** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has non-nominal swath duration, *i.e.* not between 20.5s and 21.5s |
+| **4** | <span class="atbd-rowspan-copy">**Pre-processor**</span> | Source L1a input product has inconsistent `phaseScreen` and `rangeShifts` LUTs (see {sec}`Section 4.3.2 <4.3.2>`, and L1 ATBD Section 4.10.3.5) |
+| **5** | **Coregistrator** | Coregistration from data failed due to fitting quality index below `fittingQualityThreshold` (Automatic mode only, see Stack ATBD Section 4.2.4.3 and `AUX_FMT` Table 84) |
+| **6** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | Shift accuracy below `residualShiftsQualityThreshold` for at least 1 pixel (Geometry and Data mode only, see Stack ATBD Section 4.5.1 and `AUX_FMT` Table 84) |
+| **7** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **8** | <span class="atbd-rowspan-copy">**Coregistrator**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **9** | **AZF** | *- Intentionally left blank, i.e. 0 -* |
-| **10** |   | *- Intentionally left blank, i.e. 0 -* |
-| **11** | **IOB** | `phaseScreen` and/or `rangeShifts` LUTs (see {sec}`Section 4.3.2.3 <4.3.2.3>`) are missing from the source L1a input product and `compensateIonoPhaseScreenFlag` is set to true in `AUX_PPS` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
-| **12** |   | Estimation quality below `slowIonosphereQualityThreshold` (see `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
-| **13** |   | Failed Single-baseline estimation for at least 1 interferometric pair containing the current frame (Multi-baseline mode only, see Stack ATBD Section 5.2.5)⁽²⁾ |
-| **14** |   | Current frame outside of region affected by slow-varying ionosphere, that is, above `latitudeThreshold` (see Stack ATBD {sec}`Section 5.2 <5.2>` and `AUX_FMT` {ref}`Table 88 <tab:pfd-l1-88>`) |
+| **10** | <span class="atbd-rowspan-copy">**AZF**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **11** | **IOB** | `phaseScreen` and/or `rangeShifts` LUTs (see {sec}`Section 4.3.2.3 <4.3.2.3>`) are missing from the source L1a input product and `compensateIonoPhaseScreenFlag` is set to true in `AUX_PPS` (see `AUX_FMT` Table 88) |
+| **12** | <span class="atbd-rowspan-copy">**IOB**</span> | Estimation quality below `slowIonosphereQualityThreshold` (see `AUX_FMT` Table 88) |
+| **13** | <span class="atbd-rowspan-copy">**IOB**</span> | Failed Single-baseline estimation for at least 1 interferometric pair containing the current frame (Multi-baseline mode only, see Stack ATBD Section 5.2.5)⁽²⁾ |
+| **14** | <span class="atbd-rowspan-copy">**IOB**</span> | Current frame outside of region affected by slow-varying ionosphere, that is, above `latitudeThreshold` (see Stack ATBD Section 5.2 and `AUX_FMT` Table 88) |
 | **15** | **MSC** | *- Intentionally left blank, i.e. 0 -* |
-| **16** |   | *- Intentionally left blank, i.e. 0 -* |
-| **17** |   | *- Intentionally left blank, i.e. 0 -* |
-| **18** |   | *- Intentionally left blank, i.e. 0 -* |
-| **19** |   | *- Intentionally left blank, i.e. 0 -* |
-| **20** |   | *- Intentionally left blank, i.e. 0 -* |
-| **21** |   | *- Intentionally left blank, i.e. 0 -* |
-| **22** |   | *- Intentionally left blank, i.e. 0 -* |
-| **23** | **SKP** | DEM resolution too coarse with respect to the selected `estimationWindowSize` (see `AUX_FMT`, {ref}`Table 90 <tab:pfd-l1-90>`) |
-| **24** |   | SKP estimation failure, *i.e.* it failed to compute the SKP decomposition or failed to compute the scattering mechanisms (*e.g.* due to invalid SVD decomposition or inadmissible ranges, see Stack ATBD Section 5.5.2.3 and Section 5.4.2.4). |
-| **25** |   | SKP correction failure, *i.e.* the same failures reported in Bit #24 occurred and `phaseCorrection` is not “None” (see `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`). |
-| **26** |   | Fraction of SKP valid phase screen estimations, *i.e.* above `groundPhasesScreenQualityThreshold`, is below `overallProductQualityThreshold` (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` {ref}`Table 90 <tab:pfd-l1-90>`) |
-| **27** |   | Invalid number of polarizations (*i.e.* neither 3 nor 4) |
-| **28** |   | *- Intentionally left blank, i.e. 0 -* |
+| **16** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **17** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **18** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **19** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **20** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **21** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **22** | <span class="atbd-rowspan-copy">**MSC**</span> | *- Intentionally left blank, i.e. 0 -* |
+| **23** | **SKP** | DEM resolution too coarse with respect to the selected `estimationWindowSize` (see `AUX_FMT`, Table 90) |
+| **24** | <span class="atbd-rowspan-copy">**SKP**</span> | SKP estimation failure, *i.e.* it failed to compute the SKP decomposition or failed to compute the scattering mechanisms (*e.g.* due to invalid SVD decomposition or inadmissible ranges, see Stack ATBD Section 5.5.2.3 and Section 5.4.2.4). |
+| **25** | <span class="atbd-rowspan-copy">**SKP**</span> | SKP correction failure, *i.e.* the same failures reported in Bit #24 occurred and `phaseCorrection` is not “None” (see `AUX_FMT` Table 90). |
+| **26** | <span class="atbd-rowspan-copy">**SKP**</span> | Fraction of SKP valid phase screen estimations, *i.e.* above `groundPhasesScreenQualityThreshold`, is below `overallProductQualityThreshold` (see Stack ATBD Section 5.4.2.8 and `AUX_FMT` Table 90) |
+| **27** | <span class="atbd-rowspan-copy">**SKP**</span> | Invalid number of polarizations (*i.e.* neither 3 nor 4) |
+| **28** | <span class="atbd-rowspan-copy">**SKP**</span> | *- Intentionally left blank, i.e. 0 -* |
 | **29** | **Stack** | Coregistration primary L1a product had nonzero `overallQualityIndex`  (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
-| **30** |   | Calibration reference L1a product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
-| **31** |   | At least 1 L1a input product other than the source L1a input product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **30** | <span class="atbd-rowspan-copy">**Stack**</span> | Calibration reference L1a product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
+| **31** | <span class="atbd-rowspan-copy">**Stack**</span> | At least 1 L1a input product other than the source L1a input product had nonzero `overallQualityIndex` (see {sec}`Section 4.3.1.13.1 <4.3.1.13.1>`) |
 
 [1] By *source L1a* input product, we refer to the L1a product from which the L1c product is generated, and similarly for *coregistration primary* and *calibration reference* L1a products.
 
@@ -585,18 +585,18 @@ This ADS is a copy of the LUT ADS included in the L1a product (secondary one) re
 | `autofocusPhaseScreenStd` | Two-dimensional map describing the autofocus phase screen standard deviation computed during L1 ionospheric processing. | Not copied |
 | denoisingHH denoisingXX denoisingHV denoisingVH denoisingVV | Two-dimensional maps (one per polarisation) describing the conversion factor to translate the SAR image values into denoised values. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but downsampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. Consequently, this LUT may have a different decimation factor than that of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`). The denoising maps reflect the output polarization of the stack (*e.g.* if cross-pol merging is active, the LUT will contain a denoising term for X/X but not for H/V and V/H). |
 | latitude | Two-dimensional map describing the latitude coordinates of each (sub-sampled) pixel. | Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`) |
-| longitude | Two-dimensional map describing the longitude coordinates of each (sub-sampled) pixel. |   |
-| height | Two-dimensional map describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. |   |
-| `incidenceAngle` | Two-dimensional map describing the incidence angle of each (sub-sampled) pixel. |   |
-| `elevationAngle` | Two-dimensional map describing the elevation angle of each (sub-sampled) pixel. |   |
-| `rangeTerrainSlope` | Two-dimensional map describing the local terrain slopes in slant-range direction. |   |
-| `azimuthTerrainSlope` | Two-dimensional map describing the local terrain slopes in along-track direction. |   |
+| longitude | Two-dimensional map describing the longitude coordinates of each (sub-sampled) pixel. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
+| height | Two-dimensional map describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
+| `incidenceAngle` | Two-dimensional map describing the incidence angle of each (sub-sampled) pixel. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
+| `elevationAngle` | Two-dimensional map describing the elevation angle of each (sub-sampled) pixel. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
+| `rangeTerrainSlope` | Two-dimensional map describing the local terrain slopes in slant-range direction. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
+| `azimuthTerrainSlope` | Two-dimensional map describing the local terrain slopes in along-track direction. | <span class="atbd-rowspan-copy">Copied from secondary image LUT ADS and resampled over the primary image sampling grid but down-sampled to the resolution of the grid of the geometric LUTs of the coregistration primary L1a product. These LUTs have the same decimation factors as those of the source L1a product (see {sec}`Section 6.3.4.1 <6.3.4.1>`)</span> |
 | `waveNumbers` | Two-dimensional map describing the wavenumbers computed w.r.t. the incidence angles map. | New |
 | `flatteningPhaseScreen` | Two-dimensional map containing the estimated phase contributions due to the topography. | New |
 | `rangeCoregistrationShifts` | Two-dimensional map describing the coregistration shifts in slant-range direction. This LUT contains the shifts applied to the image. | New |
-| `rangeOrbitCoregistrationShifts` | Two-dimensional map describing the coregistration shfits in slant-range direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD) | New |
+| `rangeOrbitCoregistrationShifts` | Two-dimensional map describing the coregistration shfits in slant-range direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD) | New |
 | `azimuthCoregistrationShifts` | Two-dimensional map describing the coregistration shifts in azimuth direction. This LUT contains the shifts applied to the image. | New |
-| `azimuthOrbitCoregistrationShifts` | Two-dimensional map descrbing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD) | New |
+| `azimuthOrbitCoregistrationShifts` | Two-dimensional map descrbing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD) | New |
 | `coregistrationShiftsQuality` | Two-dimensional map describing the quality of residual coregistration shifts estimated from data. | New |
 | coherence | Two-dimensional map storing the coherence of secondary images with respect to the coregistration primary. | New |
 | Interferogram | Two-dimensional map storing the interferometric phases with respect to the coregistration primary. | New |
@@ -615,17 +615,17 @@ In the following table the new variables are described in detail. Note that the 
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| group: coregistration `rangeCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along range direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD). Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `azimuthCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along azimuth direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data. Values are expressed in [m]. | matrix (float) | 1 |
-| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see {sec}`Section 4.1 <4.1>` of the Stack ATBD). Values are expressed in [m]. | matrix(float) | 1 |
+| group: coregistration `rangeCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along range direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data.<br>Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `rangeOrbitCoregistrationShfits` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in slan-range direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br>Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `azimuthCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts along azimuth direction. These shifts are the sum of those estimated from geometry and, if available, of the residual ones estimated from data.<br>Values are expressed in [m]. | matrix (float) | 1 |
+| group: coregistration `azimuthOrbitCoregistrationShifts` | Two-dimensional map covering the whole SAR image and describing the coregistration shifts in azimuth direction obtained only from orbit and scene geometry (see Section 4.1 of the Stack ATBD). <br>Values are expressed in [m]. | matrix(float) | 1 |
 | group: coregistration `flatteningPhaseScreen` | Two-dimensional map covering the whole SAR image and representing the sole phase contribution due to the DEM. As per `STA_P` convention, the DEM phase compensation shall be executed using the ‘+’ convention, that is, as $CoSCS\cdot{}e^{+j\Delta\phi_{flat}}$, where $\Delta\phi_{flat}$ is the content of this LUT (converted into radians). Values are expressed in [rad]. | matrix (float) | 1 |
 | group: coregistration `waveNumbers` | Two-dimensional map covering the whole SAR image and representing the vertical wavenumbers. Values are expressed in [rad/m]. | matrix (float) | 1 |
 | group: interferometry coherence | Two-dimensional map covering the whole SAR image and storing the coherence with respect to the coregistration primary. | matrix(float) | 1 (only for secondary images) |
-| group: interferometry interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. Values are expressed in [rad]. | matrix(float) | 1 (only for secondary images) |
+| group: interferometry<br>interferogram | Two-dimensional map covering the whole SAR image and storing the interferometric phases with respect to the coregistration primary. Values are expressed in [rad]. | matrix(float) | 1 (only for secondary images) |
 | group: `multiSquintCalibration` `ionospherePhaseScreens` | Stack of one (single-layer) or more (multi-layer) two-dimensional map that stores the onospheric phase screens estimated by the Multi-Squint Calibration module (MSC). Values are expressed in [rad]. | 3d array (float) | 1 (only if the MSC’s ionosphere correction is activated) |
-| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT). Values are expressed in [rad]. | matrix (float) | 1 (only if the SKP module is successfully executed) |
-| group: `skpPhaseCalibration` `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen. Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1 (only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` `skpCalibrationPhaseScreen` | Two-dimensional map covering the whole SAR image and describing the estimated phase contributions due to both the foreste disturbance. As per `STA_P` convention, the removal of the SKP phase screen shall be executed using the ‘+‘ convention, that is, as $CoSCS\cdot{}e^{+j{(\Delta\phi_{flat}+\ \phi}_{skp})}$, where $\phi_{skp}$ is the content of this LUT (converted into radians) and $\Delta\phi_{flat}$ are the geometric phases from DEM in radians (see *e.g.* the `flatteningPhaseScreen` LUT).<br>Values are expressed in [rad]. | matrix (float) | 1<br>(only if the SKP module is successfully executed) |
+| group: `skpPhaseCalibration` `skpCalibrationPhaseScreenQuality` | Two-dimensional map covering the whole SAR image and describing the quality of the estimated phase screen.<br>Values are normalized between 0 (worst quality) and 1 (best quality). Invalid data (from FNF) are set to `noDataValue` (see `AUX_FMT`). | matrix (float) | 1<br>(only if the SKP module is successfully executed) |
 
 :::
 
@@ -663,299 +663,155 @@ netcdf bio\_s3\_sta\_\_1s\_20170225t094535\_20170225t094556\_i\_g01\_m02\_c01\_t
 
 dimensions:
 
-`relativeAzimuthTime` = 1785 ;
-
-`slantRangeTime` = 818 ;
-
-`ionosphereRelativeAzimuthTime` = 1320 ;
-
-`ionosphereSlantRangeTime` = 261 ;
-
-`ionosphereLayers` = 4 ;
-
+```text
+        relativeAzimuthTime = 1785 ;
+        slantRangeTime = 818 ;
+        ionosphereRelativeAzimuthTime = 1320 ;
+        ionosphereSlantRangeTime = 261 ;
+        ionosphereLayers = 4 ;
 variables:
-
-double `relativeAzimuthTime`(`relativeAzimuthTime`) ;
-
-`relativeAzimuthTime`:units = "s" ;
-
-double `slantRangeTime`(`slantRangeTime`) ;
-
-`slantRangeTime`:units = "s" ;
-
-float `ionosphereRelativeAzimuthTime`(`ionosphereRelativeAzimuthTime`) ;
-
-`ionosphereRelativeAzimuthTime`:units = "s" ;
-
-float `ionosphereSlantRangeTime`(`ionosphereSlantRangeTime`) ;
-
-`ionosphereSlantRangeTime`:units = "s" ;
-
+        double relativeAzimuthTime(relativeAzimuthTime) ;
+                relativeAzimuthTime:units = "s" ;
+        double slantRangeTime(slantRangeTime) ;
+                slantRangeTime:units = "s" ;
+        float ionosphereRelativeAzimuthTime(ionosphereRelativeAzimuthTime) ;
+                ionosphereRelativeAzimuthTime:units = "s" ;
+        float ionosphereSlantRangeTime(ionosphereSlantRangeTime) ;
+                ionosphereSlantRangeTime:units = "s" ;
 // global attributes:
-
-:mission = "BIOMASS" ;
-
-:swath = "S3" ;
-
-:`productType` = "STA" ;
-
-string :`polarisationList` = "H/H", "X/X", "V/V" ;
-
-:`startTime` = "2017-02-25T09:45:35.071893" ;
-
-:`stopTime` = "2017-02-25T09:45:56.095647" ;
-
-:`referenceAzimuthTime` = "2017-02-25T09:45:35.071893" ;
-
-:`missionPhaseID` = "INT" ;
-
-:`driftPhaseFlag` = "False" ;
-
-:`sensorMode` = "Measurement" ;
-
-:`globalCoverageID` = 1US ;
-
-:`majorCycleID` = 2US ;
-
-:`repeatCycleID` = 1US ;
-
-:`absoluteOrbitNumber` = 809US ;
-
-:`relativeOrbitNumber` = 17US ;
-
-:`orbitPass` = "Ascending" ;
-
-:`platformHeading` = 0. ;
-
-:`dataTakeID` = 13518US ;
-
-:frame = 1US ;
-
-:`productComposition` = "Nominal" ;
-
-:`noDataValue` = -9999. ;
-
-:`formatVersion` = "V1.7.0" ;
-
+                :mission = "BIOMASS" ;
+                :swath = "S3" ;
+                :productType = "STA" ;
+                string :polarisationList = "H/H", "X/X", "V/V" ;
+                :startTime = "2017-02-25T09:45:35.071893" ;
+                :stopTime = "2017-02-25T09:45:56.095647" ;
+                :referenceAzimuthTime = "2017-02-25T09:45:35.071893" ;
+                :missionPhaseID = "INT" ;
+                :driftPhaseFlag = "False" ;
+                :sensorMode = "Measurement" ;
+                :globalCoverageID = 1US ;
+                :majorCycleID = 2US ;
+                :repeatCycleID = 1US ;
+                :absoluteOrbitNumber = 809US ;
+                :relativeOrbitNumber = 17US ;
+                :orbitPass = "Ascending" ;
+                :platformHeading = 0. ;
+                :dataTakeID = 13518US ;
+                :frame = 1US ;
+                :productComposition = "Nominal" ;
+                :noDataValue = -9999. ;
+                :formatVersion = "V1.7.0" ;
 group: radiometry {
-
-variables:
-
-float `sigmaNought`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`sigmaNought`:\_FillValue = -9999.f ;
-
-`sigmaNought`:description = "Sigma Nought" ;
-
-float `gammaNought`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`gammaNought`:\_FillValue = -9999.f ;
-
-`gammaNought`:description = "Gamma Nought" ;
-
-} // group radiometry
-
+  variables:
+        float sigmaNought(relativeAzimuthTime, slantRangeTime) ;
+                sigmaNought:_FillValue = -9999.f ;
+                sigmaNought:description = "Sigma Nought" ;
+        float gammaNought(relativeAzimuthTime, slantRangeTime) ;
+                gammaNought:_FillValue = -9999.f ;
+                gammaNought:description = "Gamma Nought" ;
+  } // group radiometry
 group: denoising {
-
-variables:
-
-float denoisingHH(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-denoisingHH:\_FillValue = -9999.f ;
-
-denoisingHH:description = "Denoising H/H" ;
-
-float denoisingXX(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-denoisingXX:\_FillValue = -9999.f ;
-
-denoisingXX:description = "Denoising X/X" ;
-
-float denoisingVV(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-denoisingVV:\_FillValue = -9999.f ;
-
-denoisingVV:description = "Denoising V/V" ;
-
-} // group denoising
-
+  variables:
+        float denoisingHH(relativeAzimuthTime, slantRangeTime) ;
+                denoisingHH:_FillValue = -9999.f ;
+                denoisingHH:description = "Denoising H/H" ;
+        float denoisingXX(relativeAzimuthTime, slantRangeTime) ;
+                denoisingXX:_FillValue = -9999.f ;
+                denoisingXX:description = "Denoising X/X" ;
+        float denoisingVV(relativeAzimuthTime, slantRangeTime) ;
+                denoisingVV:_FillValue = -9999.f ;
+                denoisingVV:description = "Denoising V/V" ;
+  } // group denoising
 group: geometry {
-
-variables:
-
-double latitude(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-latitude:\_FillValue = -9999. ;
-
-latitude:description = "Latitude" ;
-
-latitude:units = "deg" ;
-
-double longitude(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-longitude:\_FillValue = -9999. ;
-
-longitude:description = "Longitude" ;
-
-longitude:units = "deg" ;
-
-double height(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-height:\_FillValue = -9999. ;
-
-height:description = "Height" ;
-
-height:units = "m" ;
-
-float `incidenceAngle`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`incidenceAngle`:\_FillValue = -9999.f ;
-
-`incidenceAngle`:description = "Incidence Angle" ;
-
-`incidenceAngle`:units = "deg" ;
-
-float `elevationAngle`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`elevationAngle`:\_FillValue = -9999.f ;
-
-`elevationAngle`:description = "Elevation Angle" ;
-
-`elevationAngle`:units = "deg" ;
-
-float `rangeTerrainSlope`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`rangeTerrainSlope`:\_FillValue = -9999.f ;
-
-`rangeTerrainSlope`:description = "Range Terrain Slope" ;
-
-`rangeTerrainSlope`:units = "deg" ;
-
-float `azimuthTerrainSlope`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`azimuthTerrainSlope`:\_FillValue = -9999.f ;
-
-`azimuthTerrainSlope`:description = "Azimuth Terrain Slope" ;
-
-`azimuthTerrainSlope`:units = "deg" ;
-
-} // group geometry
-
+  variables:
+        double latitude(relativeAzimuthTime, slantRangeTime) ;
+                latitude:_FillValue = -9999. ;
+                latitude:description = "Latitude" ;
+                latitude:units = "deg" ;
+        double longitude(relativeAzimuthTime, slantRangeTime) ;
+                longitude:_FillValue = -9999. ;
+                longitude:description = "Longitude" ;
+                longitude:units = "deg" ;
+        double height(relativeAzimuthTime, slantRangeTime) ;
+                height:_FillValue = -9999. ;
+                height:description = "Height" ;
+                height:units = "m" ;
+        float incidenceAngle(relativeAzimuthTime, slantRangeTime) ;
+                incidenceAngle:_FillValue = -9999.f ;
+                incidenceAngle:description = "Incidence Angle" ;
+                incidenceAngle:units = "deg" ;
+        float elevationAngle(relativeAzimuthTime, slantRangeTime) ;
+                elevationAngle:_FillValue = -9999.f ;
+                elevationAngle:description = "Elevation Angle" ;
+                elevationAngle:units = "deg" ;
+        float rangeTerrainSlope(relativeAzimuthTime, slantRangeTime) ;
+                rangeTerrainSlope:_FillValue = -9999.f ;
+                rangeTerrainSlope:description = "Range Terrain Slope" ;
+                rangeTerrainSlope:units = "deg" ;
+        float azimuthTerrainSlope(relativeAzimuthTime, slantRangeTime) ;
+                azimuthTerrainSlope:_FillValue = -9999.f ;
+                azimuthTerrainSlope:description = "Azimuth Terrain Slope" ;
+                azimuthTerrainSlope:units = "deg" ;
+  } // group geometry
 group: coregistration {
-
-variables:
-
-float `azimuthCoregistrationShifts`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`azimuthCoregistrationShifts`:\_FillValue = -9999.f ;
-
-`azimuthCoregistrationShifts`:description = "Azimuth Coregistration Shifts" ;
-
-`azimuthCoregistrationShifts`:units = "m" ;
-
-float `azimuthOrbitCoregistrationShifts`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`azimuthOrbitCoregistrationShifts`:\_FillValue = -9999.f ;
-
-`azimuthOribtCoregistrationShifts`:description = "Azimuth Coregistration Shifts from Orbit" ;
-
-`azimuthOrbitCoregistrationShifts`:units = "m" ;
-
-float `rangeCoregistrationShifts`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`rangeCoregistrationShifts`:\_FillValue = -9999.f ;
-
-`rangeCoregistrationShifts`:description = "Range Coregistration Shifts" ;
-
-`rangeCoregistrationShifts`:units = "m" ;
-
-float `rangeOrbitCoregistrationShifts`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`rangeOrbitCoregistrationShifts`:\_FillValue = -9999.f ;
-
-`rangeOribtCoregistrationShifts`:description = "Range Coregistration Shifts from Orbit" ;
-
-`rangeOrbitCoregistrationShifts`:units = "m" ;
-
-float `coregistrationShiftsQuality`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`coregistrationShiftsQuality`:\_FillValue = -9999.f ;
-
-`coregistrationShiftsQuality`:description = "Coregistration Shifts Quality" ;
-
-float `waveNumbers`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`waveNumbers`:\_FillValue = -9999.f ;
-
-`waveNumbers`:description = "Vertical Wave Numbers (Kz)" ;
-
-`waveNumbers`:units = "rad/m" ;
-
-float `flatteningPhaseScreen`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`flatteningPhaseScreen`:\_FillValue = -9999.f ;
-
-`flatteningPhaseScreen`:description = "Flattening Phases Screen (DSI)" ;
-
-`flatteningPhaseScreen`:units = "rad" ;
-
-} // group coregistration
-
+  variables:
+        float azimuthCoregistrationShifts(relativeAzimuthTime, slantRangeTime) ;
+                azimuthCoregistrationShifts:_FillValue = -9999.f ;
+                azimuthCoregistrationShifts:description = "Azimuth Coregistration Shifts" ;
+                azimuthCoregistrationShifts:units = "m" ;
+     float azimuthOrbitCoregistrationShifts(relativeAzimuthTime, slantRangeTime) ;
+                azimuthOrbitCoregistrationShifts:_FillValue = -9999.f ;
+                azimuthOribtCoregistrationShifts:description = "Azimuth Coregistration Shifts from Orbit" ;
+                azimuthOrbitCoregistrationShifts:units = "m" ;
+        float rangeCoregistrationShifts(relativeAzimuthTime, slantRangeTime) ;
+                rangeCoregistrationShifts:_FillValue = -9999.f ;
+                rangeCoregistrationShifts:description = "Range Coregistration Shifts" ;
+                rangeCoregistrationShifts:units = "m" ;
+     float rangeOrbitCoregistrationShifts(relativeAzimuthTime, slantRangeTime) ;
+                rangeOrbitCoregistrationShifts:_FillValue = -9999.f ;
+                rangeOribtCoregistrationShifts:description = "Range Coregistration Shifts from Orbit" ;
+                rangeOrbitCoregistrationShifts:units = "m" ;
+        float coregistrationShiftsQuality(relativeAzimuthTime, slantRangeTime) ;
+                coregistrationShiftsQuality:_FillValue = -9999.f ;
+                coregistrationShiftsQuality:description = "Coregistration Shifts Quality" ;
+        float waveNumbers(relativeAzimuthTime, slantRangeTime) ;
+                waveNumbers:_FillValue = -9999.f ;
+                waveNumbers:description = "Vertical Wave Numbers (Kz)" ;
+                waveNumbers:units = "rad/m" ;
+        float flatteningPhaseScreen(relativeAzimuthTime, slantRangeTime) ;
+                flatteningPhaseScreen:_FillValue = -9999.f ;
+                flatteningPhaseScreen:description = "Flattening Phases Screen (DSI)" ;
+                flatteningPhaseScreen:units = "rad" ;
+  } // group coregistration
 group: interferometry{
-
-variables:
-
-float coherence(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-coherence:\_FillValue = -9999.f ;
-
-coherence:description = "Interferometric coherence" ;
-
-float interferogram(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-interferogram:\_FillValue = -9999.f ;
-
-interferogram:description = "Interferometric phases" ;
-
-interferogram:units = "rad" ;
-
-} // group interferometry
-
-group: `multiSquintCalibration` {
-
-variables:
-
-float `ionospherePhaseScreens`(`ionosphereRelativeAzimuthTime`, `ionosphereSlantRangeTime`, `ionosphereLayers`) ;
-
-`ionospherePhaseScreens`:\_FillValue = -9999.f ;
-
-`ionospherePhaseScreens`:units = "rad" ;
-
-`ionospherePhaseScreens`:description = "Ionosphere Phase Screens [rad]" ;
-
-} // group `multiSquintCalibration`
-
-group: `skpPhaseCalibration` {
-
-variables:
-
-float `skpCalibrationPhaseScreen`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`skpCalibrationPhaseScreen`:\_FillValue = -9999.f ;
-
-`skpCalibrationPhaseScreen`:description = "SKP Calibration Phases" ;
-
-`skpCalibrationPhaseScreen`:units = "rad" ;
-
-float `skpCalibrationPhaseScreenQuality`(`relativeAzimuthTime`, `slantRangeTime`) ;
-
-`skpCalibrationPhaseScreenQuality`:\_FillValue = -9999.f ;
-
-`skpCalibrationPhaseScreenQuality`:description = "SKP Estimation Quality" ;
-
-} // group `skpPhaseCalibration`
-
+  variables:
+        float coherence(relativeAzimuthTime, slantRangeTime) ;
+                coherence:_FillValue = -9999.f ;
+                coherence:description = "Interferometric coherence" ;
+     float interferogram(relativeAzimuthTime, slantRangeTime) ;
+                interferogram:_FillValue = -9999.f ;
+                interferogram:description = "Interferometric phases" ;
+                interferogram:units = "rad" ;
+  } // group interferometry
+group: multiSquintCalibration {
+  variables:
+        float ionospherePhaseScreens(ionosphereRelativeAzimuthTime, ionosphereSlantRangeTime, ionosphereLayers) ;
+                ionospherePhaseScreens:_FillValue = -9999.f ;
+                ionospherePhaseScreens:units = "rad" ;
+                ionospherePhaseScreens:description = "Ionosphere Phase Screens [rad]" ;
+} // group multiSquintCalibration
+group: skpPhaseCalibration {
+  variables:
+        float skpCalibrationPhaseScreen(relativeAzimuthTime, slantRangeTime) ;
+                skpCalibrationPhaseScreen:_FillValue = -9999.f ;
+                skpCalibrationPhaseScreen:description = "SKP Calibration Phases" ;
+                skpCalibrationPhaseScreen:units = "rad" ;
+        float skpCalibrationPhaseScreenQuality(relativeAzimuthTime, slantRangeTime) ;
+                skpCalibrationPhaseScreenQuality:_FillValue = -9999.f ;
+                skpCalibrationPhaseScreenQuality:description = "SKP Estimation Quality" ;
+  } // group skpPhaseCalibration
 }
+```
 
 (sec:pfd-l1-6-3-5)=
 #### 6.3.5 Coregistered image orbit and attitude ADS
@@ -969,11 +825,11 @@ These files are an exact copy of the homonymous files included in the L1a produc
 
 The Quick-look ADS is a lower resolution version of the SAR (coregistered) image MDS and, optionally, the coherence and the interferogram with respect to the coregistration primary. Coherence and interferogram are exported only for secondary images, since for coregistration primary they are trivial.
 
-As for the coregistered SAR image, Quick-look ADS are identical to those of L1a products; therefore we refer to {sec}`Section 4.3.4 <4.3.4>` for more details on the color coding. Note that, in cases where cross-polarizations are combined, the conversion to RGB is identical to that described in {sec}`Section 4.3.4 <4.3.4>`, setting $HV\mathrel{:=}2\cdot{}XX$ and $VH\mathrel{:=}0$ in case of the Pauli and $HV\mathrel{:=}{}XX$ in case of HSV. Pixels with missing data are shown in black.
+As for the coregistered SAR image, Quick-look ADS are identical to those of L1a products; therefore we refer to {sec}`Section 4.3.4 <4.3.4>` for more details on the color coding. Note that, in cases where cross-polarizations are combined, the conversion to RGB is identical to that described in {sec}`Section 4.3.4 <4.3.4>`, setting $\mathrm{HV}\mathrel{:=}2\cdot\mathrm{XX}$ and $\mathrm{VH}\mathrel{:=}0$ in case of the Pauli and $\mathrm{HV}\mathrel{:=}\mathrm{XX}$ in case of HSV. Pixels with missing data are shown in black.
 
 As for the interferometric Quick-Looks, the coherence image is a grayscale image with the same size of the SAR image Quick-Look ADS. The color scheme maps linearly the 0-1 (min/max coherence) interval onto black/white. The interferogram uses OpenCV’s JET color scheme⁽³⁾ with boundaries $(-\pi,\pi)$, $-\pi$ being blue and $\pi$ being red. Similarly to the coregistered Quick-Look ADS, missing data is shown in black.
 
-[3] See https://docs.opencv.org/4.x/d3/d50/group\_\_imgproc\_\_colormap.html
+[3] See https://docs.opencv.org/4.x/d3/d50/group__imgproc__colormap.html
 
 (sec:pfd-l1-6-3-7)=
 #### 6.3.7 Overlay ADS

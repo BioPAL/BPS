@@ -464,7 +464,7 @@ flowchart TB
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — AGB processing detailed workflow. 5°x5° neighbourhood and 3°x3° processing block are shown in Fig.12.</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 3</span><span class="caption-text"> — AGB processing detailed workflow. 5°x5° neighbourhood and 3°x3° processing block are shown in <a class="reference internal" href="04-agb-estimation.html#fig-atbd-agb-processing-blocks">Fig.12</a>.</span></p>
 
 ::::
 

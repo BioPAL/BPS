@@ -63,7 +63,7 @@ This document is organized as follows:
 (sec:pfd-l1-1-4)=
 ### 1.4 Symbols and Variables
 
-:::{dropdown} Acronyms
+:::{dropdown} Symbols and Variables
 | Acronym | Description |
 |---|---|
 | $\beta^0$ | Beta-nought quantity |
@@ -91,6 +91,6 @@ This document is organized as follows:
 | <span id="rd2"></span>`[RD2]` | GDAL library, https://gdal.org/ |
 | <span id="rd3"></span>`[RD3]` | GDAL library Wiki - Cloud Optimized GeoTIFF section, https://trac.osgeo.org/gdal/wiki/CloudOptimizedGeoTIFF#HowtoreaditwithGDAL |
 | <span id="rd4"></span>`[RD4]` | LibTIFF - TIFF Library and Utilities, https://libtiff.gitlab.io/libtiff/ |
-| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff\_tags.shtml |
+| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml |
 | <span id="rd6"></span>`[RD6]` | Network Common Data Form (NetCDF) format, https://www.unidata.ucar.edu/software/netcdf/ |
 | <span id="rd7"></span>`[RD7]` | Well-Known Text representation of coordinate reference systems, https://www.iso.org/standard/63094.html |

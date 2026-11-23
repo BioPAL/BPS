@@ -73,20 +73,20 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW | *Orbit and attitude extraction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data *Intermediate product: iRAW* |
+| $RAW$ | RAW | *Orbit and attitude extraction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data<br>*Intermediate product: iRAW* |
 | - | `blockLines` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 256 | Number of lines in the processing block |
 | $L$ | `medianFilterLength` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Median filter length |
 | $N,\ M$ | `boxSamples`, `boxLines` | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 19, 19 | Number of samples and lines in the boxes used to compute space-variant statistics |
 | $k$ | `percentileThreshold` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 0.99 | Normalized threshold on percentile of the signal distribution model |
 | - | `morphologicalOpenOperatorSamples`, `morphologicalOpenOperatorLines`, `morphologicalCloseOperatorSamples`, `morphologicalCloseOperatorLines` | `AUX_PP1` (`AUX_FMT`) | 4 scalar values | - | 1, 3, 1, 9 | Sizes of the morphological open and close operators |
-| - | maxRFITMPercentage | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum normalized percentage of image pixels impacted by time-domain RFI. If the percentage exceeds this parameter, the processing will not continue. |
+| - | maxRFITMPercentage | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum normalized percentage of image pixels impacted<br>by time-domain RFI. If the percentage exceeds this parameter, the processing will not continue. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW | *RFI mitigation in frequency domain* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after time-domain RFI mitigation *Intermediate product: iRAW\_rfi\_corrected* |
-| $Mask$ | RFI mask | *L1 post-processing step* | N{sub}`rg` x N{sub}`az` array of Boolean values | - | - | Time-domain RFI mask *Intermediate product: iRFI\_time\_domain\_mask* |
+| $RAW$ | RAW | *RFI mitigation in frequency domain* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after time-domain RFI mitigation<br>*Intermediate product: iRAW\_rfi\_corrected* |
+| $Mask$ | RFI mask | *L1 post-processing step* | N{sub}`rg` x N{sub}`az` array of Boolean values | - | - | Time-domain RFI mask<br>*Intermediate product: iRFI\_time\_domain\_mask* |
 
 **Mathematical description**
 
@@ -97,7 +97,7 @@ The main steps of the algorithm are:
 1. starting from the input raw data amplitudes, a 1D median filter of length L is applied along azimuth direction to each range line, where L is a configurable value chosen considering the trade-off between the capability to identify close RFI contributions along azimuth direction and the capability of median filter output to represent the raw data pixels expected amplitude:
 
 $$
-{RAW}_{median}(\tau,t)=Median(\vert{}RAW(\tau,t)\vert,L)
+{RAW}_{median}(\tau,\mathrm{t})=Median(\vert{}RAW(\tau,\mathrm{t})\vert,L)
 \tag{4.1}
 $$ (eq:atbd-l1-sar-4-1)
 
@@ -106,8 +106,8 @@ $$ (eq:atbd-l1-sar-4-1)
 (equation-eq-atbd-l1-sar-4-2)=
 \begin{equation}
 \begin{aligned}
-\mu(\tau,t)=\frac{1}{NM}\sum_{i=-(N-1)/2}^{(N-1)/2}{\sum_{j=-(M-1)/2}^{(M-1)/2}{{RAW}_{median}(\tau+i,t+j)}} \\
-\sigma(\tau,t)=\sqrt{{\left( \frac{1}{NM}\sum_{i=-(N-1)/2}^{(N-1)/2}{\sum_{j=-(M-1)/2}^{(M-1)/2}{{RAW}_{median}^2(\tau+i,t+j)}} \right)^{}-(\mu(\tau,t))}^2}
+\mu(\tau,\mathrm{t})=\frac{1}{NM}\sum_{i=-(N-1)/2}^{(N-1)/2}{\sum_{j=-(M-1)/2}^{(M-1)/2}{{RAW}_{median}(\tau+\mathrm{i},\mathrm{t}+\mathrm{j})}} \\
+\sigma(\tau,\mathrm{t})=\sqrt{{\left( \frac{1}{NM}\sum_{i=-(N-1)/2}^{(N-1)/2}{\sum_{j=-(M-1)/2}^{(M-1)/2}{{RAW}_{median}^2(\tau+\mathrm{i},\mathrm{t}+\mathrm{j})}} \right)^{}-(\mu(\tau,\mathrm{t}))}^2}
 \end{aligned}
 \tag{4.2}
 \end{equation}
@@ -117,16 +117,16 @@ $$ (eq:atbd-l1-sar-4-1)
 
 (equation-eq-atbd-l1-sar-4-3)=
 \begin{equation}
-Mask(\tau,t)=\begin{Bmatrix} 1,\ if\ \left\vert RAW(\tau,t) \right\vert>k\bullet(\mu(\tau,t)+\sigma(\tau,t)) \\ 0,\ if\ \left\vert RAW(\tau,t) \right\vert\leq{}k\bullet(\mu(\tau,t)+\sigma(\tau,t)) \end{Bmatrix}
+Mask(\tau,\mathrm{t})=\begin{Bmatrix} 1,\ if\ \left\vert RAW(\tau,\mathrm{t}) \right\vert>k\bullet(\mu(\tau,\mathrm{t})+\sigma(\tau,\mathrm{t})) \\ 0,\ if\ \left\vert RAW(\tau,\mathrm{t}) \right\vert\leq{}k\bullet(\mu(\tau,\mathrm{t})+\sigma(\tau,\mathrm{t})) \end{Bmatrix}
 \tag{4.3}
 \end{equation}
 
 5. morphological open and close operators (with configurable sizes) are applied to the detection mask: open operator reduces the ratio of false positives (reduce salt and pepper noise in the mask), while close one fills the holes in the RFI detection map;
-6. the mitigation of the RFI signal on the input raw data is performed replacing those samples indexed by the RFI mask with the nearest not-indexed samples, selected moving along the azimuth direction ($t$ is replaced by $\widetilde{t}$) while keeping fixed the range position ($\tau$):
+6. the mitigation of the RFI signal on the input raw data is performed replacing those samples indexed by the RFI mask with the nearest not-indexed samples, selected moving along the azimuth direction ($\mathrm{t}$ is replaced by $\widetilde{\mathrm{t}}$) while keeping fixed the range position ($\tau$):
 
 (equation-eq-atbd-l1-sar-4-4)=
 \begin{equation}
-RAW(\tau,t)=\begin{Bmatrix} RAW(\tau,\widetilde{t}),\ if\ Mask(\tau,t)=1 \\ RAW(\tau,t),\ if\ Mask(\tau,t)=0 \end{Bmatrix}
+RAW(\tau,\mathrm{t})=\begin{Bmatrix} RAW(\tau,\widetilde{\mathrm{t}}),\ if\ Mask(\tau,\mathrm{t})=1 \\ RAW(\tau,\mathrm{t}),\ if\ Mask(\tau,\mathrm{t})=0 \end{Bmatrix}
 \tag{4.4}
 \end{equation}
 
@@ -214,20 +214,20 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW | *RFI mitigation in time domain* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data *Intermediate product: iRAW* |
-| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration). It can be different from the one used during range compression step |
+| $RAW$ | RAW | *RFI mitigation in time domain* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data<br>*Intermediate product: iRAW* |
+| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function<br>Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration). It can be different from the one used during range compression step |
 | $M$ | `blockLines` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 512 | Number of lines in the blocks used to compute Power Spectral Density |
 | - | `blockOverlap` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 0 | Overlap between blocks |
 | $k_p,\ k_i$ | persistentRFIThreshold, isolatedRFIThreshold | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 2, 4 | Thresholds for the detection of persistent and isolated RFI |
 | $k_{std}$ | isolatedRFIPSDStdThreshold | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 7 | Threshold on PSD standard deviation for isolated RFI |
-| - | maxRFIFMPercentage | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum normalized percentage of image spectrum impacted by frequency-domain RFI. If the percentage exceeds this parameter, the processing will not continue. |
+| - | maxRFIFMPercentage | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum normalized percentage of image spectrum impacted by frequency-domain RFI. If the percentage<br>exceeds this parameter, the processing will not continue. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW | *Range compression step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after frequency-domain RFI mitigation *Intermediate product: iRAW\_rfi\_corrected* |
-| $Mask$ | RFI mask | *L1 post-processing step* | N{sub}`rg` x N{sub}`az` array of Boolean values | - | - | Frequency-domain RFI mask *Intermediate product: iRFI\_freq\_domain\_mask* |
+| $RAW$ | RAW | *Range compression step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after frequency-domain RFI mitigation<br>*Intermediate product: iRAW\_rfi\_corrected* |
+| $Mask$ | RFI mask | *L1 post-processing step* | N{sub}`rg` x N{sub}`az` array of Boolean values | - | - | Frequency-domain RFI mask<br>*Intermediate product: iRFI\_freq\_domain\_mask* |
 
 **Mathematical description**
 
@@ -244,22 +244,22 @@ Persistent RFI detection is based on the comparison between the average range PS
 1. starting from the input raw data and dividing it into stripes of full range and configurable number of lines (N{sub}`r`xM), the power of each range line in the block is computed:
 
 $$
-P_m(t)=\frac{1}{N_r}\sum_{n=0}^{N_r-1}{\left\vert RAW(n,t) \right\vert^2}
+P_m(\mathrm{t})=\frac{1}{N_r}\sum_{n=0}^{N_r-1}{\left\vert RAW(n,\mathrm{t}) \right\vert^2}
 \tag{4.8}
 $$ (eq:atbd-l1-sar-4-8)
 
-2. a polynomial fitting of $P_m(t)$ is performed, in a least squares sense, obtaining $\widehat{P_m}(t)$. Before fitting, the values of $P_m(t)$ outside a predefined quantile interval are discarded. This is done to prevent the polynomial to be influenced from RFI-corrupted lines or black lines;
+2. a polynomial fitting of $P_m(\mathrm{t})$ is performed, in a least squares sense, obtaining $\widehat{P_m}(\mathrm{t})$. Before fitting, the values of $P_m(\mathrm{t})$ outside a predefined quantile interval are discarded. This is done to prevent the polynomial to be influenced from RFI-corrupted lines or black lines;
 3. the full-length mean Power Spectral Density (PSD) over the entire processing block is estimated by means of its periodogram:
 
 $$
-{PSD}_{RAW}(f_r,t)=\frac{1}{M}\sum_{j=0}^{M-1}{\frac{\left\vert F_r(RAW(\tau,t+j)) \right\vert^2}{N_r}}
+{PSD}_{RAW}(f_r,\mathrm{t})=\frac{1}{M}\sum_{j=0}^{M-1}{\frac{\left\vert F_r(RAW(\tau,\mathrm{t}+\mathrm{j})) \right\vert^2}{N_r}}
 \tag{4.9}
 $$ (eq:atbd-l1-sar-4-9)
 
 4. the chirp function is transformed in frequency domain and then normalized with the mean power of the raw data in the box:
 
 $$
-{PSD}_{CHIRP}(f_r,t)=\frac{\left\vert F_r(chirp(\tau)) \right\vert^2}{N_{chirp}}\sum_{j=-(M-1)/2}^{(M-1)/2}{\widehat{P_m}(t+j)}
+{PSD}_{CHIRP}(f_r,\mathrm{t})=\frac{\left\vert F_r(chirp(\tau)) \right\vert^2}{N_{chirp}}\sum_{j=-(M-1)/2}^{(M-1)/2}{\widehat{P_m}(t+j)}
 \tag{4.10}
 $$ (eq:atbd-l1-sar-4-10)
 
@@ -267,7 +267,7 @@ $$ (eq:atbd-l1-sar-4-10)
 
 (equation-eq-atbd-l1-sar-4-11)=
 \begin{equation}
-Mask(f_r,t)=\begin{Bmatrix} 1,\ if\ 10\log_{10}({PSD}_{RAW}(f_r,t)/{PSD}_{CHIRP}(f_r,t))>k_p \\ 0,\ if\ 10\log_{10}({PSD}_{RAW}(f_r,t)/{PSD}_{CHIRP}(f_r,t))\leq{}k_p \end{Bmatrix}
+Mask(f_r,\mathrm{t})=\begin{Bmatrix} 1,\ if\ 10\log_{10}({PSD}_{RAW}(f_r,\mathrm{t})/{PSD}_{CHIRP}(f_r,\mathrm{t}))>k_p \\ 0,\ if\ 10\log_{10}({PSD}_{RAW}(f_r,\mathrm{t})/{PSD}_{CHIRP}(f_r,\mathrm{t}))\leq{}k_p \end{Bmatrix}
 \tag{4.11}
 \end{equation}
 
@@ -277,14 +277,14 @@ Similarly, the isolated RFI detection algorithm is based on the comparison betwe
 2. the nominal replica PSD associated to each line in the block is computed:
 
 $$
-{PSD}_{CHIRP}(f_r,t)=\frac{\left\vert F_r(chirp(\tau)) \right\vert^2}{N_{chirp}}\widehat{P_m}(t)
+{PSD}_{CHIRP}(f_r,\mathrm{t})=\frac{\left\vert F_r(chirp(\tau)) \right\vert^2}{N_{chirp}}\widehat{P_m}(t)
 \tag{4.12}
 $$ (eq:atbd-l1-sar-4-12)
 
 3. the line PSD is normalized so that it has the same power of the replica PSD:
 
 $$
-{PSD}_{RAW}(f_r,t)=\frac{{PSD}_{RAW}(f_r,t)}{\frac{1}{N_r}\sum_{f_r=0}^{W-1}{\frac{{PSD}_{RAW}(f_r,t)}{{PSD}_{CHIRP}(f_r,t)}}}
+{PSD}_{RAW}(f_r,\mathrm{t})=\frac{{PSD}_{RAW}(f_r,\mathrm{t})}{\frac{1}{N_r}\sum_{f_r=0}^{W-1}{\frac{{PSD}_{RAW}(f_r,\mathrm{t})}{{PSD}_{CHIRP}(f_r,\mathrm{t})}}}
 \tag{4.13}
 $$ (eq:atbd-l1-sar-4-13)
 
@@ -303,7 +303,7 @@ The mitigation step is performed operating line by line on the input raw data:
 
 (equation-eq-atbd-l1-sar-4-14)=
 \begin{equation}
-F_r(RAW(\tau,t))=\begin{Bmatrix} 0,\ if\ Mask(f_r,t)=1 \\ F(RAW(\tau,t)),\ if\ Mask(f_r,t)=0 \end{Bmatrix}
+F_r(RAW(\tau,\mathrm{t}))=\begin{Bmatrix} 0,\ if\ Mask(f_r,\mathrm{t})=1 \\ F(RAW(\tau,\mathrm{t})),\ if\ Mask(f_r,\mathrm{t})=0 \end{Bmatrix}
 \tag{4.14}
 \end{equation}
 
@@ -397,13 +397,13 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW | *RFI mitigation in frequency-domain step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after RFI mitigation *Intermediate product: iRAW\_rfi\_corrected* |
-| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration) *Intermediate product:* `iChirp` *(in case of internal calibration chirp replica)* |
-| $A_{drift}$, $\varphi_{drift}$ | Drift interpolated | *Internal calibration pars retrieval step* | N{sub}`az` x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$*Intermediate product:* `iDrift` |
+| $RAW$ | RAW | *RFI mitigation in frequency-domain step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after RFI mitigation<br>*Intermediate product: iRAW\_rfi\_corrected* |
+| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function<br>Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration)<br>*Intermediate product:* `iChirp` *(in case of internal calibration chirp replica)* |
+| $A_{\mathrm{drift}}$, $\varphi_{\mathrm{drift}}$ | Drift interpolated | *Internal calibration pars retrieval step* | N{sub}`az` x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$<br>*Intermediate product:* `iDrift` |
 | $A_{drift}^{ref},\ \varphi_{drift}^{ref}$ | `referenceDrift` | `AUX_INS` (`AUX_FMT`) | complex value | - | - | Reference amplitude and phase drift |
-| $\delta\tau_{IJ}^{TXP}$ | Internal delay | *Internal calibration pars retrieval step* | scalar value | - | - | Delay between polarimetric channels for the given pulse type *TXP* and for each polarization combination $IJ$*Intermediate product:* `iDelays` |
-| $I_{Rx}$ | RX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Receive channel imbalance (amplitude and phase) *Intermediate product:* `iChannelImbalance` |
-| $I_{Tx}$ | TX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase) *Intermediate product:* `iChannelImbalance` |
+| $\delta\tau_{IJ}^{TXP}$ | Internal delay | *Internal calibration pars retrieval step* | scalar value | - | - | Delay between polarimetric channels for the given pulse type *TXP* and for each polarization combination $IJ$<br>*Intermediate product:* `iDelays` |
+| $I_{Rx}$ | RX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Receive channel imbalance (amplitude and phase)<br>*Intermediate product:* `iChannelImbalance` |
+| $I_{Tx}$ | TX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase)<br>*Intermediate product:* `iChannelImbalance` |
 | $\mathrm{\Delta}\tau$ | PARC delays | `PARC_INFO` (`AUX_FMT`) | 4 scalar values | - | - | PARC delays |
 | - | `rangeProcessingParametersList` \> `windowType`, `windowCoefficient`, `processingBandwidth`, `timeBias` | `AUX_PP1` (`AUX_FMT`) | string + 3 scalar values | - | depends on swath | Range spectrum windowing parameters (window type, window coefficient and processing bandwidth) + time bias to be applied during processing |
 | - | `calibrationSignalsSWP` | AUX INS (`AUX_FMT`) | scalar value | - | 0.0000030137930999841456 | Calibration signals Sampling Window Position (SWP) [s] |
@@ -412,7 +412,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RGC$ | RGC | *Doppler Centroid estimation step, Azimuth data resampling step* | (N{sub}`rg`-N{sub}`chirp`+1) x N{sub}`az` array of complex values | - | - | Range compressed data *Intermediate product: iRGC* |
+| $RGC$ | RGC | *Doppler Centroid estimation step, Azimuth data resampling step* | (N{sub}`rg`-N{sub}`chirp`+1) x N{sub}`az` array of complex values | - | - | Range compressed data<br>*Intermediate product: iRGC* |
 
 **Mathematical description**
 
@@ -687,17 +687,17 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes *Intermediate product: iRGC* |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
-| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information *Intermediate product:* `iSlantDem` |
-| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default value is 5s. |
+| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and<br>set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes<br>*Intermediate product: iRGC* |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| $yaw,\ pitch,$<br>$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information<br>*Intermediate product:* `iSlantDem` |
+| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default<br>value is 5s. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $f_{DC}$ | Doppler Centroid | *Azimuth compression step, Antenna pattern compensation step, Multilooking step* | set of polynomials | - | - | Doppler Centroid polynomials *Intermediate product: iRGC (updated annotations)* |
+| $f_{DC}$ | Doppler Centroid | *Azimuth compression step, Antenna pattern compensation step, Multilooking step* | set of polynomials | - | - | Doppler Centroid polynomials<br>*Intermediate product: iRGC (updated annotations)* |
 
 **Mathematical description**
 
@@ -736,7 +736,7 @@ where ${\overrightarrow{n}}_{pp}$ is the unit vector normal to the current point
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — SAR Reference Frame for BIOMASS sensor (image taken from [AD2]).</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 12</span><span class="caption-text"> — SAR Reference Frame for BIOMASS sensor (image taken from <a class="reference internal" href="01-introduction.html#ad2">[AD2]</a>).</span></p>
 
 :::
 
@@ -821,12 +821,12 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RGC$ | RGC data | *Azimuth data resampling step* | N{sub}`rg`-N{sub}`chirp`+1 x N{sub}`az` array of complex values | - | - | Range compressed data *Intermediate product: iRGC* |
-| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 array of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| $RGC$ | RGC data | *Azimuth data resampling step* | N{sub}`rg`-N{sub}`chirp`+1 x N{sub}`az` array of complex values | - | - | Range compressed data<br>*Intermediate product: iRGC* |
+| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and<br>set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 array of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| $yaw,\ pitch,$<br>$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
 | $N,\ M$ | `blockSamples`, `blockLines` | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 128, 8192 | Number of samples and lines in the blocks used to estimate Doppler Centroid from data |
-| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default value is 5s. |
+| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default<br>value is 5s. |
 | - | dcRMSErrorThreshold | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Doppler Centroid estimation root mean squared (RMS) error threshold [Hz] |
 | - | Antenna patterns | *2D antenna patterns extraction step* | arrays of complex values | - | - | 2D antenna patterns (two-way, for both the doublets) |
 
@@ -834,8 +834,8 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $f_{DC}$ | Doppler Centroid | *Azimuth compression step, Antenna pattern compensation step, Multilooking step* | set of polynomials + set of arrays of real values | - | - | Doppler Centroid polynomials, estimates grids and estimates quality *Intermediate product: iRGC (updated annotations), iDC, iDC\_std* |
-| $yaw,\ pitch,{}roll$ | Attitude refined | - | N{sub}`sv` x 3 array of real values | - | - | Refined attitude Euler angles *Intermediate product: iRGC (updated annotations)* |
+| $f_{DC}$ | Doppler Centroid | *Azimuth compression step, Antenna pattern compensation step, Multilooking step* | set of polynomials + set of arrays of real values | - | - | Doppler Centroid polynomials, estimates grids and estimates quality<br>*Intermediate product: iRGC (updated annotations), iDC, iDC\_std* |
+| $yaw,\ pitch,$<br>$roll$ | Attitude refined | - | N{sub}`sv` x 3 array of real values | - | - | Refined attitude Euler angles<br>*Intermediate product: iRGC (updated annotations)* |
 
 **Mathematical description**
 
@@ -984,7 +984,7 @@ For performances analyses, refer to {rd}`1`.
 The effective velocity is the one best matching the true range history of the targets to the hyperbolical model, i.e.,
 
 $$
-r(t_a;\ r_0,\ t_0)\approx\sqrt{r_0^2+v_e(r_0)\cdot(t_a-t_0)^2},
+r(t_{\mathrm{a}};\ r_0,\ t_0)\approx\sqrt{r_0^2+v_{\mathrm{e}}(r_0)\cdot(t_{\mathrm{a}}-t_0)^2},
 \tag{4.37}
 $$ (eq:atbd-l1-sar-4-37)
 
@@ -994,18 +994,18 @@ where the coordinates of the point of analysis are $(r_0,t_0)$. The use of a hyp
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes *Intermediate product: iRGC* |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and<br>set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes<br>*Intermediate product: iRGC* |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $f_{DC}$ | Doppler Centroid | *Doppler Centroid estimation step* | set of polynomials | - | - | Doppler Centroid polynomials |
-| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information *Intermediate product:* `iSlantDem` |
-| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default value is 5s. |
+| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information<br>*Intermediate product:* `iSlantDem` |
+| $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default<br>value is 5s. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $K_a$ | Doppler Rate | *Azimuth compression step* | set of polynomials | - | - | Doppler Rate polynomials *Intermediate product: iRGC (updated annotations)* |
-| $v_e$ | Effective velocity | *Azimuth compression step* | set of polynomials | - | - | Effective velocity polynomials |
+| $K_a$ | Doppler Rate | *Azimuth compression step* | set of polynomials | - | - | Doppler Rate polynomials<br>*Intermediate product: iRGC (updated annotations)* |
+| $v_{\mathrm{e}}$ | Effective velocity | *Azimuth compression step* | set of polynomials | - | - | Effective velocity polynomials |
 
 **Mathematical description**
 
@@ -1029,7 +1029,7 @@ The main steps are:
 4. Once the coordinates of the points have been computed, ${\overrightarrow{p}}_{e,i}$, the effective velocity for the given range is simply computed using:
 
 $$
-v_{e,i}(r_{0,i},t_0)\approx\sqrt{\left\vert {\overrightarrow{v}}_s(t_0) \right\vert^2+({\overrightarrow{p}}_s(t_0)-{\overrightarrow{p}}_{e,i})\cdot{\overrightarrow{a}}_s(t_0)},
+v_{\mathrm{e},i}(r_{0,i},t_0)\approx\sqrt{\left\vert {\overrightarrow{v}}_s(t_0) \right\vert^2+({\overrightarrow{p}}_s(t_0)-{\overrightarrow{p}}_{e,i})\cdot{\overrightarrow{a}}_s(t_0)},
 \tag{4.39}
 $$ (eq:atbd-l1-sar-4-39)
 
@@ -1063,10 +1063,10 @@ Note that this step is executed after Range Compression one, but before Doppler 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RGC | *Range compression step* | (N{sub}`rg`-N{sub}`chirp`+1) x N{sub}`az` array of complex values | - | - | Range compressed data *Intermediate product: iRGC* |
-| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Range compression step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
-| $yaw,\ pitch,{}roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
+| - | RGC | *Range compression step* | (N{sub}`rg`-N{sub}`chirp`+1) x N{sub}`az` array of complex values | - | - | Range compressed data<br>*Intermediate product: iRGC* |
+| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Range compression step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and<br>set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| $yaw,\ pitch,$<br>$roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
 | - | `azimuthResamplingFrequency` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 1018.80 | Azimuth resampling frequency [Hz] |
 | - | `filterType` | `AUX_PP1` (`AUX_FMT`) | string | - | FIR / SINC \* | Type of filters used for azimuth resampling (FIR, SINC, GLS) |
 | - | `filterBandwidth` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 1500 / 1018.80 \* | Filter cut-off frequency [Hz] |
@@ -1079,7 +1079,7 @@ Note that this step is executed after Range Compression one, but before Doppler 
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RGC resampled | *Doppler Centroid estimation step, Doppler Rate estimation step, Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range compressed data (resampled) *Intermediate product: iRGC (updated both raster and annotations)* |
+| - | RGC resampled | *Doppler Centroid estimation step, Doppler Rate estimation step, Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range compressed data (resampled)<br>*Intermediate product: iRGC (updated both raster and annotations)* |
 
 **Mathematical description**
 
@@ -1209,7 +1209,7 @@ flowchart TB
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Outline of the processing steps for topography adaptive antenna pattern correction. The operations for the reference height (APC1) are embedded into the SAR focusing kernel. All operations related to AP correction are marked in green. The optional compensation of the antenna cross-talk is performed at the end of the SAR focussing and involves all polarisations (see Sec. 4.6.2).</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 16</span><span class="caption-text"> — Outline of the processing steps for topography adaptive antenna pattern correction. The operations for the reference height (APC1) are embedded into the SAR focusing kernel. All operations related to AP correction are marked in green. The optional compensation of the antenna cross-talk is performed at the end of the SAR focussing and involves all polarisations (see <a class="reference internal" href="04-l1-core-processing.html#sec-atbd-l1-sar-4-6-2">Sec. 4.6.2</a>).</span></p>
 
 ::::
 
@@ -1223,12 +1223,12 @@ The following description is based on the assumption, confirmed by manufacturer,
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $B_{RGC}$ | RGC resampled | *Azimuth data resampling step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range compressed data (resampled) *Intermediate product: iRGC* |
+| $B_{RGC}$ | RGC resampled | *Azimuth data resampling step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range compressed data (resampled)<br>*Intermediate product: iRGC* |
 | $\overrightarrow{p_S}$ | Orbit | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Orbit state vectors (satellite position in Cartesian ECEF coordinates) |
 | $\overrightarrow{a_{YPR}}$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles relative to the Zero Doppler reference frame {ad}`2` |
-| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) *Intermediate product:* `iPatt2D` |
-| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization *Intermediate product:* `iTxPT` |
-| ${\overrightarrow{G}}_{topo}$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information *Intermediate product:* `iSlantDem` |
+| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets)<br>*Intermediate product:* `iPatt2D` |
+| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization<br>*Intermediate product:* `iTxPT` |
+| ${\overrightarrow{G}}_{topo}$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information<br>*Intermediate product:* `iSlantDem` |
 | $f_{DC}$ | Doppler Centroid | *Doppler Centroid estimation step* | set of polynomials | - | - | Doppler Centroid polynomials |
 | - | `elevationMispointingBias` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Mis-pointing bias in elevation to be applied during antenna pattern compensation [rad] |
 | - | `azimuthMispointingBias` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Mis-pointing bias in azimuth to be applied during antenna pattern compensation [rad] |
@@ -1237,8 +1237,8 @@ The following description is based on the assumption, confirmed by manufacturer,
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $B_{RGC}^{comp}$ | RGC compensated | *Azimuth compression step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range-compressed SAR data, compensated for the 2D antenna illumination pattern for an average off-nadir angle profile *Intermediate product: iRGC (updated raster)* |
-| $B_{SCS}$ | SLC | *Cross-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Focused single-look complex SAR data, additionally compensated for topography-dependent radiometric bias *Intermediate product: iSLC* |
+| $B_{RGC}^{\mathrm{comp}}$ | RGC compensated | *Azimuth compression step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range-compressed SAR data, compensated for the 2D antenna illumination pattern for an average off-nadir angle profile<br>*Intermediate product: iRGC (updated raster)* |
+| $B_{SCS}$ | SLC | *Cross-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Focused single-look complex SAR data, additionally compensated for topography-dependent radiometric bias<br>*Intermediate product: iSLC* |
 | - | Antenna pattern combined | *Denoising step* | arrays of complex values | - | - | 2D antenna pattern after combination |
 
 **Mathematical description**
@@ -1255,7 +1255,7 @@ Specific variables:
 - $v_s$: Scalar satellite velocity in ECEF coordinate system.
 - ${\overrightarrow{G}}_{topo}(\tau,t)$: DEM information, backgeocoded to obtain 3D global Cartesian coordinates on the slant range grid (see {sec}`Sec. 3.5 <3.5>`).
 - $f_{DC}(\tau,t)$: Doppler centroid, as derived from the polynomials estimated in {sec}`Section 4.3 <4.3>`.
-- $a_D^C(t)$: Azimuth variant transmit and receive antenna excitation coefficients for doublet $D\in\{D1,D2\}$ on transmit ($C=Tx)$ and receive ($C=Rx$).
+- $a_D^C(t)$: Azimuth variant transmit and receive antenna excitation coefficients for doublet $\mathrm{D}\in\{\mathrm{D}1,\mathrm{D}2\}$ on transmit ($\mathrm{C}=\mathrm{Tx})$ and receive ($\mathrm{C}=\mathrm{Rx}$).
 - $P_D^C(\theta,\beta)$: 2D complex antenna doublet pattern for transmit ($C=Tx)$ and receive ($C=Rx$) defined for elevation angles $\theta$ and antenna azimuth angles $\beta$. Two patterns, for doublets $D\in\{D1,D2\}$ are used. These, combined with the antenna excitation coefficients, define the azimuth time variant transmit and receive diagrams antenna diagrams {rd}`27`:
 
 $$
@@ -1352,7 +1352,7 @@ $$ (eq:atbd-l1-sar-4-51)
 6. An inverse azimuth Fourier transform is performed to bring the compensated data to the range- and azimuth-time domain:
 
 $$
-B_{RGC}^{comp}(\ \tau,t)=FFT_{f_a\ \rightarrow{}t_a}\left[ e^{2\pi{}j\ f_{DC}(\tau,t_{mid})\ t}B_{RGC}({\tau,\ f}_a) \right],
+B_{RGC}^{\mathrm{comp}}(\ \tau,t)=FFT_{f_a\ \rightarrow{}t_a}\left[ e^{2\pi{}j\ f_{DC}(\tau,t_{mid})\ t}B_{RGC}({\tau,\ f}_a) \right],
 \tag{4.52}
 $$ (eq:atbd-l1-sar-4-52)
 
@@ -1372,7 +1372,7 @@ $$ (eq:atbd-l1-sar-4-53)
 where $BC\left[ \ldots \right]$ denotes the operator that reduces a two-dimensional antenna pattern to the corresponding effective azimuth beam-center pattern over elevation, taking into account the weighting function $W(f_a)$ applied for sidelobe suppression:
 
 $$
-BC\left[ P(X,f_a) \right]=\ \frac{\exp\left[ j\cdot\arg \left\{ P(X,\ 0) \right\} \right]}{\sqrt{\sum_{f_a}^{}{{W(f_a)}^2}}}\sqrt{\sum_{f_a}^{}{\left\vert W(f_a)\cdot{}P(X,f_a) \right\vert^2}}
+BC\left[ P(X,f_a) \right]=\ \frac{\exp\left[ \mathrm{j}\cdot\arg \left\{ P(X,\ 0) \right\} \right]}{\sqrt{\sum_{f_a}^{}{{W(f_a)}^2}}}\sqrt{\sum_{f_a}^{}{\left\vert W(f_a)\cdot{}P(X,f_a) \right\vert^2}}
 \tag{4.54}
 $$ (eq:atbd-l1-sar-4-54)
 
@@ -1410,7 +1410,7 @@ For performances analyses, refer to {rd}`1`.
 
 **Algorithm overview and rationale**
 
-The goal of this compensation is to correct for the cross-talk introduced by the antennas. The reference antenna patterns (RASP) provided by the Customer show a clear Doppler-dependent cross-talk (with a maximum value of $-32\ dB$ in the H polarization), which implies the correction, if required, should be performed as a function of range in the range-Doppler domain, i.e. after range compression or at focused image level. The current scheme shown and presented in the figure below makes the correction of the cross-talk for a reference height only. The correction is deemed optional as the present performance of the antenna cross-talk is better than the specification of $-30\ dB.$ In the very unlikely case that a topography-dependent correction of the cross-talk is necessary, a second residual bias correction should be applied at the image focused level in space domain, similar as the APC2 step (not detailed in this ATBD).
+The goal of this compensation is to correct for the cross-talk introduced by the antennas. The reference antenna patterns (RASP) provided by the Customer show a clear Doppler-dependent cross-talk (with a maximum value of $-32\ \mathrm{dB}$ in the H polarization), which implies the correction, if required, should be performed as a function of range in the range-Doppler domain, i.e. after range compression or at focused image level. The current scheme shown and presented in the figure below makes the correction of the cross-talk for a reference height only. The correction is deemed optional as the present performance of the antenna cross-talk is better than the specification of $-30\ \mathrm{dB}.$ In the very unlikely case that a topography-dependent correction of the cross-talk is necessary, a second residual bias correction should be applied at the image focused level in space domain, similar as the APC2 step (not detailed in this ATBD).
 
 The compensation of the cross-talk should be applied at focused image level to allow independent SAR focusing of the polarimetric channels. For efficiency reasons, the operation shall be performed in azimuth blocks of same size as the SAR focusing and using the same reference height as for the APC1 correction in the previous section.
 
@@ -1461,7 +1461,7 @@ flowchart TB
 
 </div>
 
-<p class="atbd-figure-caption"><span class="caption-number">Fig. 17</span><span class="caption-text"> — Block diagram showing the operations for the antenna cross-talk compensation. The extraction of reference off-nadir and antenna patterns is analogous to the APC1 correction step (see first figure in Sec. 4.6.1).</span></p>
+<p class="atbd-figure-caption"><span class="caption-number">Fig. 17</span><span class="caption-text"> — Block diagram showing the operations for the antenna cross-talk compensation. The extraction of reference off-nadir and antenna patterns is analogous to the APC1 correction step (see first figure in <a class="reference internal" href="04-l1-core-processing.html#sec-atbd-l1-sar-4-6-1">Sec. 4.6.1</a>).</span></p>
 
 ::::
 
@@ -1469,16 +1469,16 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC | *Co-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data *Intermediate product: iSLC* |
-| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) *Intermediate product:* `iPatt2D` |
-| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization *Intermediate product:* `iTxPT` |
+| - | SLC | *Co-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data<br>*Intermediate product: iSLC* |
+| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets)<br>*Intermediate product:* `iPatt2D` |
+| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization<br>*Intermediate product:* `iTxPT` |
 | $\theta_{el,avg}(\tau)$ | Off-nadir angle | *Co-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x 1 array of real values | - | - | Average off-nadir angle for the entire scene as a function of range |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC | *Radiometric corrections step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data compensated for the antenna cross-talk for a constant reference height *Intermediate product: iSLC (updated raster)* |
+| - | SLC | *Radiometric corrections step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data compensated for the antenna cross-talk for a constant reference height<br>*Intermediate product: iSLC (updated raster)* |
 
 **Mathematical description**
 
@@ -1585,12 +1585,12 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RGC compensated | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range-compressed SAR data, compensated for the 2D antenna illumination pattern for an average off-nadir angle profile *Intermediate product: iRGC* |
-| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Antenna pattern compensation step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| - | RGC compensated | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range-compressed SAR data, compensated for the 2D antenna illumination pattern for an average off-nadir angle profile<br>*Intermediate product: iRGC* |
+| $\tau,\ t$ | RGC data slant range and azimuth time axes | *Antenna pattern compensation step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and<br>set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $f_{DC}$ | Doppler Centroid | *Doppler Centroid estimation step* | set of polynomials | - | - | Doppler Centroid polynomials |
 | $K_a$ | Doppler Rate | *Doppler Rate estimation step* | set of polynomials | - | - | Doppler Rate polynomials |
-| $v_e$ | Effective velocity | *Doppler Rate estimation step* | set of polynomials | - | - | Effective velocity polynomials |
+| $v_{\mathrm{e}}$ | Effective velocity | *Doppler Rate estimation step* | set of polynomials | - | - | Effective velocity polynomials |
 | - | `blockSamples`, `blockLines`, `blockOverlapSamples`, `blockOverlapLines` | `AUX_PP1` (`AUX_FMT`) | 4 scalar values | - | 256, 25000, 46, 10888 | Number of samples and lines in the processing blocks and in the overlap between blocks |
 | - | `azimuthProcessingParametersList` \> `windowType`, `windowCoefficient`, `processingBandwidth`, `timeBias` | `AUX_PP1` (`AUX_FMT`) | string + 3 scalar values | - | depends on swath | Azimuth spectrum windowing parameters (window type, window coefficient and processing bandwidth) + time bias to be applied during processing |
 
@@ -1598,7 +1598,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Focused single-look complex SAR data *Intermediate product: iSLC* |
+| - | SLC | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Focused single-look complex SAR data<br>*Intermediate product: iSLC* |
 
 **Mathematical description**
 
@@ -1619,7 +1619,7 @@ $$ (eq:atbd-l1-sar-4-61)
 where:
 
     - $k_{r0C}=\sqrt{\left( \frac{\omega_{r0}}{c_0/2} \right)^2-k_{a0C}^2}$
-    - $k_a=\frac{2\pi{}f_a}{v_{e0C}}$
+    - $k_a=\frac{2\pi{}f_{\mathrm{a}}}{v_{e0C}}$
     - $k_{a0C}=\frac{2\pi}{v_{e0C}}floor\left( \frac{f_{DC}}{PRF} \right)PRF$
 
 b. the unfolding phase, aimed at moving the scene to the Zero-Doppler position:
@@ -1695,7 +1695,7 @@ $$ (eq:atbd-l1-sar-4-65)
 In this way the remaining part of the bistatic delay effect is compensated. This shift along the azimuth direction is applied in the azimuth focusing kernel when the data is in the range time - azimuth frequency domain (i.e., before the last azimuth inverse transform) multiplying each range line by the following phase ramp:
 
 $$
-H_{bistatic}(\tau,\ f_a)=\exp (-j2\pi{}f_a\mathrm{\Delta}t_{fine}(\tau))
+H_{\mathrm{bistatic}}(\tau,\ f_a)=\exp (-j2\pi{}f_a\mathrm{\Delta}t_{fine}(\tau))
 \tag{4.66}
 $$ (eq:atbd-l1-sar-4-66)
 
@@ -1710,16 +1710,16 @@ This step is aimed at compensating all those undesired components that affect th
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| ${SCS}_{nc}$ | SLC | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data compensated for the antenna cross-talk for a constant reference height *Intermediate product: iSLC* |
+| ${SCS}_{nc}$ | SLC | *Antenna pattern compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data compensated for the antenna cross-talk for a constant reference height<br>*Intermediate product: iSLC* |
 | $r_{ref}$ | `referenceRange` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 800000 | Range spreading loss reference slant range [m] |
 | ${\mathrm{\Delta}G}_{SF}$ | `processingGainList` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Processing gain to be applied multiplicatively to the image during processing (one value per polarization) |
-| $G_{AC}$ | `absoluteCalibrationConstantList` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Absolute calibration constant to be applied multiplicatively to the image during processing (one value per polarization) |
+| $G_{AC}$ | `absoluteCalibrationConstantList` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Absolute calibration constant to be applied<br>multiplicatively to the image during processing (one value per polarization) |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS$ | SLC radiometrically calibrated | *Polarimetric* *calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Radiometrically corrected and calibrated azimuth compressed data *Intermediate product: iSLC (updated raster)* |
+| $SCS$ | SLC radiometrically calibrated | *Polarimetric* *calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Radiometrically corrected and calibrated azimuth compressed data<br>*Intermediate product: iSLC (updated raster)* |
 | $\frac{G_{SF}\bullet{}G_{AC}}{G_{SL}}$ | Radiometric correction factors | *Denoising step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Radiometric correction factors |
 
 **Mathematical description**
@@ -1761,7 +1761,7 @@ where $\left[ \mathbf{T}_{\mathbf{R}} \right]$ and $\left[ \mathbf{T}_{\mathbf{T
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC radiometrically calibrated | *Radiometric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Radiometrically corrected and calibrated azimuth compressed data *Intermediate product: iSLC* |
+| - | SLC radiometrically calibrated | *Radiometric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Radiometrically corrected and calibrated azimuth compressed data<br>*Intermediate product: iSLC* |
 | *δ*{sub}`1`*, δ*{sub}`2`*, δ*{sub}`3`*, δ*{sub}`4` | `crossTalkHVTx`, `crossTalkVHTx`, `crossTalkHVRx`, `crossTalkVHRx` | `AUX_PP1` (`AUX_FMT`) | 4 complex values | - | - | H to V/V to H system cross-talk on transmit/receive values |
 | *f*{sub}`1`*, f*{sub}`2` | `channelImbalanceHVTx`, `channelImbalanceHVRx` | `AUX_PP1` (`AUX_FMT`) | 2 complex values | - | - | H to V system channel imbalance on transmit/receive values |
 
@@ -1769,7 +1769,7 @@ where $\left[ \mathbf{T}_{\mathbf{R}} \right]$ and $\left[ \mathbf{T}_{\mathbf{T
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC polarimetrically calibrated | *Ionospheric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC polarimetrically calibrated | *Ionospheric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data<br>*Intermediate product: iSLC\_iono\_corrected* |
 
 **Mathematical description**
 
@@ -1913,7 +1913,7 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data defocused at ionosphere height *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data defocused at ionosphere height<br>*Intermediate product: iSLC\_iono\_corrected* |
 | - | `gaussianFilterMaximumMajorAxisLength` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Gaussian filter maximum length of major axis |
 | - | `gaussianFilterMaximumMinorAxisLength` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Gaussian filter maximum length of minor axis |
 | - | `gaussianFilterMajorAxisLength` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Gaussian filter length of major axis. Used in case computed filter dimensions exceed above reported values |
@@ -1924,7 +1924,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\Omega$ | FR | *Correction of FR on polarimetry step, L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map *Intermediate product: iFR* |
+| $\Omega$ | FR | *Correction of FR on polarimetry step, L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map<br>*Intermediate product: iFR* |
 
 **Mathematical description**
 
@@ -1950,7 +1950,7 @@ where $\Omega$ is the one-way FR rotation angle. FR is invariant to the directio
 \begin{aligned}
 S_{hh}(\Omega)=+\cos^2 (\Omega)S_{hh}-\sin^2 (\Omega)S_{vv} \\
 S_{hv}(\Omega)=+\cos (\Omega)\sin (\Omega)\ (S_{hh}+S_{vv})+S_{xx} \\
-S_{vh}(\Omega)=-\cos (\Omega)sin(\Omega)\ (S_{hh}+S_{vv})+S_{xx} \\
+S_{vh}(\Omega)=-\cos (\Omega)\mathrm{sin}(\Omega)\ (S_{hh}+S_{vv})+S_{xx} \\
 S_{vv}(\Omega)=-\sin^2 (\Omega)S_{hh}+\cos^2 (\Omega)S_{vv}.
 \end{aligned}
 \tag{4.72}
@@ -1987,17 +1987,17 @@ where $\gamma_{pol}$ is the polarimetric decorrelation determined by only SNR.
 The sequence of operations is then:
 
 - SNR is computed from data, then $\gamma_{pol}$ is derived as $\gamma_{pol}=\frac{SNR}{1+SNR}$;
-- $\sigma_{\Omega}$ is computed starting from geomagnetic latitude, which in turn is derived from input geomagnetic field $\overrightarrow{B}$, and from the desired accuracy of the ionospheric phase estimation $\sigma_{\phi}$:
+- $\sigma_{\Omega}$ is computed starting from geomagnetic latitude, which in turn is derived from input geomagnetic field $\overrightarrow{\mathrm{B}}$, and from the desired accuracy of the ionospheric phase estimation $\sigma_{\phi}$:
 
 $$
-\sigma_{\Omega}=\frac{\sigma_{\phi}}{\frac{4\pi{}mf}{e\overrightarrow{B}\cdot\widehat{\kappa}}}
+\sigma_{\Omega}=\frac{\sigma_{\phi}}{\frac{4\pi\mathrm{mf}}{\mathrm{e}\overrightarrow{\mathrm{B}}\cdot\widehat{\kappa}}}
 \tag{4.76}
 $$ (eq:atbd-l1-sar-4-76)
 
 - number of looks is computed from SNR and desired FR estimation quality inverting the formula above:
 
 $$
-N=\frac{1}{16}\frac{1-\gamma_{pol}^2}{2\gamma_{pol}^2\sigma_{\Omega}^2},
+\mathrm{N}=\frac{1}{16}\frac{1-\gamma_{\mathrm{pol}}^2}{2\gamma_{\mathrm{pol}}^2\sigma_{\Omega}^2},
 \tag{4.77}
 $$ (eq:atbd-l1-sar-4-77)
 
@@ -2007,7 +2007,7 @@ The required FR estimation accuracy is not difficult to be achieved, because FR 
 
 | **SNR** | $\boldsymbol{\gamma}_{\boldsymbol{pol}}$ | **1 sigma** | **3-sigma** |
 |---|---|---|---|
-|   |   | N Size of Est. Window [km{sup}`2`] | N Size of Est. Window [km{sup}`2`] |
+| <span class="atbd-rowspan-copy">**SNR**</span> | <span class="atbd-rowspan-copy">$\boldsymbol{\gamma}_{\boldsymbol{pol}}$</span> | N Size of Est. Window [km{sup}`2`] | N Size of Est. Window [km{sup}`2`] |
 | **3 dB** | 0.666 | 51.44 K 4.47 x 4.47 | 462.96 K 13.41 x 13.41 |
 | **8 dB** | 0.863 | 14.038 K 2.33 x 2.33 | 126.342 K 7.01 x 7.01 |
 | **13 dB** | 0.952 | 4.216K 1.28 x 1.28 | 37.947 K 3.84 x 3.84 |
@@ -2018,7 +2018,7 @@ It can be seen that FR can be estimated with high accuracy using window sizes of
 
 Spatial averaging of 2.3 km x 2.3 km yields to a FR estimation accuracy of around 0.05˚ for a SNR of 8 dB. This is sufficient for the correction of FR on polarimetry. However, for the conversion to an ionospheric phase screen, 0.05˚ of FR corresponds at high latitudes to 40˚ and increase as the latitude lowers. The effect of number of looks and the ionospheric phase is discussed further in {sec}`Sec. 4.10.3 <4.10.3>`.
 
-At low latitudes, as the $\overrightarrow{B}\cdot\widehat{\kappa}$ approaches to zero, the required number of looks explodes causing the known equatorial gap in the ionospheric correction proposed in the BIOMASS L1 GPP project. Improved techniques (like the re-use of the azimuth sub-aperture TEC & ionospheric height estimation approach) allows to close this performance gap. Such techniques are under evaluation (see {rd}`29`).
+At low latitudes, as the $\overrightarrow{\mathrm{B}}\cdot\widehat{\kappa}$ approaches to zero, the required number of looks explodes causing the known equatorial gap in the ionospheric correction proposed in the BIOMASS L1 GPP project. Improved techniques (like the re-use of the azimuth sub-aperture TEC & ionospheric height estimation approach) allows to close this performance gap. Such techniques are under evaluation (see {rd}`29`).
 
 In order to consider the focusing geometry of SAR, the correction of the FR is performed at the ionospheric altitude. For this, the SLC images are defocused to the given (either estimated or modelled) ionospheric altitude, before the FR is estimated. The mathematics for the focusing and defocusing is explained in {sec}`Sec. 4.10.3.5 <4.10.3.5>`.
 
@@ -2083,14 +2083,14 @@ The figure above summarizes the FR correction on polarimetry. The key parameter 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data<br>*Intermediate product: iSLC\_iono\_corrected* |
 | - | Ionosphere height / `ionosphereHeightValue` | *Ionosphere height estimation step /* `AUX_PP1` (`AUX_FMT`) | scalar value | - | 350000 | Ionosphere height. Can be estimated, computed from model or taken in input from `AUX_PP1` file (as per configuration) |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC FR corrected | *Ionospheric phase screen correction step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected (updated raster)* |
+| - | SLC FR corrected | *Ionospheric phase screen correction step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected (updated raster)* |
 
 (sec:atbd-l1-sar-4-10-2-3)=
 ##### 4.10.2.3 Ionosphere Height Estimation
@@ -2163,8 +2163,8 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data<br>*Intermediate product: iSLC\_iono\_corrected* |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $\overrightarrow{B}$ | Geomagnetic field | `AUX_GMF` (`AUX_FMT`) | 2D array of real values | updated regularly (several years between updates) | - | Geomagnetic field model |
 | - | `ionosphereHeightEstimationMethodLatitudeThreshold` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 10 | Latitude threshold for ionosphere height estimation method selection [deg]. If latitude is below this threshold the squint sensitivity method is used, otherwise the feature tracking one is selected |
 | - | `ionosphereHeightMinimumValue` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 200000 | Minimum value for ionosphere height estimation. If ionosphere height is estimated and estimated value is lower than this value, it is discarded and input model is used instead |
@@ -2225,11 +2225,11 @@ $$ (eq:atbd-l1-sar-4-79)
 At P-band 1 TECU (=10{sup}`16` electrons per square meter) induces around 3° of FR assuming $\overrightarrow{B}\cdot\widehat{\kappa}=$40,000 nT. In equation above, ${\widehat{\kappa}}_0$ is the propagation vector in zero-Doppler geometry. Normally, the zero-Doppler geometry is already understood and symbolized without subscript 0. In this section, however, because the propagation vector is dealt as a function of squint, the zero-Doppler version is named for distinction purpose. Equation above is derived with respect to $\overrightarrow{B}\cdot\widehat{\kappa}$ to become:
 
 $$
-\frac{d\Omega}{d(\overrightarrow{B}\cdot\widehat{\kappa})}=\frac{\frac{d\Omega}{d\beta}}{\frac{d(\overrightarrow{B}\cdot\widehat{\kappa})}{d\beta}}=\frac{\zeta{}e}{cmf^2}TEC,
+\frac{d\Omega}{d(\overrightarrow{B}\cdot\widehat{\kappa})}={\frac{d\Omega}{d\beta}}/{\frac{d(\overrightarrow{B}\cdot\widehat{\kappa})}{d\beta}}=\frac{\zeta{}e}{cmf^2}TEC,
 \tag{4.80}
 $$ (eq:atbd-l1-sar-4-80)
 
-where $\beta$ is the squint angle. The look direction $\widehat{\kappa}$ varies with respect to $\beta$. The plane on that $\widehat{\kappa}$ varies is defined by ${\widehat{\kappa}}_0$ and the sensor forwarding direction $\widehat{v}={\overrightarrow{v}}_{sat}/\left\vert {\overrightarrow{v}}_{sat} \right\vert$. For a squint angle $\beta$, the propagation vector is simply calculated by $\widehat{\kappa}={\widehat{\kappa}}_0\cos \beta+{\widehat{v}}_{sat}\sin \beta$. $\overrightarrow{B}\cdot\widehat{\kappa}$ and $\frac{d(\overrightarrow{B}\cdot\widehat{\kappa})}{d\beta}$ can be estimated by using the International Geomagnetic Reference Field (IGRF). The geomagnetic field $\overrightarrow{B}$ is a function of position and height. The IGRF model provides series of coefficients of spherical harmonics for the description of the geomagnetic field. By their serial summation, $\overrightarrow{B}$ at the given position is calculated. For a given location, both the equations above become functions of two unknowns: TEC and the ionospheric height $h_{iono}$. Note that as the geomagnetic field $\overrightarrow{B}$ is not linear with height, the solution of equations above for TEC and $h_{iono}$ becomes a nonlinear problem. Note also that ellipsoid is used as terrain height model.
+where $\beta$ is the squint angle. The look direction $\widehat{\kappa}$ varies with respect to $\beta$. The plane on that $\widehat{\kappa}$ varies is defined by ${\widehat{\kappa}}_0$ and the sensor forwarding direction $\widehat{v}={\overrightarrow{v}}_{sat}/\left\vert {\overrightarrow{v}}_{sat} \right\vert$. For a squint angle $\beta$, the propagation vector is simply calculated by $\widehat{\kappa}={\widehat{\kappa}}_0\cos \beta+{\widehat{v}}_{sat}\sin \beta$. $\overrightarrow{B}\cdot\widehat{\kappa}$ and ${d(\overrightarrow{B}\cdot\widehat{\kappa})}/{d\beta}$ can be estimated by using the International Geomagnetic Reference Field (IGRF). The geomagnetic field $\overrightarrow{B}$ is a function of position and height. The IGRF model provides series of coefficients of spherical harmonics for the description of the geomagnetic field. By their serial summation, $\overrightarrow{B}$ at the given position is calculated. For a given location, both the equations above become functions of two unknowns: TEC and the ionospheric height $h_{iono}$. Note that as the geomagnetic field $\overrightarrow{B}$ is not linear with height, the solution of equations above for TEC and $h_{iono}$ becomes a nonlinear problem. Note also that ellipsoid is used as terrain height model.
 
 (fig:atbd-l1-sar-23)=
 :::{div} atbd-mermaid-figure
@@ -2251,7 +2251,7 @@ The figure above depicts an example of estimating the ionospheric height and TEC
 
 Unfortunately, only for a part of the spectra, the FR-Bk relation places on a line, and that interval is highlighted in the figure above. In addition, the condition on the FR-Bk line to pass through the origin is fulfilled only when the assumed ionospheric altitude for estimating $\overrightarrow{B}\cdot\widehat{\kappa}$ coincides with the true ionospheric altitude. On the given dataset, that altitude is 300 km. In practice, the height could be found by calculating the $\overrightarrow{B}\cdot\widehat{\kappa}$ values for all height levels to check if the Bk-FR line passes the origin. The TEC level is then given by the slope of the extended line passing the origin.
 
-The key advantage of this approach is that its application does not rely on the presence of spatial variation of ionosphere but can be applied on a “flat” and homogeneous ionosphere; and second that it performs also very close to the geomagnetic equator as indicated by the Kalimantan example. On the other hand, the performance of the proposed approach is limited by the accuracy of the polarimetric calibration. Residual system distortions bias the FR estimates and make an accurate estimation of $\frac{d\Omega}{d\beta}$ difficult.
+The key advantage of this approach is that its application does not rely on the presence of spatial variation of ionosphere but can be applied on a “flat” and homogeneous ionosphere; and second that it performs also very close to the geomagnetic equator as indicated by the Kalimantan example. On the other hand, the performance of the proposed approach is limited by the accuracy of the polarimetric calibration. Residual system distortions bias the FR estimates and make an accurate estimation of ${d\Omega}/{d\beta}$ difficult.
 
 (sec:atbd-l1-sar-4-10-2-3-3)=
 ###### 4.10.2.3.3 Criterion for Ionospheric Height Estimation Method
@@ -2282,9 +2282,9 @@ Based on the above considerations, it is expected that the 2 sub-look method wil
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\Omega$ | FR | *Bickel & Bates estimator step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map *Intermediate product: iFR* |
+| $\Omega$ | FR | *Bickel & Bates estimator step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map<br>*Intermediate product: iFR* |
 | $\overrightarrow{B}$ | Geomagnetic field | `AUX_GMF` (`AUX_FMT`) | 2D array of real values | updated regularly (several years between updates) | - | Geomagnetic field model |
-| $p_s{,\ v}_s$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $h_{iono}$ | Ionosphere height | *Ionosphere height estimation step* | scalar value | - | 350000 | Ionosphere height |
 
 **Outputs**
@@ -2329,22 +2329,22 @@ Once ionospheric height is known, it is possible to calculate TEC from FR by mea
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\Omega$ | FR | *Bickel & Bates estimator step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map (wrapped) *Intermediate product: iFR* |
-| $TEC\text{GPS}$ | External TEC | `AUX_TEC` (`AUX_FMT`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | IONEX maps are issued daily by the IGS associated analysis centres | - | External TEC map |
+| $\Omega$ | FR | *Bickel & Bates estimator step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map (wrapped)<br>*Intermediate product: iFR* |
+| $\mathrm{TEC}\text{GPS}$ | External TEC | `AUX_TEC` (`AUX_FMT`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | IONEX maps are issued daily by the IGS associated analysis centres | - | External TEC map |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\Omega$ | FR | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map (unwrapped) *Intermediate product: iFR (updated raster)* |
+| $\Omega$ | FR | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | FR map (unwrapped)<br>*Intermediate product: iFR (updated raster)* |
 | - | TEC | - | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Absolute TEC |
 
 **Mathematical description**
 
-The estimation of Faraday rotation (FR) by means of the Bickel and Bates algorithm is modulo $\frac{\pi}{2}$. Since at P-band the absolute value of (one-way) will rather frequently exceed $\frac{\pi}{4}$ (half of $\frac{\pi}{2}$), for an absolute TEC estimation the unwrapping of the estimated FR is required. This task can be supported by external global or regional – GPS-derived – TEC maps. For the determination of the unwrapping integer, the rather low (with respect to the SAR calibration requirements) accuracy and the low spatio-temporal resolution of the GPS derived maps as well as the difference in the ionospheric height seen by the GPS and the BIOMASS configurations mismatch of the integration interval, are not so critical. In the worst case, at high latitudes, around 12 TECU corresponds to a (one-way) FR of $\frac{\pi}{4}$. These figures are well above the TEC estimation accuracy of the global TEC maps. At lower latitudes the ambiguity TEC level (TEC corresponding to $\frac{\pi}{4}$ of FR) is higher (it reaches infinity where $\overrightarrow{B}\cdot\widehat{\kappa}=\ 0$). Their global distribution in ascending orbit is shown in the following figure. The GPS derived TEC, TEC{sub}`GPS`, is converted to Faraday rotation Ω{sub}`GPS`,
+The estimation of Faraday rotation (FR) by means of the Bickel and Bates algorithm is modulo ${\pi}/{2}$. Since at P-band the absolute value of (one-way) will rather frequently exceed ${\pi}/{4}$ (half of ${\pi}/{2}$), for an absolute TEC estimation the unwrapping of the estimated FR is required. This task can be supported by external global or regional – GPS-derived – TEC maps. For the determination of the unwrapping integer, the rather low (with respect to the SAR calibration requirements) accuracy and the low spatio-temporal resolution of the GPS derived maps as well as the difference in the ionospheric height seen by the GPS and the BIOMASS configurations mismatch of the integration interval, are not so critical. In the worst case, at high latitudes, around 12 TECU corresponds to a (one-way) FR of ${\pi}/{4}$. These figures are well above the TEC estimation accuracy of the global TEC maps. At lower latitudes the ambiguity TEC level (TEC corresponding to ${\pi}/{4}$ of FR) is higher (it reaches infinity where $\overrightarrow{B}\cdot\widehat{\kappa}=\ 0$). Their global distribution in ascending orbit is shown in the following figure. The GPS derived TEC, TEC{sub}`GPS`, is converted to Faraday rotation Ω{sub}`GPS`,
 
 $$
-\Omega\text{GPS}=\frac{\zeta{}e(\overrightarrow{B}\cdot\widehat{\kappa})}{cmf_0^2}TEC\text{GPS}
+\Omega\text{GPS}=\frac{\zeta{}e(\overrightarrow{B}\cdot\widehat{\kappa})}{cmf_0^2}\mathrm{TEC}\text{GPS}
 $$
 
 where $c$ is the speed of light, $m$ and $e$ are the electron mass and charge, $f_0$ is the center carrier frequency, $\zeta=40.31$ m{sup}`3`/s{sup}`2`, $\overrightarrow{B}$ is geomagnetic field, and $\widehat{\kappa}$ is the unit propagation vector. Once Ω{sub}`GPS` has been computed, it is straightforward to directly “unwrap” the estimated FR Ω.
@@ -2445,7 +2445,7 @@ If for some pixels Bk is exactly zero, Nan or infinite value in the TEC field ar
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\phi_{iono}$ | Ionospheric phase | *Ionospheric phase screen correction, L1 post-processing step step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map *Intermediate product:* `iPhaseScreenBB` |
+| $\phi_{iono}$ | Ionospheric phase | *Ionospheric phase screen correction, L1 post-processing step step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map<br>*Intermediate product:* `iPhaseScreenBB` |
 
 **Mathematical description**
 
@@ -2515,15 +2515,15 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SLC$ | SLC FR corrected | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| $SLC$ | SLC FR corrected | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected* |
 | $h_{iono}$ | Ionosphere height | *Ionosphere height estimation step* | scalar value | - | 350000 | Ionosphere height |
-| $\phi_{iono}$ | Ionospheric phase | *TEC to ionospheric phase step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map *Intermediate product:* `iPhaseScreenBB` |
+| $\phi_{iono}$ | Ionospheric phase | *TEC to ionospheric phase step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map<br>*Intermediate product:* `iPhaseScreenBB` |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SLC^{'}$ | SLC phase screen corrected | *Group delay correction* *step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected and phase screen corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected (updated raster)* |
+| $SLC^{'}$ | SLC phase screen corrected | *Group delay correction* *step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected and phase screen corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected (updated raster)* |
 
 **Mathematical Description**
 
@@ -2608,14 +2608,14 @@ At P-band 1 TECU induces 2.13 m of range delay, thus half to a pixel of range sh
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC phase screen corrected | *Ionospheric phase screen correction step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected and phase screen corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC phase screen corrected | *Ionospheric phase screen correction step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected and phase screen corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected* |
 | $TEC$ | TEC | *TEC estimation from FR step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | TEC map |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC group delay corrected | *Autofocus step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected, phase screen corrected and group delay corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected (updated raster)* |
+| - | SLC group delay corrected | *Autofocus step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected, phase screen corrected and group delay corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected (updated raster)* |
 | $\Delta{}r$ | Range shifts | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Range shifts map |
 
 **Mathematical description**
@@ -2659,10 +2659,10 @@ $$
 \tag{4.93}
 $$ (eq:atbd-l1-sar-4-93)
 
-It should be noted that $\frac{dx}{dt}=v_{piercing}$, not $v$. The negative sign indicates the phase advance. Assuming zero-squint geometry, a scatterer is focused at the azimuth time when the Doppler frequency becomes zero. When imaged through an ionosphere with a linear TEC gradient, it will be focused at a (shifted) position given by
+It should be noted that ${dx}/{dt}=v_{piercing}$, not $v$. The negative sign indicates the phase advance. Assuming zero-squint geometry, a scatterer is focused at the azimuth time when the Doppler frequency becomes zero. When imaged through an ionosphere with a linear TEC gradient, it will be focused at a (shifted) position given by
 
 $$
-\Delta{}a=\frac{2\zeta{}v\cdot{}v_{piercing}}{cfK_a}\frac{\partial{}TEC}{\partial{}x}\ \ \ \ \ \ \ or\ \ \ \ \ \ \ \Delta{}a=\frac{\zeta{}R_0}{f^2\cos \alpha}\frac{h_{iono}}{h_{sat}}\frac{\partial{}TEC}{\partial{}x}
+\Delta{}a=\frac{2\zeta{}v\cdot{}v_{piercing}}{cfK_a}\frac{\partial{}TEC}{\partial{}x}\ \ \ \ \ \ \ \mathrm{or}\ \ \ \ \ \ \ \Delta{}a=\frac{\zeta{}R_0}{f^2\cos \alpha}\frac{h_{iono}}{h_{sat}}\frac{\partial{}TEC}{\partial{}x}
 \tag{4.94}
 $$ (eq:atbd-l1-sar-4-94)
 
@@ -2683,7 +2683,7 @@ The detailed computation of the Gaussian filter is included in the next section.
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data<br>*Intermediate product: iSLC\_iono\_corrected* |
 | $\Omega_{ext}$ | External TEC | `AUX_TEC` (`AUX_FMT`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | IONEX maps are issued daily by the IGS associated analysis centres | - | External TEC map |
 | $\overrightarrow{B}$ | Geomagnetic field | `AUX_GMF` (`AUX_FMT`) | 2D array of real values | updated regularly (several years between updates) | - | Geomagnetic field model |
 | $h_{iono}$ | Ionosphere height | *Ionosphere height estimation step* | scalar value | - | 350000 | Ionosphere height |
@@ -2693,9 +2693,9 @@ The detailed computation of the Gaussian filter is included in the next section.
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | Ionosphere multi-look RL-LR phase | - | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionosphere multi-look RL-LR phase *Intermediate product: iMLKRLLRPhase* |
-| $\gamma_{LR-RL}$ | Ionosphere multi-look coherence | - | (N{sub}`rg`-N{sub}`chirp`+1)/256 x N’{sub}`az`/256 array of real values | - | - | Ionosphere multi-look coherence *Intermediate product: iMLKCoherence* |
-| ${\widehat{\Omega}}_{plane}$ | FR plane | *L1 post- processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Estimated FR plane (second order polynomial) *Intermediate product: iFRPlane* |
+| - | Ionosphere multi-look RL-LR phase | - | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionosphere multi-look RL-LR phase<br>*Intermediate product: iMLKRLLRPhase* |
+| $\gamma_{LR-RL}$ | Ionosphere multi-look coherence | - | (N{sub}`rg`-N{sub}`chirp`+1)/256 x N’{sub}`az`/256 array of real values | - | - | Ionosphere multi-look coherence<br>*Intermediate product: iMLKCoherence* |
+| ${\widehat{\Omega}}_{plane}$ | FR plane | *L1 post- processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Estimated FR plane (second order polynomial)<br>*Intermediate product: iFRPlane* |
 | ${\widehat{\Omega}}_f$ | FR angle | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Filtered FR angle |
 | - | Ionospheric phase | *Ionospheric phase screen correction step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Estimated ionospheric phase screen |
 
@@ -2735,21 +2735,21 @@ where $\theta_l$ is the look angle computed for the points at the ionospheric he
 d. Remove the FR derived from the external map in the complex domain and take the argument:
 
 $$
-\phi_{\Omega}^{'}=\arg \left\{ \gamma_{LR-RL}\cdot\exp \left[ -j\ 4\cdot\Omega_{ext} \right] \right\}
+\phi_{\Omega}^{'}=\arg \left\{ \gamma_{LR-RL}\cdot\exp \left[ -\mathrm{j}\ 4\cdot\Omega_{ext} \right] \right\}
 \tag{4.97}
 $$ (eq:atbd-l1-sar-4-97)
 
 e. Compute the mean offset and take the argument:
 
 $$
-\phi_{mean}=\arg \left\{ \sum_{}^{}{\exp \left[ {j\cdot\phi}_{\Omega}^{'} \right]\cdot\left\vert \gamma_{LR-RL} \right\vert} \right\}
+\phi_{mean}=\arg \left\{ \sum_{}^{}{\exp \left[ {\mathrm{j}\cdot\phi}_{\Omega}^{'} \right]\cdot\left\vert \gamma_{LR-RL} \right\vert} \right\}
 \tag{4.98}
 $$ (eq:atbd-l1-sar-4-98)
 
 f. Remove the offset in the complex domain, take the argument (hence assuming no wrapping is occurring) and add again the mean offset and the FR phase derived from the external TEC map:
 
 $$
-\widehat{\Omega}=\frac{1}{4}\cdot\arg{\left\{ \exp \left[ j\cdot(\phi_{\Omega}^{'}-\phi_{mean}) \right] \right\}+\frac{\phi_{mean}}{4}+\Omega_{ext}}
+\widehat{\Omega}=\frac{1}{4}\cdot\arg{\left\{ \exp \left[ \mathrm{j}\cdot(\phi_{\Omega}^{'}-\phi_{mean}) \right] \right\}+\frac{\phi_{mean}}{4}+\Omega_{ext}}
 \tag{4.99}
 $$ (eq:atbd-l1-sar-4-99)
 
@@ -2802,7 +2802,7 @@ c. Retrieve the Gaussian filter $g$. If the size of the filter, which depends on
 d. Perform the weighted Gaussian filter as follows {rd}`31`:
 
 $$
-{\widehat{\Omega}}_g=\frac{1}{4}\cdot\arg \left\{ \frac{\exp{\left[ j\cdot\arg \left\{ \gamma_{LR-RL} \right\} \right]\cdot{}w*g}}{w*g} \right\}
+{\widehat{\Omega}}_g=\frac{1}{4}\cdot\arg \left\{ \frac{\exp{\left[ \mathrm{j}\cdot\arg \left\{ \gamma_{LR-RL} \right\} \right]\cdot{}w*g}}{w*g} \right\}
 \tag{4.105}
 $$ (eq:atbd-l1-sar-4-105)
 
@@ -2863,7 +2863,7 @@ $$ (eq:atbd-l1-sar-4-107)
 
 c. The elongation parameter $b$ is required near geomagnetic poles.
 
-    i. Geomagnetic poles are calculated by interpolating the pre-calculated geomagnetic pole positions provided through URL http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_NP.xy and http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020\_SP.xy
+    i. Geomagnetic poles are calculated by interpolating the pre-calculated geomagnetic pole positions provided through URL http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy and http://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_SP.xy
 
     ii. Geomagnetic time $t_m$ is calculated from the subsolar point, satellite and pole positions. As the apparent time represents the angle at pole between sun and the location of interest, the geomagnetic time is the angle at geomagnetic pole. The longitude of the subsolar point is calculated from local time, and the latitude of that is approximated to be on equator. The angle between two planes indicates the geomagnetic time. The first plane bears the center of Earth and passes geomagnetic pole, scene center, with normal vector
 
@@ -2894,7 +2894,7 @@ T_M=\angle\left( {\overrightarrow{n}}_1\cdot{\widehat{n}}_2-i\left( {\widehat{n}
 \tag{4.108}
 $$ (eq:atbd-l1-sar-4-108)
 
-where ${\widehat{n}}_2=\frac{{\overrightarrow{n}}_2}{\left\vert {\overrightarrow{n}}_2 \right\vert}$ is unit vector of ${\overrightarrow{n}}_2$. The normalisation of ${\overrightarrow{n}}_1$ is optional, as its amplitude does not affect to the determination of geomagnetic time. $T_M$ varies between 0 and $2\pi$. To convert $T_M$ to 24-hour system, $12/\pi$ is multiplied.
+where ${\widehat{n}}_2={{\overrightarrow{n}}_2}/{\left\vert {\overrightarrow{n}}_2 \right\vert}$ is unit vector of ${\overrightarrow{n}}_2$. The normalisation of ${\overrightarrow{n}}_1$ is optional, as its amplitude does not affect to the determination of geomagnetic time. $T_M$ varies between 0 and $2\pi$. To convert $T_M$ to 24-hour system, $12/\pi$ is multiplied.
 
 The geometry of the equations is shown in figure below.
 
@@ -2969,7 +2969,7 @@ x & y & z
 \end{pmatrix}^T=1
 $$
 
-has an ellipse of which major axis $\frac{1}{a}$, minor axis $\frac{1}{b}$, and the third axis length of 1. Its major axis is tilted as much as the geomagnetic dip angle $I$ on xz-plane from the horizontal direction. Note here that he minor axis is shorter than the major axis, i.e., $\frac{1}{a}<\frac{1}{b}$. It is because the ellipsoid in formula above describes the spectrum of the ellipsoids. They will be converted to the distance domain (Step 2.d) after its projection onto the horizontal plane (Step 2.b).
+has an ellipse of which major axis ${1}/{a}$, minor axis ${1}/{b}$, and the third axis length of 1. Its major axis is tilted as much as the geomagnetic dip angle $I$ on xz-plane from the horizontal direction. Note here that he minor axis is shorter than the major axis, i.e., ${1}/{a}<{1}/{b}$. It is because the ellipsoid in formula above describes the spectrum of the ellipsoids. They will be converted to the distance domain (Step 2.d) after its projection onto the horizontal plane (Step 2.b).
 
 The geometry of the B-aligned coordinate is shown in figure below. The geomagnetic field $\overrightarrow{B}$, and its projection onto horizontal plane which aligns with the $x$-direction are demonstrated.
 
@@ -3086,11 +3086,11 @@ e. The quadratic form is rotated into the range-azimuth coordinate. The range di
 \tag{4.120}
 \end{equation}
 
-f. The quadratic form is rescaled to the ground. The scaling factor is a function of the ionospheric height. At first, the satellite height $h_{sat}$ is calculated from the satellite position. The scaling factor is $r=\frac{h_{sat}}{(h_{sat}-h_{iono})}$. The quadratic form is updated to
+f. The quadratic form is rescaled to the ground. The scaling factor is a function of the ionospheric height. At first, the satellite height $h_{sat}$ is calculated from the satellite position. The scaling factor is $r={h_{sat}}/{(h_{sat}-h_{iono})}$. The quadratic form is updated to
 
 (equation-eq-atbd-l1-sar-4-121)=
 \begin{equation}
-\begin{pmatrix} \left( \frac{A^{'}}{r^2} \right)\cos^2{\theta_r}+(\frac{B^{'}}{r})\cos{\theta_r}\sin{\theta_r}+C\sin^2{\theta_r} & \left( \left( \frac{A^{'}}{r^2} \right)-C' \right)\sin{2\theta_r}-(\frac{B^{'}}{r})\cos{2\theta_r} \\ \left( \left( \frac{A^{'}}{r^2} \right)-C' \right)\sin{2\theta_r}-(\frac{B^{'}}{r})\cos{2\theta_r} & \left( \frac{A^{'}}{r^2} \right)\sin^2{\theta_r}+(\frac{B^{'}}{r})\cos{\theta_r}\sin{\theta_r}+C\cos^2{\theta_r} \end{pmatrix}
+\begin{pmatrix} ({A^{'}}/{r^2})\cos^2{\theta_r}+({B^{'}}/{r})\cos{\theta_r}\sin{\theta_r}+C\sin^2{\theta_r} & (({A^{'}}/{r^2})-C')\sin{2\theta_r}-({B^{'}}/{r})\cos{2\theta_r} \\ (({A^{'}}/{r^2})-C')\sin{2\theta_r}-({B^{'}}/{r})\cos{2\theta_r} & ({A^{'}}/{r^2})\sin^2{\theta_r}+({B^{'}}/{r})\cos{\theta_r}\sin{\theta_r}+C\cos^2{\theta_r} \end{pmatrix}
 \tag{4.121}
 \end{equation}
 
@@ -3120,8 +3120,8 @@ g. Finally, the quadratic form is rescaled one more time to be ready applied on 
 (equation-eq-atbd-l1-sar-4-122)=
 \begin{equation}
 \begin{pmatrix}
-A'' & \frac{B''}{2} \\
-\frac{B''}{2} & C''
+A'' & {B''}/{2} \\
+{B''}/{2} & C''
 \end{pmatrix},
 \tag{4.122}
 \end{equation}
@@ -3130,9 +3130,9 @@ where
 
 $$
 \begin{aligned}
-A^{''}=\left( \frac{A^{'}\delta_{rg}^2}{r^2} \right)\cos^2{\theta_r}+(\frac{B^{'}\delta_{rg}\delta_{az}}{r})\cos{\theta_r}\sin{\theta_r}+C\delta_{az}^2\sin^2{\theta_r} \\
-\frac{B^{''}}{2}=\left( \left( \frac{A^{'}\delta_{rg}^2}{r^2} \right)-C'\delta_{az}^2 \right)\sin{2\theta_r}-(\frac{B^{'}\delta_{rg}\delta_{az}}{r})\cos{2\theta_r} \\
-C^{''}=\left( \frac{A^{'}\delta_{rg}^2}{r^2} \right)\sin^2{\theta_r}+(\frac{B^{'}\delta_{rg}\delta_{az}}{r})\cos{\theta_r}\sin{\theta_r}+C\delta_{az}^2\cos^2{\theta_r}
+A^{''}=({A^{'}\delta_{rg}^2}/{r^2})\cos^2{\theta_r}+({B^{'}\delta_{rg}\delta_{az}}/{r})\cos{\theta_r}\sin{\theta_r}+C\delta_{az}^2\sin^2{\theta_r} \\
+{B^{''}}/{2}=(({A^{'}\delta_{rg}^2}/{r^2})-C'\delta_{az}^2)\sin{2\theta_r}-({B^{'}\delta_{rg}\delta_{az}}/{r})\cos{2\theta_r} \\
+C^{''}=({A^{'}\delta_{rg}^2}/{r^2})\sin^2{\theta_r}+({B^{'}\delta_{rg}\delta_{az}}/{r})\cos{\theta_r}\sin{\theta_r}+C\delta_{az}^2\cos^2{\theta_r}
 \end{aligned}
 $$
 
@@ -3200,7 +3200,7 @@ $$
 \tag{4.130}
 $$ (eq:atbd-l1-sar-4-130)
 
-The number of look required is determined by setting the deviation of the FR does not go over the required phase deviation, i.e., $\sigma_{\Omega}\geq\Omega_{\max}=\frac{\phi_{\max}}{k}$. Required number of looks is
+The number of look required is determined by setting the deviation of the FR does not go over the required phase deviation, i.e., $\sigma_{\Omega}\geq\Omega_{\max}={\phi_{\max}}/{k}$. Required number of looks is
 
 $$
 N_{req}=\frac{1-\gamma_{pol}^2}{32\gamma^2\sigma_{\Omega}^2}\geq\frac{1-\gamma_{pol}^2}{32\gamma^2\phi_{\max}^2}k^2.
@@ -3276,11 +3276,11 @@ There are three models for the global evaluation of the ionospheric height, `hmF
 
 The SHAMDHMF2() estimates `hmF2` by the sum of two components: the Rz12-dependent and the independent components. Both are calculated from their own set of spherical harmonic coefficients. The Rz12 dependent part is responsible for the modeling the change of `hmF2` depending on the solar cycle. The seasonal dependency of the `fmF2` is realized in the subroutine SCHNEVPDH(), which is called at the last step of SHAMDHMF2 routine.
 
-The current implementation in the BPS L1 Processor wraps the Fortran code. The Fortran core part reads the Rz12 index the from `ig_rz.dat` file. This file is read by calling the subroutine read\_ig\_rz() defined in IRFUN.FOR. File can be found at http://irimodel.org/indices/ig\_rz.dat (latest update: Sep. 30th, 2021).
+The current implementation in the BPS L1 Processor wraps the Fortran code. The Fortran core part reads the Rz12 index the from `ig_rz.dat` file. This file is read by calling the subroutine read\_ig\_rz() defined in IRFUN.FOR. File can be found at http://irimodel.org/indices/ig_rz.dat (latest update: Sep. 30th, 2021).
 
 The `ig_rz.dat` is comprised of four parts. The first line indicates the time of update. The second line indicates the time of the first and last month in the table. The following two blocks as number arrays are ionospheric index (IG) and Rz. The time span presented includes also the projections into the future. Because the estimation of Rz12 for the current moment requires the prediction of nearest future 6 months, the `ig_rz.dat` provides not only the provisional Rz of recent past months, but also the future values. In a very lazy sense, the update of the `ig_rz.dat` should be no later than the final moment of the data interval shown in the second part of the file.
 
-In the IRI homepage (https://irimodel.org/), two sources of `ig_rz.dat` are presented. Another source that the `get_model.py` accesses (twice-a-year update period), is the Radio and Space Physics Laboratory, Canada, that provides daily update of monthly Rz values under URL https://chain-new.chain-project.net/echaim\_downloads/ig\_rz.dat. The comparison with IRI version, the disagreement of Rz values start from 2021 January.
+In the IRI homepage (https://irimodel.org/), two sources of `ig_rz.dat` are presented. Another source that the `get_model.py` accesses (twice-a-year update period), is the Radio and Space Physics Laboratory, Canada, that provides daily update of monthly Rz values under URL https://chain-new.chain-project.net/echaim_downloads/ig_rz.dat. The comparison with IRI version, the disagreement of Rz values start from 2021 January.
 
 The computation of the ionosphere height through the IRI model is performed by L1 Processor evaluating it in correspondence of the scene centre. The scene centre is computed starting from extracted RAW data, i.e. output of L1 Pre-Processing step, and computing its mid-range mid azimuth position (NOTE: before computing mid-range position, chirp length is subtracted from range extent). Note that, even if the implementation of the IRI model wrapper is performed in a different way in BIOMASS L1 GPP, the same approach for the ionosphere height computation is used, ensuring results equivalence.
 
@@ -3306,7 +3306,7 @@ Errors in the measurement of $\Delta{}a$ develop into random walks during the in
 
 The accuracy of the $\Delta{}a$ estimation depends not only on the contrast in the amplitude images but in the content inside the blocks. For example, it has been seen around cities and mountainous areas, “elongated” or periodic structures produce multiple and/or degraded (less sharp) cross-correlation peaks. Designing a reliable outlier rejection approach that would work in all possible scenarios is not a trivial task. That is why it is decided to work with an WLS integrator that combines all information available and gives less weight to less reliable measurements. The weights are defined as follow:
 
-- The variance of the absolute phase estimated from the FR angle, $\phi_{FR}$.
+- The variance of the absolute phase estimated from the FR angle, $\phi_{\mathrm{FR}}$.
 - The variance of the second derivative at each block is the variance in a 3x3 window around it (assuming that the errors in each block the blocks are uncorrelated with respect to the surrounding ones).
 
 The correction of the ionospheric phase screen estimated by autofocus is performed as described in {sec}`Section 4.10.3.5 <4.10.3.5>`, i.e., by compressing to the ionospheric height estimated with feature tracking (see {sec}`Section 4.10.2.3.1 <4.10.2.3.1>`), applying the correction as a phase multiplication, and then compressing again. All this can be done iteratively. In our case we (i) accumulate the measured shifts $\Delta{}a$ during the iterations (to keep the consistency with the absolute phase extracted from the FR) and (ii) always correct the original image to avoid introducing errors due to integrated random walks in the correction step.
@@ -3320,7 +3320,7 @@ As quality indicators of the estimator and convergence we propose:
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC ionospheric corrected | *Ionospheric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Ionospheric corrected azimuth compressed data *Intermediate product: iSLC\_iono\_corrected* |
+| - | SLC ionospheric corrected | *Ionospheric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Ionospheric corrected azimuth compressed data <br>*Intermediate product: iSLC\_iono\_corrected* |
 | $\overrightarrow{B}$ | Geomagnetic field | `AUX_GMF` (`AUX_FMT`) | 2D array of real values | updated regularly (several years between updates) | - | Geomagnetic field model |
 | $N$ | `mapDriftAzimuthSubBands` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Number of azimuth sub-bands for map-drift autofocus |
 | - | `mapDriftCorrelationWindowWidth` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Width of amplitude correlation window for map-drift autofocus |
@@ -3334,8 +3334,8 @@ As quality indicators of the estimator and convergence we propose:
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC autofocused | *Multilooking step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Azimuth compressed data after autofocus *Intermediate product: iSLC\_af\_corrected* |
-| $\phi_k$ | Ionospheric phase | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Autofocus phase error estimates (or second derivative) *Intermediate product:* `iPhaseScreenAF` |
+| - | SLC autofocused | *Multilooking step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Azimuth compressed data after autofocus<br>*Intermediate product: iSLC\_af\_corrected* |
+| $\phi_k$ | Ionospheric phase | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Autofocus phase error estimates (or second derivative)<br>*Intermediate product:* `iPhaseScreenAF` |
 | $M$ | Covariance matrix | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Covariance matrix of WLS system |
 
 **Algorithm description**
@@ -3415,14 +3415,14 @@ To build the WLS system that integrates the 2D phase screen different elements a
 A weight matrix
 
 $$
-\overline{\overline{W}}=\mathbf{diag}\left( \frac{1}{{\overrightarrow{\sigma}}^2} \right),
+\overline{\overline{W}}=\mathbf{diag}({1}/{{\overrightarrow{\sigma}}^2}),
 \tag{4.139}
 $$ (eq:atbd-l1-sar-4-139)
 
 which is a diagonal matrix with
 
 $$
-{\overrightarrow{\sigma}}^2=\left[ {\overrightarrow{\sigma}}_{\ddot{\phi},\ HH}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ HV}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ VH}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ VV}^2,{\overrightarrow{\sigma}}_{\phi,\ FR}^2\ \right]^T
+{\overrightarrow{\sigma}}^2=\left[ {\overrightarrow{\sigma}}_{\ddot{\phi},\ \mathrm{HH}}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ \mathrm{HV}}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ \mathrm{VH}}^2,\ {\overrightarrow{\sigma}}_{\ddot{\phi},\ \mathrm{VV}}^2,{\overrightarrow{\sigma}}_{\phi,\ \mathrm{FR}}^2\ \right]^T
 \tag{4.140}
 $$ (eq:atbd-l1-sar-4-140)
 
@@ -3430,7 +3430,7 @@ contains the variances of all measurements put into the system.
 
 A matrix $\overline{\overline{L}}$ with the derivative operator is used to generate the matrix $\overline{\overline{LL}}=\ \overline{\overline{L}}\cdot\overline{\overline{L}}$ which corresponds to the second derivative.
 
-Since the WLS system combines independent measurements, a matrix $\overline{\overline{A}}$ is built by stacking the different linear transformation operators: one $\overline{\overline{LL}}$ for each polarisation and one identity matrix since the low-resolution estimate of $\phi_{FR}$ is already absolute:
+Since the WLS system combines independent measurements, a matrix $\overline{\overline{A}}$ is built by stacking the different linear transformation operators: one $\overline{\overline{LL}}$ for each polarisation and one identity matrix since the low-resolution estimate of $\phi_{\mathrm{FR}}$ is already absolute:
 
 (equation-eq-atbd-l1-sar-4-141)=
 \begin{equation}
@@ -3441,7 +3441,7 @@ Since the WLS system combines independent measurements, a matrix $\overline{\ove
 Now it is possible to build a WLS system that from the observations,
 
 $$
-\overrightarrow{b}=\left[ {\ddot{\overrightarrow{\phi}}}_{HH},\ {\ddot{\overrightarrow{\phi}}}_{HV},\ {\ddot{\overrightarrow{\phi}}}_{VH},\ {\ddot{\overrightarrow{\phi}}}_{VV},\ {\overrightarrow{\phi}}_{FR} \right]^T,
+\overrightarrow{b}=\left[ {\ddot{\overrightarrow{\phi}}}_{\mathrm{HH}},\ {\ddot{\overrightarrow{\phi}}}_{\mathrm{HV}},\ {\ddot{\overrightarrow{\phi}}}_{\mathrm{VH}},\ {\ddot{\overrightarrow{\phi}}}_{\mathrm{VV}},\ {\overrightarrow{\phi}}_{\mathrm{FR}} \right]^T,
 \tag{4.142}
 $$ (eq:atbd-l1-sar-4-142)
 
@@ -3463,7 +3463,7 @@ Block diagram above depicts the processing steps for the estimation of the phase
 
 1. With the block dimensions and overlap calculate the block centres (autofocus grid)
 2. Use the timing and geometry information to calculate the Doppler rate at ionospheric height.
-3. Import the low-resolution phase screen estimated from the FR, $\phi_{FR}$, and calculate the corresponding scaled to phase accuracy, $\sigma_{\phi_{FR}}^2$, and resample it to the autofocus grid to be used in  ${\overrightarrow{\sigma}}^2$. The variance of the FR angle is extracted as the square of {eq}`4.69` and the scaling factor between FR angle and phase is
+3. Import the low-resolution phase screen estimated from the FR, $\phi_{\mathrm{FR}}$, and calculate the corresponding scaled to phase accuracy, $\sigma_{\phi_{\mathrm{FR}}}^2$, and resample it to the autofocus grid to be used in  ${\overrightarrow{\sigma}}^2$. The variance of the FR angle is extracted as the square of {eq}`4.69` and the scaling factor between FR angle and phase is
 
 $$
 C_{\Omega\ }^{\phi}=\ \frac{4\cdot\pi\cdot{}m\cdot{}f}{e\cdot(\overrightarrow{B}\cdot\widehat{k})}.
@@ -3474,11 +3474,11 @@ $$ (eq:atbd-l1-sar-4-145)
 5. Use the Doppler rate at ionospheric height to scale the shifts to second derivative maps with
 
 $$
-\ddot{\phi}(t_{\widehat{a}})=\ \frac{4\cdot\pi\cdot{}K_{a,iono}^2}{B_a^2\cdot(1+aosf)}\cdot\Delta{}a,
+\ddot{\phi}(t_{\widehat{a}})=\ \frac{4\cdot\pi\cdot{}K_{\mathrm{a},\mathrm{iono}}^2}{B_{\mathrm{a}}^2\cdot(1+\mathrm{aosf})}\cdot\Delta{}a,
 \tag{4.146}
 $$ (eq:atbd-l1-sar-4-146)
 
-where $K_{a,iono}$ is the Doppler rate at the ionospheric layer and $aosf$ is the oversampling factor in azimuth. The sampling of new azimuth time vector $t_{\widehat{a}}$ corresponds to the step of the autofocus grid in the azimuth direction. The flattened second derivative maps can be put into (4.142).
+where $K_{\mathrm{a},\mathrm{iono}}$ is the Doppler rate at the ionospheric layer and $\mathrm{aosf}$ is the oversampling factor in azimuth. The sampling of new azimuth time vector $t_{\widehat{a}}$ corresponds to the step of the autofocus grid in the azimuth direction. The flattened second derivative maps can be put into (4.142).
 
 6. Apply a variance running window (3x3) to estimate the accuracy of the second derivative maps, $\sigma_{\ddot{\phi},\ (HH,\ HV,\ VH,\ VV)}^2$ to be used in  ${\overrightarrow{\sigma}}^2$.
 7. Integrate altogether with a WLS using {eq}`eq. (4.143) <4.143>` to obtain the estimated phase screen,  $\widehat{\phi}$ (sampled at the autofocus grid).
@@ -3605,7 +3605,7 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS$ | SLC | *Autofocus step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Single-look complex azimuth compressed and calibrated data *Intermediate product: iSLC\_iono\_corrected* |
+| $SCS$ | SLC | *Autofocus step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Single-look complex azimuth compressed and calibrated data<br>*Intermediate product: iSLC\_iono\_corrected* |
 | - | `rangeProcessingParametersList` \> `windowType`, `windowCoefficient`, `lookBandwidth`, `numberOfLooks`, `lookCentralFrequencies`, `upsamplingFactor`, `downsamplingFactor` | `AUX_PP1` (`AUX_FMT`) | string + 5 scalar values + array of real values | - | depends on swath | Range multi-looking parameters (window type, window coefficient, look bandwidth, number of looks, looks central frequencies, upsampling and downsampling factors) |
 | - | `azimuthProcessingParametersList` \> `windowType`, `windowCoefficient`, `lookBandwidth`, `numberOfLooks`, `lookCentralFrequencies`, `upsamplingFactor`, `downsamplingFactor` | `AUX_PP1` (`AUX_FMT`) | string + 5 scalar values + array of real values | - | depends on swath | Azimuth multi-looking parameters (window type, window coefficient, look bandwidth, number of looks, looks central frequencies, upsampling and downsampling factors) |
 
@@ -3613,7 +3613,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $ML$ | ML | *Denoising step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected data *Intermediate product: iSRD* |
+| $ML$ | ML | *Denoising step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected data<br>*Intermediate product: iSRD* |
 
 **Mathematical description**
 
@@ -3719,9 +3719,9 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| ${ML}_n$ | ML | *Multilooking step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected data *Intermediate product: iSRD* |
-| $\sigma_{noise}^2$ | Noise power | *Internal calibration parameters retrieval step* | 2 N{sub}`rg,ic` x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble *Intermediate product:* `iEstNoise` |
-| $G_{CH}$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function used in range compression step *Intermediate product:* `iChirp` *(if derived from internal calibration)* |
+| ${ML}_n$ | ML | *Multilooking step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected data<br>*Intermediate product: iSRD* |
+| $\sigma_{\mathrm{noise}}^2$ | Noise power | *Internal calibration parameters retrieval step* | 2 N{sub}`rg,ic` x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble<br>*Intermediate product:* `iEstNoise` |
+| $G_{CH}$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function used in range compression step<br>*Intermediate product:* `iChirp` *(if derived from internal calibration)* |
 | $G_{AP}$ | Antenna pattern combined | *Antenna patter compensation step* | arrays of complex values | - | - | 2D antenna pattern after combination |
 | $\frac{G_{SF}\bullet{}G_{AC}}{G_{SL}}$ | Radiometric correction factors | *Radiometric corrections and calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Radiometric corrections applied during processing (i.e., spread-loss factor, processing scaling factor and absolute calibration constant) |
 | $k_{noise}$ | `noiseGainList` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Noise calibration factor to be applied multiplicatively to the denoising vectors (one value per polarization) |
@@ -3730,8 +3730,8 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| ${ML}_d$ | ML denoised | *Ground projection step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected and denoised data *Intermediate product: iSRD\_denoised* |
-| $I_{noise}$ | Denoising vectors | *L1 post-processing step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Denoising vectors *Intermediate product: iSLC\_nesz\_map* |
+| ${ML}_d$ | ML denoised | *Ground projection step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected and denoised data<br>*Intermediate product: iSRD\_denoised* |
+| $I_{noise}$ | Denoising vectors | *L1 post-processing step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Denoising vectors<br>*Intermediate product: iSLC\_nesz\_map* |
 
 **Mathematical description**
 
@@ -3784,7 +3784,7 @@ The Ground-range Projection step performs a mono-dimensional interpolation of th
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | ML denoised | *Denoising step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected and denoised data *Intermediate product: iSRD\_denoised* |
+| - | ML denoised | *Denoising step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected and denoised data<br>*Intermediate product: iSRD\_denoised* |
 | - | `rangePixelSpacing` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 25 | Pixel spacing between ground range samples [m] |
 | - | `filterType` | `AUX_PP1` (`AUX_FMT`) | string | - | GLS | Type of filters used for ground range projection (FIR, SINC, GLS) |
 | - | `filterBandwidth` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 6000000 | Filter bandwidth [Hz] |
@@ -3795,7 +3795,7 @@ The Ground-range Projection step performs a mono-dimensional interpolation of th
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | GRD | *L1 post-processing step* | N’’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected, denoised and ground-projected data *Intermediate product: iGRD* |
+| - | GRD | *L1 post-processing step* | N’’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected, denoised and ground-projected data<br>*Intermediate product: iGRD* |
 
 **Mathematical description**
 

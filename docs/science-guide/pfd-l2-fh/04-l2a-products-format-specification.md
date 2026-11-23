@@ -37,59 +37,35 @@ This is a mandatory element for the standard which is left empty by this specifi
 
 This element or block of elements is optional
 
-bio:EarthObservation *Root element of metadata representation tailored for BIOMASS SAR products*
-
-om:`phenomenonTime` *Time coverage of the product*
-
-gml:TimePeriod *Time coverage of the product as a period*
-
-**gml:`beginPosition` Start date and time of the product**
-
-**gml:`endPosition` Stop date and time of the product**
-
-om:`resultTime` *Time when the sensing data has become available*
-
-gml:TimeInstant *Identifiable position in time*
-
-**gml:`timePosition` Date and time of data availability**
-
-om:`validTime` *Time validity of the product*
-
-gml:TimePeriod *Time validity of the product as a period*
-
-**gml:`beginPosition` Validity start date and time of the product**
-
-**gml:`endPosition` Validity stop date and time of the product**
-
-om:procedure *Procedure used to sense the data*
-
-eop:EarthObservationEquipment *Equipment used to sense the data*
-
-eop:platform *Platform description*
-
-eop:Platform *Nested element for platform description*
-
-**eop:`shortName` Satellite name**
-
-eop:instrument *Instrument description*
-
-eop:Instrument *Nested element for instrument description*
-
-**eop:`shortName` Sensor name**
-
-eop:sensor *Sensor description*
-
-eop:Sensor *Nested element for sensor description*
-
-**eop:`sensorType` Sensor type**
-
-**eop:`operationalMode` Sensor operational mode**
-
-**eop:`swathIdentifier` Swath identifier**
-
-eop:`acquisitionParameters` *Acquisition parameters*
-
-bio:Acquisition *Acquisition description*
+```text
+bio:EarthObservation Root element of metadata representation tailored for BIOMASS SAR products
+    om:phenomenonTime Time coverage of the product
+        gml:TimePeriod Time coverage of the product as a period
+            gml:beginPosition Start date and time of the product
+            gml:endPosition Stop date and time of the product
+    om:resultTime Time when the sensing data has become available
+        gml:TimeInstant Identifiable position in time
+            gml:timePosition Date and time of data availability
+    om:validTime Time validity of the product
+        gml:TimePeriod Time validity of the product as a period
+            gml:beginPosition Validity start date and time of the product
+            gml:endPosition Validity stop date and time of the product
+    om:procedure Procedure used to sense the data
+        eop:EarthObservationEquipment Equipment used to sense the data
+            eop:platform Platform description
+                eop:Platform Nested element for platform description
+                    eop:shortName Satellite name
+            eop:instrument Instrument description
+                eop:Instrument Nested element for instrument description
+                    eop:shortName Sensor name
+            eop:sensor Sensor description
+                eop:Sensor Nested element for sensor description
+                    eop:sensorType Sensor type
+                    eop:operationalMode Sensor operational mode
+                    eop:swathIdentifier Swath identifier
+            eop:acquisitionParameters Acquisition parameters
+                bio:Acquisition Acquisition description
+```
 
 **eop:`orbitDirection` Orbit direction**
 
@@ -107,87 +83,54 @@ bio:Acquisition *Acquisition description*
 
 **bio:tileID List of DGG geographic cell (tile) identifiers**
 
-**bio:basinID Retrieval basin identifier**
-
-om:`observedProperty` *Observed property (empty)*
-
-om:`featureOfInterest` *Observed area*
-
-eop:Footprint *Footprint description*
-
-eop:`multiExtentOf` *Footprint representation structure, coordinates in* `posList`
-
-gml:MultiSurface
-
-gml:`surfaceMember`
-
-gml:Polygon
-
-gml:exterior
-
-gml:LinearRing
-
-**gml:`posList` Footprint points in NE,SE,SW,NW,NE order**
-
-eop:`centerOf` *Acquisition centre representation structure*
-
-gml:Point
-
-**gml:pos Coordinates of the centre of the acquisition**
-
-om:result *Observation result*
-
-eop:EarthObservationResult
-
-eop:product
-
-bio:ProductInformation
-
-eop:`fileName`
-
-**ows:ServiceReference Product filename**
-
-ows:RequestMessage **download request (empty)**
-
-**eop:version Product baseline**
-
-eop:product (list)
-
-bio:ProductInformation
-
-eop:`fileName`
-
-**ows:ServiceReference Product filename (internal files)**
-
-ows:RequestMessage **download request (empty)**
-
-**eop:size Product size**
-
-**bio:rds product schema**
-
-eop:`metaDataProperty` *Observation metadata*
-
-bio:EarthObservationMetaData
-
-**eop:identifier Product identifier**
-
-**eop:doi Digital Object Identifier**
+```text
+bio:basinID Retrieval basin identifier
+    om:observedProperty Observed property (empty)
+    om:featureOfInterest Observed area
+        eop:Footprint Footprint description
+            eop:multiExtentOf Footprint representation structure, coordinates in posList
+                gml:MultiSurface
+                    gml:surfaceMember
+                        gml:Polygon
+                            gml:exterior
+                                gml:LinearRing
+                                    gml:posList Footprint points in NE,SE,SW,NW,NE order
+            eop:centerOf Acquisition centre representation structure
+                gml:Point
+                    gml:pos Coordinates of the centre of the acquisition
+    om:result Observation result
+        eop:EarthObservationResult
+            eop:product
+                bio:ProductInformation
+                    eop:fileName
+                        ows:ServiceReference Product filename
+                            ows:RequestMessage download request (empty)
+            eop:version Product baseline
+            eop:product (list)
+                bio:ProductInformation
+                    eop:fileName
+                        ows:ServiceReference Product filename (internal files)
+                            ows:RequestMessage download request (empty)
+                    eop:size Product size
+                    bio:rds product schema
+    eop:metaDataProperty Observation metadata
+        bio:EarthObservationMetaData
+            eop:identifier Product identifier
+            eop:doi Digital Object Identifier
+```
 
 **eop:`acquisitionType` Type of acquisition**
 
 **eop:`productType` Product type**
 
-**eop:status Status of the product**
-
-eop:processing *Data processing information*
-
-bio:ProcessingInformation
-
-**eop:`processingCenter` Processing centre code**
-
-**eop:`processingDate` Processing date and time**
-
-**eop:`processorName` Processor name**
+```text
+eop:status Status of the product
+                eop:processing Data processing information
+                    bio:ProcessingInformation
+                        eop:processingCenter Processing centre code
+                        eop:processingDate Processing date and time
+                        eop:processorName Processor name
+```
 
 **eop:`processorVersion` Processor version**
 
@@ -246,18 +189,18 @@ The TIFF and GeoTIFF tags used to annotate the MDS files are described in the fo
 | ImageWidth | 256 | Variable | Number of columns in the image, i.e. the number of pixels per row. |
 | ImageLength | 257 | Variable | Number of rows of pixels in the image. |
 | BitsPerSample | 258 | 32 | Number of bits per component. |
-| Compression | 259 | 34887, 34926 | Compression scheme used on the image data (LERC and ZSTD) |
-| PhotometricInterpretation | 262 | 1 | Colour space of the image. Always set to 1 (minimum value is black). |
-| ImageDescription | 270 | Variable | A string that describes the image. Valid Strings are composed by prefix: “BIOMASS L2a FP\_FH\_\_L2A: ” or “BIOMASS L2b FP\_FH\_\_L2B: ” and: “Forest Height [m]” “Forest height quality” “Forest Mask” (L2b only) “Heat Map” (L2b only) "acquisition id image" (L2b only) |
-| SamplesPerPixel | 277 | 1 | The number of components per pixel. Always set to 1, since each product is stored in a different file. |
-| PlanarConfiguration | 284 | 1 | How the components of each pixel are stored. Always set to 1 (contiguous). |
+| Compression | 259 | 34887, <br>34926 | Compression scheme used on the image data (LERC and ZSTD) |
+| PhotometricInterpretation | 262 | 1 | Colour space of the image.<br>Always set to 1 (minimum value is black). |
+| ImageDescription | 270 | Variable | A string that describes the image. Valid Strings are composed by prefix:<br>“BIOMASS L2a FP\_FH\_\_L2A: ” or “BIOMASS L2b FP\_FH\_\_L2B: ” and:<br>“Forest Height [m]”<br>“Forest height quality”<br>“Forest Mask” (L2b only)<br>“Heat Map” (L2b only)<br>"acquisition id image" (L2b only) |
+| SamplesPerPixel | 277 | 1 | The number of components per pixel.<br>Always set to 1, since each product is stored in a different file. |
+| PlanarConfiguration | 284 | 1 | How the components of each pixel are stored.<br>Always set to 1 (contiguous). |
 | Software | 305 | Variable | Software name and version that created the image. |
-| DateTime | 306 | Variable | Date and time of image creation in the format: YYYY:MM:DD HH:MM:SS |
-| TileWidth | 322 | Variable | The tile width in pixels. This is the number of columns in each tile. |
-| TileLength | 323 | Variable | The tile length (height) in pixels. This is the number of rows in each tile. |
+| DateTime | 306 | Variable | Date and time of image creation in the format:<br>YYYY:MM:DD HH:MM:SS |
+| TileWidth | 322 | Variable | The tile width in pixels.<br>This is the number of columns in each tile. |
+| TileLength | 323 | Variable | The tile length (height) in pixels.<br>This is the number of rows in each tile. |
 | TileOffsets | 324 | Variable | For each tile, the byte offset of that tile, as compressed and stored on disk. |
 | TileByteCounts | 325 | Variable | For each tile, the number of (compressed) bytes in that tile. |
-| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel. Set to 3 (IEEE floating point data) |
+| SampleFormat | 339 | 3 or 1 | Specifies how to interpret each data sample in a pixel.<br>Set to 3 (IEEE floating point data) |
 | ModelPixelScaleTag | 33550 | Variable | List of doubles, (ScaleX, ScaleY, ScaleZ) where ScaleX and ScaleY give the horizontal and vertical spacing of raster pixels. The ScaleZ is zero. |
 | ModelTiePointTag | 33922 | N \* (pixel, line, 0, lat, long, 0) | Maps image pixels to geographic coordinates, where N is the number of tie points in the scene. |
 | GeoKeyDirectoryTag | 34735 | Variable | Contains the value of all GeoTIFF keys of type SHORT and the location of the values for GeoTIFF keys of other types. |
@@ -608,7 +551,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `floatNoDataValue` | Pixel value in case of invalid data. The value is always set to -9999.0 | `xsd:float` | 1 |
+| `floatNoDataValue` | Pixel value in case of invalid data. The value is always set to <br>-9999.0 | `xsd:float` | 1 |
 | `intNoDataValue` | Pixel value in case of invalid data. The value is always set to +255 (L2b only) | `xsd:unsignedByte` | 0,1 |
 
 :::
@@ -986,8 +929,8 @@ classDiagram
 | `processorVersion` | Version of the processor used to generate the product. | `xsd:string` | 1 |
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
 | `generalConfigurationParameters` | General processing flags (not specific to the Forest Height processing). | `generalConfigurationParametersType` | 1 |
-| `verticalReflectivityOption` | Specify which vertical reflectivity profile has been used: default modelled profile or tomographic profile (out of BPS scope). See also `verticalReflectivityDefaultProfile`. | `verticalProfileOptionType` | 1 |
-| `verticalReflectivityDefaultProfile` | Used if `verticalReflectivityOption` is set to “default profile”, in this case the profile stored to xml is used: a modeled tomographic volume-only reflectivity profile normalized to unit height; deterministic and fixed for all the globe {ad}`9`. | `verticalReflectivityProfileType` | 1 |
+| `verticalReflectivityOption` | Specify which vertical reflectivity profile has been used: default modelled profile or tomographic profile (out of BPS scope). <br>See also `verticalReflectivityDefaultProfile`. | `verticalProfileOptionType` | 1 |
+| `verticalReflectivityDefaultProfile` | Used if `verticalReflectivityOption` is set to “default profile”, in this case the profile stored to xml is used:<br>a modeled tomographic volume-only reflectivity profile normalized to unit height; deterministic and fixed for all the globe {ad}`9`. | `verticalReflectivityProfileType` | 1 |
 | `modelInversion` | Model inversion algorithm used between single or dual (baseline). | `modelInversionType` | 1 |
 | `spectralDecorrelationCompensationFlag` | True if range spectral decorrelation compensation has been applied, False otherwise. | bool | 1 |
 | SNRDecorrelationCompensation | True if SNR decorrelation compensation has been applied, False otherwise. | bool | 1 |
@@ -1059,9 +1002,9 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| `applyCalibrationScreen` | Phase calibration performed: “none”: no phase screen has been applied “geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry) “skp”: complete phase screen has been applied (default) | `calibrationScreenType` | 1 |
+| `applyCalibrationScreen` | Phase calibration performed: <br>“none”: no phase screen has been applied<br>“geometry”: only flattening phase screen has been applied (i.e., as computed from acquisition geometry)<br>“skp”: complete phase screen has been applied (default) | `calibrationScreenType` | 1 |
 | `forestCoverageThreshold` | Minimum percentage forest coverage in L2a product footprint, used to trigger L2a processing. | `xsd:float` | 1 |
-| `forestMaskInterpolationThreshold` | This parameter is a threshold which has been used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid. This created a safety buffer around forest border. | `xsd:float` | 1 |
+| `forestMaskInterpolationThreshold` | This parameter is a threshold which has been used to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid.<br>This created a safety buffer around forest border. | `xsd:float` | 1 |
 | `subsettingRule` | In case of more than three acquisitions the user selected subsetting rule is here annotated (always “geometry” for FH L2a processor). | `subsettingRuleType` | 1 |
 | `polarisationCombinationMethod` | Polarisations combination method: “HV” or “VH”, if just one of the two is selected (in addition to HH and VV ones); “Average”, if the average of HV and VH is computed and used; “None” if no combination is performed (all the four polarizations are used). | `polarisationCombinationMethodType` | 1 |
 
@@ -1141,8 +1084,8 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| MDS →FH → `compressionFactor` MDS →Quality→ `compressionFactor` | ZSTD algorithm compression factor for both FH and quality images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
-| MDS → FH → `MAX_Z_ERROR` MDS → Quality→ `MAX_Z_ERROR` | For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. Zero means loss-less compression. | `xsd:float` | 1 |
+| MDS →FH → `compressionFactor`<br>MDS →Quality→ `compressionFactor` | ZSTD algorithm compression factor for both FH and quality images MDS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
+| MDS → FH → `MAX_Z_ERROR`<br>MDS → Quality→ `MAX_Z_ERROR` | For both FH and quality images MDS, define exactly how lossy the LERC compression algorithm is allowed to be, specifying the absolute maximum error admitted. <br>Zero means loss-less compression. | `xsd:float` | 1 |
 | ADS →FNF → `compressionFactor` | ZLIB algorithm compression factor for the FNF ADS. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS → GeometricLuts → `compressionFactor` | ZLIB algorithm compression factor valid for all the Geometric LUTs ADS layers. From 0 to 9, where zero means no compression. | `xsd:unsignedByte` | 1 |
 | ADS → GeometricLuts → least\_significant\_digit | For all Geometric LUTs ADS, define exactly how lossy the ZLIB compression algorithm is allowed to be, specifying the power of ten of the smallest decimal place in the data that is a reliable value. | `xsd:unsignedByte` | 1 |
@@ -1278,357 +1221,184 @@ The content of L2a LUT ADS is reported hereafter, where:
 
 LUT ADS Attributes:
 
-**mission**: “BIOMASS”
-
-**tileID***: [string] json encoded list of DGG geographical tile identifiers (NxxEyyy)*
-
-**basinID**: *[string] json encoded list of DGG Basin identifiers*
-
-`productType`: FP\_FH\_\_L2A
-
-`startTime`: *[str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC*
-
-`stopTime`: *[str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC*
-
-`radarCarrierFrequency`: *[float32] Radar carrier frequency [Hz]*
-
-`missionPhaseID`: *[str: COM, TOM or INT] Mission phase identifier*
-
-`sensorMode`: “Measurement”
-
-`globalCoverageID`: *[uint16] Global coverage identifier*
-
-**swath**: *[str: S1, S2 or S3] BIOMASS swath identifier*
-
-`majorCycleID`: *[uint16] Major cycle identifier*
-
-`absoluteOrbitNumber`: *[list of uint32] List of absolute orbit numbers at start time (one for each input L1c)*
-
-`relativeOrbitNumber`*: [uint16] Relative orbit number (track) at start time*
-
-`orbitPass`: *[str: Ascending or Descending] Orbit pass*
-
-`dataTakeID`: *[string] json encoded list of data take identifiers (one for each input L1c)*
-
-**frame**: *[uint16] Frame identifier*
-
-**platform\_heading**: *[float32] Platform heading relative to North, deg*
-
-**forest\_coverage\_percentage**: *[float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the* *STA footprint*
-
-`formatVersion` *[str]* *Version of the product*
-
+```text
+        mission: “BIOMASS”
+        tileID: [string] json encoded list of DGG geographical tile identifiers (NxxEyyy)
+        basinID: [string] json encoded list of DGG Basin identifiers
+        productType: FP_FH__L2A
+        startTime: [str: YYYY-MM-DD hh:mm:ss.ppp] Start time of the product image, UTC
+        stopTime: [str: YYYY-MM-DD hh:mm:ss.ppp] Stop time of the product image, UTC
+        radarCarrierFrequency: [float32] Radar carrier frequency [Hz]
+        missionPhaseID: [str: COM, TOM or INT] Mission phase identifier
+        sensorMode: “Measurement”
+        globalCoverageID: [uint16] Global coverage identifier
+        swath: [str: S1, S2 or S3] BIOMASS swath identifier
+        majorCycleID: [uint16] Major cycle identifier
+        absoluteOrbitNumber: [list of uint32] List of absolute orbit numbers at start time (one for each input L1c)
+        relativeOrbitNumber: [uint16] Relative orbit number (track) at start time
+        orbitPass: [str: Ascending or Descending] Orbit pass
+        dataTakeID: [string] json encoded list of data take identifiers (one for each input L1c)
+        frame: [uint16] Frame identifier
+        platform_heading: [float32] Platform heading relative to North, deg
+        forest_coverage_percentage: [float32] Forest coverage of the input STA products, compute as a percentage of all the pixels in the                 STA footprint
+         formatVersion [str] Version of the product
 LUT ADS Dimensions / Coordinate variables:
-
-Name: **Latitude**
-
-size: *[int] size*
-
-type: dtype(float32)
-
-units: deg
-
-description: FNF LUT latitude axis
-
-Name: **Longitude**
-
-size: [int] size
-
-type: dtype(float32)
-
-units: deg
-
-description: FNF LUT longitude axis
-
+        Name: Latitude
+                size: [int] size
+                type: dtype(float32)
+                units: deg
+                description: FNF LUT latitude axis
+        Name: Longitude
+                size: [int] size
+                type: dtype(float32)
+                units: deg
+                description: FNF LUT longitude axis
 LUT ADS group of variables:
-
-Group Name: **FNF**
-
-FNF group contents:
-
-Name: **FNF**
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(ubyte)
-
-description: Forest/Non-Forest mask : this is an external image, defined outside of BPS from aggregated C3S LCM, representing the initial two-dimensional mask, here defined in the same latitude-longitude based on DGG projection used for L2a images and cropped to have a coverage containing the L2a product image boundaries. It defines, for each geographical pixel, the initial presence or absence of forest.
-
-Name: `firstSample`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Product image MDS sample the first LUT sample corresponds to
-
-Name: `firstLine`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Product image MDS line the first LUT line corresponds to
-
-Name: `samplesInterval`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Number of product image MDS samples one LUT sample corresponds to
-
-Name: `linesInterval`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Number of product image MDS lines one LUT line corresponds to
-
-Name: `pixelType`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Data type of output LUT pixels
-
-Name: `noDataValue`
-
-shape: (1, 1)
-
-type: dtype(ubyte)
-
-description: Pixel value in case of invalid data. The value is always set to 255. (See 3)
-
-Name: **projection**
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: LUT projection, DGG, as described in {rd}`8`
-
-Name: `coordinateReferenceSystem`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Coordinate reference systems, as per WKT representation {rd}`7`
-
-Name: datum, `geodeticReferenceFrame`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Geodetic reference frame
-
-Group Name: **height**
-
-height group contents:
-
-Name: **height**
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]
-
-units: m
-
-Name: `firstSample`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Product image MDS sample the first LUT sample corresponds to
-
-Name: `firstLine`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Product image MDS line the first LUT line corresponds to
-
-Name: `samplesInterval`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Number of product image MDS samples one LUT sample corresponds to
-
-Name: `linesInterval`
-
-shape: (1, 1)
-
-type: dtype(uint32)
-
-description: Number of product image MDS lines one LUT line corresponds to
-
-Name: `pixelType`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Data type of output LUT pixels
-
-Name: `noDataValue`
-
-shape: (1, 1)
-
-type: dtype(float32)
-
-description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
-
-Name: **projection**
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: LUT projection, DGG, as described in {rd}`8`
-
-Name: `coordinateReferenceSystem`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Coordinate reference systems, as per WKT representation {rd}`7`
-
-Name: `geodeticReferenceFrame`
-
-shape: (1, 1)
-
-type: \<class str\>
-
-description: Geodetic reference frame
-
-Name: **least\_significant\_digit**
-
-shape: (1, 1)
-
-type: `unsignedByte`
-
-description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
-
-Group Name: **latitude**
-
-height group contents:
-
-Name: **latitude**
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
-
-units: deg
-
-The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
-
-Group Name: **longitude**
-
-height group contents:
-
-Name: **longitude**
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
-
-units: deg
-
-The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
-
-Group Name: `incidenceAngle`
-
-height group contents:
-
-Name: `incidenceAngle`
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
-
-units: deg
-
-The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
-
-Group Name: `elevationAngle`
-
-height group contents:
-
-Name: `elevationAngle`
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
-
-units: deg
-
-The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
-
-Group Name: `rangeTerrainSlope`
-
-height group contents:
-
-Name: `rangeTerrainSlope`
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
-
-units: deg
-
-The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
-
-Group Name: `azimuthTerrainSlope`
-
-height group contents:
-
-Name: `azimuthTerrainSlope`
-
-dimensions: (Longitude, Latitude)
-
-shape: *([int] x shape, [int] y shape)*
-
-type: dtype(float32)
-
-description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
-
-units: deg
+        Group Name: FNF
+        FNF group contents:
+                Name: FNF
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(ubyte)
+                        description: Forest/Non-Forest mask : this is an external image, defined outside of BPS from aggregated C3S LCM, representing the initial two-dimensional mask, here defined in the same latitude-longitude based on DGG projection used for L2a images and cropped to have a coverage containing the L2a product image boundaries. It defines, for each geographical pixel, the initial presence or absence of forest.
+                Name: firstSample
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Product image MDS sample the first LUT sample corresponds to
+                Name: firstLine
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Product image MDS line the first LUT line corresponds to
+                Name: samplesInterval
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Number of product image MDS samples one LUT sample corresponds to
+                Name: linesInterval
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Number of product image MDS lines one LUT line corresponds to
+                Name: pixelType
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Data type of output LUT pixels
+                Name: noDataValue
+                        shape: (1, 1)
+                        type: dtype(ubyte)
+                        description: Pixel value in case of invalid data. The value is always set to 255. (See 3)
+                Name: projection
+                        shape: (1, 1)
+                        type: <class str>
+                        description: LUT projection, DGG, as described in [RD8]
+                Name: coordinateReferenceSystem
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Coordinate reference systems, as per WKT representation [RD7]
+                Name: datum, geodeticReferenceFrame
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Geodetic reference frame
+        Group Name:  height
+        height group contents:
+                Name:  height
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the height coordinates of each (sub-sampled) pixel, derived from the Digital Elevation Model (DEM) used during processing. Values are expressed in [m]
+    units: m
+                Name: firstSample
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Product image MDS sample the first LUT sample corresponds to
+                Name: firstLine
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Product image MDS line the first LUT line corresponds to
+                Name: samplesInterval
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Number of product image MDS samples one LUT sample corresponds to
+                Name: linesInterval
+                        shape: (1, 1)
+                        type: dtype(uint32)
+                        description: Number of product image MDS lines one LUT line corresponds to
+                Name: pixelType
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Data type of output LUT pixels
+                Name: noDataValue
+                        shape: (1, 1)
+                        type: dtype(float32)
+                        description: Pixel value in case of invalid data. The value is always set to -9999.0. (See 3)
+                Name: projection
+                        shape: (1, 1)
+                        type: <class str>
+                        description: LUT projection, DGG, as described in [RD8]
+                Name: coordinateReferenceSystem
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Coordinate reference systems, as per WKT representation [RD7]
+                Name: geodeticReferenceFrame
+                        shape: (1, 1)
+                        type: <class str>
+                        description: Geodetic reference frame
+                Name: least_significant_digit
+                        shape: (1, 1)
+                        type: unsignedByte
+                        description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
+        Group Name:  latitude
+        height group contents:
+                Name:  latitude
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
+    units: deg
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (firstSample, firstLine, samplesInterval, pixelType, noDataValue, projection, coordinateReferenceSystem, geodeticReferenceFrame, least_significant_digit).
+        Group Name:  longitude
+        height group contents:
+                Name:  longitude
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
+    units: deg
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (firstSample, firstLine, samplesInterval, pixelType, noDataValue, projection, coordinateReferenceSystem, geodeticReferenceFrame, least_significant_digit).
+        Group Name:  incidenceAngle
+        height group contents:
+                Name:  incidenceAngle
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+    units: deg
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (firstSample, firstLine, samplesInterval, pixelType, noDataValue, projection, coordinateReferenceSystem, geodeticReferenceFrame, least_significant_digit).
+        Group Name:  elevationAngle
+        height group contents:
+                Name:  elevationAngle
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
+    units: deg
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (firstSample, firstLine, samplesInterval, pixelType, noDataValue, projection, coordinateReferenceSystem, geodeticReferenceFrame, least_significant_digit).
+        Group Name:  rangeTerrainSlope
+        height group contents:
+                Name:  rangeTerrainSlope
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+    units: deg
+The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (firstSample, firstLine, samplesInterval, pixelType, noDataValue, projection, coordinateReferenceSystem, geodeticReferenceFrame, least_significant_digit).
+        Group Name:  azimuthTerrainSlope
+        height group contents:
+                Name:  azimuthTerrainSlope
+                        dimensions: (Longitude, Latitude)
+                        shape: ([int] x shape, [int] y shape)
+                        type: dtype(float32)
+                        description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
+    units: deg
+```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
@@ -1819,7 +1589,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form: *lon,lat lon,lat lon,lat lon,lat lon,lat* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat coordinate pairs which describe the corners of the image. The string is of the form:<br>*lon,lat lon,lat lon,lat lon,lat lon,lat*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::
 
@@ -1927,6 +1697,6 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form: *lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height* The coordinates must appear in the following order: *last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
+| coordinates | A string of 5 lon,lat,height coordinate tuples which describe the corners of the image. The string is of the form:<br>*lon,lat,height lon,lat,height lon,lat,height lon,lat,height lon,lat,height*<br>The coordinates must appear in the following order:<br>*last line first pixel, last line last pixel, first line last pixel, first line first pixel, last line first pixel* | `xsd:string` | 1 |
 
 :::

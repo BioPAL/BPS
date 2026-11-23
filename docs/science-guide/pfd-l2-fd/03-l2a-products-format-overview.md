@@ -69,24 +69,24 @@ BIOMASS L2a Product/
 
 | **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS Forest Disturbance L2a Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS Forest Disturbance L2a Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
-| ∟ measurement |   | Folder |   |
-| ∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
-| ∟ Probability of change | 1 | COG | Probability of forest change image MDS |
-| ∟ CFM | 1 | COG | Computed Forest Mask image MDS. |
-| ∟ annotation |   | Folder |   |
-| ∟ main | 1 | XML | Main ADS, including: Product DSR Raster image DSR Input information DSR Processing parameters DSR Annotation LUT DSR |
-| ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: ACM matrix (all polarimetric layers) {ad}`8` `numberOfAverages` matrix {ad}`8` FNF, generated outside BPS |
-| ∟ preview |   | Folder |   |
-| ∟ quicklook | 3 | PNG | Quick-look ADS, for each measurement |
-| ∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
-| ∟ schema |   | Folder |   |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Probability of change | 1 | COG | Probability of forest change image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ CFM | 1 | COG | Computed Forest Mask image MDS. |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including:<br>• Product DSR<br>• Raster image DSR<br>• Input information DSR<br>• Processing parameters DSR<br>• Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including:<br>• ACM matrix (all polarimetric layers) {ad}`8`<br>• `numberOfAverages` matrix {ad}`8`<br>• FNF, generated outside BPS |
+| <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 3 | PNG | Quick-look ADS, for each measurement |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 

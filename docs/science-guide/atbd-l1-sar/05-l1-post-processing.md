@@ -38,9 +38,9 @@ LUTs annotated in output product are a decimated version of output data of the v
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | SLC autofocused or GRD | *Autofocus step* *or* *Ground projection step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values for L1a or N’’’{sub}`rg` x N’’{sub}`az` array of real values for L1b | - | - | Azimuth compressed data after autofocus or Multi-look detected, denoised and ground-projected data *Intermediate product: iSLC\_af\_corrected / iGRD* |
+| - | SLC autofocused<br> or <br>GRD | *Autofocus step*<br> *or* <br>*Ground projection step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values for L1a<br> or <br>N’’’{sub}`rg` x N’’{sub}`az` array of real values for L1b | - | - | Azimuth compressed data after autofocus<br> or <br>Multi-look detected, denoised and ground-projected data<br>*Intermediate product: iSLC\_af\_corrected / iGRD* |
 | - | LUT | *Various L1 core processing step (see previous sections)* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` arrays of real values | - | - | Various side products (RFI masks, ionosphere phase screen, …) added to output product as annotation LUT |
-| - | `pixelRepresentation` | `AUX_PP1` (`AUX_FMT`) | string | - | Abs Phase or Abs | Representation of the image pixels within the image MDS (I Q, Abs Phase, Abs, Pow Phase, Pow) |
+| - | `pixelRepresentation` | `AUX_PP1` (`AUX_FMT`) | string | - | Abs Phase<br> or <br>Abs | Representation of the image pixels within the image MDS (I Q, Abs Phase, Abs, Pow Phase, Pow) |
 | - | `pixelType` | `AUX_PP1` (`AUX_FMT`) | String | - | 32 bit Float | Data type of output pixels within the image MDS |
 | - | `pixelQuantity` | `AUX_PP1` (`AUX_FMT`) | string | - | Beta-Nought | Physical quantity stored in output data (Beta-Nought, Sigma-Nought or Gamma-Nought) |
 | - | `absCompressionMethod` | `AUX_PP1` (`AUX_FMT`) | string | - | LERC | Abs values TIFF compression method |
@@ -49,7 +49,7 @@ LUTs annotated in output product are a decimated version of output data of the v
 | - | `phaseMaxZError` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 0.001 | Maximum error threshold on phase values. Used only in case `phaseCompressionMethod` is set to LERC, `LERC_DEFLATE` or `LERC_ZSTD`. If set to 0, compression is lossless. If set to -1, value is computed dynamically |
 | - | `noPixelValue` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | -9999 | Pixel value in case of invalid data |
 | - | `blockSize` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 512 | Size of block written during TIFF files export |
-| - | `lutRangeDecimationFactorList`, `lutAzimuthDecimationFactorList` | `AUX_PP1` (`AUX_FMT`) | 2 sets of scalar values | - | 2, 12 for geometry LUTs 20, 120 for other LUTs | Look-Up Tables (LUT) ADS range and azimuth decimation factors w.r.t. output L1 product sampling grid, divided per LUT groups |
+| - | `lutRangeDecimationFactorList`, `lutAzimuthDecimationFactorList` | `AUX_PP1` (`AUX_FMT`) | 2 sets of scalar values | - | 2, 12 for geometry LUTs<br>20, 120<br>for other LUTs | Look-Up Tables (LUT) ADS range and azimuth decimation factors w.r.t. output L1 product sampling grid, divided per LUT groups |
 | - | `lutBlockSize` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 512 | Size of block written during NetCDF files export |
 | - | `qlRangeDecimationFactor`, `qlAzimuthDecimationFactor` | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 20, 120 | Quick-look ADS range and azimuth decimation factors w.r.t. output L1 product sampling grid |
 | - | `qlRangeAveragingFactor`, `qlAzimuthAveragingFactor` | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 20, 120 | Quick-look ADS range and azimuth averaging factors |
@@ -59,8 +59,8 @@ LUTs annotated in output product are a decimated version of output data of the v
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | L1S | Stack Processor (`L1_PFD`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values for L1a or N’’’{sub}`rg` x N’’{sub}`az` array of real values for L1b | - | - | L1 (a or b) Standard Product |
-| - | L1M | Stack Processor (`L1_PFD`) | - (only annotations) | - | - | L1 (a or b) Monitoring Product |
+| - | L1S | Stack Processor<br>(`L1_PFD`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values for L1a<br> or <br>N’’’{sub}`rg` x N’’{sub}`az` array of real values for L1b | - | - | L1 (a or b) Standard Product |
+| - | L1M | Stack Processor<br>(`L1_PFD`) | - (only annotations) | - | - | L1 (a or b) Monitoring Product |
 
 (sec:atbd-l1-sar-5-1-1)=
 #### 5.1.1 Quick-look Generation
@@ -72,15 +72,15 @@ The quick-look is a lower resolution version of the SAR image included in each L
 
 BIOMASS products, being full-polarisation ones, contain only one quick-look image which is a combination of the imagery from all the four polarisation channels. This is done exploiting the three Red-Green-Blue (RGB) channels of the PNG image and the Pauli decomposition colour coding scheme for L1a products, i.e.:
 
-- Red channel: $\left\vert HH-VV \right\vert$ (double bounce);
-- Green channel: $\left\vert HV+VH \right\vert$ (volume scattering);
-- Blue channel: $\left\vert HH+VV \right\vert$ (surface scattering).
+- Red channel: $\left\vert \mathrm{HH}-\mathrm{VV} \right\vert$ (double bounce);
+- Green channel: $\left\vert \mathrm{HV}+\mathrm{VH} \right\vert$ (volume scattering);
+- Blue channel: $\left\vert \mathrm{HH}+\mathrm{VV} \right\vert$ (surface scattering).
 
 and the Lexicographic one for L1b products, i.e.:
 
-- Red channel: $\left\vert HH \right\vert$;
-- Green channel: $\frac{1}{2}\sqrt{{HV}^2+{VH}^2}$;
-- Blue channel: $\left\vert VV \right\vert$.
+- Red channel: $\left\vert \mathrm{HH} \right\vert$;
+- Green channel: $\frac{1}{2}\sqrt{\mathrm{HV}^2+\mathrm{VH}^2}$;
+- Blue channel: $\left\vert \mathrm{VV} \right\vert$.
 
 The quick-look images are produced by basic sample averaging and decimation, in both azimuth and range directions. The number of averaging samples in range and azimuth as well as the range and azimuth decimation factors are configurable parameters.
 

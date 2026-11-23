@@ -1879,6 +1879,12 @@ html[data-theme="dark"] .bps-chapters__time {
   padding: 0.25rem 0.5rem;
 }
 
+/* Converted documents: a row covered by a vertically merged cell of the source
+   repeats its content, muted (a Markdown table cannot span rows). */
+.bd-content td .atbd-rowspan-copy {
+  color: var(--pst-color-text-muted);
+}
+
 /* Converted documents: long identifiers in table cells (parameter names,
    XPaths) may break, so that a table fits its column instead of hiding its
    last columns behind a horizontal scroll. */
@@ -1891,7 +1897,10 @@ html[data-theme="dark"] .bps-chapters__time {
 
 /* The last column of a converted table (usually "Description") keeps room for
    its text instead of being squeezed by the identifier columns (FH 3.5.2). */
-.bd-content .pst-scrollable-table-container table td:last-child,
-.bd-content table td:last-child {
-  min-width: 16rem;
+@media (min-width: 768px) {
+  /* only wide tables (5 columns or more): small tables and the change history
+     keep their natural layout, phones keep theirs */
+  .bd-content table:has(tr > td:nth-child(5)) td:last-child {
+    min-width: 16rem;
+  }
 }
