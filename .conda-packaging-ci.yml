@@ -1,72 +1,43 @@
-.conda_build_common_setup:
-  image: condaforge/miniforge3
-  before_script:
-    - apt-get update && apt-get install -y curl
-    - mkdir -p local_channel/linux-64 && mkdir -p local_channel/noarch && python -m conda_index ./local_channel
-    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
-    - conda config --prepend channels conda-forge
-    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
-    - conda config --prepend channels ${PWD}/local_channel
-    - conda install -y conda-build
-
 .conda_build_setup:
   extends:
-    - .conda_build_common_setup
-  script:
-    - conda install -y python-build
-    - cd ${BPSPROJECT}
-    - python -m build --sdist
-    - conda-build recipe --output-folder conda_build_dir
-    - |
-        for file in conda_build_dir/*/*.conda; do
-          cp $file dist
-          if [[ $file == *"py_0.conda" ]]; then
-            cp $file ../local_channel/noarch
-          else
-            cp $file ../local_channel/linux-64
-          fi
-        done
-    - cd - && python -m conda_index ./local_channel
-  timeout: 20 minutes
-  retry: 2
-  artifacts:
-    expire_in: 2 weeks
-    paths:
-      - ./*/dist/*.conda
-      - ./local_channel
-
-.conda_build_binaries_setup:
-  extends:
-    - .conda_build_common_setup
-  before_script:
-    - !reference [.conda_build_common_setup, before_script]
-  script:
-    - cd ${BPSPROJECT}
-    - mkdir -p dist
-    - conda-build recipe --output-folder conda_build_dir
-    - ls conda_build_dir/*/*.conda
-    - |
-        for file in conda_build_dir/*/*.conda; do
-          cp $file dist
-          if [[ $file == *"py_0.conda" ]]; then
-            cp $file ../local_channel/noarch
-          else
-            cp $file ../local_channel/linux-64
-          fi
-        done
-    - cd - && python -m conda_index ./local_channel
-  timeout: 20 minutes
-  retry: 2
-  artifacts:
-    expire_in: 2 weeks
-    paths:
-      - ./*/dist/*.conda
-      - ./local_channel
-
-.conda_packaging_rules:
-  extends:
     - .full_build
-
+  image: condaforge/miniforge3
+  script:
+    - BPS_CHANNEL=${PWD}/local_channel
+    - mkdir -p ${BPS_CHANNEL}/linux-64
+    - mkdir -p ${BPS_CHANNEL}/noarch
+    - conda config --set custom_channels.${INTERNAL_CONDA_CHANNEL_NAME} "$INTERNAL_CONDA_CHANNEL_URL"
+    - conda config --prepend channels ${INTERNAL_CONDA_CHANNEL_NAME}
+    - cd ${BPSPROJECT}
+    - |
+      if [[ "$BUILD_SDIST" == "true" ]]; then
+        conda install -y conda-build python-build
+        python -m build --sdist
+      else
+        conda install -y conda-build
+      fi
+    - python -m conda_index ${BPS_CHANNEL}
+    - conda config --prepend channels ${BPS_CHANNEL}
+    - conda-build recipe --output-folder build_dir
+    - |
+      mkdir -p dist
+      for file in build_dir/*/*.conda; do
+        cp $file dist
+        if [[ $file == *"py_0.conda" ]]; then
+          cp $file ${BPS_CHANNEL}/noarch
+        else
+          cp $file ${BPS_CHANNEL}/linux-64
+        fi
+      done
+    - cd -
+    - python -m conda_index ${BPS_CHANNEL}
+  timeout: 20 minutes
+  retry: 2
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - ./*/dist/*.conda
+      - ./local_channel
 
 #Conda Packaging Stage 1
 
@@ -74,19 +45,18 @@ bps-common-conda:
   stage: conda-packaging
   needs: []
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-common
+    BUILD_SDIST: "true"
 
 bps-l1_binaries-conda:
   stage: conda-packaging
   needs: []
   extends:
-    - .conda_packaging_rules
-    - .conda_build_binaries_setup
+    - .conda_build_setup
   before_script:
-    - !reference [ .conda_build_binaries_setup, before_script ]
+    - apt-get update && apt-get install -y curl
     - curl -s $L1_EXECUTABLES_LNX -o L1_executables.tgz
     - tar -xzf L1_executables.tgz
     - mkdir -p bps-l1_binaries/bin
@@ -104,15 +74,15 @@ bps-l1_binaries-conda:
     - cp L1_executables/libare_focus.so bps-l1_binaries/lib
   variables:
     BPSPROJECT: bps-l1_binaries
+    BUILD_SDIST: "false"
 
 bps-stack_binaries-conda:
   stage: conda-packaging
   needs: []
   extends:
-    - .conda_packaging_rules
-    - .conda_build_binaries_setup
+    - .conda_build_setup
   before_script:
-    - !reference [ .conda_build_binaries_setup, before_script ]
+    - apt-get update && apt-get install -y curl
     - curl -s $STACK_EXECUTABLES_LNX -o Stack_Executables.tgz
     - tar -xzf Stack_Executables.tgz
     - export PATH=${PWD}/Stack_Executables:${PATH}
@@ -126,15 +96,15 @@ bps-stack_binaries-conda:
     - cp Stack_Executables/libare_focus.so bps-stack_binaries/lib
   variables:
     BPSPROJECT: bps-stack_binaries
+    BUILD_SDIST: "false"
 
 bps-l1-framing-processor-libs-conda:
   stage: conda-packaging
   needs: []
   extends:
-    - .conda_packaging_rules
-    - .conda_build_binaries_setup
+    - .conda_build_setup
   before_script:
-    - !reference [ .conda_build_binaries_setup, before_script ]
+    - apt-get update && apt-get install -y curl
     - mkdir $HOME/EOCFI_LIBS
     - cd $HOME/EOCFI_LIBS
     - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
@@ -143,7 +113,7 @@ bps-l1-framing-processor-libs-conda:
     - cp $HOME/EOCFI_LIBS/* bps-l1_framing_processor_libs/lib/
   variables:
     BPSPROJECT: bps-l1_framing_processor_libs
-
+    BUILD_SDIST: "false"
 
 #Conda Packaging Stage 2
 
@@ -152,50 +122,50 @@ bps-transcoder-conda:
   needs:
     - job: bps-common-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-transcoder
+    BUILD_SDIST: "true"
 
 bps-stack_cal_processor-conda:
   stage: conda-packaging
   needs:
     - job: bps-common-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-stack_cal_processor
+    BUILD_SDIST: "true"
 
 bps-stack_pre_processor-conda:
   stage: conda-packaging
   needs:
     - job: bps-common-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-stack_pre_processor
+    BUILD_SDIST: "true"
 
 bps-stack_coreg_processor-conda:
   stage: conda-packaging
   needs:
     - job: bps-common-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-stack_coreg_processor
+    BUILD_SDIST: "true"
 
 bps-l1_core_processor-conda:
   stage: conda-packaging
   needs:
     - job: bps-common-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-l1_core_processor
+    BUILD_SDIST: "true"
 
 bps-l1_pre_processor-conda:
   stage: conda-packaging
@@ -203,17 +173,16 @@ bps-l1_pre_processor-conda:
     - job: bps-common-conda
     - job: bps-transcoder-conda
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   variables:
     BPSPROJECT: bps-l1_pre_processor
+    BUILD_SDIST: "true"
 
 #Conda Packaging Stage 3
 
 bps-l1_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
@@ -223,22 +192,22 @@ bps-l1_processor-conda:
     - job: bps-l1_core_processor-conda
   variables:
     BPSPROJECT: bps-l1_processor
+    BUILD_SDIST: "true"
 
 bps-l1_geocoding_tool-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-transcoder-conda
     - job: bps-l1_binaries-conda
   variables:
     BPSPROJECT: bps-l1_geocoding_tool
+    BUILD_SDIST: "true"
 
 bps-l1_framing_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
@@ -246,55 +215,55 @@ bps-l1_framing_processor-conda:
     - job: bps-l1-framing-processor-libs-conda
   variables:
     BPSPROJECT: bps-l1_framing_processor
+    BUILD_SDIST: "true"
 
 bps-l2a_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
     - job: bps-transcoder-conda
   variables:
     BPSPROJECT: bps-l2a_processor
+    BUILD_SDIST: "true"
 
 bps-l2b_fd_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
     - job: bps-transcoder-conda
   variables:
     BPSPROJECT: bps-l2b_fd_processor
+    BUILD_SDIST: "true"
 
 bps-l2b_fh_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
     - job: bps-transcoder-conda
   variables:
     BPSPROJECT: bps-l2b_fh_processor
+    BUILD_SDIST: "true"
 
 bps-l2b_agb_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
     - job: bps-transcoder-conda
   variables:
     BPSPROJECT: bps-l2b_agb_processor
+    BUILD_SDIST: "true"
 
 bps-stack_processor-conda:
   stage: conda-packaging
   extends:
-    - .conda_packaging_rules
     - .conda_build_setup
   needs:
     - job: bps-common-conda
@@ -305,3 +274,4 @@ bps-stack_processor-conda:
     - job: bps-stack_coreg_processor-conda
   variables:
     BPSPROJECT: bps-stack_processor
+    BUILD_SDIST: "true"
