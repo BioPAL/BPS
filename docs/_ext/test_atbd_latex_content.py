@@ -24,10 +24,10 @@ def test_left_to_right_diagrams_are_recognised_and_turned_top_down():
 def test_equation_tag_pattern_is_not_the_html_tag_pattern():
     # A second ``_TAG_RE`` (HTML tags of captions) once shadowed the ``\tag``
     # one: numbered equations stayed in Sphinx's ``split`` (``\tag not allowed here``).
-    from atbd_latex_content import _EQ_TAG_RE
-    match = _EQ_TAG_RE.search("a=b\n\\tag{3.1}")
+    from atbd_latex_content import _TAG_RE
+    match = _TAG_RE.search("a=b\n\\tag{3.1}")
     assert match is not None and match.group("num") == "3.1"
-    assert _EQ_TAG_RE.sub("", "a=b\n\\tag*{(A)}").strip() == "a=b"
+    assert _TAG_RE.sub("", "a=b\n\\tag*{(A)}").strip() == "a=b"
 
 
 def test_display_formulas_pick_the_fitting_macro():
