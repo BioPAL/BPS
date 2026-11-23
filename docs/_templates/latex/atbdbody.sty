@@ -26,9 +26,26 @@
   % IBM Plex Sans is a little wider than Arial: scale it to keep the pagination.
   \atbd@setfont{IBMPlexSans}{Extension=.otf,Scale=0.95}}{%
   \setmainfont{DejaVu Sans}[Scale=0.9]\setsansfont{DejaVu Sans}[Scale=0.9]}}
-\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+% Code: Liberation Mono has the metrics of Courier New (the code font of the
+% originals); DejaVu Sans Mono is the fallback.
+\IfFontExistsTF{LiberationMono-Regular.ttf}{%
+  \setmonofont{LiberationMono}[Extension=.ttf,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]}{%
+  \setmonofont{DejaVu Sans Mono}[Scale=0.85]}
 % Line spacing of the originals (Word "multiple 1.15": 15.8 pt at 11 pt).
-\linespread{1.16}
+\linespread{1.164}
+% Sizes of the originals are PDF points (bp): 11 bp text, 15.83 bp leading.
+\renewcommand\normalsize{%
+  \@setfontsize\normalsize{11bp}{13.6bp}%
+  \abovedisplayskip 11\p@ \@plus3\p@ \@minus6\p@
+  \abovedisplayshortskip \z@ \@plus3\p@
+  \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+  \belowdisplayskip \abovedisplayskip
+  \let\@listi\@listI}
+\normalsize
+% Word does not hyphenate: no hyphenation, spaces stretch instead.
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+\tolerance=2000 \emergencystretch=2em
 \newfontfamily\atbdfallbackfont{DejaVu Sans}[Scale=0.92]
 \IfFontExistsTF{DejaVuMathTeXGyre.ttf}{%
   \newfontfamily\atbdmathletterfont{DejaVuMathTeXGyre.ttf}[Scale=0.92]}{%
@@ -77,77 +94,94 @@
 \setlength\atbdheadindent{1.25cm}
 
 \titleformat{\chapter}[block]
-  {\color{atbdblue}\fontsize{24}{28}\selectfont\bfseries}{}{0pt}{}
-\titlespacing*{\chapter}{-\atbdheadindent}{0pt}{18pt}
+  {\color{atbdblue}\fontsize{24bp}{28bp}\selectfont\bfseries}{}{0pt}{}
+\titlespacing*{\chapter}{-\atbdheadindent}{-22.9bp}{18.4bp}
 \titleformat{\section}[block]
-  {\color{atbdblue}\fontsize{16}{19}\selectfont}{}{0pt}{}
-\titlespacing*{\section}{-\atbdheadindent}{16pt}{10pt}
+  {\color{atbdblue}\fontsize{16bp}{19bp}\selectfont}{}{0pt}{}
+\titlespacing*{\section}{-\atbdheadindent}{20bp}{13.4bp}
 \titleformat{\subsection}[block]
-  {\color{atbdblue}\fontsize{13}{16}\selectfont}{}{0pt}{}
-\titlespacing*{\subsection}{-\atbdheadindent}{14pt}{8pt}
+  {\color{atbdblue}\fontsize{14bp}{17bp}\selectfont}{}{0pt}{}
+\titlespacing*{\subsection}{-\atbdheadindent}{11.3bp}{11.8bp}
 \titleformat{\subsubsection}[block]
-  {\color{atbdblue}\fontsize{12}{14}\selectfont}{}{0pt}{}
-\titlespacing*{\subsubsection}{-\atbdheadindent}{12pt}{6pt}
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{}
+\titlespacing*{\subsubsection}{-\atbdheadindent}{13bp}{10.1bp}
 \titleformat{\paragraph}[block]
-  {\color{atbdblue}\normalsize\bfseries}{}{0pt}{}
-\titlespacing*{\paragraph}{-\atbdheadindent}{10pt}{4pt}
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{}
+\titlespacing*{\paragraph}{-\atbdheadindent}{13bp}{10.1bp}
 \titleformat{\subparagraph}[block]
   {\color{atbdblue}\normalsize\itshape}{}{0pt}{}
 \titlespacing*{\subparagraph}{-\atbdheadindent}{8pt}{4pt}
 
 
 % ---------------------------------------------------------------------------
-% Header and footer
+% Header and footer, placed at the absolute positions measured on the
+% originals (points from the top left corner of the A4 page). They are drawn
+% on every page after the cover, whose \atbdmaketitle ends with a
+% \clearpage: the flag is raised and the page counter is started at 1 once
+% that page is out (page 2 of the PDF is page "1", Arabic numerals only).
 % ---------------------------------------------------------------------------
+\RequirePackage{eso-pic}
+\newif\ifatbd@decor
+\providecommand\atbdheaderdate{\atbddate}
+\providecommand\atbdsup[1]{\raisebox{3.1bp}{\fontsize{6bp}{7bp}\selectfont #1}}
+% Coordinates are PDF points (bp); x and y are measured from the top left
+% corner, y being the baseline of the content.
+\newcommand\atbd@atpoint[3]{%
+  \put(\strip@pt\dimexpr#1bp\relax,\strip@pt\dimexpr\paperheight-#2bp\relax){\rlap{#3}}}
+
 \newcommand\atbdheaderbox{%
-  {\fontsize{9.5}{11.5}\selectfont\color{atbdgrey}%
-   \arrayrulecolor{atbdbox}\setlength\arrayrulewidth{0.5pt}%
-   \renewcommand\arraystretch{1.15}%
-   \begin{tabular}[b]{|p{6.15cm}|p{1.2cm}|p{2.45cm}|}
+  {\fontsize{9bp}{10bp}\selectfont\color{atbdgrey}%
+   \arrayrulecolor{atbdbox}\setlength\arrayrulewidth{0.5bp}%
+   \setlength\tabcolsep{2.7bp}\renewcommand\arraystretch{1}%
+   \newcommand\atbd@strut{\rule[-4.8bp]{0bp}{16bp}}%
+   \begin{tabular}[b]{|p{178.3bp}|p{36.55bp}|p{71.15bp}|}
      \hline
-     \multicolumn{3}{|p{10.4cm}|}{\atbdtitle}\\
+     \multicolumn{3}{|p{297.8bp}|}{\atbd@strut\atbdtitle}\\
      \hline
-     \atbdcode & \atbdissue & \atbddate\\
+     \atbd@strut\atbdcode & \atbd@strut\atbdissue & \atbd@strut\atbdheaderdate\\
      \hline
    \end{tabular}}}
-% Typeset once: a tabular built inside the output routine can break a
-% tabulary being measured on the same page.
+% Typeset once: a tabular built inside the shipout can break a tabulary
+% being measured on the same page.
 \newsavebox\atbd@headerboxsaved
 \AtBeginDocument{\sbox\atbd@headerboxsaved{\atbdheaderbox}}
 
-\newcommand\atbdheaderlogo{%
-  \IfFileExists{Aresys_light.png}{%
-    \includegraphics[height=1.35cm]{Aresys_light.png}}{}}
-
-\newcommand\atbdfootline{%
-  \color{atbdgrey}\fontsize{8.5}{10}\selectfont
-  \atbdissueline}
+\newcommand\atbd@decoration{%
+  \ifatbd@decor
+    \setlength\unitlength{1pt}%
+    % header: logo 110 x 39 pt, reference box, yellow rule
+    \atbd@atpoint{57.7}{51.3}{\IfFileExists{Aresys_light.png}{%
+      \includegraphics[width=110bp,height=39bp]{Aresys_light.png}}{}}%
+    \atbd@atpoint{234.6}{47.8}{\usebox\atbd@headerboxsaved}%
+    \atbd@atpoint{57.8}{56.1}{\color{atbdrule}\rule{480.7bp}{1bp}}%
+    % footer: yellow rule, short notice on the left, page number centred
+    \atbd@atpoint{57.7}{765}{\color{atbdrule}\rule{480.7bp}{1bp}}%
+    \atbd@atpoint{57.7}{786}{\color{atbdgrey}\fontsize{7bp}{8bp}\selectfont
+      Web export \textendash{} not the approved ESA document}%
+    \atbd@atpoint{0}{786}{\hbox to\paperwidth{\hss\color{atbdnavy}%
+      \fontsize{11bp}{13bp}\selectfont\thepage\hss}}%
+  \fi}
+\AddToShipoutPictureBG{\atbd@decoration}
 
 \newcommand\atbd@headfoot{%
   \fancyhf{}%
-  \fancyhfoffset[L]{\atbdheadindent}%
-  \fancyhead[L]{\atbdheaderlogo}%
-  \fancyhead[R]{\usebox\atbd@headerboxsaved}%
-  \fancyfoot[L]{\atbdfootline}%
-  \fancyfoot[C]{\color{atbdnavy}page \thepage/\pageref*{LastPage}}%
-  \fancyfoot[R]{\color{atbdgrey}\fontsize{8.5}{10}\selectfont\atbdcode}%
-  \renewcommand\headrule{{\color{atbdrule}%
-    \hrule height 0.75pt width\headwidth\vskip-0.75pt}}%
-  \renewcommand\footrule{{\color{atbdrule}%
-    \hrule height 0.75pt width\headwidth\vskip 3pt}}%
-  \renewcommand\headrulewidth{0.75pt}%
-  \renewcommand\footrulewidth{0.75pt}}
-% Sphinx switches between "normal" and "plain" (chapter openings): both get
-% the document header and footer.
+  \renewcommand\headrulewidth{0pt}%
+  \renewcommand\footrulewidth{0pt}}
+% Sphinx switches between "normal" and "plain" (chapter openings): both are
+% empty, the decoration above does the work.
 \fancypagestyle{normal}{\atbd@headfoot}
 \fancypagestyle{plain}{\atbd@headfoot}
+
+% Numbering (D-pdf-2): the cover has no number; the page after it is "1".
+\AtBeginDocument{\pagenumbering{gobble}%
+  \apptocmd\atbdmaketitle{\atbd@decortrue\pagenumbering{arabic}}{}{}}
 
 % ---------------------------------------------------------------------------
 % Body spacing: Word paragraphs of the originals (6 pt after), compact lists
 % and displayed equations.
 % ---------------------------------------------------------------------------
-\setlength\parskip{4pt plus 1pt}
-\def\@listi{\leftmargin\leftmargini\topsep 3pt plus 1pt\parsep\z@\itemsep 1pt}
+\setlength\parskip{1.5pt plus 0.5pt}
+\def\@listi{\leftmargin\leftmargini\topsep 0pt plus 1pt\parsep\z@\itemsep 0.7bp}
 \let\@listI\@listi
 \def\@listii{\leftmargin\leftmarginii\topsep 1pt\parsep\z@\itemsep\z@}
 \def\@listiii{\leftmargin\leftmarginiii\topsep 1pt\parsep\z@\itemsep\z@}

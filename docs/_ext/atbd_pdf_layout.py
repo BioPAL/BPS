@@ -119,6 +119,21 @@ def _format_date(raw: str) -> str:
     return value
 
 
+_MONTH_ABBR = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def header_date(value: str) -> str:
+    """``02/04/2026`` -> ``Apr 02\\atbdsup{nd}, 2026`` (header of the originals)."""
+    match = re.fullmatch(r"(\d{2})/(\d{2})/(\d{4})", value.strip())
+    if not match:
+        return latex_escape(value)
+    day, month, year = int(match.group(1)), int(match.group(2)), match.group(3)
+    if not 1 <= month <= 12:
+        return latex_escape(value)
+    suffix = "th" if 11 <= day % 100 <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    return rf"{_MONTH_ABBR[month - 1]} {day:02d}\atbdsup{{{suffix}}}, {year}"
+
+
 def read_document_meta(docs_dir: Path, folder: str) -> dict[str, str]:
     """Title, code, issue and date of ``science-guide/<folder>``.
 
@@ -164,6 +179,7 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
             ("covertitle", meta["cover_title"]),
         )
     )
+    definitions += f"\n\\newcommand\\atbdheaderdate{{{header_date(meta['date'])}}}"
     size, leading, stretch = _TABLE_FONTS["pfd" if folder.startswith("pfd-") else "atbd"]
     definitions += (
         "\n\\newcommand\\atbdtablefont{\\linespread{1}"
@@ -205,8 +221,8 @@ def latex_config(docs_dir: Path, folder: str, bps_version: str) -> dict[str, Any
             # Original: text 3.25 cm from the left edge (headings at 2 cm),
             # 1.95 cm on the right; logo header and footer rules.
             "geometry": (
-                r"\usepackage[a4paper,left=3.25cm,right=1.95cm,top=2.7cm,"
-                r"bottom=2.9cm,headheight=1.55cm,headsep=0.6cm,footskip=1.2cm]{geometry}"
+                r"\usepackage[a4paper,left=92.1bp,right=53.3bp,top=76.1bp,"
+                r"height=684.7bp,headheight=0bp,headsep=0bp,footskip=0bp]{geometry}"
             ),
             "fontpkg": "",
             "fncychap": "",
