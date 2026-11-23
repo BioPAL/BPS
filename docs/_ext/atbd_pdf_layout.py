@@ -64,7 +64,9 @@ _COVER_LAYOUT = {
     "atbd-l2-fd": dict(logo_y=86.7, title_y=242.1, mission=(110.0, 448.0), ref=(337.6, 734.5)),
     "atbd-l2-fh": dict(logo_y=86.7, title_y=269.7, mission=(110.0, 444.2), ref=(340.6, 733.8)),
     "atbd-l1-sar": dict(logo_y=86.6, title_y=269.7, mission=(110.1, 445.7), ref=(317.2, 733.9)),
-    "atbd-l1-stack": dict(logo_y=122.8, title_y=269.7, mission=(91.9, 486.4), ref=(294.7, 742.9)),
+    # L1 Stack: the Aresys logo is 36 pt lower, the ESA logo only 28 pt
+    "atbd-l1-stack": dict(logo_y=122.8, esa_bottom=179.0, title_y=269.7, mission=(91.9, 486.4),
+                          ref=(294.7, 742.9)),
     "pfd-l1": dict(logo_y=86.7, title_y=242.1, mission=(103.8, 445.7), ref=(124.5, 734.2)),
     "pfd-l2-agb": dict(logo_y=86.7, title_y=214.5, mission=(102.5, 464.0), ref=(321.9, 729.8)),
     "pfd-l2-fd": dict(logo_y=86.6, title_y=242.1, mission=(110.1, 445.7), ref=(354.2, 734.2)),
@@ -216,7 +218,8 @@ def _cover_definitions(folder: str) -> str:
     ref_x, ref_y = layout["ref"]
     values = {
         "aresysy": layout["logo_y"] + 76.2,  # bottom of the logos
-        "esay": layout["logo_y"] - 86.7 + 151.3,  # visible ESA logo of the originals: y 95.0-151.3
+        # visible ESA logo of the originals: y 95.0-151.3
+        "esay": layout.get("esa_bottom", layout["logo_y"] - 86.7 + 151.3),
         "titley": title_base,
         "ruley": last_bottom + _COVER_RULE_GAP,
         "missionx": mission_x,
