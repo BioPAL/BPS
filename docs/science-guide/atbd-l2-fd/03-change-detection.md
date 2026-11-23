@@ -213,11 +213,11 @@ flowchart TB
 (sec:atbd-fd-3-3-4)=
 #### 3.3.4 Algorithm mathematical background
 
-This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on `applyCalibrationScreen` configuration, the used screen is:
+This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on *`applyCalibrationScreen`* configuration, the used screen is:
 
-$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`*= “skp”*
+$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if *`applyCalibrationScreen`= “skp”*
 
-$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`*= “geometry”*
+$\varphi=\ \varphi_{flattening}$ if *`applyCalibrationScreen`= “geometry”*
 
 The operation implemented in the calibration step of the L2 processor is simply the subtraction of the selected calibration phase screens from the input image stack phase. The operation can be expressed as:
 
@@ -498,7 +498,7 @@ flowchart LR
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $I_{GN}$ | - | *Ground cancellation processing step* | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M acquisitions) | - | Ground cancelled complex image |
-| `pRes` | `productResolution` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | - | 50.0 | Value in [m] to be used as the resolution on ground range map and also to perform the covariance averaging in radar coordinates |
+| *`pRes`* | `productResolution` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | - | 50.0 | Value in [m] to be used as the resolution on ground range map and also to perform the covariance averaging in radar coordinates |
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsampling factor, that modules the overall decimation in multilooking within covariance computation |
 | $\theta$ | `incidenceAngle` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\theta}\times{}N_{az,\theta} \right]$ | - | - | L1c stack reference acquisition incidence angle (on inflated ellipsoid) annotation [deg] |
 | $\mathrm{B}_r$ | L1c range- bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
@@ -536,7 +536,7 @@ $$
 \left\vert \Omega_a \right\vert=\left\lceil \frac{pRes}{\rho_a}(\Delta_aB_a)^{-1} \right\rceil
 $$
 
-where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
+where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, *`pRes`* is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
 
 $$
 L=\left\lceil \frac{pRes^2}{\rho_r\rho_a}\sin{\theta_m} \right\rceil
@@ -765,7 +765,7 @@ flowchart TB
 | *N* | `numberOfAverages` | FD L2a product of previous cycle (`FD_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]$ | lower bound=1 | - | Number of averages in ACM computation |
 | *FNF* | FNF | Internal resource | $\left[ N_{lat,FNF}\times{}N_{lon,FNF} \right]$ | Yearly | - | A global forest-non-forest mask given as input |
 | *fMIT* | `forestMaskInterpolationThreshold` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.5 | Threshold to fix rounding of pixels with decimal values originated from binary FNF interpolation onto L2a grid |
-| `detLimit` | `numericalDeterminatLimit` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | \>0.0 | 1.0e-12 | Lower Threshold to avoid numerical errors when computing pol covariance matrices determinants |
+| *`detLimit`* | `numericalDeterminatLimit` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | \>0.0 | 1.0e-12 | Lower Threshold to avoid numerical errors when computing pol covariance matrices determinants |
 
 (sec:atbd-fd-3-7-3)=
 #### 3.7.3 Outputs
@@ -784,7 +784,7 @@ flowchart TB
 (sec:atbd-fd-3-7-4-1)=
 ##### 3.7.4.1 Hypothesis testing
 
-Each pixel is processed independently. For each pixel of the geocoded ground cancelled polarimetric covariance matrix at current global cycle “*N+1*” multiplied by a factor *L* (corresponding the number of looks {rd}`6`) $\boldsymbol{X}_{N+1}=L\boldsymbol{X}$, the likelihood ratio statistic is calculated to test the null hypothesis that it is the same as that of the previous *N* cycles (*N=* `numberOfAverages`) Average Covariance Matrix $\boldsymbol{Y}_N=\ \sum_{i=0}^N{\boldsymbol{X}_i}$
+Each pixel is processed independently. For each pixel of the geocoded ground cancelled polarimetric covariance matrix at current global cycle “*N+1*” multiplied by a factor *L* (corresponding the number of looks {rd}`6`) $\boldsymbol{X}_{N+1}=L\boldsymbol{X}$, the likelihood ratio statistic is calculated to test the null hypothesis that it is the same as that of the previous *N* cycles (*N=* *`numberOfAverages`*) Average Covariance Matrix $\boldsymbol{Y}_N=\ \sum_{i=0}^N{\boldsymbol{X}_i}$
 
 (equation-eq-atbd-fd-3-17)=
 \begin{equation}
@@ -795,7 +795,7 @@ R_{N+1}=\left\{ \frac{(N+1)^{(N+1)p}}{N^{Np}}\frac{\left\vert \boldsymbol{Y}_N \
 \tag{3.17}
 \end{equation}
 
-From {sec}`Section 3.5.4 <3.5.4>` *L* is the number of looks, |..| denotes determinant, and *p* is the polarimetric dimension of the data matrix (*L=6* and *p=3* as per BIOMASS requirements {rd}`9`). The polarimetric covariance matrices are (by definition) Hermitian and semi-positive definite: their determinant is real-valued. However, determinant calculation can be ill-posed as its value approaches zero (as numerical errors may arise). It has been chosen to set a lower limit (optional user defined parameter `numericalDeterminantLimit`) to deal with numerical errors and avoid any problems in subsequent equations.
+From {sec}`Section 3.5.4 <3.5.4>` *L* is the number of looks, |..| denotes determinant, and *p* is the polarimetric dimension of the data matrix (*L=6* and *p=3* as per BIOMASS requirements {rd}`9`). The polarimetric covariance matrices are (by definition) Hermitian and semi-positive definite: their determinant is real-valued. However, determinant calculation can be ill-posed as its value approaches zero (as numerical errors may arise). It has been chosen to set a lower limit (optional user defined parameter *`numericalDeterminantLimit`*) to deal with numerical errors and avoid any problems in subsequent equations.
 
 To calculate the probability of rejecting the null hypothesis if all the covariance matrices are the same, the following auxiliary variables are calculated {rd}`6` {rd}`5`:
 
@@ -834,7 +834,7 @@ $$ (eq:atbd-fd-3-20)
 (sec:atbd-fd-3-7-4-3)=
 ##### 3.7.4.3 ACM update mechanism
 
-History of previous *N* cycles is represented by an Average Covariance Matrix $\boldsymbol{Y}_N$ (equivalent to current Covariance Matrix $\boldsymbol{X}_{N+1}$ as for dimensions and data type), which consists of the stacking of covariance matrices from previous cycles, in case no change occurred. When detection is computed between current CM $\boldsymbol{X}_{N+1}$ and the ACM $\boldsymbol{Y}_N$ for a given pixel, in case of no change current CM is added to ACM to be used in the subsequent cycle (ACM is updated to be the average over the whole series where no change has occurred). In case of change, instead, this ACM is reset to current CM for subsequent cycles and FD will report an indication of change for the corresponding pixels in the disturbance layer. The `numberOfAverages` of the previous *N* cycles, which is a measure of how many objects are averaged in the current ACM, is also reset to 1. The update mechanism is reported in {fig}`13` for the ACM $\boldsymbol{Y}_N$.
+History of previous *N* cycles is represented by an Average Covariance Matrix $\boldsymbol{Y}_N$ (equivalent to current Covariance Matrix $\boldsymbol{X}_{N+1}$ as for dimensions and data type), which consists of the stacking of covariance matrices from previous cycles, in case no change occurred. When detection is computed between current CM $\boldsymbol{X}_{N+1}$ and the ACM $\boldsymbol{Y}_N$ for a given pixel, in case of no change current CM is added to ACM to be used in the subsequent cycle (ACM is updated to be the average over the whole series where no change has occurred). In case of change, instead, this ACM is reset to current CM for subsequent cycles and FD will report an indication of change for the corresponding pixels in the disturbance layer. The *`numberOfAverages`* of the previous *N* cycles, which is a measure of how many objects are averaged in the current ACM, is also reset to 1. The update mechanism is reported in {fig}`13` for the ACM $\boldsymbol{Y}_N$.
 
 (fig:atbd-fd-13)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure

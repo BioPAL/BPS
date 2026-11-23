@@ -332,9 +332,9 @@ Since the IOB core estimator is defined for an interferometric pair, to define a
 
 Note that the module is endowed with a set of configurable parameters (as reported in the Input table below or in the `AUX_FMT` document), most of which the reader will find self-explanatory as the method is outlined in detail. Among those, the noticeable non-trivial ones are:
 
-- `latitudeThreshold`: As per physical (and experimental) evidence, slow-varying ionospheric effects are to be expected only at the low latitudes (tropical regions), thus it is reasonable to assume that it is better to skip any correction/estimation of the ionosphere at the high latitudes. This parameter specifies the threshold latitude (North/South) above/below which the IOB estimation is not executed.
-- `calibrationPrimaryImage`: Since the module is interferometric, no absolute ionosphere can be estimated for any image. Consequently, to resolve the ambiguity, the existence of a reference ionosphere-free image must be assumed. As it will be described in the details in the next sections, no ionosphere (null phase screen) correction will be performed in any case for such reference image.
-- `slowIonosphereQualityThreshold`: This parameter specifies a minimum estimation quality for the ionosphere to be corrected. Ionosphere estimations below this threshold value will be ignored.
+- *`latitudeThreshold`*: As per physical (and experimental) evidence, slow-varying ionospheric effects are to be expected only at the low latitudes (tropical regions), thus it is reasonable to assume that it is better to skip any correction/estimation of the ionosphere at the high latitudes. This parameter specifies the threshold latitude (North/South) above/below which the IOB estimation is not executed.
+- *`calibrationPrimaryImage`*: Since the module is interferometric, no absolute ionosphere can be estimated for any image. Consequently, to resolve the ambiguity, the existence of a reference ionosphere-free image must be assumed. As it will be described in the details in the next sections, no ionosphere (null phase screen) correction will be performed in any case for such reference image.
+- *`slowIonosphereQualityThreshold`*: This parameter specifies a minimum estimation quality for the ionosphere to be corrected. Ionosphere estimations below this threshold value will be ignored.
 
 Finally, note that since for the Single-baseline modality the slow-varying ionosphere estimator is equivalent to the results of the IOB interferometric estimator, we will identify the two and henceforth call the IOB estimator Single-baseline estimator.
 
@@ -350,7 +350,7 @@ Finally, note that since for the Single-baseline modality the slow-varying ionos
 | $k_z$ |   | Coregistration Step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Vertical wavenumbers |
 | $\Delta\phi_{L1a}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel | - | Ionospheric phase screen estimated by L1 processor and shifted onto the primary grid |
 | $\delta_{\phi_{L1a}}$ |   | L1a and Coregistration step | M of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) each with a single channel |   | Spatial range shifts due to ionosphere estimated by the L1 processor and shifted onto the primary grid |
-| $n^*$ | `calibrationReferenceImage` | Job\_Order <br> (*ProcParameter – calibration\_primary\_imge*) <br> or `AUX_PPS` <br> (`primaryImageFlag`). <br> See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M <br> with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
+| $n^*$ | `calibrationReferenceImage` | Job\_Order <br> (*ProcParameter – calibration\_primary\_imge*) <br> or `AUX_PPS` <br> (*`primaryImageFlag`*). <br> See {sec}`Section 5.2.3.1 <5.2.3.1>` | Integer | 1 – M <br> with M=3 (NT) or M=7 (TOM) | - | Index of the calibration reference image |
 |   | `slowIonosphereRemovalFlag` | `AUX_PPS` <br> (`AUX_FMT`) | Boolean <br> switch | True/False | True | Enable/disable the IOB module |
 | $B_{sub}$ | `rangeLookBandwidth` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 1.0 | 0.3 | Percentage of bandwidth when computing the sub-looks |
 | $f_{sub}$ | `rangeLookFrequency` | `AUX_PPS` <br> (`AUX_FMT`) | Float <br> value <br> [%] | 0.0 – 0.5 | 0.3 | Percentage of frequency band when computing the sub-looks |
@@ -511,7 +511,7 @@ $$
 \tag{5.16}
 $$ (eq:atbd-l1-stack-5-16)
 
-with $\left\langle \cdot \right\rangle$ being a local average operator. in the provided implementation a uniform filter with a default $201\times41$ boxcar kernel, which corresponds to approximately to a 200m x 200m window in azimuth and slant-range directions. The size of the filter is however configurable via `AUX_PPS` (see `sublookWindowAzimuthSize` and `sublookWindowRangeSize` in {sec}`Section 5.2.1 <5.2.1>`).
+with $\left\langle \cdot \right\rangle$ being a local average operator. in the provided implementation a uniform filter with a default $201\times41$ boxcar kernel, which corresponds to approximately to a 200m x 200m window in azimuth and slant-range directions. The size of the filter is however configurable via `AUX_PPS` (see *`sublookWindowAzimuthSize`* and *`sublookWindowRangeSize`* in {sec}`Section 5.2.1 <5.2.1>`).
 
 (sec:atbd-l1-stack-5-2-2-4)=
 ##### 5.2.2.4 Split-Spectrum
@@ -554,7 +554,7 @@ with $\Delta\phi_{bias}\mathrel{:=}2\pi{}f_c\tau_{rg}-\Delta\Phi_n+\frac{4\pi}{c
 - $\delta_{\phi_{L1a}}$are the ionospheric spatial range shifts estimated by the L1 processor
 - $\Delta\phi_{L1a}$ is the ionosphere phase screen estimated by the L1 processor.
 
-Note that the compensation of the ionosphere phase screen and range shifts from L1 is optional and can be enabled or disabled by the user via `AUX_PPS` (see `compensateL1IonoPhaseScreenFlag`).
+Note that the compensation of the ionosphere phase screen and range shifts from L1 is optional and can be enabled or disabled by the user via `AUX_PPS` (see *`compensateL1IonoPhaseScreenFlag`*).
 
 The final slow-varying ionosphere $\Delta\phi_{iono}^{'}$ can be computed via {eq}`Equation 5.16 <5.16>` and using the compensated high/low phase screens $\Delta{\phi'}_L$ and $\Delta{\phi'}_H$.
 
@@ -621,7 +621,7 @@ where $\boldsymbol{I}_{q_{sb}^{n,n^*}>\ q_{thres}}\boldsymbol{\in\{}0,1\boldsymb
 (sec:atbd-l1-stack-5-2-3)=
 #### 5.2.3 Multi-Baseline
 
-The Multi-baseline modality combines the single-baseline estimations associated to input $K$ interferometric pairs into $M-1$ differential ionospheric phase screens by computing the phase screens that best fit all the single-baseline estimations . Note that, with the Multi-baseline modality, interferometric pairs are selected according to their spatial baseline and only pairs whose spatial baseline does not exceed a user defined threshold are considered for estimation (see `multiBaselineCriticalBaselineThreshold` in {sec}`Section 5.2 <5.2>` and Output Table in {sec}`Section 5.2.1 <5.2.1>`). By default, the threshold is set to be 45% of the critical baseline.
+The Multi-baseline modality combines the single-baseline estimations associated to input $K$ interferometric pairs into $M-1$ differential ionospheric phase screens by computing the phase screens that best fit all the single-baseline estimations . Note that, with the Multi-baseline modality, interferometric pairs are selected according to their spatial baseline and only pairs whose spatial baseline does not exceed a user defined threshold are considered for estimation (see *`multiBaselineCriticalBaselineThreshold`* in {sec}`Section 5.2 <5.2>` and Output Table in {sec}`Section 5.2.1 <5.2.1>`). By default, the threshold is set to be 45% of the critical baseline.
 
 In the Multi-baseline modality, given the $K$ range slopes and $K$ azimuth slopes associated the selected interferometric pairs in the stack, the ionospheric phase ramps in azimuth will be estimated by solving the following linear system:
 
@@ -685,7 +685,7 @@ Note that during Multi-baseline estimation, the weighting term $W_{sb}^l$ and $W
 To select the reference image, the stack processor exposes three (3) options:
 
 1. Manually select the reference via Job Order,
-2. Use the coregistration primary image as calibration reference. This is selected via the `primaryImageFlag` tag of the `AUX_PPS` (see `AUX_FMT` for more details). Note that if both 1 and 2 are engaged, 2 is ignored.
+2. Use the coregistration primary image as calibration reference. This is selected via the *`primaryImageFlag`* tag of the `AUX_PPS` (see `AUX_FMT` for more details). Note that if both 1 and 2 are engaged, 2 is ignored.
 3. If neither of the two above are specified, let the stack processor choose the best image according to the Faraday decorrelation indices and RFI indices computed by the L1 processor.
 
 Options 1 and 2 are trivial. As for option 3, we will combine the two metrics simply by setting
@@ -1517,14 +1517,14 @@ Optionally, the user can enable via `AUX_PPS` a post-processing of the estimated
 (sec:atbd-l1-stack-5-4-2-7)=
 ##### 5.4.2.7 SKP Phase Removal
 
-If enabled in the `AUX_PPS` configuration, that is if `phaseCorrection` is set to any of *“Flattening Phase Screen” or “Ground Phase Screen”*, the SKP phase contribution will be removed from each image of the stack as reported in {eq}`Equation 5.67 <5.67>` below. Setting $\varphi_{cal}$ to be $k_z(z_g-z_{DEM})$ as in the Equation of Section 5.5.2.6 above, we correct the ground phase as follows:
+If enabled in the `AUX_PPS` configuration, that is if *`phaseCorrection`* is set to any of *“Flattening Phase Screen” or “Ground Phase Screen”*, the SKP phase contribution will be removed from each image of the stack as reported in {eq}`Equation 5.67 <5.67>` below. Setting $\varphi_{cal}$ to be $k_z(z_g-z_{DEM})$ as in the Equation of Section 5.5.2.6 above, we correct the ground phase as follows:
 
 $$
 {CalCoSCS_n(a,r)\mathrel{:=}{}CoSCS}_n(a,r)\cdot{}e^{j(\Delta\Phi_n+s\boldsymbol{I}_{a,r}(q_n)\cdot\varphi_{cal})},
 \tag{5.67}
 $$ (eq:atbd-l1-stack-5-67)
 
-where, as for the IOS, $\boldsymbol{I}(q_n)$ is the indicator matrix so that $\boldsymbol{I}_{\boldsymbol{a,r}}(q_n)=1$ iff $q_{n,a,r}>q_{thresh}$, $0$ otherwise. The switch $s\in\{0,1\}$ is $0$ if `phaseCorrection` is set to *“Flattening Phase Screen”*, and it is $1$ if `phaseCorrection` is set to *“Ground Phase Screen”*. In other words, the correction will always compensate for the synthetic phases from DEM, while the ground phases will be corrected if and only if the user has enabled it via AUX-PPS and the estimation quality is above threshold. Details on how the quality is computed are reported in the next section.
+where, as for the IOS, $\boldsymbol{I}(q_n)$ is the indicator matrix so that $\boldsymbol{I}_{\boldsymbol{a,r}}(q_n)=1$ iff $q_{n,a,r}>q_{thresh}$, $0$ otherwise. The switch $s\in\{0,1\}$ is $0$ if *`phaseCorrection`* is set to *“Flattening Phase Screen”*, and it is $1$ if *`phaseCorrection`* is set to *“Ground Phase Screen”*. In other words, the correction will always compensate for the synthetic phases from DEM, while the ground phases will be corrected if and only if the user has enabled it via AUX-PPS and the estimation quality is above threshold. Details on how the quality is computed are reported in the next section.
 
 (sec:atbd-l1-stack-5-4-2-8)=
 ##### 5.4.2.8 SKP Ground Phase Quality
@@ -1538,7 +1538,7 @@ Finally, similarly to Section 5.4.5.1, the estimation is considered successful a
 (sec:atbd-l1-stack-5-4-3)=
 #### 5.4.3 Contingency Handling
 
-The SKP module separates contingency cases into two categories: *blocking* and *nonblocking.* Blocking cases are cases in which the execution of the SKP is prematurely stopped or completely skipped. Conversely, nonblocking contingency cases may or may not stop the execution. If the SKP hit the former case (*i.e.* the SKP is executed), the situation of hitting a contingency case will be reported in the L1c annotation using the `skpDecompositionIndex` field. The contingency cases handled by the SKP module are the following:
+The SKP module separates contingency cases into two categories: *blocking* and *nonblocking.* Blocking cases are cases in which the execution of the SKP is prematurely stopped or completely skipped. Conversely, nonblocking contingency cases may or may not stop the execution. If the SKP hit the former case (*i.e.* the SKP is executed), the situation of hitting a contingency case will be reported in the L1c annotation using the *`skpDecompositionIndex`* field. The contingency cases handled by the SKP module are the following:
 
 - Small estimation window: SKP requires the estimation window $w_{est}$ to be sufficiently large compared to the DEM resolution of the L1a products. Accordingly, we require the DEM resolution from L1a to be at most 90% of $w_{est}$. Failing such a check is considered a *blocking* case.
 - Missing polarizations: SKP requires at least 2 polarizations. Failing to provide an input stack with at least 2 usable polarizations will result in *blocking* the SKP execution.

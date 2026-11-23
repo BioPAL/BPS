@@ -63,7 +63,7 @@ Details on the derivation of external FNF are reported in {rd}`10`.
 (sec:atbd-agb-3-2-1)=
 #### 3.2.1 Overview and rationale
 
-The algorithm applies to TOM stacks and subsets the stack in order to select (or not) the acquisitions. The subsetting rule applicable at the moment follows a geometric criterion. Other rules could be defined post-launch. A **no-subsetting** rule is also available (“maintain all”, allowing to perform `L2A_GN_P` core algorithm on the full tomographic acquisition stack. **Note that this rule is only available for** `L2A_GN` **processing, and an error is generated if the rule is applied to other L2a processing submodules**.
+The algorithm applies to TOM stacks and subsets the stack in order to select (or not) the acquisitions. The subsetting rule applicable at the moment follows a geometric criterion. Other rules could be defined post-launch. A **no-subsetting** rule is also available (“maintain all”, allowing to perform `L2A_GN_P` core algorithm on the full tomographic acquisition stack. **Note that this rule is only available for `L2A_GN` processing, and an error is generated if the rule is applied to other L2a processing submodules**.
 
 **This step is mandatory for TOM only.**
 
@@ -213,11 +213,11 @@ flowchart TB
 (sec:calibration-math)=
 #### 3.3.4 Algorithm mathematical background
 
-This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on `applyCalibrationScreen` configuration, the used screen is:
+This step aims to remove all the phase disturbances from the L1c stack and set terrain phase at zero height (i.e., subtract DTM phase). Each polarization channel is processed independently. The SCS L1c stack provided as input contains a set of calibration and ground steering phase screens (SKP calibration screens and flattening phases screens described in {rd}`1`). Depending on *`applyCalibrationScreen`* configuration, the used screen is:
 
-$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if `applyCalibrationScreen`*= “skp”*
+$\varphi=\ \varphi_{skp}+\varphi_{flattening}$ if *`applyCalibrationScreen`= “skp”*
 
-$\varphi=\ \varphi_{flattening}$ if `applyCalibrationScreen`*= “geometry”*
+$\varphi=\ \varphi_{flattening}$ if *`applyCalibrationScreen`= “geometry”*
 
 The operation implemented in the calibration step of the L2 processor is simply the subtraction of the selected calibration phase screens from the input image stack phase. The operation can be expressed as:
 
@@ -523,14 +523,14 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $\left\vert I_{GN} \right\vert^2$ | - | *Ground cancellation processing step* | $\left[ N_{rg}\times{}N_{az} \right]$ | Two CP and one XP (independent from M acquisitions) | - | Ground cancelled intensity image |
-| `pRes` | `productResolution` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | - | 200.0 | Value in [m] to be used as the resolution on ground range map and also to perform the intensity averaging in radar coordinates |
+| *`pRes`* | `productResolution` | `AUX_PP2_2` A (`AUX_FMT`) | float value [scalar] | - | 200.0 | Value in [m] to be used as the resolution on ground range map and also to perform the intensity averaging in radar coordinates |
 | - | `upsamplingFactor` | `AUX_PP2_2A` (`AUX_FMT`) | int value [scalar] | - | 2 | upsamping factor, that modules the overall decimation in multilooking |
 | $\theta$ | `incidenceAngle` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\theta}\times{}N_{az,\theta} \right]$ | - | - | L1c stack reference acquisition incidence angle (on inflated ellipsoid) annotation [deg] |
 | $\alpha$ | `terrainSlope` | L1c reference acquisition ADS (`L1_PFD`) | $\left[ N_{rg,\alpha}\times{}N_{az,\alpha} \right]$ | - | - | Terrain slope [deg] |
 | $\mathrm{B}_r$ | L1c range- bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
 | $B_a$ | L1c azimuth bandwidth | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | L1c range bandwidth [Hz] |
 | $\mathrm{v}_a$ | L1c velocity annotation | L1c reference acquisition ADS (`L1_PFD`) | - | - | - | Average azimuth velocity [m/s] |
-| `rcFlag` | `radiometricCalibrationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | Flag to apply radiometric calibration |
+| *`rcFlag`* | `radiometricCalibrationFlag` | `AUX_PP2_2` A (`AUX_FMT`) | Boolean [scalar] | - | True | Flag to apply radiometric calibration |
 
 (sec:atbd-agb-3-5-3)=
 #### 3.5.3 Outputs
@@ -550,7 +550,7 @@ $$
 \tag{3.13}
 $$ (eq:sigma-naught-normalisation-1)
 
-where $p$ denote the $p$-th polarimetric channel; $r$ and $a$ denote the slant-range and azimuth indices; $\Omega_r$ and $\Omega_a$ denote the neighborhood in the slant-range and azimuth directions of the desired position; ${I_{GN}}_p(r,a)$ denotes the pixel value of ground cancelled complex image in polarimetric channel $p$; α indicate terrain slopes in range direction, θ the incidence angle, ϑ$=\theta-\alpha$ the local incidence angle (wrt. ground surface normal). The correction term $\sin \left[ \theta(r,a)-\alpha(r,a) \right]$ is applied only if `rcFlag` is set to True. A preliminary interpolation step is needed to bring angles onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`).
+where $p$ denote the $p$-th polarimetric channel; $r$ and $a$ denote the slant-range and azimuth indices; $\Omega_r$ and $\Omega_a$ denote the neighborhood in the slant-range and azimuth directions of the desired position; ${I_{GN}}_p(r,a)$ denotes the pixel value of ground cancelled complex image in polarimetric channel $p$; α indicate terrain slopes in range direction, θ the incidence angle, ϑ$=\theta-\alpha$ the local incidence angle (wrt. ground surface normal). The correction term $\sin \left[ \theta(r,a)-\alpha(r,a) \right]$ is applied only if *`rcFlag`* is set to True. A preliminary interpolation step is needed to bring angles onto the same L1c grid, in similar fashion as for the calibration screens ({sec}`Section 3.3.4 <3.3.4>`).
 
 The averaging window size is computed as:
 
@@ -563,7 +563,7 @@ $$
 \left\vert \Omega_a \right\vert=\left\lceil \frac{pRes}{\rho_a}(\Delta_aB_a)^{-1} \right\rceil
 $$
 
-where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, `pRes` is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
+where $\rho_r=\frac{\mathrm{c}}{2B_r}$ and $\rho_a=\frac{\mathrm{v}_a}{B_a}$ denote the L1c resolution computed from system bandwidth, Lightspeed *c*, average azimuth velocity $\mathrm{v}_a$, *`pRes`* is the L2 resolution, $\theta_m=\frac{1}{N_rN_a}\sum_{r,a}^{}{\theta(r,a)}$ is the average incidence angle across the swath, while the terms $(\Delta_iB_i)^{-1},\ i=r,a$ represent the oversampling factor. SCS invalid pixels will not be used during processing. The presence of an invalid SCS pixel causes the generation of an invalid covariance sample. The number of looks *L* {rd}`6` is computed as:
 
 $$
 L=\left\lceil \frac{pRes^2}{\rho_r\rho_a}\sin{\theta_m} \right\rceil

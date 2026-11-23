@@ -596,7 +596,7 @@ classDiagram
 
 :::
 
-**Note on `estimatedParametersPolarisationType`**
+****Note on `estimatedParametersPolarisationType`****
 
 It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of “**LCM”** elements, which contains an *`xsd:sequence`* of “**date”** elements, which contains *`xsd:all`* **“N”, “A”,** and **“L”** elements, each of them each composed by the final *`xsd:sequence`* with “**mean”** and “**std”** elementary “`xsd:float`” elements)
 
@@ -608,7 +608,7 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | *classes* | *String with integers separated by spaces, indicating group of LCM classes, i.e. “1 2 3”* | *`xsd:string`* | *required* |
-| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | `xsd:complexType`<u> (LCM)</u> | 1..unbounded |
+| LCM | Sequence of “LCM” elements. <br> Each LCM in the sequence collects, for each date, the “N”, “A”, “L” estimated parameters variability for the LCM classes specified in the attribute. | <u>`xsd:complexType` (LCM)</u> | 1..unbounded |
 
 :::
 
@@ -619,8 +619,8 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *dates* | *String containing two dates (in the* `timeType` *format*<u>)</u>*, separated by a space: start and stop date to describe an interval.* | *`xsd:string`* | *required* |
-| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | `xsd:complexType`<u> (date)</u> | 1..unbounded |
+| *dates* | *String containing two dates (in the `timeType` format*<u>)</u>*, separated by a space: start and stop date to describe an interval.* | *`xsd:string`* | *required* |
+| date | Sequence of “date” elements. <br> Each “date” collects the “N”, “A”, “L” estimated parameters variability inside the dates interval specified in the attribute. | <u>`xsd:complexType` (date)</u> | 1..unbounded |
 
 :::
 
@@ -631,9 +631,9 @@ It is a unique complex type (see {fig}`23`), containing an *`xsd:sequence`* of �
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
-| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
-| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | `xsd:complexType`<u> (N, A, L)</u> | 1 |
+| N | AGB inversion algorithm estimated parameter “N” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType` (N, A, L)</u> | 1 |
+| A | AGB inversion algorithm estimated parameter “A” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType` (N, A, L)</u> | 1 |
+| L | AGB inversion algorithm estimated parameter “L” for a specific polarisation group, LCM classes group and specified dates interval. | <u>`xsd:complexType` (N, A, L)</u> | 1 |
 
 :::
 

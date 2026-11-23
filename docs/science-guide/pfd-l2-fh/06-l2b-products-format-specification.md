@@ -336,7 +336,7 @@ classDiagram
 | `forestMaskingFlag` | The minimum percentage of tile coverage used to trigger the computation. | bool | 1 |
 | `rollOffFactorAzimuth` | True if forest/non-forest map masking has been performed during L2a products merging, false otherwise. | `xsd:float` | 1 |
 | `rollOffFactorRange` | Feathering roll-off factor used. | `xsd:float` | 1 |
-| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | `compressionOptionsL2b`<u> Type</u> | 1 |
+| `compressionOptions` | Configurable compression options for all the L2b MDS COG. | <u>`compressionOptionsL2b` Type</u> | 1 |
 
 :::
 

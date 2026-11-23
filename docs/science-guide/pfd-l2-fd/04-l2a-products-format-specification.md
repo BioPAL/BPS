@@ -1010,7 +1010,7 @@ classDiagram
 | `productGenerationTime` | Product generation time [UTC]. | `timeType` | 1 |
 | `generalConfigurationParameters` | General processing flags (not specific to the Forest Disturbance processing). | <u>`generalConfigurationParametersType`</u> | 1 |
 | `emphasizedForestHeight` | Value of the height [m] which has been emphasized during ground cancellation {ad}`8`. | `floatWithUnit` | 1 |
-| `operationalMode` | Ground Cancellation method used between the followings. <br> “single reference”: direct computation with a preliminary automatic reference image selection. <br> *or* <br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element `imagesPairSelection`. <br> Note: <br> in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of `imagesPairSelection` element). | <u>`operationalModeType`</u> | 1 |
+| `operationalMode` | Ground Cancellation method used between the followings. <br> “single reference”: direct computation with a preliminary automatic reference image selection. <br> *or* <br> “insar pair”: debug operational mode, perform computation with only the two images specified in the optional element *`imagesPairSelection`.* <br> Note: <br> in case of only two images available, the `operationalMode` is automatically set to “insar pair” (without the need of *`imagesPairSelection`* element). | <u>`operationalModeType`</u> | 1 |
 | `imagesPairSelection` | Optional: <br> if *`operationalMode`* is “insar pair” and if this element is present, this means that ground cancellation has being performed using only the two images specified here. | `acquisitionListType` | 0..1 |
 | `disableGroundCancellationFlag` | False, if the ground cancellation has been performed. <br> True, if ground cancellation has been disabled. <br> Optional, default is False. | bool | 0..1 |
 | `significanceLevel` | Significance level, expressed as a percentage, applied in the change detection algorithm {ad}`8`. | `xsd:float` | 1 |
@@ -1390,7 +1390,7 @@ The content of L2a LUT ADS is reported hereafter, where:
 \end{sphinxVerbatim}
 ```
 
-`formatVersion` *[str]* *Version of the product*
+**`formatVersion`** *[str]* *Version of the product*
 
 <u>LUT ADS Dimensions / Coordinate variables</u>:
 

@@ -215,7 +215,7 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $RAW$ | RAW | *RFI mitigation in time domain* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data <br> *Intermediate product: iRAW* |
-| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function <br> Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration). It can be different from the one used during range compression step |
+| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step / `AUX_INS` (`AUX_FMT`)* | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function <br> Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration). It can be different from the one used during range compression step |
 | $M$ | `blockLines` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 512 | Number of lines in the blocks used to compute Power Spectral Density |
 | - | `blockOverlap` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 0 | Overlap between blocks |
 | $k_p,\ k_i$ | persistentRFIThreshold, isolatedRFIThreshold | `AUX_PP1` (`AUX_FMT`) | 2 scalar values | - | 2, 4 | Thresholds for the detection of persistent and isolated RFI |
@@ -399,12 +399,12 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | $RAW$ | RAW | *RFI mitigation in frequency-domain step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data after RFI mitigation <br> *Intermediate product: iRAW\_rfi\_corrected* |
-| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function <br> Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration) <br> *Intermediate product:* `iChirp` *(in case of internal calibration chirp replica)* |
-| $A_{\mathrm{drift}}$, $\varphi_{\mathrm{drift}}$ | Drift interpolated | *Internal calibration pars retrieval step* | N{sub}`az` x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$ <br> *Intermediate product:* `iDrift` |
+| $chirp$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step / `AUX_INS` (`AUX_FMT`)* | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function <br> Can be the nominal chirp, the internal calibration chirp replica or the internal chirp taken from `AUX_INS` file (as per configuration) <br> *Intermediate product: `iChirp` (in case of internal calibration chirp replica)* |
+| $A_{\mathrm{drift}}$, $\varphi_{\mathrm{drift}}$ | Drift interpolated | *Internal calibration pars retrieval step* | N{sub}`az` x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$ <br> *Intermediate product: `iDrift`* |
 | $A_{drift}^{ref},\ \varphi_{drift}^{ref}$ | `referenceDrift` | `AUX_INS` (`AUX_FMT`) | complex value | - | - | Reference amplitude and phase drift |
-| $\delta\tau_{IJ}^{TXP}$ | Internal delay | *Internal calibration pars retrieval step* | scalar value | - | - | Delay between polarimetric channels for the given pulse type *TXP* and for each polarization combination $IJ$ <br> *Intermediate product:* `iDelays` |
-| $I_{Rx}$ | RX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Receive channel imbalance (amplitude and phase) <br> *Intermediate product:* `iChannelImbalance` |
-| $I_{Tx}$ | TX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase) <br> *Intermediate product:* `iChannelImbalance` |
+| $\delta\tau_{IJ}^{TXP}$ | Internal delay | *Internal calibration pars retrieval step* | scalar value | - | - | Delay between polarimetric channels for the given pulse type *TXP* and for each polarization combination $IJ$ <br> *Intermediate product: `iDelays`* |
+| $I_{Rx}$ | RX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Receive channel imbalance (amplitude and phase) <br> *Intermediate product: `iChannelImbalance`* |
+| $I_{Tx}$ | TX channel imbalance | *Internal calibration pars retrieval step* | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase) <br> *Intermediate product: `iChannelImbalance`* |
 | $\mathrm{\Delta}\tau$ | PARC delays | `PARC_INFO` (`AUX_FMT`) | 4 scalar values | - | - | PARC delays |
 | - | `rangeProcessingParametersList` \> `windowType`, `windowCoefficient`, `processingBandwidth`, `timeBias` | `AUX_PP1` (`AUX_FMT`) | string + 3 scalar values | - | depends on swath | Range spectrum windowing parameters (window type, window coefficient and processing bandwidth) + time bias to be applied during processing |
 | - | `calibrationSignalsSWP` | AUX INS (`AUX_FMT`) | scalar value | - | 0.0000030137930999841456 | Calibration signals Sampling Window Position (SWP) [s] |
@@ -691,7 +691,7 @@ flowchart TB
 | $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and <br> set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes <br> *Intermediate product: iRGC* |
 | $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $yaw,\ pitch,$ <br> $roll$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles |
-| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product:* `iSlantDem` |
+| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product: `iSlantDem`* |
 | $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default <br> value is 5s. |
 
 **Outputs**
@@ -998,7 +998,7 @@ where the coordinates of the point of analysis are $(r_0,t_0)$. The use of a hyp
 | $\tau,\ t$ | RGC data slant range and azimuth time axes | *Azimuth data resampling step* | set of N{sub}`rg`-N{sub}`chirp`+1 real values and <br> set of N{sub}`az` UTC times respectively | - | - | Range compressed data slant range and azimuth time axes <br> *Intermediate product: iRGC* |
 | $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *Orbit and attitude extraction step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Orbit state vectors (satellite position and velocity) |
 | $f_{DC}$ | Doppler Centroid | *Doppler Centroid estimation step* | set of polynomials | - | - | Doppler Centroid polynomials |
-| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product:* `iSlantDem` |
+| $x,\ y,\ z$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product: `iSlantDem`* |
 | $\mathrm{\Delta}t$ | `polynomialUpdateRate` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 5 | Estimated Doppler polynomials update rate [s]. Default <br> value is 5s. |
 
 **Outputs**
@@ -1227,9 +1227,9 @@ The following description is based on the assumption, confirmed by manufacturer,
 | $B_{RGC}$ | RGC resampled | *Azimuth data resampling step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Range compressed data (resampled) <br> *Intermediate product: iRGC* |
 | $\overrightarrow{p_S}$ | Orbit | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Orbit state vectors (satellite position in Cartesian ECEF coordinates) |
 | $\overrightarrow{a_{YPR}}$ | Attitude | *Orbit and attitude extraction step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles relative to the Zero Doppler reference frame {ad}`2` |
-| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) <br> *Intermediate product:* `iPatt2D` |
-| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization <br> *Intermediate product:* `iTxPT` |
-| ${\overrightarrow{G}}_{topo}$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product:* `iSlantDem` |
+| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) <br> *Intermediate product: `iPatt2D`* |
+| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization <br> *Intermediate product: `iTxPT`* |
+| ${\overrightarrow{G}}_{topo}$ | X, Y, Z | *Back-geocoding step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Back-geocoded DEM X, Y and Z information <br> *Intermediate product: `iSlantDem`* |
 | $f_{DC}$ | Doppler Centroid | *Doppler Centroid estimation step* | set of polynomials | - | - | Doppler Centroid polynomials |
 | - | `elevationMispointingBias` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Mis-pointing bias in elevation to be applied during antenna pattern compensation [rad] |
 | - | `azimuthMispointingBias` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Mis-pointing bias in azimuth to be applied during antenna pattern compensation [rad] |
@@ -1467,8 +1467,8 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | - | SLC | *Co-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | AP-corrected focused SAR data <br> *Intermediate product: iSLC* |
-| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) <br> *Intermediate product:* `iPatt2D` |
-| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization <br> *Intermediate product:* `iTxPT` |
+| $P_D$ | Antenna patterns | *2D antenna patterns extraction step* | N{sub}`θ` x N{sub}`β` arrays of complex values (8 in total, i.e. 4 pols combinations for both the doublets, function of elevation and azimuth angles) | - | - | 2D antenna patterns (two-way, for both the doublets) <br> *Intermediate product: `iPatt2D`* |
+| $T_{Tx},\ T_{Rx}$ | TX Power Tracking | *Internal calibration parameters retrieval step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization <br> *Intermediate product: `iTxPT`* |
 | $\theta_{el,avg}(\tau)$ | Off-nadir angle | *Co-antenna patterns compensation step* | (N{sub}`rg`-N{sub}`chirp`+1) x 1 array of real values | - | - | Average off-nadir angle for the entire scene as a function of range |
 
 **Outputs**
@@ -2081,7 +2081,7 @@ The figure above summarizes the FR correction on polarimetry. The key parameter 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | - | SLC polarimetrically calibrated | *Polarimetric calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Polarimetrically calibrated azimuth compressed data <br> *Intermediate product: iSLC\_iono\_corrected* |
-| - | Ionosphere height / `ionosphereHeightValue` | *Ionosphere height estimation step /* `AUX_PP1` (`AUX_FMT`) | scalar value | - | 350000 | Ionosphere height. Can be estimated, computed from model or taken in input from `AUX_PP1` file (as per configuration) |
+| - | Ionosphere height / `ionosphereHeightValue` | *Ionosphere height estimation step / `AUX_PP1` (`AUX_FMT`)* | scalar value | - | 350000 | Ionosphere height. Can be estimated, computed from model or taken in input from `AUX_PP1` file (as per configuration) |
 
 **Outputs**
 
@@ -2443,7 +2443,7 @@ If for some pixels Bk is exactly zero, Nan or infinite value in the TEC field ar
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\phi_{iono}$ | Ionospheric phase | *Ionospheric phase screen correction, L1 post-processing step step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map <br> *Intermediate product:* `iPhaseScreenBB` |
+| $\phi_{iono}$ | Ionospheric phase | *Ionospheric phase screen correction, L1 post-processing step step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map <br> *Intermediate product: `iPhaseScreenBB`* |
 
 **Mathematical description**
 
@@ -2515,7 +2515,7 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | $SLC$ | SLC FR corrected | *Correction of FR on polarimetry step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | FR-corrected azimuth compressed data <br> *Intermediate product: iSLC\_iono\_corrected* |
 | $h_{iono}$ | Ionosphere height | *Ionosphere height estimation step* | scalar value | - | 350000 | Ionosphere height |
-| $\phi_{iono}$ | Ionospheric phase | *TEC to ionospheric phase step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map <br> *Intermediate product:* `iPhaseScreenBB` |
+| $\phi_{iono}$ | Ionospheric phase | *TEC to ionospheric phase step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Ionospheric phase screen map <br> *Intermediate product: `iPhaseScreenBB`* |
 
 **Outputs**
 
@@ -2685,7 +2685,7 @@ The detailed computation of the Gaussian filter is included in the next section.
 | $\Omega_{ext}$ | External TEC | `AUX_TEC` (`AUX_FMT`) | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | IONEX maps are issued daily by the IGS associated analysis centres | - | External TEC map |
 | $\overrightarrow{B}$ | Geomagnetic field | `AUX_GMF` (`AUX_FMT`) | 2D array of real values | updated regularly (several years between updates) | - | Geomagnetic field model |
 | $h_{iono}$ | Ionosphere height | *Ionosphere height estimation step* | scalar value | - | 350000 | Ionosphere height |
-| $\phi_{\max}$ | Maximum allowed phase error after estimation | `AUX_PP1` (`AUX_FMT`) | scalar values | - | - | Maximum allowed phase error after estimation (in order to set the size of the Gaussian filter) |
+| $\phi_{\max}$ | Maximum allowed phase error after estimation | *`AUX_PP1` (`AUX_FMT`)* | scalar values | - | - | Maximum allowed phase error after estimation (in order to set the size of the Gaussian filter) |
 
 **Outputs**
 
@@ -3335,7 +3335,7 @@ As quality indicators of the estimator and convergence we propose:
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | - | SLC autofocused | *Multilooking step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of complex values | - | - | Azimuth compressed data after autofocus <br> *Intermediate product: iSLC\_af\_corrected* |
-| $\phi_k$ | Ionospheric phase | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Autofocus phase error estimates (or second derivative) <br> *Intermediate product:* `iPhaseScreenAF` |
+| $\phi_k$ | Ionospheric phase | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Autofocus phase error estimates (or second derivative) <br> *Intermediate product: `iPhaseScreenAF`* |
 | $M$ | Covariance matrix | *L1 post-processing step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Covariance matrix of WLS system |
 
 **Algorithm description**
@@ -3720,8 +3720,8 @@ flowchart TB
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
 | ${ML}_n$ | ML | *Multilooking step* | N’’{sub}`rg` x N’’{sub}`az` array of real values | - | - | Multi-look detected data <br> *Intermediate product: iSRD* |
-| $\sigma_{\mathrm{noise}}^2$ | Noise power | *Internal calibration parameters retrieval step* | 2 N{sub}`rg,ic` x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble <br> *Intermediate product:* `iEstNoise` |
-| $G_{CH}$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step /* `AUX_INS` (`AUX_FMT`) | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function used in range compression step <br> *Intermediate product:* `iChirp` *(if derived from internal calibration)* |
+| $\sigma_{\mathrm{noise}}^2$ | Noise power | *Internal calibration parameters retrieval step* | 2 N{sub}`rg,ic` x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble <br> *Intermediate product: `iEstNoise`* |
+| $G_{CH}$ | Chirp replica | *RAW data extraction step / Internal calibration pars retrieval step / `AUX_INS` (`AUX_FMT`)* | N{sub}`chirp` x 1 array of complex values | - | - | Chirp function used in range compression step <br> *Intermediate product: `iChirp` (if derived from internal calibration)* |
 | $G_{AP}$ | Antenna pattern combined | *Antenna patter compensation step* | arrays of complex values | - | - | 2D antenna pattern after combination |
 | $\frac{G_{SF}\bullet{}G_{AC}}{G_{SL}}$ | Radiometric correction factors | *Radiometric corrections and calibration step* | (N{sub}`rg`-N{sub}`chirp`+1) x N’{sub}`az` array of real values | - | - | Radiometric corrections applied during processing (i.e., spread-loss factor, processing scaling factor and absolute calibration constant) |
 | $k_{noise}$ | `noiseGainList` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Noise calibration factor to be applied multiplicatively to the denoising vectors (one value per polarization) |

@@ -188,7 +188,7 @@ flowchart TB
 | - | `forestMaskingFlag` | `AUX_PP2_AGB` (`AUX_FMT`) | bool | - | True | True if forest/non-forest map masking should be performed |
 | *BB* {sup}`t` | Footprint | L2a main product header (`AGB_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates in a 5°×5° neighborhood |
 | *mDGG* | `minimumL2aCoverage` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
-| `refSel` | `referenceSeelection` | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | ‘`refOnly`’ | Combinatorial behaviour for multiple reference data at second iteration |
+| *`refSel`* | `referenceSeelection` | `AUX_PP2_AGB` (`AUX_FMT`) | String | ‘`refOnly`’, ‘`firstIterationOnly`’, ‘`weightedMean`’ | ‘`refOnly`’ | Combinatorial behaviour for multiple reference data at second iteration |
 | *LCM* | Land Cover Map | Internal resource (IODD) | $\left[ N_{lat,LCM}\times{}N_{lon,LCM} \right]$ | Yearly | - | Landcover product <br> classifying the type of land and forest |
 | $\Omega_{fcrej}$ | `rejectedLandcover` Classes | `AUX_PP2_AGB` (`AUX_FMT`) | List of integers | - | - | Set of landcover class indices to ignore. LCM description can be found in (IODD) |
 | ${\underline{\sigma}}_p^0,\ {\overline{\sigma}}_p^0$ | `backscatterLimits` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}\times$2 float value [scalar] | $0<{\underline{\sigma}}_p^0<{\overline{\sigma}}_p^0<\infty$ | 0.0001,100 for all polarisations | Lower and upper limits on backscatter in linear units |
@@ -202,7 +202,7 @@ flowchart TB
 | `useConstantN` | `useConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | Boolean [scalar] | - | False | If True, indexingN=p is forced |
 | $n_p$ | `valuesConstantN` | `AUX_PP2_AGB` (`AUX_FMT`) | $N_{pol}$floats | (-∞,∞) | (1.0,1.0,1.0) | Values to use if `useConstantN`=True |
 | *mFV* | `minimumPercentageOfFillableVoids` | `AUX_PP2_AGB` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 5.0 | The minimum [%] of invalid pixels that triggers a new iteration |
-| - | `regressionSolver` | `AUX_PP2_AGB` (`AUX_FMT`) | string | ‘double’, <br> ’float’ | double | Numerical precision of the regression |
+| - | *`regressionSolver`* | `AUX_PP2_AGB` (`AUX_FMT`) | string | ‘double’, <br> ’float’ | double | Numerical precision of the regression |
 
 (sec:atbd-agb-4-1-3)=
 #### 4.1.3 Outputs
@@ -211,7 +211,7 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | $\widehat{W}$ | Estimated AGB mean | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | - | - | AGB mean map [t/ha] for the 3°×3° processing block |
 | $\widehat{\sigma_W}$ | Estimated AGB std | AGB L2b product (`AGB_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | - | - | AGB std map [t/ha] for the 3°×3° processing block |
-| *rerun* | `agbTileStatus` | AGB L2b product (`AGB_PFD`) | String | ‘Complete’,, “NotComplete’, ‘Partial’ | - | Flag raised when a new iteration is needed |
+| *rerun* | *`agbTileStatus`* | AGB L2b product (`AGB_PFD`) | String | ‘Complete’,, “NotComplete’, ‘Partial’ | - | Flag raised when a new iteration is needed |
 | *HM* | heat map | AGB L2b product (`AGB_PFD`) | $3\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | 0- | - | heat map (three values (1 float and 2 integers) per pixel) for the 3°×3° processing block |
 | `acquisitionIdImage` | `acquisitionIdImage` | AGB L2b product (`AGB_PFD`) | $N_{L2a}\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]^{\mathrm{t}^{L2b}}$ | 0,1 | - | Incidence matrix for the contributing data |
 
@@ -321,11 +321,11 @@ $$ (eq:model-parameter-estimation-7)
 
 Such sets can belong to an area that covers only a subset of the original 3°×3° processing block 5°×5° neighbourhood: continental borders and sea/land interfaces are implicitly dealt within this algorithmic substep.
 
-*NOTE: when combining AGB previous estimates and external reference* AGB estimates in the second iteration, the behaviour can be selected by user (with parameter ‘`refSel`*’) as follows:*
+*NOTE: when combining AGB previous estimates and external reference* *AGB estimates in the second iteration, the behaviour can be selected by user (with parameter ‘`refSel`’) as follows:*
 
-- `refOnly`: *reference estimates are preferred when both data are available at the same pixel (default behaviour)*
-- `firstIterationOnly`: *AGB previously estimated* *values are preferred when both data are available at the same pixel*
-- `weightedMean`: *a weighted mean (where weights are the inverse of AGB standard deviation U and U*{sub}`fc`) *is computed when both data are available at the same pixel*
+- **`refOnly`:** *reference estimates are preferred when both data are available at the same pixel (default behaviour)*
+- **`firstIterationOnly`:** *AGB previously estimated* *values are preferred when both data are available at the same pixel*
+- **`weightedMean`:** *a weighted mean (where weights are the inverse of AGB standard deviation U and U*{sub}`fc`) *is computed when both data are available at the same pixel*
 
 (sec:atbd-agb-4-1-4-3)=
 ##### 4.1.4.3 Regression-based parameter estimation
@@ -558,7 +558,7 @@ Where the estimated AGB for pixel $(x,y)$ is calculated from a weighted average 
 
 *Moreover, from the implementation side, it must be noted that the least squares model inversion can be split into three orthogonal problems, if and only if all parameters depend on polarization: in this case, the above formulation is completely separable in the polarization domain.*
 
-*Note that the least square problem can be solved with double (64bit) or single (32bit) precision, based on* `regressionSolver` *flag.*
+*Note that the least square problem can be solved with double (64bit) or single (32bit) precision, based on `regressionSolver` flag.*
 
 (sec:atbd-agb-4-1-4-4)=
 ##### 4.1.4.4 AGB mean and standard error estimation

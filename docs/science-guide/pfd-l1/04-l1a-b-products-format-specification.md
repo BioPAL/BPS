@@ -1923,7 +1923,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* | *Number of* `dcEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
+| *count* | *Number of `dcEstimate` records within the list.* | `xsd:unsignedInt` | *required* |
 | `dcEstimate` | Doppler Centroid estimate record which contains the Doppler Centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | <u>`dcEstimateType`</u> | 1.. 150 |
 
 :::
@@ -1989,7 +1989,7 @@ classDiagram
 
 | **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| *count* | *Number of* `fmRateEstimate` *records within the list.* | `xsd:unsignedInt` | *required* |
+| *count* | *Number of `fmRateEstimate` records within the list.* | `xsd:unsignedInt` | *required* |
 | `fmRateEstimate` | Frequency Modulation rate estimate record. <br> Considering the worst case (entire slice processed non-framed, one entry each 1 second), list `maxOccurs` is set to 150. | `slantRangePolynomialType` | 1.. 150 |
 
 :::

@@ -178,7 +178,7 @@ CoSCS(i,\ j)\cdot\exp \left\{ +j\ {\Delta{}\varphi}_{syn,n,r}(i,j) \right\}.
 \tag{4.4}
 $$ (eq:atbd-l1-stack-4-4-2)
 
-Synthetic interferograms are annotated in the L1c products as the `flatteningPhaseScreen` LUT.
+Synthetic interferograms are annotated in the L1c products as the *`flatteningPhaseScreen`* LUT.
 
 (sec:atbd-l1-stack-4-1-3-4)=
 ##### 4.1.3.4 Vertical Wavenumber Computation
@@ -313,19 +313,19 @@ W(n,m)=\frac{p2p(n,m)\cdot{}snr(n,m)}{1+\ p2p(n,m)\cdot{}snr(n,m)},
 \tag{4.9}
 $$ (eq:atbd-l1-stack-4-9)
 
-The shifts estimated in a block are considered valid if $W(n,m)$ is above a quality threshold specified by `AUX_PPS` (`blockQualityThreshold`). The matrix $W(n,m)$ is written in the quality LUTs of the stack.
+The shifts estimated in a block are considered valid if $W(n,m)$ is above a quality threshold specified by `AUX_PPS` (*`blockQualityThreshold`*). The matrix $W(n,m)$ is written in the quality LUTs of the stack.
 
 At this stage, the Stack Processor allow for two possible approaches for estimating the final coregistration shifts from those estimated in {eq}`Equation (4.12) <4.12>`:
 
 - Upsample the coregistration shifts to the primary grid (see {sec}`Section 4.2.3 <4.2.3>`)
 - Use a model-based inversion of the shifts (see {sec}`Section 4.2.4 <4.2.4>`)
 
-The selection of the method is left to the user and it is configurable via the `AUX_PPS` parameter `modelBasedFitFlag`. By default, Stack Processor uses not model-based inversion.
+The selection of the method is left to the user and it is configurable via the `AUX_PPS` parameter *`modelBasedFitFlag`*. By default, Stack Processor uses not model-based inversion.
 
 (sec:atbd-l1-stack-4-2-2)=
 #### 4.2.2 Upsampling of the Coregistration Shifts
 
-In this modality, the coregistration shifts in {eq}`Equation (4.12) <4.12>` are filtered with a low-pass filter using either a boxcar or a Gaussian kernel, as specified by the `AUX_PPS` parameter `lowPassFilterType` and then upsampled to the full extent of the coregistration primary grid using a linear interpolation. Since the operation is trivial, we simply report the Inputs and Outputs table in the section below to give an overview of the parameters configurable via `AUX_PPS`.
+In this modality, the coregistration shifts in {eq}`Equation (4.12) <4.12>` are filtered with a low-pass filter using either a boxcar or a Gaussian kernel, as specified by the `AUX_PPS` parameter *`lowPassFilterType`* and then upsampled to the full extent of the coregistration primary grid using a linear interpolation. Since the operation is trivial, we simply report the Inputs and Outputs table in the section below to give an overview of the parameters configurable via `AUX_PPS`.
 
 (sec:atbd-l1-stack-4-2-2-1)=
 ##### 4.2.2.1 Inputs and Outputs
@@ -464,7 +464,7 @@ The coregistration module exposes to the user the possibility to let the process
 Under Automatic mode, the coregistration model first attempts to the coregister the data using the coregistration with “geometry and data” mode and evaluates the coregistration by checking that the following conditions hold:
 
 - The number of valid coregistration blocks is above a selected threshold. The threshold is specified by the user via `AUX_PPS` as the minimum number of valid blocks.
-- $Q_{shifts}$ specified in Equation 4.17 is above a threshold also specified by the user via `AUX_PPS` (`fittingQualityThreshold`).
+- $Q_{shifts}$ specified in Equation 4.17 is above a threshold also specified by the user via `AUX_PPS` (*`fittingQualityThreshold`*).
 
 If one of the two conditions above failed, the coregistration results are discarded and the geometry-based estimated shifts are used as a fallback.
 
@@ -542,7 +542,7 @@ $$ (eq:atbd-l1-stack-4-13)
 
 Accordingly, shifting onto the *full resolution coregistration primary grid* is achieved by selecting the indices $i=i'$ and $j=j'$. Similarly, we shift onto the target *subsampled primary LUT grid* by selecting subsampling indices $i^{'}$ and $j'$ that best approximate the target resolution (90m x 90m under default configuration of the L1a products).
 
-In the context of coregistration with Geometry and Data, we only shift pixels that correspond to an estimation accuracy above a user selected threshold (see `AUX_FMT`, Table 67, `residualShiftsQualityThreshold`). For the other pixels, no shift is applied. That is achieved by setting $T_{az}(i,j)\mathrel{:=}{}t_{az}^L(i,\ j)$ and $T_{rg}(i,j)\mathrel{:=}{}t_{rg}^L(i,\ j)$ for each pixel $(i,j)$ so that $Q_{ij}<q_{thres}$.
+In the context of coregistration with Geometry and Data, we only shift pixels that correspond to an estimation accuracy above a user selected threshold (see `AUX_FMT`, Table 67, *`residualShiftsQualityThreshold`*). For the other pixels, no shift is applied. That is achieved by setting $T_{az}(i,j)\mathrel{:=}{}t_{az}^L(i,\ j)$ and $T_{rg}(i,j)\mathrel{:=}{}t_{rg}^L(i,\ j)$ for each pixel $(i,j)$ so that $Q_{ij}<q_{thres}$.
 
 Finally, note that if a LUT needs to be shifted onto the full resolution coregistration primary grid and later exported onto the subsampled primary LUT grid in the L1c product, the above operation can be performed in 2 separate steps with negligible runtime and memory overhead by first shifting onto the full resolution primary grid, obtaining the matrix $L^{\vert{}r}(i,j)$, and then by directly subsampling that matrix using indices $i'$ and $j^{'}$.
 
