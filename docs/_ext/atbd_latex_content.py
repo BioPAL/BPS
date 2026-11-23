@@ -770,9 +770,9 @@ def _split_tall_rows(table: nodes.table, budget: float, pad: float = 2.0) -> int
 # of the last one (_PARTS_CAPTION_PT) included.
 _PARTS_ROW_PT = 490.0
 _PART_GAP_PT = 8
-_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51)  # text of 6 pt or more
+_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51, 0.505)  # text of 6 pt or more
 _PARTS_LABEL_PT = 22.0
-_PARTS_FLOAT_PT = 0.88 * _TEXT_HEIGHT_PT
+_PARTS_FLOAT_PT = 0.95 * _TEXT_HEIGHT_PT
 _PARTS_CAPTION_PT = 40.0
 
 
@@ -1148,7 +1148,7 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float,
     heights = [max(sizes[k][1] * scales[k] for k in row) + _PARTS_LABEL_PT for row in rows]
     groups: list[list[list[int]]] = []
     used = 0.0
-    room = _PARTS_FLOAT_PT - (_PARTS_CAPTION_PT if each_caption else 0.0)
+    room = _PARTS_FLOAT_PT - _PARTS_CAPTION_PT  # every float carries a caption
     for row, height in zip(rows, heights):
         if groups and used + height <= room:
             groups[-1].append(row)
@@ -1156,15 +1156,6 @@ def _pack_parts(sizes: list[tuple[float, float]], scale: float,
         else:
             groups.append([row])
             used = height
-    if not each_caption and groups:
-        last = groups[-1]
-        total = sum(heights[rows.index(r)] for r in last)
-        while len(last) > 1 and total + _PARTS_CAPTION_PT > _PARTS_FLOAT_PT:
-            moved = last.pop()
-            total -= heights[rows.index(moved)]
-            groups.append([moved])
-            last = groups[-1]
-            total = heights[rows.index(moved)]
     return scales, groups
 
 
@@ -1266,7 +1257,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 lead.parent.insert(lead.parent.index(lead), nodes.raw(
                     "", r"\needspace{4\baselineskip}", format="latex"))
         for figure in figures:
-            if _followed_by_longtable(figure):
+            if _followed_by_longtable(figure) and False:
                 # A float pending when a longtable starts can be set off the
                 # page (with the table start): keep this one in place.
                 figure.parent.insert(figure.parent.index(figure),
@@ -1518,7 +1509,7 @@ class AtbdLatexContent(SphinxPostTransform):
             figure = nodes.figure("")
             last_group = g == len(groups) - 1
             setup = ""
-            if (last_group or each_caption) and caption is not None and caption[0]:
+            if caption is not None and caption[0]:
                 setup += _set_number("figure", caption[0])
             figure += nodes.raw("", setup, format="latex")
             for r, row in enumerate(rows):
@@ -1539,7 +1530,7 @@ class AtbdLatexContent(SphinxPostTransform):
                     figure += visuals[i]
                     figure += nodes.raw("", r"\end{minipage}", format="latex")
                 figure += nodes.raw("", "}", format="latex")
-            if (last_group or each_caption) and caption is not None:
+            if caption is not None:
                 inlines = [n.deepcopy() for n in caption[1]]
                 if each_caption:
                     letters = sorted(i for row in rows for i in row)
@@ -1548,13 +1539,15 @@ class AtbdLatexContent(SphinxPostTransform):
                         "%s%s%s" % (chr(97 + letters[0]),
                                     "–" if letters[-1] - letters[0] == len(letters) - 1 else ", ",
                                     chr(97 + letters[-1])))))
+                elif g > 0:
+                    inlines.append(nodes.Text(" (continued)"))
                 figure += nodes.caption("", "", *inlines)
-                if g == 0 or not each_caption:
+                if g == 0:
                     figure += nodes.raw("", "".join(_latex_label(docname, x)
                                                     for x in container["ids"]), format="latex")
             figures.append(figure)
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
-        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        container.replace_self([barrier, *figures, *extra])
         return figures[0]
 
     def _class_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
@@ -1643,7 +1636,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 figure += nodes.caption("", "", *caption[1])
             figures.append(figure)
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
-        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        container.replace_self([barrier, *figures, *extra])
         return figures[0]
 
     def _mermaid_box(self, code: str, options: Any) -> tuple[float, float] | None:
