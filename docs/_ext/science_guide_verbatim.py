@@ -95,6 +95,26 @@ class IdentifierBreaks(SphinxPostTransform):
                 lit += nodes.Text(piece)
 
 
+class KeepLinkText(SphinxPostTransform):
+    """The theme writes a bare GitHub/GitLab URL as "owner/repo"; a converted page
+    prints it as the source does (L1 SAR [RD33], review W1-6)."""
+
+    default_priority = 450  # after the theme's ShortenLinkTransform (400)
+    formats = ("html",)
+
+    def run(self, **kwargs: Any) -> None:
+        if not is_converted(self.app, self.env.docname):
+            return
+        for ref in self.document.findall(nodes.reference):
+            uri = ref.get("refuri", "")
+            classes = ref.get("classes", [])
+            short = [c for c in ("github", "gitlab") if c in classes]
+            if not uri or not short or len(ref.children) != 1:
+                continue
+            ref.children = [nodes.Text(uri)]
+            ref["classes"] = [c for c in classes if c not in short]
+
+
 def _ancestors(node: nodes.Node):
     while node.parent is not None:
         node = node.parent
@@ -105,4 +125,5 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.connect("source-read", _source_read)
     app.add_transform(NoSmartQuotes)
     app.add_post_transform(IdentifierBreaks)
+    app.add_post_transform(KeepLinkText)
     return {"version": "1.0", "parallel_read_safe": True, "parallel_write_safe": True}
