@@ -80,16 +80,29 @@
     \hbox{\color{atbdblue}\fontsize{16bp}{19bp}\selectfont\rule{0bp}{14.5bp}#2}\vss}%
   \nointerlineskip}
 
-% Web export notice at the bottom of the Document information page.
+% Web export notice (D-pdf-1): grey box between the heading and the first
+% table of the Document information; it names the code, issue and build date.
+\definecolor{atbdnoticerule}{HTML}{808080}
+\definecolor{atbdnoticefill}{HTML}{F2F2F2}
 \newcommand\atbd@today{%
   \ifnum\day<10 0\fi\the\day/\ifnum\month<10 0\fi\the\month/\the\year}
+\newcommand\atbdnoticewidth{446bp}
 \newcommand\atbdexportnotice{%
-  \par\vfill
-  \noindent{\color{atbdgrey}\linespread{1}\fontsize{8bp}{10bp}\selectfont
-    Web export of \atbdcode\ issue \atbdissue
-    \ifdefempty{\atbdbpsversion}{}{\ (BPS v\atbdbpsversion)},
-    generated on \atbd@today\ from the BIOMASS BPS documentation site.
-    The authoritative document is the approved ESA PDF.\par}}
+  \par\nointerlineskip
+  \hbox{\setlength\fboxsep{5bp}\setlength\fboxrule{0.5bp}%
+  \fcolorbox{atbdnoticerule}{atbdnoticefill}{%
+    \begin{minipage}{\dimexpr\atbdnoticewidth-2\fboxsep-2\fboxrule\relax}%
+      \color{black}\linespread{1}\fontsize{9bp}{11.2bp}\selectfont
+      \raggedright\setlength\parindent\z@
+      This PDF is a web export of \atbdcode\ issue \atbdissue, generated on
+      \atbd@today\ from the BIOMASS BPS documentation site
+      \ifdefempty{\atbdbpsversion}{}{(BPS v\atbdbpsversion)}.
+      Pagination, fonts and some figures (redrawn) differ from the approved
+      document. The recipients, authors and approval listed below are those of
+      the approved document; this export has not been reviewed or approved.
+      The authoritative version is the approved ESA PDF.\par
+    \end{minipage}}}%
+  \nointerlineskip\vspace{14bp}}
 
 % Grid tables of the Document information: 16.9 pt rows, 0.5 pt grey rules,
 % 10 pt Arial, cell text 5.9 pt from the rule.
@@ -107,30 +120,64 @@
   \endgroup}%
   \nointerlineskip}
 
-% Change history: 4 columns, header repeated, bullets in the Change column.
+% Change history: 4 columns, header repeated. Every item of the Change
+% column is a row of its own (a longtable row cannot break, an entry can), the
+% rules between them are left out; date, issue and authors go in the middle
+% row, centred vertically.
 \newcommand\atbdchgfont{\linespread{1}\fontsize{10bp}{14.6bp}\selectfont
   \setlength\parindent\z@\setlength\parskip\z@}
 \newcommand\atbdchg[1]{#1}
-\newcommand\atbdbullet[1]{\hangindent=18bp\hangafter=1\leavevmode\hbox to 18bp{\textbullet\hss}#1}
-\newcommand\atbdchangerow[4]{%
-  #1 & #2 & \rule{0bp}{12.85bp}#3\rule[-4.5bp]{0bp}{0bp} &
-  \rule{0bp}{11.85bp}#4\rule[-4.65bp]{0bp}{0bp} \\}
-\newenvironment{atbdchange}{%
+% bullet: level 1 "•" at the column edge, level 2 "o" 18 pt further
+\newcommand\atbdbullet[2][1]{%
+  \leavevmode\hangindent=\dimexpr18bp*(2*#1-1)\relax\hangafter=1
+  \hskip\dimexpr36bp*(#1-1)\relax\hbox to 18bp{\ifnum#1=1 \textbullet\else o\fi\hss}#2}
+% #1 date, #2 issue, #3 height above the first baseline, #4 change, #5 authors,
+% #6 end of the row (\\ or \\*: no page break after it)
+\newcommand\atbdchangerow[6]{%
+  #1 & #2 & \rule{0bp}{#3bp}#4\rule[-4.5bp]{0bp}{0bp} & #5 #6}
+% Bottom of the front-matter pages: the originals stop above y = 755 pt, the
+% footer rule is at 764.5 pt; \atbd@shrinkpage / \atbd@growpage take
+% \atbdfrontlift off the text height (globally: the output routine resets
+% \@colht from \textheight at each new page).
+\newdimen\atbdfrontlift
+\newcommand\atbd@shrinkpage[1][10bp]{%
+  \atbdfrontlift=#1\relax
+  \global\advance\textheight-\atbdfrontlift
+  \global\advance\@colht-\atbdfrontlift
+  \global\advance\@colroom-\atbdfrontlift
+  \global\advance\vsize-\atbdfrontlift}
+\newcommand\atbd@growpage{%
+  \global\advance\textheight\atbdfrontlift
+  \global\advance\@colht\atbdfrontlift
+  \global\advance\@colroom\atbdfrontlift
+  \global\advance\vsize\atbdfrontlift}
+
+% In the rows of a long entry (one row per bullet) the date and the issue hang
+% from the first baseline of the middle row: a box of zero height, so that it
+% does not stretch the row. (A cell of type m is centred on the baseline of
+% its row: lowered by half the height of the digits to read on it.)
+\newcommand\atbdflat[1]{\setbox\z@\vbox{\hsize=\linewidth\centering\noindent#1\par}%
+  \ht\z@\z@\dp\z@\z@\raisebox{-2.6bp}[0bp][0bp]{\box\z@}}
+
+% #1-#4 widths of the four columns, #5 shift of the table to the left (pt);
+% the widths differ from one original to another (Word fits the columns).
+\newenvironment{atbdchange}[5]{%
   \par\nointerlineskip
+  \atbd@shrinkpage[16bp]
   \begingroup
-  \LTpre\z@\LTpost\z@\LTleft=-\atbdheadindent\LTright=0bp plus 1fill
+    \LTpre\z@\LTpost\z@\LTleft=\dimexpr-\atbdheadindent-#5bp\relax\LTright=0bp plus 1fill
   \arrayrulecolor{atbdgridrule}\setlength\arrayrulewidth{0.5bp}%
   \setlength\tabcolsep{5.4bp}\renewcommand\arraystretch{1}\atbdinfofont
   \def\atbd@head##1{\cellcolor{atbdgridhead}\rule[-5.1bp]{0bp}{16.4bp}\bfseries ##1}%
   \def\atbd@headrow{%
-    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr63.7bp-0.5bp-10.8bp\relax}}{\atbd@head{Date}} &
-    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr49.5bp-0.5bp-10.8bp\relax}}{\atbd@head{Issue}} &
+    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr#1bp-0.5bp-10.8bp\relax}}{\atbd@head{Date}} &
+    \multicolumn{1}{|>{\centering\arraybackslash}p{\dimexpr#2bp-0.5bp-10.8bp\relax}}{\atbd@head{Issue}} &
     \atbd@head{Change} & \atbd@head{Author}}%
-  \begin{longtable}{|>{\centering\arraybackslash}m{\dimexpr63.7bp-0.5bp-10.8bp\relax}%
-      |>{\centering\arraybackslash}m{\dimexpr49.5bp-0.5bp-10.8bp\relax}%
-      |>{\raggedright\arraybackslash\atbdchgfont}p{\dimexpr256.4bp-0.5bp-10.8bp\relax}%
-      |>{\raggedright\arraybackslash\linespread{1}\fontsize{10bp}{16.5bp}\selectfont}%
-        p{\dimexpr123.3bp-0.5bp-10.8bp\relax}|}
+  \begin{longtable}{|>{\centering\arraybackslash}m{\dimexpr#1bp-0.5bp-10.8bp\relax}%
+      |>{\centering\arraybackslash}m{\dimexpr#2bp-0.5bp-10.8bp\relax}%
+      |>{\raggedright\arraybackslash\atbdchgfont}m{\dimexpr#3bp-0.5bp-10.8bp\relax}%
+      |>{\raggedright\arraybackslash\linespread{1}\fontsize{10bp}{15bp}\selectfont}%
+        m{\dimexpr#4bp-0.5bp-10.8bp\relax}|}
   \hline
   \atbd@headrow\\
   \hline
@@ -144,7 +191,7 @@
   }{%
   \end{longtable}%
   \endgroup
-  \par}
+  \par\clearpage\atbd@growpage}
 
 % ---------------------------------------------------------------------------
 % Table of contents: three levels, as in the originals. The entries of the
@@ -209,9 +256,11 @@
   \begingroup
     \hypersetup{linkcolor=black}%
     \let\contentsline\atbd@contentsline
+    \atbd@shrinkpage
     \atbdfrontheading[29.2bp]{#1}%
     \@starttoc{toc}%
-  \endgroup
-  \clearpage}
+    \par\clearpage
+    \atbd@growpage
+  \endgroup}
 
 \endinput
