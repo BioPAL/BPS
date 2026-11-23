@@ -142,7 +142,8 @@ def _latex_label(docname: str, ident: str) -> str:
 
 _FORMAT_TAGS = {"sub": nodes.subscript, "sup": nodes.superscript, "em": nodes.emphasis,
                 "i": nodes.emphasis, "strong": nodes.strong, "b": nodes.strong}
-_TAG_RE = re.compile(r"<(/?)(\w+)[^>]*>")
+_FMT_TAG_RE = re.compile(r"<(/?)(\w+)[^>]*>")
+"""An HTML tag of a caption (not to be confused with ``_TAG_RE``, the \\tag of a formula)."""
 
 
 def _formatted(text: str) -> list[nodes.Node]:
@@ -151,7 +152,7 @@ def _formatted(text: str) -> list[nodes.Node]:
     root: nodes.Element = nodes.inline()
     stack = [root]
     pos = 0
-    for m in _TAG_RE.finditer(text):
+    for m in _FMT_TAG_RE.finditer(text):
         if m.start() > pos:
             stack[-1] += nodes.Text(html.unescape(text[pos:m.start()]))
         pos = m.end()
@@ -168,6 +169,19 @@ def _formatted(text: str) -> list[nodes.Node]:
     if pos < len(text):
         stack[-1] += nodes.Text(html.unescape(text[pos:]))
     return list(root.children)
+
+
+_TALL = re.compile(r"\\(?:d?frac|sum|prod|int|begin|binom|sqrt)(?![A-Za-z])")
+
+
+def _breakable(tex: str) -> str:
+    """A formula of a table cell without growing delimiters when nothing tall
+    needs them: TeX cannot break a line inside ``\\left[ … \\right]``, so a
+    long ``[N_pol × N_pol × …]`` overflowed its cell (FH p. 30)."""
+    if _TALL.search(tex):
+        return tex
+    return re.sub(r"\\(?:left|right)(?![A-Za-z])\s*(\\[{}|]|\\[A-Za-z]+|[.\[\]()|])",
+                  lambda m: "" if m.group(1) == "." else m.group(1), tex)
 
 
 def _caption_inlines(fragment: str) -> list[nodes.Node]:
@@ -766,7 +780,8 @@ class AtbdLatexContent(SphinxPostTransform):
             if math.parent is not None and _in_table(math):
                 # Formulas wider than their column are scaled down to it.
                 math.replace_self(nodes.raw(
-                    "", r"\atbdfitmath{\(%s\)}" % math.astext(), format="latex"))
+                    "", r"\atbdfitmath{\(%s\)}" % _breakable(math.astext()),
+                    format="latex"))
         engine = self.config.latex_engine
         for literal, _docname in found["literal"]:
             if isinstance(literal.parent, (nodes.title, nodes.caption)):
