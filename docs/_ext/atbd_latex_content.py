@@ -71,6 +71,10 @@ _MERMAID_FALLBACK_PT = 4.0
 # top-to-bottom flowchart of the Science Guide) under _MERMAID_MIN_PT may take
 # a page of its own, its caption included.
 _MERMAID_SHARE = 0.8
+# A diagram whose text prints below _LANDSCAPE_BELOW_PT (and gains 15 % or more)
+# goes on a landscape page, at most _LANDSCAPE_SHARE of its height.
+_LANDSCAPE_BELOW_PT = 6.0
+_LANDSCAPE_SHARE = 0.8
 _MERMAID_TALL_SHARE = 0.95
 # "direction LR" (XSD class diagrams) and "flowchart LR" / "graph LR" (the
 # redrawn Science Guide figures).
@@ -725,6 +729,67 @@ def _split_tall_rows(table: nodes.table, budget: float) -> int:
     return split
 
 
+# Redrawn figures in parts: rows up to _PARTS_ROW_PT wide (a little over the
+# text width, centred), parts at a text size of 12 pt x scale between
+# _PARTS_SCALES; floats of at most _PARTS_FLOAT_PT of height, the caption
+# of the last one (_PARTS_CAPTION_PT) included.
+_PARTS_ROW_PT = 490.0
+_PART_GAP_PT = 8
+_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.5)
+_PARTS_LABEL_PT = 22.0
+_PARTS_FLOAT_PT = 0.88 * _TEXT_HEIGHT_PT
+_PARTS_CAPTION_PT = 40.0
+
+
+def _pack_parts(sizes: list[tuple[float, float]], scale: float
+                ) -> tuple[list[float], list[list[list[int]]]]:
+    """Parts (width, height) in pt at a common scale: per-part scales (a part
+    wider than a row is scaled down to it), rows of one or two neighbours,
+    rows grouped in floats."""
+    scales = [min(scale, _PARTS_ROW_PT / w) for w, _h in sizes]
+    rows: list[list[int]] = []
+    i = 0
+    while i < len(sizes):
+        if i + 1 < len(sizes):
+            pair = (sizes[i][0] * scales[i] + sizes[i + 1][0] * scales[i + 1]
+                    + _PART_GAP_PT)
+            if pair <= _PARTS_ROW_PT:
+                rows.append([i, i + 1])
+                i += 2
+                continue
+        rows.append([i])
+        i += 1
+    heights = [max(sizes[k][1] * scales[k] for k in row) + _PARTS_LABEL_PT for row in rows]
+    groups: list[list[list[int]]] = []
+    used = 0.0
+    for row, height in zip(rows, heights):
+        if groups and used + height <= _PARTS_FLOAT_PT:
+            groups[-1].append(row)
+            used += height
+        else:
+            groups.append([row])
+            used = height
+    if len(groups) > 1 or groups:
+        last = groups[-1]
+        total = sum(heights[rows.index(r)] for r in last)
+        while len(last) > 1 and total + _PARTS_CAPTION_PT > _PARTS_FLOAT_PT:
+            moved = last.pop()
+            total -= heights[rows.index(moved)]
+            groups.append([moved])
+            last = groups[-1]
+            total = heights[rows.index(moved)]
+    return scales, groups
+
+
+def _plan_parts(sizes: list[tuple[float, float]]
+                ) -> tuple[float, list[float], list[list[list[int]]]]:
+    """The largest scale of _PARTS_SCALES giving the fewest floats."""
+    plans = [(s, *_pack_parts(sizes, s)) for s in _PARTS_SCALES]
+    fewest = min(len(groups) for _s, _sc, groups in plans)
+    return next(p for p in plans if len(p[2]) == fewest)
+
+
+
 class AtbdLatexContent(SphinxPostTransform):
     """Rewrite the web-only constructs of the converted documents for print."""
 
@@ -941,8 +1006,43 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += visual
         if caption is not None:
             figure += nodes.caption("", "", *inlines)
+        landscape = False
+        if (mermaid_only and not original and len(visuals) == 1
+                and "atbd-drawn-figure" not in container.get("classes", [])):
+            landscape = self._wants_landscape(visuals[0], single_share)
+        if landscape:
+            # a diagram too wide for its text to stay readable on a portrait
+            # page: a landscape page of its own (pdflscape, atbdfloats.sty)
+            setup += r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % _LANDSCAPE_SHARE
+            figure.children[0] = nodes.raw("", setup, format="latex")
+            figure["classes"].append("atbd-landscape")
+            container.replace_self([
+                nodes.raw("", r"\begin{landscape}\atbdfigurehere", format="latex"),
+                figure,
+                nodes.raw("", r"\end{landscape}", format="latex"), *extra])
+            return figure
+        if mermaid_only and not original and len(visuals) == 1:
+            box = self._mermaid_box(visuals[0]["code"], visuals[0].get("options", {}))
+            if box is not None and _MERMAID_FONT_PT * min(
+                    _MERMAID_SCALE, _TEXT_WIDTH_PT / box[0],
+                    single_share * _TEXT_HEIGHT_PT / box[1]) < _LANDSCAPE_BELOW_PT:
+                # text under 6 pt: the diagram may extend into the margins, as
+                # wide tables do (centred, up to _PARTS_ROW_PT)
+                figure.children[0] = nodes.raw("", setup.replace(
+                    r"\def\atbdfigmaxwidth{\linewidth}",
+                    r"\def\atbdfigmaxwidth{%dpt}" % _PARTS_ROW_PT), format="latex")
         container.replace_self([figure, *extra])
         return figure
+
+    def _wants_landscape(self, diagram: nodes.Element, share: float) -> bool:
+        """True when a landscape page gives a Mermaid diagram readably larger text."""
+        box = self._mermaid_box(diagram["code"], diagram.get("options", {}))
+        if box is None:
+            return False
+        width, tall = box
+        portrait = min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width, share * _TEXT_HEIGHT_PT / tall)
+        land = min(_MERMAID_SCALE, _TEXT_HEIGHT_PT / width, _LANDSCAPE_SHARE * _TEXT_WIDTH_PT / tall)
+        return _MERMAID_FONT_PT * portrait < _LANDSCAPE_BELOW_PT and land > 1.15 * portrait
 
     def _table_figure(self, container: nodes.container, docname: str, table: nodes.table,
                       caption: Any, extra: list[nodes.Node]) -> nodes.Node:
@@ -968,8 +1068,58 @@ class AtbdLatexContent(SphinxPostTransform):
     def _figure_parts(self, container: nodes.container, docname: str,
                       visuals: list[nodes.Node], caption: Any,
                       extra: list[nodes.Node]) -> nodes.figure:
-        """A complex figure redrawn in parts (a), (b)…: one float per part,
-        each sized as a figure of its own, the caption under the last one."""
+        """A complex figure redrawn in parts (a), (b)...: the parts are set side
+        by side where two fit in a row, in as few floats (pages) as the text
+        size allows, the caption under the last one (see _pack_parts)."""
+        sizes = []
+        for visual in visuals:
+            self._fit_mermaid(visual, container)  # may lay the part out top to bottom
+            box = self._mermaid_box(visual["code"], visual.get("options", {}))
+            if box is None:
+                sizes = []
+                break
+            sizes.append(box)
+        if not sizes:
+            return self._figure_parts_stacked(container, docname, visuals, caption, extra)
+        scale, scales, groups = _plan_parts(sizes)
+        figures = []
+        for g, rows in enumerate(groups):
+            figure = nodes.figure("")
+            last_group = g == len(groups) - 1
+            setup = ""
+            if last_group and caption is not None and caption[0]:
+                setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
+            figure += nodes.raw("", setup, format="latex")
+            for r, row in enumerate(rows):
+                row_tex = r"\par\noindent\makebox[\linewidth][c]{" if r == 0 else (
+                    r"\par\medskip\noindent\makebox[\linewidth][c]{")
+                figure += nodes.raw("", row_tex, format="latex")
+                for k, i in enumerate(row):
+                    w, h = sizes[i]
+                    s = scales[i]
+                    head = (r"\hspace{%dpt}" % _PART_GAP_PT if k else "") + (
+                        r"\begin{minipage}[b]{%.1fpt}\centering{\small (%s)}\par\smallskip "
+                        r"\csname spx@image@maxheight\endcsname=%.1fpt "
+                        r"\def\atbdfigscale{%.4f}\def\atbdfigmaxwidth{\linewidth}"
+                        % (w * s * 1.004 + 1, chr(97 + i), h * s * 1.01 + 2, s))
+                    figure += nodes.raw("", head, format="latex")
+                    visuals[i].parent.remove(visuals[i])
+                    figure += visuals[i]
+                    figure += nodes.raw("", r"\end{minipage}", format="latex")
+                figure += nodes.raw("", "}", format="latex")
+            if last_group and caption is not None:
+                figure += nodes.caption("", "", *caption[1])
+                figure += nodes.raw("", "".join(_latex_label(docname, x)
+                                                for x in container["ids"]), format="latex")
+            figures.append(figure)
+        barrier = nodes.raw("", r"\FloatBarrier", format="latex")
+        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        return figures[0]
+
+    def _figure_parts_stacked(self, container: nodes.container, docname: str,
+                              visuals: list[nodes.Node], caption: Any,
+                              extra: list[nodes.Node]) -> nodes.figure:
+        """_figure_parts when a part cannot be measured: one float per part."""
         figures = []
         last = len(visuals) - 1
         for i, visual in enumerate(visuals):
@@ -988,11 +1138,30 @@ class AtbdLatexContent(SphinxPostTransform):
             if i == last and caption is not None:
                 figure += nodes.caption("", "", *caption[1])
             figures.append(figure)
-        # the parts stay together and in place: no float of them drifts past the
-        # text that follows the figure (placeins, loaded in setup())
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
         container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
         return figures[0]
+
+    def _mermaid_box(self, code: str, options: Any) -> tuple[float, float] | None:
+        """(width, height) in pt of the PDF of a Mermaid diagram; None if unknown."""
+        from types import SimpleNamespace
+
+        from sphinxcontrib.mermaid import MermaidError, render_mm
+
+        try:
+            _relfn, outfn = render_mm(SimpleNamespace(builder=self.app.builder),
+                                      code, options, "pdf")
+            if outfn is None:
+                return None
+            match = _MEDIABOX_RE.search(Path(outfn).read_bytes())
+        except MermaidError:
+            return None
+        except Exception:  # noqa: BLE001 - keep the stacked layout
+            return None
+        if not match:
+            return None
+        x0, y0, x1, y1 = (float(v) for v in match.groups())
+        return (x1 - x0, y1 - y0) if x1 > x0 and y1 > y0 else None
 
     def _mermaid_font(self, code: str, options: Any, height: float) -> float | None:
         """Text size (pt) of a Mermaid diagram once fitted in the page.

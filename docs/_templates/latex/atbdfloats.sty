@@ -37,6 +37,7 @@
 \setlength\atbdcaptionskip{4pt}
 % Underscores of long identifiers may break the line inside table cells.
 \AtBeginEnvironment{longtable}{%
+  \hyphenpenalty=10000 \exhyphenpenalty=10000 % no hyphenation in cells (Word)
   \let\atbd@underscore\_%
   \def\_{\atbd@underscore\allowbreak}}
 
@@ -104,6 +105,7 @@
 % 85 % of the text width; white margins of the rasters are trimmed with the
 % values computed at build time (atbdtrim.tex, see atbd_latex_content.py).
 % ---------------------------------------------------------------------------
+\RequirePackage{pdflscape}
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{0}
 \setcounter{totalnumber}{4}
