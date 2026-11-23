@@ -6,13 +6,13 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{atbdmeta}[2026/11/23 ATBD PDF metadata]
 
-\newcommand\atbdmetasubject{\atbdcode, Issue \atbdissue}
+\newcommand\atbdmetasubject{Web export of \atbdcode\space issue \atbdissue\space - not the approved ESA document}
 
 % hyperref is loaded by Sphinx after the preamble: set up once it is there.
 \AtBeginDocument{%
   \hypersetup{%
     pdftitle={\atbdtitle},
-    pdfauthor={ARESYS / ESA},
+    pdfauthor={BIOMASS BPS documentation site (web export)},
     pdfsubject={\atbdmetasubject},
     pdfkeywords={BIOMASS, Biomass Processing Suite, BPS,
       \ifx\atbdbpsversion\empty\else BPS \atbdbpsversion, \fi
