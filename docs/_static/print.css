@@ -105,6 +105,18 @@
   tr {
     break-inside: avoid;
   }
+  /* scroll containers of the screen layout: show everything */
+  .pst-scrollable-table-container,
+  .table-wrapper,
+  div.highlight,
+  .bd-article-container {
+    overflow: visible !important;
+  }
+  table {
+    max-width: 100%;
+    table-layout: auto;
+  }
+
   /* wide tables and code: wrap rather than run off the page */
   pre {
     white-space: pre-wrap;
