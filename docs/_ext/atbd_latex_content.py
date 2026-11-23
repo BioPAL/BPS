@@ -94,7 +94,7 @@ _EQUATION_BODY_RE = re.compile(
     r"(\\begin\{equation\}(?:\\label\{[^{}]*\})?)(.*?)(\\tag\*?\{[^{}]*\}\s*\\end\{equation\})",
     re.DOTALL,
 )
-_TAG_RE = re.compile(r"\\tag\*?\{(?P<num>[^{}]*)\}")
+_EQ_TAG_RE = re.compile(r"\\tag\*?\{(?P<num>[^{}]*)\}")
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 # ``x^{'}`` is fine for MathJax but TeX wants ``\prime``; and ``{{\widehat{s}}^{'}}^2``
 # is a "Double superscript" for TeX, which unwraps a group holding a single
@@ -1082,7 +1082,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 ids.append(refid)
         labels = "".join(_latex_label(docname, i) for i in ids)
         text = math.astext()
-        tag = _TAG_RE.search(text)
+        tag = _EQ_TAG_RE.search(text)
         if math.get("nowrap", False) or tag is None:
             # Same width limit as the numbered equations below.
             fitted = text
@@ -1098,7 +1098,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 math.parent.insert(math.parent.index(math),
                                    nodes.raw("", labels, format="latex"))
             return
-        body = _TAG_RE.sub("", text)
+        body = _EQ_TAG_RE.sub("", text)
         body = "\n".join(line for line in body.splitlines() if line.strip())
         label = ""
         if math.get("label"):

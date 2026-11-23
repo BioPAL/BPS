@@ -19,3 +19,12 @@ def test_left_to_right_diagrams_are_recognised_and_turned_top_down():
     for other in ("flowchart TB\n  a --> b", "flowchart RL\n  a --> b",
                   "flowchart LR2\n", "  a[flowchart LR] --> b"):
         assert not _LR_RE.search(other), other
+
+
+def test_equation_tag_pattern_is_not_the_html_tag_pattern():
+    # A second ``_TAG_RE`` (HTML tags of captions) once shadowed the ``\tag``
+    # one: numbered equations stayed in Sphinx's ``split`` (``\tag not allowed here``).
+    from atbd_latex_content import _EQ_TAG_RE
+    match = _EQ_TAG_RE.search("a=b\n\\tag{3.1}")
+    assert match is not None and match.group("num") == "3.1"
+    assert _EQ_TAG_RE.sub("", "a=b\n\\tag*{(A)}").strip() == "a=b"
