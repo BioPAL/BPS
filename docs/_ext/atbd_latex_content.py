@@ -71,6 +71,10 @@ _MERMAID_FALLBACK_PT = 4.0
 # top-to-bottom flowchart of the Science Guide) under _MERMAID_MIN_PT may take
 # a page of its own, its caption included.
 _MERMAID_SHARE = 0.8
+# A diagram whose text prints below _LANDSCAPE_BELOW_PT (and gains 15 % or more)
+# goes on a landscape page, at most _LANDSCAPE_SHARE of its height.
+_LANDSCAPE_BELOW_PT = 6.0
+_LANDSCAPE_SHARE = 0.8
 _MERMAID_TALL_SHARE = 0.95
 # "direction LR" (XSD class diagrams) and "flowchart LR" / "graph LR" (the
 # redrawn Science Guide figures).
@@ -954,8 +958,42 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += visual
         if caption is not None:
             figure += nodes.caption("", "", *inlines)
+        landscape = False
+        if mermaid_only and not original and len(visuals) == 1:
+            landscape = self._wants_landscape(visuals[0], single_share)
+        if landscape:
+            # a diagram too wide for its text to stay readable on a portrait
+            # page: a landscape page of its own (pdflscape, atbdfloats.sty)
+            setup += r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % _LANDSCAPE_SHARE
+            figure.children[0] = nodes.raw("", setup, format="latex")
+            figure["classes"].append("atbd-landscape")
+            container.replace_self([
+                nodes.raw("", r"\begin{landscape}\atbdfigurehere", format="latex"),
+                figure,
+                nodes.raw("", r"\end{landscape}", format="latex"), *extra])
+            return figure
+        if mermaid_only and not original and len(visuals) == 1:
+            box = self._mermaid_box(visuals[0]["code"], visuals[0].get("options", {}))
+            if box is not None and _MERMAID_FONT_PT * min(
+                    _MERMAID_SCALE, _TEXT_WIDTH_PT / box[0],
+                    single_share * _TEXT_HEIGHT_PT / box[1]) < _LANDSCAPE_BELOW_PT:
+                # text under 6 pt: the diagram may extend into the margins, as
+                # wide tables do (centred, up to _PARTS_ROW_PT)
+                figure.children[0] = nodes.raw("", setup.replace(
+                    r"\def\atbdfigmaxwidth{\linewidth}",
+                    r"\def\atbdfigmaxwidth{%dpt}" % _PARTS_ROW_PT), format="latex")
         container.replace_self([figure, *extra])
         return figure
+
+    def _wants_landscape(self, diagram: nodes.Element, share: float) -> bool:
+        """True when a landscape page gives a Mermaid diagram readably larger text."""
+        box = self._mermaid_box(diagram["code"], diagram.get("options", {}))
+        if box is None:
+            return False
+        width, tall = box
+        portrait = min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width, share * _TEXT_HEIGHT_PT / tall)
+        land = min(_MERMAID_SCALE, _TEXT_HEIGHT_PT / width, _LANDSCAPE_SHARE * _TEXT_WIDTH_PT / tall)
+        return _MERMAID_FONT_PT * portrait < _LANDSCAPE_BELOW_PT and land > 1.15 * portrait
 
     def _table_figure(self, container: nodes.container, docname: str, table: nodes.table,
                       caption: Any, extra: list[nodes.Node]) -> nodes.Node:
