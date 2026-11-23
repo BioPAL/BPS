@@ -34,6 +34,8 @@ This page is the web-rendered version of `BIO-BPS-L1PFD-ARE-010076` issue **1.7.
 
 ::::
 
+<p class="atbd-licence">Documentation © European Space Agency (ESA) and ARESYS, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>.</p>
+
 :::{dropdown} Document information
 :icon: info
 
