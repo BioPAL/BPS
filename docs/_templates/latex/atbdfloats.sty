@@ -28,8 +28,10 @@
 % ---------------------------------------------------------------------------
 \newcolumntype{\X}[2]{>{\raggedright\arraybackslash}p{\dimexpr
       (\linewidth-\spx@arrayrulewidth)*#1/#2-\tw@\tabcolsep-\spx@arrayrulewidth\relax}}
+\providecommand\atbdwideextra{0pt}
 \newcommand\atbdwidetable{%
   \advance\linewidth\atbdheadindent
+  \advance\linewidth\atbdwideextra
   \advance\@totalleftmargin-\atbdheadindent}
 % Bold header row, as in the originals.
 \renewcommand\sphinxstyletheadfamily{\sffamily\bfseries}
