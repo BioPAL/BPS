@@ -1920,3 +1920,13 @@ html[data-theme="dark"] .bps-chapters__time {
 .bd-content details.sd-dropdown table td:first-child {
   white-space: nowrap;
 }
+
+/* An inline formula wider than the text column scrolls in its own box instead
+   of making the whole article scroll (L1 SAR 3.2.4, review W5-1). */
+.bd-content mjx-container[jax="CHTML"]:not([display="true"]) {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
