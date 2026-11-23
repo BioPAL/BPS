@@ -88,15 +88,20 @@
 \sphinxbottomrule
 \endfoot
 
-\sphinxbottomrule
 <% if below -%>
 \noalign{\vskip\atbdcaptionskip}%
 \caption{<%= ''.join(table.caption) %>\strut}\\
+<% endif -%>
+<% if not below -%>
+\sphinxbottomrule
 <% endif -%>
 \endlastfoot
 \nopagebreak
 \sphinxtableatstartofbodyhook
 <%= ''.join(table.body) -%>
+<% if below -%>
+\sphinxbottomrule
+<% endif -%>
 \end{longtable}
 \sphinxtableafterendhook
 \sphinxatlongtableend
