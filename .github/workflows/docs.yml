@@ -3,7 +3,7 @@
 #
 # Build the Sphinx site and publish to GitHub Pages on every push to develop.
 # Preview builds run on pull requests (no deploy).
-# biomass-disc rebuild also runs on push to docs/sphinx-site-migration (temporary).
+# The biomass-disc production frontend is rebuilt on every push to develop.
 
 name: Documentation
 
@@ -11,7 +11,6 @@ on:
   push:
     branches:
       - develop
-      - docs/sphinx-site-migration
     paths:
       - "docs/**"
       - "docs/presentations/**"
@@ -22,6 +21,15 @@ on:
       - "docs/presentations/**"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "biomass-disc cluster to rebuild"
+        type: choice
+        options:
+          - none
+          - dev
+          - prod
+        default: none
 
 permissions:
   contents: read
@@ -144,18 +152,18 @@ jobs:
   # follow the rebuild manually.
   #
   # Routes:
-  #   push -> develop                    : auto-trigger DEV cluster (deploy)
-  #   push -> docs/sphinx-site-migration : auto-trigger PROD publish (no deploy)
-  #   workflow_dispatch (dev)            : manual trigger DEV cluster
-  #   workflow_dispatch (prod)           : manual trigger PROD cluster
+  #   push -> develop          : auto-trigger PROD publish (no deploy)
+  #   pull_request             : build only, no trigger
+  #   workflow_dispatch (dev)  : manual trigger DEV cluster (deploy)
+  #   workflow_dispatch (prod) : manual trigger PROD cluster (deploy)
   trigger-biomass-disc:
     needs: build
     if: |
-      (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/docs/sphinx-site-migration')) ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
       (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
     runs-on: ubuntu-latest
     environment:
-      name: ${{ ((github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod') || (github.event_name == 'push' && github.ref == 'refs/heads/docs/sphinx-site-migration')) && 'biomass-disc-prod' || 'biomass-disc-dev' }}
+      name: ${{ ((github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod') || github.event_name == 'push') && 'biomass-disc-prod' || 'biomass-disc-dev' }}
     steps:
       - name: Resolve deploy overlay
         id: target
@@ -170,12 +178,9 @@ jobs:
               *) echo "::error::Invalid deploy_target: ${DISPATCH_INPUT}"; exit 1 ;;
             esac
             do_deploy="true"
-          elif [ "${GIT_REF}" = "refs/heads/docs/sphinx-site-migration" ]; then
+          else
             overlay="prod"
             do_deploy="false"
-          else
-            overlay="dev"
-            do_deploy="true"
           fi
           echo "overlay=${overlay}" >> "$GITHUB_OUTPUT"
           echo "do_deploy=${do_deploy}" >> "$GITHUB_OUTPUT"
