@@ -1382,7 +1382,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 lead.parent.insert(lead.parent.index(lead), nodes.raw(
                     "", r"\needspace{4\baselineskip}", format="latex"))
         for figure in figures:
-            if _followed_by_longtable(figure) and False:
+            if _followed_by_longtable(figure):
                 # A float pending when a longtable starts can be set off the
                 # page (with the table start): keep this one in place.
                 figure.parent.insert(figure.parent.index(figure),
