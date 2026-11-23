@@ -5,6 +5,17 @@
 % atbdlayout.sty. Values come from the \atbd* macros of atbdlayout.sty.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{atbdmeta}[2026/11/23 ATBD PDF metadata]
+% Caption counters are set to the numbers of the original (atbdfloats.sty)
+% and chapters are unnumbered: two tables or figures may then get the same
+% hyperref anchor ("table.0.1"), and a "Tab.1" reference reaches the wrong
+% one. The anchor also carries the source line, which makes it unique.
+\AtBeginDocument{%
+  \@ifundefined{theHtable}{}{%
+    \let\atbd@theHtable\theHtable
+    \renewcommand\theHtable{\atbd@theHtable.\the\inputlineno}}%
+  \@ifundefined{theHfigure}{}{%
+    \let\atbd@theHfigure\theHfigure
+    \renewcommand\theHfigure{\atbd@theHfigure.\the\inputlineno}}}
 
 \newcommand\atbdmetasubject{Web export of \atbdcode\space issue \atbdissue\space - not the approved ESA document}
 
