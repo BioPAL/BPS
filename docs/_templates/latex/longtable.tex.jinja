@@ -68,7 +68,7 @@
 <%- else %>
 \caption{<%= ''.join(table.caption) %>\strut}<%= labels %>\\*[\sphinxlongtablecapskipadjust]
 <%- endif %>
-<% elif labels -%>
+<% elif labels and not below -%>
 \noalign{\phantomsection<%= labels %>}%
 <% endif -%>
 \sphinxtoprule
@@ -103,6 +103,9 @@
 \sphinxbottomrule
 <% endif -%>
 \end{longtable}
+<% if below and labels -%>
+\phantomsection<%= labels %>
+<% endif -%>
 \sphinxtableafterendhook
 \sphinxatlongtableend
 \end{savenotes}

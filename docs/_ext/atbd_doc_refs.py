@@ -237,6 +237,29 @@ class LatexInternalRefs(SphinxPostTransform):
                 node["refuri"] = f"%{target_doc}#{node[REFANCHOR_ATTR]}"
 
 
+class CleanBackslashUrls(SphinxPostTransform):
+    """Drop Markdown escapes (backslash before an underscore) left inside bare URLs.
+
+    A bare ``http://host/ig\\_rz.dat`` is autolinked with the backslash in the
+    href (``%5C``): the link is dead, in HTML and in the PDF. The visible text,
+    when it is the URL itself, is cleaned the same way.
+    """
+
+    default_priority = 49
+
+    def run(self, **kwargs: Any) -> None:
+        for node in self.document.findall(nodes.reference):
+            uri = node.get("refuri", "")
+            if not uri.startswith(("http://", "https://")):
+                continue
+            if "\\" not in uri and "%5C" not in uri:
+                continue
+            clean = uri.replace("%5C", "").replace("\\", "")
+            if node.astext() == uri.replace("%5C", "\\"):
+                node.children = [nodes.Text(clean)]
+            node["refuri"] = clean
+
+
 _EXPLICIT = re.compile(r"^(?P<text>.*?\S)\s*<(?P<num>[^<>]+)>$", re.S)
 
 
@@ -386,6 +409,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_role("sec", SecRole())
     app.add_role("eq", EqRole(), override=True)
     app.add_post_transform(LatexInternalRefs)
+    app.add_post_transform(CleanBackslashUrls)
     return {
         "version": "1.0",
         "parallel_read_safe": True,
