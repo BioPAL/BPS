@@ -23,15 +23,14 @@ from arepytools.geometry.conversions import llh2xyz, xyz2llh
 from arepytools.geometry.ellipsoid import WGS84
 from arepytools.geometry.generalsarorbit import GeneralSarOrbit, create_general_sar_orbit
 from arepytools.io.metadata import StateVectors
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.l2a_processor.core.aux_pp2_2a import GeneralConf
-from bps.l2a_processor.io.aux_pp2_2a_models.models import CalibrationScreenType
+from bps.l2a_processor.core.aux_pp2_2a import CalibrationScreenType, GeneralConf
 from bps.transcoder.sarproduct.biomass_l2aproduct_writer import COMPRESSION_SCHEMA_MDS_ZSTD, INT_NODATA_VALUE
 from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
 from bps.transcoder.utils.time_conversions import pdt_to_compact_date
 from osgeo import gdal, ogr
+from perseo_core.timing import PreciseDateTime
 from scipy.interpolate import CloughTocher2DInterpolator, LinearNDInterpolator
 from scipy.sparse import csr_matrix
 from scipy.spatial import Delaunay
@@ -469,7 +468,7 @@ def calibration(
             ]  # just needee for logging reasons
 
         # interpolate ground phase screens over SCS data axis, if needed
-        if not scs_acq_list[0][0].shape == geometry_gnd_phase_screens_rad[0].shape:
+        if scs_acq_list[0][0].shape != geometry_gnd_phase_screens_rad[0].shape:
             bps_logger.info("    preliminary interpolation to bring ground phase screens onto the same L1c grid")
             # interpolation:
             # the geometry_gnd_phase_screens_rad is assumed unwrapped to be interpolated as a float real-valued field.
@@ -651,7 +650,7 @@ def mpmb_covariance_estimation(
 
 
 def _build_filtering_matrix(
-    num_rows: int, average_window_size: int, decimation_factor: int
+    num_rows: int, one_sided_average_window_size: int, decimation_factor: int
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Internal function to build a sparse matrix
     to carry out one-dimensional moving average.
@@ -661,7 +660,7 @@ def _build_filtering_matrix(
     ----------
     num_rows: int
         number of rows of the matrix to be filtered
-    average_window_size: int
+    one_sided_average_window_size: int
         one-sided length of the average window
     decimation_factor: int
         subsampling factor of the filtered signal
@@ -678,7 +677,7 @@ def _build_filtering_matrix(
     filtered_signal_axis = np.arange(0, num_rows, decimation_factor)
     Nxout = filtered_signal_axis.size
 
-    average_window_size_used = average_window_size - 1
+    average_window_size_used = one_sided_average_window_size - 1
     col = np.kron(filtered_signal_axis, np.ones((1, 2 * average_window_size_used + 1))) + np.kron(
         np.ones((1, Nxout)),
         np.arange(-average_window_size_used, average_window_size_used + 1),
@@ -706,9 +705,9 @@ def _build_filtering_matrix(
 def build_filtering_sparse_matrices(
     num_az_in: int,
     num_rg_in: int,
-    averaging_window_size_rg: int,
+    full_averaging_window_size_rg: int,
     decimation_factor_rg: int,
-    averaging_window_size_az: int,
+    full_averaging_window_size_az: int,
     decimation_factor_az: int,
 ) -> tuple[np.ndarray, int, np.ndarray, int]:
     """
@@ -720,12 +719,12 @@ def build_filtering_sparse_matrices(
         Input azimuth matrix dimension
     num_rg_in: int
         Input slant range matrix dimension
-    averaging_window_size_az: int
-        Averaging windows size in azimuth direction
+    full_averaging_window_size_rg: int
+        Averaging full-windows size in range direction
     decimation_factor_rg: int
         Slant Range decimation factor for the multi look computed from AUX PP input upsampling factor
-    averaging_window_size_rg: int
-        Averaging windows size in slant range direction
+    full_averaging_window_size_az: int
+        Averaging full-windows size in slant azimuth direction
     decimation_factor_az: int
         Azimuth decimation factor for the multi look computed from AUX PP input upsampling factor
 
@@ -741,12 +740,23 @@ def build_filtering_sparse_matrices(
         indices for the original slant range axis, to obtain the decimated output mpmb_covariance data axis
     """
 
+    # Avoid using uint8 variables here
+    full_averaging_window_size_rg = int(full_averaging_window_size_rg)
+    decimation_factor_rg = int(decimation_factor_rg)
+    full_averaging_window_size_az = int(full_averaging_window_size_az)
+    decimation_factor_az = int(decimation_factor_az)
+
+    # averaging_window_size_* = FULL window width in samples; _build_filtering_matrix wants the one-sided
+    # length (true width = 2*one_sided - 1). Exact for odd W; W-1 for even W.
+    one_sided_averaging_window_size_rg = (full_averaging_window_size_rg + 1) // 2
+    one_sided_averaging_window_size_az = (full_averaging_window_size_az + 1) // 2
+
     # sparse_filtering_matrix, filtered_signal_axis, normalizing_matrix
     (
         sparse_filtering_matrix_rg,
         axis_rg_subsampling_indexes,
         normalizing_matrix_rg,
-    ) = _build_filtering_matrix(num_rg_in, averaging_window_size_rg, decimation_factor_rg)
+    ) = _build_filtering_matrix(num_rg_in, one_sided_averaging_window_size_rg, decimation_factor_rg)
     fr_normalized_transposed = (normalizing_matrix_rg @ sparse_filtering_matrix_rg).T
 
     # Azimuth filter matrix
@@ -754,7 +764,7 @@ def build_filtering_sparse_matrices(
         sparse_filtering_matrix_az,
         axis_az_subsampling_indexes,
         normalizing_matrix_az,
-    ) = _build_filtering_matrix(num_az_in, averaging_window_size_az, decimation_factor_az)
+    ) = _build_filtering_matrix(num_az_in, one_sided_averaging_window_size_az, decimation_factor_az)
     fa_normalized = normalizing_matrix_az @ sparse_filtering_matrix_az
 
     return (
@@ -831,23 +841,26 @@ def get_dgg_sampling(
 
     # compute DGG: latitude and longitude vectors to cover the whole footprint
 
-    # create a gap before and end, to avoid cropping final data during geocoding
-    lat_min = lat_min - dgg_sampling_extracted["latitude_spacing_deg"] * 5
-    lat_max = lat_max + dgg_sampling_extracted["latitude_spacing_deg"] * 5
-    lon_min = lon_min - dgg_sampling_extracted["longitude_spacing_deg"] * 5
-    lon_max = lon_max + dgg_sampling_extracted["longitude_spacing_deg"] * 5
+    latitude_spacing = dgg_sampling_extracted["latitude_spacing_deg"]
+    longitude_spacing = dgg_sampling_extracted["longitude_spacing_deg"]
 
-    latitude_n = int((lat_max - lat_min) / dgg_sampling_extracted["latitude_spacing_deg"])
-    dgg_latitude_axis_deg = lat_min + dgg_sampling_extracted["latitude_spacing_deg"] * np.arange(latitude_n).astype(
-        np.float64
-    )
+    # create a gap before and end, to avoid cropping final data during geocoding
+    lat_min = lat_min - latitude_spacing * 5
+    lat_max = lat_max + latitude_spacing * 5
+    lon_min = lon_min - longitude_spacing * 5
+    lon_max = lon_max + longitude_spacing * 5
+
+    # The starting point must be anchored to a multiple of the spacing, to remain aligned to a common dgg grid
+    lat_min = np.floor(lat_min / latitude_spacing) * latitude_spacing
+    lon_min = np.floor(lon_min / longitude_spacing) * longitude_spacing
+
+    latitude_n = int((lat_max - lat_min) / latitude_spacing)
+    dgg_latitude_axis_deg = lat_min + latitude_spacing * np.arange(latitude_n).astype(np.float64)
     if invert_latitude:
         dgg_latitude_axis_deg = np.flip(dgg_latitude_axis_deg)
 
-    longitude_n = int((lon_max - lon_min) / dgg_sampling_extracted["longitude_spacing_deg"])
-    dgg_longitude_axis_deg = lon_min + dgg_sampling_extracted["latitude_spacing_deg"] * np.arange(longitude_n).astype(
-        np.float64
-    )
+    longitude_n = int((lon_max - lon_min) / longitude_spacing)
+    dgg_longitude_axis_deg = lon_min + longitude_spacing * np.arange(longitude_n).astype(np.float64)
     if invert_longitude:
         dgg_longitude_axis_deg = np.flip(dgg_longitude_axis_deg)
 
@@ -1009,6 +1022,12 @@ def geocoding_update_dem_coordinates(
         meshgrid of the dgg_latitude_axis_rad [rad] of dimensions [num_lat_out, num_lon_out]
     dgg_longitude_mesh_rad:np.ndarray
         meshgrid of the dgg_longitude_axis_rad [rad] of dimensions [num_lat_out, num_lon_out]
+    dem_height_m:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
+    dem_latitude_deg:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
+    dem_longitude_deg:np.ndarray
+        Interpolated over subsampled multilook axes  N_az_sub, N_rg_sub]
     """
 
     # Geocoding STEP 1/4: initialization (DEM interpolation and GSO initialization)
@@ -1134,6 +1153,9 @@ def geocoding_update_dem_coordinates(
         dgg_latitude_mesh_rad,
         dgg_longitude_mesh_rad,
         dem_valid_values_mask,
+        dem_height_m,
+        np.rad2deg(dem_latitude_rad),
+        np.rad2deg(dem_longitude_rad),
     )
 
 
@@ -1715,8 +1737,6 @@ def _regular_linear_interpolator(outputM, inputM, ax0in, ax1in, ax0out, ax1out, 
             w = (px0 - sign0 * ax0in[c]) / dx0
             outputM[i0, :] = (1.0 - w) * innerM[c, :] + w * innerM[c + 1, :]
 
-    return
-
 
 def _linear_interpolation_2d(
     data_in,
@@ -1861,7 +1881,7 @@ def refine_dgg_search_tiles(
         poly_tile = ogr.CreateGeometryFromWkt(wkt_tile)
 
         # Check if the tile footprint intersects the STA footprint
-        if not poly_tile.Intersection(poly_stack).ExportToWkt() == "POLYGON EMPTY":
+        if poly_tile.Intersection(poly_stack).ExportToWkt() != "POLYGON EMPTY":
             tile_id_list.append(tile_id_curr)
 
     return tile_id_list

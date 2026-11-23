@@ -35,7 +35,7 @@ class GeometryProcessorInputFile:
     output_path: Path
     """Output path."""
 
-    earth_geometry: EarthGeometryType | None = EarthGeometryType("DEM")
+    earth_geometry: EarthGeometryType | None = EarthGeometryType.DEM
     """Earth geometry type."""
 
     geometry_conf_file: Path | None = None

@@ -19,8 +19,8 @@ from arepytools.geometry.generalsarorbit import GSO3DCurveWrapper, create_genera
 from arepytools.geometry.geometric_functions import compute_incidence_angles
 from arepytools.io import metadata
 from arepytools.math.genericpoly import create_sorted_poly_list
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
+from bps.transcoder import BPS_PFD_L1_VERSION
 from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.generic_product import GenericProduct
 from bps.transcoder.utils.constants import (
@@ -37,6 +37,7 @@ from bps.transcoder.utils.production_model_utils import (
     translate_repeat_cycle_id,
 )
 from netCDF4 import Dataset
+from perseo_core.timing import PreciseDateTime
 from pyproj import Geod
 from scipy.constants import speed_of_light as LIGHTSPEED
 
@@ -294,6 +295,7 @@ def write_lut_file(
     ncfile.noDataValueBool = "False"
     ncfile.noDataValueFloat = product.lut_parameters.no_pixel_value
     ncfile.referenceAzimuthTime = reference_time_iso
+    ncfile.formatVersion = BPS_PFD_L1_VERSION
 
     products = LutProducts.from_dict(lut_data)
 

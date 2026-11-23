@@ -1,5 +1,5 @@
 {% set name = "bps-l2b_agb_processor" %}
-{% set version = "4.4.4" %}
+{% set version = "4.6.0.dev0" %}
 
 package:
   name: {{ name|lower }}
@@ -23,13 +23,13 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools
     - click
     - numba >=0.57
     - xsdata
     - netcdf4
     - bps-common =={{ version }}
     - bps-transcoder =={{ version }}
+    - perseo-core >=1.0.0
 
 test:
   imports:

@@ -14,8 +14,8 @@ import unittest
 from dataclasses import dataclass
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.stack_coreg_processor.core.shifting import coreg_primary_lut_axes
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

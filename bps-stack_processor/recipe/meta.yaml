@@ -1,5 +1,5 @@
 {% set name = "bps-stack_processor" %}
-{% set version = "4.4.4" %}
+{% set version = "4.6.0.dev0" %}
 
 package:
   name: {{ name|lower }}
@@ -23,7 +23,7 @@ requirements:
   run:
     - python >=3.12
     - numpy
-    - arepytools >=1.8.1
+    - arepytools >=1.9.0
     - click
     - xsdata
     - arepyextras-runner
@@ -33,7 +33,8 @@ requirements:
     - bps-stack_coreg_processor =={{ version }}
     - bps-stack_cal_processor =={{ version }}
     - bps-transcoder =={{ version }}
-    - gdal >=3.10,<3.11
+    - perseo-core >=1.0.0
+    - gdal >=3.13,<3.14
 
 test:
   imports:

@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
+from perseo_core.timing import PreciseDateTime
 
 
 class ScatteringResponse(Enum):

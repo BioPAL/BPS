@@ -7,6 +7,7 @@
 
 """Overlay utilities"""
 
+import itertools
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -41,7 +42,7 @@ class Overlay:
 def crosses_antimeridian(footprint: list[tuple[float, float]]) -> bool:
     """Check if footprint crosses antimeridian"""
     longitudes = [lon for _, lon in footprint]
-    return any(abs(lon1 - lon2) > 180 for lon1, lon2 in zip(longitudes, longitudes[1:]))
+    return any(abs(lon1 - lon2) > 180 for lon1, lon2 in itertools.pairwise(longitudes))
 
 
 def normalize_longitudes(footprint: list[tuple[float, float]]) -> list[tuple[float, float]]:

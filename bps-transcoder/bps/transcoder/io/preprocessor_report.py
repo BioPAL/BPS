@@ -13,9 +13,9 @@ Utilities to parse a l1 pre processor annotation report
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.parsing import ParsingError, parse
 from bps.transcoder.io.biomass_l1_preproc_annotations import models
+from perseo_core.timing import PreciseDateTime
 
 
 class InvalidL1PreProcAnnotations(RuntimeError):

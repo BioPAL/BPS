@@ -1,0 +1,48 @@
+name: Install subpackage
+
+description: Set up a conda environment and install a package with its selected extras
+
+inputs:
+  subproject:
+    description: Repository-relative package directory
+    required: true
+  conda-dependencies:
+    description: Space-separated additional conda package specifications
+    required: false
+    default: biomass-bps::arepyextras-runner
+  local-dependencies:
+    description: Space-separated editable dependency paths relative to the subproject
+    required: false
+    default: ""
+  package-extras:
+    description: Package extras to install
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: conda-incubator/setup-miniconda@v4
+      with:
+        miniforge-version: latest
+        activate-environment: bps-software
+        python-version: "3.14"
+    - name: Install dependencies and package
+      shell: bash -el {0}
+      working-directory: ${{ inputs.subproject }}
+      env:
+        CONDA_DEPENDENCIES: ${{ inputs.conda-dependencies }}
+        LOCAL_DEPENDENCIES: ${{ inputs.local-dependencies }}
+        PACKAGE_EXTRAS: ${{ inputs.package-extras }}
+      run: |
+        set -eo pipefail
+        read -r -a conda_deps <<< "$CONDA_DEPENDENCIES"
+        conda install --yes -c conda-forge gdal=3.13.3 "${conda_deps[@]}"
+        read -r -a local_deps <<< "$LOCAL_DEPENDENCIES"
+        pip_args=()
+        for dependency in "${local_deps[@]}"; do
+          pip_args+=(-e "$dependency")
+        done
+        if (( ${#pip_args[@]} )); then
+          python -m pip install "${pip_args[@]}"
+        fi
+        python -m pip install -e ".[${PACKAGE_EXTRAS}]"

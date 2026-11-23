@@ -27,7 +27,6 @@ from arepytools.io import (
     read_metadata,
     write_metadata,
 )
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_processor.settings.intermediate_names import (
     FOOTPRINT_FILE_NAME,
     IntermediateProductID,
@@ -35,6 +34,7 @@ from bps.l1_processor.settings.intermediate_names import (
 from bps.l1_processor.settings.l1_intermediates import L1CoreProcessorOutputProducts
 from bps.transcoder.sarproduct.dem_footprint_utils import read_from_dem_lut
 from bps.transcoder.sarproduct.generic_product import GenericProduct
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

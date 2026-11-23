@@ -11,7 +11,6 @@ PARC info Translation
 """
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_processor.io.parc_info_models import (
     AuxiliaryCalSiteInformation,
     DelayListType,
@@ -19,6 +18,7 @@ from bps.l1_processor.io.parc_info_models import (
     RcsListType,
 )
 from bps.l1_processor.parc.parc_info import ParcInfo, ParcInfoList, ScatteringResponse
+from perseo_core.timing import PreciseDateTime
 
 
 class InvalidParcInfo(RuntimeError):

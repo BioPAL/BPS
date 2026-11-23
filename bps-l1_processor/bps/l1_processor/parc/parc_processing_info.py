@@ -12,8 +12,8 @@ PARC processing info
 
 from dataclasses import dataclass, field
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_processor.parc.parc_info import ScatteringResponse
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass

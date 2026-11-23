@@ -13,9 +13,9 @@ from pathlib import Path
 from typing import Literal, Self
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.utils.production_model_utils import decode_mph_id_value
+from perseo_core.timing import PreciseDateTime
 
 MPH_NAMESPACES = {
     "bio": "http://earth.esa.int/biomass/1.0",

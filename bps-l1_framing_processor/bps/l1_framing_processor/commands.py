@@ -101,7 +101,7 @@ def run_l1_framing_processing(
         l0m_start_time = l0s_sensing_start_time
         l0m_stop_time = l0s_sensing_stop_time
     l0m_duration = np.abs(l0m_stop_time - l0m_start_time)
-    short_datatake_flag = True if l0m_duration < np.timedelta64(MINIMUM_DATATAKE_LENGTH, "s") else False
+    short_datatake_flag = l0m_duration < np.timedelta64(MINIMUM_DATATAKE_LENGTH, "s")
 
     orbit_path = str(retrieve_aux_product_data_single_content(aux_orb_path))
 
@@ -120,31 +120,32 @@ def run_l1_framing_processing(
     if frames_in_slice_list is None:
         raise RuntimeError("Input AUX_ORB product not fully overlapping with input L0S product")
 
-    if l0m_stop_time - l0s_sensing_stop_time > np.timedelta64(L0_THEORETICAL_TIME_MARGIN, "ms"):
-        if l0m_stop_time - (l0s_sensing_stop_time - np.timedelta64(SLICE_OVERLAP, "s")) > np.timedelta64(
-            MINIMUM_SLICE_LENGTH, "s"
-        ):
-            bps_logger.info("Remove L1 frames contained in next L0 slice")
-            l1framer_next_slice = L1Framer(orbit_path, l0m_start_time, l0m_stop_time)
-            l1framer_next_slice.get_frames_in_datatake()
-            frames_in_next_slice_list = l1framer_next_slice.get_frames_in_slice(
-                l0s_stop_time - np.timedelta64(SLICE_OVERLAP, "s"),
-                l0m_stop_time,
-                l0s_sensing_stop_time - np.timedelta64(SLICE_OVERLAP, "s"),
-                l0m_stop_time,
-                short_datatake_flag=False,
-                merge_short_frames_flag=True,
-                add_l1processing_margins_flag=True,
+    if l0m_stop_time - l0s_sensing_stop_time > np.timedelta64(L0_THEORETICAL_TIME_MARGIN, "ms") and l0m_stop_time - (
+        l0s_sensing_stop_time - np.timedelta64(SLICE_OVERLAP, "s")
+    ) > np.timedelta64(MINIMUM_SLICE_LENGTH, "s"):
+        bps_logger.info("Remove L1 frames contained in next L0 slice")
+        l1framer_next_slice = L1Framer(orbit_path, l0m_start_time, l0m_stop_time)
+        l1framer_next_slice.get_frames_in_datatake()
+        frames_in_next_slice_list = l1framer_next_slice.get_frames_in_slice(
+            l0s_stop_time - np.timedelta64(SLICE_OVERLAP, "s"),
+            l0m_stop_time,
+            l0s_sensing_stop_time - np.timedelta64(SLICE_OVERLAP, "s"),
+            l0m_stop_time,
+            short_datatake_flag=False,
+            merge_short_frames_flag=True,
+            add_l1processing_margins_flag=True,
+        )
+        if frames_in_next_slice_list is not None and (
+            len(frames_in_slice_list) > 1
+            and len(frames_in_next_slice_list) > 0
+            and (
+                frames_in_slice_list[-2].stop_time
+                - frames_in_next_slice_list[0].start_time
+                - np.timedelta64(L1_PROCESSING_MARGIN * 2, "s")
+                > 0
             )
-            if frames_in_next_slice_list is not None:
-                if len(frames_in_slice_list) > 1 and len(frames_in_next_slice_list) > 0:
-                    if (
-                        frames_in_slice_list[-2].stop_time
-                        - frames_in_next_slice_list[0].start_time
-                        - np.timedelta64(L1_PROCESSING_MARGIN * 2, "s")
-                        > 0
-                    ):
-                        _ = frames_in_slice_list.pop()
+        ):
+            _ = frames_in_slice_list.pop()
 
     if len(frames_in_slice_list) == 0:
         bps_logger.info("No L1 frames contained in input L0 slice")

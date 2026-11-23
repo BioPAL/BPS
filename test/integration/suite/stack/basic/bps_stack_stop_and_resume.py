@@ -26,11 +26,10 @@ import time
 import traceback
 from collections.abc import Callable
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
-from bps.common import __version__
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.stack_processor.execution.stack_coreg_execution_manager import (
     STOP_AND_RESUME_PATH as COREG_PROCESSOR_COMPLETED_PATH,
@@ -46,7 +45,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
 )
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 
 OUTPUT_DIR = "od"  # Just to keep it short for Windows tests.
 WORKER_THREADS = 1
@@ -441,7 +440,7 @@ def _fill_ci_job_order_in_place(
     )
 
     # Pulling and writing remaining images to the joborder.
-    for i in (n for n in range(0, Nimg) if n != coreg_primary_index):
+    for i in (n for n in range(Nimg) if n != coreg_primary_index):
         job_order.set(
             f"//Input[Input_ID/text()='Sx_SCS__1S']/List_of_Selected_Inputs/Selected_Input/List_of_File_Names/File_Name[{i + 1}]/text()",
             _pull_wrap(data, frame_list, i),

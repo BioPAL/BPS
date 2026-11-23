@@ -19,7 +19,8 @@ echo "Patching RPATH for binaries..."
 for bin in \
     "$PREFIX/bin/BiomassL0ImportPreProc" \
     "$PREFIX/bin/BPSL1CoreProcessor" \
-    "$PREFIX/bin/IonosphericHeightIRI20Estimator"
+    "$PREFIX/bin/IonosphericHeightIRI20Estimator" \
+    "$PREFIX/bin/GenericGeocoder"
 do
     echo "  -> $bin"
     patchelf --set-rpath "\$ORIGIN/../lib" "$bin"
@@ -43,7 +44,8 @@ echo "Verifying binaries..."
 for bin in \
     "$PREFIX/bin/BiomassL0ImportPreProc" \
     "$PREFIX/bin/BPSL1CoreProcessor" \
-    "$PREFIX/bin/IonosphericHeightIRI20Estimator"
+    "$PREFIX/bin/IonosphericHeightIRI20Estimator" \
+    "$PREFIX/bin/GenericGeocoder"
 do
     echo "Checking $bin"
     ldd "$bin"

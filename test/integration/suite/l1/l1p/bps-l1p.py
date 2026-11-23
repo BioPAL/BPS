@@ -15,16 +15,17 @@ import shutil
 import sys
 from pathlib import Path
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession, skip, skip_if
-from bps.common import __version__, retrieve_aux_product_data_single_content
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION, retrieve_aux_product_data_single_content
+from bps.transcoder import BPS_AUX_FMT_VERSION
 
 WIN32 = sys.platform == "win32"
 PY311 = sys.version_info.major == 3 and sys.version_info.minor == 11
 AUTOFOCUS_ENABLED = PY311 and not WIN32
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
+AUX_FMT_VERSION_STR = BPS_AUX_FMT_VERSION[1:]
 
 
 def update_joborder(
@@ -186,6 +187,7 @@ def update_aux_pp1(
     allow_dem_fallback: str | None = None,
 ):
     """Update the aux pp1 file with new parameters"""
+    aux_pp1.set("//auxiliaryL1ProcessingParameters/@schemaVersion", AUX_FMT_VERSION_STR)
     if raw_data_correction_flag:
         aux_pp1.set("//rawDataCorrectionFlag/text()", raw_data_correction_flag)
     if bias_correction_flag:
@@ -283,6 +285,10 @@ def test_bps_l1_002_with_error(session: TestSession, env: Environment, data: Dat
     output_directory = env.root.parent.joinpath("l1002e").absolute()
 
     aux_ins_path = data.pull("configurations/l1p/CONF-BPS-INS-002")
+    aux_pp1_path = data.pull("configurations/l1p/CONF-BPS-PP1-002")
+    aux_pp1_file = retrieve_aux_product_data_single_content(aux_pp1_path)
+    aux_pp1 = xml.Document(aux_pp1_file)
+    update_aux_pp1(aux_pp1)
 
     update_joborder(
         joborder,
@@ -291,7 +297,7 @@ def test_bps_l1_002_with_error(session: TestSession, env: Environment, data: Dat
         AUX_ORB=data.pull("product/l1001/aux_files/AUX_ORB"),
         AUX_ATT=data.pull("product/l1001/aux_files/AUX_ATT"),
         AUX_INS=aux_ins_path,
-        AUX_PP1=data.pull("configurations/l1p/CONF-BPS-PP1-002"),
+        AUX_PP1=aux_pp1_path,
         AUX_TEC=data.pull("configurations/l1p/CONF-BPS-TEC-003"),
         OUTPUT_DIR=output_directory,
     )
@@ -545,6 +551,10 @@ def test_bps_l1_006(session: TestSession, env: Environment, data: DataRepository
     output_directory = env.root.parent.joinpath("l1006").absolute()
 
     aux_ins_path = data.pull("configurations/l1p/CONF-BPS-INS-002")
+    aux_pp1_path = data.pull("configurations/l1p/CONF-BPS-PP1-002")
+    aux_pp1_file = retrieve_aux_product_data_single_content(aux_pp1_path)
+    aux_pp1 = xml.Document(aux_pp1_file)
+    update_aux_pp1(aux_pp1)
 
     update_joborder(
         joborder,
@@ -553,7 +563,7 @@ def test_bps_l1_006(session: TestSession, env: Environment, data: DataRepository
         AUX_ORB=data.pull("product/l1001/aux_files/AUX_ORB"),
         AUX_ATT=data.pull("product/l1001/aux_files/AUX_ATT"),
         AUX_INS=aux_ins_path,
-        AUX_PP1=data.pull("configurations/l1p/CONF-BPS-PP1-002"),
+        AUX_PP1=aux_pp1_path,
         AUX_TEC=data.pull("configurations/l1p/CONF-BPS-TEC-003"),
         OUTPUT_DIR=output_directory,
     )

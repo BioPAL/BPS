@@ -8,17 +8,6 @@ function download(){
 
 	cd $folder
 
-	if [ $folder == "l1_framing_processor" ]
-	then
-		echo "Downloading eocfi libs for $folder"
-		mkdir -p lib
-		cd lib
-		curl $EOCFI_LIBS_LNX --show-error --fail -q -o BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
-		tar -xvzf BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
-		rm BPS-EOCFI-4.20-CPPLIB-LINUX64_LEGACY.tar.gz
-		cd ..
-	fi
-
 	mkdir pkgs
 	cd pkgs
 	mkdir noarch
@@ -52,7 +41,7 @@ function download(){
 
 mkdir bundle
 download prereq "bps-common" "bps-transcoder" "$AREPYTOOLS_URL" "$AREPYEXTRAS_RUNNER_URL"
-download l1_framing_processor "bps-l1_framing_processor"
+download l1_framing_processor "bps-l1_framing_processor" "bps-l1_framing_processor_libs"
 download l1_processor "bps-l1_binaries" "bps-l1_core_processor" "bps-l1_processor" "bps-l1_pre_processor"
 download l2a_processor "bps-l2a_processor"
 download l2b_fd_processor "bps-l2b_fd_processor"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
-	<xsd:include schemaLocation="./bio-l1-annotations.xsd"/>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.7.0">
+	<xsd:include schemaLocation="./bio-l1-annotations.xsd" />
 	<xsd:complexType name="staProcessingParametersType">
 		<xsd:sequence>
 			<xsd:element name="processorVersion" type="xsd:string">
@@ -435,7 +435,7 @@
 				</xsd:complexType>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="polarisation" type="polarisationType" use="required"/>
+		<xsd:attribute name="polarisation" type="polarisationType" use="required" />
 	</xsd:complexType>
 	<xsd:complexType name="staQualityParametersListType">
 		<xsd:sequence>
@@ -445,7 +445,7 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="count" type="xsd:unsignedInt" use="required"/>
+		<xsd:attribute name="count" type="xsd:unsignedInt" use="required" />
 	</xsd:complexType>
 	<xsd:complexType name="staQualityType">
 		<xsd:sequence>
@@ -554,6 +554,7 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
+		<xsd:attribute name="schemaVersion" type="xsd:token" use="required" fixed="1.7.0" />
 	</xsd:complexType>
 	<xsd:element name="mainAnnotation" type="staMainAnnotationType">
 		<xsd:annotation>

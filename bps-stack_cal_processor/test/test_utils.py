@@ -7,11 +7,16 @@
 
 import unittest
 from itertools import product
+from typing import ClassVar
 
 import numba as nb
 import numpy as np
 import scipy as sp
-from bps.stack_cal_processor.core.utils import _interp1d_nn, interpolate_on_grid_nn, query_grid_mask
+from bps.stack_cal_processor.core.utils import (
+    _interp1d_nn,
+    interpolate_on_grid_nn,
+    query_grid_mask,
+)
 
 
 class UtilsTest(unittest.TestCase):
@@ -170,7 +175,7 @@ class UtilsTest(unittest.TestCase):
 class Interp1dTest(unittest.TestCase):
     """Test that _interp1d_nn is equivalent to scipy's interp1d."""
 
-    _sp_interp_options = {
+    _sp_interp_options: ClassVar[dict[str, str | bool]] = {
         "kind": "nearest",
         "bounds_error": False,
         "fill_value": "extrapolate",

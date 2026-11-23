@@ -11,11 +11,11 @@ from dataclasses import dataclass, field
 from typing import Literal, Self
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l1product import QualityParameters
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass
@@ -74,7 +74,7 @@ class RawDataAnalysis:
             power_ratios[polarization] = [
                 PowerRatio(
                     time=measurement.time,
-                    value=measurement.power_ratios.get(polarization, float(0.0)),
+                    value=measurement.power_ratios.get(polarization, 0.0),
                 )
                 for measurement in report.iobpr_measurements
             ]
@@ -236,12 +236,10 @@ class InternalCalibrationParameters:
                     np.abs(np.angle(d) - drift_phase_mean) / drift_phase_std for d in drift
                 ]
                 drift_relative_check = [
-                    True
-                    if (
+                    bool(
                         a <= quality_parameters.max_drift_amplitude_std_fraction
                         and p <= quality_parameters.max_drift_phase_std_fraction
                     )
-                    else False
                     for a, p in zip(drift_amplitude_relative_deviation, drift_phase_relative_deviation)
                 ]
                 drift_amplitude_absolute_deviation = [
@@ -253,12 +251,10 @@ class InternalCalibrationParameters:
                     for d in drift
                 ]
                 drift_absolute_check = [
-                    True
-                    if (
+                    bool(
                         a <= quality_parameters.max_drift_amplitude_error
                         and p <= quality_parameters.max_drift_phase_error
                     )
-                    else False
                     for a, p in zip(drift_amplitude_absolute_deviation, drift_phase_absolute_deviation)
                 ]
             else:

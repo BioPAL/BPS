@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
+from bps.common.io import common
+from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1ProcessingParameters
 
 
 @dataclass
@@ -19,7 +21,7 @@ class _SamplingFactors:
     range_down_sampling: int
 
     @classmethod
-    def from_processing_parameters(cls, processing_parameters, swath: str):
+    def from_processing_parameters(cls, processing_parameters: BIOMASSL1ProcessingParameters, swath: common.SwathType):
         """Retrieve factors from configuration of given swath"""
         return cls(
             azimuth_up_sampling=processing_parameters.azimuth_upsampling_factor[swath],
@@ -81,7 +83,12 @@ class _SCSMarginsComputer:
         return overlaps
 
 
-def create_no_data_mask(data_shape, product_type: str, processing_parameters, swath: str):
+def create_no_data_mask(
+    data_shape,
+    product_type: str,
+    processing_parameters: BIOMASSL1ProcessingParameters,
+    swath: common.SwathType,
+):
     """Compute nodata mask based on processing configuration and data level"""
 
     azimuth_focusing_margins_removed = processing_parameters.azimuth_focusing_margins_removal_flag

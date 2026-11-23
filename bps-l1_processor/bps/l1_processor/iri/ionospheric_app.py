@@ -15,9 +15,9 @@ from pathlib import Path
 from typing import Any
 
 from arepyextras.runner.environment import Environment
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.runner_helper import run_application_args
 from bps.l1_processor.settings.l1_binaries import BPS_IRI_WRAPPER_EXE_NAME
+from perseo_core.timing import PreciseDateTime
 
 
 def run_ionospheric_height_estimation(

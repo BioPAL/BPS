@@ -324,14 +324,14 @@ def run_stack_processor(
     preprocessor_start_time = default_timer()
     bps_logger.info("Run Pre-Processor step")
 
-    stack_pre_proc_output_products = list(
+    stack_pre_proc_output_products = [
         StackPreProcessorOutputProducts.from_intermediate_dir(
             stack_pre_proc_brk_folder,
             product.name,
             index,
         )
         for index, product in enumerate(job_order.input_stack)
-    )
+    ]
 
     stack_pre_processor_execution_manager = StackPreProcessorExecutionManager(
         job_order=job_order,
@@ -362,14 +362,14 @@ def run_stack_processor(
         ].height_model.value.name,
     )
 
-    stack_coreg_proc_output_products = list(
+    stack_coreg_proc_output_products = [
         CoregistrationOutputProducts.from_intermediate_dir(
             stack_coreg_proc_brk_folder,
             product.name,
             index,
         )
         for index, product in enumerate(job_order.input_stack)
-    )
+    ]
 
     stack_coreg_processor_execution_manager = StackCoregProcessorExecutionManager(
         job_order=job_order,

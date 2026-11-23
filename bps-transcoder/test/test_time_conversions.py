@@ -1,11 +1,11 @@
 import unittest
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.utils.time_conversions import (
     pdt_to_compact_date,
     pdt_to_compact_string,
     round_precise_datetime,
 )
+from perseo_core.timing import PreciseDateTime
 
 
 class TimeConversionsTest(unittest.TestCase):

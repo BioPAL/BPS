@@ -17,6 +17,20 @@ from arepytools.io.metadata import EPolarization
 from bps.common.utils import LogLevel
 
 
+class ResidualShiftFittingModel(Enum):
+    """Full Accuracy post processing fitting models."""
+
+    MODEL_BASED = "MODEL_BASED"
+    POLYNOMIAL = "POLYNOMIAL"  # probably useless since the default has always been MODEL_BASED
+    NON_STATIONARY_AREAS = "NON_STATIONARY_AREAS"
+
+
+class DataRefinementMode(Enum):
+    """Data refinement modes for data coregistration."""
+
+    FULL_ACCURACY = "FULL_ACCURACY"
+
+
 @dataclass
 class GeneralCoregStackProcessorInternalConfiguration:
     """Internal general configuration of the coregistratior's binary"""
@@ -36,7 +50,6 @@ class GeneralCoregStackProcessorInternalConfiguration:
 class FullAccuracyPreProcessingConfType:
     """Configuration of the pre-processing step for Full-Accuracy coregistration."""
 
-    coreg_reference_polarization: EPolarization  # Set from AUX-PPS.
     enable_common_band_range_filter: int = 0
     range_max_shift: int = 5
     azimuth_max_shift: int = 5
@@ -64,11 +77,30 @@ class NonStationaryAreasConfType:
 class FullAccuracyPostProcessingConfType:
     """Configuration of the post-processing step for Full-Accuracy coregistration."""
 
+    enable_automatic_mode: bool
     quality_threshold_for_automatic_mode: float  # Set from AUX-PPS.
     min_valid_blocks: int  # Set from AUX-PPS.
+    residual_shift_fitting_model: ResidualShiftFittingModel
     weight_threshold_refine_rg: float = 0.01
     weight_threshold_refine_az: float = 0.01
     non_stationary_coreg_conf: NonStationaryAreasConfType | None = None
+
+
+@dataclass
+class FullAccuracyConfType:
+    """Configuration for Full-Accuracy coregistration."""
+
+    full_accuracy_preprocessing_conf: FullAccuracyPreProcessingConfType
+    full_accuracy_postprocessing_conf: FullAccuracyPostProcessingConfType
+
+
+@dataclass
+class DataRefinementConfType:
+    """Configuration for Data Refinement coregistration."""
+
+    data_refinement_mode: DataRefinementMode
+    full_accuracy_conf: FullAccuracyConfType
+    coreg_reference_polarization: EPolarization  # Set from AUX-PPS.
 
 
 @dataclass
@@ -108,17 +140,12 @@ class CoregStackProcessorInternalConfiguration:
     class CoregMode(Enum):
         """Coregistration modalities."""
 
-        FULL_ACCURACY = "FULL_ACCURACY"  # i.e. Geometry And Data.
+        GEOMETRY_AND_DATA = "GEOMETRY_AND_DATA"
         GEOMETRY = "GEOMETRY"
-        AUTOMATIC = "AUTOMATIC"
 
     coreg_mode: CoregMode  # This is set from AUX-PPS.
-    full_accuracy_preproc_conf: FullAccuracyPreProcessingConfType = field(
-        default_factory=FullAccuracyPreProcessingConfType
-    )
-    full_accuracy_postproc_conf: FullAccuracyPostProcessingConfType = field(
-        default_factory=FullAccuracyPostProcessingConfType
-    )
+
+    data_refinement_conf: DataRefinementConfType
     reinterp_conf: ReinterpolationConfType = field(default_factory=ReinterpolationConfType)
     coreg_output_products_conf: CoregistrationOutputProductsConfType = field(
         default_factory=CoregistrationOutputProductsConfType

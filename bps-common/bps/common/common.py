@@ -121,13 +121,13 @@ def retrieve_aux_product_data_single_content(product: Path) -> Path:
 
 
 __all__ = [
-    "Swath",
-    "Polarization",
-    "MissionPhaseID",
-    "STRIPMAP_SWATHS",
     "ACQUISITION_MODES",
+    "STRIPMAP_SWATHS",
     "AcquisitionMode",
     "InvalidAuxProduct",
+    "MissionPhaseID",
+    "Polarization",
+    "Swath",
     "retrieve_aux_product_data_content",
     "retrieve_aux_product_data_single_content",
 ]

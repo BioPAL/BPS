@@ -10,7 +10,7 @@ Time interval utilities
 -----------------------
 """
 
-from arepytools.timing.precisedatetime import PreciseDateTime
+from perseo_core.timing import PreciseDateTime
 
 TimeInterval = tuple[PreciseDateTime, PreciseDateTime]
 

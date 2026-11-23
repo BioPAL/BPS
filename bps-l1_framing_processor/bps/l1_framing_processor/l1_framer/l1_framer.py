@@ -289,7 +289,7 @@ class L1Framer:
         pos, vel, acc = self._orbit.get_pos_vel_acc(time_axis)
         angle_axis = self._orbit.get_ops_angle(time_axis, pos, vel, acc)
 
-        self.anx_crossing_flag = True if angle_axis[-1] < angle_axis[0] else False
+        self.anx_crossing_flag = angle_axis[-1] < angle_axis[0]
 
         angle_axis = np.unwrap(angle_axis, period=360)
 
@@ -511,9 +511,10 @@ class L1Framer:
                         if frame.duration > frames_in_slice_list[index - 1].duration:
                             frames_in_slice_list[index - 1].index = frame.index
                 indexes_to_discard.append(index)
-            elif frame.duration < SLICE_OVERLAP - L1_PROCESSING_MARGIN:
-                if frame.dt_position == DataTakePosition.CENTRAL:
-                    indexes_to_discard.append(index)
+            elif (
+                frame.duration < SLICE_OVERLAP - L1_PROCESSING_MARGIN and frame.dt_position == DataTakePosition.CENTRAL
+            ):
+                indexes_to_discard.append(index)
 
         for index in sorted(indexes_to_discard, reverse=True):
             del frames_in_slice_list[index]

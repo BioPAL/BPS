@@ -104,7 +104,7 @@ def raise_if_aux_pps_is_not_compatible_for_resume(
         if len(errors) > 0:
             raise StackWorkingDirError(
                 "Cannot resume STA_P. Current AUX-PPS not compatible with previous one. "
-                "Found compatibility issues: {}".format(errors)
+                f"Found compatibility issues: {errors}"
             )
 
 
@@ -162,7 +162,7 @@ def raise_if_job_order_is_not_compatible_for_resume(
         if len(errors) > 0:
             raise StackWorkingDirError(
                 "Cannot resume STA_P. Current job order not compatible with previous one. "
-                "Found compatibility issues: {}".format(errors)
+                f"Found compatibility issues: {errors}"
             )
 
 

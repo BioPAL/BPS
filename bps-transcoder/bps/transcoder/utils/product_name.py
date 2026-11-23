@@ -16,8 +16,8 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.transcoder.utils.production_model_utils import decode_product_name_id_value
+from perseo_core.timing import PreciseDateTime
 
 # Regular expression that matches a BIOMASS L1 product name.
 BPS_L1_PRODUCT_REGEX = (
@@ -192,7 +192,7 @@ def parse_l1product_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName, ValueError
 
     Return
     ------
@@ -270,7 +270,7 @@ def parse_l2aproduct_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName, ValueError
 
     Return
     ------
@@ -337,7 +337,7 @@ def parse_l2bproduct_name(
 
     Raises
     ------
-    InvalidBIOMASSProductName, InvalidUtcString, TypeError
+    InvalidBIOMASSProductName
 
     Return
     ------

@@ -19,6 +19,7 @@ from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 
+import numba as nb
 import numpy as np
 from bps.common import bps_logger, retrieve_aux_product_data_single_content
 from bps.common.fnf_utils import read_fnf_mask, retrieve_fnf_content
@@ -32,12 +33,11 @@ from bps.common.translate_job_order import get_bps_logger_level
 from bps.common.utils import cross_pol_merging
 from bps.l2a_processor import BPS_L2A_PROCESSOR_NAME
 from bps.l2a_processor.basins import BASINS
-from bps.l2a_processor.core.aux_pp2_2a import GeneralConf
+from bps.l2a_processor.core.aux_pp2_2a import CalibrationScreenType, GeneralConf
 from bps.l2a_processor.core.parsing import parse_aux_pp2_2a, parse_l2a_job_order
 from bps.l2a_processor.fd.fd_commands import FD
 from bps.l2a_processor.fh.fh_commands import FH
 from bps.l2a_processor.gn.gn_commands import GN
-from bps.l2a_processor.io.aux_pp2_2a_models.models import CalibrationScreenType
 from bps.l2a_processor.l2a_common_functionalities import (
     calibration,
     fast_read_baseline_ordering_index,
@@ -94,6 +94,9 @@ def run_l2a_processing(
 
     # Input parsing: joborder
     job_order = parse_l2a_job_order(job_order_file.read_text())
+
+    # setting number of threads
+    nb.set_num_threads(job_order.device_resources.num_threads)
 
     # Relative paths in the joborder are intended as relative to the directory where the JobOrder is
     job_order_dir = job_order_file.parent
@@ -208,16 +211,15 @@ def run_l2a_processing(
                 == 0  # this is to absure entering here, in case no reference is present (TBD for int subsetting)
                 or stack_product_obj.stack_coregistration_parameters.primary_image
                 == stack_product_obj.stack_coregistration_parameters.secondary_image
+            ) and (
+                stack_product_obj.stack_coregistration_parameters.primary_image
+                == stack_product_obj.stack_coregistration_parameters.secondary_image
             ):
-                if (
-                    stack_product_obj.stack_coregistration_parameters.primary_image
-                    == stack_product_obj.stack_coregistration_parameters.secondary_image
-                ):
-                    # There is not a specific flag telling which one is the primary image
-                    # this is the way to check for it.
-                    # Primary Image Index is a zero-based index of the primary image:
-                    # the index is respect the order as found in the job order (NOT baselines-sorted)
-                    primary_image_index = counter
+                # There is not a specific flag telling which one is the primary image
+                # this is the way to check for it.
+                # Primary Image Index is a zero-based index of the primary image:
+                # the index is respect the order as found in the job order (NOT baselines-sorted)
+                primary_image_index = counter
 
             # manually read the LUTs from the product
             (
@@ -238,6 +240,7 @@ def run_l2a_processing(
                     "latitude",
                     "longitude",
                     "incidenceAngle",
+                    "elevationAngle",
                     "rangeTerrainSlope",
                     "azimuthTerrainSlope",
                     "waveNumbers",
@@ -333,6 +336,8 @@ def run_l2a_processing(
         # re fill the stack_lut_list with recomputed wavenumbers
         for original_luts, lut_wavenumber_reset in zip(stack_lut_list, lut_wavenumbers_reset):
             original_luts["waveNumbers"] = lut_wavenumber_reset
+
+    bps_logger.debug(f"Primary image index is {primary_image_index}")
 
     # Sort read inputs basing on wavenumbers
     wavenumbers_sorting_indices = np.argsort([np.nanmean(lut["waveNumbers"]) for lut in stack_lut_list])
@@ -711,7 +716,7 @@ def _basin_check_intersection(
         poly_tile = ogr.CreateGeometryFromWkt(wkt_tile)
 
         # Check if the Country intersects the STA footprint
-        if not poly_tile.Intersection(poly_stack).ExportToWkt() == "POLYGON EMPTY":
+        if poly_tile.Intersection(poly_stack).ExportToWkt() != "POLYGON EMPTY":
             is_in_this_country = True
             break
 
@@ -931,12 +936,10 @@ def fast_read_mission_phase_id(
         xpath_primaryImage_posList = ".//staCoregistrationParameters/primaryImage"
         primaryImage_node = root.find(xpath_primaryImage_posList)
         assert primaryImage_node is not None
-        primaryImage_node.text
 
         xpath_secondaryImage_posList = ".//staCoregistrationParameters/secondaryImage"
         secondaryImage_node = root.find(xpath_secondaryImage_posList)
         assert secondaryImage_node is not None
-        secondaryImage_node.text
 
         xpath_missionPhaseID_posList = ".//acquisitionInformation/missionPhaseID"
         missionPhaseID_node = root.find(xpath_missionPhaseID_posList)

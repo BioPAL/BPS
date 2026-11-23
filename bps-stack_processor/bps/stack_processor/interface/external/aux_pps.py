@@ -27,7 +27,6 @@ from bps.stack_cal_processor.configuration import (
     MSC_NAME,
     SKP_NAME,
     UNITS_CAL_CONFIG,
-    BaselineMethodType,
 )
 from bps.stack_cal_processor.core.filtering import ConvolutionWindowType
 from bps.stack_pre_processor.configuration import PrimaryImageSelectionConf
@@ -144,7 +143,7 @@ class SlowIonosphereRemovalConf:
     range_look_frequency: float  # [Hz].
     phase_unwrapping_flag: bool
     latitude_threshold: float  # [rad].
-    baseline_method: BaselineMethodType
+    baseline_method: common.BaselineMethodType
     unweighted_multi_baseline_estimation: bool
     multi_baseline_critical_baseline_threshold: float
     sublook_window_azimuth_size: int  # [px].
@@ -236,22 +235,12 @@ class SkpPhaseCalibrationConf:
 class L1cProductExportConf:
     """Configuration of the L1c exporter."""
 
-    class CompressionMethodType(Enum):
-        """Enumeration for an image pixel type."""
-
-        NONE = "NONE"
-        DEFLATE = "DEFLATE"
-        ZSTD = "ZSTD"
-        LERC = "LERC"
-        LERC_DEFLATE = "LERC_DEFLATE"
-        LERC_ZSTD = "LERC_ZSTD"
-
     l1_product_doi: str
     pixel_representation: common.PixelRepresentationType
     pixel_quantity: common.PixelQuantityType
-    abs_compression_method: CompressionMethodType | None
+    abs_compression_method: common.CompressionMethodType | None
     abs_max_z_error: float
-    phase_compression_method: CompressionMethodType | None
+    phase_compression_method: common.CompressionMethodType | None
     phase_max_z_error: float
     no_pixel_value: float
     l1c_ql_colour_coding_method: common.ColourCodingMethod

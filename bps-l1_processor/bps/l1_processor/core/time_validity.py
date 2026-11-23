@@ -12,12 +12,12 @@ Validity interval
 
 from pathlib import Path
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.common.io.parsing import parse
 from bps.l1_processor.core.time_interval import TimeInterval, are_overlapping, contains
 from bps.l1_processor.processor_interface.joborder_l1 import L1JobOrder
 from bps.transcoder.io import aux_att_models, aux_orb_models
+from perseo_core.timing import PreciseDateTime
 
 
 def _raise_on_inconsistent_timings(
@@ -28,12 +28,11 @@ def _raise_on_inconsistent_timings(
 ):
     """Check wether processing time in the job order, in the standard product
     and in the orbit and attitude files are consistent"""
-    if jo_interval is not None:
-        if not are_overlapping(jo_interval, data_interval):
-            raise RuntimeError(
-                f"Requested times [{jo_interval[0]}, {jo_interval[1]}] are incompatible"
-                + f" with input phenomenon times [{data_interval[0]}, {data_interval[1]}]"
-            )
+    if jo_interval is not None and not are_overlapping(jo_interval, data_interval):
+        raise RuntimeError(
+            f"Requested times [{jo_interval[0]}, {jo_interval[1]}] are incompatible"
+            + f" with input phenomenon times [{data_interval[0]}, {data_interval[1]}]"
+        )
 
     display_name = "requested times" if jo_interval else "phenomenon times"
     proc_interval = jo_interval if jo_interval else data_interval

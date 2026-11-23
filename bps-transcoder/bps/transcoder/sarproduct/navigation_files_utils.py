@@ -17,7 +17,6 @@ from arepytools.geometry.attitude_utils import (
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
 from arepytools.geometry.reference_frames import compute_sensor_local_axis
 from arepytools.io import metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.parsing import serialize
 from bps.transcoder.auxiliaryfiles.aux_attitude import (
     AttitudeRecord,
@@ -25,6 +24,7 @@ from bps.transcoder.auxiliaryfiles.aux_attitude import (
     translate_attitude_record_to_quaternion_model,
 )
 from bps.transcoder.io import aux_att_models, aux_orb_models
+from perseo_core.timing import PreciseDateTime
 from scipy.spatial import transform
 
 CREATION_DATE_TEMPLATE_STRING = "CREATION_DATE_TEMPLATE"

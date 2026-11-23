@@ -13,8 +13,10 @@ AUX PP1 Translation
 import numpy as np
 from bps.common.io import translate_common
 from bps.l2a_processor.core.aux_pp2_2a import (
+    AcquisitionFolderName,
     ADSfloatCompressionType,
     AuxProcessingParametersL2A,
+    CalibrationScreenType,
     GeneralConf,
     GroundCancellationConfAGB,
     GroundCancellationConfFD,
@@ -27,27 +29,13 @@ from bps.l2a_processor.core.aux_pp2_2a import (
     MinMaxNumType,
     MinMaxType,
     OperationalModeType,
+    verticalRangeWithUnitsType,
 )
 from bps.l2a_processor.io import aux_pp2_2a_models
-from bps.transcoder.io import common_annotation_models_l2
 
 
 class InvalidAuxPP2_2A(RuntimeError):
     """Raised when input aux pp2 2a is invalid"""
-
-
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
 
 
 def translate_model_to_general_conf(
@@ -56,7 +44,7 @@ def translate_model_to_general_conf(
     """Translate general configuration section to the corresponding conf"""
     pol_method = translate_common.translate_polarisation_combination_method(conf.polarisation_combination_method)
     return GeneralConf(
-        apply_calibration_screen=conf.apply_calibration_screen,
+        apply_calibration_screen=CalibrationScreenType(conf.apply_calibration_screen.value),
         forest_coverage_threshold=conf.forest_coverage_threshold,
         forest_mask_interpolation_threshold=conf.forest_mask_interpolation_threshold,
         subsetting_rule=GeneralConf.SubsettingRules(conf.subsetting_rule.value),
@@ -71,7 +59,7 @@ def translate_model_to_agb_conf(
     return L2aAGBConf(
         l2aAGBProductDOI=conf.l2a_agbproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         ground_cancellaton=translate_model_to_gn_conf(conf.ground_cancellation, "AGB"),
         product_resolution=conf.product_resolution.value,
         upsampling_factor=conf.upsampling_factor,
@@ -86,7 +74,7 @@ def translate_model_to_fd_conf(
     return L2aFDConf(
         l2aFDProductDOI=conf.l2a_fdproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         ground_cancellaton=translate_model_to_gn_conf(conf.ground_cancellation, "FD"),
         significance_level=conf.significance_level,
         product_resolution=conf.product_resolution.value,
@@ -107,13 +95,15 @@ def translate_model_to_fh_conf(
     return L2aFHConf(
         l2aFHProductDOI=conf.l2a_fhproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
         vertical_reflectivity_option=L2aFHConf.verticalReflectivityOptions(conf.vertical_reflectivity_option.value),
         vertical_reflectivity_default_profile=np.array([val for val in conf.vertical_reflectivity_default_profile.val]),
         model_inversion=L2aFHConf.ModelInversionOptions(conf.model_inversion.value),
-        spectral_decorrelation_compensation_flag=str_to_bool(conf.spectral_decorrelation_compensation_flag),
-        correct_terrain_slopes_flag=str_to_bool(conf.correct_terrain_slopes_flag),
-        snr_decorrelation_compensation_flag=str_to_bool(conf.snrdecorrelation_compensation_flag),
+        spectral_decorrelation_compensation_flag=translate_common.translate_bool(
+            conf.spectral_decorrelation_compensation_flag
+        ),
+        correct_terrain_slopes_flag=translate_common.translate_bool(conf.correct_terrain_slopes_flag),
+        snr_decorrelation_compensation_flag=translate_common.translate_bool(conf.snrdecorrelation_compensation_flag),
         normalised_height_estimation_range=MinMaxType(
             min=conf.normalised_height_estimation_range.min,
             max=conf.normalised_height_estimation_range.max,
@@ -155,21 +145,18 @@ def translate_model_to_gn_conf(
     gn_type,
 ) -> GroundCancellationConfAGB | GroundCancellationConfFD:
     """Translate AGB or FD Ground Cancellation configuration section to the corresponding conf"""
+    images_pair_selection = []
     if conf.images_pair_selection is None:
-        images_pair_selection = aux_pp2_2a_models.AuxppacquisitionListType(
-            acquisition_folder_name=[
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(value="", reference_image=""),
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(value="", reference_image=""),
-            ],
-            count=2,
-        )
+        images_pair_selection = [
+            AcquisitionFolderName(value="", reference_image=False, average_wavenumber=None),
+            AcquisitionFolderName(value="", reference_image=False, average_wavenumber=None),
+        ]
     else:
-        list_temp = []
         for acq_folder_name in conf.images_pair_selection.acquisition_folder_name:
-            list_temp.append(
-                aux_pp2_2a_models.AuxppacquisitionListType.AcquisitionFolderName(
+            images_pair_selection.append(
+                AcquisitionFolderName(
                     value=acq_folder_name.value,
-                    reference_image=acq_folder_name.reference_image.lower(),
+                    reference_image=translate_common.translate_bool(acq_folder_name.reference_image),
                     average_wavenumber=(
                         float(acq_folder_name.average_wavenumber)
                         if acq_folder_name.average_wavenumber is not None
@@ -177,20 +164,16 @@ def translate_model_to_gn_conf(
                     ),
                 ),
             )
-        assert len(list_temp) == 2
-        images_pair_selection = common_annotation_models_l2.AcquisitionListType(
-            acquisition=list_temp,
-            count=len(list_temp),
-        )
+        assert len(images_pair_selection) == 2
+
     if conf.disable_ground_cancellation_flag is None:
         disable_ground_cancellation_flag = False
     else:
-        disable_ground_cancellation_flag = str_to_bool(conf.disable_ground_cancellation_flag)
+        disable_ground_cancellation_flag = translate_common.translate_bool(conf.disable_ground_cancellation_flag)
 
     if gn_type == "AGB":
         return GroundCancellationConfAGB(
-            compute_gn_power_flag=str_to_bool(conf.compute_gnpower_flag),
-            radiometric_calibration_flag=str_to_bool(conf.radiometric_calibration_flag),
+            radiometric_calibration_flag=translate_common.translate_bool(conf.radiometric_calibration_flag),
             emphasized_forest_height=conf.emphasized_forest_height.value,
             operational_mode=OperationalModeType(conf.operational_mode.value),
             images_pair_selection=images_pair_selection,
@@ -212,14 +195,18 @@ def translate_model_to_tfh_conf(
     return L2aTFHConf(
         l2aTOMOFHProductDOI=conf.l2a_tfhproduct_doi,
         product_id=conf.product_id,
-        enable_product_flag=str_to_bool(conf.enable_product_flag),
-        enable_super_resolution=str_to_bool(conf.enable_super_resolution),
+        enable_product_flag=translate_common.translate_bool(conf.enable_product_flag),
+        enable_super_resolution=translate_common.translate_bool(conf.enable_super_resolution),
         product_resolution=conf.product_resolution.value,
         regularization_noise_factor=conf.regularization_noise_factor,
         power_threshold=conf.power_threshold,
         median_factor=conf.median_factor,
-        estimation_valid_values_limits=conf.estimation_valid_values_limits,
-        vertical_range=conf.vertical_range,
+        estimation_valid_values_limits=MinMaxType(
+            min=conf.estimation_valid_values_limits.min.value, max=conf.estimation_valid_values_limits.max.value
+        ),
+        vertical_range=verticalRangeWithUnitsType(
+            min=conf.vertical_range.min.value, max=conf.vertical_range.max.value, sampling=conf.vertical_range.sampling
+        ),
         compression_options=translate_model_to_comp_tfh_conf(conf.compression_options),
     )
 
@@ -237,9 +224,9 @@ def translate_model_to_comp_agb_conf(
         ),
         ads=L2aAGBConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
-            incidence_angle=ADSfloatCompressionType(
-                compression_factor=conf.ads.local_incidence_angle.compression_factor,
-                least_significant_digit=conf.ads.local_incidence_angle.least_significant_digit,
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
             ),
         ),
         mds_block_size=conf.mds_block_size,
@@ -271,6 +258,10 @@ def translate_model_to_comp_fd_conf(
                 least_significant_digit=conf.ads.acm.least_significant_digit,
             ),
             number_of_averages=IntCompressionType(compression_factor=conf.ads.acm.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,
@@ -294,6 +285,10 @@ def translate_model_to_comp_fh_conf(
         ),
         ads=L2aFHConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,
@@ -317,6 +312,10 @@ def translate_model_to_comp_tfh_conf(
         ),
         ads=L2aTFHConf.CompressionConf.ADS(
             fnf=IntCompressionType(compression_factor=conf.ads.fnf.compression_factor),
+            geometric_luts=ADSfloatCompressionType(
+                compression_factor=conf.ads.geometric_luts.compression_factor,
+                least_significant_digit=conf.ads.geometric_luts.least_significant_digit,
+            ),
         ),
         mds_block_size=conf.mds_block_size,
         ads_block_size=conf.ads_block_size,

@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import ClassVar
 
 from bps.transcoder.utils.quality_index import QualityIndex
 
@@ -38,7 +39,7 @@ class L1QualityIndex(QualityIndex):
 
     number_of_failing_estimations_above_threshold: bool = False
 
-    _bit_map = {
+    _bit_map: ClassVar[dict[str, int]] = {
         "raw_data_stats_out_of_boundaries": 4,
         "int_cal_sequence_above_threshold": 8,
         "dc_fallback_activated": 16,

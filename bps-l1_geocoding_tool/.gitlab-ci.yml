@@ -1,0 +1,43 @@
+stages:
+  - analysis
+  - test
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - when: always
+
+include:
+  - local: "/.gitlab-ci-common.yml"
+
+variables:
+  SOURCE_RELATIVE_PATH: "bps/l1_geocoding_tool"
+  LOCAL_DEPENDENCIES: "../bps-common ../bps-transcoder"
+
+ruff:
+  extends: .ruff
+
+pyrefly:
+  extends: .pyrefly
+
+fawlty_deps:
+  extends: .fawlty_deps
+
+unittest_linux_py314:
+  extends:
+    - .unittest_linux
+  variables:
+    PYTHON: "3.14"
+
+unittest_win10_py314:
+  extends:
+    - .unittest_win10
+  variables:
+    PYTHON: "3.14"
+
+build:
+  extends: .build
+
+deploy:
+  extends: .deploy

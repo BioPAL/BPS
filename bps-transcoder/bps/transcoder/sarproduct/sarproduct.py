@@ -25,13 +25,13 @@ from arepytools.io import (
     write_raster_with_raster_info,
 )
 from arepytools.math import genericpoly
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.sarproduct.footprint_utils import (
     compute_footprint,
     compute_ground_corner_points_on_wgs84,
 )
 from bps.transcoder.sarproduct.platform_heading_utils import compute_platform_heading
+from perseo_core.timing import PreciseDateTime
 
 
 class SARProduct:

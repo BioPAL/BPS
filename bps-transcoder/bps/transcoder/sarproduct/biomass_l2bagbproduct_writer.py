@@ -7,6 +7,7 @@
 
 """_summary_"""
 
+import copy
 import xml.etree.ElementTree as ET
 from copy import deepcopy
 from pathlib import Path
@@ -15,15 +16,14 @@ from xml.dom import minidom
 import cv2
 import numpy as np
 import pystac
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, translate_common
+from bps.common.io import common
 from bps.common.io.parsing import serialize
 from bps.common.l2_joborder_tags import L2B_OUTPUT_PRODUCT_AGB
-from bps.transcoder import BPS_PFD_AGB_VERSION, BPS_PPD_VERSION
+from bps.transcoder import BPS_ATBD_AGB_VERSION, BPS_PFD_AGB_VERSION, BPS_PPD_VERSION
 from bps.transcoder.io import (
-    common_annotation_models_l2,
-    main_annotation_models_l2b_agb,
+    main_annotation_l2b_agb,
+    translate_main_annotation_l2b_agb,
     vrt,
 )
 from bps.transcoder.sarproduct.biomass_l2bagbproduct import (
@@ -38,6 +38,7 @@ from bps.transcoder.utils.production_model_utils import (
     translate_global_coverage_id,
 )
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
+from perseo_core.timing import PreciseDateTime
 from scipy.signal import convolve2d
 
 for key, value in MPH_NAMESPACES.items():
@@ -46,8 +47,8 @@ for key, value in MPH_NAMESPACES.items():
 COMPRESSION_SCHEMA_MDS_LERC_ZSTD = "LERC_ZSTD"
 COMPRESSION_SCHEMA_MDS_ZSTD = "ZSTD"
 COMPRESSION_EXIF_CODES_LERC_ZSTD = [34887, 34926]  #  LERC, ZSTD
-FLOAT_NODATA_VALUE = float(-9999.0)
-INT_NODATA_VALUE = int(255)
+FLOAT_NODATA_VALUE = -9999.0
+INT_NODATA_VALUE = 255
 
 
 COORDINATE_REFERENCE_SYSTEM = 'GEOGCS["WGS 84",DATUM["WGS_1984",ELLIPSOID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]'
@@ -247,19 +248,18 @@ class BIOMASSL2bAGBProductWriter:
         xml5 = ET.SubElement(xml4, "{" + MPH_NAMESPACES["bio"] + "}Acquisition")
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}missionPhase")
         mission_phases_dict = {
-            "INT": "INTERFEROMETRIC",
-            "TOM": "TOMOGRAPHIC",
-            "COM": "COMMISSIONING",
+            common.MissionPhaseIdtype.INT: "INTERFEROMETRIC",
+            common.MissionPhaseIdtype.TOM: "TOMOGRAPHIC",
+            common.MissionPhaseIdtype.COM: "COMMISSIONING",
         }
-        xml6.text = mission_phases_dict[str(self.product.main_ads_product.mission_phase_id)]
+        xml6.text = mission_phases_dict[self.product.main_ads_product.mission_phase_id]
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}globalCoverageID")
         xml6.text = encode_mph_id_value(self.product.main_ads_product.global_coverage_id)
-        for tile_id in self.product.main_ads_product.tile_id_list:
-            xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}tileID")
-            xml6.text = str(tile_id)
+        xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}tileID")
+        xml6.text = self.product.main_ads_product.tile_id
 
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["bio"] + "}basinID")
-        xml6.text = str(self.product.main_ads_product.basin_id_list[0])
+        xml6.text = self.product.main_ads_product.basin_id[0]
 
         xml2 = ET.SubElement(
             xml1,
@@ -337,7 +337,7 @@ class BIOMASSL2bAGBProductWriter:
         )
         xml8 = ET.SubElement(xml7, "{" + MPH_NAMESPACES["ows"] + "}RequestMessage")
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}version")
-        xml6.text = f"{self.product.main_ads_product.baseline:02d}"
+        xml6.text = f"{self.product.baseline:02d}"
 
         def add_file_to_mph(
             base_element: ET.Element,
@@ -462,6 +462,8 @@ class BIOMASSL2bAGBProductWriter:
         xml4.text = f"BIOMASS Above Ground Biomass Product Format Specification (BPS_AGB_PFD) {BPS_PFD_AGB_VERSION}"
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
         xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS Above Ground Biomass Algorithms Theoretical Baseline Document (BPS_AGB_ATBD) {BPS_ATBD_AGB_VERSION}"
 
         # Write MPH file
         xmlstr = minidom.parseString(ET.tostring(xml1)).toprettyxml(indent="   ")
@@ -500,8 +502,6 @@ class BIOMASSL2bAGBProductWriter:
         lon_min = min(footprint[1::2])
         lon_max = max(footprint[1::2])
         bbox = [lon_min, lat_min, lon_max, lat_max]
-        # properties
-        self.product.main_ads_input_information.input_information.l2a_inputs
 
         # times
         start_time = self.product.main_ads_product.start_time.isoformat(timespec="milliseconds")
@@ -517,7 +517,7 @@ class BIOMASSL2bAGBProductWriter:
             "processing:software_version": self.product.main_ads_processing_parameters.processor_version,
             "processing:level": "L2B",
             "processing:product_type": "Above Ground Biomass",
-            "tile_id": self.product.main_ads_product.tile_id_list[0],
+            "tile_id": self.product.main_ads_product.tile_id,
             "start_datetime": start_time,
             "end_datetime": stop_time,
             "global_cycle": id[18:20],
@@ -743,7 +743,7 @@ class BIOMASSL2bAGBProductWriter:
         assert self.product_structure.agb_standard_deviation_file is not None
         assert self.product_structure.heatmap_file is not None
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key in [
                 "dgg_latitude_axis",
                 "dgg_longitude_axis",
@@ -758,7 +758,7 @@ class BIOMASSL2bAGBProductWriter:
                 "acquisition_id_image",
                 "bps_fnf",
             ]:
-                raise ValueError("Not valid dictionary key '{}' in processed data dictionary.".format(key))
+                raise ValueError(f"Not valid dictionary key '{key}' in processed data dictionary.")
 
             data = self.product.measurement.data_dict[key]
 
@@ -898,176 +898,26 @@ class BIOMASSL2bAGBProductWriter:
         vrt_path.write_text(vrt_text, encoding="utf-8")
 
     def _write_main_annotation_file(self):
-        """_summary_
+        """Write the main annotation file for the biomass L2b AGB product."""
+        product = copy.copy(self.product.main_ads_product)
+        product.product_type = common.ProductType.AGB_L2_B
+        product.start_time = self.start_time_l2a
+        product.stop_time = self.stop_time_l2a
+        product.global_coverage_id = translate_global_coverage_id(self.product.main_ads_product.global_coverage_id)
 
-        Returns
-        -------
-        _type_
-            _description_
-        """
-        # Fill main annotation model
+        self.product.main_ads_raster_image.footprint = self.footprint
 
-        # - product
-        mission = common_annotation_models_l2.MissionType(self.product.main_ads_product.mission)
-        tile_id = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.tile_id_list)
-        basin_id_list = common_annotation_models_l2.StringListType(id=self.product.main_ads_product.basin_id_list)
-        product_type = common_annotation_models_l2.ProductType.AGB_L2_B
-
-        start_time = self.start_time_l2a.isoformat(timespec="microseconds")[:-1]
-
-        stop_time = self.stop_time_l2a.isoformat(timespec="microseconds")[:-1]
-
-        radar_carrier_frequency = common_annotation_models_l2.DoubleWithUnit(
-            value=self.product.main_ads_product.radar_carrier_frequency,
-            units="Hz",
-        )
-        mission_phase_id = common_annotation_models_l2.MissionPhaseIdtype(
-            self.product.main_ads_product.mission_phase_id
-        )
-        sensor_mode = common_annotation_models_l2.SensorModeType(self.product.main_ads_product.sensor_mode)
-
-        contributing_tiles = common_annotation_models_l2.StringListType(
-            id=self.product.main_ads_product.contributing_tiles
-        )
-
-        product = main_annotation_models_l2b_agb.ProductL2BL3Type(
-            mission=mission,
-            tile_id=tile_id.id[0],
-            basin_id=basin_id_list,
-            product_type=product_type,
-            start_time=start_time,
-            stop_time=stop_time,
-            radar_carrier_frequency=radar_carrier_frequency,
-            mission_phase_id=mission_phase_id,
-            sensor_mode=sensor_mode,
-            global_coverage_id=translate_global_coverage_id(self.product.main_ads_product.global_coverage_id),
-            contributing_tiles=contributing_tiles,
-            cal_abcoverage_per_tile=self.product.main_ads_product.cal_ab_coverage_per_tile,
-            gncoverage_per_tile=self.product.main_ads_product.gncoverage_per_tile,
-        )
-
-        footprint = ""
-        for num in self.footprint:
-            footprint = footprint + str(num) + " "
-        footprint = footprint[0:-1]
-        footprint = common_annotation_models_l2.FloatArrayWithUnits(
-            value=footprint,
-            count=len(self.footprint),
-            units="deg",
-        )
-
-        first_latitude_value = translate_common.translate_float_with_unit_to_model(
-            float(self.product.main_ads_raster_image.first_latitude_value),
-            common.UomType.DEG,
-        )
-        first_longitude_value = translate_common.translate_float_with_unit_to_model(
-            float(self.product.main_ads_raster_image.first_longitude_value),
-            common.UomType.DEG,
-        )
-        latitude_spacing = translate_common.translate_float_with_unit_to_model(
-            float(self.product.main_ads_raster_image.latitude_spacing),
-            common.UomType.DEG,
-        )
-        longitude_spacing = translate_common.translate_float_with_unit_to_model(
-            float(self.product.main_ads_raster_image.longitude_spacing),
-            common.UomType.DEG,
-        )
-
-        number_of_samples = self.product.main_ads_raster_image.number_of_samples
-        number_of_lines = self.product.main_ads_raster_image.number_of_lines
-        projection = common_annotation_models_l2.ProjectionType(self.product.main_ads_raster_image.projection)
-        datum = self.product.main_ads_raster_image.datum
-        pixel_representation = self.product.main_ads_raster_image.pixel_representation
-        pixel_type = self.product.main_ads_raster_image.pixel_type
-        no_data_value = self.product.main_ads_raster_image.no_data_value
-        raster_image = common_annotation_models_l2.RasterImageType(
-            footprint=footprint,
-            first_latitude_value=first_latitude_value,
-            first_longitude_value=first_longitude_value,
-            latitude_spacing=latitude_spacing,
-            longitude_spacing=longitude_spacing,
-            number_of_samples=number_of_samples,
-            number_of_lines=number_of_lines,
-            projection=projection,
-            datum=datum,
-            pixel_representation=pixel_representation,
-            pixel_type=pixel_type,
-            no_data_value=no_data_value,
-        )
-
-        # # - inputInformation
-        input_information_l2b = common_annotation_models_l2.InputInformationL2BL3ListType(
-            l2a_inputs=self.product.main_ads_input_information.input_information.l2a_inputs,
-            count=len(self.product.main_ads_input_information.input_information.l2a_inputs),
-        )
-
-        # # - processing parameters
-        PRODUCT_GENERATION_TIME_MS = self.product.main_ads_processing_parameters.product_generation_time.isoformat(
-            timespec="microseconds"
-        )[:-1]
-
-        forest_masking_flag = str(self.product.main_ads_processing_parameters.forest_masking_flag).lower()
-
-        rejected_landcover_classes = common_annotation_models_l2.IntArray(
-            value=self.product.main_ads_processing_parameters.rejected_landcover_classes,
-            count=len(self.product.main_ads_processing_parameters.rejected_landcover_classes),
-        )
-
-        backscatter_limits = main_annotation_models_l2b_agb.BackscatterLimitsType(
-            hh=self.product.main_ads_processing_parameters.backscatter_limits[
-                main_annotation_models_l2b_agb.PolarisationType.HH.value
-            ],
-            vh=self.product.main_ads_processing_parameters.backscatter_limits[
-                main_annotation_models_l2b_agb.PolarisationType.HV.value
-            ],
-            vv=self.product.main_ads_processing_parameters.backscatter_limits[
-                main_annotation_models_l2b_agb.PolarisationType.VV.value
-            ],
-        )
-
-        use_constant_n = str(self.product.main_ads_processing_parameters.use_constant_n).lower()
-        values_constant_n = common_annotation_models_l2.FloatArray(
-            value=self.product.main_ads_processing_parameters.values_constant_n,
-            count=len(self.product.main_ads_processing_parameters.values_constant_n),
-        )
-        regression_solver = self.product.main_ads_processing_parameters.regression_solver
-        processing_parameters = main_annotation_models_l2b_agb.ProcessingParametersL2BType(
-            processor_version=self.product.main_ads_processing_parameters.processor_version,
-            product_generation_time=PRODUCT_GENERATION_TIME_MS,
-            forest_masking_flag=forest_masking_flag,
-            minimum_l2a_coverage=self.product.main_ads_processing_parameters.minumum_l2a_coverage,
-            rejected_landcover_classes=rejected_landcover_classes,
-            backscatter_limits=backscatter_limits,
-            angle_limits=self.product.main_ads_processing_parameters.angle_limits,
-            mean_agblimits=self.product.main_ads_processing_parameters.mean_agblimits,
-            std_agblimits=self.product.main_ads_processing_parameters.std_agblimits,
-            relative_agblimits=self.product.main_ads_processing_parameters.relative_agblimits,
-            reference_selection=self.product.main_ads_processing_parameters.reference_selection,
-            indexing_l=self.product.main_ads_processing_parameters.indexing_l,
-            indexing_a=self.product.main_ads_processing_parameters.indexing_a,
-            indexing_n=self.product.main_ads_processing_parameters.indexing_n,
-            use_constant_n=use_constant_n,
-            values_constant_n=values_constant_n,
-            regression_solver=regression_solver,
-            regression_matrix_subsampling_factor=self.product.main_ads_processing_parameters.regression_matrix_subsampling_factor,
-            minimum_percentage_of_fillable_voids=self.product.main_ads_processing_parameters.minimum_percentage_of_fillable_voids,
-            estimated_parameters=self.product.main_ads_processing_parameters.estimated_parameters,
-            compression_options=self.product.main_ads_processing_parameters.compression_options,
-        )
-
-        main_annotation_model = main_annotation_models_l2b_agb.MainAnnotation(
+        main_annotation = main_annotation_l2b_agb.MainAnnotationL2bAGB(
             product=product,
-            raster_image=raster_image,
-            input_information=input_information_l2b,
-            processing_parameters=processing_parameters,
+            raster_image=self.product.main_ads_raster_image,
+            input_information=self.product.main_ads_input_information,
+            processing_parameters=self.product.main_ads_processing_parameters,
         )
 
-        # Write main annotation file
         assert self.product_structure.main_annotation_file is not None
-
-        main_annotation_text = serialize(main_annotation_model)
-        main_annotation_path = Path(self.product_structure.main_annotation_file)
-        main_annotation_path.write_text(main_annotation_text, encoding="utf-8")
+        translate_main_annotation_l2b_agb.write_main_annotation_l2b_agb(
+            Path(self.product_structure.main_annotation_file), main_annotation
+        )
 
     def _write_quicklook_files(self):
         """_summary_
@@ -1083,7 +933,7 @@ class BIOMASSL2bAGBProductWriter:
         if not dirname.exists():
             dirname.mkdir(parents=True, exist_ok=True)
 
-        for key in self.product.measurement.data_dict.keys():
+        for key in self.product.measurement.data_dict:
             if key in [
                 "dgg_latitude_axis",
                 "dgg_longitude_axis",

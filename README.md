@@ -50,12 +50,14 @@ Here below are reported the instructions to install and use BPS processors start
 
 Both installation and usage procedures make use of the open-source package management system [conda](https://docs.conda.io/projects/conda/en/latest/), to be pre-installed.
 
+BPS supports Python 3.12, 3.13, and 3.14. Python 3.14 is the recommended version.
+
 ## Install BPS (for users)
 
 1. Create an empty BPS environment and activate it:
 
     ```bash
-    conda create --name bps-env python=3.12
+    conda create --name bps-env python=3.14
     conda activate bps-env
     ```
 
@@ -90,14 +92,14 @@ Open a command window with *conda* available and follow this procedure:
 2. Create an empty BPS environment and activate it:
 
     ```bash
-    conda create --name bps-dev-env python=3.12
+    conda create --name bps-dev-env python=3.14
     conda activate bps-dev-env
     ```
 
 3. Install GDAL library:
 
     ```bash
-    conda install -c conda-forge GDAL=3.10
+    conda install -c conda-forge GDAL=3.13
     ```
 
 4. Install BPS packages. Note that you don't have to install all the BPS processors to make it work, but only those that you are interested in. The installation order reported below ensures that inter-dependencies will be correctly resolved:

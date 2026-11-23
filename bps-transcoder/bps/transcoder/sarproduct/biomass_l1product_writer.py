@@ -5,11 +5,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""_summary_"""
+"""Writer for BIOMASS L1 products"""
 
 import copy
 import itertools
-import os
 import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -18,17 +17,12 @@ from xml.dom import minidom
 import numpy as np
 from arepytools.constants import LIGHT_SPEED
 from arepytools.math import genericpoly
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io import common, translate_common
-from bps.common.io.parsing import serialize
+from bps.common.io import common
 from bps.transcoder import BPS_ATBD_L1_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
-from bps.transcoder.io import (
-    common_annotation_l1,
-    main_annotation_l1ab,
-    translate_main_annotation_l1ab,
-)
+from bps.transcoder.io import common_annotation_l1, main_annotation_l1ab
 from bps.transcoder.io.preprocessor_report import BAQCompressionLevel
+from bps.transcoder.io.translate_main_annotation_l1ab import write_main_annotation_l1ab
 from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.generic_product import GenericProduct
 from bps.transcoder.sarproduct.l1.product_content import L1ProductContent
@@ -56,6 +50,7 @@ from bps.transcoder.utils.gdal_utils import GeotiffConf, GeotiffMetadata, write_
 from bps.transcoder.utils.production_model_utils import encode_mph_id_value
 from bps.transcoder.utils.rxgain_table import get_rx_gain_from_parameters_code
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
+from perseo_core.timing import PreciseDateTime
 
 CURRENT_AZIMUTH_TIME = PreciseDateTime.now()
 TAI_UTC = 37
@@ -80,7 +75,7 @@ def convert_baq_compression_level(
 
 
 class BIOMASSL1ProductWriter:
-    """_summary_"""
+    """Writer class for BIOMASS L1 products"""
 
     def __init__(
         self,
@@ -91,24 +86,11 @@ class BIOMASSL1ProductWriter:
         processor_version: str = "1.0.0",
         gdal_num_threads: int = 1,
     ) -> None:
-        """_summary_
-
-        Parameters
-        ----------
-        product : BIOMASSL1Product
-            _description_
-        product_path : _type_
-            _description_
-        product_lut : dict
-            _description_
-        processor_name : str
-            _description_
-        processor_version : str
-            _description_
-        """
+        """Writer class init"""
         self.product = product
+        assert self.product.name is not None
         self.product_path = Path(product_path).joinpath(self.product.name)
-        if os.path.exists(self.product_path):
+        if self.product_path.exists():
             raise FileExistsError(f"Folder {self.product_path} already exists.")
 
         self.product_lut = product_lut if product_lut else {}
@@ -126,6 +108,14 @@ class BIOMASSL1ProductWriter:
 
         def build_relative_href_path(path: str | Path):
             return f"./{Path(path).relative_to(self.product_path)}"
+
+        assert self.product.name is not None
+        assert self.product.start_time is not None
+        assert self.product.stop_time is not None
+        assert self.product.anx_time is not None
+        assert self.product.global_coverage_id is not None
+        assert self.product.major_cycle_id is not None
+        assert self.product.repeat_cycle_id is not None
 
         name = self.product.name
         id_counter = 0
@@ -322,10 +312,13 @@ class BIOMASSL1ProductWriter:
         xml6.text = "EPSG:4326"
         xml6 = ET.SubElement(xml5, "{" + MPH_NAMESPACES["eop"] + "}fileName")
         if self.product.type == "SCS":
+            assert self.content.quicklook_pauli is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
             if not quicklook_file.exists():
+                assert self.content.quicklook_hsv is not None
                 quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
         else:
+            assert self.content.quicklook_lexicographic is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
         xml7 = ET.SubElement(
             xml6,
@@ -451,12 +444,12 @@ class BIOMASSL1ProductWriter:
             data_shape=self.product.data_list[0].shape,
             product_type=self.product.type,
             processing_parameters=self.product.processing_parameters,
-            swath=self.product.swath_list[0],
+            swath=common.SwathType(self.product.swath_list[0]),
         )
         assert nodata_mask.shape == self.product.data_list[0].shape
 
         geotiff_conf_abs = GeotiffConf(
-            compression_schema=self.product.sar_image_parameters.abs_compression_method.value,
+            compression_schema=self.product.sar_image_parameters.abs_compression_method.name,
             max_z_error=self.product.sar_image_parameters.abs_max_z_error,
             nodata_value=self.product.sar_image_parameters.no_pixel_value,
             block_size=self.product.sar_image_parameters.block_size,
@@ -465,7 +458,7 @@ class BIOMASSL1ProductWriter:
         )
 
         geotiff_conf_phase = copy.copy(geotiff_conf_abs)
-        geotiff_conf_phase.compression_schema = self.product.sar_image_parameters.phase_compression_method.value
+        geotiff_conf_phase.compression_schema = self.product.sar_image_parameters.phase_compression_method.name
         geotiff_conf_phase.max_z_error = self.product.sar_image_parameters.phase_max_z_error
 
         geotiff_metadata = GeotiffMetadata(
@@ -562,6 +555,7 @@ class BIOMASSL1ProductWriter:
         assert self.product.orbit_direction is not None
         assert self.product.datatake_id is not None
         assert self.product.type is not None
+        assert self.product.platform_heading is not None
         acquisition_information = common_annotation_l1.AcquisitionInformationType(
             mission=common.MissionType.BIOMASS,
             swath=common.SwathType[self.product.swath_list[0]],
@@ -570,7 +564,7 @@ class BIOMASSL1ProductWriter:
             start_time=self.product.start_time,
             stop_time=self.product.stop_time,
             mission_phase_id=mission_phase_id_dict[self.product.mission_phase_id],
-            drift_phase_flag=True if self.product.repeat_cycle_id == -2 else False,
+            drift_phase_flag=self.product.repeat_cycle_id == -2,
             sensor_mode=sensor_mode_dict[self.product.sensor_mode],
             global_coverage_id=self.product.global_coverage_id,
             major_cycle_id=self.product.major_cycle_id,
@@ -682,7 +676,7 @@ class BIOMASSL1ProductWriter:
             datum=datum,
             footprint=np.reshape(self.product.footprint, (8,)).tolist(),
             pixel_representation=representation_dict[self.product.type],
-            pixel_type=translate_common.translate_pixel_type_type(self.product.sar_image_parameters.pixel_type),
+            pixel_type=self.product.sar_image_parameters.pixel_type,
             pixel_quantity=common.PixelQuantityType.BETA_NOUGHT,
             no_data_value=self.product.sar_image_parameters.no_pixel_value,
         )
@@ -773,6 +767,10 @@ class BIOMASSL1ProductWriter:
         raw_data_analysis = raw_data_analysis_values.to_annotation()
 
         # - processingParameters
+        assert self.product.sampling_constants_list[0].frg_hz is not None
+        assert self.product.sampling_constants_list[0].brg_hz is not None
+        assert self.product.sampling_constants_list[0].faz_hz is not None
+        assert self.product.sampling_constants_list[0].baz_hz is not None
         processing_parameters = common_annotation_l1.ProcessingParameters(
             processor_version=self.processor_version,
             product_generation_time=CURRENT_AZIMUTH_TIME,
@@ -802,9 +800,13 @@ class BIOMASSL1ProductWriter:
             antenna_pattern_correction2_flag=(self.product.processing_parameters.antenna_pattern_correction2_flag),
             antenna_cross_talk_correction_flag=(self.product.processing_parameters.antenna_cross_talk_correction_flag),
             range_processing_parameters=common_annotation_l1.SpectrumProcessingParametersType(
-                window_type=self.product.processing_parameters.range_window_type[self.product.swath_list[0]],
+                window_type=self.product.processing_parameters.range_window_type[
+                    common.SwathType[self.product.swath_list[0]]
+                ],
                 window_coefficient=(
-                    self.product.processing_parameters.range_window_coefficient[self.product.swath_list[0]]
+                    self.product.processing_parameters.range_window_coefficient[
+                        common.SwathType[self.product.swath_list[0]]
+                    ]
                 ),
                 total_bandwidth=self.product.sampling_constants_list[0].frg_hz,  # Hz
                 processing_bandwidth=self.product.sampling_constants_list[0].brg_hz,  # Hz
@@ -813,9 +815,13 @@ class BIOMASSL1ProductWriter:
                 look_overlap=0,  # Hz
             ),
             azimuth_processing_parameters=common_annotation_l1.SpectrumProcessingParametersType(
-                window_type=self.product.processing_parameters.azimuth_window_type[self.product.swath_list[0]],
+                window_type=self.product.processing_parameters.azimuth_window_type[
+                    common.SwathType[self.product.swath_list[0]]
+                ],
                 window_coefficient=(
-                    self.product.processing_parameters.azimuth_window_coefficient[self.product.swath_list[0]]
+                    self.product.processing_parameters.azimuth_window_coefficient[
+                        common.SwathType[self.product.swath_list[0]]
+                    ]
                 ),
                 total_bandwidth=self.product.sampling_constants_list[0].faz_hz,  # Hz
                 processing_bandwidth=self.product.sampling_constants_list[0].baz_hz,  # Hz
@@ -829,9 +835,7 @@ class BIOMASSL1ProductWriter:
                 self.product.processing_parameters.range_spreading_loss_compensation_flag
             ),
             reference_range=self.product.processing_parameters.reference_range,  # M
-            processing_gain_list=[
-                (1, common.PolarisationType(p.replace("/", ""))) for p in self.product.polarization_list
-            ],
+            processing_gain_list=self.product.processing_parameters.processing_gain,
             polarimetric_correction_flag=(self.product.processing_parameters.polarimetric_correction_flag),
             ionosphere_height_defocusing_flag=(self.product.processing_parameters.ionosphere_height_defocusing_flag),
             ionosphere_height_estimation_method=(
@@ -851,7 +855,7 @@ class BIOMASSL1ProductWriter:
             ground_projection_flag=(
                 False if self.product.type == "SCS" else self.product.processing_parameters.ground_projection_flag
             ),
-            noise_gain_list=[(1, common.PolarisationType(p.replace("/", ""))) for p in self.product.polarization_list],
+            noise_gain_list=self.product.processing_parameters.noise_gain,
         )
 
         # - internalCalibration
@@ -870,6 +874,7 @@ class BIOMASSL1ProductWriter:
 
             for polarisation in self.product.polarization_list:
                 polarisation_enum = polarisation_dict[polarisation]
+                # pyrefly: ignore[bad-index]
                 rx_pol = polarisation_enum.value[1]
                 preamble = (
                     self.product.preproc_report.noise_preamble_h
@@ -948,7 +953,7 @@ class BIOMASSL1ProductWriter:
         ):
             combined_dcpolynomial_list = self.product.dc_vector_list[0]
             if self.product.dc_annotations and combined_dcpolynomial_list.get_number_of_poly() > 0:
-                reference_pol = list(self.product.dc_annotations.geometric_dc.keys())[0]
+                reference_pol = next(iter(self.product.dc_annotations.geometric_dc.keys()))
                 geometry_dcpolynomial_list = self.product.dc_annotations.geometric_dc.get(reference_pol)
 
                 combined_stats_list = build_list_of_combined_dc_stats_from_annotations_and_poly(
@@ -1036,7 +1041,8 @@ class BIOMASSL1ProductWriter:
             for index in range(dr_vector_list_ref.get_number_of_poly()):
                 dr_poly = dr_vector_list_ref.get_poly(index)
                 coefficients = np.concatenate((dr_poly.coefficients[0:2], dr_poly.coefficients[4:]))
-
+                assert isinstance(dr_poly.t_ref_az, PreciseDateTime)
+                assert dr_poly.t_ref_rg is not None
                 fm_rate_estimate.append(
                     common.SlantRangePolynomialType(dr_poly.t_ref_az, dr_poly.t_ref_rg, coefficients.tolist())
                 )
@@ -1106,14 +1112,14 @@ class BIOMASSL1ProductWriter:
             for rtm in rfi_mitigation.rfi_tmreport_list:
                 rfi_tmfraction[rtm.polarisation] = rtm.avg_percentage_affected_samples
         else:
-            for _, p in polarisation_dict.items():
+            for p in polarisation_dict.values():
                 rfi_tmfraction[p] = 0.0
         rfi_fmfraction = {}
         if rfi_mitigation.rfi_persistent_fmreport_list:
             for rfm in rfi_mitigation.rfi_persistent_fmreport_list:
                 rfi_fmfraction[rfm.polarisation] = rfm.max_percentage_affected_bw / 100
         else:
-            for _, p in polarisation_dict.items():
+            for p in polarisation_dict.values():
                 rfi_fmfraction[p] = 0.0
         invalid_drift_fraction = 0.0
         invalid_replica_fraction = {}
@@ -1245,12 +1251,9 @@ class BIOMASSL1ProductWriter:
             quality=quality,
             annotation_lut=layers,
         )
-        main_annotation_model = translate_main_annotation_l1ab.translate_main_annotation_l1ab_to_model(annotation_l1ab)
 
-        # Write main annotation file
-        main_annotation_text = serialize(main_annotation_model)
         main_annotation_path = self.product_path.joinpath(self.content.main_annotation)
-        main_annotation_path.write_text(main_annotation_text, encoding="utf-8")
+        write_main_annotation_l1ab(main_annotation_path, annotation_l1ab)
 
     def write(
         self,
@@ -1300,12 +1303,15 @@ class BIOMASSL1ProductWriter:
         # Write quick-look file
         if quicklook_pauli_file is not None:
             bps_logger.debug("..quick-look file (Pauli decomposition)")
+            assert self.content.quicklook_pauli is not None
             shutil.copyfile(quicklook_pauli_file, self.product_path.joinpath(self.content.quicklook_pauli))
         if quicklook_hsv_file is not None:
             bps_logger.debug("..quick-look file (HSV representation)")
+            assert self.content.quicklook_hsv is not None
             shutil.copyfile(quicklook_hsv_file, self.product_path.joinpath(self.content.quicklook_hsv))
         if quicklook_lexicographic_file is not None:
             bps_logger.debug("..quick-look file (lexicographic representation)")
+            assert self.content.quicklook_lexicographic is not None
             shutil.copyfile(
                 quicklook_lexicographic_file, self.product_path.joinpath(self.content.quicklook_lexicographic)
             )
@@ -1313,11 +1319,15 @@ class BIOMASSL1ProductWriter:
         # Write overlay file
         bps_logger.debug("..overlay file")
         if self.product.type == "SCS":
+            assert self.content.quicklook_pauli is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_pauli)
             if not quicklook_file.exists():
+                assert self.content.quicklook_hsv is not None
                 quicklook_file = self.product_path.joinpath(self.content.quicklook_hsv)
         else:
+            assert self.content.quicklook_lexicographic is not None
             quicklook_file = self.product_path.joinpath(self.content.quicklook_lexicographic)
+        assert self.product.name is not None
         write_overlay_file(
             self.product_path.joinpath(self.content.overlay),
             quicklook_file,

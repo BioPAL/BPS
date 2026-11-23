@@ -15,8 +15,12 @@ from enum import Enum
 
 import numpy as np
 from bps.common.io import common
-from bps.l2a_processor.io.aux_pp2_2a_models import CalibrationScreenType
-from bps.transcoder.io import common_annotation_models_l2
+
+
+class CalibrationScreenType(Enum):
+    NONE = "none"
+    GEOMETRY = "geometry"
+    SKP = "skp"
 
 
 @dataclass
@@ -45,12 +49,19 @@ class OperationalModeType(Enum):
 
 
 @dataclass
+class AcquisitionFolderName:
+    value: str
+    reference_image: bool
+    average_wavenumber: None | float
+
+
+@dataclass
 class GroundCancellationConfFD:
     """Ground Cancellation configurations for FD"""
 
     emphasized_forest_height: float
     operational_mode: OperationalModeType
-    images_pair_selection: common_annotation_models_l2.AcquisitionListType
+    images_pair_selection: list[AcquisitionFolderName]
     disable_ground_cancellation_flag: bool
 
 
@@ -58,7 +69,6 @@ class GroundCancellationConfFD:
 class GroundCancellationConfAGB(GroundCancellationConfFD):
     """Ground Cancellation configurations for GN (AGB)"""
 
-    compute_gn_power_flag: bool
     radiometric_calibration_flag: bool
 
 
@@ -130,7 +140,7 @@ class L2aAGBConf:
             """Compression configuration for AGB L2a ADS"""
 
             fnf: IntCompressionType
-            incidence_angle: ADSfloatCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -169,6 +179,7 @@ class L2aFDConf:
             fnf: IntCompressionType
             acm: ADSfloatCompressionType
             number_of_averages: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -215,6 +226,7 @@ class L2aFHConf:
             """Compression configuration for FH L2a ADS"""
 
             fnf: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS
@@ -264,6 +276,7 @@ class L2aTFHConf:
             """Compression configuration for TOMO FH L2a ADS"""
 
             fnf: IntCompressionType
+            geometric_luts: ADSfloatCompressionType
 
         mds: MDS
         ads: ADS

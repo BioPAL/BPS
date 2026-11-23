@@ -21,7 +21,6 @@ spec:
       default: false
       description: Propagate Windows unit test enablement to downstream project pipelines.
 ---
-
 stages:
   - subproject
   - integration_tests
@@ -36,15 +35,15 @@ workflow:
     - when: always
 
 variables:
-  L1_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/L1_executables_lnx_2026-0513-3dceeb5a-c159c2e3.tgz"
-  L1_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/L1_executables_win_2026-0513-3dceeb5a-c159c2e3.zip"
-  STACK_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/Stack_executables_lnx_2026-0513-3dceeb5a.tgz"
-  STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-0513-3dceeb5a.zip"
+  L1_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/L1_executables_lnx_2026-1103-d936c9cb-c159c2e3.tgz"
+  L1_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/L1_executables_win_2026-1103-d936c9cb-c159c2e3.zip"
+  STACK_EXECUTABLES_LNX: "${EXECUTABLES_PATH}/Stack_executables_lnx_2026-1103-d936c9cb.tgz"
+  STACK_EXECUTABLES_WIN: "${EXECUTABLES_PATH}/Stack_executables_win_2026-1103-d936c9cb.zip"
 
 include:
   - project: "biomass/bps/ci-variables"
     ref: main
-    file: '/variables.yml'
+    file: "/variables.yml"
   - local: ".conda-packaging-ci.yml"
   - local: ".docker-ci.yml"
   - local: ".testplan-ci.yml"
@@ -89,7 +88,7 @@ include:
   stage: subproject
   variables:
     SUBPROJECT: $CI_JOB_NAME
-    BPS_ENABLE_WIN10_UNITTEST: '$[[ inputs.bps-enable-win10-unittest ]]'
+    BPS_ENABLE_WIN10_UNITTEST: "$[[ inputs.bps-enable-win10-unittest ]]"
   trigger:
     strategy: mirror
 
@@ -104,6 +103,7 @@ bps-common:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-common/*
         - bps-common/**/*
 
@@ -118,6 +118,7 @@ bps-transcoder:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-transcoder/*
         - bps-transcoder/**/*
 
@@ -132,6 +133,7 @@ bps-l1_framing_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_framing_processor/*
         - bps-l1_framing_processor/**/*
 
@@ -146,6 +148,7 @@ bps-l1_pre_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_pre_processor/*
         - bps-l1_pre_processor/**/*
 
@@ -160,6 +163,7 @@ bps-l1_core_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_core_processor/*
         - bps-l1_core_processor/**/*
 
@@ -174,6 +178,7 @@ bps-l1_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l1_processor/*
         - bps-l1_processor/**/*
 
@@ -188,6 +193,7 @@ bps-stack_pre_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_pre_processor/*
         - bps-stack_pre_processor/**/*
 
@@ -202,6 +208,7 @@ bps-stack_coreg_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_coreg_processor/*
         - bps-stack_coreg_processor/**/*
 
@@ -216,6 +223,7 @@ bps-stack_cal_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_cal_processor/*
         - bps-stack_cal_processor/**/*
 
@@ -230,6 +238,7 @@ bps-stack_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-stack_processor/*
         - bps-stack_processor/**/*
 
@@ -244,6 +253,7 @@ bps-l2a_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2a_processor/*
         - bps-l2a_processor/**/*
 
@@ -258,6 +268,7 @@ bps-l2b_fd_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_fd_processor/*
         - bps-l2b_fd_processor/**/*
 
@@ -272,6 +283,7 @@ bps-l2b_fh_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_fh_processor/*
         - bps-l2b_fh_processor/**/*
 
@@ -286,8 +298,24 @@ bps-l2b_agb_processor:
     - if: "$CI_COMMIT_TAG == null"
       changes:
         - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
         - bps-l2b_agb_processor/*
         - bps-l2b_agb_processor/**/*
+
+bps-l1_geocoding_tool:
+  extends: .subproject
+  trigger:
+    include: bps-l1_geocoding_tool/.gitlab-ci.yml
+  rules:
+    - if: '"$[[ inputs.bps-full-build ]]" == "true"'
+      when: never
+    - if: "$CI_COMMIT_TAG =~ /^l1_geocoding_tool-v.*/"
+    - if: "$CI_COMMIT_TAG == null"
+      changes:
+        - .gitlab-ci.yml
+        - .gitlab-ci-common.yml
+        - bps-l1_geocoding_tool/*
+        - bps-l1_geocoding_tool/**/*
 
 bps-task-tables:
   extends: .subproject
@@ -323,7 +351,7 @@ bps-task-tables:
     - curl -s $STACK_EXECUTABLES_LNX -o Stack_Executables.tgz
     - tar -xzf Stack_Executables.tgz
     - export PATH=${PWD}/Stack_Executables:${PATH}
-    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda create --name test -y python=${PYTHON} gdal=3.13
     - conda activate test
     - python -m pip install -e ./bps-common -e ./bps-transcoder
     - python -m pip install -e ./bps-l1_framing_processor
@@ -334,11 +362,11 @@ bps-task-tables:
     - python -c "import os; f='test/integration/config/linux.toml'; content=open(f).read().replace('\${DATASET_PATH_LNX}', os.environ['DATASET_PATH_LNX']); open(f,'w').write(content)"
     - python -m arepyextras.test --config test/integration/config/linux.toml test run ${INTEGRATION_TEST}
 
-base_rocky8_py312:
+base_rocky8_py314:
   extends:
     - .integration_test_rocky8
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/base"
 
 e2e_rocky8_py312:
@@ -362,20 +390,20 @@ e2e_rocky8_py314:
     PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/e2e"
 
-l1_rocky8_py312:
+l1_rocky8_py314:
   extends:
     - .integration_test_rocky8
     - .enable_l1
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/l1"
 
-stack_rocky8_py312:
+stack_rocky8_py314:
   extends:
     - .integration_test_rocky8
     - .enable_stack
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/stack/basic"
 
 .integration_test_win10:
@@ -394,7 +422,7 @@ stack_rocky8_py312:
     - Expand-Archive -Path "L1_executables.zip" -DestinationPath .
     - Invoke-WebRequest -UseBasicParsing -Uri "$env:STACK_EXECUTABLES_WIN" -OutFile "Stack_Executables.zip"
     - Expand-Archive -Path "Stack_Executables.zip" -DestinationPath .
-    - conda create --name test -y python=${PYTHON} gdal=3.10
+    - conda create --name test -y python=${PYTHON} gdal=3.13
     - conda activate test
     - $L1_BIN_FOLDER = $("${pwd}" + "\L1_executables")
     - $env:PATH = $($env:PATH + ";" + $L1_BIN_FOLDER)
@@ -410,27 +438,27 @@ stack_rocky8_py312:
     - python -m arepyextras.test --config test/integration/config/win10.toml test run ${INTEGRATION_TEST}
   retry: 2
 
-base_win10_py312:
+base_win10_py314:
   extends:
     - .integration_test_win10
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/base"
 
-l1_win10_py312:
+l1_win10_py314:
   extends:
     - .integration_test_win10
     - .enable_l1
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/l1"
 
-stack_win10_py312:
+stack_win10_py314:
   extends:
     - .integration_test_win10
     - .enable_stack
   variables:
-    PYTHON: "3.12"
+    PYTHON: "3.14"
     INTEGRATION_TEST: "test/integration/suite/stack/win_tests"
 
 .conda_integration_test_rocky8_base:
@@ -439,9 +467,6 @@ stack_win10_py312:
     - .tags_rocky8_conda
     - .full_build
   script:
-    - mkdir $HOME/EOCFI_LIBS && cd $HOME/EOCFI_LIBS
-    - curl $EOCFI_LIBS_LNX -o BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && tar -xvzf BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz && rm BPS-EOCFI-4.27-CPPLIB-LINUX64_LEGACY.tar.gz
-    - export LD_LIBRARY_PATH=${HOME}/EOCFI_LIBS:${LD_LIBRARY_PATH} && cd -
     - conda create --name test python=${PYTHON} conda-build
     - conda activate test
     - python -m conda_index ./local_channel
@@ -525,4 +550,4 @@ conda_deploy:
       done
     - ./.gitlab/ci/conda-forge-update.sh ${INTERNAL_CONDA_CHANNEL_PATH}
   needs:
-    - job: base_rocky8_conda_py312
+    - job: base_rocky8_conda_py314

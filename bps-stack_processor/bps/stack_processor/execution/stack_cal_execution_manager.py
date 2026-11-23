@@ -19,7 +19,7 @@ import numpy as np
 import numpy.typing as npt
 from arepytools.io import open_product_folder
 from arepytools.io.productfolder2 import ProductFolder2
-from bps.common import bps_logger
+from bps.common import BIOMASS_PROCESSOR_VERSION, bps_logger
 from bps.common.configuration import fill_bps_configuration_file, write_bps_configuration_file
 from bps.common.io import common
 from bps.common.runner_helper import run_application
@@ -43,7 +43,6 @@ from bps.stack_cal_processor.input_manager import (
 )
 from bps.stack_coreg_processor.input_file import BPSCoregProcessorInputFile, CoregProcessorInputFile
 from bps.stack_coreg_processor.interface import write_coreg_configuration_file, write_coreg_input_file
-from bps.stack_processor import __version__ as VERSION
 from bps.stack_processor.execution.fnf import read_fnf_mask
 from bps.stack_processor.execution.utils import setup_coreg_processor_env
 from bps.stack_processor.interface.external.aux_pps import AuxiliaryStaprocessingParameters
@@ -391,7 +390,7 @@ class _StackWarpingManager:
                 job_order.processor_configuration,
                 task_name="STA_P",
                 processor_name="STA_P",
-                processor_version=bps_logger.get_version_in_logger_format(VERSION),
+                processor_version=BIOMASS_PROCESSOR_VERSION,
                 node_name=bps_logger.get_default_logger_node(),
             ),
             self.bps_configuration_file_path,

@@ -70,6 +70,8 @@ import traceback
 from dataclasses import dataclass
 from pathlib import Path
 
+from bps.common import get_version_in_bps_format
+
 _BPS_LOGGER = logging.getLogger("bps")
 
 _LEVEL_MAPPING = {
@@ -94,13 +96,13 @@ def _stderr_level(record: logging.LogRecord) -> bool:
 
 def _add_msg_type(record: logging.LogRecord) -> bool:
     """Filter to map logging levels to BPS message types in log record"""
-    setattr(record, "msg_type", _LEVEL_MAPPING.get(record.levelname, "E"))
+    record.msg_type = _LEVEL_MAPPING.get(record.levelname, "E")
     return True
 
 
 def _add_musecs(record: logging.LogRecord) -> bool:
     """Filter to add micro seconds to the log record"""
-    setattr(record, "musecs", record.msecs * 1e3)
+    record.musecs = record.msecs * 1000.0
     return True
 
 
@@ -127,10 +129,10 @@ class _FacilityInfoFilter(logging.Filter):
     facility_info: _FacilityInfo
 
     def filter(self, record: logging.LogRecord) -> bool:
-        setattr(record, "node", self.facility_info.node)
-        setattr(record, "processor", self.facility_info.processor)
-        setattr(record, "task", self.facility_info.task)
-        setattr(record, "version", self.facility_info.version)
+        record.node = self.facility_info.node
+        record.processor = self.facility_info.processor
+        record.task = self.facility_info.task
+        record.version = self.facility_info.version
         return True
 
 
@@ -140,28 +142,6 @@ _BPS_FORMATTER = logging.Formatter(
     "%(asctime)s.%(musecs)06d %(node)s %(processor)s %(version)s %(task)s [%(process)010d]: [%(msg_type)s] %(message)s",
     "%Y-%m-%dT%H:%M:%S",
 )
-
-
-def get_version_in_logger_format(version: str) -> str:
-    """Convert a version to the format required by the BPS logger.
-
-    Parameters
-    ----------
-    version : str
-        version in standard format (e.g. 2.3.5)
-
-    Returns
-    -------
-    str
-        version in BPS format (e.g. 02.35)
-    """
-    major, minor, patch = (int(x) for x in version.split(".")[0:3])
-    if minor > 9 or patch > 9:
-        raise RuntimeError(f"Minor and patch version cannot exceed '9': {version}")
-
-    minor_bps = minor * 10 + patch
-    assert minor_bps < 99
-    return f"{major:02d}.{minor_bps:02d}"
 
 
 def get_default_logger_node() -> str:
@@ -216,7 +196,7 @@ def init_logger(
 
     _BPS_LOGGER.setLevel(loglevel)
 
-    version = get_version_in_logger_format(version)
+    version = get_version_in_bps_format(version)
 
     _FACILITY_INFO.node = node
     _FACILITY_INFO.processor = processor
@@ -338,7 +318,7 @@ def update_logger(
     if task is not None:
         _FACILITY_INFO.task = task
     if version is not None:
-        _FACILITY_INFO.version = get_version_in_logger_format(version)
+        _FACILITY_INFO.version = get_version_in_bps_format(version)
 
 
 def stack_trace(

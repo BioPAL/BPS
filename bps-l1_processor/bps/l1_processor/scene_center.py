@@ -16,8 +16,8 @@ import numpy as np
 from arepytools.geometry.conversions import xyz2llh
 from arepytools.geometry.generalsarorbit import create_general_sar_orbit
 from arepytools.io import open_product_folder, read_metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
+from perseo_core.timing import PreciseDateTime
 
 
 def compute_scene_center(

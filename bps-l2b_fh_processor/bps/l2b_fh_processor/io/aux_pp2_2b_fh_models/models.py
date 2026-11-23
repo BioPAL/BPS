@@ -251,6 +251,7 @@ class AuxiliaryL2BFhprocessingParametersType:
         Feathering roll-off factor. Values: 0.0 - 1.0. Default: TBD.
     compression_options
         Configurable compression options for all the FH L2B MDS variables.
+    schema_version
     """
 
     class Meta:
@@ -292,6 +293,15 @@ class AuxiliaryL2BFhprocessingParametersType:
             "name": "compressionOptions",
             "type": "Element",
             "namespace": "",
+        },
+    )
+    schema_version: str = field(
+        init=False,
+        default="3.7.0",
+        metadata={
+            "name": "schemaVersion",
+            "type": "Attribute",
+            "required": True,
         },
     )
 

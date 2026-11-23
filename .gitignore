@@ -18,6 +18,7 @@ xsd/bricksar-xsd/*
 
 # data
 L1_executables
+bps-l1_framing_processor_libs/lib
 bps-l1_binaries/bin
 bps-l1_binaries/lib
 bps-stack_binaries/bin

@@ -38,7 +38,7 @@ def _delete(product: Path) -> None:
     if product.exists():
         try:
             open_product_folder(product).delete()
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             bps_logger.warning(
                 "An error occurred during removal of %s intermediate product: '%s: %s'",
                 product,
@@ -361,8 +361,8 @@ class L1ParcCoreAdditionalInputFiles:
     def from_base_dir(cls, base_dir: Path) -> L1ParcCoreAdditionalInputFiles:
         """Setup class from base directory"""
         return cls(
-            faraday_rotation_product=base_dir.joinpath("Input" + names.IntermediateProductID.FR.to_name()),
-            phase_screen_product=base_dir.joinpath("Input" + names.IntermediateProductID.PHASE_SCREEN_BB.to_name()),
+            faraday_rotation_product=base_dir.joinpath(names.IntermediateProductID.FR.to_name()),
+            phase_screen_product=base_dir.joinpath(names.IntermediateProductID.PHASE_SCREEN_BB.to_name()),
         )
 
     def delete(self):

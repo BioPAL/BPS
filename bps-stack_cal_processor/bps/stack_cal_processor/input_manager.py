@@ -11,10 +11,11 @@ Stack Calibration Input Manager
 """
 
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import reduce
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
@@ -22,15 +23,15 @@ from arepytools.io import open_product_folder, read_metadata
 from arepytools.io.metadata import EPolarization
 from arepytools.io.productfolder2 import ProductFolder2, is_product_folder
 from arepytools.math.genericpoly import GenericPoly
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io.common_types.models import CoregistrationMethodType
+from bps.common.io import common
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.stack_cal_processor.core.utils import (
     read_productfolder_data,
     read_productfolder_data_by_polarization,
     read_raster_info,
 )
+from perseo_core.timing import PreciseDateTime
 
 # As per BPSStackProcessor convention, in every coregistered product
 # the metadata channel 0 is that of the coregistered product (that is,
@@ -296,7 +297,7 @@ class StackCalProcessorInputManager:
                 else synth_phases[self._coreg_primary_image_index]
             )
 
-        synth_phases = list(phi - phase_bias for phi in synth_phases)
+        synth_phases = [phi - phase_bias for phi in synth_phases]
 
         # DSI's for the coregistration primary are always 0.
         if has_coreg_primary:
@@ -387,7 +388,7 @@ class StackCalProcessorInputManager:
         # remove biases.
         rng_shifts_bias = defaultdict(float)
         if bias_compensation:
-            rng_shifts_bias[CoregistrationMethodType.GEOMETRY] = (
+            rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY] = (
                 read_productfolder_data(
                     self._range_coreg_shifts_products[self._coreg_primary_image_index],
                     roi=self.roi,
@@ -395,8 +396,8 @@ class StackCalProcessorInputManager:
                 if not has_coreg_primary
                 else coreg_rng_shifts[self._coreg_primary_image_index]
             )
-            rng_shifts_bias[CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
-                rng_shifts_bias[CoregistrationMethodType.GEOMETRY].shape
+            rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
+                rng_shifts_bias[common.CoregistrationMethodType.GEOMETRY].shape
             )
 
         # Possibly, apply the bias.
@@ -464,7 +465,7 @@ class StackCalProcessorInputManager:
         # remove biases.
         azm_shifts_bias = defaultdict(float)
         if bias_compensation:
-            azm_shifts_bias[CoregistrationMethodType.GEOMETRY] = (
+            azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY] = (
                 read_productfolder_data(
                     self._range_coreg_shifts_products[self._coreg_primary_image_index],
                     roi=self.roi,
@@ -472,8 +473,8 @@ class StackCalProcessorInputManager:
                 if not has_coreg_primary
                 else coreg_azm_shifts[self._coreg_primary_image_index]
             )
-            azm_shifts_bias[CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
-                azm_shifts_bias[CoregistrationMethodType.GEOMETRY].shape
+            azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY] -= _null_range_shifts(
+                azm_shifts_bias[common.CoregistrationMethodType.GEOMETRY].shape
             )
 
         # Possibly, apply the bias.
@@ -521,9 +522,9 @@ class StackCalProcessorInputManager:
             _select_by_indices(self._azimuth_coreg_shifts_geo_products, image_indices),
         ):
             num_lines, num_samples = _get_raster_shape(cor_az_pf, roi=self.roi)
-            if coreg_method is CoregistrationMethodType.GEOMETRY:
+            if coreg_method is common.CoregistrationMethodType.GEOMETRY:
                 azimuth_residual_shifts.append(np.zeros((num_lines, num_samples)))
-            elif coreg_method is CoregistrationMethodType.GEOMETRY_AND_DATA:
+            elif coreg_method is common.CoregistrationMethodType.GEOMETRY_AND_DATA:
                 azimuth_residual_shifts.append(
                     read_productfolder_data(cor_az_pf, roi=self.roi)
                     - read_productfolder_data(cor_geo_az_pf, roi=self.roi)
@@ -707,7 +708,7 @@ class StackCalProcessorInputManager:
 
                 doppler_centroids_poly_gen = GenericPoly(
                     (
-                        PreciseDateTime().set_from_utc_string(str(doppler_centroids_poly.t_ref_az)),
+                        PreciseDateTime.from_utc_string(str(doppler_centroids_poly.t_ref_az)),
                         doppler_centroids_poly.t_ref_rg,
                     ),
                     doppler_centroids_poly.coefficients,
@@ -722,7 +723,7 @@ class StackCalProcessorInputManager:
                 doppler_centroids_product = np.array(
                     doppler_centroids_poly_gen.evaluate((azimuth_times, range_times))
                 ).reshape(-1)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 bps_logger.warning(
                     "Could not initialize the doppler centroids for image '%s'. Setting them to 0's",
                     coreg_product.pf_dir_path,

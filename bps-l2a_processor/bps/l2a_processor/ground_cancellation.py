@@ -8,10 +8,13 @@
 import warnings
 from datetime import datetime
 from pathlib import Path
+from typing import Any, cast
 
 import numexpr as ne
 import numpy as np
 from bps.common import bps_logger
+from bps.common.io import common
+from bps.common.utils import cross_pol_merging
 from bps.l2a_processor.core.translate_aux_pp2_2a import (
     GroundCancellationConfAGB,
     GroundCancellationConfFD,
@@ -34,6 +37,7 @@ def ground_cancellation(
     vert_wavenumber_axis_az_s: np.ndarray,
     aux_pp2_conf_gn: GroundCancellationConfAGB | GroundCancellationConfFD,
     acquisition_paths_selected_not_sorted: list[Path],
+    polarisation_combination_method: common.PolarisationCombinationMethodType | None,
 ) -> tuple[list[np.ndarray], int | None]:
     """Ground cancellation
 
@@ -68,7 +72,6 @@ def ground_cancellation(
             images_pair_selection: optional, not used if operational_mode is not "insar_pair"
             disable_ground_cancellation_flag: optional, default False
         AGB:
-            computeGNpowerFlag
             emphasized_forest_height
             operational_mode
             images_pair_selection: optional, not used if operational_mode is not "insar_pair"
@@ -83,6 +86,8 @@ def ground_cancellation(
     """
 
     start_time = datetime.now()
+
+    is_agb = isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB)
 
     # output initialization: list will contain three polarizations in the order HH, XP, VV
     ground_cancelled_list = []
@@ -103,8 +108,8 @@ def ground_cancellation(
         bps_logger.info(f"    using AUX PP2 2A operational mode: {aux_pp2_conf_gn.operational_mode.value}")
         if aux_pp2_conf_gn.operational_mode == OperationalModeType.INSAR_PAIR:
             # In case of "insar pair", read here the two images specified in "images_pair_selection"
-            path_1 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)
-            path_2 = Path(aux_pp2_conf_gn.images_pair_selection.acquisition[0].value)
+            path_1 = Path(aux_pp2_conf_gn.images_pair_selection[0].value)
+            path_2 = Path(aux_pp2_conf_gn.images_pair_selection[1].value)
             bps_logger.info(
                 f"    reading now following insar pair acquisitions, from AUX PP2 2A: \r\n{path_1} \r\n{path_2}"
             )
@@ -135,6 +140,44 @@ def ground_cancellation(
                 nan_mask = data == FLOAT_NODATA_VALUE
                 product_2.data_list[idx][nan_mask] = np.nan
 
+            # Cross pol merging for the two insar pair acquisitions specified in aux pp2 2a configuration
+            if len(product_1.polarization_list) == 4:
+                if polarisation_combination_method is None:
+                    raise ValueError(
+                        "        With 4-polarisation inputs, a merging method is required. 'None' cannot be used; please choose between 'Average', 'VH', and 'HV'."
+                    )
+                bps_logger.info(
+                    f"        Cross polarisation merging using AUX PP2 2A polarisation combination method '{polarisation_combination_method.value}'"
+                )
+                for stack_data in (product_1, product_2):
+                    # cross_pol_merging requires the denoising LUTs of the cross-pol channels (and their axes)
+                    # even if only the data are needed here: pass throwaway placeholders.
+                    placeholder = np.zeros(1, dtype=np.float32)
+                    n_channels = cross_pol_merging(
+                        data_list=stack_data.data_list,
+                        swath_info_list=stack_data.swath_info_list,
+                        polarization_list=cast("list[str]", stack_data.polarization_list),
+                        metadata_list=cast(
+                            "list[list[Any]]",
+                            [
+                                stack_data.raster_info_list,
+                                stack_data.burst_info_list,
+                                stack_data.sampling_constants_list,
+                                stack_data.acquisition_timeline_list,
+                                stack_data.data_statistics_list,
+                                stack_data.dc_vector_list,
+                                stack_data.dr_vector_list,
+                                stack_data.slant_to_ground_list,
+                                stack_data.ground_to_slant_list,
+                                stack_data.pulse_list,
+                            ],
+                        ),
+                        lut_data={"denoisingHV": placeholder.copy(), "denoisingVH": placeholder.copy()},
+                        lut_axes=cast(Any, ({"denoisingHV": placeholder.copy()}, {"denoisingHV": placeholder.copy()})),
+                        xpol_merging_method=polarisation_combination_method,
+                    )
+                    assert len(stack_data.data_list) == n_channels == len(stack_data.swath_info_list)
+
             # Only reshape of the list of lists
             scs_pol_list = []
             for data1_curr_pol, data2_curr_pol in zip(product_1.data_list, product_2.data_list):
@@ -160,16 +203,13 @@ def ground_cancellation(
                 break  # we suppose same dimensions for each polarization
 
         # Logging operational mode
-        if not aux_pp2_conf_gn.operational_mode == OperationalModeType.INSAR_PAIR and num_acq == 2:
+        if aux_pp2_conf_gn.operational_mode != OperationalModeType.INSAR_PAIR and num_acq == 2:
             # Forcing insar pair
             # Message for the user, the code does not need to re set the flag
             bps_logger.info(
                 "    operational mode from AUX PP2 2A is ignored and automatically set to INSAR PAIR (two acquisitions are available)"
             )
-        elif (
-            type(aux_pp2_conf_gn) == GroundCancellationConfFD  # noqa: E721
-            and aux_pp2_conf_gn.operational_mode == OperationalModeType.MULTI_REFERENCE
-        ):
+        elif not is_agb and aux_pp2_conf_gn.operational_mode == OperationalModeType.MULTI_REFERENCE:
             # Is the default for AGB and applicable only for AGB
             raise ValueError(
                 f"    operational mode {aux_pp2_conf_gn.operational_mode.value} is incompatible with FD processor"
@@ -178,8 +218,7 @@ def ground_cancellation(
         # Not needed if insar pair or if two acquisitions in scs_pol_list
         if (
             not (num_acq == 2 or aux_pp2_conf_gn.operational_mode == OperationalModeType.INSAR_PAIR)
-            and not scs_pol_list[first_pol_present_idx][0].shape
-            == vertical_wavenumber_list[first_pol_present_idx].shape
+            and scs_pol_list[first_pol_present_idx][0].shape != vertical_wavenumber_list[first_pol_present_idx].shape
         ):
             bps_logger.info("    preliminary interpolation to bring vertical wavenumbers onto the same L1c grid")
             sum_nan_before_list = [np.sum(np.isnan(wv)) for wv in vertical_wavenumber_list]
@@ -192,11 +231,10 @@ def ground_cancellation(
             )
             sum_nan_after_list = [np.sum(np.isnan(wv)) for wv in vertical_wavenumber_list]
             for idx, (sum_nan_before, sum_nan_after) in enumerate(zip(sum_nan_before_list, sum_nan_after_list)):
-                if sum_nan_after - sum_nan_before > 0:
-                    if sum_nan_after > 0:
-                        bps_logger.warning(
-                            f"    invalid samples before / after LUT interpolation: {sum_nan_before / (len(vert_wavenumber_axis_az_s) * len(vert_wavenumber_axis_sr_s) * len(vertical_wavenumber_list)) * 100:2.3f}% / {sum_nan_after / (vertical_wavenumber_list[0].size * len(vertical_wavenumber_list)) * 100:2.3f}%, for wavenumber {idx + 1} of {len(vertical_wavenumber_list)}"
-                        )
+                if sum_nan_after - sum_nan_before > 0 and sum_nan_after > 0:
+                    bps_logger.warning(
+                        f"    invalid samples before / after LUT interpolation: {sum_nan_before / (len(vert_wavenumber_axis_az_s) * len(vert_wavenumber_axis_sr_s) * len(vertical_wavenumber_list)) * 100:2.3f}% / {sum_nan_after / (vertical_wavenumber_list[0].size * len(vertical_wavenumber_list)) * 100:2.3f}%, for wavenumber {idx + 1} of {len(vertical_wavenumber_list)}"
+                    )
 
                 warnings.filterwarnings(action="ignore", message="All-NaN axis encountered")
 
@@ -239,8 +277,9 @@ def ground_cancellation(
                 notch_final = scs_acq_list[0] - scs_acq_list[1]
                 mask_final = np.zeros((Naz, Nrg), dtype=np.uint8)
 
-                # FD is always complex, AGB may be abs ** 2
-                if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
+                # GN for FD processing chain is always complex
+                # GN for AGB processing chain is always abs ** 2
+                if is_agb:
                     notch_final = np.abs(notch_final) ** 2
                 ground_cancelled_list.append(notch_final)
 
@@ -259,8 +298,9 @@ def ground_cancellation(
 
                 notch_final[mask_final == 1] = 0
 
-                # FD is always complex, AGB may be abs ** 2
-                if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
+                # GN for FD processing chain is always complex
+                # GN for AGB processing chain is always abs ** 2
+                if is_agb:
                     notch_final = np.abs(notch_final) ** 2
                 ground_cancelled_list.append(notch_final)
 
@@ -291,15 +331,15 @@ def ground_cancellation(
                     notch_temp[notch_mask == 1] = 0
 
                     # Current reference contribute sum
+                    # GN for AGB processing chain is always abs ** 2
                     notch_final = notch_final + np.abs(notch_temp) ** 2
                     i_valid = 1 - notch_mask
                     mask_final = mask_final + i_valid
 
                 mask_final[mask_final == 0] = 1
-                notch_final = np.sqrt(notch_final / mask_final)
 
-                if isinstance(aux_pp2_conf_gn, GroundCancellationConfAGB) and aux_pp2_conf_gn.compute_gn_power_flag:
-                    notch_final = np.abs(notch_final) ** 2
+                # GN for FD never enters in this branch MULTI REFERENCE, this remains abs ** 2
+                notch_final = notch_final / mask_final
                 ground_cancelled_list.append(notch_final)
 
         stop_time = datetime.now()
@@ -327,11 +367,15 @@ def ground_cancellation(
             )
         ):
             if pol_is_present:
-                ground_cancelled_list.append(scs_acq_list[primary_image_index])
+                # GN for FD processing chain is always complex
+                # GN for AGB processing chain is always abs ** 2
+                if is_agb:
+                    ground_cancelled_list.append(np.abs(scs_acq_list[primary_image_index]) ** 2)
+                else:
+                    ground_cancelled_list.append(scs_acq_list[primary_image_index])
             else:
                 ground_cancelled_list.append(None)
 
-        warnings.simplefilter("always")
         return ground_cancelled_list, idx_reference_to_save
 
 

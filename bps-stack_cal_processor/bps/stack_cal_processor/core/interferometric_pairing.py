@@ -85,7 +85,7 @@ def multi_baseline_interferometric_pair_indices(
 
     # Trivial case.
     if num_images <= 1:
-        return tuple()
+        return ()
 
     # The baselines (as percentage of CB) for all inteferometric pairs.
     interferometric_pairs = tuple(combinations(range(num_images), 2))
@@ -107,7 +107,7 @@ def multi_baseline_interferometric_pair_indices(
     # estimation for images that are not covered by pairs.
     if not validate_interferometric_pairs(interferometric_pairs, num_images):
         raise MultiBaselineInterferometricPairingError(
-            "Selected MB thresh={} results in too few pairs {}".format(cb_ratio_threshold, interferometric_pairs)
+            f"Selected MB thresh={cb_ratio_threshold} results in too few pairs {interferometric_pairs}"
         )
 
     return interferometric_pairs
@@ -158,7 +158,7 @@ def single_baseline_interferometric_pair_indices(
     """
     # Trivial case.
     if num_images == 0:
-        return tuple()
+        return ()
 
     # Check if the reference image index is consistent with the size of the
     # stack.

@@ -12,12 +12,7 @@ AUX PP2 2B AGB
 
 from dataclasses import dataclass
 
-from bps.common.io.common_types import (
-    FloatArray,
-    IntArray,
-    MinMaxType,
-    MinMaxTypeWithUnit,
-)
+from bps.common.io import common
 
 
 @dataclass
@@ -59,18 +54,18 @@ class AuxProcessingParametersL2BAGB:
     l2bAGBProductDOI: str
     forest_masking_flag: bool
     minimumL2acoverage: float
-    rejected_landcover_classes: IntArray
-    backscatterLimits: dict[str, MinMaxType]
-    angleLimits: MinMaxTypeWithUnit
-    meanAGBLimits: MinMaxTypeWithUnit
-    stdAGBLimits: MinMaxTypeWithUnit
-    relativeAGBLimits: MinMaxType
+    rejected_landcover_classes: list[int]
+    backscatterLimits: dict[common.PolarisationType, common.MinMaxType]
+    angleLimits: common.MinMaxTypeWithUnit
+    meanAGBLimits: common.MinMaxTypeWithUnit
+    stdAGBLimits: common.MinMaxTypeWithUnit
+    relativeAGBLimits: common.MinMaxType
     referenceSelection: str
     indexingL: str
     indexingA: str
     indexingN: str
     useConstantN: bool
-    valuesConstantN: FloatArray
+    valuesConstantN: list[float]
     regressionSolver: str
     minimumPercentageOfFillableVoids: float
     compression_options: CompressionConf

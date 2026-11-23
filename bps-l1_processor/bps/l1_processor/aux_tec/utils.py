@@ -44,12 +44,9 @@ def retrieve_single_decompressed_ionex_file(aux_tec_products: list[Path], ionex_
     if len(aux_tec_products) not in (1, 2):
         raise RuntimeError(f"Unexpected number of AUX TEC products provided: {len(aux_tec_products)} != 1 or 2")
     aux_tec_from_same_day = False
-    if len(aux_tec_products) == 2:
-        if aux_tec_products[0].name[15:46] == aux_tec_products[1].name[15:46]:
-            bps_logger.warning(
-                "Provided AUX TEC products have same validity. First one is used, second one is discarded"
-            )
-            aux_tec_from_same_day = True
+    if len(aux_tec_products) == 2 and aux_tec_products[0].name[15:46] == aux_tec_products[1].name[15:46]:
+        bps_logger.warning("Provided AUX TEC products have same validity. First one is used, second one is discarded")
+        aux_tec_from_same_day = True
 
     ionex_files = [retrieve_aux_product_data_single_content(product) for product in aux_tec_products]
 

@@ -4,7 +4,6 @@
 
 #### Package content
 - `pkgs`: conda packages
-- `lib`: eo-cfi shared libraries
 
 #### Prerequisites
 - internet connection is required
@@ -12,7 +11,7 @@
 
 #### Installation procedure
 
-1. Create a dedicated conda environment with python (suggested: `python=3.12`)
+1. Create a dedicated conda environment with python (suggested: `python=3.14`)
 
 2. Initialize a local conda channel
 

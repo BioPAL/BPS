@@ -7,6 +7,7 @@
 
 import unittest
 from dataclasses import dataclass
+from typing import ClassVar
 
 import numpy as np
 from bps.transcoder.utils.quality_index import (
@@ -101,7 +102,7 @@ class QualityIndexTestCase(unittest.TestCase):
         a: bool
         b: bool
         c: bool
-        _bit_map = {
+        _bit_map: ClassVar[dict[str, int]] = {
             "a": 1,
             "b": 5,
             "c": 0,
@@ -114,7 +115,7 @@ class QualityIndexTestCase(unittest.TestCase):
         a: bool
         b: bool
         c: bool
-        _bit_map = {
+        _bit_map: ClassVar[dict[str, int]] = {
             "a": 1,
             "b": 5,
         }

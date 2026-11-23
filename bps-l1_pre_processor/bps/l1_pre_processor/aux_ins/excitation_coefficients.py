@@ -24,9 +24,9 @@ from arepytools.io import (
     write_raster_with_raster_info,
 )
 from arepytools.io.metadata import EPolarization, RasterInfo, SwathInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import AcquisitionMode, Polarization, bps_logger
 from bps.l1_pre_processor.aux_ins.aux_ins import AuxInsParameters
+from perseo_core.timing import PreciseDateTime
 
 
 def retrieve_tx_power_tracking(

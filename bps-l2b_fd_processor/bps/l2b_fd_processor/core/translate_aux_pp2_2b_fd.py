@@ -22,20 +22,6 @@ class InvalidAuxPP2_2B_FD(RuntimeError):
     """Raised when input aux pp2 fd is invalid"""
 
 
-class InvalidBoolTagContent(RuntimeError):
-    """Raised when input bool tag content is different from true or false"""
-
-
-def str_to_bool(tag: str) -> bool:
-    """Safe string to bool tag content conversion"""
-    tag = tag.lower()
-    if tag == "true":
-        return True
-    if tag == "false":
-        return False
-    raise InvalidBoolTagContent(tag)
-
-
 def translate_model_to_comp_fd_conf(
     conf: aux_pp2_2b_fd_models.CompressionOptionsL2BFd,
 ) -> AuxProcessingParametersL2BFD.CompressionConf:

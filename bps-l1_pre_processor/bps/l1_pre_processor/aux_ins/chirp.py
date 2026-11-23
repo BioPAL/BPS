@@ -21,10 +21,10 @@ from arepytools.io import (
     write_metadata,
     write_raster_with_raster_info,
 )
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import AcquisitionMode, Polarization, bps_logger
 from bps.l1_pre_processor.aux_ins import netcdf_utils
 from numpy import typing as npt
+from perseo_core.timing import PreciseDateTime
 
 DEFAULT_ACQUISITION_START_TIME = PreciseDateTime.from_numeric_datetime(2020)
 
@@ -135,7 +135,7 @@ def write_chirp_replicas_to_product_folder(
         raster_info.set_samples_axis(
             samples_start=float(replica.axis[0]),
             samples_start_unit="s",
-            samples_step=float((replica.axis[1] - replica.axis[0] if replica.axis.size > 1 else 0.0)),
+            samples_step=float(replica.axis[1] - replica.axis[0] if replica.axis.size > 1 else 0.0),
             samples_step_unit="s",
         )
         meta.insert_element(raster_info)

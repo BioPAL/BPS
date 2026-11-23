@@ -12,10 +12,10 @@ class FusionTestCase(unittest.TestCase):
         latlon_coverage = [2.0, 3.0, 10.0, 11.0]
 
         (
-            tiles_name_list,
-            geotransform_dict,
-            tile_extent_lonlat_dict,
-            tiles_dict,
+            _tiles_name_list,
+            _geotransform_dict,
+            _tile_extent_lonlat_dict,
+            _tiles_dict,
         ) = dgg_search_tiles(latlon_coverage, True)
 
 

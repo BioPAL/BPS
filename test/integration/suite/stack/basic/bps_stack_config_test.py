@@ -21,11 +21,10 @@ import os
 import tempfile
 import traceback
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession
 from aux_pps_utils import initialize_aux_pps
-from bps.common import __version__
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
@@ -39,7 +38,7 @@ from netCDF4 import Dataset
 FAIL_FORMAT_STR = "\n  [ FAIL ] {:s}"
 PASS_FORMAT_STR = "\n  [  OK  ] {:s}"
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 
 OUTPUT_DIR = "od"  # Short name to keep the paths short enough for Windows.
 WORKER_THREADS = 5
@@ -548,8 +547,8 @@ def test_bps_sta_018_int_l1c_lut_compression(session: TestSession, env: Environm
         )
 
         netcdf_object = Dataset(l1c_product_structure.lut_annotation2_file)
-        for lut_group in netcdf_object.groups.keys():
-            for lut_name in netcdf_object[lut_group].variables.keys():
+        for lut_group in netcdf_object.groups:
+            for lut_name in netcdf_object[lut_group].variables:
                 lut_filter = netcdf_object.groups[lut_group][lut_name].filters()
                 if not lut_filter["zlib"] or lut_filter["complevel"] != ZLIB_L1C_COMPLEVEL:
                     raise RuntimeError(
@@ -563,7 +562,7 @@ def test_bps_sta_019_int_nondefault_l1c_config(session: TestSession, env: Enviro
     """4 Frames stack with duplicates not allowed."""
     no_data_value = -1234567.0
 
-    aux_pps, job_order_filename, l1a_frame_list = _initialize_stack_int_nominal_test(data, coreg_primary_index=0)
+    aux_pps, job_order_filename, _l1a_frame_list = _initialize_stack_int_nominal_test(data, coreg_primary_index=0)
     aux_pps.set("//azimuthSpectralFilteringFlag/text()", "false")
     aux_pps.set("//skpPhaseEstimationFlag/text()", "false")
     aux_pps.set("//noPixelValue/text()", no_data_value)
@@ -597,9 +596,7 @@ def test_bps_sta_019_int_nondefault_l1c_config(session: TestSession, env: Enviro
         netcdf_object = Dataset(l1c_product_structure.lut_annotation2_file)
         if netcdf_object.noDataValue != no_data_value:
             raise RuntimeError(
-                FAIL_FORMAT_STR.format(
-                    "Wrong noDataValue: ncdf={}, aux_pps={}".format(netcdf_object.noDataValue, no_data_value)
-                )
+                FAIL_FORMAT_STR.format(f"Wrong noDataValue: ncdf={netcdf_object.noDataValue}, aux_pps={no_data_value}")
             )
 
 

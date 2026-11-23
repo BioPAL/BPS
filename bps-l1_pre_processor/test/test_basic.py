@@ -1,9 +1,9 @@
 import unittest
 from pathlib import Path
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_pre_processor.input_file import L1PreProcessorInputFile
 from bps.l1_pre_processor.translate import translate_l1preprocessor_input_file_to_model
+from perseo_core.timing import PreciseDateTime
 
 
 class BPSL1PreProcessorInputFile(unittest.TestCase):

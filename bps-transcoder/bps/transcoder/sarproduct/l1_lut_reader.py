@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from netCDF4 import Dataset
+from perseo_core.timing import PreciseDateTime
 
 VALID_LUT_LAYERS = [
     "rfiMaskHH",  # for backward compatibility
@@ -44,6 +44,7 @@ VALID_LUT_LAYERS = [
     "height",
     "incidenceAngle",
     "elevationAngle",
+    "terrainSlope",  # for backward compatibility
     "rangeTerrainSlope",
     "azimuthTerrainSlope",
     "faradayRotationPlane",
@@ -69,13 +70,13 @@ def read_lut_file(
                     group_name,
                     layer_name,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001, S110
                 pass
 
     # Check unexpected layers
     unexpected_layers = set(filter(lambda layer: layer not in VALID_LUT_LAYERS, variables))
     if unexpected_layers:
-        raise RuntimeError(f"{lut_file:s} contains unexpected LUTs ({unexpected_layers})")
+        raise RuntimeError(f"{lut_file} contains unexpected LUTs ({unexpected_layers})")
 
     lut_start_time = PreciseDateTime.from_utc_string(read_lut_attribute(lut_dataset, "startTime"))
 
@@ -85,6 +86,7 @@ def read_lut_file(
         "rfiMaskHV": "rfiTimeMaskHV",
         "rfiMaskVH": "rfiTimeMaskVH",
         "rfiMaskVV": "rfiTimeMaskVV",
+        "terrainSlope": "rangeTerrainSlope",
     }
     for old_tag, new_tag in old_tag_translation_map.items():
         if old_tag in variables:

@@ -13,7 +13,7 @@ from arepytools.io.metadata import EPolarization
 from bps.stack_cal_processor.input_manager import select_calibration_reference_image
 
 # Just some random input stack names.
-_INPUT_STACK = list(Path(f"/path/to/l1a_frame{n}") for n in range(1, 8))
+_INPUT_STACK = [Path(f"/path/to/l1a_frame{n}") for n in range(1, 8)]
 
 
 class SelectCalibReferenceTests(unittest.TestCase):

@@ -93,10 +93,7 @@ def raise_if_disk_memory_allocated_is_insufficient(job_order: StackJobOrder):
     # fmt:on
     if job_order.device_resources.available_space < forecast_MB:
         raise InsufficientDiskSpaceAllocationError(
-            "Expected disk space footprint [GB]: {:.2f}. Allocated [GB]: {:.2f}".format(
-                forecast_MB / 1e3,
-                job_order.device_resources.available_space / 1e3,
-            )
+            f"Expected disk space footprint [GB]: {forecast_MB / 1e3:.2f}. Allocated [GB]: {job_order.device_resources.available_space / 1e3:.2f}"
         )
 
 

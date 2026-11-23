@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
-	<xsd:include schemaLocation="./bio-l1-annotations.xsd"/>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.7.0">
+	<xsd:include schemaLocation="./bio-l1-annotations.xsd" />
 	<xsd:complexType name="mainAnnotationType">
 		<xsd:sequence>
 			<xsd:element name="acquisitionInformation" type="acquisitionInformationType">
@@ -74,6 +74,7 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
+		<xsd:attribute name="schemaVersion" type="xsd:token" use="required" fixed="1.7.0" />
 	</xsd:complexType>
 	<xsd:element name="mainAnnotation" type="mainAnnotationType">
 		<xsd:annotation>

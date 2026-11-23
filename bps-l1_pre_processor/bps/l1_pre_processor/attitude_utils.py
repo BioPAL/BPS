@@ -14,7 +14,6 @@ from functools import partial
 from pathlib import Path
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.auxiliaryfiles.aux_attitude import (
     Attitude,
@@ -23,6 +22,7 @@ from bps.transcoder.auxiliaryfiles.aux_attitude import (
     update_model_with_additional_attitude_records,
 )
 from bps.transcoder.io import aux_att_models
+from perseo_core.timing import PreciseDateTime
 from scipy.spatial import transform
 
 

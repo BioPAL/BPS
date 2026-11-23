@@ -3,25 +3,28 @@
     - eo_docker_builder
   services:
     - "docker:dind"
+  variables:
+    DOCKER_BUILD_FLAGS: "--provenance=false --sbom=false"
   before_script:
     - source bps-dockerfiles/common_variables.sh
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - echo "BPS version $BPS_VERSION - images will be tagged as $BPS_TAG"
   artifacts:
     expire_in: "2 hrs"
-  
+
 .processors:
   parallel:
     matrix:
-      - image: [
-                "l1_framing_processor",
-                "l1_processor",
-                "stack_processor",
-                "l2a_processor",
-                "l2b_fd_processor",
-                "l2b_fh_processor",
-                "l2b_agb_processor"
-              ]
+      - image:
+          [
+            "l1_framing_processor",
+            "l1_processor",
+            "stack_processor",
+            "l2a_processor",
+            "l2b_fd_processor",
+            "l2b_fh_processor",
+            "l2b_agb_processor",
+          ]
 
 .docker_full_build:
   extends:
@@ -78,7 +81,7 @@ prereq:
     - cd bps-dockerfiles
     - cp prereq/Dockerfile bundle/prereq
     - cd bundle/prereq
-    - docker build --no-cache --pull -t $CI_REGISTRY_IMAGE/bps-prereq:latest -t $CI_REGISTRY_IMAGE/bps-prereq:$BPS_TAG .
+    - docker build $DOCKER_BUILD_FLAGS --no-cache --pull -t $CI_REGISTRY_IMAGE/bps-prereq:latest -t $CI_REGISTRY_IMAGE/bps-prereq:$BPS_TAG .
     - docker image push --all-tags $CI_REGISTRY_IMAGE/bps-prereq
     - |
       if [ -n "$CI_COMMIT_TAG" ]; then
@@ -106,7 +109,7 @@ build:
     - cd bundle/$image
     - docker pull $CI_REGISTRY_IMAGE/bps-prereq:latest
     - docker tag $CI_REGISTRY_IMAGE/bps-prereq:latest bps-prereq:latest
-    - docker build --no-cache -t $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG .
+    - docker build $DOCKER_BUILD_FLAGS --no-cache -t $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG .
     - docker image push $CI_REGISTRY_IMAGE/bps-$IMAGE_NAME:$BPS_TAG
   dependencies:
     - bundle

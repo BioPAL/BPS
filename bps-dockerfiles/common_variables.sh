@@ -28,7 +28,7 @@ compute_bps_tag() {
 export BPS_VERSION=$(grep  -m 1 "__version__" $PWD/bps-common/bps/common/__init__.py | awk -F '"' '{print $2}')
 export BPS_TAG=$(compute_bps_tag "$BPS_VERSION")
 
-export AREPYTOOLS_VERSION="1.8.1"
+export AREPYTOOLS_VERSION="1.9.0"
 export AREPYTOOLS_URL="${INTERNAL_CONDA_CHANNEL_URL}/${INTERNAL_CONDA_CHANNEL_NAME}/noarch/arepytools-${AREPYTOOLS_VERSION}-py_0.conda"
 export AREPYEXTRAS_RUNNER_URL="${INTERNAL_CONDA_CHANNEL_URL}/${INTERNAL_CONDA_CHANNEL_NAME}/noarch/arepyextras-runner-1.0.2-py_0.tar.bz2"
 

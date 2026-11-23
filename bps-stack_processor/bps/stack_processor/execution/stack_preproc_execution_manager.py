@@ -21,7 +21,6 @@ import numpy as np
 import numpy.typing as npt
 import scipy as sp
 from arepytools.io.metadata import EPolarization, ESideLooking, StateVectors
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import MissionPhaseID, bps_logger
 from bps.common.io import common
 from bps.common.roi_utils import raise_if_roi_is_invalid
@@ -57,6 +56,7 @@ from bps.transcoder.io import common_annotation_l1
 from bps.transcoder.sarproduct.biomass_l1product import BIOMASSL1Product
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.l1.quality_index import L1QualityIndex
+from perseo_core.timing import PreciseDateTime
 
 # Limits in seconds for the nominal L1a data duration. Durations out of bounds
 # will be reported as non-nominal.
@@ -85,12 +85,7 @@ class InvalidL1ProductLUTError(RuntimeError):
     """Handle missing or invalid LUTs in an L1a product."""
 
     def __init__(self, l1a_product_name: str, missing_luts: dict[str, str]):
-        super().__init__(
-            "LUT(s) in L1a product {} are missing or invalid: {}".format(
-                l1a_product_name,
-                missing_luts,
-            )
-        )
+        super().__init__(f"LUT(s) in L1a product {l1a_product_name} are missing or invalid: {missing_luts}")
 
 
 class StackPreProcessorExecutionManager:
@@ -226,9 +221,7 @@ class StackPreProcessorExecutionManager:
         )
         if len(usable_polarizations) == 0:
             raise StackPreProcessorRuntimeError(
-                "No common polarization available in the stack {:s}".format(
-                    {p.name: p.polarization_list for p in l1a_product_data}
-                )
+                f"No common polarization available in the stack { ({p.name: p.polarization_list for p in l1a_product_data}):s}"
             )
 
         bps_logger.info(
@@ -304,9 +297,7 @@ class StackPreProcessorExecutionManager:
         )
         if self.aux_pps.coregistration.polarization_used not in stack_polarizations:
             raise StackPreProcessorRuntimeError(
-                "Selected coreg reference polarization {:s} no longer available".format(
-                    self.aux_pps.coregistration.polarization_used.value
-                )
+                f"Selected coreg reference polarization {self.aux_pps.coregistration.polarization_used.value:s} no longer available"
             )
 
         # Compute the RFI and Faraday decorrelation indices. Setting all RFI
@@ -858,9 +849,9 @@ def _compute_required_luts(
     if xpol_method is None or xpol_method is common.PolarisationCombinationMethodType.AVERAGE:
         required_nominal_polarizations = (EPolarization(p) for p in ["H/H", "H/V", "V/H", "V/V"])
     if xpol_method is common.PolarisationCombinationMethodType.HV:
-        required_nominal_polarizations = set(EPolarization(p) for p in ["H/H", "H/V", "V/V"])
+        required_nominal_polarizations = {EPolarization(p) for p in ["H/H", "H/V", "V/V"]}
     if xpol_method is common.PolarisationCombinationMethodType.VH:
-        required_nominal_polarizations = set(EPolarization(p) for p in ["H/H", "V/H", "V/V"])
+        required_nominal_polarizations = {EPolarization(p) for p in ["H/H", "V/H", "V/V"]}
 
     required_polarizations = set(usable_polarizations).intersection(required_nominal_polarizations)
 

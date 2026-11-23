@@ -16,9 +16,13 @@ from bps.common.io import common
 from bps.stack_coreg_processor.configuration import (
     CoregistrationOutputProductsConfType,
     CoregStackProcessorInternalConfiguration,
+    DataRefinementConfType,
+    DataRefinementMode,
+    FullAccuracyConfType,
     FullAccuracyPostProcessingConfType,
     FullAccuracyPreProcessingConfType,
     NonStationaryAreasConfType,
+    ResidualShiftFittingModel,
 )
 from bps.stack_coreg_processor.input_file import (
     BPSCoregProcessorInputFile,
@@ -37,9 +41,9 @@ from bps.stack_processor.interface.internal.intermediates import (
 # Map AUX-PPS configuration values to Aresys configuration values,
 # whenever they mismatch.
 AUX_PPS_TO_COREG_CONF = {
-    common.CoregistrationMethodType.AUTOMATIC: CoregStackProcessorInternalConfiguration.CoregMode.AUTOMATIC,
+    common.CoregistrationMethodType.AUTOMATIC: CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY_AND_DATA,
     common.CoregistrationMethodType.GEOMETRY: CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY,
-    common.CoregistrationMethodType.GEOMETRY_AND_DATA: CoregStackProcessorInternalConfiguration.CoregMode.FULL_ACCURACY,
+    common.CoregistrationMethodType.GEOMETRY_AND_DATA: CoregStackProcessorInternalConfiguration.CoregMode.GEOMETRY_AND_DATA,
 }
 
 
@@ -76,13 +80,10 @@ def fill_stack_coreg_processor_config(
     """
     return CoregStackProcessorInternalConfiguration(
         coreg_mode=AUX_PPS_TO_COREG_CONF[coregistration_method],
-        full_accuracy_preproc_conf=fill_full_accuracy_preproc_conf(aux_pps.coregistration),
-        full_accuracy_postproc_conf=fill_full_accuracy_postproc_conf(
-            aux_pps.coregistration,
-            nonstationary_flag=not (
-                coregistration_method is common.CoregistrationMethodType.GEOMETRY
-                or aux_pps.coregistration.model_based_fit_flag
-            ),
+        data_refinement_conf=fill_data_refinement_conf(
+            aux_pps=aux_pps,
+            coregistration_method=coregistration_method,
+            coreg_conf=aux_pps.coregistration,
         ),
         coreg_output_products_conf=fill_coreg_output_products_conf(
             coregistration_execution_policy=(
@@ -163,7 +164,6 @@ def fill_full_accuracy_preproc_conf(
 
     """
     return FullAccuracyPreProcessingConfType(
-        coreg_reference_polarization=coreg_conf.polarization_used,
         azimuth_max_shift=coreg_conf.azimuth_max_shift,
         azimuth_block_size=coreg_conf.azimuth_block_size,
         azimuth_min_overlap=coreg_conf.azimuth_min_overlap,
@@ -196,8 +196,12 @@ def fill_full_accuracy_postproc_conf(
 
     """
     return FullAccuracyPostProcessingConfType(
+        enable_automatic_mode=coreg_conf.coregistration_method is common.CoregistrationMethodType.AUTOMATIC,
         quality_threshold_for_automatic_mode=coreg_conf.fitting_quality_threshold,
         min_valid_blocks=coreg_conf.min_valid_blocks,
+        residual_shift_fitting_model=ResidualShiftFittingModel.NON_STATIONARY_AREAS
+        if nonstationary_flag
+        else ResidualShiftFittingModel.MODEL_BASED,
         non_stationary_coreg_conf=NonStationaryAreasConfType(
             low_pass_filter_type=coreg_conf.low_pass_filter_type,
             low_pass_filter_order=coreg_conf.low_pass_filter_order,
@@ -205,6 +209,73 @@ def fill_full_accuracy_postproc_conf(
         )
         if nonstationary_flag
         else None,
+    )
+
+
+def fill_full_accuracy_conf(
+    aux_pps: AuxiliaryStaprocessingParameters,
+    coregistration_method: common.CoregistrationMethodType,
+) -> FullAccuracyConfType:
+    """
+    Fill a the full-accuracy configuration object
+    from AUX-PPS.
+
+    Parameters
+    ----------
+    aux_pps: AuxiliaryStaprocessingParameters
+        The AUX-PPS configuration object.
+
+    coregistration_method: common.CoregistrationMethodType
+        The coregistration method.
+
+    Return
+    ------
+    FullAccuracyConfType
+        The output configuration object.
+
+    """
+    return FullAccuracyConfType(
+        full_accuracy_preprocessing_conf=fill_full_accuracy_preproc_conf(aux_pps.coregistration),
+        full_accuracy_postprocessing_conf=fill_full_accuracy_postproc_conf(
+            aux_pps.coregistration,
+            nonstationary_flag=not (
+                coregistration_method is common.CoregistrationMethodType.GEOMETRY
+                or aux_pps.coregistration.model_based_fit_flag
+            ),
+        ),
+    )
+
+
+def fill_data_refinement_conf(
+    aux_pps: AuxiliaryStaprocessingParameters,
+    coregistration_method: common.CoregistrationMethodType,
+    coreg_conf: CoregistrationConf,
+) -> DataRefinementConfType:
+    """
+    Fill a data refinement configuration object
+    from AUX-PPS.
+
+    Parameters
+    ----------
+    aux_pps: AuxiliaryStaprocessingParameters
+        The AUX-PPS configuration object.
+
+    coregistration_method: common.CoregistrationMethodType
+        The coregistration method.
+
+    coreg_conf: CoregistrationConf
+        The coreg configuration from AUX-PPS
+
+    Return
+    ------
+    DataRefinementConfType
+        The output configuration object.
+
+    """
+    return DataRefinementConfType(
+        data_refinement_mode=DataRefinementMode.FULL_ACCURACY,
+        full_accuracy_conf=fill_full_accuracy_conf(aux_pps, coregistration_method),
+        coreg_reference_polarization=coreg_conf.polarization_used,
     )
 
 

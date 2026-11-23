@@ -15,6 +15,7 @@ import cv2
 import numpy as np
 import numpy.typing as npt
 from bps.common import bps_logger
+from bps.common.io import common
 from bps.common.io.common import ColourCodingMethod
 
 
@@ -29,7 +30,7 @@ class QuickLookConf:
     range_averaging_factor: int = 2
     azimuth_decimation_factor: int = 12
     azimuth_averaging_factor: int = 12
-    absolute_scaling_factor: float | dict = 1.0
+    absolute_scaling_factor: float | dict[common.ChannelType, float] = 1.0
     max_percentile: float = 99
 
     @property
@@ -324,14 +325,14 @@ def decimation(rgb: np.ndarray, conf: QuickLookConf):
 
 
 def scale_to_256(
-    rgb: np.ndarray, absolute_scaling_factor: float | dict, max_percentile: float
+    rgb: np.ndarray, absolute_scaling_factor: float | dict[common.ChannelType, float], max_percentile: float
 ) -> npt.NDArray[np.uint8]:
     """Rescale image to 0-255 uint8"""
     if isinstance(absolute_scaling_factor, dict):
         factors = [
-            absolute_scaling_factor["RED"],
-            absolute_scaling_factor["GREEN"],
-            absolute_scaling_factor["BLUE"],
+            absolute_scaling_factor[common.ChannelType.RED],
+            absolute_scaling_factor[common.ChannelType.GREEN],
+            absolute_scaling_factor[common.ChannelType.BLUE],
         ]
     else:
         factors = [absolute_scaling_factor] * 3

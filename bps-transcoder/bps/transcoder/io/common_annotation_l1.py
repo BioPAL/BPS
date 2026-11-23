@@ -11,10 +11,9 @@ Common annotations l1
 """
 
 from dataclasses import dataclass
-from typing import Literal
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io import common
+from perseo_core.timing import PreciseDateTime
 
 ProcessingGainList = list[common.FloatWithPolarisation]
 NoiseGainList = list[common.FloatWithPolarisation]
@@ -48,7 +47,7 @@ class ProcessingParameters:
     rfi_mitigation_method: common.RfiMitigationMethodType
     rfi_mask: common.RfiMaskType
     rfi_mask_generation_method: common.RfiMaskGenerationMethodType
-    rfi_fm_mitigation_method: Literal["NOTCH_FILTER", "NEAREST_NEIGHBOUR_INTERPOLATION"]
+    rfi_fm_mitigation_method: common.RfiFmmitigationMethodType
     rfi_fm_chirp_source: common.RangeReferenceFunctionType
     internal_calibration_estimation_flag: bool
     internal_calibration_correction_flag: bool

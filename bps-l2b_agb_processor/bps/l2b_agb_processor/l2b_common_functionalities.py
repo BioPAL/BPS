@@ -14,11 +14,15 @@ from pathlib import Path
 from typing import Literal, get_args
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.transcoder.sarproduct.biomass_l2aproduct import BIOMASSL2aProductFD, BIOMASSL2aProductFH, BIOMASSL2aProductGN
+from bps.transcoder.sarproduct.biomass_l2aproduct import (
+    BIOMASSL2aProductFD,
+    BIOMASSL2aProductFH,
+    BIOMASSL2aProductGN,
+)
 from bps.transcoder.sarproduct.biomass_l2bfdproduct import BIOMASSL2bFDProduct
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
+from perseo_core.timing import PreciseDateTime
 from scipy.interpolate import RegularGridInterpolator
 
 L2B_OUTPUT_PRODUCT_FD_LITERAL = Literal["FP_FD__L2B"]
@@ -33,7 +37,7 @@ L2B_OUTPUT_PRODUCTS = Literal[
     L2B_OUTPUT_PRODUCT_FH_LITERAL,
     L2B_OUTPUT_PRODUCT_AGB_LITERAL,
 ]
-INT_NODATA_VALUE = int(255)
+INT_NODATA_VALUE = 255
 FLOAT_NODATA_VALUE = -9999.0
 
 
@@ -617,13 +621,9 @@ def _check_coverage(
 
 
 def _get_latitude_band_key(lat_min, lat_max):
-    if lat_min >= 60 or lat_max <= -60:
+    if lat_min >= 60 or lat_max <= -60 or (lat_min < 60 and lat_max > 60) or (lat_max < -60 and lat_min > -60):
         return "60-70"
-    elif (lat_min < 60 and lat_max > 60) or (lat_max < -60 and lat_min > -60):
-        return "60-70"
-    elif lat_min >= 50 or lat_max <= -50:
-        return "50-60"
-    elif (lat_min < 50 and lat_max > 50) or (lat_max < -50 and lat_min > -50):
+    elif lat_min >= 50 or lat_max <= -50 or (lat_min < 50 and lat_max > 50) or (lat_max < -50 and lat_min > -50):
         return "50-60"
     elif lat_min >= -50 or lat_max <= 50:
         return "0-50"

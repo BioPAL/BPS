@@ -15,12 +15,13 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.io.parsing import parse
 from bps.transcoder.io import aux_orb_models
 from bps.transcoder.orbit.orbit import EOrbitType, Orbit
+from perseo_core.timing import PreciseDateTime
 
 
 @dataclass
@@ -53,7 +54,7 @@ class StateVectors:
 def _get_time_from_state_vector(
     state_vector: aux_orb_models.OsvType,
 ) -> PreciseDateTime:
-    return PreciseDateTime().set_from_utc_string(state_vector.utc[4:])
+    return PreciseDateTime.from_utc_string(state_vector.utc[4:])
 
 
 def _translate_state_vector(
@@ -88,7 +89,7 @@ class EOOrbit(Orbit):
         Generic Orbit class
     """
 
-    orbit_type_dict = {
+    orbit_type_dict: ClassVar[dict[str, str]] = {
         "AUX_PREORB": EOrbitType.PREDICTED.value,
         "AUX_RESORB": EOrbitType.RESTITUTED.value,
         "AUX_POEORB": EOrbitType.PRECISE.value,
@@ -127,12 +128,8 @@ class EOOrbit(Orbit):
 
         self.type = self.orbit_type_dict.get(fixed_header.file_type, EOrbitType.UNKNOWN.value)
 
-        self.start_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_start[4:] + ".000000"
-        )
-        self.stop_time = PreciseDateTime().set_from_utc_string(
-            fixed_header.validity_period.validity_stop[4:] + ".000000"
-        )
+        self.start_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_start[4:] + ".000000")
+        self.stop_time = PreciseDateTime.from_utc_string(fixed_header.validity_period.validity_stop[4:] + ".000000")
 
         # - Set orbit data
         state_vectors = StateVectors.translate_state_vectors(orbit_model.data_block.list_of_osvs.osv)

@@ -21,13 +21,12 @@ from xml.dom import minidom
 import numpy as np
 import numpy.typing as npt
 from arepytools.io.metadata import RasterInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
-from bps.common.io.common import UomType
-from bps.common.io.parsing import parse, serialize
-from bps.common.io.translate_common import translate_float_array_with_units_to_model
-from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io import main_annotation_models_l1ab, main_annotation_models_l1c
+from bps.common.io import common
+from bps.transcoder import BPS_ATBD_STA_VERSION, BPS_PFD_L1_VERSION, BPS_PPD_VERSION
+from bps.transcoder.io import main_annotation_l1c
+from bps.transcoder.io.translate_main_annotation_l1ab import read_main_annotation_l1ab
+from bps.transcoder.io.translate_main_annotation_l1c import write_main_annotation_l1c
 from bps.transcoder.sarproduct.biomass_stackproduct import (
     LUT_LAYERS,
     BIOMASSStackProduct,
@@ -44,7 +43,6 @@ from bps.transcoder.sarproduct.sta.product_content import BIOMASSStackProductStr
 from bps.transcoder.sarproduct.sta.stack_unique_identifier import StackUniqueID
 from bps.transcoder.sarproduct.vrt import VRTInfo, write_vrt_file
 from bps.transcoder.utils.gdal_utils import GeotiffConf, GeotiffMetadata, write_geotiff
-from bps.transcoder.utils.polarization_conversions import translate_polarization_tag
 from bps.transcoder.utils.production_model_utils import (
     encode_mph_id_value,
     translate_global_coverage_id,
@@ -68,12 +66,11 @@ from bps.transcoder.utils.time_conversions import (
 from bps.transcoder.utils.xsd_schema_attacher import copy_biomass_xsd_files
 from netCDF4 import Dataset as NetCDF4Dataset
 from netCDF4 import Group as NetCDF4Group
+from perseo_core.timing import PreciseDateTime
 
 # Default compression level for L1c products.
 ZLIB_L1C_COMPLEVEL = 2
 
-# Field to use in case of missing field from L1a product.
-MISSING_FROM_INPUT_PRODUCT = "N/A"
 
 for key, value in MPH_NAMESPACES.items():
     ET.register_namespace(key, value)
@@ -81,38 +78,38 @@ for key, value in MPH_NAMESPACES.items():
 # Mapping between LUT names and official LUT layers.
 STACK_LUT_LAYER_MAP = {
     # Radiometry LUTs.
-    "gammaNought": main_annotation_models.LayerType.GAMMA_NOUGHT_LUT,
-    "sigmaNought": main_annotation_models.LayerType.SIGMA_NOUGHT_LUT,
+    "gammaNought": common.LayerType.GAMMA_NOUGHT_LUT,
+    "sigmaNought": common.LayerType.SIGMA_NOUGHT_LUT,
     # Denoising LUTs.
-    "denoisingHH": main_annotation_models.LayerType.DENOISING_MAP_HH,
-    "denoisingHV": main_annotation_models.LayerType.DENOISING_MAP_HV,
-    "denoisingXX": main_annotation_models.LayerType.DENOISING_MAP_XX,
-    "denoisingVH": main_annotation_models.LayerType.DENOISING_MAP_VH,
-    "denoisingVV": main_annotation_models.LayerType.DENOISING_MAP_VV,
+    "denoisingHH": common.LayerType.DENOISING_MAP_HH,
+    "denoisingHV": common.LayerType.DENOISING_MAP_HV,
+    "denoisingXX": common.LayerType.DENOISING_MAP_XX,
+    "denoisingVH": common.LayerType.DENOISING_MAP_VH,
+    "denoisingVV": common.LayerType.DENOISING_MAP_VV,
     # Geometry LUTs.
-    "latitude": main_annotation_models.LayerType.LATITUDE_DEG,
-    "longitude": main_annotation_models.LayerType.LONGITUDE_DEG,
-    "height": main_annotation_models.LayerType.HEIGHT_M,
-    "incidenceAngle": main_annotation_models.LayerType.INCIDENCE_ANGLE_DEG,
-    "elevationAngle": main_annotation_models.LayerType.ELEVATION_ANGLE_DEG,
-    "rangeTerrainSlope": main_annotation_models.LayerType.RANGE_TERRAIN_SLOPE_DEG,
-    "azimuthTerrainSlope": main_annotation_models.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
+    "latitude": common.LayerType.LATITUDE_DEG,
+    "longitude": common.LayerType.LONGITUDE_DEG,
+    "height": common.LayerType.HEIGHT_M,
+    "incidenceAngle": common.LayerType.INCIDENCE_ANGLE_DEG,
+    "elevationAngle": common.LayerType.ELEVATION_ANGLE_DEG,
+    "rangeTerrainSlope": common.LayerType.RANGE_TERRAIN_SLOPE_DEG,
+    "azimuthTerrainSlope": common.LayerType.AZIMUTH_TERRAIN_SLOPE_DEG,
     # Coregistration LUTs.
-    "azimuthCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_COREGISTRATION_SHIFTS_M,
-    "azimuthOrbitCoregistrationShifts": main_annotation_models.LayerType.AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M,
-    "rangeCoregistrationShifts": main_annotation_models.LayerType.RANGE_COREGISTRATION_SHIFTS_M,
-    "rangeOrbitCoregistrationShifts": main_annotation_models.LayerType.RANGE_ORBIT_COREGISTRATION_SHIFTS_M,
-    "coregistrationShiftsQuality": main_annotation_models.LayerType.COREGISTRATION_SHIFTS_QUALITY,
-    "waveNumbers": main_annotation_models.LayerType.WAVENUMBERS_RAD_M,
-    "flatteningPhaseScreen": main_annotation_models.LayerType.FLATTENING_PHASE_SCREEN_RAD,
+    "azimuthCoregistrationShifts": common.LayerType.AZIMUTH_COREGISTRATION_SHIFTS_M,
+    "azimuthOrbitCoregistrationShifts": common.LayerType.AZIMUTH_ORBIT_COREGISTRATION_SHIFTS_M,
+    "rangeCoregistrationShifts": common.LayerType.RANGE_COREGISTRATION_SHIFTS_M,
+    "rangeOrbitCoregistrationShifts": common.LayerType.RANGE_ORBIT_COREGISTRATION_SHIFTS_M,
+    "coregistrationShiftsQuality": common.LayerType.COREGISTRATION_SHIFTS_QUALITY,
+    "waveNumbers": common.LayerType.WAVENUMBERS_RAD_M,
+    "flatteningPhaseScreen": common.LayerType.FLATTENING_PHASE_SCREEN_RAD,
     # Inteferometric LUTs.
-    "coherence": main_annotation_models.LayerType.COHERENCE,
-    "interferogram": main_annotation_models.LayerType.INTERFEROGRAM_RAD,
+    "coherence": common.LayerType.COHERENCE,
+    "interferogram": common.LayerType.INTERFEROGRAM_RAD,
     # MSC LUTS.
-    "ionospherePhaseScreens": main_annotation_models.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
+    "ionospherePhaseScreens": common.LayerType.IONOSPHERE_PHASE_SCREENS_RAD,
     # SKP LUTs.
-    "skpCalibrationPhaseScreen": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_RAD,
-    "skpCalibrationPhaseScreenQuality": main_annotation_models.LayerType.SKP_CALIBRATION_PHASE_SCREEN_QUALITY,
+    "skpCalibrationPhaseScreen": common.LayerType.SKP_CALIBRATION_PHASE_SCREEN_RAD,
+    "skpCalibrationPhaseScreenQuality": common.LayerType.SKP_CALIBRATION_PHASE_SCREEN_QUALITY,
 }
 
 
@@ -676,14 +673,12 @@ class BIOMASSStackProductWriter:
         xml4.text = "true" if self.product.frame_status == "PARTIAL" else "false"
         xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}isMerged")
         xml4.text = "true" if self.product.frame_status == "MERGED" else "false"
-
-        if self.source_mph_ref_docs is not None:
-            for ref_doc in self.source_mph_ref_docs:
-                xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
-                xml4.text = ref_doc.text
-        else:
-            xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
-            xml4.text = MISSING_FROM_INPUT_PRODUCT
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS L1a/b/c Products Format Specification (BPS_L1_PFD) {BPS_PFD_L1_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS Product Performance Description (BPS_PPD) {BPS_PPD_VERSION}"
+        xml4 = ET.SubElement(xml3, "{" + MPH_NAMESPACES["bio"] + "}refDoc")
+        xml4.text = f"BIOMASS L1c Stack Product ATBD (BPS_L1_STACK_ATBD) {BPS_ATBD_STA_VERSION}"
 
         # Write MPH file.
         self.product_structure.mph_file.write_text(
@@ -766,115 +761,73 @@ class BIOMASSStackProductWriter:
 
     def __write_main_annotation2_file(self):
         """Write the annotation file for product 2."""
-        # Read main annotation file from secondary image.
-        main_annotation1_path = Path(
-            self.source_product1_path.joinpath(self.source_product1_content.main_annotation),
+        # Read source annotations in translated form.
+        main_annotation1 = read_main_annotation_l1ab(
+            self.source_product1_path / self.source_product1_content.main_annotation
         )
-        main_annotation1_model: main_annotation_models_l1ab.MainAnnotation = parse(
-            main_annotation1_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1ab.MainAnnotation,
-        )
-
-        # Read main annotation file from secondary image.
-        main_annotation2_path = Path(
-            self.source_product2_path.joinpath(self.source_product2_content.main_annotation),
-        )
-        main_annotation2_model: main_annotation_models_l1ab.MainAnnotation = parse(
-            main_annotation2_path.read_text(encoding="utf-8"),
-            main_annotation_models_l1ab.MainAnnotation,
+        main_annotation2 = read_main_annotation_l1ab(
+            self.source_product2_path / self.source_product2_content.main_annotation
         )
 
-        # Fill coregistered image main annotation model.
+        # Fill coregistered image main annotation.
         # - acquisition_information.
-        acquisition_information = main_annotation2_model.acquisition_information
-        acquisition_information.product_type = self.product.type
-        acquisition_information.polarisation_list = main_annotation_models.PolarisationListType(
-            polarisation=[translate_polarization_tag(pol, poltype="bps") for pol in self.product.polarization_list],
-            count=len(self.product.polarization_list),
-        )
-        acquisition_information.start_time = no_zulu_isoformat(
-            self.product.start_time,
-            timespec="microseconds",
-        )
-        acquisition_information.stop_time = no_zulu_isoformat(
-            self.product.stop_time,
-            timespec="microseconds",
-        )
+        acquisition_information = main_annotation2.acquisition_information
+        acquisition_information.product_type = common.ProductType[self.product.type]
+        acquisition_information.polarisation_list = [
+            common.PolarisationType[pol.replace("/", "")] for pol in self.product.polarization_list
+        ]
+        acquisition_information.start_time = self.product.start_time
+        acquisition_information.stop_time = self.product.stop_time
 
-        sar_image = main_annotation1_model.sar_image
+        sar_image = main_annotation1.sar_image
 
         # We need to update the size of the raster in azimuth direction, in
         # case the data was cropped to a TOI.
         sar_image.number_of_lines = self.product.number_of_lines
 
-        sar_image.first_line_azimuth_time = no_zulu_isoformat(self.product.start_time, timespec="microseconds")
-        sar_image.last_line_azimuth_time = no_zulu_isoformat(self.product.stop_time, timespec="microseconds")
+        sar_image.first_line_azimuth_time = self.product.start_time
+        sar_image.last_line_azimuth_time = self.product.stop_time
         sar_image.no_data_value = self.product.product_nodata_value
 
         # As per PFD convention, it's not specified whether the footprint must
         # be closed or open. We leave it as we inherited from the primary L1a
         # product.
-        sar_image.footprint = translate_float_array_with_units_to_model(
-            np.reshape(self.product.stack_footprint, -1),
-            units=UomType.DEG,
-        )
-
-        instrument_parameters = main_annotation2_model.instrument_parameters
-
-        raw_data_analysis = main_annotation2_model.raw_data_analysis
-
-        processing_parameters = main_annotation2_model.processing_parameters
-
-        internal_calibration = main_annotation2_model.internal_calibration
-
-        rfi_mitigation = main_annotation2_model.rfi_mitigation
-
-        doppler_parameters = main_annotation2_model.doppler_parameters
-
-        radiometric_calibration = main_annotation2_model.radiometric_calibration
-
-        polarimetric_distortion = main_annotation2_model.polarimetric_distortion
-
-        ionosphere_correction = main_annotation2_model.ionosphere_correction
-
-        geometry = main_annotation2_model.geometry
-
-        quality = main_annotation2_model.quality
+        sar_image.footprint = [float(value) for value in np.reshape(self.product.stack_footprint, -1)]
 
         # Populate the LUT layers.
-        layers = [
+        annotation_lut = [
             annot_lut_layer
             for lut_layer, annot_lut_layer in STACK_LUT_LAYER_MAP.items()
             if lut_layer in self.product_lut
         ]
-        annotation_lut = main_annotation_models.LayerListType(layer=layers, count=len(layers))
 
-        stack_main_annotation_model = main_annotation_models_l1c.MainAnnotation(
+        assert self.product.stack_processing_parameters is not None
+        assert self.product.stack_coregistration_parameters is not None
+        assert self.product.stack_in_sarparameters is not None
+        assert self.product.stack_quality is not None
+        stack_main_annotation = main_annotation_l1c.MainAnnotationL1c(
             acquisition_information=acquisition_information,
             sar_image=sar_image,
-            instrument_parameters=instrument_parameters,
-            raw_data_analysis=raw_data_analysis,
-            processing_parameters=processing_parameters,
-            internal_calibration=internal_calibration,
-            rfi_mitigation=rfi_mitigation,
-            doppler_parameters=doppler_parameters,
-            radiometric_calibration=radiometric_calibration,
-            polarimetric_distortion=polarimetric_distortion,
-            ionosphere_correction=ionosphere_correction,
-            geometry=geometry,
-            quality=quality,
+            instrument_parameters=main_annotation2.instrument_parameters,
+            raw_data_analysis=main_annotation2.raw_data_analysis,
+            processing_parameters=main_annotation2.processing_parameters,
+            internal_calibration=main_annotation2.internal_calibration,
+            rfi_mitigation=main_annotation2.rfi_mitigation,
+            doppler_parameters=main_annotation2.doppler_parameters,
+            radiometric_calibration=main_annotation2.radiometric_calibration,
+            polarimetric_distortion=main_annotation2.polarimetric_distortion,
+            ionosphere_correction=main_annotation2.ionosphere_correction,
+            geometry=main_annotation2.geometry,
+            quality=main_annotation2.quality,
             annotation_lut=annotation_lut,
-            sta_processing_parameters=self.product.stack_processing_parameters.to_l1c_annotation(),
-            sta_coregistration_parameters=self.product.stack_coregistration_parameters.to_l1c_annotation(),
-            sta_in_sarparameters=self.product.stack_in_sarparameters.to_l1c_annotation(),
-            sta_quality=self.product.stack_quality.to_l1c_annotation(),
+            sta_processing_parameters=self.product.stack_processing_parameters,
+            sta_coregistration_parameters=self.product.stack_coregistration_parameters,
+            sta_in_sarparameters=self.product.stack_in_sarparameters,
+            sta_quality=self.product.stack_quality,
         )
 
         # Write coregistered image main annotation file.
-        self.product_structure.main_annotation2_file.write_text(
-            serialize(stack_main_annotation_model),
-            encoding="utf-8",
-        )
+        write_main_annotation_l1c(self.product_structure.main_annotation2_file, stack_main_annotation)
 
     def __write_lut_annotation2_file(self):
         """Write LUT annotation file for product 2."""
@@ -912,6 +865,7 @@ class BIOMASSStackProductWriter:
         ncfile.frame = np.uint16(self.product.frame_number)
         ncfile.productComposition = self.product.frame_status.title()
         ncfile.noDataValue = self.product.product_nodata_value
+        ncfile.formatVersion = BPS_PFD_L1_VERSION
 
         if len(self.product_lut) == 0:
             # Write LUT annotation file: Finalize Dataset.
@@ -939,7 +893,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{value}Nought",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Nought".format(value.capitalize()),
+                lut_description=f"{value.capitalize():s} Nought",
                 lut_unit=None,
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -982,7 +936,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{angle_type}Angle",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Angle".format(angle_type.capitalize()),
+                lut_description=f"{angle_type.capitalize():s} Angle",
                 lut_unit="deg",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -994,7 +948,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}TerrainSlope",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Terrain Slope".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Terrain Slope",
                 lut_unit="deg",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -1008,7 +962,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}CoregistrationShifts",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Coregistration Shifts".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Coregistration Shifts",
                 lut_unit="m",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -1019,7 +973,7 @@ class BIOMASSStackProductWriter:
                 lut_name=f"{axis}OrbitCoregistrationShifts",
                 lut_type=np.float32,
                 lut_axes=("relativeAzimuthTime", "slantRangeTime"),
-                lut_description="{:s} Coregistration Shifts from Orbit".format(axis.capitalize()),
+                lut_description=f"{axis.capitalize():s} Coregistration Shifts from Orbit",
                 lut_unit="m",
                 expected_shape=tuple(ax.size for ax in self.lut_axes_primary),
                 warn_on_missing=True,
@@ -1383,58 +1337,45 @@ class BIOMASSStackProductWriter:
         # Check that number of channels is consistent with polarizations.
         if self.product.channels != len(self.product.polarization_list):
             raise InvalidBIOMASSStackProductError(
-                "Channels and polarizations mismatch: num channels={}, num pols={}".format(
-                    self.product.channels, len(self.product.polarization_list)
-                )
+                f"Channels and polarizations mismatch: num channels={self.product.channels}, num pols={len(self.product.polarization_list)}"
             )
 
         # Check that number of channels is consistent with the number of rasters.
         if self.product.channels != len(self.product.raster_info_list):
             raise InvalidBIOMASSStackProductError(
-                "Channels and raster list mismatch: num channels={}, num rasters={}".format(
-                    self.product.channels, len(self.product.raster_info_list)
-                )
+                f"Channels and raster list mismatch: num channels={self.product.channels}, num rasters={len(self.product.raster_info_list)}"
             )
 
         # Check that number of channels is consistent with the data list.
         if self.product.channels != len(self.product.data_list) and not self.product.is_monitoring:
             raise InvalidBIOMASSStackProductError(
-                "Channels and data list mismatch: num channels: {}, num images: {}".format(
-                    self.product.channels, len(self.product.data_list)
-                )
+                f"Channels and data list mismatch: num channels: {self.product.channels}, num images: {len(self.product.data_list)}"
             )
 
         # Check that all data have same shape and are consistent with the rasters.
         data_shapes = [d.shape for d in self.product.data_list]
         if any(sh != self.product.data_list[0].shape for sh in data_shapes):
             raise InvalidBIOMASSStackProductError(
-                "Not all frames have same shape: {}".format(dict(zip(self.product.polarization_list, data_shapes)))
+                f"Not all frames have same shape: {dict(zip(self.product.polarization_list, data_shapes))}"
             )
 
         raster_shapes = [(r.lines, r.samples) for r in self.product.raster_info_list]
         if any(dsh != rsh for dsh, rsh in zip(data_shapes, raster_shapes)):
             raise InvalidBIOMASSStackProductError(
-                "Raster info and data have mismatching shapes: rasters={}, data={}".format(
-                    dict(zip(self.product.polarization_list, raster_shapes)),
-                    dict(zip(self.product.polarization_list, data_shapes)),
-                )
+                f"Raster info and data have mismatching shapes: rasters={dict(zip(self.product.polarization_list, raster_shapes))}, data={dict(zip(self.product.polarization_list, data_shapes))}"
             )
 
         # Check that the start/stop time makes sense.
         raster_start_times = [r.lines_start for r in self.product.raster_info_list]
         if any(rt != self.product.start_time for rt in raster_start_times):
             raise InvalidBIOMASSStackProductError(
-                "Annotated start time and raster are inconsistent: start={}, rasters={}".format(
-                    self.product.start_time, raster_start_times
-                )
+                f"Annotated start time and raster are inconsistent: start={self.product.start_time}, rasters={raster_start_times}"
             )
 
         raster_stop_times = [_stop_time(r) for r in self.product.raster_info_list]
         if any(rt != self.product.stop_time for rt in raster_stop_times):
             raise InvalidBIOMASSStackProductError(
-                "Annotated stop time and raster info are inconsistent: stop={}, rasters={}".format(
-                    self.product.stop_time, raster_stop_times
-                )
+                f"Annotated stop time and raster info are inconsistent: stop={self.product.stop_time}, rasters={raster_stop_times}"
             )
 
         # Check the sampling steps.
@@ -1443,34 +1384,26 @@ class BIOMASSStackProductWriter:
         azm_sampling_steps = [r.lines_step for r in self.product.raster_info_list]
         if not all(np.isclose(s, self.product.az_time_interval, atol=eps) for s in azm_sampling_steps):
             raise InvalidBIOMASSStackProductError(
-                "Annotated azimuth sampling step and rasters are inconsistent: rasters={}, annot={}".format(
-                    azm_sampling_steps, self.product.az_time_interval
-                )
+                f"Annotated azimuth sampling step and rasters are inconsistent: rasters={azm_sampling_steps}, annot={self.product.az_time_interval}"
             )
 
         rng_sampling_steps = [r.samples_step for r in self.product.raster_info_list]
         if not all(np.isclose(s, self.product.rg_time_interval, atol=eps) for s in rng_sampling_steps):
             raise InvalidBIOMASSStackProductError(
-                "Annotated range sampling step and rasters are inconsistent: rasters={}, annot={}".format(
-                    rng_sampling_steps, self.product.rg_time_interval
-                )
+                f"Annotated range sampling step and rasters are inconsistent: rasters={rng_sampling_steps}, annot={self.product.rg_time_interval}"
             )
 
         # Check consistency of number of lines/samples and raster info.
         num_azimuths = [r.lines for r in self.product.raster_info_list]
         if any(naz != self.product.number_of_lines for naz in num_azimuths):
             raise InvalidBIOMASSStackProductError(
-                "Annotated num of azimuths and rasters mismatch: rasters={}, annot={}".format(
-                    num_azimuths, self.product.number_of_lines
-                )
+                f"Annotated num of azimuths and rasters mismatch: rasters={num_azimuths}, annot={self.product.number_of_lines}"
             )
 
         num_ranges = [r.samples for r in self.product.raster_info_list]
         if any(nrg != self.product.number_of_samples for nrg in num_ranges):
             raise InvalidBIOMASSStackProductError(
-                "Annotated num of ranges and rasters mismatch: rasters={}, annot={}".format(
-                    num_ranges, self.product.number_of_samples
-                )
+                f"Annotated num of ranges and rasters mismatch: rasters={num_ranges}, annot={self.product.number_of_samples}"
             )
 
 
@@ -1505,7 +1438,7 @@ def _add_file_to_mph(
 
 def _relative_href_path(path: Path, *, root_dir: Path) -> str:
     """Create a relative path ./relative/path."""
-    return "./{}".format(path.relative_to(root_dir))
+    return f"./{path.relative_to(root_dir)}"
 
 
 def _closed_footprint(footprint: list[list[float]]) -> str:

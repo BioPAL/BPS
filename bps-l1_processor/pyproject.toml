@@ -6,7 +6,7 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
-    "arepytools>=1.8.1",
+    "arepytools>=1.9.0",
     "click",
     "arepyextras-runner",
     "scipy",
@@ -15,10 +15,11 @@ dependencies = [
     "shapely",
     "pyproj",
     "netCDF4",
-    "bps-common==4.4.4",
-    "bps-l1_pre_processor==4.4.4",
-    "bps-l1_core_processor==4.4.4",
-    "bps-transcoder==4.4.4",
+    "bps-common==4.6.0.dev0",
+    "bps-l1_pre_processor==4.6.0.dev0",
+    "bps-l1_core_processor==4.6.0.dev0",
+    "bps-transcoder==4.6.0.dev0",
+    "perseo-core>=1.0.0",
 ]
 dynamic = ["version"]
 classifiers = [
@@ -27,6 +28,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",
@@ -37,7 +40,7 @@ classifiers = [
 bps_l1_processor = "bps.l1_processor.__main__:main"
 
 [project.optional-dependencies]
-dev = ["nox", "ruff==0.15.7"]
+dev = ["ruff==0.17.4", "pyrefly==1.4.1"]
 test = ["unittest-xml-reporting", "coverage"]
 
 [build-system]
@@ -52,3 +55,7 @@ only-include = ["bps"]
 
 [tool.hatch.build.targets.wheel]
 only-include = ["bps"]
+
+[tool.pyrefly]
+extends = "../pyrefly.toml"
+project-includes = ["**/*.py*"]

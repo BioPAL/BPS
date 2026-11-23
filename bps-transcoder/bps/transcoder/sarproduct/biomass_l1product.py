@@ -10,14 +10,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
 
 from arepytools.io import metadata
-from arepytools.timing.precisedatetime import PreciseDateTime
-from bps.common.io import common, common_types
+from bps.common.io import common
 from bps.transcoder.io import common_annotation_l1
-from bps.transcoder.io import common_annotation_models_l1 as main_annotation_models
-from bps.transcoder.io.common_annotation_l1 import PolarimetricDistortionType
 from bps.transcoder.io.iono_cal_report import IonosphericCalibrationReport
 from bps.transcoder.io.preprocessor_report import L1PreProcAnnotations
 from bps.transcoder.sarproduct.biomass_l0product import BIOMASSL0Product
@@ -28,6 +24,7 @@ from bps.transcoder.utils.time_conversions import (
     pdt_to_compact_date,
     pdt_to_compact_string,
 )
+from perseo_core.timing import PreciseDateTime
 
 # Type conversions between L1 products and SAR products.
 SAR_TO_L1A_PRODUCT_TYPE = {"SLC": "SCS", "GRD": "DGM"}
@@ -43,15 +40,15 @@ class BIOMASSL1ProcessingParameters:
     rfi_mitigation_method: common.RfiMitigationMethodType
     rfi_mask: common.RfiMaskType
     rfi_mask_generation_method: common.RfiMaskGenerationMethodType
-    rfi_fm_mitigation_method: Literal["NOTCH_FILTER", "NEAREST_NEIGHBOUR_INTERPOLATION"]
+    rfi_fm_mitigation_method: common.RfiFmmitigationMethodType
     rfi_fm_chirp_source: common.RangeReferenceFunctionType
     internal_calibration_estimation_flag: bool
     internal_calibration_correction_flag: bool
     internal_calibration_source: common.InternalCalibrationSourceType
     range_reference_function_source: common.RangeReferenceFunctionType
     range_compression_method: common.RangeCompressionMethodType
-    range_window_type: dict
-    range_window_coefficient: dict
+    range_window_type: dict[common.SwathType, common.WeightingWindowType]
+    range_window_coefficient: dict[common.SwathType, float]
     extended_swath_processing: bool
     dc_method: common.DcMethodType
     dc_value: float
@@ -62,8 +59,8 @@ class BIOMASSL1ProcessingParameters:
     azimuth_compression_block_lines: int
     azimuth_compression_block_overlap_samples: int
     azimuth_compression_block_overlap_lines: int
-    azimuth_window_type: dict
-    azimuth_window_coefficient: dict
+    azimuth_window_type: dict[common.SwathType, common.WeightingWindowType]
+    azimuth_window_coefficient: dict[common.SwathType, float]
     bistatic_delay_correction_flag: bool
     bistatic_delay_correction_method: common.BistaticDelayCorrectionMethodType
     azimuth_focusing_margins_removal_flag: bool
@@ -77,10 +74,10 @@ class BIOMASSL1ProcessingParameters:
     group_delay_correction_flag: bool
     autofocus_flag: bool
     autofocus_method: common.AutofocusMethodType
-    range_upsampling_factor: dict
-    range_downsampling_factor: dict
-    azimuth_upsampling_factor: dict
-    azimuth_downsampling_factor: dict
+    range_upsampling_factor: dict[common.SwathType, int]
+    range_downsampling_factor: dict[common.SwathType, int]
+    azimuth_upsampling_factor: dict[common.SwathType, int]
+    azimuth_downsampling_factor: dict[common.SwathType, int]
     detection_flag: bool
     thermal_denoising_flag: bool
     noise_parameters_source: common.InternalCalibrationSourceType
@@ -89,7 +86,9 @@ class BIOMASSL1ProcessingParameters:
     requested_height_model_version: str
     requested_height_model_used: bool
     absolute_calibration_constants: dict[common.PolarisationType, float]
-    polarimetric_distortion: PolarimetricDistortionType
+    polarimetric_distortion: common_annotation_l1.PolarimetricDistortionType
+    processing_gain: list[tuple[float, common.PolarisationType]]
+    noise_gain: list[tuple[float, common.PolarisationType]]
 
     @classmethod
     def from_l1_annotation(cls, params: common_annotation_l1.ProcessingParameters) -> BIOMASSL1ProcessingParameters:
@@ -109,8 +108,16 @@ class BIOMASSL1ProcessingParameters:
             internal_calibration_source=default_params.internal_calibration_source,
             range_reference_function_source=params.range_reference_function_source,
             range_compression_method=params.range_compression_method,
-            range_window_type=params.range_processing_parameters.window_type,
-            range_window_coefficient=params.range_processing_parameters.window_coefficient,
+            range_window_type={
+                common.SwathType.S1: params.range_processing_parameters.window_type,
+                common.SwathType.S2: params.range_processing_parameters.window_type,
+                common.SwathType.S3: params.range_processing_parameters.window_type,
+            },
+            range_window_coefficient={
+                common.SwathType.S1: params.range_processing_parameters.window_coefficient,
+                common.SwathType.S2: params.range_processing_parameters.window_coefficient,
+                common.SwathType.S3: params.range_processing_parameters.window_coefficient,
+            },
             extended_swath_processing=params.extended_swath_processing_flag,
             dc_method=params.dc_method,
             dc_value=params.dc_value,
@@ -121,8 +128,16 @@ class BIOMASSL1ProcessingParameters:
             azimuth_compression_block_lines=16700,
             azimuth_compression_block_overlap_samples=46,
             azimuth_compression_block_overlap_lines=4076,
-            azimuth_window_type=params.azimuth_processing_parameters.window_type,
-            azimuth_window_coefficient=params.azimuth_processing_parameters.window_coefficient,
+            azimuth_window_type={
+                common.SwathType.S1: params.azimuth_processing_parameters.window_type,
+                common.SwathType.S2: params.azimuth_processing_parameters.window_type,
+                common.SwathType.S3: params.azimuth_processing_parameters.window_type,
+            },
+            azimuth_window_coefficient={
+                common.SwathType.S1: params.azimuth_processing_parameters.window_coefficient,
+                common.SwathType.S2: params.azimuth_processing_parameters.window_coefficient,
+                common.SwathType.S3: params.azimuth_processing_parameters.window_coefficient,
+            },
             bistatic_delay_correction_flag=params.bistatic_delay_correction_flag,
             bistatic_delay_correction_method=params.bistatic_delay_correction_method,
             azimuth_focusing_margins_removal_flag=default_params.azimuth_focusing_margins_removal_flag,
@@ -149,6 +164,8 @@ class BIOMASSL1ProcessingParameters:
             requested_height_model_used=default_params.requested_height_model_used,
             absolute_calibration_constants=default_params.absolute_calibration_constants,
             polarimetric_distortion=default_params.polarimetric_distortion,
+            processing_gain=default_params.processing_gain,
+            noise_gain=default_params.noise_gain,
         )
 
 
@@ -166,11 +183,11 @@ class SARImageParameters:
     """SAR Image parameters"""
 
     pixel_representation: common.PixelRepresentationType
-    pixel_type: main_annotation_models.PixelTypeType
-    abs_compression_method: common_types.CompressionMethodType
+    pixel_type: common.PixelTypeType
+    abs_compression_method: common.CompressionMethodType
     abs_max_z_error: float
     abs_max_z_error_percentile: float
-    phase_compression_method: common_types.CompressionMethodType
+    phase_compression_method: common.CompressionMethodType
     phase_max_z_error: float
     phase_max_z_error_percentile: float
     no_pixel_value: float
@@ -178,7 +195,7 @@ class SARImageParameters:
 
     @classmethod
     def from_l1_annotation(cls, params) -> SARImageParameters:
-        """ """
+        """Create SARImageParameters from L1 annotation."""
         default_params = _default_sar_image_parameters()
         return cls(
             pixel_representation=params.pixel_representation,
@@ -196,7 +213,7 @@ class SARImageParameters:
 
 @dataclass
 class LUTParameters:
-    """_summary_"""
+    """LUT parameters"""
 
     @dataclass
     class LutDecimationFactors:
@@ -223,7 +240,7 @@ class QuicklookParameters:
     ql_range_averaging_factor: int
     ql_azimuth_decimation_factor: int
     ql_azimuth_averaging_factor: int
-    ql_absolute_scaling_factor: dict
+    ql_absolute_scaling_factor: dict[common.ChannelType, float]
 
 
 @dataclass
@@ -302,32 +319,19 @@ class BIOMASSL1Product(SARProduct):
             self.swath_list = ["S1"]
 
         self.sensor_mode = "MEASUREMENT"
-        if source is not None:
-            self.source_name = source.name
-            self.mission_phase_id = source.mission_phase_id
-            self.instrument_configuration_id = source.instrument_configuration_id
-            self.datatake_id = source.datatake_id
-            self.orbit_number = source.orbit_number
-            self.orbit_drift_flag = source.orbit_drift_flag
-            self.global_coverage_id = source.global_coverage_id
-            self.major_cycle_id = source.major_cycle_id
-            self.repeat_cycle_id = source.repeat_cycle_id
-            self.track_number = source.track_number
-            self.anx_time = source.anx_time
-            self.source_bit_rate = source.bit_rate if isinstance(source, BIOMASSL0Product) else 0.0
-        else:
-            self.source_name = "L0S"
-            self.mission_phase_id = "INTERFEROMETRIC"
-            self.instrument_configuration_id = 1
-            self.datatake_id = 1
-            self.orbit_number = 1
-            self.orbit_drift_flag = False
-            self.global_coverage_id = 1
-            self.major_cycle_id = 1
-            self.repeat_cycle_id = 1
-            self.track_number = 1
-            self.anx_time = None
-            self.source_bit_rate = 0.0
+        self.source_name = source.name if source is not None else "L0S"
+        self.mission_phase_id = source.mission_phase_id if source is not None else "INTERFEROMETRIC"
+        self.instrument_configuration_id = source.instrument_configuration_id if source is not None else 1
+        self.datatake_id = source.datatake_id if source is not None else 1
+        self.orbit_number = source.orbit_number if source is not None else 1
+        self.orbit_drift_flag = source.orbit_drift_flag if source is not None else False
+        self.global_coverage_id = source.global_coverage_id if source is not None else 1
+        self.major_cycle_id = source.major_cycle_id if source is not None else 1
+        self.repeat_cycle_id = source.repeat_cycle_id if source is not None else 1
+        self.track_number = source.track_number if source is not None else 1
+        self.anx_time = source.anx_time if source is not None else None
+        input_is_l0 = source is not None and isinstance(source, BIOMASSL0Product)
+        self.source_bit_rate = source.bit_rate if input_is_l0 else 0.0
 
         if source_monitoring is not None:
             self.source_monitoring_name = source_monitoring.name
@@ -376,6 +380,10 @@ class BIOMASSL1Product(SARProduct):
         assert self.mission_phase_id is not None
         assert self.start_time is not None
         assert self.stop_time is not None
+        assert self.global_coverage_id is not None
+        assert self.major_cycle_id is not None
+        assert self.repeat_cycle_id is not None
+        assert self.track_number is not None
         self.creation_date = PreciseDateTime.now()
         global_coverage_id_str = encode_product_name_id_value(self.global_coverage_id, npad=2)
         major_cycle_id_str = encode_product_name_id_value(self.major_cycle_id, npad=2)
@@ -408,7 +416,7 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
         rfi_mitigation_method=common.RfiMitigationMethodType.TIME_AND_FREQUENCY,
         rfi_mask=common.RfiMaskType.SINGLE,
         rfi_mask_generation_method=common.RfiMaskGenerationMethodType.OR,
-        rfi_fm_mitigation_method="NOTCH_FILTER",
+        rfi_fm_mitigation_method=common.RfiFmmitigationMethodType.NOTCH_FILTER,
         rfi_fm_chirp_source=common.RangeReferenceFunctionType.NOMINAL,
         internal_calibration_estimation_flag=True,
         internal_calibration_correction_flag=True,
@@ -416,14 +424,14 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
         range_reference_function_source=common.RangeReferenceFunctionType.REPLICA,
         range_compression_method=common.RangeCompressionMethodType.INVERSE_FILTER,
         range_window_type={
-            main_annotation_models.SwathType.S1.value: main_annotation_models.WeightingWindowType.HAMMING,
-            main_annotation_models.SwathType.S2.value: main_annotation_models.WeightingWindowType.HAMMING,
-            main_annotation_models.SwathType.S3.value: main_annotation_models.WeightingWindowType.HAMMING,
+            common.SwathType.S1: common.WeightingWindowType.HAMMING,
+            common.SwathType.S2: common.WeightingWindowType.HAMMING,
+            common.SwathType.S3: common.WeightingWindowType.HAMMING,
         },
         range_window_coefficient={
-            main_annotation_models.SwathType.S1.value: 0.75,
-            main_annotation_models.SwathType.S2.value: 0.75,
-            main_annotation_models.SwathType.S3.value: 0.75,
+            common.SwathType.S1: 0.75,
+            common.SwathType.S2: 0.75,
+            common.SwathType.S3: 0.75,
         },
         extended_swath_processing=False,
         dc_method=common.DcMethodType.COMBINED,
@@ -436,14 +444,14 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
         azimuth_compression_block_overlap_samples=46,
         azimuth_compression_block_overlap_lines=4076,
         azimuth_window_type={
-            main_annotation_models.SwathType.S1.value: main_annotation_models.WeightingWindowType.HAMMING,
-            main_annotation_models.SwathType.S2.value: main_annotation_models.WeightingWindowType.HAMMING,
-            main_annotation_models.SwathType.S3.value: main_annotation_models.WeightingWindowType.HAMMING,
+            common.SwathType.S1: common.WeightingWindowType.HAMMING,
+            common.SwathType.S2: common.WeightingWindowType.HAMMING,
+            common.SwathType.S3: common.WeightingWindowType.HAMMING,
         },
         azimuth_window_coefficient={
-            main_annotation_models.SwathType.S1.value: 0.75,
-            main_annotation_models.SwathType.S2.value: 0.75,
-            main_annotation_models.SwathType.S3.value: 0.75,
+            common.SwathType.S1: 0.75,
+            common.SwathType.S2: 0.75,
+            common.SwathType.S3: 0.75,
         },
         bistatic_delay_correction_flag=True,
         bistatic_delay_correction_method=common.BistaticDelayCorrectionMethodType.FULL,
@@ -459,24 +467,24 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
         autofocus_flag=False,
         autofocus_method=common.AutofocusMethodType.MAP_DRIFT,
         range_upsampling_factor={
-            main_annotation_models.SwathType.S1.value: 3,
-            main_annotation_models.SwathType.S2.value: 3,
-            main_annotation_models.SwathType.S3.value: 3,
+            common.SwathType.S1: 3,
+            common.SwathType.S2: 3,
+            common.SwathType.S3: 3,
         },
         range_downsampling_factor={
-            main_annotation_models.SwathType.S1.value: 1,
-            main_annotation_models.SwathType.S2.value: 1,
-            main_annotation_models.SwathType.S3.value: 1,
+            common.SwathType.S1: 1,
+            common.SwathType.S2: 1,
+            common.SwathType.S3: 1,
         },
         azimuth_upsampling_factor={
-            main_annotation_models.SwathType.S1.value: 3,
-            main_annotation_models.SwathType.S2.value: 3,
-            main_annotation_models.SwathType.S3.value: 3,
+            common.SwathType.S1: 3,
+            common.SwathType.S2: 3,
+            common.SwathType.S3: 3,
         },
         azimuth_downsampling_factor={
-            main_annotation_models.SwathType.S1.value: 10,
-            main_annotation_models.SwathType.S2.value: 10,
-            main_annotation_models.SwathType.S3.value: 10,
+            common.SwathType.S1: 10,
+            common.SwathType.S2: 10,
+            common.SwathType.S3: 10,
         },
         detection_flag=True,
         thermal_denoising_flag=True,
@@ -491,7 +499,7 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
             common.PolarisationType.VH: 1.0,
             common.PolarisationType.VV: 1.0,
         },
-        polarimetric_distortion=PolarimetricDistortionType(
+        polarimetric_distortion=common_annotation_l1.PolarimetricDistortionType(
             cross_talk=common.CrossTalkList(
                 hv_rx=complex(0, 0),
                 hv_tx=complex(0, 0),
@@ -500,17 +508,29 @@ def _default_processing_parameters() -> BIOMASSL1ProcessingParameters:
             ),
             channel_imbalance=common.ChannelImbalanceList(hv_rx=complex(0, 0), hv_tx=complex(0, 0)),
         ),
+        processing_gain=[
+            (1.0, common.PolarisationType.HH),
+            (1.0, common.PolarisationType.HV),
+            (1.0, common.PolarisationType.VH),
+            (1.0, common.PolarisationType.VV),
+        ],
+        noise_gain=[
+            (1.0, common.PolarisationType.HH),
+            (1.0, common.PolarisationType.HV),
+            (1.0, common.PolarisationType.VH),
+            (1.0, common.PolarisationType.VV),
+        ],
     )
 
 
 def _default_sar_image_parameters() -> SARImageParameters:
     return SARImageParameters(
         pixel_representation=common.PixelRepresentationType.ABS_PHASE,
-        pixel_type=main_annotation_models.PixelTypeType.VALUE_32_BIT_FLOAT,
-        abs_compression_method=common_types.CompressionMethodType.LERC_ZSTD,
+        pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+        abs_compression_method=common.CompressionMethodType.LERC_ZSTD,
         abs_max_z_error=0.0001,
         abs_max_z_error_percentile=0,
-        phase_compression_method=common_types.CompressionMethodType.LERC_ZSTD,
+        phase_compression_method=common.CompressionMethodType.LERC_ZSTD,
         phase_max_z_error=0.001,
         phase_max_z_error_percentile=0,
         no_pixel_value=-9999.0,
@@ -541,9 +561,9 @@ def _default_quicklook_parameters() -> QuicklookParameters:
         ql_azimuth_decimation_factor=120,
         ql_azimuth_averaging_factor=120,
         ql_absolute_scaling_factor={
-            main_annotation_models.ChannelType.RED.value: 1.0,
-            main_annotation_models.ChannelType.GREEN.value: 1.0,
-            main_annotation_models.ChannelType.BLUE.value: 1.0,
+            common.ChannelType.RED: 1.0,
+            common.ChannelType.GREEN: 1.0,
+            common.ChannelType.BLUE: 1.0,
         },
     )
 

@@ -15,9 +15,9 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 from arepytools.io.metadata import RasterInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.roi_utils import RegionOfInterest, raise_if_roi_is_invalid
 from bps.stack_coreg_processor.utils import StackCoregProcessorRuntimeError
+from perseo_core.timing import PreciseDateTime
 
 
 def coreg_primary_lut_axes(

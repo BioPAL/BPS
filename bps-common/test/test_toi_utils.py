@@ -13,13 +13,13 @@ Unit Tests for the TOI Utility Library
 import unittest
 
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common.toi_utils import (
     InvalidTimeOfInterestError,
     TimeOfInterest,
     raise_if_invalid_toi,
     toi_to_axis_slice,
 )
+from perseo_core.timing import PreciseDateTime
 
 # Just a date.
 START_TIME = PreciseDateTime().from_numeric_datetime(year=2015, month=9, day=15)

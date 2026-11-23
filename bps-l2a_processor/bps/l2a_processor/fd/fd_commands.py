@@ -16,12 +16,11 @@ from pathlib import Path
 
 import bps.l2a_processor
 import numpy as np
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.fnf_utils import FnFMask
-from bps.common.io import common_types, translate_common
+from bps.common.io import common
 from bps.common.l2_joborder_tags import L2A_OUTPUT_PRODUCT_FD
-from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A
+from bps.l2a_processor.core.aux_pp2_2a import AuxProcessingParametersL2A, OperationalModeType
 from bps.l2a_processor.core.joborder_l2a import L2aJobOrder
 from bps.l2a_processor.fd import BPS_L2A_FD_PROCESSOR_NAME
 from bps.l2a_processor.ground_cancellation import ground_cancellation
@@ -34,18 +33,15 @@ from bps.l2a_processor.l2a_common_functionalities import (
     get_dgg_sampling,
     interpolate_fnf,
     mpmb_covariance_estimation,
+    parallel_reinterpolate,
     refine_dgg_search_tiles,
 )
-from bps.transcoder.io import common_annotation_models_l2
+from bps.transcoder.io import common_annotation_l2l3, main_annotation_l2a_fd
+from bps.transcoder.io.main_annotation_l2a_fd import BIOMASSL2aMainADSProcessingParametersFD
 from bps.transcoder.sarproduct.biomass_l2aproduct import (
     BIOMASSL2aLutAdsFD,
-    BIOMASSL2aMainADSInputInformation,
-    BIOMASSL2aMainADSProcessingParametersFD,
-    BIOMASSL2aMainADSproduct,
-    BIOMASSL2aMainADSRasterImage,
     BIOMASSL2aProductFD,
     BIOMASSL2aProductMeasurement,
-    main_annotation_models_l2a_fd,
 )
 from bps.transcoder.sarproduct.biomass_l2aproduct_writer import (
     AVERAGING_FACTOR_QUICKLOOKS,
@@ -59,6 +55,7 @@ from bps.transcoder.sarproduct.biomass_stackproduct import BIOMASSStackProduct
 from bps.transcoder.sarproduct.l2_annotations import COORDINATE_REFERENCE_SYSTEM, ground_corner_points
 from bps.transcoder.utils.dgg_utils import create_dgg_sampling_dict, dgg_search_tiles
 from netCDF4 import Dataset
+from perseo_core.timing import PreciseDateTime
 from scipy.stats import chi2
 
 LIGHTSPEED = 299792458
@@ -163,8 +160,7 @@ class FD:
     def _initialize_processing(self):
         """Initialize the FD L2a processing"""
 
-        self.processing_start_time = datetime.now()
-        self.start_time = PreciseDateTime.now()
+        self.processing_start_time = PreciseDateTime.now()
         bps_logger.info("%s started", BPS_L2A_FD_PROCESSOR_NAME)
 
         self.product_path = self.job_order.output_directory
@@ -194,6 +190,7 @@ class FD:
             self.stack_lut_axes_dict["axis_primary_az_s"],
             self.aux_pp2_2a.fd.ground_cancellaton,
             self.acquisition_paths_selected_not_sorted,
+            self.aux_pp2_2a.general.polarisation_combination_method,
         )
         acquisition_id_reference_image = (
             self.acquisition_paths_selected_not_sorted[idx_selected_reference].name
@@ -225,6 +222,23 @@ class FD:
             self.aux_pp2_2a.fd.upsampling_factor,
         )
 
+        bps_logger.info(
+            "Interpolation of incidence angle, elevation angle and range, azimuth DEM Slopes over LUTs axis"
+        )
+        # height, latitude, longitude are already interpolated
+        luts_interpolated_list = parallel_reinterpolate(
+            [
+                self.stack_lut_list[self.primary_image_index]["incidenceAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["elevationAngle"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["rangeTerrainSlope"].astype(np.float32),
+                self.stack_lut_list[self.primary_image_index]["azimuthTerrainSlope"].astype(np.float32),
+            ],
+            self.stack_lut_axes_dict["axis_primary_az_s"],
+            self.stack_lut_axes_dict["axis_primary_sr_s"],
+            self.scs_axes_dict["scs_axis_az_s"][axis_az_subsampling_indexes],  # sub,
+            self.scs_axes_dict["scs_axis_sr_s"][axis_rg_subsampling_indexes],  # sub,
+        )
+
         # Get the DGG sampling parameters, needed for the geocoding step:
         # Check the orientation of FNF lat lon axis and keep this convention in the L2a product.
         invert_latitude, invert_longitude = check_lat_lon_orientation(self.fnf.lat_axis, self.fnf.lon_axis)
@@ -244,6 +258,9 @@ class FD:
             dgg_latitude_mesh_rad,
             dgg_longitude_mesh_rad,
             dem_valid_values_mask,
+            dem_for_lut,
+            latitude_deg_for_lut,
+            longitude_deg_for_lut,
         ) = geocoding_update_dem_coordinates(
             self.stack_lut_list[self.primary_image_index]["height"],
             self.stack_lut_list[self.primary_image_index]["latitude"],
@@ -284,8 +301,45 @@ class FD:
             )
         ).astype(type(covariance_vec_9x[0, 0, 0]))
 
-        # Forest Disturbance computation
+        bps_logger.info(
+            "Geocoding of DEM, latitude, longitude, incidence and elevation angles, range and azimuth DEM Slopes for LUTs annotation"
+        )
+        luts_geocoded_list = geocoding(
+            [
+                dem_for_lut,  # height
+                latitude_deg_for_lut,  # latitude
+                longitude_deg_for_lut,  # longitude
+                luts_interpolated_list[0],  # incidenceAngle
+                luts_interpolated_list[1],  # elevationAngle
+                luts_interpolated_list[2],  # rangeTerrainSlope
+                luts_interpolated_list[3],  # azimuthTerrainSlope
+            ],
+            delaunay,
+            dgg_latitude_mesh_rad,
+            dgg_longitude_mesh_rad,
+            dem_valid_values_mask,
+            fill_value=FLOAT_NODATA_VALUE,
+        )
+        del luts_interpolated_list
+
         lut_dict = {}
+        for lut_name, lut_geocoded in zip(
+            [
+                "height",
+                "latitude",
+                "longitude",
+                "incidenceAngle",
+                "elevationAngle",
+                "rangeTerrainSlope",
+                "azimuthTerrainSlope",
+            ],
+            luts_geocoded_list,
+        ):
+            lut_dict[lut_name] = lut_geocoded.astype(np.float32)
+            lut_dict[lut_name][~np.isfinite(lut_dict[lut_name])] = FLOAT_NODATA_VALUE
+        del luts_geocoded_list
+
+        # Forest Disturbance computation
         if self.l2a_fd_product:
             (
                 fd,
@@ -378,36 +432,46 @@ class FD:
 
         self.radar_carrier_frequency = 435000000.0
 
-        lut_metadata = BIOMASSL2aLutAdsFD.LutMetadata(
+        lut_dict["fnf_metadata"] = BIOMASSL2aLutAdsFD.LutMetadata(
             first_sample=1,
             first_line=1,
             samples_interval=1,
             lines_interval=1,
             pixelType="8 bit Unsigned Integer",
             no_data_value=INT_NODATA_VALUE,
-            projection=(common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
+            projection=(common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value),
             coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
-            geodeticReferenceFrame=common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value,
+            geodeticReferenceFrame=common.GeodeticReferenceFrameType.WGS84.value,
         )
-        lut_dict["fnf_metadata"] = deepcopy(lut_metadata)
-        lut_dict["number_of_averages_metadata"] = deepcopy(lut_metadata)
-        lut_metadata.least_significant_digit = self.aux_pp2_2a.fd.compression_options.ads.acm.least_significant_digit
+        lut_dict["number_of_averages_metadata"] = deepcopy(lut_dict["fnf_metadata"])
 
-        lut_metadata.pixelType = "32 bit Float"
-        lut_metadata.no_data_value = FLOAT_NODATA_VALUE
-        lut_dict["acm_metadata"] = deepcopy(lut_metadata)
+        lut_dict["geometric_metadata"] = BIOMASSL2aLutAdsFD.LutMetadata(
+            first_sample=1,
+            first_line=1,
+            samples_interval=1,
+            lines_interval=1,
+            pixelType="32 bit Float",
+            no_data_value=FLOAT_NODATA_VALUE,
+            projection=common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value,
+            coordinateReferenceSystem=COORDINATE_REFERENCE_SYSTEM,
+            geodeticReferenceFrame=common.GeodeticReferenceFrameType.WGS84.value,
+        )
+        lut_dict["geometric_metadata"].least_significant_digit = np.uint8(
+            self.aux_pp2_2a.fh.compression_options.ads.geometric_luts.least_significant_digit
+        )
+        lut_dict["acm_metadata"] = deepcopy(lut_dict["geometric_metadata"])
 
         # COG metadata
         # fill common fileds for FD, CFM and Number of Averages
         meta_data_temp = [
             BIOMASSL2aProductMeasurement.MetadataCOG(
-                swath=common_annotation_models_l2.SwathType.S1.value,
+                swath=common.SwathType.S1.value,
                 tile_id_list=self.tile_id_list,
                 basin_id_list=self.basin_id_list,
                 compression=COMPRESSION_EXIF_CODES_LERC_ZSTD,  #  [LERC, ZSTD]
                 image_description="",
                 software="",
-                dateTime=self.start_time.isoformat(timespec="microseconds")[:-1],
+                dateTime=self.processing_start_time.isoformat(timespec="microseconds")[:-1],
             )
             for idx in range(3)
         ]
@@ -419,17 +483,17 @@ class FD:
             "cfm": deepcopy(meta_data_temp[2]),
         }
         meta_data["fd"].image_description = (
-            f"BIOMASS L2a {self.product_type}" + ": " + common_types.PixelRepresentationType.FOREST_DISTURBANCE.value
+            f"BIOMASS L2a {self.product_type}" + ": " + common.PixelRepresentationType.FOREST_DISTURBANCE.value
         )
 
         meta_data["fd"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
         meta_data["probability_ofchange"].image_description = (
-            f"BIOMASS L2a {self.product_type}" + ": " + common_types.PixelRepresentationType.PROBABILITY_OF_CHANGE.value
+            f"BIOMASS L2a {self.product_type}" + ": " + common.PixelRepresentationType.PROBABILITY_OF_CHANGE.value
         )
 
         meta_data["cfm"].image_description = (
-            f"BIOMASS L2a {self.product_type}" + ": " + common_types.PixelRepresentationType.COMPUTED_FOREST_MASK.value
+            f"BIOMASS L2a {self.product_type}" + ": " + common.PixelRepresentationType.COMPUTED_FOREST_MASK.value
         )
         meta_data["cfm"].compression = [COMPRESSION_EXIF_CODES_LERC_ZSTD[1]]  # [ZSTD]
 
@@ -462,8 +526,7 @@ class FD:
 
         lut_dict, metadata_dict = self._fill_product_for_writing(lut_dict)
 
-        self.processing_stop_time = datetime.now()
-        self.stop_time = PreciseDateTime.now()
+        self.processing_stop_time = PreciseDateTime.now()
 
         # Fill input objects for BIOMASSL2aProductFD initialization:
         # measurement,
@@ -482,11 +545,11 @@ class FD:
         )
 
         # main_ads_product
-        mission = common_annotation_models_l2.MissionType.BIOMASS.value
-        sensor_mode = common_annotation_models_l2.SensorModeType.MEASUREMENT.value
+        orbit_direction_str = self.stack_products_list[self.primary_image_index].orbit_direction
+        if orbit_direction_str not in ["ASCENDING", "DESCENDING"]:
+            raise ValueError(f"Invalid orbit direction: {orbit_direction_str}")
         orbit_direction = (
-            self.stack_products_list[self.primary_image_index].orbit_direction[0]
-            + self.stack_products_list[self.primary_image_index].orbit_direction[1:].lower()
+            common.OrbitPassType.ASCENDING if orbit_direction_str == "ASCENDING" else common.OrbitPassType.DESCENDING
         )
 
         start_time_l1c = self.stack_products_list[0].start_time
@@ -494,64 +557,85 @@ class FD:
         for l1c_product in self.stack_products_list:
             start_time_l1c = min(start_time_l1c, l1c_product.start_time)
             stop_time_l1c = max(stop_time_l1c, l1c_product.stop_time)
-        main_ads_product = BIOMASSL2aMainADSproduct(
-            mission,
-            self.tile_id_list,
-            self.basin_id_list,
-            self.product_type,
-            start_time_l1c,
-            stop_time_l1c,
-            self.radar_carrier_frequency,
-            self.mission_phase_id,
-            sensor_mode,
-            self.stack_products_list[self.primary_image_index].global_coverage_id,
-            self.stack_products_list[self.primary_image_index].swath_list[0],
-            self.stack_products_list[self.primary_image_index].major_cycle_id,
-            [product.orbit_number for product in self.stack_products_list],
-            self.stack_products_list[self.primary_image_index].track_number,
-            orbit_direction,
-            [product.datatake_id for product in self.stack_products_list],
-            self.stack_products_list[self.primary_image_index].frame_number,
-            self.stack_products_list[self.primary_image_index].platform_heading,
-            self.output_baseline,
+        assert start_time_l1c is not None
+        assert stop_time_l1c is not None
+
+        primary_product = self.stack_products_list[self.primary_image_index]
+        swath_name = primary_product.swath_list[0]
+        swath = common.SwathType(swath_name)
+
+        assert primary_product.global_coverage_id is not None
+        assert primary_product.major_cycle_id is not None
+        assert primary_product.track_number is not None
+        assert primary_product.frame_number is not None
+        assert primary_product.platform_heading is not None
+
+        absolute_orbit_numbers = []
+        datatake_ids = []
+        for product in self.stack_products_list:
+            assert product.orbit_number is not None
+            assert product.datatake_id is not None
+            absolute_orbit_numbers.append(product.orbit_number)
+            datatake_ids.append(product.datatake_id)
+
+        selected_reference_image = None
+        if idx_selected_reference is not None:
+            assert acquisition_id_reference_image is not None
+            selected_reference_image = common_annotation_l2l3.SelectedReferenceImageType(
+                value=idx_selected_reference, acquisition_id=acquisition_id_reference_image
+            )
+
+        main_ads_product = common_annotation_l2l3.BIOMASSL2aMainADSproduct(
+            mission=common.MissionType.BIOMASS,
+            tile_id_list=self.tile_id_list,
+            basin_id_list=self.basin_id_list,
+            product_type=common.ProductType.from_l2_joborder_tag(self.product_type),
+            start_time=start_time_l1c,
+            stop_time=stop_time_l1c,
+            radar_carrier_frequency=self.radar_carrier_frequency,
+            mission_phase_id=common.MissionPhaseIdtype[self.mission_phase_id],
+            sensor_mode=common.SensorModeType.MEASUREMENT,
+            global_coverage_id=primary_product.global_coverage_id,
+            swath=swath,
+            major_cycle_id=primary_product.major_cycle_id,
+            absolute_orbit_number=absolute_orbit_numbers,
+            relative_orbit_number=primary_product.track_number,
+            orbit_pass=orbit_direction,
+            datatake_id=datatake_ids,
+            frame=primary_product.frame_number,
+            platform_heading=primary_product.platform_heading,
+            baseline=self.output_baseline,
             forest_coverage_percentage=self.forest_coverage_percentage,
-            selected_reference_image=idx_selected_reference,
-            acquisition_id_reference_image=acquisition_id_reference_image,
+            selected_reference_image=selected_reference_image,
         )
 
         # main_ads_raster_image
-        projection = common_annotation_models_l2.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG.value
-        coordinate_reference_system = COORDINATE_REFERENCE_SYSTEM
-        geodetic_reference_frame = common_annotation_models_l2.GeodeticReferenceFrameType.WGS84.value
-        datum = common_annotation_models_l2.DatumType(
-            coordinate_reference_system=coordinate_reference_system,
-            geodetic_reference_frame=common_annotation_models_l2.GeodeticReferenceFrameType(geodetic_reference_frame),
-        )
-        pixel_representation_dict = {
-            "fd": common_types.PixelRepresentationType.FOREST_DISTURBANCE,
-            "probability_ofchange": common_types.PixelRepresentationType.PROBABILITY_OF_CHANGE,
-            "cfm": common_types.PixelRepresentationType.COMPUTED_FOREST_MASK,
-        }
-        pixel_representation = common_annotation_models_l2.PixelRepresentationChoiceType(
-            fd=pixel_representation_dict["fd"],
-            cfm=pixel_representation_dict["cfm"],
-            probability_of_change=pixel_representation_dict["probability_ofchange"],
-        )
-        pixel_type = common_annotation_models_l2.PixelTypeChoiceType(
-            float_pixel_type=main_annotation_models_l2a_fd.PixelTypeType("32 bit Float"),
-            int_pixel_type=main_annotation_models_l2a_fd.PixelTypeType("8 bit Unsigned Integer"),
+        datum = common.DatumType(
+            coordinate_reference_system=COORDINATE_REFERENCE_SYSTEM,
+            geodetic_reference_frame=common.GeodeticReferenceFrameType.WGS84,
         )
 
-        no_data_value = common_annotation_models_l2.NoDataValueChoiceType(
+        pixel_representation = common_annotation_l2l3.PixelRepresentationChoiceType(
+            fd=common.PixelRepresentationType.FOREST_DISTURBANCE,
+            cfm=common.PixelRepresentationType.COMPUTED_FOREST_MASK,
+            probability_of_change=common.PixelRepresentationType.PROBABILITY_OF_CHANGE,
+        )
+        pixel_type = common_annotation_l2l3.PixelTypeChoiceType(
+            float_pixel_type=common.PixelTypeType.VALUE_32_BIT_FLOAT,
+            int_pixel_type=common.PixelTypeType.VALUE_8_BIT_UNSIGNED_INTEGER,
+        )
+
+        no_data_value = common_annotation_l2l3.NoDataValueChoiceType(
             float_no_data_value=FLOAT_NODATA_VALUE,
             int_no_data_value=INT_NODATA_VALUE,
         )
-        main_ads_raster_image = BIOMASSL2aMainADSRasterImage(
+        projection = common.ProjectionType.LATITUDE_LONGITUDE_BASED_ON_DGG
+        main_ads_raster_image = common_annotation_l2l3.BIOMASSL2aMainADSRasterImage(
             footprint,
-            dgg_latitude_axis[0],
-            dgg_longitude_axis[0],
-            dgg_latitude_axis[1] - dgg_latitude_axis[0],
-            dgg_longitude_axis[1] - dgg_longitude_axis[0],
+            float(dgg_latitude_axis[0]),
+            float(dgg_longitude_axis[0]),
+            float(dgg_latitude_axis[1] - dgg_latitude_axis[0]),
+            float(dgg_longitude_axis[1] - dgg_longitude_axis[0]),
             len(dgg_latitude_axis),
             len(dgg_longitude_axis),
             projection,
@@ -562,32 +646,24 @@ class FD:
         )
 
         # main_ads_input_information
-        polarisation_list = common_annotation_models_l2.PolarisationListType(
-            polarisation=[
-                common_annotation_models_l2.PolarisationType("HH"),
-                common_annotation_models_l2.PolarisationType("VH"),
-                common_annotation_models_l2.PolarisationType("VV"),
-            ],
-            count=int(3),
-        )
+        polarisation_list = [common.PolarisationType.HH, common.PolarisationType.VH, common.PolarisationType.VV]
 
         acquisition_list = []
         overall_product_quality_indices = []
         for idx, acq_folder_name in enumerate(self.acquisition_paths_selected_not_sorted):
-            overall_product_quality_indices.append(
-                self.stack_products_list[idx].stack_quality.overall_product_quality_index
-            )
-            if idx == self.primary_image_index:  # primary image index is ordered as the acquisitions (not sorted)
-                reference_image = "true"
-            else:
-                reference_image = "false"
+            quality = self.stack_products_list[idx].stack_quality
+            assert quality is not None
+            overall_product_quality_indices.append(quality.overall_product_quality_index)
+            reference_image = (
+                idx == self.primary_image_index
+            )  # primary image index is ordered as the acquisitions (not sorted)
 
             sta_quality_parameters_list = []
             assert self.stack_products_list[0].stack_quality is not None
             assert self.stack_products_list[0].stack_quality.sta_quality_parameters_list is not None
             for param in self.stack_products_list[0].stack_quality.sta_quality_parameters_list:
                 sta_quality_parameters_list.append(
-                    common_annotation_models_l2.StaQualityParametersType(
+                    common_annotation_l2l3.StaQualityParametersType(
                         invalid_l1a_data_samples=param.invalid_l1a_data_samples,
                         rfi_decorrelation=param.rfi_decorrelation,
                         rfi_decorrelation_threshold=param.rfi_decorrelation_threshold,
@@ -598,26 +674,21 @@ class FD:
                         invalid_ground_phases_screen_estimates_fraction=param.invalid_skp_calibration_phase_screen_ratio,
                         ground_phases_screen_quality_threshold=param.skp_calibration_phase_screen_quality_threshold,
                         skp_decomposition_index=param.skp_decomposition_index,
-                        polarisation=common_annotation_models_l2.PolarisationType(param.polarization),
+                        polarisation=param.polarization,
                     )
                 )
 
-            sta_quality_parameters_list = common_annotation_models_l2.StaQualityParametersListType(
-                sta_quality_parameters=sta_quality_parameters_list,
-                count=len(self.stack_products_list[0].stack_quality.sta_quality_parameters_list),
-            )
-
-            sta_quality = common_annotation_models_l2.StaQualityType(
-                overall_product_quality_index=self.stack_products_list[idx].stack_quality.overall_product_quality_index,
+            sta_quality = common_annotation_l2l3.StaQualityType(
+                overall_product_quality_index=quality.overall_product_quality_index,
                 sta_quality_parameters_list=sta_quality_parameters_list,
             )
 
             acquisition_list.append(
-                common_annotation_models_l2.AcquisitionType(
-                    folder_name=str(acq_folder_name.name),
+                common_annotation_l2l3.AcquisitionType(
+                    folder_name=acq_folder_name.name,
                     sta_quality=sta_quality,
                     reference_image=reference_image,
-                    average_wavenumber=average_wavenumbers[idx],
+                    average_wavenumber=float(average_wavenumbers[idx]),
                 )
             )
 
@@ -631,27 +702,23 @@ class FD:
         )
 
         # Compute height of ambiguity from the average wavenumbers
-        vertical_wavenumbers_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            min=common_annotation_models_l2.FloatWithUnit(
-                value=float(min(average_wavenumbers)),
-                units=common_types.UomType.RAD_M,
-            ),
-            max=common_annotation_models_l2.FloatWithUnit(
-                value=float(max(average_wavenumbers)),
-                units=common_types.UomType.RAD_M,
-            ),
+        vertical_wavenumbers_info = common.MinMaxTypeWithUnit(
+            min=float(min(average_wavenumbers)),
+            max=float(max(average_wavenumbers)),
+            units=common.UomType.RAD_M,
         )
 
         wavenumber_spacings = np.abs(np.diff(average_wavenumbers))
         hoa_max = 2 * np.pi / min(wavenumber_spacings)
         hoa_min = 2 * np.pi / max(wavenumber_spacings)
-        height_of_ambiguity_info = common_annotation_models_l2.MinMaxTypeWithUnit(
-            min=common_annotation_models_l2.FloatWithUnit(value=float(hoa_min), units=common_types.UomType.M),
-            max=common_annotation_models_l2.FloatWithUnit(value=float(hoa_max), units=common_types.UomType.M),
+        height_of_ambiguity_info = common.MinMaxTypeWithUnit(
+            min=float(hoa_min),
+            max=float(hoa_max),
+            units=common.UomType.M,
         )
 
-        main_ads_input_information = BIOMASSL2aMainADSInputInformation(
-            self.product_type,
+        main_ads_input_information = common_annotation_l2l3.BIOMASSL2aMainADSInputInformation(
+            common.ProductType.from_l2_joborder_tag(self.product_type),
             overall_products_quality_index=(0 if sum(overall_product_quality_indices) == 0 else 1),
             nominal_stack=str(np.logical_or(is_int_and_nominal, is_tom_and_nominal)).lower(),
             polarisation_list=polarisation_list,
@@ -659,61 +726,79 @@ class FD:
             footprint=footprint,
             vertical_wavenumbers=vertical_wavenumbers_info,
             height_of_ambiguity=height_of_ambiguity_info,
-            acquisition_list=common_annotation_models_l2.AcquisitionListType(
-                acquisition=acquisition_list,
-                count=len(acquisition_list),
-            ),
+            acquisition_list=acquisition_list,
         )
 
         # main_ads_processing_parameters
-        general_configuration = common_annotation_models_l2.GeneralConfigurationParametersType(
-            apply_calibration_screen=common_annotation_models_l2.CalibrationScreenType(
+        general_configuration = common_annotation_l2l3.GeneralConfigurationParametersType(
+            apply_calibration_screen=common_annotation_l2l3.CalibrationScreenType(
                 self.aux_pp2_2a.general.apply_calibration_screen.value
             ),
             forest_coverage_threshold=self.aux_pp2_2a.general.forest_coverage_threshold,
             forest_mask_interpolation_threshold=self.aux_pp2_2a.general.forest_mask_interpolation_threshold,
-            subsetting_rule=common_annotation_models_l2.SubsettingRuleType(
-                self.aux_pp2_2a.general.subsetting_rule.value
-            ),
-            polarisation_combination_method=translate_common.translate_polarisation_combination_method_to_model(
-                self.aux_pp2_2a.general.polarisation_combination_method
-            ),
+            subsetting_rule=common_annotation_l2l3.SubsettingRuleType(self.aux_pp2_2a.general.subsetting_rule.value),
+            polarisation_combination_method=self.aux_pp2_2a.general.polarisation_combination_method,
         )
 
-        least_significant_digit_acm = self.aux_pp2_2a.fd.compression_options.ads.acm.least_significant_digit
-
-        compression_options_fd = main_annotation_models_l2a_fd.CompressionOptionsL2A(
-            mds=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds(
-                fd=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Fd(
+        compression_options_fd = main_annotation_l2a_fd.CompressionOptionsL2AFD(
+            mds=main_annotation_l2a_fd.CompressionOptionsL2AFD.Mds(
+                fd=main_annotation_l2a_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.mds.fd.compression_factor
                 ),
-                probability_ofchange=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.ProbabilityOfchange(
+                probability_ofchange=main_annotation_l2a_fd.CompressionFactorMaxZErrorType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.compression_factor,
                     max_z_error=self.aux_pp2_2a.fd.compression_options.mds.probability_of_change.max_z_error,
                 ),
-                cfm=main_annotation_models_l2a_fd.CompressionOptionsL2A.Mds.Cfm(
+                cfm=main_annotation_l2a_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.mds.cfm.compression_factor
                 ),
             ),
-            ads=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads(
-                fnf=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Fnf(
+            ads=main_annotation_l2a_fd.CompressionOptionsL2AFD.Ads(
+                fnf=main_annotation_l2a_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.ads.fnf.compression_factor
                 ),
-                acm=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.Acm(
+                acm=main_annotation_l2a_fd.CompressionFactorLeastSignificantDigitType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.ads.acm.compression_factor,
-                    least_significant_digit=least_significant_digit_acm,
+                    least_significant_digit=self.aux_pp2_2a.fd.compression_options.ads.acm.least_significant_digit,
                 ),
-                number_of_averages=main_annotation_models_l2a_fd.CompressionOptionsL2A.Ads.NumberOfAverages(
+                number_of_averages=main_annotation_l2a_fd.CompressionFactorType(
                     compression_factor=self.aux_pp2_2a.fd.compression_options.ads.number_of_averages.compression_factor
+                ),
+                geometric_luts=main_annotation_l2a_fd.CompressionFactorLeastSignificantDigitType(
+                    compression_factor=self.aux_pp2_2a.fd.compression_options.ads.geometric_luts.compression_factor,
+                    least_significant_digit=self.aux_pp2_2a.fd.compression_options.ads.geometric_luts.least_significant_digit,
                 ),
             ),
             mds_block_size=self.aux_pp2_2a.fd.compression_options.mds_block_size,
             ads_block_size=self.aux_pp2_2a.fd.compression_options.ads_block_size,
         )
 
+        # imagesPairSelection: the AUX contains AuxppacquisitionListType.AcquisitionFolderName objects,
+        # the annotation needs AcquisitionType: pick them from the stack acquisition list
+        images_pair_selection = None
+        if self.aux_pp2_2a.fd.ground_cancellaton.operational_mode == OperationalModeType.INSAR_PAIR:
+            pair_from_aux_pp2 = {
+                Path(acq.value).name: acq for acq in self.aux_pp2_2a.agb.ground_cancellaton.images_pair_selection
+            }
+            images_pair_selection = [
+                common_annotation_l2l3.AcquisitionType(
+                    folder_name=acq.folder_name,
+                    sta_quality=acq.sta_quality,
+                    reference_image=pair_from_aux_pp2[acq.folder_name].reference_image,
+                    average_wavenumber=pair_from_aux_pp2[acq.folder_name].average_wavenumber,
+                )
+                for acq in acquisition_list
+                if acq.folder_name in pair_from_aux_pp2
+            ]
+            if len(images_pair_selection) != 2:
+                raise RuntimeError(
+                    f"INSAR_PAIR: expected 2 acquisitions from AUX PP2 2A images pair selection "
+                    f"{list(pair_from_aux_pp2)} in the stack, found {len(images_pair_selection)}"
+                )
+
         main_ads_processing_parameters = BIOMASSL2aMainADSProcessingParametersFD(
             bps.l2a_processor.__version__,
-            self.start_time,
+            self.processing_start_time,
             general_configuration,
             compression_options_fd,
             self.aux_pp2_2a.fd.ground_cancellaton.emphasized_forest_height,
@@ -722,18 +807,26 @@ class FD:
             self.aux_pp2_2a.fd.product_resolution,
             self.aux_pp2_2a.fd.numerical_determinant_limit,
             self.aux_pp2_2a.fd.upsampling_factor,
-            self.aux_pp2_2a.fd.ground_cancellaton.images_pair_selection,
+            images_pair_selection,
             self.aux_pp2_2a.fd.ground_cancellaton.disable_ground_cancellation_flag,
         )
 
         # lut_ads
         lut_ads = BIOMASSL2aLutAdsFD(
-            lut_dict["fnf"]["fnf"],
-            lut_dict["acm"],
-            lut_dict["number_of_averages"],
-            lut_dict["fnf_metadata"],
-            lut_dict["acm_metadata"],
-            lut_dict["number_of_averages_metadata"],
+            lut_fnf=lut_dict["fnf"]["fnf"],
+            lut_acm=lut_dict["acm"],
+            lut_number_of_averages=lut_dict["number_of_averages"],
+            lut_latitude=lut_dict["latitude"],
+            lut_longitude=lut_dict["longitude"],
+            lut_dem=lut_dict["height"],
+            lut_incidence_angle=lut_dict["incidenceAngle"],
+            lut_elevation_angle=lut_dict["elevationAngle"],
+            lut_range_dem_slope=lut_dict["rangeTerrainSlope"],
+            lut_azimuth_dem_slope=lut_dict["azimuthTerrainSlope"],
+            lut_fnf_metadata=lut_dict["fnf_metadata"],
+            lut_acm_metadata=lut_dict["acm_metadata"],
+            lut_number_of_averages_metadata=lut_dict["number_of_averages_metadata"],
+            lut_geometric_metadata=lut_dict["geometric_metadata"],
         )
 
         # Initialize FD Product
@@ -800,7 +893,7 @@ class FD:
         bps_logger.info(
             "%s total processing time = %.3f s",
             BPS_L2A_FD_PROCESSOR_NAME,
-            elapsed_time.total_seconds(),
+            elapsed_time,
         )
 
 
@@ -998,8 +1091,8 @@ def _covariance_matrix_mat2vec(matrix_in: np.ndarray) -> np.ndarray:
 
     else:
         # [3x3] case
-        matrix_out = abs(matrix_in.reshape((9))[extraction_indexes]).astype(np.float64)
-        matrix_out[angle_indexes_out] = np.angle(matrix_in.reshape((9))[angle_indexes_in]).astype(np.float64)
+        matrix_out = abs(matrix_in.reshape(9)[extraction_indexes]).astype(np.float64)
+        matrix_out[angle_indexes_out] = np.angle(matrix_in.reshape(9)[angle_indexes_in]).astype(np.float64)
 
     return matrix_out
 

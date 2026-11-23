@@ -6,12 +6,13 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 dependencies = [
-    "arepytools",
+    "arepytools>=1.9.0",
     "scipy>=1.10",
     "numpy",
     "netCDF4",
-    "bps-common==4.4.4",
-    "bps-transcoder==4.4.4",
+    "bps-common==4.6.0.dev0",
+    "bps-transcoder==4.6.0.dev0",
+    "perseo_core>=1.0.0",
 ]
 dynamic = ["version"]
 classifiers = [
@@ -20,6 +21,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",
@@ -27,7 +30,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["nox", "ruff==0.15.7"]
+dev = ["ruff==0.17.4", "pyrefly==1.4.1"]
 test = ["unittest-xml-reporting", "coverage"]
 
 [build-system]
@@ -42,3 +45,7 @@ only-include = ["bps"]
 
 [tool.hatch.build.targets.wheel]
 only-include = ["bps"]
+
+[tool.pyrefly]
+extends = "../pyrefly.toml"
+project-includes = ["**/*.py*"]

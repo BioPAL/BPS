@@ -21,9 +21,9 @@ from arepytools.io.metadata import (
     MetaDataChannel,
     SwathInfo,
 )
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.l1_processor.io.l0_mph_utils import L0MainProductHeader
 from bps.l1_processor.processor_interface.aux_pp1 import DopplerEstimationConf
+from perseo_core.timing import PreciseDateTime
 
 DEFAULT_ACQUISITION_START_TIME = PreciseDateTime.from_numeric_datetime(2020)
 

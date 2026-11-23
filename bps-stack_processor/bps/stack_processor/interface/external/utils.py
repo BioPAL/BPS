@@ -101,10 +101,7 @@ def fill_stack_cal_conf_from_aux_pps(
             calib_polarization_index = polarizations.index(aux_pps.slow_ionosphere_removal.polarization_used)
         except ValueError as ex:
             raise StackCalConf.IobConf.IobValueError(
-                "Selected calibration reference polarization {} is not available (stack pols: {})".format(
-                    aux_pps.slow_ionosphere_removal.polarization_used,
-                    [p.value for p in polarizations],
-                )
+                f"Selected calibration reference polarization {aux_pps.slow_ionosphere_removal.polarization_used} is not available (stack pols: {[p.value for p in polarizations]})"
             ) from ex
 
         iob_conf = StackCalConf.IobConf(
@@ -139,10 +136,7 @@ def fill_stack_cal_conf_from_aux_pps(
             calib_polarization_index = polarizations.index(aux_pps_msc_conf.polarization_used)
         except ValueError as ex:
             raise StackCalConf.MscConf.MscValueError(
-                "Selected calibration reference polarization {} is not available (stack pols: {})".format(
-                    aux_pps_msc_conf.polarization_used,
-                    [p.value for p in polarizations],
-                )
+                f"Selected calibration reference polarization {aux_pps_msc_conf.polarization_used} is not available (stack pols: {[p.value for p in polarizations]})"
             ) from ex
 
         msc_conf = StackCalConf.MscConf(

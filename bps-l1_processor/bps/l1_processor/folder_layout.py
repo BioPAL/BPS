@@ -81,7 +81,9 @@ class FolderLayout:
                 parc_folder.joinpath(L1_CORE_PROC_OUTPUT_FOLDER)
             )
             parc_core_processor_files[scattering_response] = L1CoreProcessorInterfaceFiles.from_base_dir(parc_folder)
-            parc_core_additional_inputs[scattering_response] = L1ParcCoreAdditionalInputFiles.from_base_dir(parc_folder)
+            parc_core_additional_inputs[scattering_response] = L1ParcCoreAdditionalInputFiles.from_base_dir(
+                base_dir.joinpath(L1_CORE_PROC_OUTPUT_FOLDER)
+            )
 
         return cls(
             bps_logger_file,

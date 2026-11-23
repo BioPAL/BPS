@@ -22,20 +22,19 @@ import os
 import tempfile
 import traceback
 
-import arepyextras.xml as xml
+from arepyextras import xml
 from arepyextras.test import DataRepository, Environment, TestSession
-from arepytools.timing.precisedatetime import PreciseDateTime
 from aux_pps_utils import initialize_aux_pps
-from bps.common import __version__
-from bps.common.bps_logger import get_version_in_logger_format
+from bps.common import BIOMASS_PROCESSOR_VERSION
 from bps.common.common import retrieve_aux_product_data_single_content
 from bps.transcoder.sarproduct.biomass_l1product_reader import BIOMASSL1ProductReader
 from bps.transcoder.sarproduct.biomass_stackproduct import REQUIRED_LUT_LAYERS
 from bps.transcoder.sarproduct.biomass_stackproduct_reader import (
     BIOMASSStackProductReader,
 )
+from perseo_core.timing import PreciseDateTime
 
-CURRENT_VERSION = get_version_in_logger_format(__version__)
+CURRENT_VERSION = BIOMASS_PROCESSOR_VERSION
 OUTPUT_DIR = "od"  # Short name to keep the paths short enough for Windows.
 WORKER_THREADS = 5
 FRAMES_INT_TEST = 3
@@ -53,7 +52,7 @@ def test_bps_sta_001_int_nominal(session: TestSession, env: Environment, data: D
     Stack Processor execution in INT phase with nominal configuration
     on data of size 11k x 900.
     """
-    aux_pps, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
+    _aux_pps, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
 
     stack_processor = env.run(
         "bps_stack_processor",
@@ -98,7 +97,7 @@ def test_bps_sta_003_int_insufficient_RAM(session: TestSession, env: Environment
     RAM is allocated by the job order..
     """
     max_ram_usage_MB = 20
-    aux_pps, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
+    _, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
     job_order = xml.Document(job_order_filename)
     job_order.set("//List_of_Tasks/Task/Amount_of_RAM/text()", max_ram_usage_MB)
 
@@ -118,7 +117,7 @@ def test_bps_sta_004_int_insufficient_disk_space(session: TestSession, env: Envi
     disk space is allocated by the job order..
     """
     max_disk_usage_MB = 15
-    aux_pps, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
+    _, job_order_filename, _ = _initialize_stack_int_nominal_test(data)
 
     job_order = xml.Document(job_order_filename)
     job_order.set("//List_of_Tasks/Task/Disk_Space/text()", max_disk_usage_MB)

@@ -19,9 +19,9 @@ from warnings import catch_warnings, simplefilter
 import numpy as np
 import numpy.typing as npt
 from arepytools.io.metadata import EPolarization, MetaDataElement, SwathInfo
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.common.io import common
+from perseo_core.timing import PreciseDateTime
 
 
 class EarthModel(Enum):
@@ -179,9 +179,9 @@ def cross_pol_merging(
 
     # The relevant LUT prefixes.
     xpol_luts = ["denoising"]
-    if any(lut_name.startswith("rfiTimeMask") for lut_name in lut_data.keys()):
+    if any(lut_name.startswith("rfiTimeMask") for lut_name in lut_data):
         xpol_luts.append("rfiTimeMask")
-    if any(lut_name.startswith("rfiFreqMask") for lut_name in lut_data.keys()):
+    if any(lut_name.startswith("rfiFreqMask") for lut_name in lut_data):
         xpol_luts.append("rfiFreqMask")
 
     # If we need to keep H/V, we need to have it and possibly we will drop V/H.

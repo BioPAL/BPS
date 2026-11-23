@@ -107,7 +107,9 @@ def analyse_raw_product(
             data_spectrum = abs_sq_fft.mean(axis=0) / normalization_factor
 
             # Resample range spectrum
-            data_spectrum = np.bincount(data_spectrum_axis_id, weights=data_spectrum, minlength=n_bins) / bin_count
+            with np.errstate(divide="ignore", invalid="ignore"):
+                data_spectrum = np.bincount(data_spectrum_axis_id, weights=data_spectrum, minlength=n_bins) / bin_count
+                data_spectrum[~np.isfinite(data_spectrum)] = 0
 
             # Equalize range spectrum
             filter_spectrum = filter_spectrum_dict[swath_info.polarization.value]

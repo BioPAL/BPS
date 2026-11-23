@@ -130,6 +130,8 @@ bps_conf_types_relevant_tags = [
     "CoregConfType",
     "CoregistrationConfType",
     "CoregistrationOutputProductsConfType",
+    "DataRefinementConfType",
+    "DATA_REFINEMENT_MODE",
     "DCCoreAlgorithmType",
     "DC_ESTIMATION_METHODS_TYPES",
     "DEM_TYPES",
@@ -141,6 +143,7 @@ bps_conf_types_relevant_tags = [
     "FOCUSING_METHOD_TYPES",
     "FinefitConfType",
     "FormatType",
+    "FullAccuracyConfType",
     "FullAccuracyPostProcessingConfType",
     "FullAccuracyPreProcessingConfType",
     "GenericInterferometerConfType",
@@ -216,7 +219,7 @@ def name_filter(relevant_names: list[str]):
 
 
 def find_first_child_by_name(parent: Et.Element, name: str) -> Et.Element | None:
-    return next((child for child in parent if child.get("name", default="") == name))
+    return next(child for child in parent if child.get("name", default="") == name)
 
 
 def restrict_generic_input_file(root: Et.Element):

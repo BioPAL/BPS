@@ -9,11 +9,11 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
-from arepytools.timing.precisedatetime import PreciseDateTime
 from bps.common import bps_logger
 from bps.transcoder.sarproduct import mph
 from bps.transcoder.sarproduct.biomass_l0product import BIOMASSL0Product
 from bps.transcoder.sarproduct.l0.product_content import L0ProductContent
+from perseo_core.timing import PreciseDateTime
 
 
 def _retrieve_xml_file(product_path: Path, content: L0ProductContent):
@@ -72,10 +72,9 @@ def read_l0_product(product_path: Path | str) -> BIOMASSL0Product:
         phenomenon_time_length = product.sensing_stop_time - product.sensing_start_time
 
     valid_time_length = None
-    if product.start_time is None or product.stop_time is None:
-        if mph_l0.valid_time:
-            product.start_time, product.stop_time = mph_l0.valid_time
-            valid_time_length = product.stop_time - product.start_time
+    if (product.start_time is None or product.stop_time is None) and mph_l0.valid_time:
+        product.start_time, product.stop_time = mph_l0.valid_time
+        valid_time_length = product.stop_time - product.start_time
 
     product.orbit_number = mph_l0.acquisition.orbit_number
     product.orbit_direction = mph_l0.acquisition.orbit_direction

@@ -11,20 +11,14 @@ from pathlib import Path
 from typing import Any, Literal
 from xml.etree import ElementTree
 
-import arepytools.io.metadata as metadata
 import numpy as np
 from arepytools.constants import LIGHT_SPEED
-from arepytools.timing.precisedatetime import PreciseDateTime
+from arepytools.io import metadata
 from bps.common import bps_logger
 from bps.common.io import common
-from bps.common.io.parsing import parse
 from bps.transcoder.auxiliaryfiles.aux_attitude import read_attitude_file
-from bps.transcoder.io import (
-    common_annotation_l1,
-    main_annotation_l1ab,
-    main_annotation_models_l1ab,
-    translate_main_annotation_l1ab,
-)
+from bps.transcoder.io import common_annotation_l1
+from bps.transcoder.io.translate_main_annotation_l1ab import read_main_annotation_l1ab
 from bps.transcoder.orbit.eoorbit import EOOrbit
 from bps.transcoder.sarproduct import l1_annotations
 from bps.transcoder.sarproduct.biomass_l1product import (
@@ -44,20 +38,9 @@ from bps.transcoder.sarproduct.sarproduct import SARProduct
 from bps.transcoder.utils.gdal_utils import read_geotiff
 from bps.transcoder.utils.product_name import parse_l1product_name
 from osgeo import gdal
+from perseo_core.timing import PreciseDateTime
 
 gdal.UseExceptions()
-
-
-def _read_main_annotation_l1ab(
-    file: Path,
-) -> main_annotation_l1ab.MainAnnotationL1ab:
-    """Read main annotation of l1ab products"""
-    main_annotation_model: main_annotation_models_l1ab.MainAnnotation = parse(
-        file.read_text(encoding="utf-8"),
-        main_annotation_models_l1ab.MainAnnotation,
-    )
-
-    return translate_main_annotation_l1ab.translate_main_annotation_l1ab(main_annotation_model)
 
 
 class BIOMASSL1ProductReader:
@@ -103,7 +86,7 @@ class BIOMASSL1ProductReader:
 
         # Populate the no data values.
         for data, nodata_val in zip(self.product.data_list, geotiff.nodata_values):
-            data[nodata_mask] = self.nodata_fill_value if self.nodata_fill_value is None else nodata_val
+            data[nodata_mask] = self.nodata_fill_value if self.nodata_fill_value is not None else nodata_val
 
     def _read_mph_file(self):
         tree = ElementTree.parse(self.product_path.joinpath(self.content.mph_file))
@@ -132,7 +115,7 @@ class BIOMASSL1ProductReader:
         """Read annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         self.product.name = os.path.basename(self.product_path)
         self.product.mission = annotation.acquisition_information.mission.value
@@ -224,9 +207,10 @@ class BIOMASSL1ProductReader:
 
             # - BurstInfo
             burst_info = metadata.BurstInfo()
+            assert isinstance(raster_info.samples_start, float)
             burst_info.add_burst(
                 raster_info.samples_start,
-                raster_info.lines_start,
+                raster_info.lines_start_date,
                 raster_info.lines,
                 burst_center_azimuth_shift_i=None,
             )
@@ -250,7 +234,7 @@ class BIOMASSL1ProductReader:
                 metadata_di.processing_center = ""
                 metadata_di.processing_date = PreciseDateTime.now()
                 metadata_di.processing_software = ""
-                metadata_di.side_looking = "LEFT"
+                metadata_di.side_looking = metadata.ESideLooking.left_looking
                 # metadata_di.external_calibration_factor = 1.0
                 # metadata_di.data_take_id = "1"
                 self.product.dataset_info.append(metadata_di)
@@ -263,9 +247,9 @@ class BIOMASSL1ProductReader:
             swath_info = metadata.SwathInfo(swath, polarization, acquisition_prf)
             swath_info.rank = annotation.instrument_parameters.rank
             swath_info.range_delay_bias = 0
-            swath_info.acquisition_start_time = list(
-                annotation.instrument_parameters.first_line_sensing_time_list.values()
-            )[0]
+            swath_info.acquisition_start_time = next(
+                iter(annotation.instrument_parameters.first_line_sensing_time_list.values())
+            )
 
             swath_info.azimuth_steering_rate_reference_time = 0
             swath_info.azimuth_steering_rate_pol = (0, 0, 0)
@@ -436,7 +420,7 @@ class BIOMASSL1ProductReader:
         """Read ionosphere correction from main annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         return annotation.ionosphere_correction
 
@@ -444,7 +428,7 @@ class BIOMASSL1ProductReader:
         """Read processing parameters from main annotation file"""
         main_annotation_path = Path(self.product_path.joinpath(self.content.main_annotation))
 
-        annotation = _read_main_annotation_l1ab(main_annotation_path)
+        annotation = read_main_annotation_l1ab(main_annotation_path)
 
         rg_params = annotation.processing_parameters.range_processing_parameters
         az_params = annotation.processing_parameters.azimuth_processing_parameters

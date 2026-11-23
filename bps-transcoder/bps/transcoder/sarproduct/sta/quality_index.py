@@ -13,6 +13,7 @@ L1c Quality Index
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import ClassVar
 
 from bps.transcoder.utils.quality_index import QualityIndex
 
@@ -46,7 +47,7 @@ class StackQualityIndex(QualityIndex):
     l1a_calibration_reference_source_product_is_invalid: bool = False
     l1a_stack_contains_other_invalid_products: bool = False
 
-    _bit_map = {
+    _bit_map: ClassVar[dict[str, int]] = {
         # Input control's bit (1).
         "l1a_source_product_is_invalid": 0,
         # Preprocessor's bits (2-5).
