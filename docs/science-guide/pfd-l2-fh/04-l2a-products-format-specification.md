@@ -128,7 +128,7 @@ This element or block of elements is optional
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
 \textcolor[HTML]{0070C0}{bio:EarthObservation }\textit{Root element of metadata representation tailored for BIOMASS SAR products}
     \textcolor[HTML]{0070C0}{om:phenomenonTime} \textit{Time coverage of the product}
         \textcolor[HTML]{0070C0}{gml:TimePeriod} \textit{Time coverage of the product as a period}
@@ -211,7 +211,7 @@ This element or block of elements is optional
                         \textcolor[HTML]{C00000}{\textbf{eop:processingMode}} \textbf{File Class}
                         \textcolor[HTML]{C00000}{\textbf{bio:sourceProduct}} \textbf{BIOMASS source product identifier}
             \textcolor[HTML]{C00000}{\textbf{bio:refDoc}} \textbf{Reference document}
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 </div>
@@ -880,7 +880,7 @@ The `acquisitionListType` is composed by 2 to 8 entries, where each entry is an 
 | *`referenceImage`* | *Flag to indicate if this is the reference image or not.* | *bool* | *1* |
 | *`averageWavenumber`* | *Optional Average Wavenumber, it is not used in FH (only in L2A FD)* | *float* | *0* |
 | FolderName | Folder name which univocally identifies an acquisition of the stack. | `xsd:string` | 1 |
-| `staQuality` | <u>Folder name which univocally identifies an acquisition of the stack, as defined in [RD10].</u> | <u>`staQualityType`</u> | 1 |
+| `staQuality` | <u>Folder name which univocally identifies an acquisition of the stack, as defined in </u>{rd}`10`<u>.</u> | <u>`staQualityType`</u> | 1 |
 
 :::
 
@@ -1323,7 +1323,7 @@ The content of L2a LUT ADS is reported hereafter, where:
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         \textbf{mission}: “BIOMASS”
         \textbf{t}\textbf{ileID}\textit{: }\textit{[string] json encoded list of DGG geographical tile identifiers (NxxEyyy)}
         \textbf{b}\textbf{asinID}: \textit{[string] json encoded list of }\textit{DGG Basin identifier}\textit{s}\textit{ }
@@ -1344,7 +1344,7 @@ The content of L2a LUT ADS is reported hereafter, where:
         \textbf{platform}\textbf{_h}\textbf{eading}: \textit{[}\textit{float32}\textit{] Platform heading relative to North, deg}
         \textbf{forest}\textbf{_c}\textbf{overage}\textbf{_p}\textbf{ercentage}: \textit{[}\textit{float32}\textit{] }\textit{Forest coverage of the input STA products, compute as a percentage of all the pixels in the }                \textit{STA footprint}
          \textbf{formatVersion }\textit{[}\textit{str}\textit{]}\textit{ }\textit{Version of the product}
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 <u>LUT ADS Dimensions / Coordinate variables</u>:
@@ -1363,7 +1363,7 @@ The content of L2a LUT ADS is reported hereafter, where:
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Name: \textbf{Latitude}
                 size: \textit{[int] size}
                 type: dtype(float32)
@@ -1374,14 +1374,14 @@ The content of L2a LUT ADS is reported hereafter, where:
                 type: dtype(float32)
                 units: deg
                 description: FNF LUT longitude axis
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 <u>LUT ADS group of variables</u>:
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b>FNF</b>
-        FNF group contents:
+        <u>FNF group contents</u>:
                 Name: <b>FNF</b>
                         dimensions: (Longitude, Latitude)
                         shape: <i>([int] x shape, [int] y shape)</i>
@@ -1424,7 +1424,7 @@ The content of L2a LUT ADS is reported hereafter, where:
                         type: &lt;class str&gt;
                         description: Geodetic reference frame
         Group Name: <b> </b><b>height</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>height</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1472,7 +1472,7 @@ The content of L2a LUT ADS is reported hereafter, where:
                         type: unsignedByte
                         description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
         Group Name: <b> </b><b>latitude</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>latitude</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1482,9 +1482,9 @@ The content of L2a LUT ADS is reported hereafter, where:
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{FNF}
-        FNF group contents:
+        \underline{FNF group contents}:
                 Name: \textbf{FNF}
                         dimensions: (Longitude, Latitude)
                         shape: \textit{([int] x shape, [int] y shape)}
@@ -1527,7 +1527,7 @@ The content of L2a LUT ADS is reported hereafter, where:
                         type: <class str>
                         description: Geodetic reference frame
         Group Name: \textbf{ }\textbf{height}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{height}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
@@ -1575,21 +1575,21 @@ The content of L2a LUT ADS is reported hereafter, where:
                         type: unsignedByte
                         description: Power of ten of the smallest decimal place in the data that is a reliable value, adopted to the data during ZLIB compression.
         Group Name: \textbf{ }\textbf{latitude}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{latitude}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the latitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg].
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b> </b><b>longitude</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>longitude</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1599,23 +1599,23 @@ The remaining variables, which are identical across all geometric LUTs, are omit
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{ }\textbf{longitude}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{longitude}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the longitude coordinates of each (sub-sampled) pixel. Values are expressed in [deg]
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b> </b><b>incidenceAngle</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>incidenceAngle</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1625,23 +1625,23 @@ The remaining variables, which are identical across all geometric LUTs, are omit
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{ }\textbf{incidenceAngle}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{incidenceAngle}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the incidence angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b> </b><b>elevationAngle</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>elevationAngle</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1651,23 +1651,23 @@ The remaining variables, which are identical across all geometric LUTs, are omit
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{ }\textbf{elevationAngle}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{elevationAngle}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the elevation angle of each (sub-sampled) pixel. Values are computed during L1 processing considering an average height. Values are expressed in [deg].
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b> </b><b>rangeTerrainSlope</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>rangeTerrainSlope</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1677,23 +1677,23 @@ The remaining variables, which are identical across all geometric LUTs, are omit
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{ }\textbf{rangeTerrainSlope}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{rangeTerrainSlope}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along range direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).
 
 ```{raw} html
 <div class="highlight-text notranslate"><div class="highlight"><pre class="atbd-text-tree">        Group Name: <b> </b><b>azimuthTerrainSlope</b>
-        height group contents:
+        <u>height</u><u> group contents:</u>
                 Name: <b> </b><b>azimuthTerrainSlope</b>
                         dimensions: (Longitude, Latitude)
                         shape:<i> ([int] x shape, [int] y shape)</i>
@@ -1703,16 +1703,16 @@ The remaining variables, which are identical across all geometric LUTs, are omit
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
         Group Name: \textbf{ }\textbf{azimuthTerrainSlope}
-        height group contents:
+        \underline{height}\underline{ group contents:}
                 Name: \textbf{ }\textbf{azimuthTerrainSlope}
                         dimensions: (Longitude, Latitude)
                         shape:\textit{ ([int] x shape, [int] y shape)}
                         type: dtype(float32)
                         description: Two-dimensional map covering the geocoded image and describing the local DEM slopes along azimuth direction computed using the Digital Elevation Model (DEM). Values are expressed in [deg].
     units: deg
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The remaining variables, which are identical across all geometric LUTs, are omitted from the detailed description (`firstSample`, `firstLine`, `samplesInterval`, `pixelType`, `noDataValue`, projection, `coordinateReferenceSystem`, `geodeticReferenceFrame`, least\_significant\_digit).

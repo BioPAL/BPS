@@ -40,13 +40,13 @@ Instead, it has a new field “`agbTileStatus`” (see the “l2b only” commen
 ```
 
 ```{raw} latex
-\begin{Verbatim}[commandchars=\\\{\},fontsize=\small]
+\begin{sphinxVerbatim}[commandchars=\\\{\},fontsize=\scriptsize]
     \textcolor[HTML]{0070C0}{eop:metaDataProperty }\textit{Observation metadata}
         \textcolor[HTML]{0070C0}{bio:EarthObservationMetaData}
             […] (see 4.1)
             \textcolor[HTML]{C00000}{\textbf{bio:agbTileStatus}}\textcolor[HTML]{C00000}{\textbf{ }}\textbf{Flag raised when a new iteration is needed (l2b only)}
             \textcolor[HTML]{C00000}{\textbf{bio:agbTile}}\textcolor[HTML]{C00000}{\textbf{Iteration }}\textbf{iteration index (integer value, starting form 1)}\textbf{ (l2b only)}
-\end{Verbatim}
+\end{sphinxVerbatim}
 ```
 
 The field is a string, with following possible values ‘Complete’,, “NotComplete’, ‘Partial’ {ad}`10`
