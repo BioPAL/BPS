@@ -112,9 +112,43 @@
   .bd-article-container {
     overflow: visible !important;
   }
-  table {
-    max-width: 100%;
-    table-layout: auto;
+  /* wide tables fit the page: no clipping, long words wrap, smaller type */
+  table,
+  table.table,
+  table.docutils {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    font-size: 8.5pt;
+  }
+  table th,
+  table td {
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: normal;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 2pt 4pt;
+  }
+  table code,
+  table pre {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    font-size: 0.9em;
+  }
+  table img,
+  table svg {
+    max-width: 100% !important;
+  }
+
+  /* diagrams drawn for the dark theme (light strokes) read on white paper */
+  html[data-theme="dark"] .mermaid svg {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* a Mermaid block not yet rendered is only its source text: never print it */
+  .mermaid:not([data-processed="true"]) {
+    display: none !important;
   }
 
   /* wide tables and code: wrap rather than run off the page */
