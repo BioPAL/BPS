@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS
 # SPDX-License-Identifier: Apache-2.0
 """Make the converted ATBD/PFD pages carry their content into LaTeX/PDF builds.
 
