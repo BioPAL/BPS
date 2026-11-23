@@ -1921,13 +1921,15 @@ html[data-theme="dark"] .bps-chapters__time {
   white-space: nowrap;
 }
 
-/* An inline formula wider than the text column scrolls in its own box instead
-   of making the whole article scroll (L1 SAR 3.2.4, review W5-1). */
-.bd-content mjx-container[jax="CHTML"]:not([display="true"]) {
+/* An inline formula wider than the text column (marked by atbd-wide-math.js
+   after MathJax) scrolls in its own box instead of making the whole article
+   scroll; formulas that only overhang a few pixels keep the visible overflow
+   set above (L1 SAR 3.2.4, review W5-1/W2-3). */
+.bd-content span.math.atbd-wide-math {
   display: inline-block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   vertical-align: middle;
 }
 

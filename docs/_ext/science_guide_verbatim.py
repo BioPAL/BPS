@@ -126,4 +126,5 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_transform(NoSmartQuotes)
     app.add_post_transform(IdentifierBreaks)
     app.add_post_transform(KeepLinkText)
+    app.add_js_file("atbd-wide-math.js")
     return {"version": "1.0", "parallel_read_safe": True, "parallel_write_safe": True}
