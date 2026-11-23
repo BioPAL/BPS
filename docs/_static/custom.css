@@ -1939,3 +1939,14 @@ html[data-theme="dark"] .bps-chapters__time {
   font-size: 0.85em;
   color: var(--pst-color-text-muted);
 }
+
+/* Coloured typed trees (PFD product header): the dark red and blue of the
+   source are lightened in the dark theme to stay readable (review W3-16). */
+html[data-theme="dark"] .bd-content pre.atbd-text-tree span[style*="C00000"],
+html[data-theme="dark"] .bd-content p span[style*="C00000"] {
+  color: #ff7b7b !important;
+}
+html[data-theme="dark"] .bd-content pre.atbd-text-tree span[style*="0070C0"],
+html[data-theme="dark"] .bd-content p span[style*="0070C0"] {
+  color: #6cb6ff !important;
+}
