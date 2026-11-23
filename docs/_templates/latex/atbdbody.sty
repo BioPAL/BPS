@@ -1,0 +1,307 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Body of the Science Guide PDF exports: fonts, headings, header and footer,
+% body spacing, notes.
+% Loaded by atbdlayout.sty (colours and document metadata are defined there).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdbody}[2026/11/23 BPS Science Guide PDF layout]
+
+% ---------------------------------------------------------------------------
+% Fonts: Arial in the original documents. Liberation Sans has the same metrics
+% (same line breaks and pagination); the CI and the LaTeX image install it
+% (fonts-liberation). Fonts are looked up by file name, which does not start
+% a METAFONT run when they are missing. IBM Plex Sans (shipped with TeX Live)
+% is the fallback. Characters missing from the text font (math italic
+% letters, some symbols) are taken from DejaVu Sans.
+% ---------------------------------------------------------------------------
+\newcommand\atbd@setfont[2]{% #1 = file stem, #2 = extra fontspec options
+  \setmainfont{#1}[#2,UprightFont=*-Regular,BoldFont=*-Bold,
+    ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]%
+  \setsansfont{#1}[#2,UprightFont=*-Regular,BoldFont=*-Bold,
+    ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]}
+\IfFontExistsTF{LiberationSans-Regular.ttf}{%
+  \atbd@setfont{LiberationSans}{Extension=.ttf}}{%
+\IfFontExistsTF{IBMPlexSans-Regular.otf}{%
+  % IBM Plex Sans is a little wider than Arial: scale it to keep the pagination.
+  \atbd@setfont{IBMPlexSans}{Extension=.otf,Scale=0.95}}{%
+  \setmainfont{DejaVu Sans}[Scale=0.9]\setsansfont{DejaVu Sans}[Scale=0.9]}}
+% Code: Liberation Mono has the metrics of Courier New (the code font of the
+% originals); DejaVu Sans Mono is the fallback.
+\IfFontExistsTF{LiberationMono-Regular.ttf}{%
+  \setmonofont{LiberationMono}[Extension=.ttf,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]}{%
+  \setmonofont{DejaVu Sans Mono}[Scale=0.85]}
+% Line spacing of the originals (Word "multiple 1.15": 15.8 pt at 11 pt).
+\linespread{1.164}
+% Sizes of the originals are PDF points (bp): 11 bp text, 15.83 bp leading.
+\renewcommand\normalsize{%
+  \@setfontsize\normalsize{11bp}{13.6bp}%
+  \abovedisplayskip 11\p@ \@plus3\p@ \@minus6\p@
+  \abovedisplayshortskip \z@ \@plus3\p@
+  \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+  \belowdisplayskip \abovedisplayskip
+  \let\@listi\@listI}
+\normalsize
+% Word does not hyphenate: no hyphenation, spaces stretch instead.
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+\tolerance=2000 \emergencystretch=2em
+\newfontfamily\atbdfallbackfont{DejaVu Sans}[Scale=0.92]
+\IfFontExistsTF{DejaVuMathTeXGyre.ttf}{%
+  \newfontfamily\atbdmathletterfont{DejaVuMathTeXGyre.ttf}[Scale=0.92]}{%
+  \let\atbdmathletterfont\atbdfallbackfont}
+
+% Route symbol blocks to the fallback font (XeTeX inter-character tokens).
+\ifdefined\XeTeXinterchartokenstate
+  \newXeTeXintercharclass\atbdfallbackclass
+  \newXeTeXintercharclass\atbdmathletterclass
+  \def\atbd@fallbackrange#1#2{%
+    \count@=#1\relax
+    \loop
+      \XeTeXcharclass\count@=\atbdfallbackclass
+    \ifnum\count@<#2\relax\advance\count@\@ne\repeat}
+  \atbd@fallbackrange{"2070}{"209F}% super/subscripts
+  \atbd@fallbackrange{"2190}{"22FF}% arrows, mathematical operators
+  \atbd@fallbackrange{"2600}{"26FF}% miscellaneous symbols
+  \XeTeXcharclass"03D1=\atbdfallbackclass % theta symbol
+  \XeTeXcharclass"2011=\atbdfallbackclass % non-breaking hyphen
+  \XeTeXcharclass"FFFD=\atbdfallbackclass
+  \count@="1D400\relax
+  \loop
+    \XeTeXcharclass\count@=\atbdmathletterclass
+  \ifnum\count@<"1D7FF\relax\advance\count@\@ne\repeat
+  \XeTeXinterchartoks 0 \atbdfallbackclass = {\begingroup\atbdfallbackfont}
+  \XeTeXinterchartoks 4095 \atbdfallbackclass = {\begingroup\atbdfallbackfont}
+  \XeTeXinterchartoks \atbdfallbackclass 0 = {\endgroup}
+  \XeTeXinterchartoks \atbdfallbackclass 4095 = {\endgroup}
+  \XeTeXinterchartoks 0 \atbdmathletterclass = {\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks 4095 \atbdmathletterclass = {\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks \atbdmathletterclass 0 = {\endgroup}
+  \XeTeXinterchartoks \atbdmathletterclass 4095 = {\endgroup}
+  \XeTeXinterchartoks \atbdfallbackclass \atbdmathletterclass = {\endgroup\begingroup\atbdmathletterfont}
+  \XeTeXinterchartoks \atbdmathletterclass \atbdfallbackclass = {\endgroup\begingroup\atbdfallbackfont}
+  \AtBeginDocument{\XeTeXinterchartokenstate=1\relax}
+\fi
+
+% ---------------------------------------------------------------------------
+% Headings: numbers come from the source titles ("1. Introduction",
+% "1.1 Context"), so LaTeX numbering is switched off. Headings hang 1.25 cm
+% into the left margin, as in the original where the body text is indented.
+% ---------------------------------------------------------------------------
+
+% Number of a heading (E-12): the originals print "2.3." (L1 SAR: "2.3"), then
+% a tab to a fixed stop (measured on the originals, from the heading's left
+% edge: 36.1 / 45.4 / 51.1 bp), where the source titles have "2.3 Title"
+% with a single space. The title text of the page is rewritten here, in
+% the PDF only; the table of contents does the same (atbdcover.sty).
+\newif\ifatbd@headnodot
+\ifdefined\atbdtocnodot\atbd@headnodottrue\fi
+\ExplSyntaxOn
+\seq_new:N \l__atbd_head_seq
+\tl_new:N \l__atbd_headnum_tl
+\tl_new:N \l__atbd_headtext_tl
+\int_new:N \l__atbd_headdepth_int
+\dim_new:N \l__atbd_headstop_dim
+\box_new:N \l__atbd_head_box
+\cs_new_protected:Npn \atbd@headtitle #1
+  {
+    \regex_extract_once:nnNTF
+      { \A ( [0-9]+ (?: \. [0-9]+ )* ) \.? \x{20} (.*) \Z } {#1} \l__atbd_head_seq
+      {
+        \seq_pop_left:NN \l__atbd_head_seq \l_tmpa_tl
+        \seq_pop_left:NN \l__atbd_head_seq \l__atbd_headnum_tl
+        \seq_pop_left:NN \l__atbd_head_seq \l__atbd_headtext_tl
+        \regex_count:nVN { \. } \l__atbd_headnum_tl \l__atbd_headdepth_int
+        \int_incr:N \l__atbd_headdepth_int
+        \ifatbd@headnodot \else \tl_put_right:Nn \l__atbd_headnum_tl { . } \fi
+        \tl_if_in:NnTF \atbdcode { PFD }
+          { \int_case:nnF { \l__atbd_headdepth_int }
+              { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                {2}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                {3}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } } }
+              { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } } }
+          { \ifatbd@headnodot
+              \int_case:nnF { \l__atbd_headdepth_int }
+                { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {2}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } }
+                  {3}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } } }
+                { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } }
+            \else
+              \int_case:nnF { \l__atbd_headdepth_int }
+                { {1}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {2}{ \dim_set:Nn \l__atbd_headstop_dim { 36.1bp } }
+                  {3}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } }
+                  {4}{ \dim_set:Nn \l__atbd_headstop_dim { 45.4bp } } }
+                { \dim_set:Nn \l__atbd_headstop_dim { 51.1bp } }
+            \fi }
+        \hbox_set:Nn \l__atbd_head_box { \l__atbd_headnum_tl }
+        \dim_set:Nn \l__atbd_headstop_dim
+          { \dim_max:nn { \l__atbd_headstop_dim } { \box_wd:N \l__atbd_head_box + 0.9bp } }
+        \hbox_to_wd:nn { \l__atbd_headstop_dim } { \box_use:N \l__atbd_head_box \hfil }
+        \l__atbd_headtext_tl
+      }
+      { #1 }
+  }
+\ExplSyntaxOff
+
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{3}
+\newlength\atbdheadindent
+\setlength\atbdheadindent{1.25cm}
+
+\titleformat{\chapter}[block]
+  {\color{atbdblue}\fontsize{24bp}{28bp}\selectfont\bfseries}{}{0pt}{\atbd@headtitle}
+\titlespacing*{\chapter}{-\atbdheadindent}{-22.9bp}{18.4bp}
+\titleformat{\section}[block]
+  {\color{atbdblue}\fontsize{16bp}{19bp}\selectfont}{}{0pt}{\atbd@headtitle}
+\titlespacing*{\section}{-\atbdheadindent}{20bp}{13.4bp}
+\titleformat{\subsection}[block]
+  {\color{atbdblue}\fontsize{14bp}{17bp}\selectfont}{}{0pt}{\atbd@headtitle}
+\titlespacing*{\subsection}{-\atbdheadindent}{11.3bp}{11.8bp}
+\titleformat{\subsubsection}[block]
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{\atbd@headtitle}
+\titlespacing*{\subsubsection}{-\atbdheadindent}{13bp}{10.1bp}
+\titleformat{\paragraph}[block]
+  {\color{atbdblue}\fontsize{12bp}{14bp}\selectfont}{}{0pt}{\atbd@headtitle}
+\titlespacing*{\paragraph}{-\atbdheadindent}{13bp}{10.1bp}
+\titleformat{\subparagraph}[block]
+  {\color{atbdblue}\normalsize\itshape}{}{0pt}{}
+\titlespacing*{\subparagraph}{-\atbdheadindent}{8pt}{4pt}
+
+
+% ---------------------------------------------------------------------------
+% Header and footer, placed at the absolute positions measured on the
+% originals (points from the top left corner of the A4 page). They are drawn
+% on every page after the cover, whose \atbdmaketitle ends with a
+% \clearpage: the flag is raised and the page counter is started at 1 once
+% that page is out (page 2 of the PDF is page "1", Arabic numerals only).
+% ---------------------------------------------------------------------------
+\RequirePackage{eso-pic}
+\newif\ifatbd@decor
+\providecommand\atbdheaderdate{\atbddate}
+\providecommand\atbdsup[1]{\raisebox{3.1bp}{\fontsize{6bp}{7bp}\selectfont #1}}
+% Coordinates are PDF points (bp); x and y are measured from the top left
+% corner, y being the baseline of the content.
+\newcommand\atbd@atpoint[3]{%
+  \put(\strip@pt\dimexpr#1bp\relax,\strip@pt\dimexpr\paperheight-#2bp\relax){\rlap{#3}}}
+
+\newcommand\atbdheaderbox{%
+  {\fontsize{9bp}{10bp}\selectfont\color{atbdgrey}%
+   \arrayrulecolor{atbdbox}\setlength\arrayrulewidth{0.5bp}%
+   \setlength\tabcolsep{2.7bp}\renewcommand\arraystretch{1}%
+   \newcommand\atbd@strut{\rule[-4.8bp]{0bp}{16bp}}%
+   \begin{tabular}[b]{|p{178.3bp}|p{36.55bp}|p{71.15bp}|}
+     \hline
+     \multicolumn{3}{|p{297.8bp}|}{\atbd@strut\atbdtitle}\\
+     \hline
+     \atbd@strut\atbdcode & \atbd@strut\atbdissue & \atbd@strut\atbdheaderdate\\
+     \hline
+   \end{tabular}}}
+% Typeset once: a tabular built inside the shipout can break a tabulary
+% being measured on the same page.
+\newsavebox\atbd@headerboxsaved
+\AtBeginDocument{\sbox\atbd@headerboxsaved{\atbdheaderbox}}
+
+\newcommand\atbd@decoration{%
+  \ifatbd@decor
+    \setlength\unitlength{1pt}%
+    % header: logo 110 x 39 pt, reference box, yellow rule
+    \atbd@atpoint{57.7}{51.3}{\IfFileExists{Aresys_doc_header.png}{%
+      \includegraphics[width=110bp,height=39bp]{Aresys_doc_header.png}}{}}%
+    \atbd@atpoint{234.6}{47.8}{\usebox\atbd@headerboxsaved}%
+    \atbd@atpoint{57.8}{56.1}{\color{atbdrule}\rule{480.7bp}{1bp}}%
+    % footer: yellow rule, short notice on the left, page number centred
+    \atbd@atpoint{57.7}{765}{\color{atbdrule}\rule{480.7bp}{1bp}}%
+    \atbd@atpoint{57.7}{786}{\color{atbdgrey}\fontsize{7bp}{8bp}\selectfont
+      Web export \textendash{} not the approved ESA document}%
+    \atbd@atpoint{0}{786}{\hbox to\paperwidth{\hss\color{atbdnavy}%
+      \fontsize{11bp}{13bp}\selectfont\thepage\hss}}%
+  \fi}
+\AddToShipoutPictureBG{\atbd@decoration}
+
+\newcommand\atbd@headfoot{%
+  \fancyhf{}%
+  \renewcommand\headrulewidth{0pt}%
+  \renewcommand\footrulewidth{0pt}}
+% Sphinx switches between "normal" and "plain" (chapter openings): both are
+% empty, the decoration above does the work.
+\fancypagestyle{normal}{\atbd@headfoot}
+\fancypagestyle{plain}{\atbd@headfoot}
+
+% Numbering (D-pdf-2): the cover has no number; the page after it is "1".
+\AtBeginDocument{\pagenumbering{gobble}%
+  \apptocmd\atbdmaketitle{\atbd@decortrue\pagenumbering{arabic}}{}{}}
+
+% ---------------------------------------------------------------------------
+% Text height. conf.py asks geometry for height=684.7bp, but Sphinx has already
+% fixed the bottom margin, so geometry drops it and the text ran down to
+% y = 769.8 bp, through the yellow footer rule (y = 764.5). The body of the
+% originals ends at y = 758: set the height here (after geometry) so that the
+% bottom of the last line stays clear of the rule.
+% ---------------------------------------------------------------------------
+\newdimen\atbd@bodybottom
+\atbd@bodybottom=757.6bp
+\AtBeginDocument{%
+  \setlength\textheight{\dimexpr\atbd@bodybottom-1in-\voffset-\topmargin-\headheight-\headsep\relax}%
+  \@colht\textheight \@colroom\textheight \vsize\textheight}
+
+% ---------------------------------------------------------------------------
+% Cross-references (E-15): [RD10], [AD1], "Section 3.3.4", "Fig.12" are black
+% and upright in the originals. They stay links, without colour or frame
+% (colorlinks, set by Sphinx from these colours); external URLs are blue as
+% in the originals (0000FF).
+% ---------------------------------------------------------------------------
+\definecolor{InnerLinkColor}{rgb}{0,0,0}
+\definecolor{OuterLinkColor}{HTML}{0000FF}
+\protected\def\sphinxcrossref#1{#1}
+\AtBeginDocument{\hypersetup{linkcolor=black,citecolor=black,filecolor=black,
+  urlcolor=OuterLinkColor,linkbordercolor={0 0 0},citebordercolor={0 0 0}}}
+
+% ---------------------------------------------------------------------------
+% Body spacing: Word paragraphs of the originals (6 pt after), compact lists
+% and displayed equations.
+% ---------------------------------------------------------------------------
+% Word "6 pt after" of the originals between paragraphs (E-14).
+\setlength\parskip{6bp plus 0.5bp}
+% Lists (E-13): bullet at 18 bp from the text edge (x = 110 in the originals)
+% and text at 36 bp (x = 128); level 2 "o" 18 bp further in, text 36 bp in the
+% parent. \makelabel puts the right edge of the label at leftmargin - labelsep:
+% labelsep = 36 bp - 18 bp - width of the bullet (3.85 bp; "o" 6.62 bp).
+\setlength\leftmargini{36bp}
+\setlength\leftmarginii{36bp}
+\setlength\leftmarginiii{36bp}
+\setlength\leftmarginiv{36bp}
+\renewcommand\labelitemi{\textbullet}
+\renewcommand\labelitemii{\texttt{o}}
+\renewcommand\labelitemiii{\textbullet}
+\renewcommand\labelitemiv{\textbullet}
+\def\@listi{\leftmargin\leftmargini \labelsep 14.15bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 0pt plus 1pt\parsep\z@\itemsep 0.7bp}
+\let\@listI\@listi
+\def\@listii{\leftmargin\leftmarginii \labelsep 11.4bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 1pt\parsep\z@\itemsep\z@}
+\def\@listiii{\leftmargin\leftmarginiii \labelsep 11.4bp \labelwidth\dimexpr\leftmargin-\labelsep\relax
+  \topsep 1pt\parsep\z@\itemsep\z@}
+\AtBeginDocument{%
+  \setlength\abovedisplayskip{8pt plus 2pt}%
+  \setlength\belowdisplayskip{8pt plus 2pt}%
+  \setlength\abovedisplayshortskip{2pt plus 1pt}%
+  \setlength\belowdisplayshortskip{4pt plus 1pt}}
+
+% ---------------------------------------------------------------------------
+% Notes: italic "NOTE: ..." paragraphs as in the originals (no frame). The
+% other admonitions keep the Sphinx boxes.
+% ---------------------------------------------------------------------------
+\def\atbd@notename{note}
+\newif\ifatbd@plainnote
+\let\atbd@admonition\sphinxadmonition
+\let\atbd@endadmonition\endsphinxadmonition
+\renewenvironment{sphinxadmonition}[2]{%
+  \def\atbd@tmp{#1}%
+  \ifx\atbd@tmp\atbd@notename
+    \atbd@plainnotetrue\par\addvspace{4pt}\itshape
+    \everypar{\everypar{}NOTE:\ }%
+  \else\atbd@plainnotefalse\atbd@admonition{#1}{#2}\fi}
+  {\ifatbd@plainnote\par\addvspace{4pt}\else\atbd@endadmonition\fi}
+
+\endinput

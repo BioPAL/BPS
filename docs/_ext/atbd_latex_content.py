@@ -37,6 +37,7 @@ from __future__ import annotations
 import html
 import math
 import os
+import json
 import re
 import struct
 import zlib
@@ -71,6 +72,10 @@ _MERMAID_FALLBACK_PT = 4.0
 # top-to-bottom flowchart of the Science Guide) under _MERMAID_MIN_PT may take
 # a page of its own, its caption included.
 _MERMAID_SHARE = 0.8
+# A diagram whose text prints below _LANDSCAPE_BELOW_PT (and gains 15 % or more)
+# goes on a landscape page, at most _LANDSCAPE_SHARE of its height.
+_LANDSCAPE_BELOW_PT = 6.0
+_LANDSCAPE_SHARE = 0.8
 _MERMAID_TALL_SHARE = 0.95
 # "direction LR" (XSD class diagrams) and "flowchart LR" / "graph LR" (the
 # redrawn Science Guide figures).
@@ -95,6 +100,7 @@ _EQUATION_BODY_RE = re.compile(
     re.DOTALL,
 )
 _TAG_RE = re.compile(r"\\tag\*?\{(?P<num>[^{}]*)\}")
+_BR_RE = re.compile(r"<br\s*/?>", re.I)
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 # ``x^{'}`` is fine for MathJax but TeX wants ``\prime``; and ``{{\widehat{s}}^{'}}^2``
 # is a "Double superscript" for TeX, which unwraps a group holding a single
@@ -103,6 +109,96 @@ _PRIME_SUP_RE = re.compile(r"\^\{('+)\}")
 _PRIME_GROUP_RE = re.compile(r"(\^\{(?:\\prime)+\})\}(?=\s*[\^_])")
 # Operators the sources use without a definition (amsmath has no \argmin).
 _ARG_OP_RE = re.compile(r"\\arg(min|max)(?![A-Za-z])")
+
+
+# Content that a fixed-size delimiter would not fit (stacked material).
+_TALL_RE = re.compile(r"\\(?:d|t)?frac\b|\\(?:sum|prod|int|sqrt|binom|begin|over)\b")
+_LEFT_ANY_RE = re.compile(r"\\left(?![A-Za-z])")
+_RIGHT_ANY_RE = re.compile(r"\\right(?![A-Za-z])")
+_LEFT_BRACKET_RE = re.compile(r"\\left\s*(?=[(\[]|\\\{)")
+_RIGHT_BRACKET_RE = re.compile(r"\\right\s*(?=[)\]]|\\\})")
+
+
+def _breakable_delimiters(tex: str) -> str:
+    """``tex`` with its ``\\left( ... \\right)`` pairs as fixed-size ``\\bigl( ... \\bigr)``,
+    which TeX can break inside (after \\times, +, ...), or "" when that does not
+    apply (no pair, other delimiters such as ``\\left.``, stacked content)."""
+    lefts, rights = len(_LEFT_ANY_RE.findall(tex)), len(_RIGHT_ANY_RE.findall(tex))
+    if not lefts or _TALL_RE.search(tex):
+        return ""
+    if (len(_LEFT_BRACKET_RE.findall(tex)), len(_RIGHT_BRACKET_RE.findall(tex))) != (lefts, rights):
+        return ""
+    tex = _LEFT_BRACKET_RE.sub(r"\\bigl", tex)
+    return _RIGHT_BRACKET_RE.sub(r"\\bigr", tex)
+
+
+_ENV_RE = re.compile(r"\\(begin|end)\{")
+
+
+def _rows(tex: str) -> list[str]:
+    """Rows of an aligned body: split at the ``\\\\`` of the top level (not inside
+    a group or an environment), alignment marks (``&``) of the top level dropped."""
+    rows: list[str] = []
+    depth = envs = start = 0
+    out: list[str] = []
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        m = _ENV_RE.match(tex, i)
+        if m:
+            envs += 1 if m.group(1) == "begin" else -1
+            close = tex.find("}", m.end())
+            i = len(tex) if close < 0 else close + 1
+            continue
+        if ch == "\\" and tex.startswith("\\\\", i):
+            if depth == 0 and envs == 0:
+                out.append(tex[start:i])
+                rows.append("".join(out))
+                out = []
+                i += 2
+                start = i
+                continue
+            i += 2
+            continue
+        if ch == "\\":
+            i += 2
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+        elif ch == "&" and depth == 0 and envs == 0:
+            out.append(tex[start:i])
+            start = i + 1
+        i += 1
+    out.append(tex[start:])
+    rows.append("".join(out))
+    return [r.strip() for r in rows if r.strip()]
+
+
+def _rows_alternative(tex: str) -> str:
+    """Optional argument of ``\\atbdfitdisplay``: the rows of an aligned body, each
+    broken after its operators (a body too wide to be scaled is set that way)."""
+    rows = _rows(tex)
+    if len(rows) < 2:
+        return ""
+    return "[%s]" % "".join(
+        "\\atbdrow{%s}" % (_breakable_delimiters(r) or r) for r in rows)
+
+
+def _alternative(tex: str) -> str:
+    """Optional argument of the atbdmath.sty macros: the breakable variant
+    (fixed-size brackets, or the rows of a multi-line body)."""
+    if "&" in tex or "\\\\" in tex:
+        return _rows_alternative(tex)
+    alt = _breakable_delimiters(tex)
+    return "[{%s}]" % alt if alt else ""
+
+
+def _display_macro(body: str) -> str:
+    """Macro of atbdmath.sty that fits a displayed formula to the text width:
+    one line breaks after its operators, an alignment (``&``, ``\\\\``) is scaled."""
+    return "atbdfitdisplay" if ("&" in body or "\\\\" in body) else "atbdfitline"
 
 
 def _tex_math(text: str) -> str:
@@ -121,6 +217,9 @@ _LONG_TABLE_LITERAL = 8  # table columns are narrow
 # Break opportunities in long words of running text (WKT strings, numbers):
 # after punctuation, and inside long digit runs (high-precision constants).
 _WORD_BREAK_RE = re.compile(r"(?<=[,;:/_.\[\](=&])(?=\S)|(?<=\d{4})(?=\d)")
+# In table cells, long words also break between the words of a camelCase identifier.
+# and after the hyphens of a long compound.
+_TABLE_WORD_BREAK_RE = re.compile(_WORD_BREAK_RE.pattern + r"|(?<=[a-z])(?=[A-Z])|(?<=[a-z]-)(?=[a-z])")
 _LONG_WORD = 40
 _LONG_TABLE_WORD = 15
 # C0 control characters left by the DOCX conversion (no glyph in any font).
@@ -134,6 +233,16 @@ def _breakable_literal(text: str, engine: str, longest: int = _LONG_LITERAL) -> 
     parts = [p for p in _LITERAL_BREAK_RE.split(text) if p]
     body = r"\allowbreak{}".join(tex_escape(p, engine) for p in parts)
     return r"\sphinxcode{\sphinxupquote{%s}}" % body
+
+
+def _set_number(kind: str, number: str) -> str:
+    """LaTeX that makes the next caption of ``kind`` ("figure", "table") carry the
+    number of the original document. The counter itself is set (and not only
+    the printed number), so that a caption without a source number goes on
+    from the numbered ones instead of from the count of the export."""
+    if number.isdigit():
+        return r"\setcounter{%s}{%d}" % (kind, int(number) - 1)
+    return r"\renewcommand{\the%s}{%s}" % (kind, number)
 
 
 def _latex_label(docname: str, ident: str) -> str:
@@ -174,14 +283,83 @@ def _formatted(text: str) -> list[nodes.Node]:
 _TALL = re.compile(r"\\(?:d?frac|sum|prod|int|begin|binom|sqrt)(?![A-Za-z])")
 
 
+_LONG_INLINE_MATH = 30  # characters of TeX: shorter formulas keep their delimiters
+
+
+def _comma_breaks(tex: str) -> str:
+    """``tex`` with a break allowed after each comma of its top level (a list
+    ``yaw, pitch, roll`` wraps in a narrow cell; TeX does not break at the glue
+    of a formula)."""
+    out: list[str] = []
+    depth = 0
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        if ch == "\\":
+            out.append(tex[i:i + 2])
+            i += 2
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+        out.append(ch)
+        if ch == "," and depth == 0 and not tex[i + 1:i + 2].isdigit():
+            out.append("\\allowbreak{}")
+        i += 1
+    return "".join(out)
+
+
 def _breakable(tex: str) -> str:
     """A formula of a table cell without growing delimiters when nothing tall
     needs them: TeX cannot break a line inside ``\\left[ … \\right]``, so a
     long ``[N_pol × N_pol × …]`` overflowed its cell (FH p. 30)."""
-    if _TALL.search(tex):
-        return tex
-    return re.sub(r"\\(?:left|right)(?![A-Za-z])\s*(\\[{}|]|\\[A-Za-z]+|[.\[\]()|])",
-                  lambda m: "" if m.group(1) == "." else m.group(1), tex)
+    if not _TALL.search(tex):
+        tex = re.sub(r"\\(?:left|right)(?![A-Za-z])\s*(\\[{}|]|\\[A-Za-z]+|[.\[\]()|])",
+                     lambda m: "" if m.group(1) == "." else m.group(1), tex)
+    return _comma_breaks(tex)
+
+
+_MATH_BREAK_RE = re.compile(r"(?<=,)|(?<=[=+\-])|(?<=\\times)|(?<=\\cdot)|(?<=\\ )")
+
+
+def _math_atom(tex: str) -> float:
+    """Width, in characters (half an em), of the longest piece of a formula that
+    cannot break (between its commas and operators): letters and digits of the
+    first level 1.1, of the scripts 0.75, of the second level 0.55."""
+    best = width = 0.0
+    depth = 0
+    i = 0
+    while i < len(tex):
+        ch = tex[i]
+        if ch == "\\":
+            m = re.match(r"\\([A-Za-z]+|.)", tex[i:])
+            name = m.group(1)
+            i += len(m.group(0))
+            if name in ("times", "cdot", " "):
+                width += 0.9 * (0.75 ** min(depth, 2))
+                if depth == 0:
+                    best, width = max(best, width), 0.0
+                continue
+            if name in ("left", "right", "bigl", "bigr", "mathrm", "mathit",
+                        "text", "operatorname", "frac", "mathbf", "allowbreak"):
+                continue
+            width += 1.1 * (0.75 ** min(depth, 2))
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth = max(0, depth - 1)
+        elif ch in "^_":
+            pass
+        elif ch == " ":
+            pass
+        else:
+            width += (0.55 if ch in "[](),.;" else 1.1) * (0.75 ** min(depth, 2))
+            if ch in ",=+-" and depth == 0:
+                best, width = max(best, width), 0.0
+        i += 1
+    return min(13.0, 1.1 * max(best, width))
 
 
 def _caption_inlines(fragment: str) -> list[nodes.Node]:
@@ -230,10 +408,21 @@ def _header_only(table: nodes.table) -> None:
         tgroup.replace(thead, tbody)
 
 
-# Inputs / Outputs tables of the ATBDs (Symbol | Name | Origin | Size |
-# Variability | Default | Description): column widths of the originals
-# (equal columns; a wider Description when the table uses the indent).
-_IO_TABLE_WIDTHS = {False: (1, 1, 1, 1, 1, 1, 1), True: (13, 14, 13, 13, 13, 13, 19)}
+# Advance widths (1/1000 em) of Liberation Sans Regular and Bold for ASCII 32..126
+# (metrics of Arial, the font of the table text of the originals).
+_SANS_WIDTHS = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584]
+_SANS_BOLD_WIDTHS = [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,556,556,778,556,556,500,389,280,389,584]
+# Padding of the table cells (\tabcolsep, atbdfloats.sty).
+_TABCOLSEP_PT = 5.4
+# A "character" of the column budgets is half an em of the table font.
+_CHAR_EM = 0.5
+
+
+def _wlen(word: str, bold: bool = False) -> float:
+    """Width of ``word`` in the table font, in characters (half an em)."""
+    widths = _SANS_BOLD_WIDTHS if bold else _SANS_WIDTHS
+    total = sum(widths[ord(c) - 32] if 32 <= ord(c) < 127 else 600 for c in word)
+    return total / 1000.0 / _CHAR_EM
 
 
 def _header_texts(tgroup: nodes.tgroup) -> list[str]:
@@ -244,34 +433,44 @@ def _header_texts(tgroup: nodes.tgroup) -> list[str]:
     return [" ".join(entry.astext().split()) for entry in row.children]
 
 
-def _cell_blocks(entry: nodes.Element) -> list[list[int]]:
-    """Word lengths of each paragraph (or line block) of a table cell."""
+def _cell_blocks(entry: nodes.Element, bold: bool = False) -> list[list[float]]:
+    """Word widths of each paragraph (or line block) of a table cell."""
     blocks = [p for p in entry.findall(nodes.TextElement)
               if isinstance(p, (nodes.paragraph, nodes.line, nodes.literal_block))]
     texts = [p.astext() for p in blocks] or [entry.astext()]
-    return [[len(w) for w in t.split()] or [0] for t in texts]
+    return [[_wlen(w, bold) for w in t.split()] or [0] for t in texts]
 
 
-def _cell_atom(entry: nodes.Element) -> int:
+def _cell_atom(entry: nodes.Element, bold: bool = False) -> float:
     """Longest piece of a table cell that cannot wrap.
 
     Long words and inline literals get break points (``_text`` and
     ``_breakable_literal``), and formulas are scaled down to the column.
     """
-    longest = 1
+    longest = 1.0
     for text in entry.findall(nodes.Text):
         parent = text.parent
         literal = isinstance(parent, nodes.literal)
         for word in str(text).split():
             if isinstance(parent, nodes.math):
-                pieces = [word[:12]]
+                continue
             elif literal and len(word) > _LONG_TABLE_LITERAL:
                 pieces = _LITERAL_BREAK_RE.split(word)
             elif not literal and len(word) > _LONG_TABLE_WORD:
-                pieces = _WORD_BREAK_RE.split(word)
+                pieces = _TABLE_WORD_BREAK_RE.split(word)
             else:
                 pieces = [word]
-            longest = max(longest, *(len(p) for p in pieces))
+            longest = max(longest, *(_wlen(p, bold) for p in pieces))
+    for math in entry.findall(nodes.math):
+        longest = max(longest, _math_atom(_breakable(math.astext())))
+    # A short word cut in several text nodes (``N`` + subscript + ``-N``...)
+    # does not break between them.
+    for block in entry.findall(nodes.TextElement):
+        if isinstance(block, (nodes.paragraph, nodes.line)) and not any(
+                True for _ in block.findall(nodes.math)):
+            for word in block.astext().split():
+                if len(word) <= _LONG_TABLE_WORD:
+                    longest = max(longest, _wlen(word, bold))
     return longest
 
 
@@ -359,11 +558,16 @@ def _fit_columns(rows: list[list[tuple[int, list[list[int]]]]], minimum: list[fl
     return scores
 
 
-def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False) -> None:
+def _column_widths(table: nodes.table, budget: float = 100.0, pad: float = 2.5,
+                   centered: bool = False) -> None:
     """Replace ``colwidths-auto`` by widths proportional to the cell contents.
 
-    ``budget`` is the number of characters of the table font that fit in the
-    table width; ``wide`` tables also use the heading indent.
+    ``budget`` is the number of characters (half an em) of the table font
+    that fit in the table width, ``pad`` the characters taken by the padding
+    and rule of each column. Every column is wide enough for its longest word
+    (``_wlen``: widths of the Arial metrics), or when these do not fit, for
+    its longest unbreakable piece. ``centered`` tables (the input and output
+    tables of the ATBDs) also get ``atbd-centered`` (centred cells).
     """
     classes = table["classes"]
     if "colwidths-given" in classes:
@@ -374,23 +578,15 @@ def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False)
         if not ncols:
             continue
         header = _header_texts(tgroup)
-        io_widths = _IO_TABLE_WIDTHS[wide]
-        if (ncols == len(io_widths) and header
-                and header[0] == "Symbol" and header[-1] == "Description"):
-            for spec, width in zip(colspecs, io_widths):
-                spec["colwidth"] = width
-            if "colwidths-auto" in classes:
-                classes.remove("colwidths-auto")
-            classes.append("colwidths-given")
-            return
-        # Cells of each row: blocks (paragraphs, list items) of word lengths.
-        rows: list[list[tuple[int, list[list[int]]]]] = []
+        if centered and header and header[0] == "Symbol" and header[-1] == "Description":
+            classes.append("atbd-centered")
+        # Cells of each row: blocks (paragraphs, list items) of word widths.
+        rows: list[list[tuple[int, list[list[float]]]]] = []
         words = [1.0] * ncols
         atoms = [1.0] * ncols
-        natural = [3] * ncols
+        natural = [3.0] * ncols
         for row in tgroup.findall(nodes.row):
-            # Bold header: wider characters.
-            scale = 1.2 if isinstance(row.parent, nodes.thead) else 1.0
+            bold = isinstance(row.parent, nodes.thead)
             cells = []
             col = 0
             for entry in row.children:
@@ -398,31 +594,33 @@ def _column_widths(table: nodes.table, budget: float = 75.0, wide: bool = False)
                     break
                 span = 1 + entry.get("morecols", 0)
                 if span == 1:
-                    blocks = _cell_blocks(entry)
+                    blocks = _cell_blocks(entry, bold)
                     cells.append((col, blocks))
                     longest = max((w for b in blocks for w in b), default=1)
-                    words[col] = max(words[col], scale * min(longest, 28))
-                    atoms[col] = max(atoms[col], scale * min(_cell_atom(entry), 28))
+                    words[col] = max(words[col], min(longest, 30.0))
+                    atoms[col] = max(atoms[col], min(_cell_atom(entry, bold), 30.0))
                     for b in blocks:
-                        natural[col] = max(natural[col], min(sum(b) + len(b) - 1, 80))
+                        natural[col] = max(natural[col], min(sum(b) + len(b) - 1, 80.0))
                 col += span
             rows.append(cells)
-        # Each column also pays its \tabcolsep padding. Keep every column
-        # wide enough for its longest word (or, when these do not fit, for
-        # its longest unbreakable piece), then give the rest, a few
-        # characters at a time, to the column that saves the most wrapped
-        # lines and broken words; what no column can use goes to the columns
-        # not yet at their one-line width, then in proportion to the widths.
-        budget = budget - 2.0 * ncols
-        minimum = [w + 1.0 for w in words]
-        if sum(minimum) >= budget:
-            minimum = [a + 1.0 for a in atoms]
-        if sum(minimum) >= budget:
+        # Keep every column wide enough for its longest word (or, when these
+        # do not fit, for its longest unbreakable piece), then give the rest
+        # to the columns that save the most wrapped lines and broken words;
+        # what no column can use goes to the columns not yet at their
+        # one-line width, then in proportion to the widths. The weights of
+        # the columns include their padding, so that the text of each gets
+        # exactly its share of characters.
+        text_budget = budget - pad * ncols
+        minimum = [w + 0.6 for w in words]
+        if sum(minimum) >= text_budget:
+            minimum = [a + 0.6 for a in atoms]
+        if sum(minimum) >= text_budget:
             scores = minimum
         else:
-            scores = _fit_columns(rows, minimum, natural, budget)
-        total = sum(scores)
-        widths = [max(1, round(1000 * s / total)) for s in scores]
+            scores = _fit_columns(rows, minimum, natural, text_budget)
+        weights = [s + pad for s in scores]
+        total = sum(weights)
+        widths = [max(1, round(1000 * w / total)) for w in weights]
         for spec, width in zip(colspecs, widths):
             spec["colwidth"] = width
         if "colwidths-auto" in classes:
@@ -581,13 +779,13 @@ _ROW_SPLIT_LINES = 60  # estimated lines of the tallest cell before splitting
 _ROW_CHUNK_LINES = 24  # estimated lines of each row the cell is split into
 
 
-def _column_chars(tgroup: nodes.tgroup, budget: float) -> list[float]:
-    """Width in characters of each column (``budget``: table width)."""
+def _column_chars(tgroup: nodes.tgroup, budget: float, pad: float = 2.0) -> list[float]:
+    """Width in characters of each column (``budget``: table width; the
+    column weights include ``pad`` characters of padding)."""
     specs = [c for c in tgroup.children if isinstance(c, nodes.colspec)]
     weights = [float(s.get("colwidth", 1) or 1) for s in specs]
     total = sum(weights) or 1.0
-    usable = budget - 2.0 * len(specs)
-    return [max(1.0, usable * w / total) for w in weights]
+    return [max(1.0, budget * w / total - pad) for w in weights]
 
 
 def _tokens(paragraph: nodes.paragraph) -> list[tuple[nodes.Node, int]]:
@@ -656,12 +854,12 @@ def _cell_chunks(entry: nodes.entry, width: float, chunk: int) -> list[list[node
     return chunks
 
 
-def _split_tall_rows(table: nodes.table, budget: float) -> int:
+def _split_tall_rows(table: nodes.table, budget: float, pad: float = 2.0) -> int:
     """Set each row taller than most of a page as several rows; return
     the number of rows split."""
     split = 0
     for tgroup in table.findall(nodes.tgroup):
-        widths = _column_chars(tgroup, budget)
+        widths = _column_chars(tgroup, budget, pad)
         for tbody in [c for c in tgroup.children if isinstance(c, nodes.tbody)]:
             for row in list(tbody.children):
                 entries = [e for e in row.children if isinstance(e, nodes.entry)]
@@ -690,6 +888,421 @@ def _split_tall_rows(table: nodes.table, budget: float) -> int:
                     tbody.insert(index + offset, extra)
                 split += 1
     return split
+
+
+# Redrawn figures in parts: rows up to _PARTS_ROW_PT wide (a little over the
+# text width, centred), parts at a text size of 12 pt x scale between
+# _PARTS_SCALES; floats of at most _PARTS_FLOAT_PT of height, the caption
+# of the last one (_PARTS_CAPTION_PT) included.
+_PARTS_ROW_PT = 490.0
+_PART_GAP_PT = 8
+_PARTS_SCALES = (0.6, 0.58, 0.56, 0.54, 0.52, 0.51, 0.505)  # text of 6 pt or more
+_PARTS_LABEL_PT = 22.0
+_PARTS_FLOAT_PT = 0.93 * _TEXT_HEIGHT_PT  # 0.95 let a part and its caption reach the page foot (L1 SAR Fig. 4)
+_PARTS_CAPTION_PT = 40.0  # a caption of up to two lines and its skip
+
+
+def _caption_pt(text: str) -> float:
+    """Height kept for a figure caption under its parts: the label and text at
+    11 pt (15.8 pt leading, ~80 characters a line), plus the caption skip. A
+    long caption (L1 SAR Fig. 16: five lines) would otherwise run over the
+    page foot."""
+    lines = -(-(len(text) + 12) // 80)
+    return max(_PARTS_CAPTION_PT, 12.0 + 15.8 * lines)
+
+
+# Subscripts, superscripts and small text of the labels of a Mermaid flowchart are drawn
+# at 83 % of the text (the browser default), which puts them under 6 pt when
+# the diagram is scaled down to the page: they are set at the size of the text.
+_SCRIPT_CSS = "sub,sup,small{font-size:100%}"
+_INIT_RE = re.compile(r"^%%\{init:\s*(\{.*\})\s*\}%%[ \t]*$", re.MULTILINE)
+
+
+def _readable_scripts(code: str) -> str:
+    """Mermaid code whose <sub> and <sup> labels print at the size of the text."""
+    if not any(tag in code for tag in ("<sub>", "<sup>", "<small>")):
+        return code
+    match = _INIT_RE.search(code)
+    config: dict[str, Any] = {}
+    if match:
+        try:
+            config = json.loads(match.group(1))
+        except ValueError:
+            return code
+    if "themeCSS" in config:
+        return code
+    config["themeCSS"] = _SCRIPT_CSS
+    init = "%%{init: " + json.dumps(config) + "}%%"
+    if match:
+        return code[:match.start()] + init + code[match.end():]
+    return init + "\n" + code
+
+
+# XSD class diagrams (``classDiagram``, "direction LR") whose text would print
+# under 6 pt are cut by sub-trees: a first part holds the root and the levels
+# below it that fit, the types at the cut are drawn by their name only, and
+# each of them heads a part of its own with its descendants.
+_CLASS_RE = re.compile(r'^  class (\S+?)(?:\["(.*?)"\])? \{\n(.*?)^  \}[ \t]*\n?',
+                       re.DOTALL | re.MULTILINE)
+_EDGE_RE = re.compile(r"^  (\S+) --> (\S+) : (.*)$", re.MULTILINE)
+# What a part may take at the smallest scale of _PARTS_SCALES (text of 6 pt).
+_CLASS_PART_WIDTH_PT = 1000.0  # estimate; the real size (about 5 % less) is checked
+_CLASS_PART_HEIGHT_PT = 1000.0
+
+
+def _parse_classes(code: str):
+    """(preamble, ids in order, {id: (label, member lines)}, edges) of a class
+    diagram written by the XSD converter; None when it is some other shape."""
+    if "classDiagram" not in code or "--|>" in code or "..>" in code:
+        return None
+    classes: dict[str, tuple[str, list[str]]] = {}
+    order: list[str] = []
+    first = None
+    for match in _CLASS_RE.finditer(code):
+        first = match.start() if first is None else first
+        cid = match.group(1)
+        classes[cid] = (match.group(2) or cid, match.group(3).rstrip("\n").split("\n"))
+        order.append(cid)
+    if len(order) < 2 or first is None:
+        return None
+    edges = [(a, b, label) for a, b, label in _EDGE_RE.findall(code)
+             if a in classes and b in classes]
+    return code[:first], order, classes, edges
+
+
+def _class_box(label: str, lines: list[str]) -> tuple[float, float]:
+    """Estimated (width, height) in pt of one class box (calibrated on mmdc)."""
+    longest = max([len(label) * 1.1] + [len(x.strip()) for x in lines])
+    return 7.0 * longest + 30, 18.0 * max(len(lines), 1) + 96
+
+
+def _class_extent(classes: dict, edges: list, root: str) -> tuple[float, float]:
+    """Estimated size of a left-to-right class diagram rooted at ``root``."""
+    depth = {root: 0}
+    for _ in range(len(classes)):
+        for a, b, _label in edges:
+            if a in depth and depth.get(b, -1) < depth[a] + 1:
+                depth[b] = depth[a] + 1
+    ranks: dict[int, list[str]] = {}
+    for cid in classes:
+        if cid in depth:
+            ranks.setdefault(depth[cid], []).append(cid)
+    width = height = 0.0
+    for d, ids in sorted(ranks.items()):
+        boxes = [_class_box(*classes[i]) for i in ids]
+        width += max(w for w, _h in boxes)
+        height = max(height, sum(h - 60 for _w, h in boxes) + 50 * (len(ids) - 1) + 60)
+        if d:
+            width += 60 + 7.0 * max([len(lab) for _a, b, lab in edges if b in ids] or [0])
+    return width, height
+
+
+def _class_part(preamble: str, classes: dict, edges: list, root: str,
+                levels: int | None, leaf_cut: tuple[str, ...] = ()
+                ) -> tuple[str, list[str], dict, list]:
+    """Mermaid code of the part rooted at ``root``: the types of the first
+    ``levels`` levels in full, the next one by name only when it has a sub-tree
+    of its own (``None``: everything). Returns the code, the types at the cut,
+    and the (classes, edges) drawn, for the estimate."""
+    children: dict[str, list[tuple[str, str]]] = {}
+    for a, b, label in edges:
+        children.setdefault(a, []).append((b, label))
+    drawn: dict[str, tuple[str, list[str]]] = {}
+    shown_edges: list[tuple[str, str, str]] = []
+    cut: list[str] = []
+    stack = [(root, 0)]
+    seen: set[str] = set()
+    while stack:
+        cid, depth = stack.pop(0)
+        if cid in seen:
+            continue
+        seen.add(cid)
+        label, lines = classes[cid]
+        if levels is not None and depth == levels and (children.get(cid) or cid in leaf_cut):
+            drawn[cid] = (label, [])
+            if cid != root:
+                cut.append(cid)
+            continue
+        drawn[cid] = (label, lines)
+        for child, edge_label in children.get(cid, []):
+            shown_edges.append((cid, child, edge_label))
+            stack.append((child, depth + 1))
+    out = [preamble.rstrip("\n")]
+    for cid, (label, lines) in drawn.items():
+        title = cid if label == cid else '%s["%s"]' % (cid, label)
+        if lines:
+            out.append("  class %s {\n%s\n  }" % (title, "\n".join(lines)))
+        else:
+            out.append("  class %s" % title)
+    out.extend("  %s --> %s : %s" % e for e in dict.fromkeys(shown_edges))
+    return "\n".join(out) + "\n", cut, drawn, shown_edges
+
+
+def _split_class_diagram(code: str, width: float = _CLASS_PART_WIDTH_PT,
+                         height: float = _CLASS_PART_HEIGHT_PT) -> list[str] | None:
+    """The sub-tree parts of a class diagram (see above); None if it is not a
+    tree-shaped XSD diagram or fits as it is."""
+    parsed = _parse_classes(code)
+    if parsed is None:
+        return None
+    preamble, order, classes, edges = parsed
+    levels_max = len(order)
+    parts: list[str] = []
+    todo = [order[0]]
+    done: set[str] = set()
+    while todo:
+        root = todo.pop(0)
+        if root in done:
+            continue
+        done.add(root)
+        chosen = None
+        for levels in [None, *range(levels_max, 0, -1)]:
+            candidate = _class_part(preamble, classes, edges, root, levels)
+            w, h = _class_extent(candidate[2], candidate[3], root)
+            chosen = candidate
+            if w <= width and h <= height:
+                break
+        else:
+            # the root and its direct children are still too big: the largest
+            # childless ones are drawn apart as well, until the rest fits
+            leaves = sorted((c for a, c, _l in edges if a == root and not any(
+                x == c for x, _y, _z in edges)),
+                key=lambda c: -len(classes[c][1]) * max(len(x) for x in classes[c][1] or [""]))
+            for count in range(1, len(leaves) + 1):
+                candidate = _class_part(preamble, classes, edges, root, 1, tuple(leaves[:count]))
+                w, h = _class_extent(candidate[2], candidate[3], root)
+                chosen = candidate
+                if w <= width and h <= height:
+                    break
+        parts.append(chosen[0])
+        todo[:0] = chosen[1]
+    return parts if len(parts) > 1 else None
+
+
+# A flowchart drawn in lanes (``subgraph``) whose text would print under 6 pt
+# is cut between lanes: each part keeps some lanes, and a lane left out that is
+# linked to a kept one stays as a box of that kind at the end of the link.
+_SUBGRAPH_RE = re.compile(r"^(\s*)subgraph\s+([A-Za-z0-9_]+)")
+_FLOW_NODE_RE = re.compile(r'^\s*([A-Za-z0-9_]+)(\[.*\])(?::::([A-Za-z0-9_]+))?\s*$')
+_FLOW_EDGE_RE = re.compile(
+    r'^(\s*)([A-Za-z0-9_]+)(\s+(?:-->|==>|~~~|---|--\s+".*"\s+-->|--\s+".*"\s+==>)\s+)'
+    r'([A-Za-z0-9_]+)\s*$')
+_STYLE_RE = re.compile(r"^\s*style\s+([A-Za-z0-9_]+)\s")
+_LINKSTYLE_RE = re.compile(r"^\s*linkStyle\s+(\d+)(\s.*)$")
+
+
+class _Lane:
+    def __init__(self, ident: str, header: str) -> None:
+        self.ident, self.header = ident, header
+        self.items: list[Any] = []  # lines (str) and nested _Lane
+
+
+def _parse_flow(code: str):
+    """(preamble, top-level lanes, loose nodes, edges, styles, link styles) of a
+    flowchart of the converter's layout; None when it has no lane."""
+    lines = code.split("\n")
+    first = next((i for i, x in enumerate(lines) if _SUBGRAPH_RE.match(x)), None)
+    if first is None or not re.search(r"^flowchart\s", code, re.MULTILINE):
+        return None
+    preamble: list[str] = []
+    top: list[Any] = []
+    loose: dict[str, str] = {}
+    stack: list[_Lane] = []
+    edges: list[tuple[str, str, str, str]] = []
+    styles: list[str] = []
+    links: dict[int, str] = {}
+    for line in lines:
+        match = _SUBGRAPH_RE.match(line)
+        if match:
+            lane = _Lane(match.group(2), line)
+            (stack[-1].items if stack else top).append(lane)
+            stack.append(lane)
+        elif line.strip() == "end" and stack:
+            stack.pop()
+        elif _FLOW_NODE_RE.match(line):
+            if stack:
+                stack[-1].items.append(line)
+            else:
+                loose[_FLOW_NODE_RE.match(line).group(1)] = line
+        elif _FLOW_EDGE_RE.match(line):
+            m = _FLOW_EDGE_RE.match(line)
+            edges.append((m.group(2), m.group(4), line, ""))
+        elif _LINKSTYLE_RE.match(line):
+            m = _LINKSTYLE_RE.match(line)
+            links[int(m.group(1))] = m.group(2)
+        elif _STYLE_RE.match(line):
+            styles.append(line)
+        elif not top and not loose and not stack:
+            preamble.append(line)
+    return preamble, top, loose, edges, styles, links
+
+
+def _flow_lanes(items: list[Any]) -> list[_Lane]:
+    """Lanes in reading order: a subgraph holding nodes, or no other subgraph
+    (a wrapper of lanes only is looked through)."""
+    out: list[_Lane] = []
+    for item in items:
+        if isinstance(item, _Lane):
+            if any(isinstance(x, str) for x in item.items) or not any(
+                    isinstance(x, _Lane) for x in item.items):
+                out.append(item)
+            else:
+                out.extend(_flow_lanes(item.items))
+    return out
+
+
+def _lane_nodes(lane: _Lane) -> dict[str, str]:
+    nodes_: dict[str, str] = {}
+    for item in lane.items:
+        if isinstance(item, _Lane):
+            nodes_.update(_lane_nodes(item))
+        else:
+            nodes_[_FLOW_NODE_RE.match(item).group(1)] = item
+    return nodes_
+
+
+def _emit_lane(lane: _Lane, keep: set[str]) -> list[str]:
+    """Lines of a lane kept whole, or of the wrapper around the kept lanes."""
+    if lane.ident in keep:
+        return _lane_lines(lane)
+    inner: list[str] = []
+    for item in lane.items:
+        if isinstance(item, _Lane):
+            inner.extend(_emit_lane(item, keep))
+    return [lane.header, *inner, "  end"] if inner else []
+
+
+def _lane_lines(lane: _Lane) -> list[str]:
+    out = [lane.header]
+    for item in lane.items:
+        out.extend(_lane_lines(item) if isinstance(item, _Lane) else [item])
+    return [*out, "  end"]
+
+
+def _flow_owners(parsed, lanes: list[_Lane]) -> dict[str, int]:
+    """Index of the lane each node belongs to; a loose node goes with the first
+    lane it is linked to."""
+    _pre, _top, loose, edges, _styles, _links = parsed
+    owner = {n: i for i, lane in enumerate(lanes) for n in _lane_nodes(lane)}
+    pending = set(loose) - set(owner)
+    for _round in range(len(pending) + 1):
+        for node in sorted(pending):
+            near = [owner[o] for a, b, _l, _x in edges
+                    for n, o in ((a, b), (b, a)) if n == node and o in owner]
+            if near:
+                owner[node] = min(near)
+        pending -= set(owner)
+    for node in pending:
+        owner[node] = 0
+    return owner
+
+
+def _flow_part(parsed, lanes: list[_Lane], owner: dict[str, int], keep: set[int]) -> str:
+    """Mermaid code of the flowchart restricted to the lanes ``keep`` (indexes)
+    and the loose nodes that go with them."""
+    preamble, top, loose, edges, styles, links = parsed
+    names = {lanes[i].ident for i in keep}
+    inside = {n for n, i in owner.items() if i in keep}
+    everything = dict(loose)
+    for lane in lanes:
+        everything.update(_lane_nodes(lane))
+    body: list[str] = [loose[n] for n in loose if n in inside]
+    for item in top:
+        if isinstance(item, _Lane):
+            body.extend(_emit_lane(item, names))
+    stubs: dict[str, str] = {}
+    kept_edges: list[str] = []
+    kept_index: dict[int, int] = {}
+    for index, (src, dst, line, _x) in enumerate(edges):
+        ends = [e in inside for e in (src, dst)]
+        if not any(ends):
+            continue
+        for end, ok in ((src, ends[0]), (dst, ends[1])):
+            if not ok and end in everything and end not in stubs:
+                m = _FLOW_NODE_RE.match(everything[end])
+                stubs[end] = "  stub_%s%s%s" % (
+                    end, m.group(2), ":::" + m.group(3) if m.group(3) else "")
+        m = _FLOW_EDGE_RE.match(line)
+        a = src if ends[0] else "stub_" + src
+        b = dst if ends[1] else "stub_" + dst
+        kept_index[index] = len(kept_edges)
+        kept_edges.append("%s%s%s%s" % (m.group(1), a, m.group(3), b))
+    present = set(inside) | {m.group(2) for m in map(_SUBGRAPH_RE.match, body) if m}
+    out = [*preamble, *body, *stubs.values(), *kept_edges]
+    out += [x for x in styles if _STYLE_RE.match(x).group(1) in present]
+    out += ["  linkStyle %d%s" % (kept_index[i], rest)
+            for i, rest in sorted(links.items()) if i in kept_index]
+    return "\n".join(out) + "\n"
+
+
+def _split_flow_lanes(code: str, count: int) -> list[str] | None:
+    """The flowchart in ``count`` parts of consecutive lanes (with the nodes
+    between them), the parts holding about as many nodes as one another; None
+    if it has no such lanes."""
+    parsed = _parse_flow(code)
+    if parsed is None:
+        return None
+    lanes = _flow_lanes(parsed[1])
+    if len(lanes) < count or count < 2:
+        return None
+    owner = _flow_owners(parsed, lanes)
+    weights = [sum(1 for i in owner.values() if i == k) for k in range(len(lanes))]
+    from itertools import combinations
+    best, cuts = None, None
+    for cut in combinations(range(1, len(lanes)), count - 1):
+        edges_ = [0, *cut, len(lanes)]
+        sums = [sum(weights[a:b]) for a, b in zip(edges_, edges_[1:])]
+        if best is None or max(sums) < best:
+            best, cuts = max(sums), edges_
+    return [_flow_part(parsed, lanes, owner, set(range(a, b)))
+            for a, b in zip(cuts, cuts[1:])]
+
+
+def _pack_parts(sizes: list[tuple[float, float]], scale: float,
+                each_caption: bool = False, caption_pt: float = _PARTS_CAPTION_PT
+                ) -> tuple[list[float], list[list[list[int]]]]:
+    """Parts (width, height) in pt at a common scale: per-part scales (a part
+    wider than a row is scaled down to it), rows of one or two neighbours,
+    rows grouped in floats."""
+    scales = [min(scale, _PARTS_ROW_PT / w) for w, _h in sizes]
+    # a part is not taller than a page with its label and caption (every
+    # float carries the caption)
+    room = _PARTS_FLOAT_PT - _PARTS_LABEL_PT - caption_pt
+    scales = [min(sc, room / h) for sc, (_w, h) in zip(scales, sizes)]
+    rows: list[list[int]] = []
+    i = 0
+    while i < len(sizes):
+        if i + 1 < len(sizes):
+            pair = (sizes[i][0] * scales[i] + sizes[i + 1][0] * scales[i + 1]
+                    + _PART_GAP_PT)
+            if pair <= _PARTS_ROW_PT:
+                rows.append([i, i + 1])
+                i += 2
+                continue
+        rows.append([i])
+        i += 1
+    heights = [max(sizes[k][1] * scales[k] for k in row) + _PARTS_LABEL_PT for row in rows]
+    groups: list[list[list[int]]] = []
+    used = 0.0
+    room = _PARTS_FLOAT_PT - caption_pt  # every float carries a caption
+    for row, height in zip(rows, heights):
+        if groups and used + height <= room:
+            groups[-1].append(row)
+            used += height
+        else:
+            groups.append([row])
+            used = height
+    return scales, groups
+
+
+def _plan_parts(sizes: list[tuple[float, float]], each_caption: bool = False,
+                caption_pt: float = _PARTS_CAPTION_PT
+                ) -> tuple[float, list[float], list[list[list[int]]]]:
+    """The largest scale of _PARTS_SCALES giving the fewest floats."""
+    plans = [(s, *_pack_parts(sizes, s, each_caption, caption_pt)) for s in _PARTS_SCALES]
+    fewest = min(len(groups) for _s, _sc, groups in plans)
+    return next(p for p in plans if len(p[2]) == fewest)
+
 
 
 class AtbdLatexContent(SphinxPostTransform):
@@ -742,12 +1355,18 @@ class AtbdLatexContent(SphinxPostTransform):
             _drop_dropdown_title(dropdown)
         pfd = "/pfd-" in f"/{self.env.docname}"
         wide = bool(self.config.atbd_wide_tables)
-        # Characters of the table font in the table width: ATBD 9 pt,
-        # PFD 10 pt; wide tables also use the heading indent.
-        budget = (85.0 if pfd else 94.0) * (1.0 if wide else 450 / 485)
+        # Characters (half an em) of the table font in the table width; wide
+        # tables also use the heading indent (35 pt; L1 SAR: 22.7 pt more on
+        # the right, see atbdwideextra). Each column pays 2 \tabcolsep and a rule.
+        size = float(self.config.atbd_table_font_pt)
+        width_pt = 449.9 + (35.1 if wide else 0.0)
+        if wide and not pfd and "atbd-l1-sar" in self.env.docname:
+            width_pt += 22.7
+        budget = width_pt / (_CHAR_EM * size)
+        pad = (2 * _TABCOLSEP_PT + 0.5) / (_CHAR_EM * size)
         for table, _docname in found["tables"]:
             _header_only(table)
-            _column_widths(table, budget, wide)
+            _column_widths(table, budget, pad, centered=not pfd)
             if _can_break(table):
                 for cls in ("longtable", "atbd-wide") if wide else ("longtable",):
                     if cls not in table["classes"]:
@@ -756,9 +1375,22 @@ class AtbdLatexContent(SphinxPostTransform):
                     table["classes"].append("atbd-caption-below")
         for table, _docname in found["tables"]:
             lead = _lead_paragraph(table)
-            if lead is not None:
+            if lead is None:
+                continue
+            if not any(isinstance(c, nodes.title) for c in table.children):
                 # Keep a short lead-in ("Inputs", "... as follows:") with the
-                # start of its table.
+                # table: it becomes the first line of the table (head of the
+                # first page), as the page cannot then break between them.
+                # (Left apart, the page break before it was taken while the
+                # table output routine was already active, and the repeated
+                # header of the table was left alone at the top of the page.)
+                inlines = list(lead.children)
+                for child in inlines:
+                    lead.remove(child)
+                table.insert(0, nodes.title("", "", *inlines))
+                table["classes"].append("atbd-lead")
+                lead.parent.remove(lead)
+            else:
                 lead.parent.insert(lead.parent.index(lead), nodes.raw(
                     "", r"\needspace{4\baselineskip}", format="latex"))
         for figure in figures:
@@ -782,6 +1414,15 @@ class AtbdLatexContent(SphinxPostTransform):
                 math.replace_self(nodes.raw(
                     "", r"\atbdfitmath{\(%s\)}" % _breakable(math.astext()),
                     format="latex"))
+            elif (math.parent is not None and isinstance(math.parent, nodes.paragraph)
+                  and len(math.astext()) > _LONG_INLINE_MATH
+                  and _LEFT_ANY_RE.search(math.astext())
+                  and r"\middle" not in math.astext()):
+                # A long formula of running text with \left...\right cannot
+                # break: it stuck out of the column (AGB p. 27, x1 = 583).
+                tex = _breakable(math.astext())
+                if tex != math.astext():
+                    math.replace_self(nodes.math(tex, tex))
         engine = self.config.latex_engine
         for literal, _docname in found["literal"]:
             if isinstance(literal.parent, (nodes.title, nodes.caption)):
@@ -794,7 +1435,7 @@ class AtbdLatexContent(SphinxPostTransform):
                 literal.replace_self(nodes.raw("", latex, format="latex"))
         for table, _docname in found["tables"]:
             if "longtable" in table["classes"]:
-                _split_tall_rows(table, budget)
+                _split_tall_rows(table, budget, pad)
         _drop_empty_chapters(self.document)
 
     # -- text ----------------------------------------------------------
@@ -812,7 +1453,8 @@ class AtbdLatexContent(SphinxPostTransform):
                 parent.replace(text, nodes.Text(clean))
             return
         engine = self.config.latex_engine
-        parts = [p for p in _WORD_BREAK_RE.split(clean) if p]
+        in_table = _in_table(text)
+        parts = [p for p in (_TABLE_WORD_BREAK_RE if in_table else _WORD_BREAK_RE).split(clean) if p]
         latex = r"\allowbreak{}".join(tex_escape(p, engine) for p in parts)
         parent.replace(text, nodes.raw("", latex, format="latex"))
 
@@ -853,6 +1495,18 @@ class AtbdLatexContent(SphinxPostTransform):
             else:
                 extra.append(child)
 
+        for visual in visuals:
+            if mermaid_cls is not None and isinstance(visual, mermaid_cls):
+                visual["code"] = _readable_scripts(visual["code"])
+        if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
+            parts = self._class_parts(visuals[0])
+            if parts:
+                return self._figure_parts(container, docname, parts, caption, extra,
+                                          each_caption=True)
+            parts = self._lane_parts(visuals[0])
+            if parts:
+                return self._figure_parts(container, docname, parts, caption, extra,
+                                          each_caption=True)
         original = False
         single_share = _MERMAID_SHARE
         if has_mermaid and len(visuals) == 1 and isinstance(visuals[0], mermaid_cls):
@@ -899,7 +1553,7 @@ class AtbdLatexContent(SphinxPostTransform):
         if caption is not None:
             number, inlines = caption
             if number:
-                setup += r"\renewcommand{\thefigure}{%s}" % number
+                setup += _set_number("figure", number)
         else:
             setup += "".join(_latex_label(docname, i) for i in container["ids"])
         figure += nodes.raw("", setup, format="latex")
@@ -908,8 +1562,43 @@ class AtbdLatexContent(SphinxPostTransform):
             figure += visual
         if caption is not None:
             figure += nodes.caption("", "", *inlines)
+        landscape = False
+        if (mermaid_only and not original and len(visuals) == 1
+                and "atbd-drawn-figure" not in container.get("classes", [])):
+            landscape = self._wants_landscape(visuals[0], single_share)
+        if landscape:
+            # a diagram too wide for its text to stay readable on a portrait
+            # page: a landscape page of its own (pdflscape, atbdfloats.sty)
+            setup += r"\csname spx@image@maxheight\endcsname=%.3f\textheight" % _LANDSCAPE_SHARE
+            figure.children[0] = nodes.raw("", setup, format="latex")
+            figure["classes"].append("atbd-landscape")
+            container.replace_self([
+                nodes.raw("", r"\begin{landscape}\atbdfigurehere", format="latex"),
+                figure,
+                nodes.raw("", r"\end{landscape}", format="latex"), *extra])
+            return figure
+        if mermaid_only and not original and len(visuals) == 1:
+            box = self._mermaid_box(visuals[0]["code"], visuals[0].get("options", {}))
+            if box is not None and _MERMAID_FONT_PT * min(
+                    _MERMAID_SCALE, _TEXT_WIDTH_PT / box[0],
+                    single_share * _TEXT_HEIGHT_PT / box[1]) < _LANDSCAPE_BELOW_PT:
+                # text under 6 pt: the diagram may extend into the margins, as
+                # wide tables do (centred, up to _PARTS_ROW_PT)
+                figure.children[0] = nodes.raw("", setup.replace(
+                    r"\def\atbdfigmaxwidth{\linewidth}",
+                    r"\def\atbdfigmaxwidth{%dpt}" % _PARTS_ROW_PT), format="latex")
         container.replace_self([figure, *extra])
         return figure
+
+    def _wants_landscape(self, diagram: nodes.Element, share: float) -> bool:
+        """True when a landscape page gives a Mermaid diagram readably larger text."""
+        box = self._mermaid_box(diagram["code"], diagram.get("options", {}))
+        if box is None:
+            return False
+        width, tall = box
+        portrait = min(_MERMAID_SCALE, _TEXT_WIDTH_PT / width, share * _TEXT_HEIGHT_PT / tall)
+        land = min(_MERMAID_SCALE, _TEXT_HEIGHT_PT / width, _LANDSCAPE_SHARE * _TEXT_WIDTH_PT / tall)
+        return _MERMAID_FONT_PT * portrait < _LANDSCAPE_BELOW_PT and land > 1.15 * portrait
 
     def _table_figure(self, container: nodes.container, docname: str, table: nodes.table,
                       caption: Any, extra: list[nodes.Node]) -> nodes.Node:
@@ -921,7 +1610,7 @@ class AtbdLatexContent(SphinxPostTransform):
         head = nodes.raw("", r"\par\noindent\begin{minipage}{\linewidth}\centering ",
                          format="latex")
         cap = nodes.paragraph("", "")
-        cap += nodes.raw("", (r"\renewcommand{\thefigure}{%s}" % number if number else "")
+        cap += nodes.raw("", (_set_number("figure", number) if number else "")
                          + r"\captionof{figure}{", format="latex")
         cap.extend(inlines)
         cap += nodes.raw("", "}" + label, format="latex")
@@ -934,9 +1623,139 @@ class AtbdLatexContent(SphinxPostTransform):
 
     def _figure_parts(self, container: nodes.container, docname: str,
                       visuals: list[nodes.Node], caption: Any,
-                      extra: list[nodes.Node]) -> nodes.figure:
-        """A complex figure redrawn in parts (a), (b)…: one float per part,
-        each sized as a figure of its own, the caption under the last one."""
+                      extra: list[nodes.Node], each_caption: bool = False) -> nodes.figure:
+        """A complex figure redrawn in parts (a), (b)...: the parts are set side
+        by side where two fit in a row, in as few floats (pages) as the text
+        size allows, the caption under the last one (see _pack_parts).
+        ``each_caption``: every float carries the caption, with the letters of
+        its parts, under the same figure number (sub-trees of an XSD diagram)."""
+        sizes = []
+        for visual in visuals:
+            if not each_caption:
+                self._fit_mermaid(visual, container)  # may lay the part out top to bottom
+            box = self._mermaid_box(visual["code"], visual.get("options", {}))
+            if box is None:
+                sizes = []
+                break
+            sizes.append(box)
+        if not sizes:
+            return self._figure_parts_stacked(container, docname, visuals, caption, extra)
+        caption_text = ("".join(n.astext() for n in caption[1])
+                        if caption is not None else "")
+        scale, scales, groups = _plan_parts(sizes, each_caption, _caption_pt(caption_text))
+        figures = []
+        for g, rows in enumerate(groups):
+            figure = nodes.figure("")
+            last_group = g == len(groups) - 1
+            setup = ""
+            if caption is not None and caption[0]:
+                setup += _set_number("figure", caption[0])
+            figure += nodes.raw("", setup, format="latex")
+            for r, row in enumerate(rows):
+                row_tex = r"\par\noindent\makebox[\linewidth][c]{" if r == 0 else (
+                    r"\par\medskip\noindent\makebox[\linewidth][c]{")
+                figure += nodes.raw("", row_tex, format="latex")
+                for k, i in enumerate(row):
+                    w, h = sizes[i]
+                    s = scales[i]
+                    head = (r"\hspace{%dpt}" % _PART_GAP_PT if k else "") + (
+                        r"\begin{minipage}[b]{%.1fpt}\centering{\small (%s)}\par\smallskip "
+                        r"\csname spx@image@maxheight\endcsname=%.1fpt "
+                        r"\def\atbdfigscale{%.4f}\def\atbdfigmaxwidth{\linewidth}"
+                        % (w * s * 1.004 + 1, chr(97 + i), h * s * 1.01 + 2, s))
+                    figure += nodes.raw("", head, format="latex")
+                    if visuals[i].parent is not None:
+                        visuals[i].parent.remove(visuals[i])
+                    figure += visuals[i]
+                    figure += nodes.raw("", r"\end{minipage}", format="latex")
+                figure += nodes.raw("", "}", format="latex")
+            if caption is not None:
+                inlines = [n.deepcopy() for n in caption[1]]
+                if each_caption:
+                    letters = sorted(i for row in rows for i in row)
+                    inlines.append(nodes.Text(" (%s)" % (
+                        chr(97 + letters[0]) if len(letters) == 1 else
+                        "%s%s%s" % (chr(97 + letters[0]),
+                                    "–" if letters[-1] - letters[0] == len(letters) - 1 else ", ",
+                                    chr(97 + letters[-1])))))
+                elif g > 0:
+                    inlines.append(nodes.Text(" (continued)"))
+                figure += nodes.caption("", "", *inlines)
+                if g == 0:
+                    figure += nodes.raw("", "".join(_latex_label(docname, x)
+                                                    for x in container["ids"]), format="latex")
+            figures.append(figure)
+        barrier = nodes.raw("", r"\FloatBarrier", format="latex")
+        container.replace_self([barrier, *figures, *extra])
+        return figures[0]
+
+    def _class_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
+        """An XSD class diagram whose text would print under 6 pt, cut by
+        sub-trees into mermaid nodes (None: print it as it is)."""
+        code, options = diagram["code"], diagram.get("options", {})
+        if "classDiagram" not in code:
+            return None
+        font = self._mermaid_font(code, options, _MERMAID_SHARE)
+        if font is None or font >= _LANDSCAPE_BELOW_PT:
+            return None
+        width = _CLASS_PART_WIDTH_PT
+        for _attempt in range(4):
+            codes = _split_class_diagram(code, width)
+            if not codes:
+                return None
+            boxes = [self._mermaid_box(c, options) for c in codes]
+            if any(b is None for b in boxes):
+                return None
+            worst = max(b[0] for b in boxes)
+            if worst <= _PARTS_ROW_PT / 0.508 and all(
+                    b[1] <= _CLASS_PART_HEIGHT_PT * 1.05 for b in boxes):
+                break
+            width *= 0.88  # the estimate was short: cut finer
+        parts = []
+        for part_code in codes:
+            part = diagram.deepcopy()
+            part["code"] = part_code
+            parts.append(part)
+        return parts
+
+    def _lane_parts(self, diagram: nodes.Element) -> list[nodes.Element] | None:
+        """A flowchart in lanes whose text would print under 6 pt even on a page
+        of its own, cut between lanes (None: print it as it is)."""
+        code, options = diagram["code"], diagram.get("options", {})
+        if not code.lstrip().startswith("%%{init") and "flowchart" not in code:
+            return None
+        if _parse_flow(code) is None:
+            return None
+        font = self._mermaid_font(code, options, _MERMAID_TALL_SHARE)
+        if font is None or font >= _LANDSCAPE_BELOW_PT:
+            return None
+        best = None
+        for count in (2, 3, 4):
+            candidate = _split_flow_lanes(code, count)
+            if not candidate:
+                break
+            boxes = [self._mermaid_box(c, options) for c in candidate]
+            if any(b is None for b in boxes):
+                return None
+            _scale, scales, groups = _plan_parts(boxes, True)
+            if _MERMAID_FONT_PT * min(scales) < _LANDSCAPE_BELOW_PT:
+                continue
+            if best is None or len(groups) < best[0]:
+                best = (len(groups), candidate)
+        if best is None:
+            return None
+        codes = best[1]
+        parts = []
+        for part_code in codes:
+            part = diagram.deepcopy()
+            part["code"] = part_code
+            parts.append(part)
+        return parts
+
+    def _figure_parts_stacked(self, container: nodes.container, docname: str,
+                              visuals: list[nodes.Node], caption: Any,
+                              extra: list[nodes.Node]) -> nodes.figure:
+        """_figure_parts when a part cannot be measured: one float per part."""
         figures = []
         last = len(visuals) - 1
         for i, visual in enumerate(visuals):
@@ -947,7 +1766,7 @@ class AtbdLatexContent(SphinxPostTransform):
             if i == 0:
                 setup += "".join(_latex_label(docname, x) for x in container["ids"])
             if i == last and caption is not None and caption[0]:
-                setup += r"\renewcommand{\thefigure}{%s}" % caption[0]
+                setup += _set_number("figure", caption[0])
             setup += r"{\small (%s)}\par\smallskip " % chr(97 + i)
             figure += nodes.raw("", setup, format="latex")
             visual.parent.remove(visual)
@@ -955,11 +1774,30 @@ class AtbdLatexContent(SphinxPostTransform):
             if i == last and caption is not None:
                 figure += nodes.caption("", "", *caption[1])
             figures.append(figure)
-        # the parts stay together and in place: no float of them drifts past the
-        # text that follows the figure (placeins, loaded in setup())
         barrier = nodes.raw("", r"\FloatBarrier", format="latex")
-        container.replace_self([barrier, *figures, barrier.deepcopy(), *extra])
+        container.replace_self([barrier, *figures, *extra])
         return figures[0]
+
+    def _mermaid_box(self, code: str, options: Any) -> tuple[float, float] | None:
+        """(width, height) in pt of the PDF of a Mermaid diagram; None if unknown."""
+        from types import SimpleNamespace
+
+        from sphinxcontrib.mermaid import MermaidError, render_mm
+
+        try:
+            _relfn, outfn = render_mm(SimpleNamespace(builder=self.app.builder),
+                                      code, options, "pdf")
+            if outfn is None:
+                return None
+            match = _MEDIABOX_RE.search(Path(outfn).read_bytes())
+        except MermaidError:
+            return None
+        except Exception:  # noqa: BLE001 - keep the stacked layout
+            return None
+        if not match:
+            return None
+        x0, y0, x1, y1 = (float(v) for v in match.groups())
+        return (x1 - x0, y1 - y0) if x1 > x0 and y1 > y0 else None
 
     def _mermaid_font(self, code: str, options: Any, height: float) -> float | None:
         """Text size (pt) of a Mermaid diagram once fitted in the page.
@@ -1075,7 +1913,7 @@ class AtbdLatexContent(SphinxPostTransform):
             if number:
                 # Source number, for this table only.
                 before.append(nodes.raw(
-                    "", r"\begingroup\renewcommand{\thetable}{%s}" % number,
+                    "", r"\begingroup" + _set_number("table", number),
                     format="latex"))
                 after.append(nodes.raw("", r"\endgroup", format="latex"))
         targets = _preceding_targets(container)
@@ -1102,10 +1940,16 @@ class AtbdLatexContent(SphinxPostTransform):
             # Same width limit as the numbered equations below.
             fitted = text
             if text.count(r"\begin{aligned}") == 1 and text.count(r"\end{aligned}") == 1:
-                fitted = text.replace(r"\begin{aligned}", r"\atbdfitdisplay{").replace(
-                    r"\end{aligned}", "}")
+                inner = text.split(r"\begin{aligned}", 1)[1].split(r"\end{aligned}", 1)[0]
+                fitted = text.replace(
+                    r"\begin{aligned}", r"\atbdfitdisplay%s{" % _rows_alternative(inner)
+                ).replace(r"\end{aligned}", "}")
             elif r"\begin{aligned}" not in text:
-                fitted = _EQUATION_BODY_RE.sub(r"\1\\atbdfitdisplay{\2}\3", text, count=1)
+                fitted = _EQUATION_BODY_RE.sub(
+                    lambda m: "%s\\%s%s{%s}%s" % (
+                        m.group(1), _display_macro(m.group(2)),
+                        _alternative(m.group(2)), m.group(2), m.group(3)),
+                    text, count=1)
             if fitted != text:
                 math.children = []
                 math += nodes.Text(fitted)
@@ -1118,10 +1962,11 @@ class AtbdLatexContent(SphinxPostTransform):
         label = ""
         if math.get("label"):
             label = r"\label{equation:%s:%s}" % (math["docname"], math["label"])
-        # \atbdfitdisplay (atbdlayout.sty) sets the body like ``split`` and
-        # scales it down when it is wider than the text.
+        # \atbdfitline / \atbdfitdisplay (atbdmath.sty) fit the body to the text
+        # width (broken after its operators, or scaled when aligned).
         latex = (
-            f"{labels}\n\\begin{{equation}}{label}\n\\atbdfitdisplay{{\n{body}\n"
+            f"{labels}\n\\begin{{equation}}{label}\n\\{_display_macro(body)}{_alternative(body)}"
+            f"{{\n{body}\n"
             f"}}\\tag{{{tag.group('num')}}}\n\\end{{equation}}"
         )
         math.replace_self(nodes.raw("", latex, format="latex"))
@@ -1129,6 +1974,11 @@ class AtbdLatexContent(SphinxPostTransform):
     # -- raw HTML --------------------------------------------------------
     def _raw_html(self, raw: nodes.raw, docname: str) -> None:
         if "html" not in raw.get("format", "").split():
+            return
+        if _BR_RE.fullmatch(raw.astext().strip()):
+            # <br> of a converted table cell: a line break, as in the original
+            # (dropped, it glued the words: "ones.The")
+            raw.replace_self(nodes.raw("", r"\newline{}", format="latex"))
             return
         match = _SPAN_ID_RE.match(raw.astext().strip())
         if match is not None:
@@ -1261,6 +2111,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     # Tables also use the left indent of the headings (as in the original
     # PFDs and L1 SAR ATBD; the other ATBDs keep them in the text width).
     app.add_config_value("atbd_wide_tables", False, "env", bool)
+    app.add_config_value("atbd_table_font_pt", 9.0, "env", float)
     app.connect("config-inited", _default_figure_align)
     app.connect("build-finished", _write_trims)
     return {

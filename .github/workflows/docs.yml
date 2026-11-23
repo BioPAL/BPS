@@ -90,6 +90,10 @@ jobs:
           echo "$HOME/.cache/mermaid-cli/node_modules/.bin" >> "$GITHUB_PATH"
 
       # Never blocks the site: a missing PDF only hides its download button.
+      # The PDFs must exist in docs/_static/pdf/ BEFORE "Build HTML": Sphinx
+      # copies html_static_path (docs/_static) to _build/html/_static, which
+      # Pages then publishes; the button of each page links to _static/pdf/<doc>.pdf
+      # and is only rendered when that file exists at build time.
       - name: Build Science Guide web export PDFs
         continue-on-error: true
         env:
@@ -113,6 +117,17 @@ jobs:
           DOCS_BASEURL: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'https://biopal.github.io/BPS/' || '' }}
           DOCS_GITHUB_VERSION: develop
         run: make -C docs html
+
+      # Blocking only for a button that points to a PDF absent from the built
+      # site; a PDF that failed to build (no button) does not fail the job.
+      - name: Check PDF download links
+        run: make -C docs check-pdf-links
+
+      - name: Check the site holds the built PDFs
+        if: always()
+        continue-on-error: true
+        run: |
+          ls -l docs/_build/html/_static/pdf/*.pdf || echo "::warning::No Science Guide PDF in the built site"
 
       - name: Upload Pages artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'

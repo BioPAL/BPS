@@ -153,10 +153,12 @@ html_logo = "_static/logos/BioPAL_textonright.png"
 _secondary_sidebar_items = {
     "index": [],
     "**": ["page-toc", "edit-this-page"],
+    # every page of a document (index and chapters): the PDF button sits right
+    # under "Edit on GitHub" and takes its style (template atbd-download-pdf.html)
     "science-guide/*/*": [
-        "page-toc",
-        "atbd-download-pdf.html",
         "edit-this-page",
+        "atbd-download-pdf.html",
+        "page-toc",
     ],
 }
 
@@ -245,7 +247,11 @@ html_sidebars = {
 # Custom CSS to override / extend theme defaults
 html_css_files = [
     "custom.css",
+    ("print.css", {"media": "print"}),
 ]
+
+# Ctrl+P from the browser: open the folded <details> and dropdowns first
+html_js_files = ["print-open.js"]
 
 templates_path = ["_templates"]
 
