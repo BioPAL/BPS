@@ -10,9 +10,9 @@
  "source": "BPS_AGB_ATBD_v3_1_4.docx",
  "source_sha256": "d9055900c12833b4dfc7d81e28088dc169f2bbd1e084b802d1a2969ee7f4039c",
  "backend": "docx",
- "license": "Apache-2.0",
+ "license": "CC-BY-4.0",
  "pipeline_version": "0.1.0",
- "conversion_date": "2026-11-17",
+ "conversion_date": "2026-11-23",
  "checks": {
   "V1": "PASS",
   "V2": "PASS",

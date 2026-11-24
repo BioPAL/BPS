@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -21,29 +21,29 @@ The following table summarizes and describes primitive product types used throug
 
 <p class="atbd-table-caption"><span class="caption-number">Table 46</span><span class="caption-text"> — Primitive product types</span></p>
 
-| Name | Description | Base Type | Values |
+| **Name** | **Description** | **Base Type** | **Values** |
 |---|---|---|---|
-| `subsettingRuleType` | Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase). | `xsd:string` | geometry maintain all |
-| `calibrationScreenType` | Type of calibration screen applied (none, if not applied) | `xsd:string` | none geometry skp |
-| `polarisationCombinationMethodType` | Enumeration of polarisations combination methods. | `xsd:string` | HV VH Average None |
-| bps\_fnfType | Enumeration of Forest Mask: CFM from FD processor or FNF. | `xsd:string` | FNF CFM |
+| `subsettingRuleType` | Enumeration of available rules for INT subsetting: select three acquisitions from all the ones in input (when input is TOM phase). | `xsd:string` | geometry <br> maintain all |
+| `calibrationScreenType` | Type of calibration screen applied (none, if not applied) | `xsd:string` | none <br> geometry <br> skp |
+| `polarisationCombinationMethodType` | Enumeration of polarisations combination methods. | `xsd:string` | HV <br> VH <br> Average <br> None |
+| bps\_fnfType | Enumeration of Forest Mask: CFM from FD processor or FNF. | `xsd:string` | FNF <br> CFM |
 | `verticalProfileOptionType` | Vertical profile choice. | `xsd:string` | default profile |
-| `modelInversionType` | Forest height inversion option | `xsd:string` | single dual |
-| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF Height [m] Latitude [deg] Longitude [deg] Incidence angle [deg] Elevation angle [deg] Range terrain slope [deg] Azimuth terrain slope [deg] Local Incidence angle [deg] ACM `numberOfAverages` |
+| `modelInversionType` | Forest height inversion option | `xsd:string` | single <br> dual |
+| `layerType` | Enumeration of LUT layer contents. | `xsd:string` | FNF <br> Height [m] <br> Latitude [deg] <br> Longitude [deg] <br> Incidence angle [deg] <br> Elevation angle [deg] <br> Range terrain slope [deg] <br> Azimuth terrain slope [deg] <br> Local Incidence angle [deg] <br> ACM <br> `numberOfAverages` |
 | `missionType` | Enumeration of valid BIOMASS mission names. | `xsd:string` | BIOMASS |
-| `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 S2 S3 |
-| `productType` | Enumeration of valid product types. | `xsd:string` | SCS DGM STA `FH_L2A` `FH_L2B` `FD_L2A` `FD_L2B` `GN_L2A` `AGB_L2B` |
-| `polarisationType` | Enumeration of valid polarisations. | `xsd:string` | HH HV VH VV XX |
+| `swathType` | Enumeration of all valid swath identifiers. | `xsd:string` | S1 <br> S2 <br> S3 |
+| `productType` | Enumeration of valid product types. | `xsd:string` | SCS <br> DGM <br> STA <br> `FH_L2A` <br> `FH_L2B` <br> `FD_L2A` <br> `FD_L2B` <br> `GN_L2A` <br> `AGB_L2B` |
+| `polarisationType` | Enumeration of valid polarisations. | `xsd:string` | HH <br> HV <br> VH <br> VV <br> XX |
 | `timeType` | UTC time expressed according to ISO 8601 standard (1 microsecond resolution). | `xsd:dateTime` |   |
-| `missionPhaseIDType` | Enumeration of all valid BIOMASS mission phases. | `xsd:string` | COM INT TOM |
-| `sensorModeType` | Enumeration of valid sensor mode abbreviations. | `xsd:string` | Measurement RX Only External Calibration |
-| `orbitPassType` | Enumeration of the orbit pass direction values. | `xsd:string` | Ascending Descending |
-| `projectionType` | Enumeration of the image projection. | `xsd:string` | Slant Range Ground Range Latitude longitude based on DGG DGG |
-| `pixelRepresentationType` | Representation of the image pixels within the image MDS. | `orbitPassType` | I Q Abs Phase Abs Probability of change Computed forest mask Forest Disturbance Heat Map Forest Height [m] Forest height quality Forest mask Ground Cancelled Backscatter Above Ground Biomass [t/ha] Above Ground Biomass quality [t/ha] Acquisition Id Image |
-| `pixelTypeType` | Enumeration of image pixel data types. | `orbitPassType` | 32 bit Float 16 bit Signed Integer 16 bit Unsigned Integer 8 bit Unsigned Integer |
+| `missionPhaseIDType` | Enumeration of all valid BIOMASS mission phases. | `xsd:string` | COM <br> INT <br> TOM |
+| `sensorModeType` | Enumeration of valid sensor mode abbreviations. | `xsd:string` | Measurement <br> RX Only <br> External Calibration |
+| `orbitPassType` | Enumeration of the orbit pass direction values. | `xsd:string` | Ascending <br> Descending |
+| `projectionType` | Enumeration of the image projection. | `xsd:string` | Slant Range <br> Ground Range <br> Latitude longitude based on DGG <br> DGG |
+| `pixelRepresentationType` | Representation of the image pixels within the image MDS. | `orbitPassType` | I Q <br> Abs Phase <br> Abs <br> Probability of change <br> Computed forest mask <br> Forest Disturbance <br> Heat Map <br> Forest Height [m] <br> Forest height quality <br> Forest mask <br> Ground Cancelled Backscatter <br> Above Ground Biomass [t/ha] <br> Above Ground Biomass quality [t/ha] <br> Acquisition Id Image |
+| `pixelTypeType` | Enumeration of image pixel data types. | `orbitPassType` | 32 bit Float <br> 16 bit Signed Integer <br> 16 bit Unsigned Integer <br> 8 bit Unsigned Integer |
 | `coordinateReferenceSystemType` | Coordinate reference systems, as per WKT representation {rd}`8`. | `xsd:string` |   |
-| `geodeticReferenceFrameType` | Enumeration of geodetic reference frames. | `xsd:string` | WGS84 ITRF2000 |
-| `uomType` | Enumeration of unit of measures. | `xsd:string` | s UTC m samples lines deg rad Hz Hz/s dB Mbps C K rad/s mm/Km rad/m 1/m t/ha (rad/nT)^2 |
+| `geodeticReferenceFrameType` | Enumeration of geodetic reference frames. | `xsd:string` | WGS84 <br> ITRF2000 |
+| `uomType` | Enumeration of unit of measures. | `xsd:string` | s <br> UTC <br> m <br> samples <br> lines <br> deg <br> rad <br> Hz <br> Hz/s <br> dB <br> Mbps <br> C <br> K <br> rad/s <br> mm/Km <br> rad/m <br> 1/m <br> t/ha <br> (rad/nT)^2 |
 | float | 32 bit single precision floating point number. | `xsd:float` | units |
 | double | 64 bit double precision floating point number. | `xsd:double` | units |
 | bool | Boolean (true or false). | `xsd:boolean` | (false)\|(true) |
@@ -57,9 +57,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 47</span><span class="caption-text"> — Primitive product types with custom attributes</span></p>
 
-| Name | Description | Base Type | Attributes |
+| **Name** | **Description** | **Base Type** | **Attributes** |
 |---|---|---|---|
-| `acquisitionType` | String containing an acquisition folder name; The mandatory `referenceImage` attribute is a bool to indicate if the acquisition is the reference one. The optional `averageWavenumber` attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in FH. | `xsd:string` | `referenceImage` (mandatory, bool) `averageWavenumber` (optional, float) |
+| `acquisitionType` | String containing an acquisition folder name; <br> The mandatory *`referenceImage`* attribute is a *bool* to indicate if the acquisition is the reference one. <br> The optional *`averageWavenumber`* attribute is a float with the average value of the vertical wavenumber of the acquisition. Not used in FH. | `xsd:string` | `referenceImage` (mandatory, bool) <br> `averageWavenumber` <br> (optional, float) |
 
 :::
 
@@ -68,7 +68,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 48</span><span class="caption-text"> — Common product types (datumType)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | `coordinateReferenceSystem` | Coordinate reference system. | `coordinateReferenceSystemType` | 1 |
 | `geodeticReferenceFrame` | Geodetic reference frame. | `geodeticReferenceFrameType` | 1 |
@@ -80,7 +80,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 49</span><span class="caption-text"> — Common product types (minMaxNumType )</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | min | Minimum value. | `xsd:float` | 1 |
 | max | Maximum value. | `xsd:float` | 1 |
@@ -93,7 +93,7 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 50</span><span class="caption-text"> — Common product types (floatArrayWithUnits)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
 | count | counter | `xsd:unsignedInt` | 1 |
 | units | units | `uomType` | 1 |
@@ -106,9 +106,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 51</span><span class="caption-text"> — Common product types (floatWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | *`uomType`* | *1* |
 | `floatWithUnit` | 32 bit single precision floating point number. | `xsd:float` | 1 |
 
 :::
@@ -118,9 +118,9 @@ The following table summarizes and describes those primitive product types for w
 
 <p class="atbd-table-caption"><span class="caption-number">Table 52</span><span class="caption-text"> — Common product types (doubleWithUnit)</span></p>
 
-| Name | Description | Data Type | Cardinality |
+| **Name** | **Description** | **Data Type** | **Cardinality** |
 |---|---|---|---|
-| units | units | `uomType` | 1 |
+| *units* | *units* | *`uomType`* | *1* |
 | `doubleWithUnit` | 64 bit double precision floating point number. | xsd: double | 1 |
 
 :::

@@ -114,6 +114,13 @@ def _atbd_pdf_path(app: Any, root: str = ATBD_ROOT) -> Path:
     return Path(app.srcdir) / "_static" / "pdf" / _pdf_filename(root)
 
 
+def _human_size(size: int) -> str:
+    """File size for the download button: ``1.5 MB``, ``320 kB``."""
+    if size >= 1_000_000:
+        return f"{size / 1_000_000:.1f} MB"
+    return f"{max(1, round(size / 1000))} kB"
+
+
 def _static_pdf_uri(builder: Any, docname: str, pdf_name: str) -> str:
     """Relative link from ``docname`` to ``_static/pdf/<pdf_name>``.
 
@@ -140,7 +147,11 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
     root = _atbd_root(self.builder.current_docname) or ATBD_ROOT
     pdf_name = _pdf_filename(root)
     build_cmd = ATBD_PDF_BUILD_CMD.format(folder=pdf_name.removesuffix(".pdf"))
-    official = _root_meta(self.builder.app.srcdir, root).get("pdf_url") or ATBD_PDF_URL
+    meta = _root_meta(self.builder.app.srcdir, root)
+    # a converted document without a published PDF (re-issued for BPS v4.5.0,
+    # D-v3-10) names the approved document without a link: the AGB default
+    # would send the reader to another document (relecture W1, pfd-l2-fd)
+    official = meta.get("pdf_url") or (None if meta else ATBD_PDF_URL)
     pdf_path = _atbd_pdf_path(self.builder.app, root)
     if pdf_path.is_file():
         url = _static_pdf_uri(self.builder, self.builder.current_docname, pdf_name)
@@ -151,23 +162,21 @@ def _visit_atbd_pdf_export_html(self: Any, node: atbd_pdf_export) -> None:
             f'<i class="fa-solid fa-file-pdf"></i> '
             "Download this document as PDF</a> "
             "(generated from the same MyST source as this website).</p>"
-            "<p>The "
-            '<a class="reference external" '
-            f'href="{official}">'
-            "official archival PDF</a> on biomass-disc.info remains authoritative "
-            "until Aresys and ESA approve this web conversion.</p>"
-            "</div>"
+            # the same wording as the "Authoritative document" box of the
+            # document's first page: this PDF is an export, not the approved
+            # document (relecture, final W5)
+            + ("<p>This export is not the approved document: the "
+               '<a class="reference external" '
+               f'href="{official}">'
+               "official ESA PDF</a> is.</p>"
+               if official else
+               "<p>This export is not the approved document; the approved ESA "
+               "document is the reference.</p>")
+            + "</div>"
         )
-    else:
-        self.body.append(
-            '<div class="admonition note">'
-            '<p class="admonition-title">PDF export</p>'
-            f"<p>Build the web-export PDF from the <code>docs/</code> directory with "
-            f"<code>{build_cmd}</code> (requires TeX Live or MacTeX). "
-            f"The file is written to <code>_static/pdf/{pdf_name}</code> "
-            "and linked here once generated.</p>"
-            "</div>"
-        )
+    # no PDF built: nothing on the published page (the build command is a
+    # maintainer's note, in the Makefile, not for the readers)
+    del build_cmd
     raise nodes.SkipNode
 
 
@@ -200,8 +209,10 @@ def _inject_atbd_sidebar_toc(
         context["atbd_pdf_url"] = _static_pdf_uri(
             app.builder, pagename, _pdf_filename(root)
         )
+        context["atbd_pdf_size"] = _human_size(pdf_path.stat().st_size)
     else:
         context["atbd_pdf_url"] = None
+        context["atbd_pdf_size"] = ""
 
 
 def _silence_sidebar_wildcard_warnings(_app: Any, _config: Any) -> None:

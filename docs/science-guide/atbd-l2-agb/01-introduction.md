@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -102,7 +102,7 @@ This document is organized as follows:
 |---|---|
 | <span id="rd1"></span>`[RD1]` | BIO-BPS-L1-STACK-ATBD, BIOMASS BPS L1c Stack ATBD, I/R 1/1/2 |
 | <span id="rd2"></span>`[RD2]` | BIO-BPS-L1-SAR-ATBD, BIOMASS BPS L1 SAR ATBD, I/R 1/1/2 |
-| <span id="rd3"></span>`[RD3]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07th 2021 |
+| <span id="rd3"></span>`[RD3]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07{sup}`th` 2021 |
 | <span id="rd4"></span>`[RD4]` | M. Mariotti d’Alessandro, S. Tebaldini, S. Quegan, M. J. Soja, L. M. H. Ulander and K. Scipal, "Interferometric Ground Cancellation for Above Ground Biomass Estimation," in IEEE Transactions on Geoscience and Remote Sensing, vol. 58, no. 9, pp. 6410-6419, Sept. 2020 |
 | <span id="rd5"></span>`[RD5]` | Snowdon, Peter. "A ratio estimator for bias correction in logarithmic regressions." Canadian Journal of Forest Research 21.5 (1991): 720-724 |
 | <span id="rd6"></span>`[RD6]` | Díaz-Francés, Eloísa, and Francisco J. Rubio. "On the existence of a normal approximation to the distribution of the ratio of two independent normal random variables." Statistical Papers 54 (2013): 309-323 |

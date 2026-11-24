@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -18,12 +18,12 @@ The declination and customisation of this format structure for BIOMASS Forest Di
 - the main images MDS, including the Forest Disturbance binary raster data, the computed CFM mask and the probability of change, all aggregated in L2b tiles and organised in three Cloud Optimized GeoTIFF (COG) files;
 - the aggregated Heat Map annotation, two maps of integers which store, pixel wise, how many L1c images contribute to the L2b pixel (first layer) and how many L1c images contribute to the decision, in a Cloud Optimized GeoTIFF (COG) file;
 - main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file;
-- STAC metadata ADS (see description in {sec}`section|3`);
+- STAC metadata ADS (see description in {sec}`section 3 <3>`);
 - quick-look ADS, including an averaged and decimated previews of measurement MDS;
 - Overlay ADS, for viewing the Quick-look ADS in any application that supports KML format (like, e.g., Google Earth or GIS applications);
 - XML schemas RDS, including the schemas needed for all the XML files included in the product.
 
-No need for Look-Up Tables (LUT) ADS in L2b products.
+*No need for Look-Up Tables (LUT) ADS in L2b products.*
 
 **No Data Value**
 
@@ -68,34 +68,34 @@ BIOMASS L2b Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 39</span><span class="caption-text"> — Forest Disturbance L2b products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS Forest Disturbance L2b Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS Forest Disturbance L2b Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
-| ∟ measurement |   | Folder |   |
-| ∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
-| ∟ Probability of change | 1 | COG | Probability of forest change MDS |
-| ∟ CFM | 1 | COG | Computed Forest Mask MDS |
-| ∟ annotation |   | Folder |   |
-| ∟ main | 1 | \| | Main ADS, including: Product DSR Raster Image DSR Input information DSR Processing parameters DSR |
-| ∟ Heat Map | 2 | COG | Pixel wise agreeing and contributing L1c counters |
-| ∟ acquisition id image | 1 | COG | Pixel wise binary indicator of contributing images |
-| ∟ preview |   | Folder |   |
-| ∟ quicklook | 3 | PNG | Quick-look ADS for: Forest Disturbance (from measurement) Probability Of Change (from measurement) CFM (from measurement) Heat Map agreeing (from annotations) Heat Map contributing (from annotations) |
-| ∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
-| ∟ schema |   | Folder |   |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Probability of change | 1 | COG | Probability of forest change MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ CFM | 1 | COG | Computed Forest Mask MDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | \| | Main ADS, including: <br> • Product DSR <br> • Raster Image DSR <br> • Input information DSR <br> • Processing parameters DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Heat Map | 2 | COG | Pixel wise agreeing and contributing L1c counters |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ acquisition id image | 1 | COG | Pixel wise binary indicator of contributing images |
+| <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 3 | PNG | Quick-look ADS for: <br> • Forest Disturbance (from measurement) <br> • Probability Of Change (from measurement) <br> • CFM (from measurement) <br> • Heat Map agreeing (from annotations) <br> • Heat Map contributing (from annotations) |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 
 (sec:pfd-fd-5-1)=
 ### 5.1 Product format definition guidelines
 
-Refer to {sec}`3.1`.
+Refer to {sec}`Sec. 3.1 <3.1>`.
 
 (sec:pfd-fd-5-2)=
 ### 5.2 Naming convention
@@ -110,14 +110,14 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_FD__L2B`: Forest Disturbance L2b product;
+  - `FP_FD__L2B`: Forest Disturbance L2b product;
 - `<P>`: Mission phase identifier;
 - `<CC>`: Global Coverage identifier;
 - `<TTTTTTT>`: Tile number of the product, the seven digits are `[N|S]aa[E|W]bbb`, where:
-    - `N|S:` stands for North or South;
-    - `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
-    - `E|W:` stands for East or West;
-    - `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
+  - `N|S:` stands for North or South;
+  - `aa:` latitude in two digits padded with zeros (at 0º N or S are both valid);
+  - `E|W:` stands for East or West;
+  - `bbb:` longitude over 3 digits padded with zeros ( at 0º E or W are both valid);
 - `<BBB>`: Basin literal identifier of the product (string);
 - `<BB>:` Baseline Identifier;
 - `<DDDDDD>`: Compact creation date.
@@ -127,21 +127,21 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[fd|probability|cfm].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_i_[acquisition_id_image|heatmap].tiff` for images in annotations;
-    - `*_[fd|probability|cfm|hmagreeing|hmcontrib]_ql.png` for quick-look ADS;
-    - `*_[fd|probability|cfm|hmagreeing|hmcontrib]_map.kml` for overlay ADS;
-    - `*.xsd` for support schemas RDS.
-    - `*.json` for STAC
+  - `*.xml` for main product header;
+  - `*_i_[fd|probability|cfm].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_i_[acquisition_id_image|heatmap].tiff` for images in annotations;
+  - `*_[fd|probability|cfm|hmagreeing|hmcontrib]_ql.png` for quick-look ADS;
+  - `*_[fd|probability|cfm|hmagreeing|hmcontrib]_map.kml` for overlay ADS;
+  - `*.xsd` for support schemas RDS.
+  - `*.json` for STAC
 
-For basins, the following notation is used:
+*For basins, the following notation is used:*
 
-- • South America tropical: 100
-- • South America temperate: 200
-- • Africa tropical/temperate: 300
-- • Asia temperate: 400
-- • Asia tropical: 500
-- • Oceania tropical/temperate: 600
-- • Exclusion zone: 700
+- • *South America tropical: 100*
+- • *South America temperate: 200*
+- • *Africa tropical/temperate: 300*
+- • *Asia temperate: 400*
+- • *Asia tropical: 500*
+- • *Oceania tropical/temperate: 600*
+- • *Exclusion zone: 700*

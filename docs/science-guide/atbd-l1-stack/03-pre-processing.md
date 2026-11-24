@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -150,13 +150,13 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $m_{RFI}$ |   | L1a | M masks of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated at L1 |
+| $m_{RFI}$ |   | L1a | M masks of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated at L1 |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\gamma_{RFI}$ |   | Primary image selection | M Float values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
+| $\gamma_{RFI}$ |   | Primary image selection | M Float <br> values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
 
 (sec:atbd-l1-stack-3-1-3)=
 #### 3.1.3 Mathematical Description
@@ -171,29 +171,29 @@ Let $(t_i,\tau_i)$ be respectively the fast (range) and slow (azimuth) time coor
 (equation-eq-atbd-l1-stack-3-1)=
 \begin{equation}
 \begin{aligned}
-f_{r,\ i}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{RFI})\bullet\frac{r}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{RFI})\bullet\cos(\psi(\tau_i;r,a)) \\
-f_{a,i}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{RFI})\bullet\frac{S_a(\tau_i)-a}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{RFI})\bullet\sin(\psi(\tau_i;r,a))
+f_{\mathrm{r},\ \mathrm{i}}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\frac{r}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\cos(\psi(\tau_i;r,a)) \\
+f_{a,i}(t_i,\ \tau_i;r,a)=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\frac{S_a(\tau_i)-a}{R(\tau_i;r,a)}=\frac{2}{c}(f_c+f_{\mathrm{RFI}})\bullet\sin(\psi(\tau_i;r,a))
 \end{aligned}
 \tag{3.1}
 \end{equation}
 
 where:
 
-- $f_c$ is the central (carrier) frequency (i.e. 435 MHz);
+- $f_c$ is the central (carrier) frequency (*i.e.* 435 MHz);
 - $S_a(\tau_i)$ is the azimuth position of the sensor at slow time $\tau_i$;
-- $R(\tau_i;r,a)$ is the distance from the target at $(r,a)$to the sensor at $\tau_i$;
+- $R(\tau_i;r,a)$ is the distance from the target at $(r,a)$ to the sensor at $\tau_i$;
 - $\psi(\tau_i;r,a)$ is the squint angle between the target at $(r,a)$ and the sensor at $\tau_i$;
-- $f_{RFI}$ is the temporal frequency suppressed by the RFI, which depends on $t_i$and the chirp rate $\alpha$ as follows
+- $f_{\mathrm{RFI}}$ is the temporal frequency suppressed by the RFI, which depends on $t_i$ and the chirp rate $\alpha$ as follows
 
 $$
-f_{RFI}(t_i,\ \tau_i;r,\ a)=\alpha\bullet(t_i-\frac{2}{c}R(\tau_i;r,a))
+f_{\mathrm{RFI}}(t_i,\ \tau_i;r,\ a)=\alpha\bullet\left( t_i-\frac{2}{c}R(\tau_i;r,a) \right) .
 \tag{3.2}
 $$ (eq:atbd-l1-stack-3-2)
 
 For the sake of brevity and without loss of generality, below we will report the explicit derivation of the missing frequency in the $r$ component. The azimuth component can be obtained similarly. The missing wavenumber for each target $(r,a)$ has been defined as the union of all the RFI contributions ($n_I$) affecting the image and belonging to the bandwidth ($B_r$) of the images.
 
 $$
-f_{r,miss}(r,a)=(\sum_{i=1}^{n_I}{O(f_{r,i}(t_i,\ \tau_i;r,a),\ B_r)})-f_{r,int}(r,a),
+f_{r,miss}(r,a)=\left( \sum_{i=1}^{n_I}{O(f_{r,i}(t_i,\ \tau_i;r,a),\ B_r)} \right)-f_{r,int}(r,a),
 \tag{3.3}
 $$ (eq:atbd-l1-stack-3-3)
 
@@ -210,7 +210,7 @@ $$ (eq:atbd-l1-stack-3-4)
 - $O({\overline{v}}_1,\ \ldots{,\overline{v}}_n)$ is defined as follows:
 
 $$
-O({\overline{v}}_1,\ \ldots{,\overline{v}}_n)\mathrel{:=}\max{{In({\overline{v}}_1,\ \ldots{,\overline{v}}_n),\ 0}}
+O({\overline{v}}_1,\ \ldots{,\overline{v}}_n)\mathrel{:=}\max{\{In({\overline{v}}_1,\ \ldots{,\overline{v}}_n),\ 0\}}
 \tag{3.5}
 $$ (eq:atbd-l1-stack-3-5)
 
@@ -224,18 +224,18 @@ $$ (eq:atbd-l1-stack-3-6)
 The RFI impact to the coherence for each image, has been defined as the product of the coherence loss due to the missing spectral components in azimuth and range:
 
 $$
-\gamma_{RFI}(r,a)=(1-\frac{f_{a,miss}(r,a)}{B_a})\cdot\ (1-\frac{f_{r,miss}(r,a)}{B_r})
+\gamma_{RFI}(r,a)=\left( 1-\frac{f_{a,miss}(r,a)}{B_a} \right)\cdot\ \left( 1-\frac{f_{r,miss}(r,a)}{B_r} \right)
 \tag{3.7}
 $$ (eq:atbd-l1-stack-3-7)
 
 Where:
 
-- $B_a$ and $B_r$ are the bandwidths inazimuth and range direction respectively.
+- $B_a$ and $B_r$ are the bandwidths in azimuth and range direction respectively.
 
 (sec:atbd-l1-stack-3-1-3-2)=
 ##### 3.1.3.2 Computation of Coherence Degradation Index
 
-The algorithm to compute the coherence degradation index⁽¹⁾ is based on the theoretical basis described in the previous section, but some simplifications can be performed. Under the assumption that the range migration can be neglected, the impact of RFI on the spectrum can be computed separately on azimuth and range direction as the sum of the pixel values of the masks used to focus a pixel in the SLC. This can be defined as the convolution between the RFI mask and a 2D boxcar filter with the sizes of the focusing kernel, i.e., the synthetic aperture $L_{sa}$ (in azimuth) and the chirp length $L_{chirp}$ (in range):
+The algorithm to compute the coherence degradation index⁽¹⁾ is based on the theoretical basis described in the previous section, but some simplifications can be performed. Under the assumption that the range migration can be neglected, the impact of RFI on the spectrum can be computed separately on azimuth and range direction as the sum of the pixel values of the masks used to focus a pixel in the SLC. This can be defined as the convolution between the RFI mask and a 2D boxcar filter with the sizes of the focusing kernel, *i.e.*, the synthetic aperture $L_{sa}$ (in azimuth) and the chirp length $L_{chirp}$ (in range):
 
 [1] The coherence degradation index is polarization dependent. Hence, the stack Pre-processor will compute one index per polarization.
 
@@ -268,7 +268,7 @@ where:
 Note that the formulation of the RFI coherence degradation index can be further simplified as follows:
 
 $$
-\gamma_{RFI}\approx(1-\frac{1}{L_tL_{\tau}}\cdot\sum_{t,\tau}^{L_t,\ \ L_{\tau}}{m_{RFI}(t,\ \tau)})^2.
+\gamma_{RFI}\approx\left( 1-\frac{1}{L_tL_{\tau}}\cdot\sum_{t,\tau}^{L_t,\ \ L_{\tau}}{m_{RFI}(t,\ \tau)} \right)^2.
 \tag{3.10}
 $$ (eq:atbd-l1-stack-3-10)
 
@@ -289,22 +289,22 @@ For monostatic SAR acquisition focused on natural targets (forest and ice) we ca
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $m_{RFI}$ |   | L1a | M Boolean masks of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated by `L1_P` |
-| $\Sigma_n$ |   | L1a | M Float matrices of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps estimated by `L1_P` |
-| $SCS_n$ |   | L1a | N images of size $[N_{az}\times{}N_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | SCS images |
+| $m_{RFI}$ |   | L1a | M Boolean masks of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | RFI masks estimated by `L1_P` |
+| $\Sigma_n$ |   | L1a | M Float matrices of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps estimated by `L1_P` |
+| $SCS_n$ |   | L1a | N images of size <br> $[N_{az}\times{}N_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | SCS images |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\gamma_{RFI}$ |   | Primary image selection | M Float values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
-| $\Sigma_n$ |   | L1a | M Float matrices of size $[{N'}_{az}\times{N'}_{rg}]$ (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps with (optionally) merged cross-polarizations |
-| $SCS_n$ |   | [BREAKPOINT] Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) | - | The SCS with (optionally) merged cross-polarizations |
+| $\gamma_{RFI}$ |   | Primary image selection | M Float <br> values | M=3 (INT) or M=7 (TOM) | - | RFI degradation indices |
+| $\Sigma_n$ |   | L1a | M Float matrices of size <br> $[{N'}_{az}\times{N'}_{rg}]$ <br> (one per polarization) | M=3 (INT) or M=7 (TOM) matrices | - | Denoising maps with (optionally) merged cross-polarizations |
+| $SCS_n$ |   | [BREAKPOINT] <br> Stacking | M images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) | - | The SCS with (optionally) merged cross-polarizations |
 
 (sec:atbd-l1-stack-3-2-3)=
 #### 3.2.3 Mathematical description
 
-Given the two cross-pol channels ${SCS}_{HV}$ and $SCS_{VH}$ affected by i.i.d. AWGN, we define the cross-pol merged channel, which we henceforth denote by XX, as the average of the 2 cross-pol channels HV and VH:
+Given the two cross-pol channels ${SCS}_{HV}$ and $SCS_{VH}$ affected by *i.i.d.* AWGN, we define the cross-pol merged channel, which we henceforth denote by XX, as the average of the 2 cross-pol channels HV and VH:
 
 $$
 SCS_n^{XX}\mathrel{:=}\frac{1}{2}(SCS_n^{HV}+SCS_n^{VH}).
@@ -318,21 +318,21 @@ Note that, owing to the above definition, it follows that
 
 where $\mathbb{E}$ and $\sigma$ denotes the expected value and the standard deviation. Hence, it is easy to see that the noise contribution is reduced by a factor of $\sqrt{2}$, which results in the SNR being increased by a factor of 2.
 
-RFI masks. Set $m_{{RFI}_{HV}}$ and $m_{{RFI}_{VH}}$ to be the RFI masks corresponding to channels HV and VH and set $m_{RFI_{XX}}$ to be the RFI mask corresponding to the cross-pol merged channel, $m_{RFI_{XX}}$ is obtained by applying a component-wise logical OR ($\vee)$:
+**RFI masks**. Set $m_{{RFI}_{HV}}$ and $m_{{RFI}_{VH}}$ to be the RFI masks corresponding to channels HV and VH and set $m_{RFI_{XX}}$ to be the RFI mask corresponding to the cross-pol merged channel, $m_{RFI_{XX}}$ is obtained by applying a component-wise logical OR ($\vee)$:
 
 $$
 m_{{RFI}_{XX}}\mathrel{:=}{}m_{{RFI}_{VH}}\vee{}m_{{RFI}_{VH}}.
 \tag{3.12}
 $$ (eq:atbd-l1-stack-3-12)
 
-Denoising. From {eq}`Equation|3.11`, the denoising map of the cross-pol merged data can be estimated as follows: Since all noise terms are assumed to be AWGN, it holds that
+**Denoising**. From {eq}`Equation 3.11 <3.11>`, the denoising map of the cross-pol merged data can be estimated as follows: Since all noise terms are assumed to be AWGN, it holds that
 
 $$
 SCS_n^{XX}\mathrel{:=}\frac{SCS_n^{HV}+SCS_n^{VH}}{2}=\frac{\mathbb{E}\left[ SCS_n^{HV} \right]+w_{HV}+\mathbb{E}\left[ SCS_n^{VH} \right]+w_{VH}}{2}=\mathbb{E}\left[ SCS_n^{XX} \right]+w_{XX}.
 \tag{3.13}
 $$ (eq:atbd-l1-stack-3-13)
 
-Thus, by evaluating the variance of both sides of {eq}`Equation|3.13` and since the variance of normally distributed independent variables is a quadratic form, the denoising map $\Sigma_n^{XX}$ of the cross-pol merged channel is
+Thus, by evaluating the variance of both sides of {eq}`Equation 3.13 <3.13>` and since the variance of normally distributed independent variables is a quadratic form, the denoising map $\Sigma_n^{XX}$ of the cross-pol merged channel is
 
 (equation-eq-atbd-l1-stack-3-14)=
 \begin{equation}
@@ -346,7 +346,7 @@ Thus, by evaluating the variance of both sides of {eq}`Equation|3.13` and since 
 (sec:atbd-l1-stack-3-3)=
 ### 3.3 Coregistration Primary Image Selection
 
-The L2 processor of BIOMASS works on an interferometric stack, for this reason the selection of the coregistration primary image is an important step of the stacking processor. This step must consider both the geometry that maximizes the valid areas and the quality of the image in order to avoid, for instance, using a reference image affected by e.g. strong ionosphere, which may degrade the quality of the whole stack.
+The L2 processor of BIOMASS works on an interferometric stack, for this reason the selection of the coregistration primary image is an important step of the stacking processor. This step must consider both the geometry that maximizes the valid areas and the quality of the image in order to avoid, for instance, using a reference image affected by *e.g.* strong ionosphere, which may degrade the quality of the whole stack.
 
 (sec:atbd-l1-stack-3-3-1)=
 #### 3.3.1 Overview
@@ -357,9 +357,9 @@ The key task of the coregistration primary image selection step is to define whi
 
 Besides the “classical” approach of selecting the coregistration primary as the central images with respect to acquisition geometry (baselines), here the idea is that this selection should be based also on the quality of the images as it can be inferred from the auxiliary information already available from the L1 processor.
 
-In interferometric processing, the temporal location of the image is often used (e.g. avoid selection of a too “old” image). According to the BIOMASS mission, this should not be a problem thanks to the short repeat pass which will limit the time span of the whole stack to a worst case of 18 days (7 images with 3-days repeat during the TOM phase). Nevertheless, a temporal selection criterion is also available in the BPS.
+In interferometric processing, the temporal location of the image is often used (*e.g.* avoid selection of a too “old” image). According to the BIOMASS mission, this should not be a problem thanks to the short repeat pass which will limit the time span of the whole stack to a worst case of 18 days (7 images with 3-days repeat during the TOM phase). Nevertheless, a temporal selection criterion is also available in the BPS.
 
-In the reminder of this section we will provide general definitions of stack’s normal baselines ({sec}`Section|3.3.3.1`) and temporal baselines ({sec}`Section|3.3.3.2`), and describe how these are used in combination with quality criteria for the selection of the coregistration primary image ({sec}`Section|3.3.3.3`).
+In the reminder of this section we will provide general definitions of stack’s *normal baselines* ({sec}`Section 3.3.3.1 <3.3.3.1>`) and *temporal baselines* ({sec}`Section 3.3.3.2 <3.3.3.2>`), and describe how these are used in combination with quality criteria for the selection of the coregistration primary image ({sec}`Section 3.3.3.3 <3.3.3.3>`).
 
 (fig:atbd-l1-stack-6)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -436,8 +436,8 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $SCS_n$ |   | L1a | M stack images of size $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | The input stack |
-| $\gamma_{RFI}$ |   | Pre-procesor quality measure | M Float values | M=3 (INT) or M=7 (TOM) | - | The RFI decorrelation indices |
+| $SCS_n$ |   | L1a | M stack images of size <br> $[N_{az}\times{}N_{rg}]$ | M=3 (INT) or M=7 (TOM) matrices | - | The input stack |
+| $\gamma_{RFI}$ |   | Pre-procesor <br> quality measure | M Float values | M=3 (INT) or M=7 (TOM) | - | The RFI decorrelation indices |
 | $\gamma_{far}$ |   | L1a | M Float values | M=3 (INT) or M=7 (TOM) | - | The decorrelation from Faraday rotation coming from L1a |
 | $\gamma_{RFI}^{ref}$ |   | `AUX_PPS` | Float | 1 | 0.9 | Threshold on the RFI to discard a coregistration primary candidate |
 | $\gamma_{far}^{ref}$ |   | `AUX_PPS` | Float | 1 | 0.9 | Threshold on the FR to discard a coregistration primary candidate |
@@ -446,7 +446,7 @@ flowchart TB
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $n_{ref}$ |   | Stacking and calibration module | Integer value | 1 | - | The index of the coregistration primary image |
+| $n_{ref}$ |   | Stacking and calibration <br> module | Integer value | 1 | - | The index of the coregistration primary image |
 
 (sec:atbd-l1-stack-3-3-3)=
 #### 3.3.3 Mathematical Description
@@ -454,36 +454,36 @@ flowchart TB
 (sec:atbd-l1-stack-3-3-3-1)=
 ##### 3.3.3.1 Spatial Baseline Computation
 
-Given $N>1$ SCS images and their acquisition geometry, we first direct geocode the center of an arbitrarily selected reference image $r$, say, for instance, the first image in the stack, and then perform the inverse geocoding of this point to the sensor positions of each image in the stack (with the exception of the previously selected image). This combination of direct and inverse geocoding allows for retrieving the position of the sensors of the images at the center of their scenes. We refer to {sec}`Section|4.1.3.1` for more details on direct and inverse geocoding. With spatial baseline ${\overrightarrow{B}}_i$, we hereby refer to the sensor position of the $i$-th frame relative to the sensor position of the reference image ${\overrightarrow{S}}_r$(both computed at the center of the scenes). That can be trivially calculated as follows:
+Given $N>1$ SCS images and their acquisition geometry, we first direct geocode the center of an arbitrarily selected reference image $r$, say, for instance, the first image in the stack, and then perform the inverse geocoding of this point to the sensor positions of each image in the stack (with the exception of the previously selected image). This combination of direct and inverse geocoding allows for retrieving the position of the sensors of the images at the center of their scenes. We refer to {sec}`Section 4.1.3.1 <4.1.3.1>` for more details on direct and inverse geocoding. With spatial baseline ${\overrightarrow{B}}_i$, we hereby refer to the sensor position of the $i$-th frame relative to the sensor position of the reference image ${\overrightarrow{S}}_r$ (both computed at the center of the scenes). That can be trivially calculated as follows:
 
 $$
 {\overrightarrow{B}}_i\mathrel{:=}\ {\overrightarrow{S}}_i-{\overrightarrow{S}}_r,\ \ \ i=1\ldots\ N;\ i\ \neq\ r.
 \tag{3.15}
 $$ (eq:atbd-l1-stack-3-15)
 
-Accordingly, the normal baseline $B_{i,\bot}$ of the $i$-th image can is defined as the signed magnitude of the projection of the $i$-th spatial baseline vector onto the vector normal to the trajectory, which is the direction normal to both the along-track (tangent) and LOS vectors, using a standard right-handed coordinate system.
+Accordingly, the *normal baseline* $B_{i,\bot}$ of the $i$-th image can is defined as the signed magnitude of the projection of the $i$-th spatial baseline vector onto the vector normal to the trajectory, which is the direction normal to both the along-track (tangent) and LOS vectors, using a standard right-handed coordinate system.
 
 (sec:atbd-l1-stack-3-3-3-2)=
 ##### 3.3.3.2 Temporal Baseline Computation
 
-Given $N>1$ SCS images, the temporal baselines are calculated as time difference between the acquisition start times:
+Given $N>1$ SCS images, the *temporal baselines* are calculated as time difference between the acquisition start times:
 
 $$
 \mathrm{\Delta}T_i=\ T_{0,i}-T_{0,r}\ ,\ \ \ i=1\ldots\ N,
 \tag{3.16}
 $$ (eq:atbd-l1-stack-3-16)
 
-where $r$ is an arbitrarily chosen reference image, e.g. the first image in the stack.
+where $r$ is an arbitrarily chosen reference image, *e.g.* the first image in the stack.
 
 (sec:atbd-l1-stack-3-3-3-3)=
 ##### 3.3.3.3 Selection of the Coregistration Primary Image
 
 To select the coregistration primary image, the following criteria are provided and can be chosen by the user via a configurable parameter of the AUX-PPS:
 
-- Temporal criterion (AUX-PPS parameter: “Temporal Baseline”). Given the temporal baselines $\mathbf{\Delta}\boldsymbol{T}\mathrel{:=}(\Delta{}T_1,\ldots,\Delta{}T_n)$ , the primary image is selected as the image with temporal baseline closest to the median temporal baseline, that is, $n^{ref}\mathrel{:=}\argmin_i\left\vert \Delta{}T_i-\left\langle \mathbf{\Delta}\boldsymbol{T} \right\rangle \right\vert$, where $\langle\cdot\rangle$ represents the median operator.
-- Normal baseline criterion (AUX-PPS parameter: “Geometry”). Similar to the temporal criterion, but with temporal baselines substituted by the normal baselines: $n^{ref}\mathrel{:=}\argmin_i\vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$, where $\boldsymbol{B}_{\bot}\mathrel{:=}(B_{1,\bot},\ldots,\ B_{n,\bot})$ and $\langle\cdot\rangle$ represents the median operator.
-- Normal baseline and RFI quality criterion (AUX-PPS parameters: “Geometry and RFI correction”). This criterion combines the normal baseline criterion with quality indicators from RFI. Set $\gamma_{i,RFI}\in[0,\ 1]$ to be the average of the expected decorrelation map due to RFI patterns in the image, i.e., the average over the image polarizations of the RFI indices described in {eq}`Equation|3.10` (possibly, after cross-pol merging), the coregistration primary is selected as $n^{ref}\mathrel{:=}\argmin_{i\in\Gamma_{RFI}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is defined as in the normal baseline criterion (see above) and ΓRFI≔{i=1,…,N γi,RFI≥γRFIref, that is the subset of images whose RFI indices are above a user defined threshold. In other words, this criterion restricts the normal baseline criterion to the images that have low RFI disturbances.
-- Normal baseline and FR quality criterion (AUX-PPS parameters: “Geometry and FR correction”). Similarly to the normal baseline and RFI quality criterion, the normal baseline selection is restricted to the images that have low FR disturbances, that is $n^{ref}\mathrel{:=}\argmin_{i\in\Gamma_{FR}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is defined as in the normal baseline criterion and ΓFR≔{i=1,…,N γi,FR≥γFRref. The Faraday Rotation quality index $\gamma_{i,FR}\in[0,1]$ is defined as the following decorrelation index:
+- *Temporal criterion* (AUX-PPS parameter: “Temporal Baseline”). Given the temporal baselines $\boldsymbol{\Delta}\boldsymbol{T}\mathrel{:=}(\Delta{}T_1,\ldots,\Delta{}T_n)$ , the primary image is selected as the image with temporal baseline closest to the median temporal baseline, that is, $n^{ref}\mathrel{:=}\operatorname{argmin}_i\left\vert \Delta{}T_i-\left\langle \boldsymbol{\Delta}\boldsymbol{T} \right\rangle \right\vert$, where $\langle\cdot\rangle$ represents the median operator.
+- *Normal baseline* *criterion* (AUX-PPS parameter: “Geometry”). Similar to the temporal criterion, but with temporal baselines substituted by the normal baselines: $n^{ref}\mathrel{:=}\operatorname{argmin}_i\vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$, where $\boldsymbol{B}_{\bot}\mathrel{:=}(B_{1,\bot},\ldots,\ B_{n,\bot})$ and $\langle\cdot\rangle$ represents the median operator.
+- *Normal baseline and RFI quality criterion* (AUX-PPS parameters: “Geometry and RFI correction”). This criterion combines the normal baseline criterion with quality indicators from RFI. Set $\gamma_{i,RFI}\in[0,\ 1]$ to be the average of the expected decorrelation map due to RFI patterns in the image, *i.e.*, the average over the image polarizations of the RFI indices described in {eq}`Equation 3.10 <3.10>` (possibly, after cross-pol merging), the coregistration primary is selected as $n^{ref}\mathrel{:=}\operatorname{argmin}_{i\in\Gamma_{RFI}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is defined as in the normal baseline criterion (see above) and $\Gamma_{RFI}\mathrel{:=}\{i=1,\ldots,N\ \left\vert \ \gamma_{i,RFI}\geq\gamma_{RFI}^{ref} \right\}$, that is the subset of images whose RFI indices are above a user defined threshold. In other words, this criterion restricts the normal baseline criterion to the images that have low RFI disturbances.
+- *Normal baseline and FR quality criterion* (AUX-PPS parameters: “Geometry and FR correction”). Similarly to the normal baseline and RFI quality criterion, the normal baseline selection is restricted to the images that have low FR disturbances, that is $n^{ref}\mathrel{:=}\operatorname{argmin}_{i\in\Gamma_{FR}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is defined as in the normal baseline criterion and $\Gamma_{FR}\mathrel{:=}\{i=1,\ldots,N\ \left\vert \ \gamma_{i,FR}\geq\gamma_{FR}^{ref} \right\}$. The Faraday Rotation quality index $\gamma_{i,FR}\in[0,1]$ is defined as the following decorrelation index:
 
 $$
 \gamma_{i,FR}\mathrel{:=}\sqrt{\frac{1}{2\sigma_{i,FR}^2+1}},
@@ -492,7 +492,7 @@ $$ (eq:atbd-l1-stack-3-17)
 
 with $\sigma_{i,FR}^2$ being the variance of the Faraday Rotation (phase screen) estimated by the L1 processor.
 
-- Normal baseline and RFI & FR quality criterion (AUX-PPS parameters: “Geometry and RFI+FR correction”). Similarly to the normal baseline and the quality criteria above, the normal baseline selection is restricted to the images that have both low RFI disturbances and low FR disturbances, that is $n^{ref}\mathrel{:=}\argmin_{i\in\Gamma_{RFI\land{}FR}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is as in the normal baseline criterion and $\Gamma_{RFI\land{}FR}\mathrel{:=}\Gamma_{RFI}\cap\Gamma_{FR}$, with $\Gamma_{RFI}$ and $\Gamma_{FR}$ defined in previous points.
+- *Normal baseline and RFI & FR quality criterion* (AUX-PPS parameters: “Geometry and RFI+FR correction”). Similarly to the normal baseline and the quality criteria above, the normal baseline selection is restricted to the images that have both low RFI disturbances and low FR disturbances, that is $n^{ref}\mathrel{:=}\operatorname{argmin}_{i\in\Gamma_{RFI\land{}FR}}\ \vert{}B_{i,\bot}-\left\langle \boldsymbol{B}_{\bot} \right\rangle\vert$ , where $\left\langle \boldsymbol{B}_{\bot} \right\rangle$ is as in the normal baseline criterion and $\Gamma_{RFI\land{}FR}\mathrel{:=}\Gamma_{RFI}\cap\Gamma_{FR}$, with $\Gamma_{RFI}$ and $\Gamma_{FR}$ defined in previous points.
 
 Note that the selected criteria are also annotated in the stack for quality control, we refer to the `L1_PFD` for more details on how the AUX-PPS parameters map onto the L1c annotations.
 
@@ -521,7 +521,7 @@ The algorithm takes as input the sub-sampled Lat-Lon-Height LUTs related to the 
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-|   | latitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The latitude LUT |
+|   | latitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The latitude <br> LUT |
 |   | longitude | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The longitude LUT |
 |   | height | L1a | $[{N'}_{az}\times{N'}_{rg}]$ | 1 | - | The altitude LUT |
 |   | `relativeAzimuthTimeRGC` | L1a | $\left[ 1\times{N^{'}}_{az} \right]$ | 1 | - | The LUT's azimuth time axis |
@@ -532,17 +532,17 @@ The algorithm takes as input the sub-sampled Lat-Lon-Height LUTs related to the 
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-|   | latitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The latitude LUT upsampled on the grid on the coregistration primary data |
+|   | latitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The latitude <br> LUT upsampled on the grid on the coregistration primary data |
 |   | longitude | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The longitude LUT upsampled on the grid on the coregistration primary data |
 |   | height | L1c | $[N_{az}\times{}N_{rg}]$ | 1 | - | The altitude LUT upsampled on the grid on the coregistration primary data |
-|   | XYZ | [BREAKPOINT] | $\left[ N_{az}\times{}N_{rg} \right]$ | 1 | - | DEM product, i.e. 3 channel product containing a fill resolution upsampled DEM. |
+|   | XYZ | [BREAKPOINT] | $\left[ N_{az}\times{}N_{rg} \right]$ | 1 | - | DEM product, *i.e.* 3 channel product containing a fill resolution upsampled DEM. |
 
 (sec:atbd-l1-stack-3-4-3)=
 #### 3.4.3 Mathematical Description
 
 Given an image $I_i$ which axis are $t_{X_i}$ and $t_{Y_i}$ for the columns and rows direction respectively, it is possible to perform an up-sapling though interpolation. The axis of the interpolated image $I$ will be $t_X$ and $t_Y$, which steps will be lower than the steps of $t_{X_i}$ and $t_{Y_i}$, so for each $t_X(k)$ and $t_Y(k)$ the value $I(t_Y(k),t_X(k))$ will be evaluated using a bi-cubic kernel. In image processing, bi-cubic interpolation is often chosen over bilinear or nearest-neighbor interpolation in image resampling; in contrast to bilinear interpolation, which only takes 4 ($2\times\ 2$) pixels into account, bi-cubic interpolation considers 16 pixels (4x4).
 
-Note about the bi-cubic interpolation. Suppose the function $f$ and the derivatives $f_x,\ \ f_y$ and $f_{xy}$ are knownat the four corners $(0,0),\ (1,0),\ (0,1)$ and $(1,1)$ of the unit square. The interpolated surface can be written as
+**Note about the bi-cubic interpolation**. Suppose the function $f$ and the derivatives $f_x,\ \ f_y$ and $f_{xy}$ are knownat the four corners $(0,0),\ (1,0),\ (0,1)$ and $(1,1)$ of the unit square. The interpolated surface can be written as
 
 $$
 p(x,y)=\sum_{i=0}^3{\sum_{j=0}^3{a_{ij}x^iy^j}}
@@ -658,8 +658,8 @@ f_{xy}(0,0),f_{xy}(1,0),f_{xy}(0,1),f_{xy}(1,1)]^T
 the above system of equations can be reformulated into a matrix for the linear equation
 
 $$
-\text{A\ }\text{α}\text{\ =\ b},
+\text{A }\text{α}\text{ = b},
 \tag{3.36}
 $$ (eq:atbd-l1-stack-3-36)
 
-which allows $\text{α}$� to be calculated quickly and easily.
+which allows $\text{α}$ to be calculated quickly and easily.

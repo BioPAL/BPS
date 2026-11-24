@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -13,11 +13,11 @@
 
 The BIOMASS Processing Suite (BPS) is in charge of processing BIOMASS Level-0 data up to Level-3, generating a wide set of products. Product generation scheme is depicted in the following two figures respectively for TOM phase and for INT phase. The processing foresees the following steps:
 
-- L1 processing: the BIOMASS image formation step, taking in input 1 L0 slice and generating in output N\>=1 L1 frames;
-- Stack Processing: the coregistration and stacking processing step that will define the required 7-images Tomographic stacks or the 3-images Interferometric stacks. It includes stack phase calibration;
-- L2a Processing: processing step for each stack that provides the inputs to the further products Tile Generation performed by the L2b processors. For one global cycle the number of stacks varies mainly with latitude, approximately from a minimum of two at the Equator (ascending/descending) to about six at higher latitudes (three ascending/descending pairs);
-- L2b Processing: processing that aggregates all the stack-based L2a products insisting on the same location on ground (Tile) in the same time interval and generates a single BIOMASS L2b product. A different number of stacks may be available for each DGG tile, based on tile dimensions and swath coverage (which is not related to DGG tiling pattern);
-- L3 Processing: consolidation processing removing discontinuities in L2b products.
+- **L1 processing**: the BIOMASS image formation step, taking in input 1 L0 slice and generating in output N\>=1 L1 frames;
+- **Stack Processing**: the coregistration and stacking processing step that will define the required 7-images Tomographic stacks or the 3-images Interferometric stacks. It includes stack phase calibration;
+- **L2a Processing**: processing step for each stack that provides the inputs to the further products Tile Generation performed by the L2b processors. For one global cycle the number of stacks varies mainly with latitude, approximately from a minimum of two at the Equator (ascending/descending) to about six at higher latitudes (three ascending/descending pairs);
+- **L2b Processing**: processing that aggregates all the stack-based L2a products insisting on the same location on ground (Tile) in the same time interval and generates a single BIOMASS L2b product. A different number of stacks may be available for each DGG tile, based on tile dimensions and swath coverage (which is not related to DGG tiling pattern);
+- **L3 Processing**: consolidation processing removing discontinuities in L2b products.
 
 (fig:atbd-l1-sar-1)=
 ::::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -382,9 +382,9 @@ The BPS L1 Processor is able to ingest BIOMASS Level-0 products, acquired in Str
 
 The whole processing chain is organized into three main steps:
 
-- L1 Pre-Processor, responsible of checking, ingesting and decoding the input L0 product and of analysing the dedicated Internal Calibration packets;
-- L1 Core Processor, responsible of implementing the L1 processing chain kernel;
-- L1 Post-Processor, responsible of formatting the processor outputs into official L1a (SCS) and L1b (DGM) products, depending on the performed processing chain.
+- **L1 Pre-Processor**, responsible of checking, ingesting and decoding the input L0 product and of analysing the dedicated Internal Calibration packets;
+- **L1 Core Processor**, responsible of implementing the L1 processing chain kernel;
+- **L1 Post-Processor**, responsible of formatting the processor outputs into official L1a (SCS) and L1b (DGM) products, depending on the performed processing chain.
 
 (fig:atbd-l1-sar-3)=
 :::{div} atbd-mermaid-figure atbd-drawn-figure
@@ -599,12 +599,12 @@ This module ingests the input L0 and auxiliary products and performs the followi
 - Raw data correction (I/Q bias, imbalance and orthogonality correction (the last two if required));
 - SWL equalization;
 - Internal calibration information retrieval, i.e.:
-    - Drifts;
-    - Replica;
-    - Internal delays;
-    - Internal channel imbalance between polarizations;
-    - Transmit power tracking;
-    - Instrument noise level;
+  - Drifts;
+  - Replica;
+  - Internal delays;
+  - Internal channel imbalance between polarizations;
+  - Transmit power tracking;
+  - Instrument noise level;
 - Orbit and attitude files ingestion;
 - 2D antenna patterns ingestion;
 - Back-geocoding (i.e., the retrieval of the X,Y,Z matrices of the external map in radar coordinates, necessary for the DC/FR estimation and the antenna pattern compensation steps).
@@ -673,4 +673,4 @@ Inputs and outputs for each processing sub-step are summarized in specific subse
 
 | Symbol | Name | Origin/ Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| Mathematical symbol of the quantity appearing in formulas | Name of the quantity as related to other BPS documentation (e.g., `AUX_FMT`, L1 ATBDs, …) | BPS document name describing the origin of the quantity or processing step of origin/destination or BPS product of destination | Dimensions of the quantity | Range of values or update rate of an internal resource | Default value for configuration parameters | Verbal description of the quantity and its characteristics (e.g., measure units, …) If the quantity is stored in an intermediate product, its name is indicated here too, in order to have a link with the complete list reported in {rd}`39` |
+| Mathematical symbol of the quantity appearing in formulas | Name of the quantity as related to other BPS documentation (e.g., `AUX_FMT`, L1 ATBDs, …) | BPS document name describing the origin of the quantity or processing step of origin/destination or BPS product of destination | Dimensions of the quantity | Range of values or update rate of an internal resource | Default value for configuration parameters | Verbal description of the quantity and its characteristics (e.g., measure units, …) <br> If the quantity is stored in an intermediate product, its name is indicated here too, in order to have a link with the complete list reported in {rd}`39` |

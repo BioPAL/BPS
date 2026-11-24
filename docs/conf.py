@@ -33,6 +33,7 @@ extensions = [
     "atbd_doc_refs",  # [ADn] / [RDn] / Fig.N / sec. / eq. links in the ATBD
     "atbd_latex_content",  # Figures, tables, equations of the ATBDs in LaTeX/PDF
     "science_guide_nav",  # Science Guide hub: ATBD list sidebar (not chapter tree)
+    "science_guide_verbatim",  # Converted Science Guide pages: no smart quotes/dashes
     "bps_version",  # Latest bps-v* tag for homepage version badge
     "meeting_status",  # Status badge from presentations/<deck>/meeting.yaml
     "atbd_pdf_layout",  # PDF export: front matter of the ATBD/PFD (LaTeX only)
@@ -152,10 +153,12 @@ html_logo = "_static/logos/BioPAL_textonright.png"
 _secondary_sidebar_items = {
     "index": [],
     "**": ["page-toc", "edit-this-page"],
+    # every page of a document (index and chapters): the PDF button sits right
+    # under "Edit on GitHub" and takes its style (template atbd-download-pdf.html)
     "science-guide/*/*": [
-        "page-toc",
-        "atbd-download-pdf.html",
         "edit-this-page",
+        "atbd-download-pdf.html",
+        "page-toc",
     ],
 }
 
@@ -244,7 +247,11 @@ html_sidebars = {
 # Custom CSS to override / extend theme defaults
 html_css_files = [
     "custom.css",
+    ("print.css", {"media": "print"}),
 ]
+
+# Ctrl+P from the browser: open the folded <details> and dropdowns first
+html_js_files = ["print-open.js"]
 
 templates_path = ["_templates"]
 

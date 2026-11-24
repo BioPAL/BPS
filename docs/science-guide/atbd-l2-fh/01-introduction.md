@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -24,10 +24,10 @@ The purpose of this document is to provide the “Forest Height Algorithms Theor
 
 This document is organized as follows:
 
-- {sec}`Section|1`: Overview of the document;
-- {sec}`Section|2`: Brief introduction about BPS and Forest Height processing;
-- {sec}`Section|3`: Description of L2a Forest Height algorithms;
-- {sec}`Section|4`: Description of L2b/L3 Forest Height algorithms.
+- {sec}`Section 1 <1>`: Overview of the document;
+- {sec}`Section 2 <2>`: Brief introduction about BPS and Forest Height processing;
+- {sec}`Section 3 <3>`: Description of L2a Forest Height algorithms;
+- {sec}`Section 4 <4>`: Description of L2b/L3 Forest Height algorithms.
 
 (sec:atbd-fh-1-3)=
 ### 1.3 Acronyms

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -236,6 +237,41 @@ class LatexInternalRefs(SphinxPostTransform):
                 node["refuri"] = f"%{target_doc}#{node[REFANCHOR_ATTR]}"
 
 
+class CleanBackslashUrls(SphinxPostTransform):
+    """Drop Markdown escapes (backslash before an underscore) left inside bare URLs.
+
+    A bare ``http://host/ig\\_rz.dat`` is autolinked with the backslash in the
+    href (``%5C``): the link is dead, in HTML and in the PDF. The visible text,
+    when it is the URL itself, is cleaned the same way.
+    """
+
+    default_priority = 49
+
+    def run(self, **kwargs: Any) -> None:
+        for node in self.document.findall(nodes.reference):
+            uri = node.get("refuri", "")
+            if not uri.startswith(("http://", "https://")):
+                continue
+            if "\\" not in uri and "%5C" not in uri:
+                continue
+            clean = uri.replace("%5C", "").replace("\\", "")
+            if node.astext() == uri.replace("%5C", "\\"):
+                node.children = [nodes.Text(clean)]
+            node["refuri"] = clean
+
+
+_EXPLICIT = re.compile(r"^(?P<text>.*?\S)\s*<(?P<num>[^<>]+)>$", re.S)
+
+
+def _explicit(raw: str) -> tuple[str, str] | None:
+    """``source text <number>``: (text shown as written, number to resolve).
+
+    The form the converted documents use when the source does not read like the
+    role default (``Section 5.2 <5.2>``, ``Equation (4.12) <4.12>``)."""
+    m = _EXPLICIT.match(raw.strip())
+    return (m.group("text"), m.group("num").strip()) if m else None
+
+
 def _split_prefix(raw: str) -> tuple[str | None, str]:
     if "|" in raw:
         prefix, num = (part.strip() for part in raw.split("|", 1))
@@ -275,7 +311,11 @@ class RDRole(_DocCodeRole):
 
 class FigRole(SphinxRole):
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        prefix, num = _split_prefix(self.text)
+        explicit = _explicit(self.text)
+        if explicit:
+            prefix, num = None, explicit[1]
+        else:
+            prefix, num = _split_prefix(self.text)
         hit = _resolve(self, "fig", num, FIGURE_TARGETS)
         if hit is None:
             msg = self.inliner.reporter.error(
@@ -285,6 +325,8 @@ class FigRole(SphinxRole):
             return [], [msg]
         target_doc, anchor = hit
         label = f"{prefix} {num}" if prefix else f"Fig.{num}"
+        if explicit:
+            label = explicit[0]
         return [_reference(self, label, target_doc, anchor)], []
 
 
@@ -293,7 +335,10 @@ class SecRole(SphinxRole):
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         raw = self.text.strip()
-        if "|" in raw:
+        explicit = _explicit(raw)
+        if explicit:
+            prefix, num = "", explicit[1]
+        elif "|" in raw:
             prefix, num = (part.strip() for part in raw.split("|", 1))
         else:
             prefix, num = "sec.", raw
@@ -307,6 +352,8 @@ class SecRole(SphinxRole):
             label = f"{prefix} {num}"
         else:
             label = f"{prefix} {num}"
+        if explicit:
+            label = explicit[0]
 
         hit = _resolve(self, "sec", num, SECTION_TARGETS)
         if hit is None:
@@ -325,7 +372,10 @@ class EqRole(SphinxRole):
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         raw = self.text.strip()
-        if "|" in raw:
+        explicit = _explicit(raw)
+        if explicit:
+            prefix, num = "", explicit[1]
+        elif "|" in raw:
             prefix, num = (part.strip() for part in raw.split("|", 1))
         else:
             prefix, num = "eq.", raw
@@ -337,6 +387,8 @@ class EqRole(SphinxRole):
             label = f"{prefix} {num}"
         else:
             label = f"{prefix} {num}"
+        if explicit:
+            label = explicit[0]
 
         hit = _resolve(self, "eq", num, EQUATION_TARGETS)
         if hit is None:
@@ -357,6 +409,7 @@ def setup(app: Sphinx) -> dict[str, Any]:
     app.add_role("sec", SecRole())
     app.add_role("eq", EqRole(), override=True)
     app.add_post_transform(LatexInternalRefs)
+    app.add_post_transform(CleanBackslashUrls)
     return {
         "version": "1.0",
         "parallel_read_safe": True,

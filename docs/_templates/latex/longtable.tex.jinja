@@ -6,6 +6,10 @@
     * "atbd-wide": the table also uses the left indent of the headings;
     * "atbd-caption-below": caption under the table (PFD originals);
     * "atbd-front": front-matter table, compact rows;
+    * grid of the originals (atbdtablegrid), centred cells in the input and
+      output tables of the ATBDs ("atbd-centered");
+    * the closing rule is part of the last foot, so that it cannot be left
+      alone on a page after the repeated header (orphan header);
     * header repeated on each page, without "continued" notes. -#>
 \begin{savenotes}
 \sphinxatlongtablestart
@@ -33,6 +37,10 @@
 <% endif -%>
 \atbdrowcontinuation
 \atbdtablefont
+\atbdtablegrid
+<% if 'atbd-centered' in table.classes -%>
+\atbdcenteredcells
+<% endif -%>
 <% if 'atbd-front' in table.classes -%>
 \renewcommand\arraystretch{1.3}
 <% endif -%>
@@ -55,8 +63,12 @@
 \begin{longtable}<%= table.get_colspec() %>
 <%- if table.caption and not below -%>
 \sphinxthelongtablecaptionisattop
+<%- if 'atbd-lead' in table.classes %>
+\noalign{\atbdleadcaption}\caption*{<%= ''.join(table.caption) %>\strut}<%= labels %>\\*
+<%- else %>
 \caption{<%= ''.join(table.caption) %>\strut}<%= labels %>\\*[\sphinxlongtablecapskipadjust]
-<% elif labels -%>
+<%- endif %>
+<% elif labels and not below -%>
 \noalign{\phantomsection<%= labels %>}%
 <% endif -%>
 \sphinxtoprule
@@ -80,12 +92,20 @@
 \noalign{\vskip\atbdcaptionskip}%
 \caption{<%= ''.join(table.caption) %>\strut}\\
 <% endif -%>
+<% if not below -%>
+\sphinxbottomrule
+<% endif -%>
 \endlastfoot
 \nopagebreak
 \sphinxtableatstartofbodyhook
 <%= ''.join(table.body) -%>
+<% if below -%>
 \sphinxbottomrule
+<% endif -%>
 \end{longtable}
+<% if below and labels -%>
+\phantomsection<%= labels %>
+<% endif -%>
 \sphinxtableafterendhook
 \sphinxatlongtableend
 \end{savenotes}

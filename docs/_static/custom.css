@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+ * SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS
  * SPDX-License-Identifier: Apache-2.0
  *
  * Custom overrides for the PyData Sphinx Theme on the BIOMASS BPS docs.
@@ -1151,6 +1151,26 @@ div.math .eqno {
   overflow: visible !important;
 }
 
+/* A display formula wider than the column (phone): its block scrolls sideways
+   instead of cutting its start. The theme lays div.math out as a flex box,
+   where the formula takes its own width: the block becomes a plain box no
+   wider than the column, and the formula keeps its natural width inside. */
+.bd-content div.math {
+  display: block !important;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding: 0.15em 0;
+}
+.bd-content div.math mjx-container[display="true"] {
+  /* as wide as the formula, at least the column: centred when it fits,
+     scrolled from its left edge when it does not */
+  width: max-content;
+  min-width: 100% !important;  /* MathJax sets min-width: 21em inline */
+  margin: 0.5em 0;
+}
+
 /* MAAP eligibility callouts — semantic accent colours */
 .maap-eligibility-notice.admonition,
 div.maap-eligibility-notice {
@@ -1834,4 +1854,99 @@ html[data-theme="dark"] .bps-chapters__time {
 .bps-chapters__speaker {
   font-size: 0.8rem;
   color: var(--pst-color-text-muted);
+}
+
+/* Phones: the two partner logos share the width instead of overflowing it
+   (the ESA logo was cut on the right at 375 px). */
+@media (max-width: 575.98px) {
+  .atbd-logo-banner__link {
+    flex: 0 1 45%;
+    min-width: 0;
+  }
+  .atbd-logo-banner__img {
+    height: auto;
+    max-height: 3rem;
+    max-width: 100%;
+  }
+}
+
+/* Colour key of a converted table (cell shading of the source, e.g. the FD
+   truth table): the span fills its whole cell, in both themes. */
+.bd-content td .atbd-cell-fill,
+.bd-content th .atbd-cell-fill {
+  display: block;
+  margin: -0.25rem -0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Converted documents: a row covered by a vertically merged cell of the source
+   repeats its content, muted (a Markdown table cannot span rows). */
+.bd-content td .atbd-rowspan-copy {
+  color: var(--pst-color-text-muted);
+}
+
+/* Converted documents: identifiers in table cells (parameter names, xsd types,
+   XPaths) wrap like words and break inside only when one alone is wider than
+   its column: "doubleWithUnit" is never cut into "doub / leWi / thUn / it"
+   (L1 PFD review W5-1); a table wider than the page scrolls. */
+.bd-content table td code,
+.bd-content table td .pre {
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* The last column of a converted table (usually "Description") keeps room for
+   its text instead of being squeezed by the identifier columns (FH 3.5.2). */
+@media (min-width: 768px) {
+  /* only wide tables (5 columns or more): small tables and the change history
+     keep their natural layout, phones keep theirs */
+  .bd-content table:has(tr > td:nth-child(5)) td:last-child {
+    min-width: 16rem;
+  }
+}
+
+/* Converted documents: text blocks typed line by line in the source (product
+   header tree, VRT and ncdump examples) wrap their long lines instead of
+   scrolling thousands of pixels; the indentation of each line is kept
+   (L1 PFD review W5-4). */
+.bd-content div.highlight-text pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Converted documents: the first column of a dropdown table (the dates of the
+   Change history) is never cut at its hyphens (W5-7). */
+.bd-content details.sd-dropdown table td:first-child {
+  white-space: nowrap;
+}
+
+/* An inline formula wider than the text column (marked by atbd-wide-math.js
+   after MathJax) scrolls in its own box instead of making the whole article
+   scroll; formulas that only overhang a few pixels keep the visible overflow
+   set above (L1 SAR 3.2.4, review W5-1/W2-3). */
+.bd-content span.math.atbd-wide-math {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  vertical-align: middle;
+}
+
+/* Notation key under the first XSD diagram of a converted document: a Markdown
+   block (it is printed in the PDF too), set small like a figure note. */
+.bd-content .xsd-diagram-legend {
+  font-size: 0.85em;
+  color: var(--pst-color-text-muted);
+}
+
+/* Coloured typed trees (PFD product header): the dark red and blue of the
+   source are lightened in the dark theme to stay readable (review W3-16). */
+html[data-theme="dark"] .bd-content pre.atbd-text-tree span[style*="C00000"],
+html[data-theme="dark"] .bd-content p span[style*="C00000"] {
+  color: #ff7b7b !important;
+}
+html[data-theme="dark"] .bd-content pre.atbd-text-tree span[style*="0070C0"],
+html[data-theme="dark"] .bd-content p span[style*="0070C0"] {
+  color: #6cb6ff !important;
 }

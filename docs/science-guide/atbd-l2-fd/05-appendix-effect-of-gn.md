@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -17,4 +17,4 @@ $$ (eq:atbd-fd-5-1)
 
 where ${\sigma({r,\ a,\ z})}^2$ is the uncorrelated reflectivity density of the distributed target along z, and $k_z(r,\ a)\ =\ k_z(r,\ a,\ 1)\ -\ k_z(r,\ a,\ 2)$ is the interferometric pair vertical wavenumber.
 
-Note that quantity in {eq}`eq|5.1` is never computed within `L2A_P`
+Note that quantity in {eq}`eq 5.1 <5.1>` is never computed within `L2A_P`

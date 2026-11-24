@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -20,7 +20,7 @@ The declination and customisation of this format structure for BIOMASS Forest He
 
 - a main product header (MPH), an XML file including high-level information about the product origin, structure and main metadata;
 - STAC metadata: the SpatioTemporal Asset Catalog specification (https://stacspec.org/en) provides a common structure for describing and cataloging spatiotemporal assets (it is a file that represents information about the earth captured in a certain space and time);
-- Forest Height image MDS, including the Forest Height image binary raster data and quality layer, organised in two Cloud Optimized GeoTIFF (COG) files (specific coding information in {sec}`section|4.2`);
+- Forest Height image MDS, including the Forest Height image binary raster data and quality layer, organised in two Cloud Optimized GeoTIFF (COG) files (specific coding information in {sec}`section 4.2 <4.2>`);
 - main annotation ADS, including the properties and characteristics of the measurement data or how the measurement data was generated, stored in a single XML file;
 - Look-Up Table (LUT) ADS, including those metadata being too voluminous to be coded efficiently in an XML file (i.e., Look-Up Tables) and requiring a binary file;
 - quick-look ADS, including an averaged and decimated previews of measurement MDS;
@@ -66,25 +66,25 @@ BIOMASS FH L2a Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Forest Height L2a products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS Forest Height L2a Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS Forest Height L2a Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
-| ∟ measurement |   | Folder |   |
-| ∟ Forest Height | 1 | COG | Forest Height image MDS |
-| ∟ Quality | 1 | COG | Quality image MDS |
-| ∟ annotation |   | Folder |   |
-| ∟ main | 1 | XML | Main ADS, including: Product DSR Raster image DSR Input information DSR Processing parameters DSR Annotation LUT DSR |
-| ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
-| ∟ preview |   | Folder |   |
-| ∟ quicklook | 2 | PNG | Quick-look ADS, for each measurement |
-| ∟ overlay | 1 | KML | Overlay ADS, for each quicklook |
-| ∟ schema |   | Folder |   |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fh-proc-annotations.xsd` | 1 | XSD | RDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Height | 1 | COG | Forest Height image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Quality | 1 | COG | Quality image MDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: <br> • Product DSR <br> • Raster image DSR <br> • Input information DSR <br> • Processing parameters DSR <br> • Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: <br> • FNF, generated outside BPS {ad}`6` {ad}`7` {ad}`8` {ad}`9` |
+| <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 2 | PNG | Quick-look ADS, for each measurement |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 1 | KML | Overlay ADS, for each quicklook |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fh-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 
@@ -114,7 +114,7 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_FH__L2A`: Forest Height L2a product;
+  - `FP_FH__L2A`: Forest Height L2a product;
 - `<yyyymmddThhmmss>`: UTC start date and time (min time validity of the stack);
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time (max time validity of the stack);
 - `<P>`: Mission phase identifier;
@@ -131,11 +131,11 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[fh|quality].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_lut.nc` for Look-Up Tables ADS;
-    - `*_[fh|fhquality]_ql.png` for quick-look ADS
-    - `*_[fh|fhquality]_map.kml `for overlay ADS
-    - `*.xsd` for support schemas RDS.
-    - `*.json` for STAC
+  - `*.xml` for main product header;
+  - `*_i_[fh|quality].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_lut.nc` for Look-Up Tables ADS;
+  - `*_[fh|fhquality]_ql.png` for quick-look ADS
+  - `*_[fh|fhquality]_map.kml `for overlay ADS
+  - `*.xsd` for support schemas RDS.
+  - `*.json` for STAC

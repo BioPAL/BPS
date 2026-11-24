@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -67,26 +67,26 @@ BIOMASS L2a Product/
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Forest Disturbance L2a products structure</span></p>
 
-| File / Folder | Cardinality | Format | Description / Content |
+| **File / Folder** | **Cardinality** | **Format** | **Description / Content** |
 |---|---|---|---|
-| BIOMASS Forest Disturbance L2a Product |   | Folder |   |
+| <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">BIOMASS Forest Disturbance L2a Product</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFD966;color:#000000"> </span> |
 | ∟ main product header | 1 | XML | Main product header |
 | ∟ STAC | 1 | JSON | STAC (https://stacspec.org) metadata. |
-| ∟ measurement |   | Folder |   |
-| ∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
-| ∟ Probability of change | 1 | COG | Probability of forest change image MDS |
-| ∟ CFM | 1 | COG | Computed Forest Mask image MDS. |
-| ∟ annotation |   | Folder |   |
-| ∟ main | 1 | XML | Main ADS, including: Product DSR Raster image DSR Input information DSR Processing parameters DSR Annotation LUT DSR |
-| ∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: ACM matrix (all polarimetric layers) {ad}`8` `numberOfAverages` matrix {ad}`8` FNF, generated outside BPS |
-| ∟ preview |   | Folder |   |
-| ∟ quicklook | 3 | PNG | Quick-look ADS, for each measurement |
-| ∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
-| ∟ schema |   | Folder |   |
-| ∟ main `annotation.xsd` | 1 | XSD | RDS |
-| ∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
-| ∟ common `types.xsd` | 1 | XSD | RDS |
-| ∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ measurement</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Forest Disturbance | 1 | COG | Forest Disturbance image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ Probability of change | 1 | COG | Probability of forest change image MDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ CFM | 1 | COG | Computed Forest Mask image MDS. |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ annotation</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main | 1 | XML | Main ADS, including: <br> • Product DSR <br> • Raster image DSR <br> • Input information DSR <br> • Processing parameters DSR <br> • Annotation LUT DSR |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ lut | 1 | NetCDF | Look-Up Tables ADS, including: <br> • ACM matrix (all polarimetric layers) {ad}`8` <br> • `numberOfAverages` matrix {ad}`8` <br> • FNF, generated outside BPS |
+| <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">∟ preview</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE599;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ quicklook | 3 | PNG | Quick-look ADS, for each measurement |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ overlay | 3 | KML | Overlay ADS, for each quicklook |
+| <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">∟ schema</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000">Folder</span> | <span class="atbd-cell-fill" style="background-color:#FFE699;color:#000000"> </span> |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ main `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ L2a, L2b common `annotation.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ common `types.xsd` | 1 | XSD | RDS |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟ `fd-proc-annotations.xsd` | 1 | XSD | RDS |
 
 :::
 
@@ -116,7 +116,7 @@ where:
 
 - `<MMM>`: Satellite ID;
 - `<TTTTTTTTTT>`: Product Type/File Type, i.e.:
-    - `FP_FD__L2A`: Forest Disturbance L2a product;
+  - `FP_FD__L2A`: Forest Disturbance L2a product;
 - `<yyyymmddThhmmss>`: UTC start date and time (min time validity of the stack);
 - `<YYYYMMDDTHHMMSS>`: UTC stop date and time (max time validity of the stack);
 - `<P>`: Mission phase identifier;
@@ -133,11 +133,11 @@ The internal files in the product inherit the same naming convention, with the f
 - capital letters conversion to lowercase;
 - “Baseline Identifier” and “Compact Creation Date” naming parts removal, except for Main Product Header file;
 - addition of a dataset type depending suffix and extension, i.e.:
-    - `*.xml` for main product header;
-    - `*_i_[fd|probability|cfm].tiff` for image MDS;
-    - `*_annot.xml` for main ADS;
-    - `*_lut.nc` for Look-Up Tables ADS;
-    - `*_[fd|probability|cfm]_ql.png` for quick-look ADS
-    - `*_[fd|probability|cfm]_map.kml` for overlay ADS
-    - `*.xsd` for support schemas RDS.
-    - `*.json` for STAC
+  - `*.xml` for main product header;
+  - `*_i_[fd|probability|cfm].tiff` for image MDS;
+  - `*_annot.xml` for main ADS;
+  - `*_lut.nc` for Look-Up Tables ADS;
+  - `*_[fd|probability|cfm]_ql.png` for quick-look ADS
+  - `*_[fd|probability|cfm]_map.kml` for overlay ADS
+  - `*.xsd` for support schemas RDS.
+  - `*.json` for STAC

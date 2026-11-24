@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -24,10 +24,10 @@ The purpose of this document is to provide the “Forest Disturbance Algorithms 
 
 This document is organized as follows:
 
-- {sec}`Section|1`: Overview of the document;
-- {sec}`Section|2`: Brief introduction about BPS and Forest Disturbance processing;
-- {sec}`Section|3`: Description of L2a Forest Disturbance algorithms;
-- {sec}`Section|4`: Description of L2b/L3 Forest Disturbance algorithms.
+- {sec}`Section 1 <1>`: Overview of the document;
+- {sec}`Section 2 <2>`: Brief introduction about BPS and Forest Disturbance processing;
+- {sec}`Section 3 <3>`: Description of L2a Forest Disturbance algorithms;
+- {sec}`Section 4 <4>`: Description of L2b/L3 Forest Disturbance algorithms.
 
 (sec:atbd-fd-1-3)=
 ### 1.3 Acronyms
@@ -108,7 +108,7 @@ This document is organized as follows:
 |---|---|
 | <span id="rd1"></span>`[RD1]` | BIO-BPS-L1-STACK-ATBD, BIOMASS BPS L1c Stack ATBD, I/R 1/1/2 |
 | <span id="rd2"></span>`[RD2]` | BIO-BPS-L1-SAR-ATBD, BIOMASS BPS L1 SAR ATBD, I/R 1/1/2 |
-| <span id="rd3"></span>`[RD3]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07th 2021 |
+| <span id="rd3"></span>`[RD3]` | BIOMASS DEM Product Processor Prototype, DEM Processor Algorithm Theoretical Baseline Document, BIODEMPP-CoSCS-DEM-01, Issue 4.0, June 07{sup}`th` 2021 |
 | <span id="rd4"></span>`[RD4]` | M. Mariotti d’Alessandro, S. Tebaldini, S. Quegan, M. J. Soja, L. M. H. Ulander and K. Scipal, "Interferometric Ground Cancellation for Above Ground Biomass Estimation," in IEEE Transactions on Geoscience and Remote Sensing, vol. 58, no. 9, pp. 6410-6419, Sept. 2020 |
 | <span id="rd5"></span>`[RD5]` | K. Conradsen, A. A. Nielsen and H. Skriver, "Determining the Points of Change in Time Series of Polarimetric SAR Data," in IEEE Transactions on Geoscience and Remote Sensing, vol. 54, no. 5, pp. 3007-3024, May 2016 |
 | <span id="rd6"></span>`[RD6]` | K. Conradsen, A. A. Nielsen, J. Schou and H. Skriver, "A test statistic in the complex Wishart distribution and its application to change detection in polarimetric SAR data," in IEEE Transactions on Geoscience and Remote Sensing, vol. 41, no. 1, pp. 4-19, Jan. 2003 |

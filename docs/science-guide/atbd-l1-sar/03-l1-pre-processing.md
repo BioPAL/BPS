@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -15,28 +15,31 @@
 
 The ISP Filtering step is in charge of filtering the input L0 product Instrument Source Packets (ISP) by performing the following checks for anomalies. The filtering is applied distinguishably for the SAR Packets and the Ancillary Packets, as follows:
 
-- a. SAR Packets:
-    - Corrupted packets (those ones for which the CRC check is failed) are detected and discarded. Duplicated packets are detected and discarded. The detection is based on the comparison of the Sequence Count and the APID with the same values of the previous ISP. If both values are the same the packet is discarded;
-    - Missing packets are detected by checking the Sequence Count of each ISP. If the difference of the Sequence Count values of two successive packets for the same APID is not equal to 1 this means that one or more missing ISPs have been detected. The data of the missing packets are replaced by zeroes;
-    - The number of consecutive missing packets per APID and the equivalent time gap are computed. If one of these two values exceeds the corresponding configuration thresholds MaxISPGap or MaxTimeGap, the processing will not continue;
-- b. ANC Packets:
-    - The instrument HK parameters are checked against configurable validity thresholds and any deviation is reported.
+a. SAR Packets:
+
+- Corrupted packets (those ones for which the CRC check is failed) are detected and discarded. Duplicated packets are detected and discarded. The detection is based on the comparison of the Sequence Count and the APID with the same values of the previous ISP. If both values are the same the packet is discarded;
+- Missing packets are detected by checking the Sequence Count of each ISP. If the difference of the Sequence Count values of two successive packets for the same APID is not equal to 1 this means that one or more missing ISPs have been detected. The data of the missing packets are replaced by zeroes;
+- The number of consecutive missing packets per APID and the equivalent time gap are computed. If one of these two values exceeds the corresponding configuration thresholds MaxISPGap or MaxTimeGap, the processing will not continue;
+
+b. ANC Packets:
+
+- The instrument HK parameters are checked against configurable validity thresholds and any deviation is reported.
 
 **Inputs**
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | L0S | L0 Processor (`L0_PFD`) | - (stream of ISPs) | - | - | L0 Standard Product |
-| - | L0M | L0 Processor (`L0_PFD`) | - (stream of ISPs) | - | - | L0 Monitoring Product |
+| - | L0S | L0 Processor <br> (`L0_PFD`) | - (stream of ISPs) | - | - | L0 Standard Product |
+| - | L0M | L0 Processor <br> (`L0_PFD`) | - (stream of ISPs) | - | - | L0 Monitoring Product |
 | - | `blockSize` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 30 | Number of ISPs read in block during import |
 | - | maxISPGap | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum number of gaps between science data ISPs. If the number of consecutive missing packets for one APID exceeds this parameter, the processing will not continue. |
-| - | `maxTimeGap` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum time gap between science data ISPs. If the time equivalent to the number of consecutive missing packets for one APID exceeds this parameter, the processing will not continue. |
+| - | `maxTimeGap` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum time gap between science data ISPs. If the time equivalent to the number of consecutive <br> missing packets for one APID exceeds this parameter, the processing will not continue. |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | ISP | RAW data extraction step | - (stream of ISPs) | - | - | RAW data (science and internal calibration) without corrupted/duplicated packets and with missing data replaced by zeroes |
+| - | ISP | *RAW data extraction step* | - (stream of ISPs) | - | - | RAW data (science and internal calibration) without corrupted/duplicated packets and with missing data replaced by zeroes |
 | - | `rawDataAnalysis` \> `errorCounters` | L1a/L1b products main ADS (`L1_PFD`) | set of scalar values | - | - | Information on duplicated, corrupted and missing packets, as well as instrument HK parameters validity |
 
 (sec:atbd-l1-sar-3-2)=
@@ -60,7 +63,7 @@ Each sub-step is described in details in the following sub-sections.
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | ISP | ISP filtering step | - (stream of ISPs) | - | - | RAW data (science and internal calibration) without corrupted/duplicated packets and with missing data replaced by zeroes |
+| - | ISP | *ISP filtering step* | - (stream of ISPs) | - | - | RAW data (science and internal calibration) without corrupted/duplicated packets and with missing data replaced by zeroes |
 | - | `blockSize` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 30 | Number of ISPs read in block during import |
 | - | `rawDataDecodingParameters` | `AUX_INS` (`AUX_FMT`) | set of arrays (LUTs) | - | - | RAW data decoding parameters (LUT of normalized thresholds and ASM thresholds) |
 
@@ -68,8 +71,8 @@ Each sub-step is described in details in the following sub-sections.
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RAW decoded | RAW data correction step | Nrg x Naz array of complex values | - | - | RAW data (decoded) Intermediate product: iRAW |
-| - | RAW DynCal decoded | Internal calibration parameters retrieval step | set of M Nrg,ic x Naz,ic arrays of complex values | - | - | RAW dynamic calibration data (decoded) Intermediate product: iRAWDynCal |
+| - | RAW decoded | *RAW data correction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data (decoded) <br> *Intermediate product: iRAW* |
+| - | RAW DynCal decoded | *Internal calibration parameters retrieval step* | set of M N{sub}`rg,ic` x N{sub}`az,ic` arrays of complex values | - | - | RAW dynamic calibration data (decoded) <br> *Intermediate product: iRAWDynCal* |
 | - | `rawDataAnalysis` \> `errorCounters` | L1a/L1b products main ADS (`L1_PFD`) | set of scalar values | - | - | Information on measurements out of range |
 
 (sec:atbd-l1-sar-3-2-1)=
@@ -130,24 +133,32 @@ The algorithm for a given coded echo is organized in the following steps:
 1. Check the BAQMODE value in the SAR Header of the SAR packet. This 3-bit parameter selects the BAQ Mode of the BAQ function: 4bit, 5bit, 6bit or bypass. If not “bypass”, go to step 2, otherwise go to step 4;
 2. (BAQ not-Bypass case) Extract the normalized thresholds LUT;
 3. (BAQ not-Bypass case) For each block:
-    - a. Extract the ASM value;
-    - b. In the case ASM is higher or equal than the given ASM small value limit for the selected BAQ mode:
-        - i. Multiply the normalized thresholds LUT by the ASM and by a factor of $\sqrt{\frac{\pi}{2}}$ to to get the up-scaled thresholds LUT;
-        - ii. For each echo in the block, for both I and Q values:
-            1. Extract the BAQ code and sign;
-            2. Use the code as an index to retrieve the magnitude in the up-scaled thresholds LUT;
-            3. Multiply the magnitude by the sign to get the float echo value;
-            4. Check the echo value against configurable validity thresholds and report any out-of-range value;
-    - c. In the case ASM is lower than the given ASM small value limit for the selected BAQ mode:
-        - i. For each echo in the block, for both I and Q values:
-            1. Extract the BAQ code and sign;
-            2. If the magnitude is lower than 7/15/31 for BAQ 4/5/6 respectively, the compressed I and Q values are already the final values;
-            3. If the magnitude is 7/15/31 for BAQ 4/5/6 respectively, use the ASM value to retrieve the uncompressed I and Q values from small ASM LUT;
-            4. Multiply the uncompressed values by the sign to get the final values;
-            5. Check the echo value against configurable validity thresholds and report any out-of-range value;
+
+   a. Extract the ASM value;
+
+   b. In the case ASM is higher or equal than the given ASM small value limit for the selected BAQ mode:
+
+   i. Multiply the normalized thresholds LUT by the ASM and by a factor of $\sqrt{\frac{\pi}{2}}$ to to get the up-scaled thresholds LUT;
+
+   ii. For each echo in the block, for both I and Q values:
+
+   1. Extract the BAQ code and sign;
+   2. Use the code as an index to retrieve the magnitude in the up-scaled thresholds LUT;
+   3. Multiply the magnitude by the sign to get the float echo value;
+   4. Check the echo value against configurable validity thresholds and report any out-of-range value;
+
+   c. In the case ASM is lower than the given ASM small value limit for the selected BAQ mode:
+
+   i. For each echo in the block, for both I and Q values:
+
+   1. Extract the BAQ code and sign;
+   2. If the magnitude is lower than 7/15/31 for BAQ 4/5/6 respectively, the compressed I and Q values are already the final values;
+   3. If the magnitude is 7/15/31 for BAQ 4/5/6 respectively, use the ASM value to retrieve the uncompressed I and Q values from small ASM LUT;
+   4. Multiply the uncompressed values by the sign to get the final values;
+   5. Check the echo value against configurable validity thresholds and report any out-of-range value;
 4. (BAQ Bypass case) For each sample extract the sign and the magnitude, multiply the two to obtain the float echo value.
 
-The algorithm follows the rationale described in {sec}`Section|5` in {ad}`1`.
+The algorithm follows the rationale described in Section 5 in {ad}`1`.
 
 It is worth mentioning that the internal calibration measurements are stored without data reduction (BAQ compression), as stated in {ad}`3`. So, the described procedure applies only to science data, while the decoding of calibration data consists simply in step 4 described above.
 
@@ -161,10 +172,10 @@ The streams generated by the L0 Processor related to the science data are stored
 1. Evaluate whether the rank (which is annotated in the secondary header) is even or odd;
 2. Evaluate the STYP of the packet currently being evaluated;
 3. If the STYP code corresponds to an imaging pulse (see table below), evaluate the polarization of the pulse that was transmitted at the given PRI and proceed as follows:
-    - If the rank is even and a V-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have a VH pulse, while the V-receive channel will have a VV pulse;
-    - If the rank is odd and a V-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have an HH pulse and the V-receive channel an HV pulse;
-    - If the rank is even and an H-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have an HH pulse, while the V-receive channel will have a HV pulse;
-    - If the rank is odd and an H-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have a VH pulse and the V-receive channel a VV pulse;
+   - If the rank is even and a V-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have a VH pulse, while the V-receive channel will have a VV pulse;
+   - If the rank is odd and a V-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have an HH pulse and the V-receive channel an HV pulse;
+   - If the rank is even and an H-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have an HH pulse, while the V-receive channel will have a HV pulse;
+   - If the rank is odd and an H-polarized signal has been transmitted at the PRI being analysed, the H-receive channel will have a VH pulse and the V-receive channel a VV pulse;
 
 The above is summarized in the following table, where note that the STYP 14 and 15 are equivalent to 0 and 1.
 
@@ -173,13 +184,13 @@ The above is summarized in the following table, where note that the STYP 14 and 
 
 <p class="atbd-table-caption"><span class="caption-number">Table 1</span><span class="caption-text"> — Rationale to identify the type of pulse being evaluated for the current PRI.</span></p>
 
-|   |   | Even Rank Case | Odd Rank Case |
-|---|---|---|---|
-| STYP Code | STYP description | H-Chanel RX V-Chanel Rx | H-Chanel RX V-Chanel Rx |
-| 0 | TxV&Rx | Cross-Polar (VH) Co-Polar (VV) | Co-Polar (HH) Cross-Polar (HV) |
-| 1 | TxH&Rx | Co-Polar (HH) Cross-Polar (HV) | Cross-Polar (VH) Co-Polar (VV) |
-| 14 | TxV&Rx\_S | Cross-Polar (VH) Co-Polar (VV) | Co-Polar (HH) Cross-Polar (HV) |
-| 15 | TxH&Rx\_S | Co-Polar (HH) Cross-Polar (HV) | Cross-Polar (VH) Co-Polar (VV) |
+|   |   | <span class="atbd-cell-fill" style="background-color:#9BBB59;color:#000000">Even Rank Case</span> |   | <span class="atbd-cell-fill" style="background-color:#E6B8B7;color:#000000">Odd Rank Case</span> |   |
+|---|---|---|---|---|---|
+| **STYP Code** | **STYP description** | **H-Chanel RX** | **V-Chanel Rx** | **H-Chanel RX** | **V-Chanel Rx** |
+| 0 | TxV&Rx | Cross-Polar (VH) | Co-Polar (VV) | Co-Polar (HH) | Cross-Polar (HV) |
+| 1 | TxH&Rx | Co-Polar (HH) | Cross-Polar (HV) | Cross-Polar (VH) | Co-Polar (VV) |
+| 14 | TxV&Rx\_S | Cross-Polar (VH) | Co-Polar (VV) | Co-Polar (HH) | Cross-Polar (HV) |
+| 15 | TxH&Rx\_S | Co-Polar (HH) | Cross-Polar (HV) | Cross-Polar (VH) | Co-Polar (VV) |
 
 :::
 
@@ -215,24 +226,25 @@ The receive events after rank pulses corresponding to most of the transmit event
 
 During the acquisition variations of the SWP and SWL are possible. In particular variations of the SWL correspond to a different number of samples in the echo lines. The purpose of this processing step is to equalize the number of samples in all echo lines in the product by a proper zero padding at the end of the echo. This step is performed as follows:
 
-- a. the maximum SWL values (one for the standard pulses and one for the calibration pulses) are determined before the ISP Filtering processing of each input file (see {sec}`3.1`), by inspecting every packet in the input product. The separation between standard and calibration is done based on the STYP value (see {sec}`3.2.2`);
-- b. after decoding (see {sec}`3.2.1`), each echo will be inserted in the output product after appending zero values to match the maximum SWL value (computed at step a).
+a. the maximum SWL values (one for the standard pulses and one for the calibration pulses) are determined before the ISP Filtering processing of each input file (see {sec}`Sec. 3.1 <3.1>`), by inspecting every packet in the input product. The separation between standard and calibration is done based on the STYP value (see {sec}`Sec. 3.2.2 <3.2.2>`);
+
+b. after decoding (see {sec}`Sec. 3.2.1 <3.2.1>`), each echo will be inserted in the output product after appending zero values to match the maximum SWL value (computed at step a).
 
 **Mathematical description**
 
 The number of samples of the output matrix is computed form the maximum SWL as follows:
 
 $$
-Nsamples=ceil(Max(SWL)\cdot{}f_r)
+Nsamples=\mathrm{ceil}(\mathrm{Max}(\mathrm{SWL})\cdot{}f_{\mathrm{r}})
 \tag{3.1}
 $$ (eq:atbd-l1-sar-3-1)
 
-where SWL and $f_r$ values are taken directly from input ISPs.
+where SWL and $f_{\mathrm{r}}$ values are taken directly from input ISPs.
 
 The number of zeros to be added to the end of each line is computed as follows:
 
 $$
-Npad=Nsamples-len(echo)
+Npad=Nsamples-len(\mathrm{echo})
 \tag{3.2}
 $$ (eq:atbd-l1-sar-3-2)
 
@@ -253,17 +265,17 @@ This step is performed just after BAQ decoding one and on an echo basis, exploit
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $I_0,Q_0$ (real and imaginary parts) | RAW decoded | RAW data extraction step | Nrg x Naz array of complex values | - | - | RAW data (decoded) Intermediate product: iRAW |
-| - | `rawMeanExpected` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Expected mean of the samples in the extracted raw data |
-| - | `rawMeanThreshold` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Threshold for setting the corresponding quality parameter in the L1 product annotations |
-| - | `rawStdExpected` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Expected standard deviation of the samples in the extracted raw data |
-| - | `rawStdThreshold` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Threshold for setting the corresponding quality parameter in the L1 product annotations |
+| $I_0,Q_0$ (real and imaginary parts) | RAW decoded | *RAW data extraction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data (decoded) <br> *Intermediate product: iRAW* |
+| - | `rawMeanExpected` | *`AUX_PP1` (`AUX_FMT`)* | scalar value | - | - | Expected mean of the samples in the extracted raw data |
+| - | `rawMeanThreshold` | *`AUX_PP1` (`AUX_FMT`)* | scalar value | - | - | Threshold for setting the corresponding quality parameter in the L1 product annotations |
+| - | `rawStdExpected` | *`AUX_PP1` (`AUX_FMT`)* | scalar value | - | - | Expected standard deviation of the samples in the extracted raw data |
+| - | `rawStdThreshold` | *`AUX_PP1` (`AUX_FMT`)* | scalar value | - | - | Threshold for setting the corresponding quality parameter in the L1 product annotations |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $I_3,Q_3$ (real and imaginary parts) | RAW corrected | Orbit and attitude extraction step | Nrg x Naz array of complex values | - | - | RAW data (corrected) Intermediate product: iRAW (updated raster) |
+| $I_3,Q_3$ (real and imaginary parts) | RAW corrected | *Orbit and attitude extraction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data (corrected) <br> *Intermediate product: iRAW (updated raster)* |
 | $\mu_I,\ \mu_Q,\ \rho,\ \alpha$ | `rawDataAnalysis` \> `rawDataStatisticsList` | L1a/L1b products main ADS (`L1_PFD`) | set of scalar values | - | - | Statistical parameters computed on the whole input RAW data and used for the corrections (I bias, Q bias, I/Q gain imbalance, I/Q quadrature departure respectively) |
 
 **Mathematical description**
@@ -313,18 +325,18 @@ Q_3=\frac{Q_2}{\cos \alpha}-I_2\bullet\tan \alpha
 where:
 
 - $\alpha=\sin^{-1} (\tanh (\mu_Z))$
-- $\mu_Z=E\left[ \frac{1}{2}\ln (\frac{1+C_k}{1-C_k}) \right]$ (mean value)
+- $\mu_Z=E\left[ \frac{1}{2}\ln \left( \frac{1+C_k}{1-C_k} \right) \right]$ (mean value)
 - $C_k=\frac{S_{IQ}}{\sqrt{\left\vert S_{II} \right\vert\bullet\left\vert S_{QQ} \right\vert}}$: correlation coefficient between I and Q channels for line k
-- $S_{IQ}=\sum_{i=1}^N{(I_i\bullet{}Q_i)-(\frac{1}{N}\sum_{i=1}^N{I_i}\sum_{i=1}^N{Q_i})}$ and analogue for $S_{II}$ and $S_{QQ}$
+- $S_{IQ}=\sum_{i=1}^N{(I_i\bullet{}Q_i)-\left( \frac{1}{N}\sum_{i=1}^N{I_i}\sum_{i=1}^N{Q_i} \right)}$ and analogue for $S_{II}$ and $S_{QQ}$
 
 Note that, before correction, raw data statistics are used to compute quality parameters to be stored in output L1 product annotations. $\mu_I,\mu_Q,\ \sigma_I,\sigma_Q$ are compared to input parameters:
 
-- $rawMeanExpected-rawMeanThreshold<\mu_{[I/Q]}<rawMeanExpected+rawMeanThreshold$
-- $rawStdExpected-rawStdThreshold<\sigma_{[I/Q]}<rawStdExpected+rawStdThreshold$
+- $\mathrm{rawMeanExpected}-\mathrm{rawMeanThreshold}<\mu_{[I/Q]}<\mathrm{rawMeanExpected}+\mathrm{rawMeanThreshold}$
+- $\mathrm{rawStdExpected}-\mathrm{rawStdThreshold}<\sigma_{[I/Q]}<\mathrm{rawStdExpected}+\mathrm{rawStdThreshold}$
 
-RAW data samples are considered invalid if their I or Q fall outside the interval:
+RAW data samples are considered invalid if their *I* or *Q* fall outside the interval:
 
-- $(rawMeanExpected-rawMeanThreshold)-(rawStdExpected+rawStdThreshold)<I\ or\ Q<(rawMeanExpected-rawMeanThreshold)+(rawStdExpected+rawStdThreshold)$
+- $(\mathrm{rawMeanExpected}-\mathrm{rawMeanThreshold})-(\mathrm{rawStdExpected}+\mathrm{rawStdThreshold})<\mathrm{I}\ \mathrm{or}\ \mathrm{Q}<(\mathrm{rawMeanExpected}-\mathrm{rawMeanThreshold})+(\mathrm{rawStdExpected}+\mathrm{rawStdThreshold})$
 
 (sec:atbd-l1-sar-3-2-5)=
 #### 3.2.5 In/Out-of-band Power Ratio Computation
@@ -337,8 +349,8 @@ This step is performed on extracted and corrected RAW data and it is aimed at co
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $RAW$ | RAW corrected | RAW data correction step | Nrg x Naz array of complex values | - | - | RAW data (corrected) Intermediate product: iRAW |
-| $P_{filt}(f_r)$ | On-board filters | `AUX_INS` (`AUX_FMT`) | Nrg x Naz array of complex values (4 in total, i.e. 1 per polarization) | - | - | On-board filters |
+| $RAW$ | RAW corrected | *RAW data correction step* | N{sub}`rg` x N{sub}`az` array of complex values | - | - | RAW data (corrected) <br> *Intermediate product: iRAW* |
+| $P_{filt}(f_{\mathrm{r}})$ | On-board filters | *`AUX_INS` (`AUX_FMT`)* | N{sub}`rg` x N{sub}`az` array of complex values (4 in total, i.e. 1 per polarization) | - | - | On-board filters |
 
 **Outputs**
 
@@ -354,29 +366,29 @@ This algorithm is implemented according to the following steps:
 2. Compute average range spectrum:
 
 $$
-P_m(f_r)=\frac{1}{N_a}\sum_{n=0}^{N_a-1}{\left\vert FFT(RAW(\tau,n)) \right\vert^2}
+P_m(f_{\mathrm{r}})=\frac{1}{N_a}\sum_{n=0}^{N_a-1}{\left\vert FFT(RAW(\tau,\mathrm{n})) \right\vert^2}
 \tag{3.6}
 $$ (eq:atbd-l1-sar-3-6)
 
 3. Equalize average range spectrum, dividing it by the spectrum of the on-board filter (provided via configuration):
 
 $$
-P_{eq}(f_r)=\frac{P_m(f_r)}{P_{filt}(f_r)}
+P_{eq}(f_{\mathrm{r}})=\frac{P_m(f_{\mathrm{r}})}{P_{filt}(f_{\mathrm{r}})}
 \tag{3.7}
 $$ (eq:atbd-l1-sar-3-7)
 
 4. Compute the in/out-of-band power ratio as the ratio of the average power contained in the range bandwidth and the average power outside it:
 
 $$
-P_{ratio}=\frac{\frac{1}{N_{r,ib}}\sum_{n=0}^{N_{r,ib}-1}{P_{eq,\ ib}(f_r)}}{\frac{1}{N_{r,ob}}\sum_{n=0}^{N_{r,ob}-1}{P_{eq,ob}(f_r)}}
+P_{ratio}=\frac{\frac{1}{N_{r,ib}}\sum_{n=0}^{N_{r,ib}-1}{P_{eq,\ ib}(f_{\mathrm{r}})}}{\frac{1}{N_{r,ob}}\sum_{n=0}^{N_{r,ob}-1}{P_{eq,ob}(f_{\mathrm{r}})}}
 \tag{3.8}
 $$ (eq:atbd-l1-sar-3-8)
 
 where:
 
-- $P_{eq,\ ib}(f_r)$ is the spectrum with only the in-band components;
+- $P_{eq,\ ib}(f_{\mathrm{r}})$ is the spectrum with only the in-band components;
 - $N_{r,ib}$ is the number of samples of the spectrum contained in the bandwidth;
-- $P_{eq,\ ob}(f_r)$ is the spectrum with only the out-band components;
+- $P_{eq,\ ob}(f_{\mathrm{r}})$ is the spectrum with only the out-band components;
 - $N_{r,ob}$ is the number of samples of the spectrum outside the bandwidth.
 
 (sec:atbd-l1-sar-3-3)=
@@ -471,17 +483,17 @@ The goal of the power gain product (PGP) algorithm is to derive the transfer fun
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RAW DynCal decoded | RAW data extraction step | set of M Nrg,ic x Naz,ic arrays of complex values | - | - | RAW dynamic calibration data (decoded), organized as a set of M calibration sequences. Includes header information of the packets Intermediate product: iRAWDynCal |
-| $T_{inst}[m]$ | Temperature | RAW data extraction step | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
+| - | RAW DynCal decoded | *RAW data extraction step* | set of M N{sub}`rg,ic` x N{sub}`az,ic` arrays of complex values | - | - | RAW dynamic calibration data (decoded), organized as a set of M calibration sequences. Includes header information of the packets <br> *Intermediate product: iRAWDynCal* |
+| $T_{\mathrm{inst}}[m]$ | Temperature | *RAW data extraction step* | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
 | $LUT$ | `rawDataDecodingParameters` \> temperature LUT | `AUX_INS` (`AUX_FMT`) | set of arrays (LUTs) | - | - | LUTs for the complex scalar normalization factors (TxNormP1, RxNormP2, Sw NW Short P2 in {ad}`3`) as a function of the instrument temperature |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $PGP_{IJ}(\tau,m]$ | PGP | Amplitude and phase drifts step, Instrument replica step | set of M Nrg,pg x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m Intermediate product: iPGP |
-| $t_{PGP}[m]$ | PGP time stamps | Amplitude and phase drifts step | set of M UTC times | - | - | Time stamps of the PGP product obtained from the packet header in the middle of the calibration sequence |
-| $TXPIDX[m]$ | PGP pulse identifiers | Instrument replica step | set of M identifiers | - | - | Pulse identifier of the calibration pulses used to derive the PGP product |
+| $PGP_{IJ}(\tau,m]$ | PGP | *Amplitude and phase drifts step, Instrument replica step* | set of M N{sub}`rg,pg` x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m <br> *Intermediate product: iPGP* |
+| $t_{PGP}[m]$ | PGP time stamps | *Amplitude and phase drifts step* | set of M UTC times | - | - | Time stamps of the PGP product obtained from the packet header in the middle of the calibration sequence |
+| $TXPIDX[m]$ | PGP pulse identifiers | *Instrument replica step* | set of M identifiers | - | - | Pulse identifier of the calibration pulses used to derive the PGP product |
 
 **Mathematical description**
 
@@ -493,11 +505,11 @@ Useful variables:
 
 The steps to derive the PGP are the following:
 
-1. Extract the calibration sequences within the data take and perform, if applicable, the echo correction (see {sec}`3.2.2`);
+1. Extract the calibration sequences within the data take and perform, if applicable, the echo correction (see {sec}`Sec. 3.2.2 <3.2.2>`);
 2. Compute the normalization factors by accessing the LUTs as a function of the instrument temperature:
 
 $$
-\widehat{F}[m\mathcal{]=L}\left\{ LUT_i;T_{inst}[m] \right\}
+\widehat{F}[m\mathcal{]=L}\left\{ LUT_i;T_{\mathrm{inst}}[m] \right\}
 \tag{3.9}
 $$ (eq:atbd-l1-sar-3-9)
 
@@ -520,7 +532,7 @@ being $\mathcal{F}\left\{ \cdot \right\}$ the Fourier transform;
 
 **Algorithm overview and rationale**
 
-The instrument phase and amplitude drifts can be derived from the PGP product by performing a compression with a nominal chirp signal and evaluating the amplitude and phase variation within the data take. The correction is presented in {sec}`4.2.3`.
+The instrument phase and amplitude drifts can be derived from the PGP product by performing a compression with a nominal chirp signal and evaluating the amplitude and phase variation within the data take. The correction is presented in {sec}`Sec. 4.2.3 <4.2.3>`.
 
 It is worth remarking that the drifts include inherently the internal channel imbalance of the instrument, which obviously excludes the antenna.
 
@@ -528,10 +540,10 @@ It is worth remarking that the drifts include inherently the internal channel im
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $PGP_{IJ}(\tau,m]$ | PGP | Power Gain Product step | set of M Nrg,pg x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m Intermediate product: iPGP |
-| $t_{PGP}[m]$ | PGP time stamps | Power Gain Product step | set of M UTC times | - | - | Time stamps of the PGP product obtained from the packet header in the middle of the calibration sequence |
-| $t_{DT}[n]$ | RAW time stamps | RAW data extraction step | set of Naz UTC times | - | - | Time axis of the data take for each echo, derived from the time stamp in the packet header |
-| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | RAW data extraction step | Nr x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`4.2.1`) in order to derive the reference signal) for the given pulse type TXP |
+| $PGP_{IJ}(\tau,m]$ | PGP | *Power Gain Product step* | set of M N{sub}`rg,pg` x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m <br> *Intermediate product: iPGP* |
+| $t_{PGP}[m]$ | PGP time stamps | *Power Gain Product step* | set of M UTC times | - | - | Time stamps of the PGP product obtained from the packet header in the middle of the calibration sequence |
+| $t_{DT}[n]$ | RAW time stamps | *RAW data extraction step* | set of N{sub}`az` UTC times | - | - | Time axis of the data take for each echo, derived from the time stamp in the packet header |
+| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | *RAW data extraction step* | N{sub}`r` x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`Sec. 4.2.1 <4.2.1>`) in order to derive the reference signal) for the given pulse type TXP |
 | $\alpha_A^{User}$ | `maxDriftAmplitudeStdFraction` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Factor to be applied to the standard deviation of the amplitude values of the PGP after compression in order to filter out outliers |
 | $\alpha_{\varphi}^{User}$ | `maxDriftPhaseStdFraction` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Factor to be applied to the standard deviation of the phase values of the PGP after compression in order to filter out outliers |
 | - | `maxDriftAmplitudeError` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | - | Maximum deviation allowed for a drift amplitude from the corresponding model value. Absolute drift validation shall fail if this value is exceeded |
@@ -542,9 +554,9 @@ It is worth remarking that the drifts include inherently the internal channel im
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $PGP_{IJ}(\tau,m]$ | PGP filtered | - | set of M’ Nrg,pg x 1 arrays of complex values | - | - | PGP after outlier rejection for each polarization combination $IJ$Intermediate product: iPGP (updated raster) |
-| $A_{drift}^{'}[m]$, $\varphi_{drift}^{'}[m]$ | Drift | Instrument replica step | set of M’ complex values | - | - | Amplitude and phase drift for each calibration sequence |
-| $A_{drift}[n]$, $\varphi_{drift}[n]$ | Drift interpolated | Range compression step | Naz x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$Intermediate product: `iDrift` |
+| $PGP_{IJ}(\tau,m]$ | PGP filtered | - | set of M’ N{sub}`rg,pg` x 1 arrays of complex values | - | - | PGP after outlier rejection for each polarization combination $IJ$ <br> *Intermediate product: iPGP (updated raster)* |
+| $A_{\mathrm{drift}}^{'}[m]$, $\varphi_{\mathrm{drift}}^{'}[m]$ | Drift | *Instrument replica step* | set of M’ complex values | - | - | Amplitude and phase drift for each calibration sequence |
+| $A_{\mathrm{drift}}[n]$, $\varphi_{\mathrm{drift}}[n]$ | Drift interpolated | *Range compression step* | N{sub}`az` x 1 array of complex values | - | - | Amplitude and phase drift samples at the time instants defined by $t_{DT}[n]$ <br> *Intermediate product: `iDrift`* |
 
 **Mathematical description**
 
@@ -569,7 +581,7 @@ where $\mathbb{Z}\left\{ s(\tau) \right\}$ represents a function that performs a
 3. Retrieve the location of the maximum:
 
 $$
-\tau_{\max,IJ}^{}[m]=maxpos\left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
+\tau_{\max,IJ}^{}[m]=\mathrm{maxpos} \left\{ \left\vert {PGP}_{IJ}^{comp,int}(\tau,m] \right\vert \right\}
 \tag{3.13}
 $$ (eq:atbd-l1-sar-3-13)
 
@@ -578,8 +590,8 @@ $$ (eq:atbd-l1-sar-3-13)
 (equation-eq-atbd-l1-sar-3-14)=
 \begin{equation}
 \begin{aligned}
-A_{drift}^{'}\left[ m \right]=abs\left\{ PGP_{IJ}^{comp,ZP}(\tau_{\max,IJ}[m],m] \right\} \\
-\varphi_{drift}^{'}\left[ m \right]=\arg \left\{ PGP_{IJ}^{comp,ZP}(\tau_{max,IJ}[m],m] \right\}
+A_{\mathrm{drift}}^{'}\left[ m \right]=\mathrm{abs}\left\{ PGP_{IJ}^{comp,ZP}(\tau_{\max,IJ}[m],m] \right\} \\
+\varphi_{\mathrm{drift}}^{'}\left[ m \right]=\arg \left\{ PGP_{IJ}^{comp,ZP}(\tau_{\mathrm{max},IJ}[m],m] \right\}
 \end{aligned}
 \tag{3.14}
 \end{equation}
@@ -589,15 +601,15 @@ A_{drift}^{'}\left[ m \right]=abs\left\{ PGP_{IJ}^{comp,ZP}(\tau_{\max,IJ}[m],m]
 (equation-eq-atbd-l1-sar-3-15)=
 \begin{equation}
 \begin{aligned}
-\mu_A=mean\left\{ A_{drift}^{'} \right\} \\
-\sigma_A=stddev\left\{ A_{drift}^{'} \right\} \\
-\mu_{\varphi}=mean\left\{ \varphi_{drift}^{'} \right\} \\
-\sigma_{\varphi}=stddev\left\{ \varphi_{drift}^{'} \right\}
+\mu_A=\mathrm{mean}\left\{ A_{\mathrm{drift}}^{'} \right\} \\
+\sigma_A=\mathrm{stddev}\left\{ A_{\mathrm{drift}}^{'} \right\} \\
+\mu_{\varphi}=\mathrm{mean}\left\{ \varphi_{\mathrm{drift}}^{'} \right\} \\
+\sigma_{\varphi}=\mathrm{stddev}\left\{ \varphi_{\mathrm{drift}}^{'} \right\}
 \end{aligned}
 \tag{3.15}
 \end{equation}
 
-6. Filter out outliers by evaluating both the amplitude and the phase based on a user parameter, so that after this step ${PGP}_{IJ}^{comp}$, $A_{drift}^{'}$ and $\varphi_{drift}^{'}$ vectors are updated accordingly. Each PGP product is kept only if:
+6. Filter out outliers by evaluating both the amplitude and the phase based on a user parameter, so that after this step ${PGP}_{IJ}^{comp}$, $A_{\mathrm{drift}}^{'}$ and $\varphi_{\mathrm{drift}}^{'}$ vectors are updated accordingly. Each PGP product is kept only if:
 
 (equation-eq-atbd-l1-sar-3-16)=
 \begin{equation}
@@ -613,8 +625,8 @@ A_{drift}^{'}\left[ m \right]=abs\left\{ PGP_{IJ}^{comp,ZP}(\tau_{\max,IJ}[m],m]
 (equation-eq-atbd-l1-sar-3-17)=
 \begin{equation}
 \begin{aligned}
-A_{drift}\left[ n \right]=\ \Gamma\left\{ A_{drift}^{'}\left[ m \right];{t_{PGP}\left[ m \right]\rightarrow{}t}_{DT}\left[ n \right] \right\} \\
-\varphi_{drift}\left[ n \right]=\arg \left\{ \Gamma\left\{ \exp \left[ j\cdot\varphi_{drift}^{'}[m] \right];{t_{PGP}\left[ m \right]\rightarrow{}t}_{DT}\left[ n \right] \right\} \right\}
+A_{\mathrm{drift}}\left[ n \right]=\ \Gamma\left\{ A_{\mathrm{drift}}^{'}\left[ m \right];{t_{PGP}\left[ m \right]\rightarrow{}t}_{DT}\left[ n \right] \right\} \\
+\varphi_{\mathrm{drift}}\left[ n \right]=\arg \left\{ \Gamma\left\{ \exp \left[ \mathrm{j}\cdot\varphi_{\mathrm{drift}}^{'}[m] \right];{t_{PGP}\left[ m \right]\rightarrow{}t}_{DT}\left[ n \right] \right\} \right\}
 \end{aligned}
 \tag{3.17}
 \end{equation}
@@ -628,23 +640,21 @@ where $\Gamma\left\{ \cdot \right\}$ represents a low order (e.g., cubic) interp
 
 As described in {ad}`3`, the PGP product can be directly used to retrieve the replica to be used during range compression in order to ensure an ideal impulse response function.
 
-```{note}
-In {ad}`3` it is not mentioned whether all PGP products within the data take should be used to derive the replica or whether the replica should be generated from the PGP of each calibration sequence and then be applied and updated as a function of azimuth time by the processor. Therefore, in the following the replica will be obtained by averaging all PGPs within the data take corresponding to the same chirp parameters, i.e., in the case of a PRF change within a data take two different replicas will be derived.
-```
+*NOTE: In* {ad}`3` *it is not mentioned whether all PGP products within the data take should be used to derive the replica or whether the replica should be generated from the PGP of each calibration sequence and then be applied and updated as a function of azimuth time by the processor. Therefore, in the following the replica will be obtained by averaging all PGPs within the data take corresponding to the same chirp parameters, i.e., in the case of a PRF change within a data take two different replicas will be derived.*
 
 **Inputs**
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $PGP_{IJ}(\tau,m]$ | PGP | Power Gain Product step | set of M Nrg,pg x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m Intermediate product: iPGP |
-| $TXPIDX[m]$ | PGP pulse identifiers | Power Gain Product step | set of M identifiers | - | - | Pulse identifier of the calibration pulses used to derive the PGP product |
-| $A_{drift}^{'}[m]$, $\varphi_{drift}^{'}[m]$ | Drift | Amplitude and phase drifts step | set of M’ complex values | - | - | Amplitude and phase drift for each calibration sequence Intermediate product: `iDrift` |
+| $PGP_{IJ}(\tau,m]$ | PGP | *Power Gain Product step* | set of M N{sub}`rg,pg` x 1 arrays of complex values | - | - | PGP for each combination of Tx-Rx polarizations for each polarization channel and as a function of azimuth, represented with the discrete variable m <br> *Intermediate product: iPGP* |
+| $TXPIDX[m]$ | PGP pulse identifiers | *Power Gain Product step* | set of M identifiers | - | - | Pulse identifier of the calibration pulses used to derive the PGP product |
+| $A_{\mathrm{drift}}^{'}[m]$, $\varphi_{\mathrm{drift}}^{'}[m]$ | Drift | *Amplitude and phase drifts step* | set of M’ complex values | - | - | Amplitude and phase drift for each calibration sequence <br> *Intermediate product: `iDrift`* |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $S_{rep,IJ}^{TXP}(\tau)$ | Chirp replica | Internal delays between polarizations step, Range compression step | Nr x 1 array of complex values | - | - | Derived chirp replica for the given pulse identifier $TXP$ and for each polarization combination $IJ$Intermediate product: `iChirp` |
+| $S_{rep,IJ}^{TXP}(\tau)$ | Chirp replica | *Internal delays between polarizations step, Range compression step* | N{sub}`r` x 1 array of complex values | - | - | Derived chirp replica for the given pulse identifier $TXP$ and for each polarization combination $IJ$ <br> *Intermediate product: `iChirp`* |
 
 **Mathematical description**
 
@@ -653,7 +663,7 @@ The steps to derive the chirp replica are the following:
 1. Compute a mean PGP product for each pulse type by averaging all of them in the Fourier domain and after compensating the amplitude and phase drifts:
 
 $$
-\overline{PGP_{IJ}}(f_r)=\frac{1}{M}\sum_{TXPIDX[m]}^{}{\frac{1}{A_{drift}^{'}\left[ m \right]\cdot\exp (j\cdot\varphi_{drift}^{'}[m])}\mathcal{F}_{\tau}\left\{ PGP_{IJ}(\tau,m] \right\}}
+\overline{PGP_{IJ}}(f_r)=\frac{1}{M}\sum_{TXPIDX[m]}^{}{\frac{1}{A_{\mathrm{drift}}^{'}\left[ m \right]\cdot\exp (\mathrm{j}\cdot\varphi_{\mathrm{drift}}^{'}[m])}\mathcal{F}_{\tau}\left\{ PGP_{IJ}(\tau,m] \right\}}
 \tag{3.18}
 $$ (eq:atbd-l1-sar-3-18)
 
@@ -671,13 +681,13 @@ $$ (eq:atbd-l1-sar-3-19)
 (equation-eq-atbd-l1-sar-3-20)=
 \begin{equation}
 \begin{aligned}
-E_{factor}=\sqrt{\sum_{\tau}^{}{\left\vert S_{rep,IJ}^{TXP}(\tau) \right\vert^2}\cdot\frac{f_s}{B_r}} \\
+E_{factor}=\sqrt{\sum_{\tau}^{}{\left\vert S_{rep,IJ}^{TXP}(\tau) \right\vert^2}\cdot\frac{f_{\mathrm{s}}}{B_{\mathrm{r}}}} \\
 S_{rep,IJ}^{TXP}(\tau)=\frac{S_{rep,IJ}^{TXP}(\tau)}{E_{factor}}
 \end{aligned}
 \tag{3.20}
 \end{equation}
 
-where $f_s$ is the range sampling frequency, $B_r$ is the chirp bandwidth, and the summation term represents the energy of the signal. The above formula assumes that the normalization of the Fourier transform, i.e., the factor $1/N_{ft}$, is applied during the inverse Fourier transform operation. Otherwise, the $E_{factor}$ shall be multiplied by $N_{ft}$, ideally during the range compression step, since at the current stage the value of $N_{ft}$ is not necessarily known.
+where $f_s$ is the range sampling frequency, $B_{\mathrm{r}}$ is the chirp bandwidth, and the summation term represents the energy of the signal. The above formula assumes that the normalization of the Fourier transform, i.e., the factor $1/N_{\mathrm{ft}}$, is applied during the inverse Fourier transform operation. Otherwise, the $E_{factor}$ shall be multiplied by $N_{\mathrm{ft}}$, ideally during the range compression step, since at the current stage the value of $N_{\mathrm{ft}}$ is not necessarily known.
 
 (sec:atbd-l1-sar-3-3-4)=
 #### 3.3.4 Internal Delays Between Polarizations
@@ -690,14 +700,14 @@ If the processor uses the replica derived from the PGP product or from an intern
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $S_{rep,IJ}^{TXP}(\tau)$ | Chirp replica | Instrument replica step | Nr x 1 array of complex values | - | - | Derived chirp replica for the given pulse identifier $TXP$ and for each polarization combination $IJ$Intermediate product: `iChirp` |
-| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | RAW data extraction step | Nr x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`4.2.1`) in order to derive the reference signal) for the given pulse type TXP |
+| $S_{rep,IJ}^{TXP}(\tau)$ | Chirp replica | *Instrument replica step* | N{sub}`r` x 1 array of complex values | - | - | Derived chirp replica for the given pulse identifier $TXP$ and for each polarization combination $IJ$ <br> *Intermediate product: `iChirp`* |
+| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | *RAW data extraction step* | N{sub}`r` x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`Sec. 4.2.1 <4.2.1>`) in order to derive the reference signal) for the given pulse type TXP |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\delta\tau_{IJ}^{TXP}$ | Internal delay | Range compression step | set of M scalar values | - | - | Delay between polarimetric channels for the given pulse type TXP and for each polarization combination $IJ$Intermediate product: `iDelays` |
+| $\delta\tau_{IJ}^{TXP}$ | Internal delay | *Range compression step* | set of M scalar values | - | - | Delay between polarimetric channels for the given pulse type *TXP* and for each polarization combination $IJ$ <br> *Intermediate product: `iDelays`* |
 
 **Mathematical description**
 
@@ -733,25 +743,23 @@ $$ (eq:atbd-l1-sar-3-23)
 
 If the processor corrects for the amplitude and phase drifts the instrument internal channel imbalance between polarizations will be automatically corrected. However, in case the compensation of the drifts is skipped, the polarimetric channels will need to be compensated additionally. In this section, the channel imbalances between polarizations are estimated for that purpose.
 
-```{note}
-Since nothing is mentioned in {ad}`3`, it will be assumed that one single channel imbalance value per data take should be derived. Consequently, the different calibration pulses will be averaged to improve the estimation. It is also assumed that the channel imbalance is the same independent of the pulse type used.
-```
+*NOTE: Since nothing is mentioned in* {ad}`3`*, it will be assumed that one single channel imbalance value per data take should be derived. Consequently, the different calibration pulses will be averaged to improve the estimation. It is also assumed that the channel imbalance is the same independent of the pulse type used.*
 
 **Inputs**
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| - | RAW DynCal decoded | RAW data extraction step | set of M Nrg,ic x Naz,ic arrays of complex values | - | - | RAW dynamic calibration data (decoded) Intermediate product: iRAWDynCal |
-| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | RAW data extraction step | Nr x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`4.2.1`) in order to derive the reference signal) for the given pulse type TXP |
-| $T_{inst}[m]$ | Temperature | RAW data extraction step | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
-| $LUT_{PAS}$ | `rawDataDecodingParameters` \> temperature LUT | `AUX_INS` (`AUX_FMT`) | set of arrays (LUTs) | - | - | LUT for the complex scalar normalization factor CINorm {ad}`3` as a function of the instrument temperature |
+| - | RAW DynCal decoded | *RAW data extraction step* | set of M N{sub}`rg,ic` x N{sub}`az,ic` arrays of complex values | - | - | RAW dynamic calibration data (decoded) <br> *Intermediate product: iRAWDynCal* |
+| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | *RAW data extraction step* | N{sub}`r` x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`Sec. 4.2.1 <4.2.1>`) in order to derive the reference signal) for the given pulse type TXP |
+| $T_{\mathrm{inst}}[m]$ | Temperature | *RAW data extraction step* | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
+| $LUT_{PAS}$ | `rawDataDecodingParameters` \> temperature LUT | `AUX_INS` (`AUX_FMT`) | set of arrays (LUTs) | - | - | LUT for the complex scalar normalization factor *CINorm* {ad}`3` as a function of the instrument temperature |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $I_{Rx}$ | RX channel imbalance | Range compression step | scalar complex value | - | - | Receive channel imbalance (amplitude and phase) Intermediate product: `iChannelImbalance` |
-| $I_{Tx}$ | TX channel imbalance | Range compression step | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase) Intermediate product: `iChannelImbalance` |
+| $I_{Rx}$ | RX channel imbalance | *Range compression step* | scalar complex value | - | - | Receive channel imbalance (amplitude and phase) <br> *Intermediate product: `iChannelImbalance`* |
+| $I_{Tx}$ | TX channel imbalance | *Range compression step* | scalar complex value | - | - | Transmit channel imbalance (amplitude and phase) <br> *Intermediate product: `iChannelImbalance`* |
 
 **Mathematical description**
 
@@ -764,7 +772,7 @@ Useful variables:
 
 The steps to derive the channel imbalance are the following:
 
-1. Extract the required calibration measurements within the data take and perform, if applicable, the echo correction (see {sec}`3.2.2`)
+1. Extract the required calibration measurements within the data take and perform, if applicable, the echo correction (see {sec}`Sec. 3.2.2 <3.2.2>`)
 2. Average the different transmit and receive calibration measurements for each polarization:
 
 $$
@@ -781,7 +789,7 @@ S_j^{x,comp}(\tau)=\mathcal{F}^{-1}\left\{ {\widetilde{S}}_j^x(f_r)\cdot(\mathca
 \tag{3.25}
 $$ (eq:atbd-l1-sar-3-25)
 
-4. Upsample the compressed signal around the peak (see {sec}`3.3.2` for the definition of $\mathbb{Z}\left\{ \cdot \right\})$
+4. Upsample the compressed signal around the peak (see {sec}`Sec. 3.3.2 <3.3.2>` for the definition of $\mathbb{Z}\left\{ \cdot \right\})$
 
 $$
 S_j^{x,comp,int}(\tau\mathbb{)=Z}\left\{ S_j^{x,comp}(\tau) \right\}
@@ -798,7 +806,7 @@ $$ (eq:atbd-l1-sar-3-27)
 6. Compute the normalization factor by accessing the LUT as a function of the instrument temperature:
 
 $$
-CI_{Norm}[m\mathcal{]=L}\left\{ LUT_{PAS};T_{inst}[m] \right\}
+CI_{\mathrm{Norm}}[m\mathcal{]=L}\left\{ LUT_{PAS};T_{\mathrm{inst}}[m] \right\}
 \tag{3.28}
 $$ (eq:atbd-l1-sar-3-28)
 
@@ -809,8 +817,8 @@ where the $\mathcal{L}\left\{ LUT;Idx \right\}$ accesses the LUT at the given in
 (equation-eq-atbd-l1-sar-3-29)=
 \begin{equation}
 \begin{aligned}
-I_{Rx}=\frac{a_V^{Rx}}{a_H^{Rx}}\cdot\frac{1}{CI_{Norm}[m]} \\
-I_{Tx}=\frac{a_V^{Tx}}{a_H^{Tx}}\ \cdot\frac{1}{CI_{Norm}[m]}
+I_{Rx}=\frac{a_V^{Rx}}{a_H^{Rx}}\cdot\frac{1}{CI_{\mathrm{Norm}}[m]} \\
+I_{Tx}=\frac{a_V^{Tx}}{a_H^{Tx}}\ \cdot\frac{1}{CI_{\mathrm{Norm}}[m]}
 \end{aligned}
 \tag{3.29}
 \end{equation}
@@ -828,23 +836,23 @@ The tracking of the transmit power for each polarization allows the characteriza
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $S_{I,SSPA1}^{Tx}(\tau,m]$ | TX loop 1 | RAW data extraction step | set of M Nrg,ic x 1 arrays of complex values | - | - | Measurement of the TX-loop in polarization I with SSPA no. 1 operating |
-| $S_{I,SSPA2}^{Tx}(\tau,m]$ | TX loop 2 | RAW data extraction step | set of M Nrg,ic x 1 arrays of complex values | - | - | Measurement of the TX-loop in polarization I with SSPA no. 2 operating |
-| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | RAW data extraction step | Nr x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`4.2.1`) in order to derive the reference signal) for the given pulse type TXP |
-| $T_{inst}[m]$ | Temperature | RAW data extraction step | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
+| $S_{I,SSPA1}^{Tx}(\tau,m]$ | TX loop 1 | *RAW data extraction step* | set of M N{sub}`rg,ic` x 1 arrays of complex values | - | - | Measurement of the TX-loop in polarization I with SSPA no. 1 operating |
+| $S_{I,SSPA2}^{Tx}(\tau,m]$ | TX loop 2 | *RAW data extraction step* | set of M N{sub}`rg,ic` x 1 arrays of complex values | - | - | Measurement of the TX-loop in polarization I with SSPA no. 2 operating |
+| $S_{ref}^{TXP}(\tau)$ | Nominal chirp | *RAW data extraction step* | N{sub}`r` x 1 array of complex values | - | - | Chirp signal computed with the nominal parameters (see {sec}`Sec. 4.2.1 <4.2.1>`) in order to derive the reference signal) for the given pulse type TXP |
+| $T_{\mathrm{inst}}[m]$ | Temperature | *RAW data extraction step* | set of M scalar values | - | - | Temperature extracted from the instrument ancillary data. It is assumed that the temperature is available for each calibration sequence, hence the use of the same index m. Otherwise it shall be interpolated to the time stamps of the calibration sequences |
 | $LUT_{PAS}$ | `rawDataDecodingParameters` \> temperature LUT | `AUX_INS` (`AUX_FMT`) | set of arrays (LUTs) | - | - | LUT for the complex scalar normalization factor for each SSPA temperature |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $S_{I,TxPT}[m]$ | TX Power Tracking | Antenna pattern compensation step | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization Intermediate product: `iTxPT` |
+| $S_{I,TxPT}[m]$ | TX Power Tracking | *Antenna pattern compensation step* | set of M complex values | - | - | Transmit power tracking (complex number) for each calibration sequence m and each polarization <br> *Intermediate product: `iTxPT`* |
 
 **Mathematical Description**
 
 The steps are the following:
 
-1. Extract the required calibration measurements within the data take and perform, if applicable, the echo correction (see {sec}`3.2.2`)
+1. Extract the required calibration measurements within the data take and perform, if applicable, the echo correction (see {sec}`Sec. 3.2.2 <3.2.2>`)
 2. Compress each signal with the nominal chirp for each SSPA ($n=[1,2]$):
 
 $$
@@ -852,7 +860,7 @@ S_{I,SSPA_n}^{Tx,comp}(\tau,m)=\mathcal{F}^{-1}\left\{ \mathcal{F}\left\{ S_{I,S
 \tag{3.30}
 $$ (eq:atbd-l1-sar-3-30)
 
-3. Upsample the compressed signal around the peak (see {sec}`3.3.2` for the definition of $\mathbb{Z}\left\{ \cdot \right\})$:
+3. Upsample the compressed signal around the peak (see {sec}`Sec. 3.3.2 <3.3.2>` for the definition of $\mathbb{Z}\left\{ \cdot \right\})$:
 
 $$
 S_{I,SSPA_n}^{Tx,comp,int}(\tau,m\mathbb{)=Z}\left\{ S_{I,SSPA_n}^{Tx,comp}(\tau,m) \right\}
@@ -864,7 +872,7 @@ $$ (eq:atbd-l1-sar-3-31)
 (equation-eq-atbd-l1-sar-3-32)=
 \begin{equation}
 \begin{aligned}
-\tau_{\max}=maxpos\left\{ \left\vert S_{I,SSPA_n}^{Tx,comp,int}(\tau,m) \right\vert \right\} \\
+\tau_{\max}=\mathrm{maxpos} \left\{ \left\vert S_{I,SSPA_n}^{Tx,comp,int}(\tau,m) \right\vert \right\} \\
 a_{I,SSPA_n}^{Tx}\left[ m \right]=\ S_{I,SSPA_n}^{Tx,comp,ZP}(\tau_{\max}\ ,m)
 \end{aligned}
 \tag{3.32}
@@ -873,7 +881,7 @@ a_{I,SSPA_n}^{Tx}\left[ m \right]=\ S_{I,SSPA_n}^{Tx,comp,ZP}(\tau_{\max}\ ,m)
 5. Compute the normalization factor by accessing the LUT as a function of the instrument temperature:
 
 $$
-TPT_{Norm}[m\mathcal{]=L}\left\{ LUT_{PAS};T_{inst}[m] \right\}
+TPT_{\mathrm{Norm}}[m\mathcal{]=L}\left\{ LUT_{PAS};T_{\mathrm{inst}}[m] \right\}
 \tag{3.33}
 $$ (eq:atbd-l1-sar-3-33)
 
@@ -882,36 +890,36 @@ where the $\mathcal{L}\left\{ LUT;Idx \right\}$ accesses the LUT at the given in
 6. Compute the Tx power tracking product for each SSPA:
 
 $$
-S_{I,TxPT}\left[ m \right]=\frac{a_{I,SSPA1}^{Tx}[m]}{a_{I,SSPA2}^{Tx}[m]}\cdot\frac{1}{{TPT}_{Norm}\left[ m \right]}
+S_{I,TxPT}\left[ m \right]=\frac{a_{I,SSPA1}^{Tx}[m]}{a_{I,SSPA2}^{Tx}[m]}\cdot\frac{1}{{TPT}_{\mathrm{Norm}}\left[ m \right]}
 \tag{3.34}
 $$ (eq:atbd-l1-sar-3-34)
 
 (sec:atbd-l1-sar-3-3-7)=
 #### 3.3.7 Instrument Noise Level
 
-Noise measurements are performed at the preamble and postamble of each data take. By analysing these noise pulses it is possible to estimate the instrument noise level, necessary for the denoising step of the detected image (see {sec}`4.13`) and to compute the NESZ.
+Noise measurements are performed at the preamble and postamble of each data take. By analysing these noise pulses it is possible to estimate the instrument noise level, necessary for the denoising step of the detected image (see {sec}`Sec. 4.13 <4.13>`) and to compute the NESZ.
 
 **Inputs**
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $n_{I,X}[n,\ m]$ | Noise pulses | RAW data extraction step | set of Mnoise Nrg,ic x 1 arrays of complex values | - | - | Sequence of $M_{noise,I,X}$ complex noise pulses at the preamble and postamble for each receive polarization with length $n_{rg}$. $I\in[H,V]$, and $X\in[Pre,Post]$ |
+| $n_{I,X}[n,\ m]$ | Noise pulses | *RAW data extraction step* | set of M{sub}`noise` N{sub}`rg,ic` x 1 arrays of complex values | - | - | Sequence of $M_{\mathrm{noise},\mathrm{I},\mathrm{X}}$ complex noise pulses at the preamble and postamble for each receive polarization with length $n_{rg}$. $I\in[H,V]$, and $X\in[\mathrm{Pre},\mathrm{Post}]$ |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\sigma_{noise,I,X}^2$ | Noise power | Denoising step | 2 Nrg,ic x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble Intermediate product: `iEstNoise` |
+| $\sigma_{\mathrm{noise},\mathrm{I},\mathrm{X}}^2$ | Noise power | *Denoising step* | 2 N{sub}`rg,ic` x 1 arrays of real values | - | - | Estimated noise power for the given receive polarization and preample/postamble <br> *Intermediate product: `iEstNoise`* |
 
 **Mathematical description**
 
 The steps to compute the instrument noise power are the following:
 
-1. Perform echo correction (see {sec}`3.2.2`) of the noise pulses, if applicable
+1. Perform echo correction (see {sec}`Sec. 3.2.2 <3.2.2>`) of the noise pulses, if applicable
 2. Estimate the noise power for each noise echo and average the estimation:
 
 $$
-{\widetilde{\sigma}}_{noise,I,X}^2=\frac{1}{M_{noise,I,X}}\sum_{m=1}^{M_{noise,I,X}}{\left\vert n_{I,X}\left[ *,m \right] \right\vert^2}
+{\widetilde{\sigma}}_{\mathrm{noise},I,X}^2=\frac{1}{M_{\mathrm{noise},\mathrm{I},\mathrm{X}}}\sum_{m=1}^{M_{\mathrm{noise},\mathrm{I},\mathrm{X}}}{\left\vert n_{I,X}\left[ *,m \right] \right\vert^2}
 \tag{3.35}
 $$ (eq:atbd-l1-sar-3-35)
 
@@ -935,7 +943,7 @@ For more details on BIOMASS coordinates systems refer to {ad}`2`.
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $t$ | RAW data azimuth time axis | RAW data extraction step | set of Naz UTC times | - | - | Azimuth time axis of the RAW data Intermediate product: iRAW |
+| $t$ | RAW data azimuth time axis | *RAW data extraction step* | set of N{sub}`az` UTC times | - | - | Azimuth time axis of the RAW data <br> *Intermediate product: iRAW* |
 | - | Orbit | `AUX_ORB` (`AUX_FMT`) | set of state vectors | - | - | Orbit state vectors (satellite position and velocity) |
 | - | Attitude | `AUX_ATT` (`AUX_FMT`) | set of quaternions | - | - | Attitude quaternions |
 
@@ -943,8 +951,8 @@ For more details on BIOMASS coordinates systems refer to {ad}`2`.
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $p_s{,\ v}_s$ | Orbit | RFI mitigation step | 2 Nsv x 3 arrays of real values | - | - | Updated orbit state vectors (satellite position and velocity) Note that these data are passed to next steps updating RAW data annotations Intermediate product: iRAW (updated annotations) |
-| $yaw,\ pitch,$$roll$ | Attitude | RFI mitigation step | Nsv x 3 array of real values | - | - | Attitude Euler angles Note that these data are passed to next steps updating RAW data annotations Intermediate product: iRAW (updated annotations) |
+| $p_{\mathrm{s}}{,\ v}_{\mathrm{s}}$ | Orbit | *RFI mitigation step* | 2 N{sub}`sv` x 3 arrays of real values | - | - | Updated orbit state vectors (satellite position and velocity) <br> Note that these data are passed to next steps updating RAW data annotations <br> *Intermediate product: iRAW (updated annotations)* |
+| $yaw,\ pitch,$ <br> $roll$ | Attitude | *RFI mitigation step* | N{sub}`sv` x 3 array of real values | - | - | Attitude Euler angles <br> Note that these data are passed to next steps updating RAW data annotations <br> *Intermediate product: iRAW (updated annotations)* |
 
 **Mathematical description**
 
@@ -964,10 +972,8 @@ For what concern attitude, on the other hand some more operations are required. 
 (equation-eq-atbd-l1-sar-3-36)=
 \begin{equation}
 \begin{aligned}
-{Z2S}_{1,:}=\frac{v_{s,:}}{norm(v_s)} \\
-{Z2S}_{2,:}=cross({Z2S}_{1,i},\ \widehat{p_s}) \\
-\widehat{p_{s,1}}=p_{s,1} \\
-\widehat{p_{s,2}}=p_{s,2} \\
+{Z2S}_{1,:}=\frac{v_{\mathrm{s},:}}{norm(v_{\mathrm{s}})} \\
+{Z2S}_{2,:}=cross({Z2S}_{1,i},\ \widehat{p_s}) , \widehat{p_{s,1}}=p_{s,1} , \widehat{p_{s,2}}=p_{s,2} , \\
 \widehat{p_{s,3}}=p_{s,3}\bullet1.0060611 \\
 {Z2S}_{3,:}=cross({Z2S}_{1,:},\ {Z2S}_{2,:})
 \end{aligned}
@@ -986,11 +992,11 @@ roll=\tan^{-1} ({-Z2S}_{3,2},\sqrt{{Z2S}_{3,1}^2+{Z2S}_{3,3}^2})
 \tag{3.37}
 \end{equation}
 
-where ${Z2S}_{i,j}$ is the element in position (i,j) of the 3x3 matrix representing the Zero Doppler to SAR rotation. The sign convention used is: roll → clock-wise rotation around +X axis, pitch → clock-wise rotation around +Y axis, yaw → clock-wise rotation around +Z axis.
+where ${Z2S}_{i,j}$ is the element in position *(i,j)* of the 3x3 matrix representing the Zero Doppler to SAR rotation. The sign convention used is: roll → clock-wise rotation around +X axis, pitch → clock-wise rotation around +Y axis, yaw → clock-wise rotation around +Z axis.
 
 Being the input quaternions already converted from ECI to ECEF reference frame, there is no need to use EO CFI to perform these operations.
 
-Once that the input orbit and attitude files have been ingested and pre-processed as described, all the other operations performed in the L1 Core Processing kernel (e.g., orbit and attitude interpolation at a given time) are performed using internal geometric libraries (see, e.g., {sec}`6.3` and {sec}`6.4`).
+Once that the input orbit and attitude files have been ingested and pre-processed as described, all the other operations performed in the L1 Core Processing kernel (e.g., orbit and attitude interpolation at a given time) are performed using internal geometric libraries (see, e.g., {sec}`Sec. 6.3 <6.3>` and {sec}`6.4 <6.4>`).
 
 (sec:atbd-l1-sar-3-5)=
 ### 3.5 2D antenna patterns extraction
@@ -1006,20 +1012,20 @@ This processing step is simply aimed at ingesting this auxiliary product, extrac
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $\tau,\ t$ | RAW data slant range and azimuth time axes | RAW data extraction step | set of Nrg real values and set of Naz UTC times respectively | - | - | Slant range and azimuth time axes of the RAW data Intermediate product: iRAW |
+| $\tau,\ t$ | RAW data slant range and azimuth time axes | *RAW data extraction step* | set of N{sub}`rg` real values and <br> set of N{sub}`az` UTC times respectively | - | - | Slant range and azimuth time axes of the RAW data <br> *Intermediate product: iRAW* |
 | - | DEM | DEM (`BPS_IODD`) | set of DEM tiles | yearly updates potentially available | - | Digital Elevation Model (internal resource), organized in a set of latitude/longitude tiles |
-| - | `heightModelMargin` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 2 | Margin kept during the extraction of Digital Elevation Model (DEM) to be used during processing [deg] |
+| - | `heightModelMargin` | `AUX_PP1` (`AUX_FMT`) | scalar value | - | 2 | Margin kept during the extraction of Digital Elevation <br> Model (DEM) to be used during processing [deg] |
 
 **Outputs**
 
 | Symbol | Name | Destination | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| $lat,\ lon,\ h$ | Latitude, longitude, height | L1 post-processing step | 3 N’rg x N’az arrays of real values | - | - | Latitude, longitude and height information, stored as sub-sampled grids w.r.t. input RAW data one Intermediate product: `iSlantDem` |
-| $x,\ y,\ z$ | X, Y, Z | Various L1 core processing steps (see next sections) | 3 N’rg x N’az arrays of real values | - | - | X, Y and Z information, stored as sub-sampled grids w.r.t. input RAW data one Intermediate product: `iSlantDem` |
-| $\theta$ | Incidence angle | Various L1 core processing steps (see next sections) + L1 post-processing step | N’rg x N’az array of real values | - | - | Incidence angle, stored as sub-sampled grid w.r.t. input RAW data one Intermediate product: `iSlantDem` |
-| $\theta_l$ | Look angle | Various L1 core processing steps (see next sections) + L1 post-processing step | N’rg x N’az array of real values | - | - | Look angle, stored as sub-sampled grid w.r.t. input RAW data one Intermediate product: `iSlantDem` |
-| $r^n$ | Orbit-target distance | - | N’rg x N’az array of real values | - | - | Orbit-target distance, stored as sub-sampled grid w.r.t. input RAW data one Intermediate product: `iSlantDem` |
-| $\alpha$ | Terrain slope | L1 post-processing step | N’rg x N’az array of real values | - | - | Terrain slope, stored as sub-sampled grid w.r.t. input RAW data one Intermediate product: `iSlantDem` |
+| $lat,\ lon,\ h$ | Latitude, longitude, height | *L1 post-processing step* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | Latitude, longitude and height information, stored as sub-sampled grids w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
+| $x,\ y,\ z$ | X, Y, Z | *Various L1 core processing steps (see next sections)* | 3 N’{sub}`rg` x N’{sub}`az` arrays of real values | - | - | X, Y and Z information, stored as sub-sampled grids w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
+| $\theta$ | Incidence angle | *Various L1 core processing steps (see next sections) + L1 post-processing step* | N’{sub}`rg` x N’{sub}`az` array of real values | - | - | Incidence angle, stored as sub-sampled grid w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
+| $\theta_{\mathrm{l}}$ | Look angle | *Various L1 core processing steps (see next sections) + L1 post-processing step* | N’{sub}`rg` x N’{sub}`az` array of real values | - | - | Look angle, stored as sub-sampled grid w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
+| $r^n$ | Orbit-target distance | - | N’{sub}`rg` x N’{sub}`az` array of real values | - | - | Orbit-target distance, stored as sub-sampled grid w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
+| $\alpha$ | Terrain slope | *L1 post-processing step* | N’{sub}`rg` x N’{sub}`az` array of real values | - | - | Terrain slope, stored as sub-sampled grid w.r.t. input RAW data one <br> *Intermediate product: `iSlantDem`* |
 
 (sec:atbd-l1-sar-3-6-1)=
 #### 3.6.1 Direct Geocoding
@@ -1033,7 +1039,7 @@ The first step consists in the definition of the sensor pointing plane. If no az
 \begin{aligned}
 a=\ V_x \\
 b=V_y \\
-c=V_z \\
+c=\mathrm{V}_{\mathrm{z}} \\
 d=\ -\boldsymbol{V}\cdot\boldsymbol{S}\ ,
 \end{aligned}
 \tag{3.38}
@@ -1065,14 +1071,14 @@ Inverse geocoding is the procedure that allows to retrieve the azimuth time $t$ 
 - the sensor position $S(t)$ expressed as a function of the azimuth time in the Cartesian ECEF reference system;
 - the sensor velocity $V(t)$ expressed as a function of the azimuth time in the Cartesian ECEF reference system.
 
-The actual inverse geocoding procedure is the solution for $t$of the following equation:
+The actual inverse geocoding procedure is the solution for $t$ of the following equation:
 
 $$
-\left[ P\ -S(t) \right]\cdot\ V(t)=0
+\left[ P\ -S(t) \right]\cdot\ V(\mathrm{t})=0
 \tag{3.40}
 $$ (eq:atbd-l1-sar-3-40)
 
-Range time $\tau$ derivation is than straightforward from the distance between S and P. The non-linear equation above is solved numerically via the Newton-Raphson method. Since the equation has usually multiple solutions, the method requires to be initialized with a rough estimate of the expected solution, i.e., the $t$ of the state and velocity vectors where the sign of $\left[ P\ -S(t) \right]\cdot\ V(t)$ change from positive to negative.
+Range time $\tau$ derivation is than straightforward from the distance between S and P. The non-linear equation above is solved numerically via the Newton-Raphson method. Since the equation has usually multiple solutions, the method requires to be initialized with a rough estimate of the expected solution, i.e., the $t$ of the state and velocity vectors where the sign of $\left[ P\ -S(t) \right]\cdot\ V(\mathrm{t})$ change from positive to negative.
 
 (sec:atbd-l1-sar-3-6-3)=
 #### 3.6.3 Sampling Grid Definition

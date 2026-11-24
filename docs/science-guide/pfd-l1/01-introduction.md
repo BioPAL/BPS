@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -24,12 +24,12 @@ The purpose of this document is to provide the “L1a/b/c Products Format Specif
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and L1 products;
-- {sec}`Section|3`: Overview of L1a/b products format;
-- {sec}`Section|4`: Detailed description of L1a/b products format specifications;
-- {sec}`Section|5`: Overview of L1c products format;
-- {sec}`Section|6`: Detailed description of L1c products format specifications;
-- {sec}`Section|7` (Appendix): Detailed description of common products format specifications.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and L1 products;
+- {sec}`Section 3 <3>`: Overview of L1a/b products format;
+- {sec}`Section 4 <4>`: Detailed description of L1a/b products format specifications;
+- {sec}`Section 5 <5>`: Overview of L1c products format;
+- {sec}`Section 6 <6>`: Detailed description of L1c products format specifications;
+- {sec}`Section 7 <7>` (Appendix): Detailed description of common products format specifications.
 
 (sec:pfd-l1-1-3)=
 ### 1.3 Acronyms
@@ -63,7 +63,7 @@ This document is organized as follows:
 (sec:pfd-l1-1-4)=
 ### 1.4 Symbols and Variables
 
-:::{dropdown} Acronyms
+:::{dropdown} Symbols and Variables
 | Acronym | Description |
 |---|---|
 | $\beta^0$ | Beta-nought quantity |
@@ -91,6 +91,6 @@ This document is organized as follows:
 | <span id="rd2"></span>`[RD2]` | GDAL library, https://gdal.org/ |
 | <span id="rd3"></span>`[RD3]` | GDAL library Wiki - Cloud Optimized GeoTIFF section, https://trac.osgeo.org/gdal/wiki/CloudOptimizedGeoTIFF#HowtoreaditwithGDAL |
 | <span id="rd4"></span>`[RD4]` | LibTIFF - TIFF Library and Utilities, https://libtiff.gitlab.io/libtiff/ |
-| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff\_tags.shtml |
+| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml |
 | <span id="rd6"></span>`[RD6]` | Network Common Data Form (NetCDF) format, https://www.unidata.ucar.edu/software/netcdf/ |
 | <span id="rd7"></span>`[RD7]` | Well-Known Text representation of coordinate reference systems, https://www.iso.org/standard/63094.html |

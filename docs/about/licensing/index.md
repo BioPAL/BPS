@@ -55,9 +55,18 @@ License compatibility for libraries, third-party code, NOTICE file, and PR requi
 
 ::::
 
+## Documentation and code
+
+| Content | Copyright | License |
+|---|---|---|
+| **Documentation**: the Science Guide documents (ATBDs and PFDs) converted from the ESA-approved documents, their web pages and their PDF exports | European Space Agency (ESA) and ARESYS | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
+| **Code**: the processor, and the code of this site (configuration, Sphinx extensions, templates, styles, figure scripts) | European Space Agency (ESA) and ARESYS | Apache License 2.0 |
+
+Each file states its own license in its SPDX header.
+
 ## Summary
 
-- **BIOMASS BPS uses Apache License 2.0**
+- **BIOMASS BPS code uses Apache License 2.0; the Science Guide documentation uses CC-BY-4.0**
 - **All contributions must be Apache 2.0 compatible**
 - **External dependencies must be license-compatible**
 - **Proper attribution is required for third-party code**

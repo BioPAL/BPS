@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -77,16 +77,16 @@ flowchart TB
 
 | Symbol | Name | Origin | Size | Variability | Default | Description |
 |---|---|---|---|---|---|---|
-| FNF i | FNF | FH L2a products in a DGG tile in a global cycle (`FH_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^i$ | - | - | Annotated forest-non-forest mask |
+| *FNF* {sup}`i` | FNF | FH L2a products in a DGG tile in a global cycle (`FH_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^i$ | - | - | Annotated forest-non-forest mask |
 | $H_F^i$ | forest height | FH L2a products in a DGG tile in a global cycle (`FH_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^i$ | - | - | Forest height map |
 | $h_b^i$ | forest height quality | FH L2a products in a DGG tile in a global cycle (`FH_PFD`) | $\left[ N_{lat}\times{}N_{lon} \right]^i$ | - | - | Quality index indicating the inversion performance |
-| CFM | CFM | FD L2b product in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | optional | not provided | Computed Forest Mask |
+| *CFM* | CFM | FD L2b product in a DGG tile in a global cycle (`FD_PFD`) | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | optional | not provided | Computed Forest Mask |
 | - | `forestMaskingFlag` | `AUX_PP2_FH` (`AUX_FMT`) | bool | - | True | True if forest/non-forest map masking should be performed |
-| DGG | DGG | Internal lookup table | - | - | - | DGG tile |
-| BBi | Footprint | L2a main product header (`FH_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates |
+| *DGG* | DGG | Internal lookup table | - | - | - | DGG tile |
+| *BB*{sup}`i` | Footprint | L2a main product header (`FH_PFD`) | lat-lon vertices (4 couples) | - | - | The extent of the L2a input data in geographical coordinates |
 | $\beta_A$ | `rollOffFactorAzimuth` | `AUX_PP2_FH` (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.1 | Feathering roll-off factor |
 | $\beta_R$ | `rollOffFactorRange` | `AUX_PP2_FH` (`AUX_FMT`) | float value [scalar] | 0.0-1.0 | 0.1 | Feathering roll-off factor |
-| mDGG | `minimumL2aCoverage` | `AUX_PP2_FH` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
+| *mDGG* | `minimumL2aCoverage` | `AUX_PP2_FH` (`AUX_FMT`) | float value [scalar] | 0.0-100.0 | 10.0 | The minimum [%] tile coverage that triggers the computations |
 
 (sec:atbd-fh-4-1-3)=
 #### 4.1.3 Outputs
@@ -95,38 +95,38 @@ flowchart TB
 |---|---|---|---|---|---|---|
 | $H_F$ | forest height | FH L2b product | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | forest height aggregated |
 | $h_b$ | forest height quality | FH L2b product | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | forest height quality aggregated |
-| HM | heat map | FH L2b product | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | heat map |
+| *HM* | heat map | FH L2b product | $\left[ N_{lat,L2b}\times{}N_{lon,L2b} \right]$ | - | - | heat map |
 
 (sec:atbd-fh-4-1-4)=
 #### 4.1.4 Algorithm mathematical background
 
-As a first step, the minimum required coverage over L2b DGG tile j is checked to proceed with computations:
+As a first step, the minimum required coverage over L2b DGG tile *j* is checked to proceed with computations:
 
 $$
-TR=\ (100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG)
+TR=\ \left( 100*\frac{A(\left. \bigcup_i^{}{{BB}^i} \right\vert_{DGG}\cap\left. {TT}^j \right\vert_{DGG})}{A(\left. {TT}^j \right\vert_{DGG})}>mDGG \right)
 \tag{4.1}
 $$ (eq:atbd-fh-4-1)
 
-where BBi are the L2a bounding boxes, TTj is the footprint of the current L2b DGG tile and A operator computes the area of the corresponding polygon.
+where *BB*{sup}`i` are the L2a bounding boxes, *TT*{sup}`j` is the footprint of the current L2b DGG tile and *A* operator computes the area of the corresponding polygon.
 
 (sec:atbd-fh-4-1-4-1)=
 ##### 4.1.4.1 Feathering weights
 
-Each L2a forest height map is weighted on its border (as defined by its footprint BBi) by applying raised cosine weights and accounting for transitions between swaths {rd}`14`.
+Each L2a forest height map is weighted on its border (as defined by its footprint *BB*{sup}`i`) by applying raised cosine weights and accounting for transitions between swaths {rd}`14`.
 
-Thus, the two feathering weights $w_a^i(d)w_r^i(d)$ are computed in the swath tilted domain, as defined by the footprint BBi:
+Thus, the two feathering weights $w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)$ are computed in the swath tilted domain, as defined by the footprint *BB*{sup}`i`:
 
-(4.2)
-
-$$
+(equation-eq-atbd-fh-4-2)=
+\begin{equation}
 w_{a,r}^i(d)=\left\{ \ \ \begin{matrix}
-1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ & \left\vert d \right\vert\leq\frac{1-\beta}{s_w}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \\
-\frac{1}{2}\left[ 1+\cos (\frac{\pi{}s_w}{2\beta}\left[ \left\vert d \right\vert-\frac{1-\beta}{s_w} \right]) \right]\ \ \ \ \ \ \ \ \ \ & \frac{1-\beta}{s_w}<\left\vert d \right\vert\leq\frac{1+\beta}{s_w}\ \ \ \\
+1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ & \left\vert d \right\vert\leq\frac{1-\beta}{\mathrm{s}_{\mathrm{w}}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \\
+\frac{1}{2}\left[ 1+\cos \left( \frac{\pi\mathrm{s}_{\mathrm{w}}}{2\beta}\left[ \left\vert d \right\vert-\frac{1-\beta}{\mathrm{s}_{\mathrm{w}}} \right] \right) \right]\ \ \ \ \ \ \ \ \ \ & \frac{1-\beta}{\mathrm{s}_{\mathrm{w}}}<\left\vert d \right\vert\leq\frac{1+\beta}{\mathrm{s}_{\mathrm{w}}}\ \ \ \\
 \ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ & otherwise\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
 \end{matrix} \right.
-$$
+\tag{4.2}
+\end{equation}
 
-where $s_w=s_{w,A},s_{w,R}$ is swath width along azimuth or range direction (computed from swath footprint BBi), $d$ is distance from swath border (computed in the tilted domain) and $\beta=\beta_A,\ \beta_R$ is the roll-off factor.
+where $\mathrm{s}_{\mathrm{w}}=s_{w,A},s_{w,R}$ is swath width along azimuth or range direction (computed from swath footprint *BB*{sup}`i`), $d$ is distance from swath border (computed in the tilted domain) and $\beta=\beta_A,\ \beta_R$ is the roll-off factor.
 
 (fig:atbd-fh-14)=
 :::{div} atbd-mermaid-figure
@@ -144,36 +144,36 @@ where $s_w=s_{w,A},s_{w,R}$ is swath width along azimuth or range direction (com
 (sec:atbd-fh-4-1-4-2)=
 ##### 4.1.4.2 Aggregation rule
 
-The aggregation at pixel map level of the various L2a forest height maps is done by performing an average weighted by quality information represented by the percentage bias $h_b^i$, computed in {sec}`3.5.4.1.6`. The estimation quality $h_b^i$ allows the combination of K different estimates $H_F^i$ in a simple and efficient way to generate a global $H_F$estimate. A heat map HM is also stored as representing the sum of weights used in computation (including feathering weights). Two different sets of relations are proposed, depending on the availability of FD L2b product as input. When FD L2b product is not present, annotated forest/non-forest map is used to remove deforested areas:
+The aggregation at pixel map level of the various L2a forest height maps is done by performing an average weighted by quality information represented by the percentage bias $h_b^i$, computed in {sec}`3.5.4.1.6`. The estimation quality $h_b^i$ allows the combination of K different estimates $H_F^i$ in a simple and efficient way to generate a global $H_F$ estimate. A heat map *HM* is also stored as representing the sum of weights used in computation (including feathering weights). Two different sets of relations are proposed, depending on the availability of FD L2b product as input. When FD L2b product is not present, annotated forest/non-forest map is used to remove deforested areas:
 
 $$
-H_F=\frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d)H_F^i{FNF}^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_a^i(d)w_r^i(d)}
+H_F=\frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)H_F^i{FNF}^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)}
 \tag{4.3}
 $$ (eq:atbd-fh-4-3)
 
 $$
-h_b=\frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d)h_b^i{FNF}^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_a^i(d)w_r^i(d)}
+h_b=\frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)h_b^i{FNF}^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)}
 $$
 
 $$
-HM=\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d){FNF}^i}
+HM=\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d){FNF}^i}
 $$
 
 where $\varepsilon=0.01$ is an adjustment factor.
 
-If the FD L2b product is provided as input, CFM supersedes FNF, and the rule is instead:
+If the FD L2b product is provided as input, *CFM* supersedes *FNF*, and the rule is instead:
 
 $$
-H_F=CFM\ \frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d)H_F^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_a^i(d)w_r^i(d)}
+H_F=CFM\ \frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)H_F^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)}
 \tag{4.4}
 $$ (eq:atbd-fh-4-4)
 
 $$
-h_b=CFM\ \frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d)h_b^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_a^i(d)w_r^i(d)}
+h_b=CFM\ \frac{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)h_b^i}}{\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)}
 $$
 
 $$
-HM=CFM\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_a^i(d)w_r^i(d)}
+HM=CFM\sum_{i=1}^K{\frac{1}{{\varepsilon+h}_b^i}w_{\mathrm{a}}^i(d)w_{\mathrm{r}}^i(d)}
 $$
 
 It must be noted that previous relations are actually computed only where at least one FH L2A input is present.

@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -24,12 +24,12 @@ The purpose of this document is to provide the “Forest Disturbance Products Fo
 
 This document is organized as follows:
 
-- {sec}`Section|2`: Brief introduction about BPS and Forest Disturbance products;
-- {sec}`Section|3`: Overview of L2a products format;
-- {sec}`Section|4`: Detailed description of L2a products format specifications;
-- {sec}`Section|5`: Overview of L2b products format;
-- {sec}`Section|6`: Detailed description of L2b products format specifications.
-- {sec}`Section|7`: Appendix containing xml primitive product types description.
+- {sec}`Section 2 <2>`: Brief introduction about BPS and Forest Disturbance products;
+- {sec}`Section 3 <3>`: Overview of L2a products format;
+- {sec}`Section 4 <4>`: Detailed description of L2a products format specifications;
+- {sec}`Section 5 <5>`: Overview of L2b products format;
+- {sec}`Section 6 <6>`: Detailed description of L2b products format specifications.
+- {sec}`Section 7 <7>`: Appendix containing xml primitive product types description.
 
 (sec:pfd-fd-1-3)=
 ### 1.3 Acronyms
@@ -94,15 +94,10 @@ This document is organized as follows:
 | <span id="rd2"></span>`[RD2]` | GDAL library, https://gdal.org/ |
 | <span id="rd3"></span>`[RD3]` | GDAL library Wiki - Cloud Optimized GeoTIFF section, https://trac.osgeo.org/gdal/wiki/CloudOptimizedGeoTIFF#HowtoreaditwithGDAL |
 | <span id="rd4"></span>`[RD4]` | LibTIFF - TIFF Library and Utilities, https://libtiff.gitlab.io/libtiff/ |
-| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff\_tags.shtml |
+| <span id="rd5"></span>`[RD5]` | TIFF format tags, https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml |
 | <span id="rd6"></span>`[RD6]` | Network Common Data Form (NetCDF) format, https://www.unidata.ucar.edu/software/netcdf/ |
-| <span id="rd7"></span>`[RD7]` | Network Common Data Form (NetCDF), Python |
-
-https://unidata.github.io/netcdf4-python/
-
-| Code | Document |
-|---|---|
+| <span id="rd7"></span>`[RD7]` | Network Common Data Form (NetCDF), Python <br> https://unidata.github.io/netcdf4-python/ |
 | <span id="rd8"></span>`[RD8]` | Well-Known Text representation of coordinate reference systems, https://www.iso.org/standard/63094.html |
 | <span id="rd9"></span>`[RD9]` | [PDD] `BIO-BPS-PPD-ARE-010083`, BIOMASS Product Performance Description, I/R 3/0/1 |
 | <span id="rd10"></span>`[RD10]` | [L1PFD] `BIO-BPS-L1PFD-ARE-010076`, BIOMASS L1 Product Format Specification, I/R 1/2/8 |
-| <span id="rd11"></span>`[RD11]` | https://docs.ogc.org/is/19-008r4/19-008r4.html#\_geotiff\_configuration\_geokeys |
+| <span id="rd11"></span>`[RD11]` | https://docs.ogc.org/is/19-008r4/19-008r4.html#_geotiff_configuration_geokeys |

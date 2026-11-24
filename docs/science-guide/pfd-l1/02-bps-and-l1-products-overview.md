@@ -1,5 +1,5 @@
-<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- SPDX-FileCopyrightText: 2026 European Space Agency (ESA) and ARESYS -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
 :::{atbd-logo-banner}
 :::
@@ -30,4 +30,4 @@ while the L1a and L1c (i.e., all except L1b) belong also to another product cate
 
 BIOMASS acquires data-takes as long segment of several minutes. For practical reasons related to data volume all the L1 products are chopped to generate subsets of prefixed size, defined as frames, and lying on the L1 framing grid. Such chopping is the default production rule for the generated BIOMASS L1 products. However, there will be cases where the framing is not required and the L1 might be floating (i.e., not aligned to the L1 framing grid) and the framing is disabled, generating products long as the whole Data Take. The proposed L1 organisation is valid independent on whether or not the products’ chopping into frames is applied or not.
 
-In {sec}`3` an overview of L1a/b products format is provided, while its detailed description is included in {sec}`4`. The same will be done for L1c products respectively in {sec}`5` and 6.
+In {sec}`Sec. 3 <3>` an overview of L1a/b products format is provided, while its detailed description is included in {sec}`Sec. 4 <4>`. The same will be done for L1c products respectively in {sec}`Sec. 5 <5>` and 6.
