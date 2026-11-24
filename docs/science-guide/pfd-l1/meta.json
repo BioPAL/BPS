@@ -1,0 +1,39 @@
+{
+ "slug": "l1-pfd",
+ "family": "pfd",
+ "doc_code": "BIO-BPS-L1PFD-ARE-010076",
+ "flavor": "bps",
+ "bps_slug": "pfd-l1",
+ "manifest": null,
+ "version": "1.7.0",
+ "title": "BIOMASS L1a/b/c Products Format Specification",
+ "source": "BPS_L1_PFD_v1_7_0.docx",
+ "source_sha256": "0b1514b320fbf1523ddd4be9eaaa80680f0b4bac9969bfc0c90d41fc6592eed9",
+ "backend": "docx",
+ "license": "CC-BY-4.0",
+ "pipeline_version": "0.1.0",
+ "conversion_date": "2026-11-23",
+ "checks": {
+  "V1": "PASS",
+  "V2": "PASS",
+  "V3": "PASS",
+  "V4": "REVIEW",
+  "V5": "PASS",
+  "V6": "PASS",
+  "V7": "PASS",
+  "V8": "PASS",
+  "V9": "REVIEW",
+  "V10": "PASS",
+  "V11": "PASS",
+  "V12": "PASS"
+ },
+ "counts": {
+  "headings": 69,
+  "paragraphs": 151,
+  "list_items": 144,
+  "tables": 107,
+  "figures": 38,
+  "equations": 0,
+  "captions": 141
+ }
+}

@@ -1,0 +1,5 @@
+# Never commit large meeting recordings here (hosted on biomass-disc).
+media/**/*.mp4
+media/**/*.mov
+media/**/*.mkv
+media/**/*.webm

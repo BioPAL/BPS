@@ -1,0 +1,48 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% PDF metadata, bookmarks and links of the Science Guide export. Loaded last by
+% atbdlayout.sty. Values come from the \atbd* macros of atbdlayout.sty.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdmeta}[2026/11/23 ATBD PDF metadata]
+% Caption counters are set to the numbers of the original (atbdfloats.sty)
+% and chapters are unnumbered: two tables or figures may then get the same
+% hyperref anchor ("table.0.1"), and a "Tab.1" reference reaches the wrong
+% one. The anchor also carries the source line, which makes it unique.
+\AtBeginDocument{%
+  \@ifundefined{theHtable}{}{%
+    \let\atbd@theHtable\theHtable
+    \renewcommand\theHtable{\atbd@theHtable.\the\inputlineno}}%
+  \@ifundefined{theHfigure}{}{%
+    \let\atbd@theHfigure\theHfigure
+    \renewcommand\theHfigure{\atbd@theHfigure.\the\inputlineno}}}
+
+\newcommand\atbdmetasubject{Web export of \atbdcode\space issue \atbdissue\space - not the approved ESA document}
+
+% hyperref is loaded by Sphinx after the preamble: set up once it is there.
+\AtBeginDocument{%
+  \hypersetup{%
+    pdftitle={\atbdtitle},
+    pdfauthor={BIOMASS BPS documentation site (web export)},
+    pdfsubject={\atbdmetasubject},
+    pdfkeywords={BIOMASS, Biomass Processing Suite, BPS,
+      \ifx\atbdbpsversion\empty\else BPS \atbdbpsversion, \fi
+      \atbdcode, ESA, Aresys, Science Guide},
+    pdflang={en},
+    pdfdisplaydoctitle=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=2,
+    bookmarksnumbered=true,
+    pdfpagemode=UseOutlines,
+    breaklinks=true,
+  }%
+}
+
+% hyperref (xdvipdfmx driver) keeps the first subject it wrote: put the final
+% one straight into the Info dictionary.
+\AtEndDocument{\special{pdf:docinfo << /Subject (\atbdmetasubject) >>}}
+
+% xdvipdfmx ignores pdflang: set the document language in the catalog.
+\AtBeginDocument{\special{pdf:put @catalog << /Lang (en) >>}}
+
+\endinput

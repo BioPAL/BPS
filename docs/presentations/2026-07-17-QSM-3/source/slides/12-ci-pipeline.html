@@ -1,0 +1,38 @@
+<section class="slide slide--act-i" data-label="12" data-screen-label="CI/CD pipeline design" style="font-family:var(--fs);background:var(--bg);">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 68% 0%,rgba(0,122,148,.22) 0%,transparent 52%);"></div><div style="position:absolute;inset:0;background:radial-gradient(ellipse at 5% 100%,rgba(151,192,11,.08) 0%,transparent 45%);"></div>
+  <div class="slide-ribbon">
+    <div class="slide-ribbon__accent"><div class="slide-ribbon__progress" style="width:0%"></div></div>
+    <div class="slide-ribbon__bar">
+      <div class="slide-ribbon__label">ACT I - CI/CD</div>
+      <div class="slide-ribbon__logo"><img src="../_shared/logos/biopal-text-right.png" alt="BioPAL" style="height:48px;object-fit:contain"></div>
+    </div>
+  </div>
+  <div class="slide-body slide-body--stack" style="z-index:1;">
+    <div style="display:flex;flex-direction:column;gap:16px;width:100%;">
+      <div style="font-weight:700;font-size:64px;color:#fff;line-height:1.1;letter-spacing:-.01em;">CI/CD pipeline design</div><div style="width:80px;height:4px;background:var(--gr);border-radius:2px;margin:20px 0 32px;"></div>
+      <div style="font-size:28px;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.4;">Three-tier system. Each proposed change is classified automatically based on what it touches. The base branch determines which checks run.</div><div style="display:flex;gap:22px;margin-bottom:24px;"><div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-top:4px solid var(--gr);border-radius:10px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;">
+  <div style="font-weight:700;font-size:36px;color:#fff;">Baseline</div>
+  <div style="font-size:26px;color:rgba(255,255,255,.65);line-height:1.4;">Lint, licence headers, SPDX check, unit tests</div>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Trigger:</strong> Every push and pull request</div>
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Maximum duration:</strong> 5 min</div>
+  </div>
+</div><div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-top:4px solid var(--tl);border-radius:10px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;">
+  <div style="font-weight:700;font-size:36px;color:#fff;">Extended</div>
+  <div style="font-size:26px;color:rgba(255,255,255,.65);line-height:1.4;">Integration tests, build verification, doc generation</div>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Trigger:</strong> Pull requests to shared branch</div>
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Maximum duration:</strong> 20 min</div>
+  </div>
+</div><div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-top:4px solid var(--cy);border-radius:10px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;">
+  <div style="font-weight:700;font-size:36px;color:#fff;">Heavy</div>
+  <div style="font-size:26px;color:rgba(255,255,255,.65);line-height:1.4;">Full processing chain, regression tests, performance</div>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Trigger:</strong> Nightly or on-demand</div>
+    <div style="font-size:22px;color:rgba(255,255,255,.45);"><strong style="color:rgba(255,255,255,.6);">Maximum duration:</strong> 2 hours</div>
+  </div>
+</div></div><div style="display:flex;gap:28px;align-items:center;"><div style="background:rgba(151,192,11,.1);border:1px solid rgba(151,192,11,.3);border-radius:8px;padding:14px 20px;font-size:26px;color:rgba(255,255,255,.85);line-height:1.4;"><strong style="color:var(--gr);">tier-policy.yml</strong> defines the classification rules. Auto-classification from changed file paths.</div><div style="background:rgba(0,182,240,.08);border:1px solid rgba(0,182,240,.25);border-radius:8px;padding:14px 20px;font-size:26px;color:rgba(255,255,255,.85);line-height:1.4;"><strong style="color:var(--cy);">PR #30</strong> implements the pipeline. Checks still failing: needs green before acceptance.</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="slide-footer__tagline">BIOMASS DISC - QSM#3 - 17/07/2026</span><div class="slide-footer__logos"><img src="../_shared/logos/esa-dark.png" style="height:26px;object-fit:contain;opacity:.6;"><img src="../_shared/logos/acri-st.png" style="height:24px;object-fit:contain;opacity:.85;"><img src="../_shared/logos/biomass-disc.png" style="height:28px;object-fit:contain;opacity:.75;"></div><span class="slide-footer__number">12</span></div>
+</section>

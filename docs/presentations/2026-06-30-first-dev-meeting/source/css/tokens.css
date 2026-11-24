@@ -1,0 +1,23 @@
+/* Design tokens — BioPAL / BPS First Dev Meeting deck */
+:root {
+  --bg: #0f1923;
+  --tl: #007a94;
+  --tl2: #347891;
+  --cy: #00b6f0;
+  --gr: #97c00b;
+  --pk: #ff7e79;
+  --vm: #5234c9;
+  --mn: #a3d8b0;
+  --fs: "Inter", "Helvetica Neue", sans-serif;
+  --fm: "JetBrains Mono", "IBM Plex Mono", monospace;
+  --tt: 68px;
+  --th: 136px;
+  --tb: 34px;
+  --tc: 34px;
+}
+
+.slide {
+  font-family: var(--fs);
+  background: var(--bg);
+  color: #fff;
+}

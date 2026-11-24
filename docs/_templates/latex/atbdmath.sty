@@ -1,0 +1,149 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Formulas of the Science Guide PDF exports (atbd_latex_content.py).
+% Loaded by atbdlayout.sty (colours and document metadata are defined there).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdmath}[2026/11/23 BPS Science Guide PDF layout]
+
+% Inline formulas wider than their column. Slightly too wide (to 90 % of their
+% size in 7-8 pt tables, 95 % in larger ones, so that the subscripts stay at
+% the size of the originals: 5 pt) they are scaled to the column; wider, they
+% are set at their own size and break after their commas and operators (the
+% approved PDFs do the same). A piece that cannot break (a bracketed power)
+% and is still wider than the column is scaled down to it, as a block.
+% [#1] is the same formula with fixed-size brackets, which TeX can break inside.
+\newdimen\atbd@maxline
+\def\atbd@scanlines{%
+  \unskip\unpenalty\global\setbox\thr@@\lastbox
+  \ifvoid\thr@@\else
+    \setbox\thr@@\hbox{\unhbox\thr@@}%
+    \ifdim\wd\thr@@>\atbd@maxline\global\atbd@maxline=\wd\thr@@\fi
+    \expandafter\atbd@scanlines
+  \fi}
+\newcommand\atbd@fmin{0.95}
+\newcommand\atbdfitmath[2][]{%
+  \allowbreak\sbox\z@{#2}%
+  \ifdim\wd\z@>\linewidth
+    \ifdim\f@size pt<8.5pt \def\atbd@fmin{0.9}\else\def\atbd@fmin{0.95}\fi
+    \def\atbd@alt{#1}%
+    \ifx\atbd@alt\@empty
+      \def\atbd@fm{#2}%
+    \else
+      \def\atbd@fm{#1}\sbox\z@{#1}%
+    \fi
+    \dimen@=\atbd@fmin\wd\z@
+    \ifdim\dimen@>\linewidth
+      % broken in lines of the column width: widest line measured
+      \setbox\tw@\vbox{\hsize=\linewidth \raggedright \noindent
+        \tolerance=10000 \hbadness=10000 \hfuzz=\maxdimen \atbd@fm\par}%
+      \global\atbd@maxline=\z@
+      \setbox\tw@\vbox{\unvcopy\tw@ \atbd@scanlines}%
+      \ifdim\atbd@maxline>\linewidth
+        \resizebox{\linewidth}{!}{\vtop{\hsize=\dimexpr\atbd@maxline+0.5pt\relax
+          \raggedright \noindent \tolerance=10000 \hbadness=10000
+          \hfuzz=\maxdimen \atbd@fm\par}}%
+      \else\atbd@fm\fi
+    \else\resizebox{\linewidth}{!}{\usebox\z@}\fi
+  \else\usebox\z@\fi}
+% Displayed equations (atbd_latex_content.py). The number is set in the text
+% font, 8 pt inside the right margin (right edge at 521-542 in the approved PDFs, median 536).
+\renewcommand\tagform@[1]{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)\hspace{8pt}}}
+\newdimen\atbd@eqavail
+% Log line of each formula wider than the text (page, width, available width).
+\newcommand\atbd@eqlog[1]{\typeout{ATBDEQ #1 page \thepage: \the\wd\z@\space>\space\the\atbd@eqavail}}
+\newcommand\atbd@eqsetavail{\atbd@eqavail=\dimexpr\linewidth-5.6em\relax}
+% Multi-line body aligned on & like split, scaled down when wider than the text
+% minus the number. With [#1] (the rows of the body, atbdrow each), a body that
+% would be scaled under 85 % is set row by row instead, each row broken after
+% its relations and operators.
+\newcommand\atbdfitdisplay[2][]{%
+  \atbd@eqsetavail
+  \sbox\z@{$\displaystyle\begin{aligned}#2\end{aligned}$}%
+  \ifdim\wd\z@>\atbd@eqavail
+    \def\atbd@alt{#1}%
+    \ifx\atbd@alt\@empty
+      \atbd@eqlog{aligned scaled}%
+      \resizebox{\atbd@eqavail}{!}{\usebox\z@}%
+    \else
+      \ifdim0.85\wd\z@>\atbd@eqavail
+        \atbd@eqlog{aligned in rows}%
+        \vcenter{#1}%
+      \else
+        \atbd@eqlog{aligned scaled}%
+        \resizebox{\atbd@eqavail}{!}{\usebox\z@}%
+      \fi
+    \fi
+  \else\usebox\z@\fi}
+% One-line body: kept at its size when it fits; slightly too wide (down to
+% 85 %), scaled; wider, broken after its relations and operators (=, +, -, x)
+% like the approved PDFs, in lines centred on the text width.
+\newcommand\atbdfitline[2][]{%
+  \atbd@eqsetavail
+  \sbox\z@{$\displaystyle#2$}%
+  \ifdim\wd\z@>\atbd@eqavail
+    \ifdim0.85\wd\z@>\atbd@eqavail
+      \atbd@eqlog{broken}%
+      \def\atbd@alt{#1}%
+      \ifx\atbd@alt\@empty\atbd@breakline{#2}\else\atbd@breakline{#1}\fi%
+    \else\atbd@eqlog{scaled}\resizebox{\atbd@eqavail}{!}{\usebox\z@}\fi
+  \else\usebox\z@\fi}
+% Lines of the broken formula: one that cannot be broken any further (a
+% \left...\right group) sticks out of the box; the whole is then scaled down
+% to the available width (natural width of the widest line measured below).
+\newcommand\atbd@breakline[1]{%
+  \setbox\z@\vbox{%
+    \hsize=\atbd@eqavail \centering \noindent
+    \pretolerance=-1 \tolerance=10000 \emergencystretch=3em \hbadness=10000
+    \binoppenalty=100 \relpenalty=0
+    $\displaystyle#1$\par}%
+  \global\atbd@maxline=\z@
+  \setbox\tw@\vbox{\unvcopy\z@ \atbd@scanlines}%
+  \ifdim\atbd@maxline>\atbd@eqavail
+    \atbd@eqlog{broken, widest line}%
+    \resizebox{\atbd@eqavail}{!}{\hbox to\atbd@maxline{\box\z@\hss}}%
+  \else\box\z@\fi}
+\let\atbdrow\atbd@breakline
+% Math font: Cambria Math in the originals. STIX Two Math (TeX Live) is the
+% closest font shipped with it (scaled to the 11-12 pt of the originals,
+% Arial has a larger x-height); Computer Modern otherwise.
+\IfFontExistsTF{STIXTwoMath-Regular.otf}{%
+  \usepackage{unicode-math}%
+  \setmathfont{STIXTwoMath-Regular.otf}[Scale=1.08]%
+  % Script sizes (nominal, the font is then scaled by 1.08): second-level
+  % subscripts (r_{g,\varphi}, L_{2b}) came out at 4.4-5.8 pt; keep them
+  % at 6 pt or more at the sizes of the body (11 pt) and of the tables (9 pt).
+  \newcommand\atbd@mathsize[3]{%
+    \edef\atbd@tmp{\strip@pt\dimexpr#1\relax}%
+    \edef\atbd@tmp{\noexpand\DeclareMathSizes{\atbd@tmp}{\atbd@tmp}{#2}{#3}}%
+    \atbd@tmp}%
+  % \mathrm, \mathbf and \mathit of unicode-math take their letters from the
+  % text font (Liberation Sans), which has no glyph for a Greek capital
+  % (\mathrm{\Delta}: U+1D6E5, a blank box); use the math font's alphabets.
+  \AtBeginDocument{\let\mathrm\symup \let\mathbf\symbfup \let\mathit\symit}%
+  \atbd@mathsize{11bp}{8.4}{5.9}%
+  \atbd@mathsize{12bp}{8.8}{6.2}%
+  \atbd@mathsize{10bp}{7.6}{5.7}%
+  \atbd@mathsize{9pt}{7}{6}%
+  % table fonts (9, 8, 7 bp: ATBD, PFD and Stack tables; scripts of the originals ~5 pt)
+  \atbd@mathsize{9bp}{6.8}{5.9}%
+  \atbd@mathsize{8bp}{6.2}{5.6}%
+  \atbd@mathsize{7bp}{5.6}{5.2}%
+  \atbd@mathsize{8pt}{6.4}{5.6}%
+  \atbd@mathsize{7pt}{5.8}{5.6}%
+  \atbd@mathsize{14bp}{10}{7}%
+  \atbd@mathsize{16bp}{11}{8}%
+  \atbd@mathsize{24bp}{16}{12}}{%
+% Upright letters and Greek capitals (\Delta, \mathrm, \mathbf) from
+% Computer Modern like the rest of the formulas. fontspec would take them
+% from the text font, which has no glyph in those 8-bit slots (U+0001...).
+\AtBeginDocument{%
+  \DeclareSymbolFont{operators}{OT1}{cmr}{m}{n}%
+  \SetSymbolFont{operators}{bold}{OT1}{cmr}{bx}{n}%
+  \DeclareMathAlphabet{\mathrm}{OT1}{cmr}{m}{n}%
+  \DeclareMathAlphabet{\mathbf}{OT1}{cmr}{bx}{n}%
+  \SetMathAlphabet{\mathrm}{bold}{OT1}{cmr}{bx}{n}}}
+% Sphinx prints U+2423 (open box, no glyph in Liberation Mono) where a verbatim
+% line wraps at a space: nothing there instead (the approved PDFs show none).
+\AtBeginDocument{\sphinxsetup{verbatimvisiblespace={}}}
+\endinput

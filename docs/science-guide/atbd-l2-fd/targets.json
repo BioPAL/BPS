@@ -1,0 +1,525 @@
+{
+ "doc": "science-guide/atbd-l2-fd",
+ "title": "BPS FD ATBD - Algorithms Theoretical Baseline Document",
+ "short_title": "L2 FD ATBD",
+ "doc_code": "BIO-BPS-FD-ATBD-ARE-10344",
+ "pdf_url": "https://www.biomass-disc.info/assets/documents/BPS_v4.4.2/BPS_FD_ATBD_v2.1.8.pdf",
+ "targets": {
+  "ad:1": {
+   "file": "01-introduction",
+   "anchor": "ad1"
+  },
+  "ad:2": {
+   "file": "01-introduction",
+   "anchor": "ad2"
+  },
+  "ad:3": {
+   "file": "01-introduction",
+   "anchor": "ad3"
+  },
+  "eq:3.1": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-1"
+  },
+  "eq:3.10": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-10"
+  },
+  "eq:3.11": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-11"
+  },
+  "eq:3.12": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-12"
+  },
+  "eq:3.13": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-13"
+  },
+  "eq:3.14": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-14"
+  },
+  "eq:3.15": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-15"
+  },
+  "eq:3.16": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-16"
+  },
+  "eq:3.17": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-17"
+  },
+  "eq:3.18": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-18"
+  },
+  "eq:3.19": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-19"
+  },
+  "eq:3.2": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-2"
+  },
+  "eq:3.20": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-20"
+  },
+  "eq:3.21": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-21"
+  },
+  "eq:3.22": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-22"
+  },
+  "eq:3.3": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-3"
+  },
+  "eq:3.4": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-4"
+  },
+  "eq:3.5": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-5"
+  },
+  "eq:3.6": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-6"
+  },
+  "eq:3.7": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-7"
+  },
+  "eq:3.8": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-8"
+  },
+  "eq:3.9": {
+   "file": "03-change-detection",
+   "anchor": "equation-eq-atbd-fd-3-9"
+  },
+  "eq:4.1": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "equation-eq-atbd-fd-4-1"
+  },
+  "eq:4.2": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "equation-eq-atbd-fd-4-2"
+  },
+  "eq:4.3": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "equation-eq-atbd-fd-4-3"
+  },
+  "eq:4.4": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "equation-eq-atbd-fd-4-4"
+  },
+  "eq:4.5": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "equation-eq-atbd-fd-4-5"
+  },
+  "eq:5.1": {
+   "file": "05-appendix-effect-of-gn",
+   "anchor": "equation-eq-atbd-fd-5-1"
+  },
+  "fig:1": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "fig-atbd-fd-1"
+  },
+  "fig:10": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-10"
+  },
+  "fig:11": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-11"
+  },
+  "fig:12": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-12"
+  },
+  "fig:13": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-13"
+  },
+  "fig:14": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "fig-atbd-fd-14"
+  },
+  "fig:15": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "fig-atbd-fd-15"
+  },
+  "fig:16": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "fig-atbd-fd-16"
+  },
+  "fig:2": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "fig-atbd-fd-2"
+  },
+  "fig:3": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "fig-atbd-fd-3"
+  },
+  "fig:4": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-4"
+  },
+  "fig:5": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-5"
+  },
+  "fig:6": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-6"
+  },
+  "fig:7": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-7"
+  },
+  "fig:8": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-8"
+  },
+  "fig:9": {
+   "file": "03-change-detection",
+   "anchor": "fig-atbd-fd-9"
+  },
+  "rd:1": {
+   "file": "01-introduction",
+   "anchor": "rd1"
+  },
+  "rd:10": {
+   "file": "01-introduction",
+   "anchor": "rd10"
+  },
+  "rd:11": {
+   "file": "01-introduction",
+   "anchor": "rd11"
+  },
+  "rd:2": {
+   "file": "01-introduction",
+   "anchor": "rd2"
+  },
+  "rd:3": {
+   "file": "01-introduction",
+   "anchor": "rd3"
+  },
+  "rd:4": {
+   "file": "01-introduction",
+   "anchor": "rd4"
+  },
+  "rd:5": {
+   "file": "01-introduction",
+   "anchor": "rd5"
+  },
+  "rd:6": {
+   "file": "01-introduction",
+   "anchor": "rd6"
+  },
+  "rd:7": {
+   "file": "01-introduction",
+   "anchor": "rd7"
+  },
+  "rd:8": {
+   "file": "01-introduction",
+   "anchor": "rd8"
+  },
+  "rd:9": {
+   "file": "01-introduction",
+   "anchor": "rd9"
+  },
+  "sec:1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1"
+  },
+  "sec:1.1": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-1"
+  },
+  "sec:1.2": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-2"
+  },
+  "sec:1.3": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-3"
+  },
+  "sec:1.4": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-4"
+  },
+  "sec:1.5": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-5"
+  },
+  "sec:1.6": {
+   "file": "01-introduction",
+   "anchor": "sec-atbd-fd-1-6"
+  },
+  "sec:2": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2"
+  },
+  "sec:2.1": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-1"
+  },
+  "sec:2.2": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-2"
+  },
+  "sec:2.3": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-3"
+  },
+  "sec:2.3.1": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-3-1"
+  },
+  "sec:2.3.2": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-3-2"
+  },
+  "sec:2.3.3": {
+   "file": "02-bps-and-fd-processing-overview",
+   "anchor": "sec-atbd-fd-2-3-3"
+  },
+  "sec:3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3"
+  },
+  "sec:3.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1"
+  },
+  "sec:3.1.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1-1"
+  },
+  "sec:3.1.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1-2"
+  },
+  "sec:3.1.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1-3"
+  },
+  "sec:3.1.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1-4"
+  },
+  "sec:3.1.5": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-1-5"
+  },
+  "sec:3.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2"
+  },
+  "sec:3.2.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2-1"
+  },
+  "sec:3.2.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2-2"
+  },
+  "sec:3.2.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2-3"
+  },
+  "sec:3.2.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2-4"
+  },
+  "sec:3.2.4.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-2-4-1"
+  },
+  "sec:3.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-3"
+  },
+  "sec:3.3.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-3-1"
+  },
+  "sec:3.3.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-3-2"
+  },
+  "sec:3.3.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-3-3"
+  },
+  "sec:3.3.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-3-4"
+  },
+  "sec:3.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4"
+  },
+  "sec:3.4.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-1"
+  },
+  "sec:3.4.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-2"
+  },
+  "sec:3.4.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-3"
+  },
+  "sec:3.4.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-4"
+  },
+  "sec:3.4.4.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-4-1"
+  },
+  "sec:3.4.4.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-4-2"
+  },
+  "sec:3.4.4.2.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-4-4-2-1"
+  },
+  "sec:3.5": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5"
+  },
+  "sec:3.5.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5-1"
+  },
+  "sec:3.5.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5-2"
+  },
+  "sec:3.5.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5-3"
+  },
+  "sec:3.5.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5-4"
+  },
+  "sec:3.5.5": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-5-5"
+  },
+  "sec:3.6": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6"
+  },
+  "sec:3.6.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-1"
+  },
+  "sec:3.6.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-2"
+  },
+  "sec:3.6.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-3"
+  },
+  "sec:3.6.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-4"
+  },
+  "sec:3.6.4.1.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-4-1-1"
+  },
+  "sec:3.6.4.1.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-6-4-1-2"
+  },
+  "sec:3.7": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7"
+  },
+  "sec:3.7.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-1"
+  },
+  "sec:3.7.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-2"
+  },
+  "sec:3.7.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-3"
+  },
+  "sec:3.7.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4"
+  },
+  "sec:3.7.4.1": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4-1"
+  },
+  "sec:3.7.4.2": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4-2"
+  },
+  "sec:3.7.4.3": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4-3"
+  },
+  "sec:3.7.4.4": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4-4"
+  },
+  "sec:3.7.4.5": {
+   "file": "03-change-detection",
+   "anchor": "sec-atbd-fd-3-7-4-5"
+  },
+  "sec:4": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4"
+  },
+  "sec:4.1": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4-1"
+  },
+  "sec:4.1.1": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4-1-1"
+  },
+  "sec:4.1.2": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4-1-2"
+  },
+  "sec:4.1.3": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4-1-3"
+  },
+  "sec:4.1.4": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "sec-atbd-fd-4-1-4"
+  },
+  "sec:5": {
+   "file": "05-appendix-effect-of-gn",
+   "anchor": "sec-atbd-fd-5"
+  },
+  "tab:1": {
+   "file": "04-change-detection-aggregation",
+   "anchor": "tab-atbd-fd-1"
+  }
+ }
+}

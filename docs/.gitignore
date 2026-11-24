@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+# SPDX-License-Identifier: Apache-2.0
+
+# Sphinx build artefacts
+_build/
+
+# Local virtual environment used to build the docs
+.venv/
+
+# Compiled python files inside the docs tree
+__pycache__/
+*.py[cod]

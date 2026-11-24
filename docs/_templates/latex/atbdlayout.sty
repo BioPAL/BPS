@@ -1,0 +1,60 @@
+% SPDX-FileCopyrightText: 2026 European Space Agency (ESA)
+% SPDX-License-Identifier: Apache-2.0
+%
+% Page layout of the Science Guide PDF exports (ATBD / PFD), modelled on the
+% original ESA / Aresys documents: A4, Arial-like font, blue headings,
+% logo + reference box in the header, "page X/Y" footer, cover page.
+%
+% The document metadata is defined by conf.py before this package is loaded:
+%   \atbdtitle \atbdcode \atbdissue \atbddate \atbdbpsversion
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{atbdlayout}[2026/11/23 BPS Science Guide PDF layout]
+
+\RequirePackage{fontspec}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{array}
+\RequirePackage{colortbl}
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+\RequirePackage{titlesec}
+\RequirePackage{tocloft}
+\RequirePackage{etoolbox}
+\RequirePackage{needspace}
+
+\providecommand\atbdtitle{}
+\providecommand\atbdcode{}
+\providecommand\atbdissue{}
+\providecommand\atbddate{}
+\providecommand\atbdbpsversion{}
+\providecommand\atbdcovertitle{\atbdtitle}
+% "Issue x – BPS vY" (no BPS part when the version is unknown).
+\newcommand\atbdissueline{Issue \atbdissue
+  \ifdefempty{\atbdbpsversion}{}{\ – BPS v\atbdbpsversion}}
+
+% ---------------------------------------------------------------------------
+% Colours (sampled from the original PDFs)
+% ---------------------------------------------------------------------------
+\definecolor{atbdblue}{HTML}{2F5496}     % headings
+\definecolor{atbdnavy}{HTML}{1F3864}     % page number
+\definecolor{atbdgrey}{HTML}{808080}     % header text
+\definecolor{atbdtitlegrey}{HTML}{595959}% cover title
+\definecolor{atbdrule}{HTML}{FFC000}     % header / footer rules
+\definecolor{atbdbox}{HTML}{D0CECE}      % header box borders
+\definecolor{atbdcover}{HTML}{7786A0}    % cover reference band
+
+
+% ---------------------------------------------------------------------------
+% Parts of the layout, one file per concern:
+%   atbdbody.sty   fonts, headings, header and footer, body spacing, notes
+%   atbdfloats.sty tables, captions, figures
+%   atbdmath.sty   displayed and in-table formulas
+%   atbdcover.sty  cover page, front-matter pages, table of contents
+% ---------------------------------------------------------------------------
+\RequirePackage{atbdbody}
+\RequirePackage{atbdfloats}
+\RequirePackage{atbdmath}
+\RequirePackage{atbdcover}
+\RequirePackage{atbdmeta}
+
+\endinput
