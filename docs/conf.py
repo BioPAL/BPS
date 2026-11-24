@@ -195,7 +195,12 @@ html_theme_options = {
     # Misc
     "use_edit_page_button": True,
     "show_prev_next": True,
-    "announcement": "BIOMASS BPS is an Open Science project — every contribution is welcome.",
+    # The site is built from the develop branch: say so on every page.
+    "announcement": (
+        "Disclaimer: this documentation is built from the <code>develop</code> branch of BPS "
+        "and may describe changes not yet in a release. "
+        "BIOMASS BPS is an Open Science project — every contribution is welcome."
+    ),
     # Secondary sidebar (right): in-page TOC on content pages; section hubs
     # and the homepage omit "On this page" (see _SECTION_INDEX_PAGES).
     "secondary_sidebar_items": _secondary_sidebar_items,

@@ -136,6 +136,49 @@ jobs:
         run: |
           ls -l docs/_build/html/_static/pdf/*.pdf || echo "::warning::No Science Guide PDF in the built site"
 
+  # Publish the Science Guide PDFs on the rolling "docs-latest" release, so that
+  # the biomass-disc site build (which only runs `make html`, without LaTeX) can
+  # download them into docs/_static/pdf/ and show the "Download PDF" buttons:
+  #   https://github.com/<owner>/<repo>/releases/download/docs-latest/<doc>.pdf
+  # Runs before the biomass-disc trigger; a failure never blocks the publication.
+  publish-pdfs:
+    needs: build
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download the built PDFs
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: science-guide-pdfs
+          path: artifact
+
+      - name: Upload the PDFs to the docs-latest release
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          shopt -s nullglob
+          pdfs=( $(find artifact -path '*/_static/pdf/*.pdf' | sort) )
+          if [ "${#pdfs[@]}" -eq 0 ]; then
+            echo "::warning::No Science Guide PDF to publish"
+            exit 0
+          fi
+          notes="Science Guide PDF exports built from develop at ${SHA}. Rolling release, replaced on every documentation build. The authoritative documents are the approved ESA PDFs."
+          if ! gh release view docs-latest --repo "$REPO" >/dev/null 2>&1; then
+            gh release create docs-latest --repo "$REPO" --target "$SHA" --prerelease \
+              --title "Science Guide PDFs (develop)" --notes "$notes"
+          fi
+          gh release upload docs-latest "${pdfs[@]}" --repo "$REPO" --clobber
+          gh release edit docs-latest --repo "$REPO" --notes "$notes"
+          echo "Published ${#pdfs[@]} PDF(s) on docs-latest"
+
   # Trigger the biomass-disc frontend rebuild on the ACRI GitLab pipeline.
   # The trigger token is write-only (cannot read pipeline status from here);
   # the GitLab web URL is logged as a GitHub Actions notice so a human can
@@ -147,10 +190,12 @@ jobs:
   #   workflow_dispatch (dev)  : manual trigger DEV cluster (deploy)
   #   workflow_dispatch (prod) : manual trigger PROD cluster (deploy)
   trigger-biomass-disc:
-    needs: build
+    # After publish-pdfs, so the site build finds the latest PDFs.
+    needs: [build, publish-pdfs]
     if: |
+      always() && needs.build.result == 'success' && (
       (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
-      (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none')
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_target != 'none'))
     runs-on: ubuntu-latest
     environment:
       name: ${{ ((github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'prod') || github.event_name == 'push') && 'biomass-disc-prod' || 'biomass-disc-dev' }}
